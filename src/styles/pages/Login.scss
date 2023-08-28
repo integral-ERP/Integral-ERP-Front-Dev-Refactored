@@ -1,248 +1,145 @@
-// Import Google Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+body {
+  background-image: url(../../img/fondo.jpeg);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+}
 
-// Apply global styles
-* {
-  box-sizing: border-box;
+#contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
-  font-family: Raleway, sans-serif;
-}
-
-// Apply body styles
-body {
-  background: linear-gradient(90deg, #c7c5f4, #776bcc);
-  background: white;
-}
-
-// Define a container class
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 97vh;
-}
-
-// Define screen styles
-.screen {
-  background: linear-gradient(90deg, #5d54a4, #7c78b8);
-  background: white;
-  position: relative;
-  height: 600px;
-  width: 360px;
-  box-shadow: 0px 0px 24px #5c5696;
-
-  // ... Add more styles here
-}
-
-// Define screen content styles
-.screen__content {
-  z-index: 1;
-  position: relative;
-  height: 100%;
-
-  // ... Add more styles here
-}
-
-// Define screen text styles
-.screen_text {
-  // ... Add styles for screen text here
-}
-
-// Define screen background styles
-.screen__background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  -webkit-clip-path: inset(0 0 0 0);
-  clip-path: inset(0 0 0 0);
-
-  // ... Add more styles here
-}
-
-// Define screen background shape styles
-.screen__background__shape {
-  transform: rotate(45deg);
-  position: absolute;
-
-  // ... Add more styles here
-}
-
-// Define screen background shape1 styles
-.screen__background__shape1 {
-  height: 520px;
-  width: 520px;
-  background: #fff;
-  top: -50px;
-  right: 120px;
-  border-radius: 0 72px 0 0;
-
-  // ... Add more styles here
-}
-
-// Define screen background shape2 styles
-.screen__background__shape2 {
-  height: 220px;
-  width: 220px;
-  background: #6c63ac;
-  background: white;
-  top: -172px;
-  right: 0;
-  border-radius: 32px;
-
-  // ... Add more styles here
-}
-
-// Define screen background shape3 styles
-.screen__background__shape3 {
-  height: 540px;
-  width: 190px;
-  background: linear-gradient(270deg, #5d54a4, #6a679e);
-  background: white;
-  top: -24px;
-  right: 0;
-  border-radius: 32px;
-
-  // ... Add more styles here
-}
-
-// Define screen background shape4 styles
-.screen__background__shape4 {
-  height: 400px;
-  width: 200px;
-  background: #7e7bb9;
-  background: white;
-  top: 420px;
-  right: 50px;
-  border-radius: 60px;
-
-  // ... Add more styles here
-}
-
-// Define login styles
-.login {
-  width: 320px;
-  padding: 30px;
-  padding-top: 156px;
-
-  // ... Add more styles here
-}
-
-// Define login field styles
-.login__field {
-  padding: 20px 0px;
-  position: relative;
-
-  // ... Add more styles here
-}
-
-// Define login icon styles
-.login__icon {
-  position: absolute;
-  top: 30px;
-  color: #7875b5;
-  color: black;
-
-  // ... Add more styles here
-}
-
-// Define login input styles
-.login__input {
-  border: none;
-  border-bottom: 2px solid #d1d1d4;
-  background: none;
-  padding: 10px;
-  padding-left: 24px;
-  font-weight: 700;
-  width: 75%;
-  transition: 0.2s;
-  color: black;
-
-  // ... Add more styles here
-}
-
-.login__input:active, .login__input:focus, .login__input:hover {
-  outline: none;
-  border-bottom-color: #6a679e;
-}
-
-// Define login submit button styles
-.login__submit {
-  background: #fff;
-  font-size: 14px;
-  margin-top: 30px;
-  padding: 16px 20px;
-  border-radius: 26px;
-  border: 1px solid #d4d3e8;
-  text-transform: uppercase;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
+  min-width: 100vw;
+  min-height: 100vh;
   width: 100%;
-  color: #4c489d;
-  color: black;
-  box-shadow: 0px 2px 2px #5c5696;
-  cursor: pointer;
-  transition: 0.2s;
-
-  // ... Add more styles here
+  height: 100%;
+  opacity: 1;
 }
 
-.login__submit:active, .login__submit:focus, .login__submit:hover {
-  border-color: #6a679e;
-  border-color: black;
-  outline: none;
-
-  // ... Add more styles here
+#central {
+  max-width: 32%;
+  width: 100%;
 }
 
-// Define button icon styles
-.button__icon {
-  font-size: 24px;
-  margin-left: auto;
-  color: #7875b5;
-  color: black;
-
-  // ... Add more styles here
-}
-
-// Define social login styles
-.social-login {
-  position: absolute;
-  height: 140px;
-  width: 160px;
+.titulo {
+  color: rgb(112, 112, 112);
   text-align: center;
-  bottom: 0px;
-  right: 0px;
-  color: #fff;
-
-  // ... Add more styles here
+  margin-bottom: 20px;
 }
 
-// Define social icons styles
-.social-icons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  // ... Add more styles here
+#login {
+  width: 100%;
+  padding: 8% 6% 6% 6%;
+  max-width: 380px;
+  background-color: #ffffffd4;
+  border-radius: 5%;
+  box-sizing: border-box;
+  opacity: 0.9;
+  
+  input {
+    font-family: 'Overpass', sans-serif;
+    font-size: 110%;
+    color: #1b262c;
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 0px;
+    padding: 5px 5px 5px 10px;
+    box-sizing: border-box;
+    border-radius: 1rem;
+    border:  1px solid grey;
+    
+    &::placeholder {
+      font-family: 'Overpass', sans-serif;
+      color: #E4E4E4;
+    }
+  }
+  
+  button {
+    font-family: 'Overpass', sans-serif;
+    font-size: 110%;
+    font-weight: bold;
+    color: #ffffff;
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-radius: 1rem;
+    background-color: #5ebeff;
+    margin-top: 8%;
+    
+    &:hover {
+      background-color: #0f4c75;
+      color: #bbe1fa;
+    }
+  }
 }
 
-// Define social login icon styles
-.social-login__icon {
-  padding: 20px 10px;
-  color: #fff;
-  text-decoration: none;
-  text-shadow: 0px 0px 8px #7875b5;
-
-  // ... Add more styles here
+.pie-form {
+  font-size: 90%;
+  text-align: center;
+  margin-top: 15px;
+  
+  a {
+    display: block;
+    text-decoration: none;
+    color: #bbe1fa;
+    margin-bottom: 3px;
+    
+    &:hover {
+      color: #0f4c75;
+    }
+  }
 }
 
-.social-login__icon:hover {
-  transform: scale(1.5);
+.inferior {
+  margin-top: 10px;
+  font-size: 90%;
+  text-align: center;
+  
+  a {
+    display: block;
+    text-decoration: none;
+    color: #bbe1fa;
+    margin-bottom: 3px;
+    
+    &:hover {
+      color: #3282b8;
+    }
+  }
+}
 
-  // ... Add more styles here
+.sub-text {
+  padding: 12% 0 0 0;
+  font-size: 1rem;
+  text-align: center;
+  color: rgb(112, 112, 112);
+}
+
+.text-log {
+  font-weight: 600;
+  padding: 2rem 0 0 0;
+  font-size: 1.5rem;
+  text-align: left;
+  color: rgb(112, 112, 112);
+}
+
+.sub-forgot {
+  text-align: right;
+}
+
+.logo {
+  width: 100%;
+  padding: 0 0 4% 0;
+}
+
+.select-leng {
+  margin: 1% 0 0 0;
+  background-color: rgba(247, 247, 247, 0);
+  border: none;
 }

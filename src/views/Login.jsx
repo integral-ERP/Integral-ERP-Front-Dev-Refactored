@@ -1,81 +1,111 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
-
+import { useState } from "react";
+import "../styles/pages/Login.scss";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../services/AuthService";
+import logo from "../img/logo.jpeg";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [language, setlanguage] = useState("null");
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const navigateTo = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const loginResponse = await AuthService.login(username, password);
-
-      setMessage(loginResponse.message);
-      setTimeout(() => {
-        navigateTo('/dashboard');
-      }, 2000);
-    } catch (error) {
-      setErrorMessage(error.message);
+  const handleLogin = () => {
+    if (language == "null") {
+      alert("Please select a language before loging in");
+    } else {
+      AuthService.login(username, password)
+        .then((response) => {
+          if (response.status === 200) {
+            navigateTo("/dashboard");
+          } else {
+            console.log("Error logging in");
+            setShowErrorAlert(true);
+            setTimeout(() => {
+              setShowErrorAlert(false);
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          console.log("Error logging in");
+            setShowErrorAlert(true);
+            setTimeout(() => {
+              setShowErrorAlert(false);
+            }, 3000);
+        });
     }
   };
 
-  useEffect(() => {
-    if (message) {
-      const timerId = setTimeout(() => {
-        setMessage(null);
-      }, 3000);
-
-      return () => clearTimeout(timerId);
-    }
-  }, [message]);
-
-
   return (
-    <div className="container">
-      <div className="screen">
-        <div className="screen__content">
+    <div id="contenedor">
+      <div id="central">
+        <div id="login">
+          <img className="logo" src={logo} alt="lksfg" />
           <form className="login">
-          <div className="login__field">
-            <i className="login__icon fa fa-user"></i>
-            <input
-              type="text"
-              className="login__input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Usuario"
-            />
-          </div>
-          <div className="login__field">
-            <i className="login__icon fas fa-lock"></i>
-            <input
-              type="password"
-              className="login__input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Contraseña"
-            />
-          </div>
-            {message && <p>{message}</p>}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <button className="button login__submit" onClick={handleLogin}>
-              <span className="button__text">Iniciar Sesión</span>
-              <i className="button__icon fas fa-chevron-right"></i>
+            <div className="login__field">
+              <p className="text-log">Username</p>
+              <input
+                type="text"
+                className="login__input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+              />
+            </div>
+            <div className="login__field">
+              <p className="text-log">Password</p>
+              <input
+                type="password"
+                className="login__input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+              />
+              <div className="sub-forgot">
+                <a href="#">Forgot a password?</a>
+              </div>
+              <div className="text-log">
+                <label htmlFor="language"> </label>
+                <select
+                  className="select-leng"
+                  name="language"
+                  id="language"
+                  value={language}
+                  onChange={(e) => setlanguage(e.target.value)}
+                >
+                  <option value="null">Select a language</option>
+                  <option value="us">English</option>
+                  <option value="co">Spanish</option>
+                </select>
+              </div>
+            </div>
+            <button
+              type="button"
+              title="Ingresar"
+              name="Ingresar"
+              onClick={handleLogin}
+            >
+              Sign In
             </button>
           </form>
-        </div>
-        <div className="screen__background">
-        <span className="screen__background__shape screen__background__shape4"></span>
-        <span className="screen__background__shape screen__background__shape3"></span>
-        <span className="screen__background__shape screen__background__shape2"></span>
-        <span className="screen__background__shape screen__background__shape1"></span>
+          <div className="sub-text">
+            <p>Copyright © 2023 PRESSEX all rights reserved.</p>
+          </div>
         </div>
       </div>
+      {showErrorAlert && (
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
+          <AlertTitle>Error</AlertTitle>
+          <strong>Username or password invalid. Please try again.</strong>
+        </Alert>
+      )}
     </div>
   );
 };

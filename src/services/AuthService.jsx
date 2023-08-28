@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 class AuthService {
   constructor() {
@@ -6,20 +6,11 @@ class AuthService {
   }
 
   async login(username, password) {
-    try {
-      const response = await axios.post(`${this.BASE_URL}auth/login/`, {
-        username,
-        password,
-      });
-
-      if (response.status === 200) {
-        localStorage.setItem("user", response.data);
-        return { success: true, message: 'Successful login!' };
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error('Invalid username or password.');
-    }
+    const response = await axios.post(`${this.BASE_URL}auth/login/`, {
+      username,
+      password,
+    });
+    return response;
   }
 }
 
