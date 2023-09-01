@@ -1,0 +1,207 @@
+.startup-wizard-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.startup-wizard-form__general-form {
+  margin-top: 5%;
+}
+
+.startup-wizard-form__tabs-button-container {
+  margin-bottom: 20px;
+  background-color: rgba(240, 240, 240, 255);
+  width: 100%;
+}
+
+.startup-wizard-form__general-form {
+}
+
+.startup-wizard-form__title {
+  text-align: left;
+  margin-top: 5%;
+}
+
+.section_separator {
+  margin-bottom: 50px;
+}
+
+.startup-wizard-form__file-input {
+  height: 100%;
+  max-width: 0px;
+  cursor: pointer;
+}
+
+.startup-wizard-form__image-preview {
+  max-width: 100%;
+  max-height: 200px;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center;
+}
+
+.startup-wizard-form__tabs-button,
+.startup-wizard-form__button {
+  margin: 5px;
+  background-color: rgba(240, 240, 240, 255);
+  color: black;
+  border: 1px solid rgba(225, 225, 225, 255);
+}
+
+.startup-wizard-form__section {
+  margin: 5px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.startup-wizard-form__label {
+  color: black;
+  width: 200px;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: right;
+}
+
+#left-text {
+  text-align: left;
+}
+
+.large-label {
+  width: 300px;
+}
+
+.startup-wizard-form__currency-form {
+  width: 50%;
+}
+
+.startup-wizard-form__input {
+  background-color: whitesmoke;
+  height: 30px;
+  width: 300px;
+
+  margin: 2px;
+  color: black;
+  padding: 5px;
+}
+
+.startup-wizard-form__input-checkbox {
+  background-color: whitesmoke;
+
+  width: 30px;
+  width: fit-content;
+  margin: 2px;
+  color: black;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.startup-wizard-form__fieldset {
+  border: none;
+}
+
+.short-label {
+  width: auto;
+}
+
+.input-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#company-info_phone2,
+#identificacionNumber {
+  max-width: 50px !important;
+}
+
+.short-input {
+  width: auto;
+  margin: 10px;
+}
+
+.startup-wizard-form__options-container {
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  background-color: whitesmoke;
+  border: 3px solid whitesmoke;
+  width: 95%;
+}
+
+.startup-wizard-form__option {
+  margin: 5px;
+  background-color: rgba(225, 225, 225, 255);
+  border: 1px solid rgba(225, 225, 225, 255);
+  color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+.startup-wizard-form__table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  width: 100%;
+  min-width: 30%;
+  height: 100%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  display: inline-table;
+}
+
+.startup-wizard-form__table thead tr {
+  background-color: #add8e6;
+  color: #ffffff;
+  text-align: left;
+}
+
+.startup-wizard-form__table td {
+  padding: 4px 5px;
+  text-align: left;
+}
+
+.startup-wizard-form__table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.startup-wizard-form__table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.startup-wizard-form__table tbody tr:last-of-type {
+  border-bottom: 2px solid #add8e6;
+}
+
+.table-container {
+  height: auto;
+  max-height: 140px;
+  overflow-y: scroll;
+}
+
+.startup-wizard-form__other-addresses-form {
+  width: 100%;
+  height: 100%;
+}
+
+.startup-wizard-form__addresses-options {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.startup-wizard-form__agent-form {
+  margin: 15px;
+  margin-left: 30px;
+}
+
+.currencies-list {
+  height: 150px;
+  overflow-y: scroll;
+}

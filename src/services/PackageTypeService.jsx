@@ -20,6 +20,11 @@ class PackageTypeService{
     return response;
   }
 
+  async getPackageTypeById(id){
+    const response = await axios.get(`${this.BASE_URL}packType/${id}`);
+    return response;
+  }
+
   async getContainerCodes(){
     const response = await axios.get(`${this.BASE_URL}containerCode/`);
     return response;

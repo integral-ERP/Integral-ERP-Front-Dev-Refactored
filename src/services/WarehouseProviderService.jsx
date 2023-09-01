@@ -20,6 +20,11 @@ class WarehouseProviderService{
     return response;
   }
 
+  async getWarehouseProviderByID(id){
+    const response = await axios.get(`${this.BASE_URL}wareHouseProviders/${id}`);
+    return response;
+  }
+
   async deleteWarehouseProvider(id) {
       const response = await axios.delete(`${this.BASE_URL}wareHouseProviders/${id}/`);
       return response;

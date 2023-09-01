@@ -10,6 +10,11 @@ class CustomerService{
         return response;
     }
 
+    async getCustomerById(id){
+        const response = await axios.get(`${this.BASE_URL}customer/${id}`)
+        return response;
+    }
+
     async createCustomer(data){
         const response = await axios.post(`${this.BASE_URL}customer/`, data);
     return response;

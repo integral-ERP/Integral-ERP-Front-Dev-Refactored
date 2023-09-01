@@ -13,7 +13,7 @@ import PackageType from "../views/PackageType";
 import Ports from "../views/Ports";
 import Countries from "../views/Countries"
 import Locations from "../views/Locations"
-import PickUpList from "../views/Pickup";
+import Pickup from "../views/Pickup";
 export const RoutesConfiguration = () => {
   return (
     <Router>
@@ -38,7 +38,7 @@ export const RoutesConfiguration = () => {
         <Route path="/maintenance/ports" element={<Ports />} />
         <Route path="/maintenance/countries" element={<Countries />} />
         <Route path="/maintenance/locations" element={<Locations />} />
-        <Route path="/warehouse/pickup" element={<PickUpList />} />
+        <Route path="/warehouse/pickup" element={<Pickup />} />
       </Routes>
     </Router>
   );

@@ -15,6 +15,7 @@ const Table = ({
   onEdit,
   onAdd,
   title,
+  showOptions
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -150,16 +151,16 @@ const Table = ({
 
   return (
     <>
-      <div className="header-container">
+     {showOptions && (<div className="header-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           <i className="fa-solid fa-arrow-left fa-3x"></i>
         </button>
         <div className="title-container">
           <h1 className="title">{title}</h1>
         </div>
-      </div>
+      </div>)}
 
-      <div className="button-container">
+      {showOptions && <div className="button-container">
         <div className="search-container">
           <input
             type="text"
@@ -210,7 +211,7 @@ const Table = ({
             </button>
           </div>
         </div>
-      </div>
+      </div>}
       <div className="generic-table">
         <table className="table table-hover">
           <thead>
@@ -275,6 +276,7 @@ Table.propTypes = {
   onEdit: PropTypes.func,
   onAdd: PropTypes.func,
   title: PropTypes.string,
+  showOptions: PropTypes.bool
 };
 
 Table.defaultProps = {
@@ -286,6 +288,7 @@ Table.defaultProps = {
   onEdit: null,
   onAdd: null,
   title: "Table",
+  showOptions: true
 };
 
 export default Table;

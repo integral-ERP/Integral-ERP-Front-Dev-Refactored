@@ -125,6 +125,7 @@
     form{
         margin: 5%;
         width: 50%;
+        margin-top: 3%;
     }
 
     .form-input{
@@ -148,4 +149,7 @@
       height: 15px;
     }
   }
-  
+
+  #charges, #commodities {
+    width: 90%;
+  }

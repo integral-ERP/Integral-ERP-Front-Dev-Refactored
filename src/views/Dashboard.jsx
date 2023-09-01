@@ -1,8 +1,21 @@
 import "../styles/pages/Dashboard.scss";
 import Sidebar from "./shared/components/SideBar"
+import { useState, useEffect } from "react";
 import NavBar from "./shared/components/NavBar";
-
+import TRMService from "../services/TRMService";
 const Dashboard = () => {
+
+  const [TRM, setTRM] = useState(0);
+
+  const getTRM = async () => {
+    const response = await TRMService.getTRMToday();
+    console.log(response.data[0].valor);
+    setTRM(response.data[0].valor);
+  }
+  useEffect(() => {
+    getTRM();
+  }, [])
+  
   return (
     <div className="dashboard__layout">
       <div className="dashboard__sidebar">
@@ -16,7 +29,7 @@ const Dashboard = () => {
             <h3 className="content__subtitle">Welcome to integral</h3>
             <div className="content__search-bar">Search</div>
           </div>
-          <div className="content__trm">Tasa Representativa del mercado</div>
+          <div className="content__trm">Tasa Representativa del mercado: ${TRM}</div>
         </div>
 
         <div className="content__cards">

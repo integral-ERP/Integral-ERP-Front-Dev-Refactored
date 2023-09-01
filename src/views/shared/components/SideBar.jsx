@@ -2,7 +2,8 @@ import { useState } from "react";
 import "../../../styles/components/SideBar.scss"
 import { useModal } from "../../../hooks/useModal"
 import { Link } from "react-router-dom";
-
+import MyCompanyForm from "../../forms/MyCompanyForm";
+import ModalForm from "../components/ModalForm";
 const Sidebar = () => {
   const [close, setClose] = useState(false);
   useModal(false);
@@ -10,6 +11,9 @@ const Sidebar = () => {
     setClose(!close);
   };
 
+  const [isOpenCompanyForm, openCompanyForm, closeCompanyForm] =
+    useModal(false);
+  useModal(false);
   const [more, setMore] = useState("");
   useModal(false);
   const handleDropdownMore = (index) => {
@@ -60,7 +64,7 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="#">Pick Up Order</a>
+              <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
               </li>
               <li>
                 <a href="#">Reception</a>
@@ -311,31 +315,31 @@ const Sidebar = () => {
                 <Link to={"/maintenance/carriers"}>Carriers</Link>
               </li>
               <li>
-                <a href="#">Agents</a>
+              <Link to={"/maintenance/forwardingAgents"}>Forwarding Agents</Link>
               </li>
               <li>
-                <a href="#">Vendors</a>
+              <Link to={"/maintenance/vendors"}>Vendors</Link>
               </li>
               <li>
-                <a href="#">Customers</a>
+              <Link to={"/maintenance/customers"}>Customers</Link>
               </li>
               <li>
-                <a href="#">Employees</a>
+              <Link to={"/maintenance/employees"}>Employees</Link>
               </li>
               <li>
-                <a href="#">Ports</a>
+              <Link to={"/maintenance/ports"}>Ports</Link>
               </li>
               <li>
-                <a href="#">Package Type</a>
+                <Link to={"/maintenance/packageTypes"}>Package Types</Link>
               </li>
               <li>
-                <a href="#">Warehouse providers</a>
+              <Link to={"/maintenance/warehouseProviders"}>Warehouse Providers</Link>
               </li>
               <li>
-                <a href="#">Locations</a>
+              <Link to={"/maintenance/locations"}>Locations</Link>
               </li>
               <li>
-                <a href="#">Countries</a>
+              <Link to={"/maintenance/countries"}>Countries</Link>
               </li>
             </ul>
           </li>
@@ -359,7 +363,15 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="#">Company</a>
+                <a onClick={openCompanyForm}>Company</a>
+               {/* <ModalForm
+              isOpen={isOpenCompanyForm}
+              closeModal={closeCompanyForm}
+            >
+              <MyCompanyForm
+                closeModal={closeCompanyForm}
+              ></MyCompanyForm>
+  </ModalForm>*/}
               </li>
               <li>
                 <a href="#">Air Operations</a>

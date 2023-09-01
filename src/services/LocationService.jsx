@@ -20,6 +20,11 @@ class LocationService{
     return response;
   }
 
+  async getLocationById(id){
+    const response = await axios.get(`${this.BASE_URL}location/${id}`);
+    return response;
+  }
+
   async deleteLocation(id) {
       const response = await axios.delete(`${this.BASE_URL}location/${id}/`);
       return response;

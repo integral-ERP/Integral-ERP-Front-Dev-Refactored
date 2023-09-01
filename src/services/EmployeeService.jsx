@@ -19,6 +19,11 @@ class EmployeeService{
         const response = await axios.get(`${this.BASE_URL}employee/`);
         return response;
       }
+
+      async getEmployeeById(id){
+        const response = await axios.get(`${this.BASE_URL}employee/${id}`);
+        return response;
+      }
     
       async deleteEmployee(id) {
           const response = await axios.delete(`${this.BASE_URL}employee/${id}/`);

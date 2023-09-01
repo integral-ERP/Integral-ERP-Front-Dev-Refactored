@@ -20,6 +20,11 @@ class CarrierService{
     return response;
   }
 
+  async getCarrierById(id){
+    const response = await axios.get(`${this.BASE_URL}carrier/${id}`);
+    return response;
+  }
+
   async deleteCarrier(id) {
       const response = await axios.delete(`${this.BASE_URL}carrier/${id}/`);
       return response;

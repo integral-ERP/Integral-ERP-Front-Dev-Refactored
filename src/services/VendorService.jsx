@@ -20,6 +20,11 @@ class VendorService{
     return response;
   }
 
+  async getVendorByID(id){
+    const response = await axios.get(`${this.BASE_URL}vendor/${id}`);
+    return response;
+  }
+
   async deleteVendor(id) {
       const response = await axios.delete(`${this.BASE_URL}vendor/${id}/`);
       return response;

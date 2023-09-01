@@ -20,6 +20,11 @@ class PortService{
     return response;
   }
 
+  async getPortById(id){
+    const response = await axios.get(`${this.BASE_URL}port/${id}`);
+    return response;
+  }
+
   async deletePort(id) {
       const response = await axios.delete(`${this.BASE_URL}port/${id}/`);
       return response;

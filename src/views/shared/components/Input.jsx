@@ -13,6 +13,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -24,6 +25,7 @@ const Input = (props) => {
           type="checkbox"
           checked={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -36,6 +38,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -48,6 +51,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -60,6 +64,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -72,6 +77,7 @@ const Input = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.changeHandler}
+          readOnly={props.readOnly || false}
         />
       );
       break;
@@ -82,7 +88,7 @@ const Input = (props) => {
   }
 
   return (
-    <div className="form-group row">
+    <div className="form-group">
       {labelElement} {/* Render label element within the JSX structure */}
       {inputElement}
     </div>
