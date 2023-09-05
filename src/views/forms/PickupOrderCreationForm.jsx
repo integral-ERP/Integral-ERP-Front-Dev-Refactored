@@ -31,11 +31,11 @@ const PickupOrderCreationForm = ({
   const [carriers, setcarriers] = useState([]);
   const [employees, setemployees] = useState([]);
   const [warehouseProviders, setwarehouseProviders] = useState([]);
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = dayjs().format("YYYY-MM-DD");
   const formFormat = {
     // GENERAL TAB
     status: "",
-    number: "8000321",
+    number: "8000325",
     createdDateAndTime: today,
     pickupDateAndTime: today,
     deliveryDateAndTime: today,
@@ -504,6 +504,74 @@ const PickupOrderCreationForm = ({
     // Add more mock data items...
   ];
 
+  const mockData = [
+    {
+      Status: "loaded",
+      Description: "Product A",
+      Prepaid: true,
+      Quantity: 5,
+      Price: 10.99,
+      Amount: 54.95,
+      "Tax Code": "TC123",
+      "Tax Rate": 8.5,
+      "Tax Amt": 4.67,
+      "Amt + Tax": 59.62,
+      Currency: "USD",
+    },
+    {
+      Status: "unloaded",
+      Description: "Product B",
+      Prepaid: false,
+      Quantity: 3,
+      Price: 7.5,
+      Amount: 22.5,
+      "Tax Code": "TC456",
+      "Tax Rate": 7.0,
+      "Tax Amt": 1.58,
+      "Amt + Tax": 24.08,
+      Currency: "EUR",
+    },
+    {
+      Status: "loaded",
+      Description: "Product C",
+      Prepaid: true,
+      Quantity: 2,
+      Price: 14.0,
+      Amount: 28.0,
+      "Tax Code": "TC789",
+      "Tax Rate": 9.25,
+      "Tax Amt": 2.59,
+      "Amt + Tax": 30.59,
+      Currency: "GBP",
+    },
+    {
+      Status: "loaded",
+      Description: "Product D",
+      Prepaid: false,
+      Quantity: 4,
+      Price: 9.99,
+      Amount: 39.96,
+      "Tax Code": "TC101",
+      "Tax Rate": 8.0,
+      "Tax Amt": 3.2,
+      "Amt + Tax": 43.16,
+      Currency: "USD",
+    },
+    {
+      Status: "unloaded",
+      Description: "Product E",
+      Prepaid: true,
+      Quantity: 1,
+      Price: 25.0,
+      Amount: 25.0,
+      "Tax Code": "TC222",
+      "Tax Rate": 6.5,
+      "Tax Amt": 1.63,
+      "Amt + Tax": 26.63,
+      Currency: "EUR",
+    },
+  ];
+
   return (
     <div className="company-form">
       <ul className="nav nav-tabs" role="tablist">
@@ -556,19 +624,6 @@ const PickupOrderCreationForm = ({
             role="tab"
           >
             Carrier Information
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#supplier"
-            aria-selected={activeTab === "supplier"}
-            onClick={() => setActiveTab("supplier")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Supplier Information
           </a>
         </li>
         <li className="nav-item" role="presentation">
@@ -862,6 +917,30 @@ const PickupOrderCreationForm = ({
             value={formData.pickupInfo}
           />
         </div>
+        <div className="company-form__section">
+          <Input
+            type="text"
+            inputName="invoiceNumber"
+            placeholder="Invoice Number..."
+            value={formData.invoiceNumber}
+            changeHandler={(e) =>
+              setFormData({ ...formData, invoiceNumber: e.target.value })
+            }
+            label="Invoice Number"
+          />
+        </div>
+        <div className="company-form__section">
+          <Input
+            type="text"
+            inputName="purchaseOrderNumber"
+            placeholder="Purchase Order Number..."
+            value={formData.purchaseOrderNumber}
+            changeHandler={(e) =>
+              setFormData({ ...formData, purchaseOrderNumber: e.target.value })
+            }
+            label="Purchase Order Number"
+          />
+        </div>
       </form>
       <form
         className={`tab-pane fade ${
@@ -1004,61 +1083,6 @@ const PickupOrderCreationForm = ({
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
-        <label htmlFor="inlandCarrier" className="company-form__label">
-          Inland Carrier:
-        </label>
-        <div className="company-form__section">
-          <label htmlFor="inlandCarrier" className="company-form__label">
-            Carrier:
-          </label>
-          <select
-            id="inlandCarrier"
-            className="form-input"
-            value={formData.inlandCarrierId}
-            onChange={(e) =>
-              setFormData({ ...formData, inlandCarrierId: e.target.value })
-            }
-          >
-            <option value="">Select an option</option>
-            {carriers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="carrier"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="proNumber"
-            placeholder="PRO Number..."
-            value={formData.proNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, proNumber: e.target.value })
-            }
-            label="PRO Number"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="trackingNumber"
-            placeholder="Tracking Number..."
-            value={formData.trackingNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, trackingNumber: e.target.value })
-            }
-            label="Tracking Number"
-          />
-        </div>
-        <label htmlFor="mainCarrier" className="company-form__label">
-          Main Carrier:
-        </label>
         <div className="company-form__section">
           <label htmlFor="mainCarrier" className="company-form__label">
             Carrier:
@@ -1092,79 +1116,28 @@ const PickupOrderCreationForm = ({
             label="Return Address"
           />
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "supplier" ? "show active" : ""
-        } company-form__general-form`}
-        id="supplier"
-        style={{ display: activeTab === "supplier" ? "block" : "none" }}
-      >
-        <div className="company-form__section">
-          <label htmlFor="supplier" className="company-form__label">
-            Name:
-          </label>
-          <select
-            id="supplier"
-            className="form-input"
-            value={""}
-            onChange={(e) => handleSupplierSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {customers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="customer"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {vendors.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="vendor"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
-        </div>
         <div className="company-form__section">
           <Input
-            type="textarea"
-            inputName="supplierInfo"
-            placeholder="Return Address..."
-            value={formData.supplierInfo}
-            readonly={true}
-            label="Return Address"
+            type="text"
+            inputName="proNumber"
+            placeholder="PRO Number..."
+            value={formData.proNumber}
+            changeHandler={(e) =>
+              setFormData({ ...formData, proNumber: e.target.value })
+            }
+            label="PRO Number"
           />
         </div>
         <div className="company-form__section">
           <Input
             type="text"
-            inputName="invoiceNumber"
-            placeholder="Invoice Number..."
-            value={formData.invoiceNumber}
+            inputName="trackingNumber"
+            placeholder="Tracking Number..."
+            value={formData.trackingNumber}
             changeHandler={(e) =>
-              setFormData({ ...formData, invoiceNumber: e.target.value })
+              setFormData({ ...formData, trackingNumber: e.target.value })
             }
-            label="Invoice Number"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="purchaseOrderNumber"
-            placeholder="Purchase Order Number..."
-            value={formData.purchaseOrderNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, purchaseOrderNumber: e.target.value })
-            }
-            label="Purchase Order Number"
+            label="Tracking Number"
           />
         </div>
       </form>
@@ -1176,7 +1149,10 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "charges" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <button type="button" className="btn btn-primary btn-lg charge-buttons">
+          <button
+            type="button"
+            className="btn btn-primary btn-lg charge-buttons"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -1191,8 +1167,11 @@ const PickupOrderCreationForm = ({
             </svg>
             Add Income Charge
           </button>
-          
-          <button type="button" className="btn btn-primary btn-lg charge-buttons">
+
+          <button
+            type="button"
+            className="btn btn-primary btn-lg charge-buttons"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -1247,7 +1226,7 @@ const PickupOrderCreationForm = ({
           </button>
         </div>
         <Table
-          data={carriers}
+          data={mockData}
           columns={[
             "Status",
             "Description",
@@ -1291,7 +1270,7 @@ const PickupOrderCreationForm = ({
         >
           <AlertTitle>Success</AlertTitle>
           <strong>
-            Carrier {creating ? "created" : "updated"} successfully!
+            Pick up Order {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
       )}
@@ -1303,7 +1282,8 @@ const PickupOrderCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Carrier. Please try again
+            Error {creating ? "creating" : "updating"} Pick up Order. Please try
+            again
           </strong>
         </Alert>
       )}

@@ -5,24 +5,59 @@ import CurrenciesService from "../../services/CurrencyService";
 import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 const MyCompanyForm = (props) => {
+  const formFormat = {
+    companyType: {
+      logisticsProvi: false,
+      distribution: false,
+      airlineCarrier: false,
+      oceanCarrier: false,
+      companyWarehouse: false,
+    },
 
-  const [companyType, setCompanyType] = useState({
-    logisticsProvi: false,
-    distribution: false,
-    airlineCarrier: false,
-    oceanCarrier: false,
-    companyWarehouse: false,
-  });
+    importSchedule: {
+      schedulesB: false,
+      schedulesD: false,
+      schedulesK: false,
+    },
 
-  const [importSchedule, setimportSchedule] = useState({
-    schedulesB: false,
-    schedulesD: false,
-    schedulesK: false,
-  });
+    companyInfo: {
+      nameCompany: "",
+      phone: 0,
+      fax: 0,
+      email: "",
+      webSide: "",
+      firstNameContac: "",
+      lasNameContac: "",
+    },
 
+    addressInfo: {
+      streetNumber: "",
+      city: "",
+      country: "",
+      state: "",
+      zipCode: "",
+    },
+
+    CompanyLogo: {
+      imgName: "",
+      imgLogo: null,
+    },
+
+    companyRegisCode: {
+      iataCode: "",
+      fmc: "",
+      scacCodeUs: "",
+      tsaNumber: "",
+    },
+
+    newSystemCurrency: {
+      localCurrency: "",
+      companyMoreCurren: false,
+    },
+  };
+
+  const [formData, setformData] = useState(formFormat);
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedFileName, setSelectedFileName] = useState("");
-  const [rawFileLogo, setrawFileLogo] = useState(null);
   const [message, setMessage] = useState("");
   const [currencies, setcurrencies] = useState({});
   const [countries, setCountries] = useState([]);
@@ -33,73 +68,13 @@ const MyCompanyForm = (props) => {
   const [selectedState, setSelectedState] = useState("");
   const [cities, setCities] = useState([]);
   const [selectedFile, setselectedFile] = useState(null);
-  // State variables with 'Retrieved' at the end of their names
-  const [systemCurrencyRetrieved, setSystemCurrencyRetrieved] = useState(null);
-  const [companyExists, setcompanyExists] = useState(false);
-  const [companyID, setcompanyID] = useState("");
   const [requestsError, setrequestsError] = useState(false);
-
-  // COMPANY TYPE VARIABLES
-  const [logisticsProvi, setlogisticsProvi] = useState(false);
-  const [distribution, setdistribution] = useState(false);
-  const [airlineCarrier, setairlineCarrier] = useState(false);
-  const [oceanCarrier, setoceanCarrier] = useState(false);
-  const [companyWarehouse, setcompanyWarehouse] = useState(false);
-
-  // GENERAL FORM VARIABLES
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [fax, setFax] = useState("");
-  const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState("");
-  const [contactFirstName, setContactFirstName] = useState("");
-  const [contactLastName, setContactLastName] = useState("");
-
-  // ADDRESS FORM VARIABLES
-  const [streetNumber, setStreetNumber] = useState("");
-  const [city, setCity] = useState("");
-  const [zipCode, setZipCode] = useState("");
-
-  // REGISTRATION CODES
-  const [iataCode, setIataCode] = useState("");
-  const [fmc, setFmc] = useState("");
-  const [customsCode, setCustomsCode] = useState("");
-  const [tsaNumber, setTsaNumber] = useState("");
-
-  // CURRENCY
-  const [selectedCurrency, setSelectedCurrency] = useState("");
-
-  // IMPORT SCHEDULE
-  const [schedulesB, setschedulesB] = useState(false);
-  const [schedulesD, setschedulesD] = useState(false);
-  const [schedulesK, setschedulesK] = useState(false);
-
-  const handleCountryChange = (event) => {
-    const selectedCountryValue = event.target.value;
-    setSelectedCountry(selectedCountryValue);
-
-    // Retrieve the country code and set it in the state
-    const selectedCountryCode =
-      event.target.options[event.target.selectedIndex].getAttribute("data-key");
-    setselectedCountryCode(selectedCountryCode);
-  };
-
-  const handleStateChange = (event) => {
-    const selectedStateValue = event.target.value;
-    setSelectedState(selectedStateValue);
-
-    // Retrieve the state code and set it in the state
-    const selectedStateCode =
-      event.target.options[event.target.selectedIndex].getAttribute("data-key");
-    setselectedStateCode(selectedStateCode);
-  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setselectedFile(URL.createObjectURL(file));
     console.log("selected file:", selectedFile);
-    setSelectedFileName(file.name);
-    setrawFileLogo(file);
+    setformData({...formData, selectedFileName: file.name, rawFileLogo: file})
   };
 
   const handleRadioChange = (option) => {
@@ -117,7 +92,7 @@ const MyCompanyForm = (props) => {
         setdistribution(false);
         setairlineCarrier(false);
         setoceanCarrier(false);
-
+        setformData({...formData, logisticsProvi: true});
         break;
       case "distribution":
         setlogisticsProvi(false);
@@ -385,7 +360,9 @@ const MyCompanyForm = (props) => {
   useEffect(() => {
     if (selectedCountry) {
       const fetchData = async () => {
-        const statesData = await CountriesService.fetchStates(selectedCountryCode);
+        const statesData = await CountriesService.fetchStates(
+          selectedCountryCode
+        );
         setStates(statesData.data);
       };
       fetchData();
@@ -517,20 +494,20 @@ const MyCompanyForm = (props) => {
           newSystemCurrency,
           importSchedule
         );
-    
-        if(response.status === 1){
-            // All requests were successful, no need to proceed with delete requests
-          setMessage("Datos almacenados correctamente!");
-          setcompanyExists(true);
-          console.log("All requests completed successfully!");
-          setcompanyExists(true);
-          setcompanyID(1);
-        }else {
-            console.log("Hubo un error al crear los datos...", response.error);
-          if (!companyExists) {
-            setrequestsError(true);
-          }
-        }
+
+    if (response.status === 1) {
+      // All requests were successful, no need to proceed with delete requests
+      setMessage("Datos almacenados correctamente!");
+      setcompanyExists(true);
+      console.log("All requests completed successfully!");
+      setcompanyExists(true);
+      setcompanyID(1);
+    } else {
+      console.log("Hubo un error al crear los datos...", response.error);
+      if (!companyExists) {
+        setrequestsError(true);
+      }
+    }
   };
 
   {

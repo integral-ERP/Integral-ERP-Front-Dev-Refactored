@@ -18,25 +18,44 @@ const Pickup = () => {
     "Status",
     "Number",
     "Date",
-    "Shipper",
-    "Consignee",
+    "Shipp Date",
+    "Delivery Date",
     "Pickup Name",
-    "Delivery Name",
+    "Delivery Key",
     "Pieces",
-    "PickupOrders",
+    "Pickup Orders",
+    "Pickup Key",
     "Weight",
     "Volume",
+    "Carrier",
+    "Main Carrier Key",
+    "Inland Carrier Key",
+    "PRO Number",
+    "Tracking Number",
+    "",
+    "Invoice Number",
+    "Purchase Order number"
   ];
 
   const updatePickupOrders = () => {
     PickupService.getPickups()
       .then((response) => {
-        setpickupOrders(response.data);
+        const modified = response.data.map((po) => {
+          // Check if the status is 1, if yes, set it to "loaded"
+          if (po.status === "1") {
+            po.status = "loaded";
+          }
+          // Return the modified object
+          return po;
+        });
+        console.log(modified);
+        setpickupOrders(modified);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  
 
   useEffect(() => {
     updatePickupOrders();
