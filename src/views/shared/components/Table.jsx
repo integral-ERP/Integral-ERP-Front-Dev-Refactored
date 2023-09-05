@@ -15,11 +15,41 @@ const Table = ({
   onEdit,
   onAdd,
   title,
-  showOptions
+  showOptions,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
+  const [columnOrder, setColumnOrder] = useState(columns);
   const navigate = useNavigate();
+  const columnNameToProperty = {
+    Name: "name",
+    Phone: "phone",
+    "Mobile Phone": "movelPhone",
+    Email: "email",
+    Fax: "fax",
+    Website: "webSide",
+    "Reference Number": "referentNumber",
+    "Contact First Name": "firstNameContac",
+    "Contact Last Name": "lasNameContac",
+    ID: "numIdentification",
+    "Type ID": "typeIdentificacion",
+    "Street & Number": "streetNumber",
+    City: "city",
+    State: "state",
+    Country: "country",
+    "Zip-Code": "zipCode",
+    "Parent Account": "parentAccount",
+    "Carrier Type": "carrierType",
+    "Method Code": "methodCode",
+    "Carrier Code": "carrierCode",
+    "SCAC Number": "scacNumber",
+    "IATA Code": "iataCode",
+    "Airline Code": "airlineCode",
+    "Airline Prefix": "airlinePrefix",
+    "Airway Bill Numbers": "airwayBillNumbers",
+    "Passenger Only Airline": "passengerOnlyAirline",
+  };
+
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -149,117 +179,149 @@ const Table = ({
     reader.readAsText(file);
   };
 
+  const handleDragStart = (e, columnIndex) => {
+    // Capture the dragged column's index
+    e.dataTransfer.setData("text/plain", columnIndex);
+  };
+
+  const handleDragOver = (e, columnIndex) => {
+    // Prevent the default behavior to allow dropping
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetColumnIndex) => {
+    // Get the dragged column's index
+    const sourceColumnIndex = parseInt(
+      e.dataTransfer.getData("text/plain"),
+      10
+    );
+
+    // Create a new column order array with the columns rearranged
+    const newColumnOrder = [...columnOrder];
+
+    // Remove the dragged column from its source position
+    const [draggedColumn] = newColumnOrder.splice(sourceColumnIndex, 1);
+
+    // Insert the dragged column at the target position
+    newColumnOrder.splice(targetColumnIndex, 0, draggedColumn);
+
+    // Update the state with the new column order
+    setColumnOrder(newColumnOrder);
+  };
+
   return (
     <>
-     {showOptions && (<div className="header-container">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          <i className="fa-solid fa-arrow-left fa-3x"></i>
-        </button>
-        <div className="title-container">
-          <h1 className="title">{title}</h1>
-        </div>
-      </div>)}
-
-      {showOptions && <div className="button-container">
-        <div className="search-container">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search..."
-            className="search-input"
-          />
-        </div>
-        <div className="action-buttons">
-          <button className="generic-button" onClick={onAdd}>
-            <i className="fas fa-plus menu-icon fa-3x"></i>
+      {showOptions && (
+        <div className="header-container">
+          <button className="back-button" onClick={() => navigate(-1)}>
+            <i className="fa-solid fa-arrow-left fa-3x"></i>
           </button>
-          <button className="generic-button ne" onClick={onEdit}>
-            <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-          </button>
-          <button className="generic-button ne" onClick={onDelete}>
-            <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-          </button>
-
-          <input
-            type="file"
-            accept=".json, .csv, .xml"
-            onChange={handleImport}
-            className="hidden-input"
-            id="import-input"
-          />
-          <button className="generic-button ne" onClick={onDelete}>
-            <i
-              className="fas fa-upload menu-icon fa-3x"
-              onClick={() => document.getElementById("import-input").click()}
-            ></i>
-          </button>
-
-          <div className="export-dropdown">
-            <label>
-              Export Format:
-              <select value={selectedFormat} onChange={handleFormatChange}>
-                <option value="">Select Format</option>
-                <option value="json">JSON</option>
-                <option value="csv">CSV</option>
-                <option value="pdf">PDF</option>
-                <option value="xml">XML</option>
-              </select>
-            </label>
-            <button className="generic-button" onClick={handleExport}>
-              <i className="fas fa-file-export menu-icon fa-3x"></i>
-            </button>
+          <div className="title-container">
+            <h1 className="title">{title}</h1>
           </div>
         </div>
-      </div>}
+      )}
+
+      {showOptions && (
+        <div className="button-container">
+          <div className="search-container">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search..."
+              className="search-input"
+            />
+          </div>
+          <div className="action-buttons">
+            <button className="generic-button" onClick={onAdd}>
+              <i className="fas fa-plus menu-icon fa-3x"></i>
+            </button>
+            <button className="generic-button ne" onClick={onEdit}>
+              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+            </button>
+            <button className="generic-button ne" onClick={onDelete}>
+              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+            </button>
+
+            <input
+              type="file"
+              accept=".json, .csv, .xml"
+              onChange={handleImport}
+              className="hidden-input"
+              id="import-input"
+            />
+            <button className="generic-button ne" onClick={onDelete}>
+              <i
+                className="fas fa-upload menu-icon fa-3x"
+                onClick={() => document.getElementById("import-input").click()}
+              ></i>
+            </button>
+
+            <div className="export-dropdown">
+              <label>
+                Export Format:
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select Format</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="generic-table">
         <table className="table table-hover">
           <thead>
             <tr>
-              {columns.map((column) => (
-                <th scope="col" key={column} className="generic-table__th">
-                  {column}
+              {columnOrder.map((columnName, columnIndex) => (
+                <th
+                  key={columnName}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, columnIndex)}
+                  onDragOver={(e) => handleDragOver(e, columnIndex)}
+                  onDrop={(e) => handleDrop(e, columnIndex)}
+                >
+                  {columnName}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row) => {
-              const values = Object.values(row);
-              const filteredValues = values.slice(1); // Skip the first value
-
-              while (filteredValues.length < columns.length) {
-                filteredValues.push(""); // Fill with blank values
-              }
-
-              return (
-                <tr
-                  key={row.id}
-                  className={`table-row ${
-                    selectedRow && selectedRow.id === row.id
-                      ? "table-primary"
-                      : "no-sirve"
-                  }`}
-                  onClick={() => {
-                    onSelect(row);
-                  }}
-                >
-                  {filteredValues.map((value, index) => (
-                    <td key={index} className="generic-table__td">
-                      {typeof value === "boolean" ? (
-                        value ? (
-                          <i className="fas fa-check"></i>
-                        ) : (
-                          <i className="fas fa-times"></i>
-                        )
+            {filteredData.map((row, rowIndex) => (
+              <tr
+                key={row.id}
+                className={`table-row ${
+                  selectedRow && selectedRow.id === row.id
+                    ? "table-primary"
+                    : ""
+                }`}
+                onClick={() => {
+                  onSelect(row);
+                }}
+              >
+                {columnOrder.map((columnName) => (
+                  <td key={columnName} className="generic-table__td">
+                    {typeof row[columnNameToProperty[columnName]] ===
+                    "boolean" ? (
+                      row[columnNameToProperty[columnName]] ? (
+                        <i className="fas fa-check"></i>
                       ) : (
-                        value
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+                        <i className="fas fa-times"></i>
+                      )
+                    ) : (
+                      row[columnNameToProperty[columnName]]
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -276,7 +338,7 @@ Table.propTypes = {
   onEdit: PropTypes.func,
   onAdd: PropTypes.func,
   title: PropTypes.string,
-  showOptions: PropTypes.bool
+  showOptions: PropTypes.bool,
 };
 
 Table.defaultProps = {
@@ -288,7 +350,7 @@ Table.defaultProps = {
   onEdit: null,
   onAdd: null,
   title: "Table",
-  showOptions: true
+  showOptions: true,
 };
 
 export default Table;
