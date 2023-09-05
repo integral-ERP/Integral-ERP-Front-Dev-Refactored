@@ -59,7 +59,6 @@ const PickupOrderCreationForm = ({
     deliveryLocationType: "",
     deliveryLocationInfo: "",
     // CARRIER TAB
-    inlandCarrierId: "",
     proNumber: "",
     trackingNumber: "",
     mainCarrierdId: "",
@@ -365,7 +364,6 @@ const PickupOrderCreationForm = ({
       deliveryLocationkey: formData.deliveryLocationId,
       deliveryLocationType: formData.deliveryLocationType,
       // CARRIER TAB
-      inlandCarrierKey: formData.inlandCarrierId,
       proNumber: formData.proNumber,
       trackingNumber: formData.trackingNumber,
       mainCarrierKey: formData.mainCarrierdId,
