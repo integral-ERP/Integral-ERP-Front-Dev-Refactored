@@ -9,13 +9,13 @@ import CustomerService from "../../services/CustomerService";
 import VendorService from "../../services/VendorService";
 import EmployeeService from "../../services/EmployeeService";
 import Input from "../shared/components/Input";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Table from "../shared/components/Table";
 import PickupService from "../../services/PickupService";
-
+import IncomeChargeForm from "./IncomeChargeForm";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -25,6 +25,7 @@ const PickupOrderCreationForm = ({
   const [activeTab, setActiveTab] = useState("general");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [customers, setcustomers] = useState([]);
   const [forwardingAgents, setforwardingAgents] = useState([]);
   const [vendors, setvendors] = useState([]);
@@ -93,6 +94,10 @@ const PickupOrderCreationForm = ({
       issuedByType: type,
       issuedByInfo: info,
     });
+  };
+
+  const handleOpenIncomeForm = () => {
+    openModalIncomeForm();
   };
 
   const handlePickUpSelection = async (event) => {
@@ -1150,6 +1155,9 @@ const PickupOrderCreationForm = ({
           <button
             type="button"
             className="btn btn-primary btn-lg charge-buttons"
+            onClick={() => {
+              setshowIncomeForm(!showIncomeForm);
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1184,6 +1192,9 @@ const PickupOrderCreationForm = ({
             </svg>
             Add Expense Charge
           </button>
+          {showIncomeForm && (
+            <IncomeChargeForm onCancel={setshowIncomeForm}></IncomeChargeForm>
+          )}
         </div>
         <Table
           data={mockDataCharges}
@@ -1222,6 +1233,7 @@ const PickupOrderCreationForm = ({
           <button type="button" className="btn btn-primary btn-lg">
             Add Expense Charge
           </button>
+          {}
         </div>
         <Table
           data={mockData}

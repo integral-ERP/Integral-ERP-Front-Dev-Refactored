@@ -18,7 +18,7 @@ const Pickup = () => {
     "Status",
     "Number",
     "Date",
-    "Shipp Date",
+    "Ship Date",
     "Delivery Date",
     "Pickup Name",
     "Delivery Key",

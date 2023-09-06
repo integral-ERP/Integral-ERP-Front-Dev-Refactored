@@ -20,7 +20,15 @@ const Table = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
+  const [showColumnMenu, setShowColumnMenu] = useState(false);
   const navigate = useNavigate();
+  const [visibleColumns, setVisibleColumns] = useState(() => {
+    const initialVisibility = {};
+    columns.forEach((columnName) => {
+      initialVisibility[columnName] = true;
+    });
+    return initialVisibility;
+  });
   const columnNameToProperty = {
     Name: "name",
     Phone: "phone",
@@ -48,6 +56,33 @@ const Table = ({
     "Airline Prefix": "airlinePrefix",
     "Airway Bill Numbers": "airwayBillNumbers",
     "Passenger Only Airline": "passengerOnlyAirline",
+    Status: "status",
+    Number: "number",
+    Date: "creationDate",
+    "Ship Date": "pickUpDate",
+    "Delivery Date": "deliveryDate",
+    "Pickup Name": "",
+    "Delivery Key": "",
+    Pieces: "",
+    "Pickup Orders": "",
+    "Pickup Key": "",
+    Weight: "",
+    Volume: "",
+    Carrier: "",
+    "Main Carrier Key": "",
+    "Inland Carrier Key": "",
+    "PRO Number": "",
+    "Tracking Number": "",
+    "": "",
+    "Invoice Number": "",
+    "Purchase Order number": "",
+  };
+
+  const handleColumnVisibilityChange = (columnName) => {
+    setVisibleColumns((prevVisibility) => ({
+      ...prevVisibility,
+      [columnName]: !prevVisibility[columnName],
+    }));
   };
 
   const handleSearchChange = (event) => {
@@ -233,6 +268,56 @@ const Table = ({
               className="search-input"
             />
           </div>
+          <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
+          <i className="fas fa-eye menu-icon fa-3x ne"></i>
+          </button>
+          {showColumnMenu && (
+            <div className="modal" style={{display: showColumnMenu ? "block": "none"}}>
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Show Columns</h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                      onClick={() => setShowColumnMenu(!showColumnMenu)}
+                    >
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    {columns.map((columnName) => (
+                      <label key={columnName}>
+                        <input
+                          type="checkbox"
+                          checked={visibleColumns[columnName]}
+                          onChange={() =>
+                            handleColumnVisibilityChange(columnName)
+                          }
+                        />
+                        {columnName}
+                      </label>
+                    ))}
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-primary" onClick={() => setShowColumnMenu(!showColumnMenu)}>
+                      Save changes
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                      onClick={() => setShowColumnMenu(!showColumnMenu)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="action-buttons">
             <button className="generic-button" onClick={onAdd}>
               <i className="fas fa-plus menu-icon fa-3x"></i>
@@ -280,17 +365,20 @@ const Table = ({
         <table className="table table-hover">
           <thead>
             <tr>
-              {columnOrder.map((columnName, columnIndex) => (
-                <th
-                  key={columnName}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, columnIndex)}
-                  onDragOver={(e) => handleDragOver(e, columnIndex)}
-                  onDrop={(e) => handleDrop(e, columnIndex)}
-                >
-                  {columnName}
-                </th>
-              ))}
+              {columnOrder.map(
+                (columnName, columnIndex) =>
+                  visibleColumns[columnName] && (
+                    <th
+                      key={columnName}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, columnIndex)}
+                      onDragOver={(e) => handleDragOver(e, columnIndex)}
+                      onDrop={(e) => handleDrop(e, columnIndex)}
+                    >
+                      {columnName}
+                    </th>
+                  )
+              )}
             </tr>
           </thead>
           <tbody>
@@ -306,20 +394,23 @@ const Table = ({
                   onSelect(row);
                 }}
               >
-                {columnOrder.map((columnName) => (
-                  <td key={columnName} className="generic-table__td">
-                    {typeof row[columnNameToProperty[columnName]] ===
-                    "boolean" ? (
-                      row[columnNameToProperty[columnName]] ? (
-                        <i className="fas fa-check"></i>
-                      ) : (
-                        <i className="fas fa-times"></i>
-                      )
-                    ) : (
-                      row[columnNameToProperty[columnName]]
-                    )}
-                  </td>
-                ))}
+                {columnOrder.map(
+                  (columnName) =>
+                    visibleColumns[columnName] && (
+                      <td key={columnName} className="generic-table__td">
+                        {typeof row[columnNameToProperty[columnName]] ===
+                        "boolean" ? (
+                          row[columnNameToProperty[columnName]] ? (
+                            <i className="fas fa-check"></i>
+                          ) : (
+                            <i className="fas fa-times"></i>
+                          )
+                        ) : (
+                          row[columnNameToProperty[columnName]]
+                        )}
+                      </td>
+                    )
+                )}
               </tr>
             ))}
           </tbody>

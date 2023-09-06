@@ -8,3 +8,53 @@
 .search-container{
     width: 30%;
 }
+
+.modal-body {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next row */
+  justify-content: space-between; /* Distribute items evenly horizontally */
+  align-content: flex-start; /* Align items at the start of each row */
+  max-width: 400px; /* Adjust the maximum width as needed */
+  margin: 0 auto; /* Center the content horizontally */
+}
+
+.modal-body label {
+  width: 45%; /* Adjust the width to control the number of columns */
+  margin-bottom: 10px; /* Add some vertical spacing between rows */
+}
+
+.colums-form {
+    position: absolute; /* Positioning menu absolutely relative to the container */
+    
+    right: 0; /* Align with the right edge of the container */
+    background-color: #fff; /* White background */
+    border: 1px solid #ccc; /* Gray border */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift */
+    z-index: 1; /* Ensure the menu appears above other content */
+    max-height: 200px; /* Set a maximum height if needed */
+    overflow-y: auto; /* Enable vertical scrolling if the menu overflows */
+  }
+  
+  /* Style for the menu labels and checkboxes */
+  .colums-form label {
+    display: block; /* Display each option on a new line */
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  /* Style for the checked checkboxes */
+  .colums-form input[type="checkbox"]:checked + label {
+    background-color: #007bff; /* Blue background for checked options */
+    color: #fff; /* White text color for checked options */
+  }
+  
+  /* Style for the checkboxes */
+  .colums-form input[type="checkbox"] {
+    position: absolute;
+    left: -9999px; /* Hide the actual checkbox input */
+  }
+  
+  /* Hover effect for the menu options */
+  .colums-form label:hover {
+    background-color: #f0f0f0; /* Light gray background on hover */
+  }

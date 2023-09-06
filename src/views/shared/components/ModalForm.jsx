@@ -29,7 +29,7 @@ const ModalForm = ({ children, isOpen, closeModal }) => {
   }, [isOpen]);
 
   return (
-    <article className={`modal ${isOpen && 'is-open'}`} onClick={closeModal}>
+    <article className={`modal-form ${isOpen && 'is-open'}`} onClick={closeModal}>
       <div
         className="modal__container"
         style={{ width: modalDimensions.width, height: modalDimensions.height }}
