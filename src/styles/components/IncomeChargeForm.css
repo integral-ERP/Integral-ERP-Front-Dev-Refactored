@@ -39,4 +39,12 @@
   input[type="checkbox"] {
     margin-right: 5px;
   }
-  
+
+  .input-group{
+    width: 150px !important;
+  }
+
+  .form-control{
+    margin: 0px !important;
+    margin-left: 5px !important;
+  }

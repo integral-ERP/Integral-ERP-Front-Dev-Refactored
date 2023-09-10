@@ -16,6 +16,7 @@ const Table = ({
   onAdd,
   title,
   showOptions,
+  elementDelete
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -61,21 +62,36 @@ const Table = ({
     Date: "creationDate",
     "Ship Date": "pickUpDate",
     "Delivery Date": "deliveryDate",
-    "Pickup Name": "",
-    "Delivery Key": "",
     Pieces: "",
     "Pickup Orders": "",
-    "Pickup Key": "",
-    Weight: "",
     Volume: "",
     Carrier: "",
-    "Main Carrier Key": "",
-    "Inland Carrier Key": "",
-    "PRO Number": "",
-    "Tracking Number": "",
+    "PRO Number": "proNumber",
+    "Tracking Number": "trackingNumber",
     "": "",
-    "Invoice Number": "",
-    "Purchase Order number": "",
+    "Invoice Number": "invoiceNumber",
+    "Purchase Order number": "purchaseOrderNum",
+    "Pickup Name": "PickUpLocation.name",
+    "Pickup Address": "PickUpLocation.streetNumber",
+    "Delivery Name": "deliveryLocation.name",
+    "Delivery Address": "deliveryLocation.streetNumber",
+    "Carrier Name": "mainCarrier.name",
+    "Carrier Address": "mainCarrier.streetNumber",
+    Description: "description",
+    Prepaid: "prepaid",
+    Quantity: "quantity",
+    Price: "price",
+    Amount: "amount",
+    "Tax Code": "taxCode",
+    "Tax Rate": "taxRate",
+    "Tax Amt": "taxAMT",
+    "Amt + Tax": "amtTAX",
+    Currency: "currency",
+    " Length": "length",
+    " Height": "height",
+    " Weight": "weight",
+    " Volumetric Weight": "volumetricWeight",
+    " Charged Weight": "chargedWeight"
   };
 
   const handleColumnVisibilityChange = (columnName) => {
@@ -244,6 +260,20 @@ const Table = ({
     setColumnOrder(newColumnOrder);
   };
 
+  function getPropertyValue(obj, propertyName) {
+    const parts = propertyName ? propertyName.split(".") : [];
+    let value = obj;
+    for (const part of parts) {
+      if (value && typeof value === "object" && part in value) {
+        value = value[part];
+      } else {
+        value = undefined; // Property not found or object structure is not as expected
+        break;
+      }
+    }
+    return value;
+  }
+
   return (
     <>
       {showOptions && (
@@ -268,11 +298,17 @@ const Table = ({
               className="search-input"
             />
           </div>
-          <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
-          <i className="fas fa-eye menu-icon fa-3x ne"></i>
+          <button
+            className="generic-button"
+            onClick={() => setShowColumnMenu(!showColumnMenu)}
+          >
+            <i className="fas fa-eye menu-icon fa-3x ne"></i>
           </button>
           {showColumnMenu && (
-            <div className="modal" style={{display: showColumnMenu ? "block": "none"}}>
+            <div
+              className="modal"
+              style={{ display: showColumnMenu ? "block" : "none" }}
+            >
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -302,7 +338,11 @@ const Table = ({
                     ))}
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-primary" onClick={() => setShowColumnMenu(!showColumnMenu)}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => setShowColumnMenu(!showColumnMenu)}
+                    >
                       Save changes
                     </button>
                     <button
@@ -397,13 +437,23 @@ const Table = ({
                 {columnOrder.map(
                   (columnName) =>
                     visibleColumns[columnName] && (
-                      <td key={columnName} className="generic-table__td">
-                        {typeof row[columnNameToProperty[columnName]] ===
-                        "boolean" ? (
+                      <td key={columnName} data-key={row.id} className="generic-table__td">
+                        {columnName === "Delete" ? (
+                          <button type="button" onClick={(e) => elementDelete(e.target.getAttribute("data-key"))}>
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        ) : typeof row[columnNameToProperty[columnName]] ===
+                          "boolean" ? (
                           row[columnNameToProperty[columnName]] ? (
                             <i className="fas fa-check"></i>
                           ) : (
                             <i className="fas fa-times"></i>
+                          )
+                        ) : // Check if columnNameToProperty contains a "." indicating a nested property
+                        columnNameToProperty[columnName]?.includes(".") ? (
+                          getPropertyValue(
+                            row,
+                            columnNameToProperty[columnName]
                           )
                         ) : (
                           row[columnNameToProperty[columnName]]

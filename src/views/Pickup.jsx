@@ -21,18 +21,17 @@ const Pickup = () => {
     "Ship Date",
     "Delivery Date",
     "Pickup Name",
-    "Delivery Key",
+    "Pickup Address",
+    "Delivery Name",
+    "Delivery Address",
     "Pieces",
     "Pickup Orders",
-    "Pickup Key",
     "Weight",
     "Volume",
-    "Carrier",
-    "Main Carrier Key",
-    "Inland Carrier Key",
+    "Carrier Name",
+    "Carrier Address",
     "PRO Number",
     "Tracking Number",
-    "",
     "Invoice Number",
     "Purchase Order number"
   ];
@@ -83,7 +82,7 @@ const Pickup = () => {
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-        PickupService.deletePickupOrders(selectedPickupOrder.id)
+        PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);

@@ -3,7 +3,7 @@ import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import "../../styles/components/IncomeChargeForm.css";
 import CurrenciesService from "../../services/CurrencyService";
 import Input from "../shared/components/Input";
-const IncomeChargeForm = ({ onCancel }) => {
+const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
   // Define state variables for form inputs
   const [charge, setCharge] = useState("");
   const [currencies, setcurrencies] = useState([]);

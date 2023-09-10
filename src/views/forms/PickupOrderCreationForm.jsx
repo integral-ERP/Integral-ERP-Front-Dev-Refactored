@@ -16,6 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Table from "../shared/components/Table";
 import PickupService from "../../services/PickupService";
 import IncomeChargeForm from "./IncomeChargeForm";
+import CommodityCreationForm from "./CommodityCreationForm";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -26,12 +27,15 @@ const PickupOrderCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [customers, setcustomers] = useState([]);
   const [forwardingAgents, setforwardingAgents] = useState([]);
   const [vendors, setvendors] = useState([]);
   const [carriers, setcarriers] = useState([]);
   const [employees, setemployees] = useState([]);
   const [warehouseProviders, setwarehouseProviders] = useState([]);
+  const [commodities, setcommodities] = useState([]);
+  const [charges, setcharges] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
   const formFormat = {
     // GENERAL TAB
@@ -71,6 +75,7 @@ const PickupOrderCreationForm = ({
     purchaseOrderNumber: "",
     // CHARGES TAB
     // COMMODITIES TAB
+    commodities: []
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -345,8 +350,6 @@ const PickupOrderCreationForm = ({
   }, []);
 
   const sendData = async () => {
-    console.log(formData);
-    console.log(dayjs(formData.createdDateAndTime));
     let rawData = {
       // GENERAL TAB
       status: 1,
@@ -378,6 +381,7 @@ const PickupOrderCreationForm = ({
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
       // COMMODITIES TAB
+      pieces: formData.commodities
     };
     const response = await (creating
       ? PickupService.createPickup(rawData)
@@ -398,182 +402,7 @@ const PickupOrderCreationForm = ({
     }
   };
 
-  const mockDataCharges = [
-    {
-      Status: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the status icon when true */}
-          <path d="..." fill="#C11111" />
-        </svg>
-      ),
-      Description: "Product A",
-      Prepaid: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the prepaid icon */}
-          <path d="..." fill="#24AF0D" />
-        </svg>
-      ),
-      Quantity: 10,
-      Price: "$20.00",
-      Amount: "$200.00",
-      "Tax Code": "TAX123",
-      "Tax Rate": "10%",
-      "Tax Amt": "$20.00",
-      "Amt + Tax": "$220.00",
-      Currency: "USD",
-    },
-    {
-      Status: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the status icon when false */}
-          <path d="..." fill="#24AF0D" />
-        </svg>
-      ),
-      Description: "Product B",
-      Prepaid: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the prepaid icon */}
-          <path d="..." fill="#24AF0D" />
-        </svg>
-      ),
-      Quantity: 5,
-      Price: "$15.00",
-      Amount: "$75.00",
-      "Tax Code": "TAX456",
-      "Tax Rate": "8%",
-      "Tax Amt": "$6.00",
-      "Amt + Tax": "$81.00",
-      Currency: "USD",
-    },
-    {
-      Status: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the status icon when true */}
-          <path d="..." fill="#C11111" />
-        </svg>
-      ),
-      Description: "Product C",
-      Prepaid: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          {/* SVG path for the prepaid icon */}
-          <path d="..." fill="#24AF0D" />
-        </svg>
-      ),
-      Quantity: 8,
-      Price: "$25.00",
-      Amount: "$200.00",
-      "Tax Code": "TAX789",
-      "Tax Rate": "10%",
-      "Tax Amt": "$20.00",
-      "Amt + Tax": "$220.00",
-      Currency: "USD",
-    },
-    // Add more mock data items...
-  ];
-
-  const mockData = [
-    {
-      Status: "loaded",
-      Description: "Product A",
-      Prepaid: true,
-      Quantity: 5,
-      Price: 10.99,
-      Amount: 54.95,
-      "Tax Code": "TC123",
-      "Tax Rate": 8.5,
-      "Tax Amt": 4.67,
-      "Amt + Tax": 59.62,
-      Currency: "USD",
-    },
-    {
-      Status: "unloaded",
-      Description: "Product B",
-      Prepaid: false,
-      Quantity: 3,
-      Price: 7.5,
-      Amount: 22.5,
-      "Tax Code": "TC456",
-      "Tax Rate": 7.0,
-      "Tax Amt": 1.58,
-      "Amt + Tax": 24.08,
-      Currency: "EUR",
-    },
-    {
-      Status: "loaded",
-      Description: "Product C",
-      Prepaid: true,
-      Quantity: 2,
-      Price: 14.0,
-      Amount: 28.0,
-      "Tax Code": "TC789",
-      "Tax Rate": 9.25,
-      "Tax Amt": 2.59,
-      "Amt + Tax": 30.59,
-      Currency: "GBP",
-    },
-    {
-      Status: "loaded",
-      Description: "Product D",
-      Prepaid: false,
-      Quantity: 4,
-      Price: 9.99,
-      Amount: 39.96,
-      "Tax Code": "TC101",
-      "Tax Rate": 8.0,
-      "Tax Amt": 3.2,
-      "Amt + Tax": 43.16,
-      Currency: "USD",
-    },
-    {
-      Status: "unloaded",
-      Description: "Product E",
-      Prepaid: true,
-      Quantity: 1,
-      Price: 25.0,
-      Amount: 25.0,
-      "Tax Code": "TC222",
-      "Tax Rate": 6.5,
-      "Tax Amt": 1.63,
-      "Amt + Tax": 26.63,
-      Currency: "EUR",
-    },
-  ];
+  const mockDataCharges = [];
 
   return (
     <div className="company-form">
@@ -1193,7 +1022,7 @@ const PickupOrderCreationForm = ({
             Add Expense Charge
           </button>
           {showIncomeForm && (
-            <IncomeChargeForm onCancel={setshowIncomeForm}></IncomeChargeForm>
+            <IncomeChargeForm onCancel={setshowIncomeForm} charges={charges} setcharges={setcharges}></IncomeChargeForm>
           )}
         </div>
         <Table
@@ -1227,28 +1056,24 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "commodities" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <button type="button" className="btn btn-primary btn-lg">
+          <button type="button" className="btn btn-primary btn-lg" onClick={() => setshowCommodityCreationForm(!showCommodityCreationForm)}>
             Add Piece
           </button>
-          <button type="button" className="btn btn-primary btn-lg">
-            Add Expense Charge
-          </button>
-          {}
+          {showCommodityCreationForm && (
+            <CommodityCreationForm onCancel={setshowCommodityCreationForm} commodities={commodities} setCommodities={setcommodities}></CommodityCreationForm>
+          )}
         </div>
         <Table
-          data={mockData}
+          data={commodities}
           columns={[
             "Status",
-            "Description",
-            "Prepaid",
-            "Quantity",
-            "Price",
-            "Amount",
-            "Tax Code",
-            "Tax Rate",
-            "Tax Amt",
-            "Amt + Tax",
-            "Currency",
+            " Length",
+            " Height",
+            " Width",
+            " Weight",
+            " Volumetric Weight",
+            " Charged Weigth",
+            " Delete"
           ]}
           onSelect={() => {}} // Make sure this line is correct
           selectedRow={{}}
