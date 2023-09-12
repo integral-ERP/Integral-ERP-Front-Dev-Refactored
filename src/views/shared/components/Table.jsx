@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import { toXML } from "jstoxml";
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { VariableSizeList as List } from "react-window";
 import "../../../styles/components/Table.scss";
 const Table = ({
   data,
@@ -16,12 +17,20 @@ const Table = ({
   onAdd,
   title,
   showOptions,
-  elementDelete
+  elementDelete,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
   const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const [columnWidths, setColumnWidths] = useState(() => {
+    const initialWidths = {};
+    columns.forEach((columnName) => {
+      initialWidths[columnName] = 100; // Set an initial width (e.g., 100 pixels)
+    });
+    return initialWidths;
+  });
+
   const navigate = useNavigate();
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const initialVisibility = {};
@@ -91,10 +100,29 @@ const Table = ({
     " Height": "height",
     " Weight": "weight",
     " Volumetric Weight": "volumetricWeight",
-    " Charged Weight": "chargedWeight"
+    " Charged Weight": "chargedWeight",
   };
 
   const handleColumnVisibilityChange = (columnName) => {
+    const handleColumnVisibilityChange = (columnName) => {
+      setVisibleColumns((prevVisibility) => ({
+        ...prevVisibility,
+        [columnName]: !prevVisibility[columnName],
+      }));
+
+      // Adjust the column width when it's shown/hidden
+      setColumnWidths((prevWidths) => {
+        const newWidths = { ...prevWidths };
+        if (prevVisibility[columnName]) {
+          // If the column is shown, set its width to the initial width
+          newWidths[columnName] = 100; // Adjust this value as needed
+        } else {
+          // If the column is hidden, set its width to 0
+          newWidths[columnName] = 0;
+        }
+        return newWidths;
+      });
+    };
     setVisibleColumns((prevVisibility) => ({
       ...prevVisibility,
       [columnName]: !prevVisibility[columnName],
@@ -240,6 +268,10 @@ const Table = ({
     e.preventDefault();
   };
 
+  const getItemSize = () => {
+    return 30;
+  };
+
   const handleDrop = (e, targetColumnIndex) => {
     // Get the dragged column's index
     const sourceColumnIndex = parseInt(
@@ -273,6 +305,56 @@ const Table = ({
     }
     return value;
   }
+
+  // Function to get the value from a row for a given column name
+  const getCellValue = (row, columnName) => {
+    if (columnName === "Delete") {
+      return ""; // Handle special columns as needed
+    }
+
+    // Check if columnNameToProperty contains a "." indicating a nested property
+    if (columnNameToProperty[columnName]?.includes(".")) {
+      return getPropertyValue(row, columnNameToProperty[columnName]);
+    } else {
+      return row[columnNameToProperty[columnName]];
+    }
+  };
+
+  // Function to calculate the width needed to display a text
+  const getTextWidth = (text) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = "14px Arial"; // You can adjust the font size and font family as needed
+    const textMetrics = context.measureText(text);
+    return textMetrics.width;
+  };
+
+  // Calculate the maximum width needed for each column
+  const columnWidthsCalculated = columns.reduce((widths, columnName) => {
+    const maxColumnWidth = Math.max(
+      ...filteredData.map((row) => {
+        const value =
+          columnName === "Delete"
+            ? "" // Handle special columns as needed
+            : getCellValue(row, columnName);
+
+        // Calculate the width needed for the current cell
+        const cellWidth = getTextWidth(value);
+
+        return cellWidth;
+      })
+    );
+
+    // Use a minimum width (e.g., 100 pixels) to prevent columns from being too narrow
+    widths[columnName] = Math.max(maxColumnWidth, 100);
+
+    return widths;
+  }, {});
+
+  const rowBackgroundClass = (selected) =>
+    selected ? "table-row table-primary" : "table-row";
+  const cellBackgroundClass = (selected) =>
+    selected ? "generic-table__td selected" : "generic-table__td";
 
   return (
     <>
@@ -407,13 +489,14 @@ const Table = ({
             <tr>
               {columnOrder.map(
                 (columnName, columnIndex) =>
-                  visibleColumns[columnName] && (
+                  visibleColumns[columnName] && ( // Check if the column should be visible
                     <th
                       key={columnName}
                       draggable
                       onDragStart={(e) => handleDragStart(e, columnIndex)}
                       onDragOver={(e) => handleDragOver(e, columnIndex)}
                       onDrop={(e) => handleDrop(e, columnIndex)}
+                      style={{ minWidth: columnWidthsCalculated[columnName] }}
                     >
                       {columnName}
                     </th>
@@ -421,50 +504,70 @@ const Table = ({
               )}
             </tr>
           </thead>
-          <tbody>
-            {filteredData.map((row, rowIndex) => (
-              <tr
-                key={row.id}
-                className={`table-row ${
-                  selectedRow && selectedRow.id === row.id
-                    ? "table-primary"
-                    : ""
-                }`}
-                onClick={() => {
-                  onSelect(row);
-                }}
-              >
-                {columnOrder.map(
-                  (columnName) =>
-                    visibleColumns[columnName] && (
-                      <td key={columnName} data-key={row.id} className="generic-table__td">
-                        {columnName === "Delete" ? (
-                          <button type="button" onClick={(e) => elementDelete(e.target.getAttribute("data-key"))}>
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        ) : typeof row[columnNameToProperty[columnName]] ===
-                          "boolean" ? (
-                          row[columnNameToProperty[columnName]] ? (
-                            <i className="fas fa-check"></i>
-                          ) : (
-                            <i className="fas fa-times"></i>
-                          )
-                        ) : // Check if columnNameToProperty contains a "." indicating a nested property
-                        columnNameToProperty[columnName]?.includes(".") ? (
-                          getPropertyValue(
-                            row,
-                            columnNameToProperty[columnName]
-                          )
-                        ) : (
-                          row[columnNameToProperty[columnName]]
-                        )}
-                      </td>
-                    )
-                )}
-              </tr>
-            ))}
-          </tbody>
         </table>
+        <List
+          height={500}
+          itemCount={filteredData.length}
+          itemSize={() => getItemSize()}
+          width="100%"
+        >
+          {({ index, style }) => (
+            <tr
+              key={filteredData[index].id}
+              className={`table-row ${
+                selectedRow && selectedRow.id === filteredData[index].id
+                  ? "table-primary"
+                  : ""
+              }`}
+              onClick={() => {
+                onSelect(filteredData[index]);
+              }}
+              style={style}
+            >
+              {columnOrder.map(
+                (columnName) =>
+                  visibleColumns[columnName] ? ( // Check if the column should be visible
+                    <td
+                      key={columnName}
+                      data-key={filteredData[index].id}
+                      className="generic-table__td"
+                      style={{
+                        minWidth: columnWidthsCalculated[columnName],
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {columnName === "Delete" ? (
+                        <button
+                          type="button"
+                          onClick={(e) =>
+                            elementDelete(e.target.getAttribute("data-key"))
+                          }
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      ) : typeof columnNameToProperty[columnName] ===
+                        "boolean" ? (
+                        filteredData[index][
+                          columnNameToProperty[columnName]
+                        ] ? (
+                          <i className="fas fa-check"></i>
+                        ) : (
+                          <i className="fas fa-times"></i>
+                        )
+                      ) : columnNameToProperty[columnName]?.includes(".") ? (
+                        getPropertyValue(
+                          filteredData[index],
+                          columnNameToProperty[columnName]
+                        )
+                      ) : (
+                        filteredData[index][columnNameToProperty[columnName]]
+                      )}
+                    </td>
+                  ) : null // Return null for non-visible columns
+              )}
+            </tr>
+          )}
+        </List>
       </div>
     </>
   );
