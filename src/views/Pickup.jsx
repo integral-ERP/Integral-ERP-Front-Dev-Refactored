@@ -14,6 +14,8 @@ const Pickup = () => {
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Status",
     "Number",
@@ -36,29 +38,48 @@ const Pickup = () => {
     "Purchase Order number"
   ];
 
-  const updatePickupOrders = () => {
-    PickupService.getPickups()
+  const updatePickupOrders = (url = null) => {
+    PickupService.getPickups(url)
       .then((response) => {
-        const modified = response.data.map((po) => {
-          // Check if the status is 1, if yes, set it to "loaded"
-          if (po.status === "1") {
-            po.status = "loaded";
-          }
-          // Return the modified object
-          return po;
+        
+        setpickupOrders((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
         });
-        console.log(modified);
-        setpickupOrders(modified);
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
-  
 
   useEffect(() => {
-    updatePickupOrders();
+    if(!initialDataFetched){
+      updatePickupOrders();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        updatePickupOrders(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handlePickupOrdersDataChange = () => {
     updatePickupOrders();

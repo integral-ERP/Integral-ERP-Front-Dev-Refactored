@@ -15,6 +15,8 @@ const WarehouseProviders = () => {
     useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -35,20 +37,48 @@ const WarehouseProviders = () => {
     "Zip-Code",
   ];
 
-  const fetchWarehouseProvidersData = () => {
-    WarehouseProviderService.getWarehouseProviders()
+  const fetchWarehouseProvidersData = (url = null) => {
+    WarehouseProviderService.getWarehouseProviders(url)
       .then((response) => {
-        setwarehouseProviders(response.data);
+        
+        setwarehouseProviders((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchWarehouseProvidersData();
+    if(!initialDataFetched){
+      fetchWarehouseProvidersData();
+      setInitialDataFetched(true);
+    }
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchWarehouseProvidersData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
   const handleWarehouseProviderDataChange = () => {
     fetchWarehouseProvidersData();
   };

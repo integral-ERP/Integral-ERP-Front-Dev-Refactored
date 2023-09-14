@@ -15,8 +15,9 @@ class CommoditiesService{
     return response;
   }
 
-  async getCommodities(){
-    const response = await axios.get(`${this.BASE_URL}pieces/`);
+  async getCommodities(url = null){
+    const apiUrl = url || `${this.BASE_URL}pieces/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

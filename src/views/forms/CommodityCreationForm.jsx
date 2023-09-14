@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
@@ -27,6 +27,8 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
       height: formData.height,
       width: formData.width,
       weight: formData.weight,
+      volumetricWeight: formData.volumetricWeight,
+      chargedWeight: formData.chargedWeight
       // TODO: add fields for volumetric weight and charged weight
     }
     setCommodities([...commodities, body])
@@ -52,13 +54,21 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
     }
   }
 
+  useEffect(() => {
+    console.log(formData);
+    if(formData.height && formData.width && formData.length){
+      console.log("Hola");
+      const volWeight = ((formData.height * formData.width * formData.length) / 1728).toFixed(2);
+      setformData({...formData, volumetricWeight: volWeight});
+      console.log(volWeight);
+    }
+  }, [formData.height, formData.length, formData.width]);
+  
+
   return (
     <div className="income-charge-form">
       <h2>Commodity Creation Form</h2>
       <div className="form-row">
-        {/*<label htmlFor="charge" className="centered-label">
-            Weigth
-  </label>*/}
         <div className="form-column">
           <label className="centered-label">Weigth:</label>
           <div className="input-group ">
@@ -107,10 +117,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
         <div className="form-column ">
           <label className="centered-label">Volumetric Weight:</label>
           <div className="input-group ">
-            <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight}
-              onChange={(e) =>
-                setformData({ ...formData, volumetricWeight: e.target.value })
-              }/>
+            <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight} readOnly/>
             <span className="input-group-text">in3</span>
           </div>
         </div>

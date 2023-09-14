@@ -15,8 +15,9 @@ class PackageTypeService{
     return response;
   }
 
-  async getPackageTypes(){
-    const response = await axios.get(`${this.BASE_URL}packType/`);
+  async getPackageTypes(url = null){
+    const apiUrl = url || `${this.BASE_URL}packType/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

@@ -13,6 +13,8 @@ const ForwardingAgents = () => {
   const [isOpen, openModal, closeModal] = useModal(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -44,19 +46,48 @@ const ForwardingAgents = () => {
   ];
   const [selectedForwardingAgent, setselectedForwardingAgent] = useState(null);
 
-  const fetchForwardingAgentsData = () => {
-    ForwardingAgentService.getForwardingAgents()
+  const fetchForwardingAgentsData = (url = null) => {
+    ForwardingAgentService.getForwardingAgents(url)
       .then((response) => {
-        setforwardingAgents(response.data);
+        
+        setforwardingAgents((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchForwardingAgentsData();
+    if(!initialDataFetched){
+      fetchForwardingAgentsData();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchForwardingAgentsData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handleWarehouseProviderDataChange = () => {
     fetchForwardingAgentsData();

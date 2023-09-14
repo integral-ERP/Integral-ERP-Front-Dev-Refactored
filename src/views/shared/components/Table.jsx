@@ -504,32 +504,22 @@ const Table = ({
               )}
             </tr>
           </thead>
-        </table>
-        <List
-          height={500}
-          itemCount={filteredData.length}
-          itemSize={() => getItemSize()}
-          width="100%"
-        >
-          {({ index, style }) => (
-            <tr
-              key={filteredData[index].id}
-              className={`table-row ${
-                selectedRow && selectedRow.id === filteredData[index].id
-                  ? "table-primary"
-                  : ""
-              }`}
-              onClick={() => {
-                onSelect(filteredData[index]);
-              }}
-              style={style}
-            >
-              {columnOrder.map(
-                (columnName) =>
-                  visibleColumns[columnName] ? ( // Check if the column should be visible
+          <tbody>
+            {filteredData.map((row, rowIndex) => (
+              <tr
+                key={row.id}
+                className={`table-row ${
+                  selectedRow && selectedRow.id === row.id
+                    ? "table-primary"
+                    : ""
+                }`}
+                onClick={() => onSelect(row)}
+              >
+                {columnOrder.map((columnName) =>
+                  visibleColumns[columnName] ? (
                     <td
                       key={columnName}
-                      data-key={filteredData[index].id}
+                      data-key={row.id}
                       className="generic-table__td"
                       style={{
                         minWidth: columnWidthsCalculated[columnName],
@@ -547,27 +537,23 @@ const Table = ({
                         </button>
                       ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
-                        filteredData[index][
-                          columnNameToProperty[columnName]
-                        ] ? (
+                        row[columnNameToProperty[columnName]] ? (
                           <i className="fas fa-check"></i>
                         ) : (
                           <i className="fas fa-times"></i>
                         )
                       ) : columnNameToProperty[columnName]?.includes(".") ? (
-                        getPropertyValue(
-                          filteredData[index],
-                          columnNameToProperty[columnName]
-                        )
+                        getPropertyValue(row, columnNameToProperty[columnName])
                       ) : (
-                        filteredData[index][columnNameToProperty[columnName]]
+                        row[columnNameToProperty[columnName]]
                       )}
                     </td>
-                  ) : null // Return null for non-visible columns
-              )}
-            </tr>
-          )}
-        </List>
+                  ) : null
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );

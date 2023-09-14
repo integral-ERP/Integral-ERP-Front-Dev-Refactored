@@ -14,6 +14,8 @@ const Carrier = () => {
   const [selectedCarrier, setSelectedCarrier] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -44,19 +46,48 @@ const Carrier = () => {
     "Passenger Only Airline",
   ];
 
-  const updateCarriers = () => {
-    CarrierService.getCarriers()
+  const updateCarriers = (url = null) => {
+    CarrierService.getCarriers(url)
       .then((response) => {
-        setCarriers(response.data);
+        
+        setCarriers((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    updateCarriers();
+    if(!initialDataFetched){
+      updateCarriers();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        updateCarriers(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handleCarrierDataChange = () => {
     updateCarriers();

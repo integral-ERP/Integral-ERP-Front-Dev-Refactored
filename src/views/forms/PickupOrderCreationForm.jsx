@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import CarrierService from "../../services/CarrierService";
 import Alert from "@mui/material/Alert";
@@ -17,6 +17,8 @@ import Table from "../shared/components/Table";
 import PickupService from "../../services/PickupService";
 import IncomeChargeForm from "./IncomeChargeForm";
 import CommodityCreationForm from "./CommodityCreationForm";
+import AsyncSelect from "react-select/async";
+import { debounce } from "lodash"; // Import debounce for input throttling
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -27,15 +29,18 @@ const PickupOrderCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
-  const [customers, setcustomers] = useState([]);
-  const [forwardingAgents, setforwardingAgents] = useState([]);
-  const [vendors, setvendors] = useState([]);
-  const [carriers, setcarriers] = useState([]);
-  const [employees, setemployees] = useState([]);
-  const [warehouseProviders, setwarehouseProviders] = useState([]);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] =
+    useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [issuedByOptions, setIssuedByOptions] = useState([]);
+  const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
+  const [shipperOptions, setShipperOptions] = useState([]);
+  const [pickupLocationOptions, setPickupLocationOptions] = useState([]);
+  const [deliveryLocationOptions, setDeliveryLocationOptions] = useState([]);
+  const [carrierOptions, setCarrierOptions] = useState([]);
+  const [employeeOptions, setEmployeeOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
   const formFormat = {
     // GENERAL TAB
@@ -75,16 +80,13 @@ const PickupOrderCreationForm = ({
     purchaseOrderNumber: "",
     // CHARGES TAB
     // COMMODITIES TAB
-    commodities: []
+    commodities: [],
   };
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+    const id = event.id;
+    const type = event.type;
     const result = await (type === "forwarding-agent"
       ? ForwardingAgentService.getForwardingAgentById(id)
       : WarehouseProviderService.getWarehouseProviderByID(id));
@@ -101,16 +103,9 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleOpenIncomeForm = () => {
-    openModalIncomeForm();
-  };
-
   const handlePickUpSelection = async (event) => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+    const id = event.id;
+    const type = event.type;
 
     let result;
     if (type === "forwarding-agent") {
@@ -136,11 +131,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handleDeliveryLocationSelection = async (event) => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+    const id = event.id;
+    const type = event.type;
 
     let result;
     if (type === "forwarding-agent") {
@@ -168,12 +160,25 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleConsigneeSelection = async () => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+  const handleDestinationAgentSelection = async (event) => {
+    const id = event.id;
+    setFormData({
+      ...formData,
+      destinationAgentId: id,
+    });
+  };
+
+  const handleEmployeeSelection = async (event) => {
+    const id = event.id;
+    setFormData({
+      ...formData,
+      employeeId: id,
+    });
+  };
+
+  const handleConsigneeSelection = async (event) => {
+    const id = event.id;
+    const type = event.type;
 
     let result;
     if (type === "forwarding-agent") {
@@ -201,12 +206,9 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleShipperSelection = async () => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+  const handleShipperSelection = async (event) => {
+    const id = event.id;
+    const type = event.type;
 
     let result;
     if (type === "forwarding-agent") {
@@ -231,8 +233,8 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleMainCarrierSelection = async () => {
-    const id = event.target.value;
+  const handleMainCarrierSelection = async (event) => {
+    const id = event.id;
     const result = await CarrierService.getCarrierById(id);
     const info = `${result.data.streetNumber || ""} - ${
       result.data.city || ""
@@ -246,12 +248,9 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async () => {
-    const id = event.target.value;
-    const type =
-      event.target.options[event.target.selectedIndex].getAttribute(
-        "data-type"
-      );
+  const handleSupplierSelection = async (event) => {
+    const id = event.id;
+    const type = event.type;
     let result;
     if (type === "customer") {
       result = await CustomerService.getCustomerById(id);
@@ -272,77 +271,238 @@ const PickupOrderCreationForm = ({
     });
   };
 
+  // Your remote data fetching function
+  const loadIssuedByOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = issuedByOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadDestinationAgentOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = destinationAgentOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadEmployeeOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = employeeOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadShipperOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = shipperOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadPickupLocationOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = pickupLocationOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadConsigneeOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = consigneeOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadDeliveryLocationsOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = deliveryLocationOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  const loadCarrierOptions = (inputValue, callback) => {
+    const query = inputValue.toLowerCase();
+    console.log(query);
+    const results = carrierOptions.filter((fw) =>
+      fw.name.toLowerCase().includes(query)
+    );
+    console.log(results);
+    callback(results);
+  };
+
+  // Throttle the input change to avoid sending too many requests
+  //const debouncedSearch = debounce(loadOptions, 300); // Adjust the debounce time as needed TODO: check if necessary
+
   useEffect(() => {
     if (!creating && pickupOrder) {
       let updatedFormData = {
-        /*name: carrier.name || "",
-        phone: carrier.phone || "",
-        mobilePhone: carrier.movelPhone || "",
-        email: carrier.email || "",
-        fax: carrier.fax || "",
-        website: carrier.webSide || "",
-        entityId: carrier.referentNumber || "",
-        contactFirstName: carrier.firstNameContac || "",
-        contactLastName: carrier.lasNameContac || "",
-        streetNumber: carrier.streetNumber || "",
-        city: carrier.city || "",
-        state: carrier.state || "",
-        country: carrier.country || "",
-        zipCode: carrier.zipCode || "",
-        carrierType: carrier.carrierType || "",
-        methodCode: carrier.methodCode || "",
-        carrierCode: carrier.carrierCode || "",
-        idNumber: carrier.numIdentification || "",
-        typeIdentificacion: carrier.typeIdentificacion || "",*/
+        // GENERAL TAB
+        status: pickupOrder.status,
+        number: pickupOrder.number,
+        createdDateAndTime: pickupOrder.creationDate,
+        pickupDateAndTime: pickupOrder.pickUpDate,
+        deliveryDateAndTime: pickupOrder.deliveryDate,
+        issuedById: pickupOrder.issuedByKey,
+        issuedByInfo: `${pickupOrder.issuedBy?.streetNumber || ""} - ${
+          pickupOrder.issuedBy?.city || ""
+        } - ${pickupOrder.issuedBy?.state || ""} - ${
+          pickupOrder.issuedBy?.country || ""
+        } - ${pickupOrder.issuedBy?.zipCode || ""}`,
+        destinationAgentId: pickupOrder.destinationAgentKey,
+        employeeId: pickupOrder.employeekey,
+        // PICKUP TAB
+        shipperId: pickupOrder.shipperkey,
+        shipperInfo: `${pickupOrder.shipper?.streetNumber || ""} - ${
+          pickupOrder.shipper?.city || ""
+        } - ${pickupOrder.shipper?.state || ""} - ${
+          pickupOrder.shipper?.country || ""
+        } - ${pickupOrder.shipper?.zipCode || ""}`,
+        pickupLocationId: pickupOrder.PickUpLocationkey,
+        pickupLocationInfo: `${
+          pickupOrder.PickUpLocation?.streetNumber || ""
+        } - ${pickupOrder.PickUpLocation?.city || ""} - ${
+          pickupOrder.PickUpLocation?.state || ""
+        } - ${pickupOrder.PickUpLocation?.country || ""} - ${
+          pickupOrder.PickUpLocation?.zipCode || ""
+        }`,
+        // DELIVERY TAB
+        consigneeId: pickupOrder.consigneekey,
+        consigneeInfo: `${pickupOrder.consignee?.streetNumber || ""} - ${
+          pickupOrder.consignee?.city || ""
+        } - ${pickupOrder.consignee?.state || ""} - ${
+          pickupOrder.consignee?.country || ""
+        } - ${pickupOrder.consignee?.zipCode || ""}`,
+        deliveryLocationId: pickupOrder.deliveryLocationkey,
+        deliveryLocationInfo: `${
+          pickupOrder.deliveryLocation?.streetNumber || ""
+        } - ${pickupOrder.deliveryLocation?.city || ""} - ${
+          pickupOrder.deliveryLocation?.state || ""
+        } - ${pickupOrder.deliveryLocation?.country || ""} - ${
+          pickupOrder.deliveryLocation?.zipCode || ""
+        }`,
+        // CARRIER TAB
+        proNumber: pickupOrder.proNumber,
+        trackingNumber: pickupOrder.trackingNumber,
+        mainCarrierdId: pickupOrder.mainCarrierKey,
+        mainCarrierInfo: `${pickupOrder.mainCarrier?.streetNumber || ""} - ${
+          pickupOrder.mainCarrier?.city || ""
+        } - ${pickupOrder.mainCarrier?.state || ""} - ${
+          pickupOrder.mainCarrier?.country || ""
+        } - ${pickupOrder.mainCarrier?.zipCode || ""}`,
+        // SUPPLIER TAB
+        supplierId: pickupOrder.supplierKey,
+        supplierInfo: `${pickupOrder.supplier?.streetNumber || ""} - ${
+          pickupOrder.supplier?.city || ""
+        } - ${pickupOrder.supplier?.state || ""} - ${
+          pickupOrder.supplier?.country || ""
+        } - ${pickupOrder.supplier?.zipCode || ""}`,
+        invoiceNumber: pickupOrder.invoiceNumber,
+        purchaseOrderNumber: pickupOrder.purchaseOrderNum,
+        // CHARGES TAB
+        // COMMODITIES TAB
+        commodities: pickupOrder.commodities,
       }; // Create a copy of the existing formData
 
       setFormData(updatedFormData); // Update formData once with all the changes
+      console.log(updatedFormData);
     }
   }, [creating, pickupOrder]);
 
-  const fetchFormData = () => {
-    ForwardingAgentService.getForwardingAgents()
-      .then((response) => {
-        setforwardingAgents(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    WarehouseProviderService.getWarehouseProviders()
-      .then((response) => {
-        setwarehouseProviders(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    CustomerService.getCustomers()
-      .then((response) => {
-        setcustomers(response.data);
-      })
-      .catch((error) => {
-        console.err(error);
-      });
-    VendorService.getVendors()
-      .then((response) => {
-        setvendors(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    CarrierService.getCarriers()
-      .then((response) => {
-        setcarriers(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    EmployeeService.getEmployees()
-      .then((response) => {
-        setemployees(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const fetchFormData = async () => {
+    const forwardingAgents = (
+      await ForwardingAgentService.getForwardingAgents()
+    ).data.results;
+    const warehouseProviders = (
+      await WarehouseProviderService.getWarehouseProviders()
+    ).data.results;
+    const customers = (await CustomerService.getCustomers()).data.results;
+    const vendors = (await VendorService.getVendors()).data.results;
+    const employees = (await EmployeeService.getEmployees()).data.results;
+    const carriers = (await CarrierService.getCarriers()).data.results;
+
+    // Function to add 'type' property to an array of objects
+    const addTypeToObjects = (arr, type) =>
+      arr.map((obj) => ({ ...obj, type }));
+
+    // Add 'type' property to each array
+    const forwardingAgentsWithType = addTypeToObjects(
+      forwardingAgents,
+      "forwarding-agent"
+    );
+    const warehouseProvidersWithType = addTypeToObjects(
+      warehouseProviders,
+      "warehouse-provider"
+    );
+    const customersWithType = addTypeToObjects(customers, "customer");
+    const vendorsWithType = addTypeToObjects(vendors, "vendor");
+    const employeesWithType = addTypeToObjects(employees, "employee");
+    const carriersWithType = addTypeToObjects(carriers, "carrier");
+
+    // Merge the arrays
+    const issuedByOptions = [
+      ...forwardingAgentsWithType,
+      ...warehouseProvidersWithType,
+    ];
+    const destinationAgentOptions = [...forwardingAgentsWithType];
+    const employeeOptions = [...employeesWithType];
+    const shipperOptions = [
+      ...customersWithType,
+      ...vendorsWithType,
+      ...forwardingAgentsWithType,
+    ];
+    const pickupLocationOptions = [
+      ...customersWithType,
+      ...vendorsWithType,
+      ...forwardingAgentsWithType,
+    ];
+    const consigneeOptions = [
+      ...customersWithType,
+      ...vendorsWithType,
+      ...forwardingAgentsWithType,
+      ...carriersWithType,
+    ];
+    const deliveryLocationOptions = [
+      ...customersWithType,
+      ...vendorsWithType,
+      ...forwardingAgentsWithType,
+      ...carriersWithType,
+    ];
+
+    const carrierOptions = [...carriersWithType];
+
+    // Set the state with the updated arrays
+    setIssuedByOptions(issuedByOptions);
+    setDestinationAgentOptions(destinationAgentOptions);
+    setEmployeeOptions(employeeOptions);
+    setShipperOptions(shipperOptions);
+    setPickupLocationOptions(pickupLocationOptions);
+    setConsigneeOptions(consigneeOptions);
+    setDeliveryLocationOptions(deliveryLocationOptions);
+    setCarrierOptions(carrierOptions);
+
+    console.log("carriers:", carrierOptions);
   };
 
   useEffect(() => {
@@ -358,30 +518,25 @@ const PickupOrderCreationForm = ({
       pickUpDate: formData.pickupDateAndTime,
       deliveryDate: formData.deliveryDateAndTime,
       issuedByKey: formData.issuedById,
-      issuedByType: formData.issuedByType,
       destinationAgentKey: formData.destinationAgentId,
       employeekey: formData.employeeId,
       // PICKUP TAB
       shipperkey: formData.shipperId,
-      shipperType: formData.shipperType,
       PickUpLocationkey: formData.pickupLocationId,
-      pickupLocationType: formData.pickupLocationType,
       // DELIVERY TAB
       consigneekey: formData.consigneeId,
-      consigneeType: formData.consigneeType,
       deliveryLocationkey: formData.deliveryLocationId,
-      deliveryLocationType: formData.deliveryLocationType,
       // CARRIER TAB
       proNumber: formData.proNumber,
       trackingNumber: formData.trackingNumber,
       mainCarrierKey: formData.mainCarrierdId,
       // SUPPLIER TAB
-      supplierId: formData.supplierId,
+      supplierKey: formData.supplierId,
       invoiceNumber: formData.invoiceNumber,
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
       // COMMODITIES TAB
-      pieces: formData.commodities
+      pieces: formData.commodities,
     };
     const response = await (creating
       ? PickupService.createPickup(rawData)
@@ -400,6 +555,10 @@ const PickupOrderCreationForm = ({
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
     }
+  };
+
+  const handleSelectChange = (e) => {
+    setFormData({ ...formData, consigneeId: e.target.value });
   };
 
   const mockDataCharges = [];
@@ -496,34 +655,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="issuedby" className="company-form__label">
             Issued By:
           </label>
-          <select
+          <AsyncSelect
             id="issuedby"
-            className="form-input"
             value={formData.issuedById}
-            onChange={(e) => handleIssuedBySelection(e)}
-          >
-            <option value="">Select an option</option>
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="forwarding-agent"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {warehouseProviders.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="warehouse-provider"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => {
+              handleIssuedBySelection(e);
+            }}
+            loadOptions={loadIssuedByOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={issuedByOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -539,26 +683,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="destinationAgent" className="company-form__label">
             Destination Agent:
           </label>
-          <select
+          <AsyncSelect
             id="destinationAgent"
-            className="form-input"
             value={formData.destinationAgentId}
-            onChange={(e) =>
-              setFormData({ ...formData, destinationAgentId: e.target.value })
-            }
-          >
-            <option value="">Select an option</option>
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type={"forwarding-agent"}
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => {
+              handleDestinationAgentSelection(e);
+            }}
+            loadOptions={loadDestinationAgentOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={destinationAgentOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -616,26 +753,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="employee" className="company-form__label">
             Employee:
           </label>
-          <select
+          <AsyncSelect
             id="employee"
-            className="form-input"
             value={formData.employeeId}
-            onChange={(e) =>
-              setFormData({ ...formData, employeeId: e.target.value })
-            }
-          >
-            <option value="">Select an option</option>
-            {employees.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type={"employee"}
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => {
+              handleEmployeeSelection(e);
+            }}
+            loadOptions={loadEmployeeOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={employeeOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
       </form>
       <form
@@ -649,44 +779,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="shipper" className="company-form__label">
             Shipper:
           </label>
-          <select
+          <AsyncSelect
             id="shipper"
-            className="form-input"
             value={formData.shipperId}
-            onChange={(e) => handleShipperSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="forwarding-agent"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {customers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="customer"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {vendors.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="vendor"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => {
+              handleShipperSelection(e);
+            }}
+            loadOptions={loadShipperOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={shipperOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -701,44 +806,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="pickup" className="company-form__label">
             Pick-up Location:
           </label>
-          <select
+          <AsyncSelect
             id="pickup"
-            className="form-input"
-            value={""}
-            onChange={(e) => handlePickUpSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="forwarding-agent"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {customers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="customer"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {vendors.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="vendor"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            value={formData.pickupLocationId}
+            onChange={(e) => {
+              handlePickUpSelection(e);
+            }}
+            loadOptions={loadPickupLocationOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={pickupLocationOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -785,55 +865,21 @@ const PickupOrderCreationForm = ({
           <label htmlFor="consignee" className="company-form__label">
             Consignee:
           </label>
-          <select
-            id="consignee"
-            className="form-input"
-            value={formData.consigneeId}
-            onChange={(e) => handleConsigneeSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {customers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="customer"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="forwarding-agent"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {carriers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="carrier"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {vendors.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="vendor"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+          <div className="custom-select">
+            <AsyncSelect
+              id="consignee"
+              value={formData.consigneeId}
+              onChange={(e) => handleConsigneeSelection(e)}
+              loadOptions={loadConsigneeOptions}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={consigneeOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
         </div>
+
         <div className="company-form__section">
           <Input
             type="textarea"
@@ -848,54 +894,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="delivery" className="company-form__label">
             Delivery Location:
           </label>
-          <select
+          <AsyncSelect
             id="delivery"
-            className="form-input"
-            value={formData.deliveryLocationInfo}
-            onChange={(e) => handleDeliveryLocationSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {customers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="customer"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {forwardingAgents.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="forwarding-agent"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {carriers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="carrier"
-              >
-                {fw.name}
-              </option>
-            ))}
-            {vendors.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="vendor"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            value={formData.deliveryLocationId}
+            onChange={(e) => {
+              handleDeliveryLocationSelection(e);
+            }}
+            loadOptions={loadDeliveryLocationsOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={deliveryLocationOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -919,24 +930,19 @@ const PickupOrderCreationForm = ({
           <label htmlFor="mainCarrier" className="company-form__label">
             Carrier:
           </label>
-          <select
+          <AsyncSelect
             id="mainCarrier"
-            className="form-input"
             value={formData.mainCarrierdId}
-            onChange={(e) => handleMainCarrierSelection(e)}
-          >
-            <option value="">Select an option</option>
-            {carriers.map((fw) => (
-              <option
-                key={fw.id}
-                value={fw.id}
-                data-key={fw.id}
-                data-type="carrier"
-              >
-                {fw.name}
-              </option>
-            ))}
-          </select>
+            onChange={(e) => {
+              handleMainCarrierSelection(e);
+            }}
+            loadOptions={loadCarrierOptions}
+            isClearable={true}
+            placeholder="Search and select..."
+            defaultOptions={carrierOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />
         </div>
         <div className="company-form__section">
           <Input
@@ -1022,7 +1028,11 @@ const PickupOrderCreationForm = ({
             Add Expense Charge
           </button>
           {showIncomeForm && (
-            <IncomeChargeForm onCancel={setshowIncomeForm} charges={charges} setcharges={setcharges}></IncomeChargeForm>
+            <IncomeChargeForm
+              onCancel={setshowIncomeForm}
+              charges={charges}
+              setcharges={setcharges}
+            ></IncomeChargeForm>
           )}
         </div>
         <Table
@@ -1056,11 +1066,21 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "commodities" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <button type="button" className="btn btn-primary btn-lg" onClick={() => setshowCommodityCreationForm(!showCommodityCreationForm)}>
+          <button
+            type="button"
+            className="btn btn-primary btn-lg"
+            onClick={() =>
+              setshowCommodityCreationForm(!showCommodityCreationForm)
+            }
+          >
             Add Piece
           </button>
           {showCommodityCreationForm && (
-            <CommodityCreationForm onCancel={setshowCommodityCreationForm} commodities={commodities} setCommodities={setcommodities}></CommodityCreationForm>
+            <CommodityCreationForm
+              onCancel={setshowCommodityCreationForm}
+              commodities={commodities}
+              setCommodities={setcommodities}
+            ></CommodityCreationForm>
           )}
         </div>
         <Table
@@ -1073,7 +1093,7 @@ const PickupOrderCreationForm = ({
             " Weight",
             " Volumetric Weight",
             " Charged Weigth",
-            " Delete"
+            " Delete",
           ]}
           onSelect={() => {}} // Make sure this line is correct
           selectedRow={{}}

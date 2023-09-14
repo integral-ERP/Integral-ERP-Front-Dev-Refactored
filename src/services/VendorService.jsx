@@ -15,8 +15,9 @@ class VendorService{
     return response;
   }
 
-  async getVendors(){
-    const response = await axios.get(`${this.BASE_URL}vendor/`);
+  async getVendors(url = null){
+    const apiUrl = url || `${this.BASE_URL}vendor/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

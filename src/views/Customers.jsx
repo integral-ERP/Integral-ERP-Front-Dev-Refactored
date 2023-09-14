@@ -14,6 +14,8 @@ const Customers = () => {
   const [selectedCustomer, setselectedCustomer] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -34,22 +36,53 @@ const Customers = () => {
     "Zip-Code",
   ];
 
-  const fetchcustomersData = () => {
-    CustomerService.getCustomers()
+  const fetchCustomersData = (url = null) => {
+    CustomerService.getCustomers(url)
       .then((response) => {
-        setcustomers(response.data);
+        if(customers !== response.data.results){
+          setcustomers((prevCustomers) => {
+            const newData = [...prevCustomers, ...response.data.results];
+            return newData;
+          });
+          
+        }
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.err(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchcustomersData();
+    if (!initialDataFetched) {
+      fetchCustomersData();
+      setInitialDataFetched(true);
+    }
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        console.log("Fetching next page of data...", customers.length);
+        fetchCustomersData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
+
   const handleWarehouseProviderDataChange = () => {
-    fetchcustomersData();
+    fetchCustomersData();
   };
 
   const handleEditCustomer = () => {

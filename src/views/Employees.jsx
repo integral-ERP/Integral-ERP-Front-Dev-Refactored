@@ -15,6 +15,8 @@ const Employees = () => {
     useState(null);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
     const columns = [
       "Name",
       "Phone",
@@ -45,22 +47,51 @@ const Employees = () => {
       "Passenger Only Airline",
     ];
 
-  const fetchemployeesData = () => {
-    EmployeeService.getEmployees()
-    .then((response) => {
-        setemployees(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
+    const fetchEmployeesData = (url = null) => {
+      EmployeeService.getEmployees(url)
+        .then((response) => {
+          
+          setemployees((prevCustomers) => {
+            const newData = [...prevCustomers, ...response.data.results];
+            return newData;
+          });
+  
+          if (response.data.next) {
+            setNextPageURL(response.data.next);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+  
+    useEffect(() => {
+      if(!initialDataFetched){
+        fetchEmployeesData();
+        setInitialDataFetched(true);
+      }
+    }, []);
+  
+    useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && nextPageURL) {
+          fetchEmployeesData(nextPageURL);
+        }
       });
-  };
-
-  useEffect(() => {
-    fetchemployeesData();
-  }, []);
+  
+      const lastRow = document.querySelector(".table-row:last-child");
+      if (lastRow) {
+        observer.observe(lastRow);
+      }
+  
+      return () => {
+        // Clean up the observer when the component unmounts
+        observer.disconnect();
+      };
+    }, [nextPageURL]);
 
   const handleEmployeesDataChange = () => {
-    fetchemployeesData();
+    fetchEmployeesData();
   };
 
   const handleEditEmployee = () => {
@@ -87,7 +118,7 @@ const Employees = () => {
           setTimeout(() => {
             setShowSuccessAlert(false);
           }, 3000);
-          fetchemployeesData();
+          fetchEmployeesData();
         } else {
           setShowErrorAlert(true);
           setTimeout(() => {

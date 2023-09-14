@@ -15,8 +15,9 @@ class ForwardingAgentService{
         return response;
       }
     
-      async getForwardingAgents(){
-        const response = await axios.get(`${this.BASE_URL}forWardingAgents/`);
+      async getForwardingAgents(url = null){
+        const apiUrl = url || `${this.BASE_URL}forWardingAgents/`;
+        const response = await axios.get(apiUrl);
         return response;
       }
 

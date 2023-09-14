@@ -14,6 +14,8 @@ const Ports = () => {
   const [selectedPort, setselectedPort] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Code",
     "Name",
@@ -31,19 +33,48 @@ const Ports = () => {
     "US Customs Code",
   ];
 
-  const fetchportsData = () => {
-    PortService.getPorts()
+  const fetchportsData = (url = null) => {
+    PortService.getPorts(url)
       .then((response) => {
-        setports(response.data);
+        
+        setports((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchportsData();
+    if(!initialDataFetched){
+      fetchportsData();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchportsData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handleportsDataChange = () => {
     fetchportsData();

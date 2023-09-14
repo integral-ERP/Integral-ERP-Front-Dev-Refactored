@@ -15,8 +15,9 @@ class PickupService{
     return response;
   }
 
-  async getPickups(){
-    const response = await axios.get(`${this.BASE_URL}pickUpOrder/`);
+  async getPickups(url = null){
+    const apiUrl = url || `${this.BASE_URL}pickUpOrder/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

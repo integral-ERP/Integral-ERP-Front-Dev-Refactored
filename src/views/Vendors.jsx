@@ -14,6 +14,8 @@ const Vendors = () => {
   const [selectedVendor, setselectedVendor] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -35,19 +37,48 @@ const Vendors = () => {
     "System ID",
   ];
 
-  const fetchvendorsData = () => {
-    VendorService.getVendors()
+  const fetchvendorsData = (url = null) => {
+    VendorService.getVendors(url)
       .then((response) => {
-        setvendors(response.data);
+        
+        setvendors((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchvendorsData();
+    if(!initialDataFetched){
+      fetchvendorsData();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchvendorsData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handleVendorsDataChange = () => {
     fetchvendorsData();

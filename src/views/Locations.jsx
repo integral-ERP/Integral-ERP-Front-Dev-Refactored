@@ -14,6 +14,8 @@ const Locations = () => {
   const [selectedLocation, setselectedLocation] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Status",
     "Code",
@@ -29,19 +31,48 @@ const Locations = () => {
     "Max. Weight",
     "Disable",
   ];
-  const fetchlocationsData = () => {
-    LocationService.getLocations()
+  const fetchlocationsData = (url = null) => {
+    LocationService.getLocations(url)
       .then((response) => {
-        setlocations(response.data);
+        
+        setlocations((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchlocationsData();
+    if(!initialDataFetched){
+      fetchlocationsData();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchlocationsData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handlelocationsDataChange = () => {
     fetchlocationsData();

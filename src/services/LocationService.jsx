@@ -15,8 +15,9 @@ class LocationService{
     return response;
   }
 
-  async getLocations(){
-    const response = await axios.get(`${this.BASE_URL}location/`);
+  async getLocations(url = null){
+    const apiUrl = url || `${this.BASE_URL}location/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

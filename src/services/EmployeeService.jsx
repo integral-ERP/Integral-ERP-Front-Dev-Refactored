@@ -15,8 +15,9 @@ class EmployeeService{
         return response;
       }
     
-      async getEmployees(){
-        const response = await axios.get(`${this.BASE_URL}employee/`);
+      async getEmployees(url = null) {
+        const apiUrl = url || `${this.BASE_URL}employee/`;
+        const response = await axios.get(apiUrl);
         return response;
       }
 

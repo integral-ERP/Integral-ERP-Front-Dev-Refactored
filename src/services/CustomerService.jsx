@@ -5,10 +5,11 @@ class CustomerService{
         this.BASE_URL = import.meta.env.VITE_BASE_API_URL;
     }
 
-    async getCustomers(){
-        const response = await axios.get(`${this.BASE_URL}customer/`)
+    async getCustomers(url = null) {
+        const apiUrl = url || `${this.BASE_URL}customer/`;
+        const response = await axios.get(apiUrl);
         return response;
-    }
+      }
 
     async getCustomerById(id){
         const response = await axios.get(`${this.BASE_URL}customer/${id}`)

@@ -15,8 +15,9 @@ class CarrierService{
     return response;
   }
 
-  async getCarriers(){
-    const response = await axios.get(`${this.BASE_URL}carrier/`);
+  async getCarriers(url = null) {
+    const apiUrl = url || `${this.BASE_URL}carrier/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

@@ -15,8 +15,9 @@ class WarehouseProviderService{
     return response;
   }
 
-  async getWarehouseProviders(){
-    const response = await axios.get(`${this.BASE_URL}wareHouseProviders/`);
+  async getWarehouseProviders(url = null){
+    const apiUrl = url || `${this.BASE_URL}wareHouseProviders/`;
+    const response = await axios.get(apiUrl);
     return response;
   }
 

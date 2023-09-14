@@ -14,6 +14,8 @@ const PackageType = () => {
   const [selectedPackageType, setselectedPackageType] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [nextPageURL, setNextPageURL] = useState("");
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Description",
     "Length",
@@ -31,19 +33,48 @@ const PackageType = () => {
     "Ocean",
   ];
 
-  const fetchpackageTypesData = () => {
-    PackageTypeService.getPackageTypes()
+  const fetchpackageTypesData = (url = null) => {
+    PackageTypeService.getPackageTypes(url)
       .then((response) => {
-        setpackageTypes(response.data);
+        
+        setpackageTypes((prevCustomers) => {
+          const newData = [...prevCustomers, ...response.data.results];
+          return newData;
+        });
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    fetchpackageTypesData();
+    if(!initialDataFetched){
+      fetchpackageTypesData();
+      setInitialDataFetched(true);
+    }
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && nextPageURL) {
+        fetchpackageTypesData(nextPageURL);
+      }
+    });
+
+    const lastRow = document.querySelector(".table-row:last-child");
+    if (lastRow) {
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      // Clean up the observer when the component unmounts
+      observer.disconnect();
+    };
+  }, [nextPageURL]);
 
   const handlepackageTypesDataChange = () => {
     fetchpackageTypesData();
