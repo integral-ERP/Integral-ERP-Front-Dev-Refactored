@@ -5,7 +5,6 @@ import { saveAs } from "file-saver";
 import { toXML } from "jstoxml";
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
-import { VariableSizeList as List } from "react-window";
 import "../../../styles/components/Table.scss";
 const Table = ({
   data,
@@ -17,20 +16,11 @@ const Table = ({
   onAdd,
   title,
   showOptions,
-  elementDelete,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
   const [showColumnMenu, setShowColumnMenu] = useState(false);
-  const [columnWidths, setColumnWidths] = useState(() => {
-    const initialWidths = {};
-    columns.forEach((columnName) => {
-      initialWidths[columnName] = 100; // Set an initial width (e.g., 100 pixels)
-    });
-    return initialWidths;
-  });
-
   const navigate = useNavigate();
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const initialVisibility = {};
@@ -71,58 +61,24 @@ const Table = ({
     Date: "creationDate",
     "Ship Date": "pickUpDate",
     "Delivery Date": "deliveryDate",
-    Pieces: "commodities",
+    "Pickup Name": "",
+    "Delivery Key": "",
+    Pieces: "",
     "Pickup Orders": "",
+    "Pickup Key": "",
+    Weight: "",
     Volume: "",
     Carrier: "",
-    "PRO Number": "proNumber",
-    "Tracking Number": "trackingNumber",
+    "Main Carrier Key": "",
+    "Inland Carrier Key": "",
+    "PRO Number": "",
+    "Tracking Number": "",
     "": "",
-    "Invoice Number": "invoiceNumber",
-    "Purchase Order number": "purchaseOrderNum",
-    "Pickup Name": "PickUpLocation.name",
-    "Pickup Address": "PickUpLocation.streetNumber",
-    "Delivery Name": "deliveryLocation.name",
-    "Delivery Address": "deliveryLocation.streetNumber",
-    "Carrier Name": "mainCarrier.name",
-    "Carrier Address": "mainCarrier.streetNumber",
-    Description: "description",
-    Prepaid: "prepaid",
-    Quantity: "quantity",
-    Price: "price",
-    Amount: "amount",
-    "Tax Code": "taxCode",
-    "Tax Rate": "taxRate",
-    "Tax Amt": "taxAMT",
-    "Amt + Tax": "amtTAX",
-    Currency: "currency",
-    " Length": "length",
-    " Height": "height",
-    " Weight": "weight",
-    " Volumetric Weight": "volumetricWeight",
-    " Charged Weight": "chargedWeight",
+    "Invoice Number": "",
+    "Purchase Order number": "",
   };
 
   const handleColumnVisibilityChange = (columnName) => {
-    const handleColumnVisibilityChange = (columnName) => {
-      setVisibleColumns((prevVisibility) => ({
-        ...prevVisibility,
-        [columnName]: !prevVisibility[columnName],
-      }));
-
-      // Adjust the column width when it's shown/hidden
-      setColumnWidths((prevWidths) => {
-        const newWidths = { ...prevWidths };
-        if (prevVisibility[columnName]) {
-          // If the column is shown, set its width to the initial width
-          newWidths[columnName] = 100; // Adjust this value as needed
-        } else {
-          // If the column is hidden, set its width to 0
-          newWidths[columnName] = 0;
-        }
-        return newWidths;
-      });
-    };
     setVisibleColumns((prevVisibility) => ({
       ...prevVisibility,
       [columnName]: !prevVisibility[columnName],
@@ -268,10 +224,6 @@ const Table = ({
     e.preventDefault();
   };
 
-  const getItemSize = () => {
-    return 30;
-  };
-
   const handleDrop = (e, targetColumnIndex) => {
     // Get the dragged column's index
     const sourceColumnIndex = parseInt(
@@ -292,70 +244,6 @@ const Table = ({
     setColumnOrder(newColumnOrder);
   };
 
-  function getPropertyValue(obj, propertyName) {
-    const parts = propertyName ? propertyName.split(".") : [];
-    let value = obj;
-    for (const part of parts) {
-      if (value && typeof value === "object" && part in value) {
-        value = value[part];
-      } else {
-        value = undefined; // Property not found or object structure is not as expected
-        break;
-      }
-    }
-    return value;
-  }
-
-  // Function to get the value from a row for a given column name
-  const getCellValue = (row, columnName) => {
-    if (columnName === "Delete") {
-      return ""; // Handle special columns as needed
-    }
-
-    // Check if columnNameToProperty contains a "." indicating a nested property
-    if (columnNameToProperty[columnName]?.includes(".")) {
-      return getPropertyValue(row, columnNameToProperty[columnName]);
-    } else {
-      return row[columnNameToProperty[columnName]];
-    }
-  };
-
-  // Function to calculate the width needed to display a text
-  const getTextWidth = (text) => {
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    context.font = "14px Arial"; // You can adjust the font size and font family as needed
-    const textMetrics = context.measureText(text);
-    return textMetrics.width;
-  };
-
-  // Calculate the maximum width needed for each column
-  const columnWidthsCalculated = columns.reduce((widths, columnName) => {
-    const maxColumnWidth = Math.max(
-      ...filteredData.map((row) => {
-        const value =
-          columnName === "Delete"
-            ? "" // Handle special columns as needed
-            : getCellValue(row, columnName);
-
-        // Calculate the width needed for the current cell
-        const cellWidth = getTextWidth(value);
-
-        return cellWidth;
-      })
-    );
-
-    // Use a minimum width (e.g., 100 pixels) to prevent columns from being too narrow
-    widths[columnName] = Math.max(maxColumnWidth, 100);
-
-    return widths;
-  }, {});
-
-  const rowBackgroundClass = (selected) =>
-    selected ? "table-row table-primary" : "table-row";
-  const cellBackgroundClass = (selected) =>
-    selected ? "generic-table__td selected" : "generic-table__td";
-
   return (
     <>
       {showOptions && (
@@ -366,31 +254,85 @@ const Table = ({
           <div className="title-container">
             <h1 className="title">{title}</h1>
           </div>
+          <div className="export-dropdown">
+              <label className="laver-export">
+                <span className="text-export">Export Format:</span>
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select Format</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div>
         </div>
       )}
 
       {showOptions && (
         <div className="button-container">
-          <div className="search-container">
+
+<div className="action-buttons">
+            <button className="generic-button" onClick={onAdd}>
+              <i className="fas fa-plus menu-icon fa-3x"></i>
+            </button>
+            <button className="generic-button ne" onClick={onEdit}>
+              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+            </button>
+            <button className="generic-button ne" onClick={onDelete}>
+              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+            </button>
+
             <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Search..."
-              className="search-input"
+              type="file"
+              accept=".json, .csv, .xml"
+              onChange={handleImport}
+              className="hidden-input"
+              id="import-input"
             />
+            <button className="generic-button ne" onClick={onDelete}>
+              <i
+                className="fas fa-upload menu-icon fa-3x"
+                onClick={() => document.getElementById("import-input").click()}
+              ></i>
+            </button>
+
+            {/* <div className="export-dropdown">     IMPORT///EXPORT
+              <label>
+                Export Format:
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select Format</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div> */}
           </div>
-          <button
-            className="generic-button"
-            onClick={() => setShowColumnMenu(!showColumnMenu)}
-          >
+          <div className="search">
+            <div className="search-container">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                className="search-input"
+              />
+            </div>
+            <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
             <i className="fas fa-eye menu-icon fa-3x ne"></i>
-          </button>
+            </button>
+          </div>
+          
           {showColumnMenu && (
-            <div
-              className="modal"
-              style={{ display: showColumnMenu ? "block" : "none" }}
-            >
+            <div className="modal" style={{display: showColumnMenu ? "block": "none"}}>
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -420,11 +362,7 @@ const Table = ({
                     ))}
                   </div>
                   <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => setShowColumnMenu(!showColumnMenu)}
-                    >
+                    <button type="button" className="btn btn-primary" onClick={() => setShowColumnMenu(!showColumnMenu)}>
                       Save changes
                     </button>
                     <button
@@ -440,47 +378,7 @@ const Table = ({
               </div>
             </div>
           )}
-          <div className="action-buttons">
-            <button className="generic-button" onClick={onAdd}>
-              <i className="fas fa-plus menu-icon fa-3x"></i>
-            </button>
-            <button className="generic-button ne" onClick={onEdit}>
-              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-            </button>
-            <button className="generic-button ne" onClick={onDelete}>
-              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-            </button>
-
-            <input
-              type="file"
-              accept=".json, .csv, .xml"
-              onChange={handleImport}
-              className="hidden-input"
-              id="import-input"
-            />
-            <button className="generic-button ne" onClick={onDelete}>
-              <i
-                className="fas fa-upload menu-icon fa-3x"
-                onClick={() => document.getElementById("import-input").click()}
-              ></i>
-            </button>
-
-            <div className="export-dropdown">
-              <label>
-                Export Format:
-                <select value={selectedFormat} onChange={handleFormatChange}>
-                  <option value="">Select Format</option>
-                  <option value="json">JSON</option>
-                  <option value="csv">CSV</option>
-                  <option value="pdf">PDF</option>
-                  <option value="xml">XML</option>
-                </select>
-              </label>
-              <button className="generic-button" onClick={handleExport}>
-                <i className="fas fa-file-export menu-icon fa-3x"></i>
-              </button>
-            </div>
-          </div>
+          
         </div>
       )}
       <div className="generic-table">
@@ -489,14 +387,13 @@ const Table = ({
             <tr>
               {columnOrder.map(
                 (columnName, columnIndex) =>
-                  visibleColumns[columnName] && ( // Check if the column should be visible
+                  visibleColumns[columnName] && (
                     <th
                       key={columnName}
                       draggable
                       onDragStart={(e) => handleDragStart(e, columnIndex)}
                       onDragOver={(e) => handleDragOver(e, columnIndex)}
                       onDrop={(e) => handleDrop(e, columnIndex)}
-                      style={{ minWidth: columnWidthsCalculated[columnName] }}
                     >
                       {columnName}
                     </th>
@@ -513,42 +410,26 @@ const Table = ({
                     ? "table-primary"
                     : ""
                 }`}
-                onClick={() => onSelect(row)}
+                onClick={() => {
+                  onSelect(row);
+                }}
               >
-                {columnOrder.map((columnName) =>
-                  visibleColumns[columnName] ? (
-                    <td
-                      key={columnName}
-                      data-key={row.id}
-                      className="generic-table__td"
-                      style={{
-                        minWidth: columnWidthsCalculated[columnName],
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {columnName === "Delete" ? (
-                        <button
-                          type="button"
-                          onClick={(e) =>
-                            elementDelete(e.target.getAttribute("data-key"))
-                          }
-                        >
-                          <i className="fas fa-trash"></i>
-                        </button>
-                      ) : typeof columnNameToProperty[columnName] ===
+                {columnOrder.map(
+                  (columnName) =>
+                    visibleColumns[columnName] && (
+                      <td key={columnName} className="generic-table__td">
+                        {typeof row[columnNameToProperty[columnName]] ===
                         "boolean" ? (
-                        row[columnNameToProperty[columnName]] ? (
-                          <i className="fas fa-check"></i>
+                          row[columnNameToProperty[columnName]] ? (
+                            <i className="fas fa-check"></i>
+                          ) : (
+                            <i className="fas fa-times"></i>
+                          )
                         ) : (
-                          <i className="fas fa-times"></i>
-                        )
-                      ) : columnNameToProperty[columnName]?.includes(".") ? (
-                        getPropertyValue(row, columnNameToProperty[columnName])
-                      ) : (
-                        row[columnNameToProperty[columnName]]
-                      )}
-                    </td>
-                  ) : null
+                          row[columnNameToProperty[columnName]]
+                        )}
+                      </td>
+                    )
                 )}
               </tr>
             ))}

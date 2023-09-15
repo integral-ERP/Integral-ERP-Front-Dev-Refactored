@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../styles/pages/Login.scss";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/AuthService";
-import logo from "../img/logo.png";
+import logotext from "../img/logotext.png";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
@@ -43,7 +43,7 @@ const LoginPage = () => {
     <div id="contenedor">
       <div id="central">
         <div id="login">
-          <img className="logo" src={logo} alt="lksfg" />
+          <img className="logo_login" src={logotext} alt="Logo_texto" />
           <form className="login">
             <div className="login__field">
               <p className="text-log">Username</p>

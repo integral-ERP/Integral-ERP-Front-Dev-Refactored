@@ -1,31 +1,33 @@
-.button-container {
+.button-container{
   display: flex;
   justify-content: space-between;
-  overflow-y: hidden;
-  min-height: 80px;
+  // overflow-y: hidden;
+  min-height: 5%;
 }
 
-.search-container {
-  width: 30%;
+.search-container{
+  width: 100%; 
+  margin: 0 1rem 0 0;
+
 }
 
 .modal-body {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next row */
-  justify-content: space-between; /* Distribute items evenly horizontally */
-  align-content: flex-start; /* Align items at the start of each row */
-  max-width: 400px; /* Adjust the maximum width as needed */
-  margin: 0 auto; /* Center the content horizontally */
+display: flex;
+flex-wrap: wrap; /* Allow items to wrap to the next row */
+justify-content: space-between; /* Distribute items evenly horizontally */
+align-content: flex-start; /* Align items at the start of each row */
+max-width: 400px; /* Adjust the maximum width as needed */
+margin: 0 auto; /* Center the content horizontally */
 }
 
 .modal-body label {
-  width: 45%; /* Adjust the width to control the number of columns */
-  margin-bottom: 10px; /* Add some vertical spacing between rows */
+width: 45%; /* Adjust the width to control the number of columns */
+margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .colums-form {
   position: absolute; /* Positioning menu absolutely relative to the container */
-
+  
   right: 0; /* Align with the right edge of the container */
   background-color: #fff; /* White background */
   border: 1px solid #ccc; /* Gray border */
@@ -57,35 +59,4 @@
 /* Hover effect for the menu options */
 .colums-form label:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
-}
-
-.rendered-list {
-  width: 100%;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.rendered-list::-webkit-scrollbar {
-  display: none;
-}
-
-/* Define CSS styles for row and cell backgrounds */
-.table-row {
-  background-color: #fff; /* Default row background color */
-  /* Add other row styles as needed */
-}
-
-.table-row.table-primary {
-  background-color: #007bff; /* Selected row background color */
-  color: #fff; /* Text color for selected row */
-}
-
-.generic-table__td {
-  padding: 8px; /* Adjust padding as needed */
-  /* Add other cell styles as needed */
-}
-
-.generic-table__td.selected {
-  background-color: #007bff; /* Selected cell background color */
-  color: #fff; /* Text color for selected cell */
 }

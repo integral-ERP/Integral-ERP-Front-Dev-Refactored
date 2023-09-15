@@ -49,7 +49,7 @@ const Carrier = () => {
   const updateCarriers = (url = null) => {
     CarrierService.getCarriers(url)
       .then((response) => {
-        
+
         setCarriers((prevCustomers) => {
           const newData = [...prevCustomers, ...response.data.results];
           return newData;
@@ -65,7 +65,7 @@ const Carrier = () => {
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       updateCarriers();
       setInitialDataFetched(true);
     }
@@ -155,66 +155,66 @@ const Carrier = () => {
   }, []);
 
   return (
-    <>
+    <div className="dashboard__layout">
       <div className="dashboard__sidebar">
         <Sidebar />
+        <div className="content-page">
+          <Table
+            data={carriers}
+            columns={columns}
+            onSelect={handleSelectCarrier} // Make sure this line is correct
+            selectedRow={selectedCarrier}
+            onDelete={handleDeleteCarrier}
+            onEdit={handleEditCarrier}
+            onAdd={handleAddCarrier}
+            title="Carriers"
+          />
+
+          {showSuccessAlert && (
+            <Alert
+              severity="success"
+              onClose={() => setShowSuccessAlert(false)}
+              className="alert-notification"
+            >
+              <AlertTitle>Success</AlertTitle>
+              <strong>Carrier deleted successfully!</strong>
+            </Alert>
+          )}
+          {showErrorAlert && (
+            <Alert
+              severity="error"
+              onClose={() => setShowErrorAlert(false)}
+              className="alert-notification"
+            >
+              <AlertTitle>Error</AlertTitle>
+              <strong>Error deleting Carrier. Please try again</strong>
+            </Alert>
+          )}
+
+          {selectedCarrier !== null && (
+            <ModalForm isOpen={isOpen} closeModal={closeModal}>
+              <CarrierCreationForm
+                carrier={selectedCarrier}
+                closeModal={closeModal}
+                creating={false}
+                onCarrierDataChange={handleCarrierDataChange}
+              />
+            </ModalForm>
+          )}
+
+          {selectedCarrier === null && (
+            <ModalForm isOpen={isOpen} closeModal={closeModal}>
+              <CarrierCreationForm
+                carrier={null}
+                closeModal={closeModal}
+                creating={true}
+                onCarrierDataChange={handleCarrierDataChange}
+              />
+            </ModalForm>
+          )}
+        </div>
       </div>
-      <div className="content-page">
-        <Table
-          data={carriers}
-          columns={columns}
-          onSelect={handleSelectCarrier} // Make sure this line is correct
-          selectedRow={selectedCarrier}
-          onDelete={handleDeleteCarrier}
-          onEdit={handleEditCarrier}
-          onAdd={handleAddCarrier}
-          title="Carriers"
-        />
-
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Carrier deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Carrier. Please try again</strong>
-          </Alert>
-        )}
-
-        {selectedCarrier !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={selectedCarrier}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
-
-        {selectedCarrier === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={null}
-              closeModal={closeModal}
-              creating={true}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
-      </div>
-    </>
+    </div>
   );
 };
 

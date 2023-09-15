@@ -194,7 +194,7 @@
 .table-container {
   height: auto;
   max-height: 140px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .startup-wizard-form__other-addresses-form {

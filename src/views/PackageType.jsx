@@ -143,9 +143,9 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   return (
     <>
+    <div className="dashboard__layout">
       <div className="dashboard__sidebar">
         <Sidebar />
-      </div>
       <div className="content-page">
         <Table
           data={packageTypes}
@@ -198,7 +198,9 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             />
           </ModalForm>
         )}
+        </div>
       </div>
+    </div>
     </>
   );
 };
