@@ -1,15 +1,51 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import { useState, useEffect } from "react";
 import logo from "../../img/logo.png";
 import barcode from "../../img/bars.png";
-const GeneratePickUpPDF = () => {
-  const [url, seturl] = useState(null);
-  const [imgUrl, setImgUrl] = useState(null);
-  const [barcodeUrl, setbarcodeUrl] = useState(null);
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-  useEffect(() => {
+const GeneratePickUpPDF = (data) => {
+  return new Promise((resolve, reject) => {
+    let imgUrl = null;
+    let barcodeUrl = null;
+
+    const commodityRows = [];
+
+    // Loop through the commodities array and create a table row for each item
+    if(data.commodities){
+      data.commodities?.forEach((commodity, index) => {
+        const commodityRow = [
+          {
+            text: `${index + 1}; Pallet \n`,
+            colSpan: 2,
+            margin: [0, 0, 0, 200],
+          },
+          {},
+          {
+            text: `${commodity.length}x${commodity.width}x${commodity.height} in`,
+          },
+          {
+            text: 'adhesives', // You may replace this with the actual description
+            colSpan: 2,
+            margin: [0, 0, 0, 40],
+          },
+          {},
+          {
+            text: `${commodity.weight} lb`,
+            margin: [0, 0, 0, 40],
+          },
+          {
+            text: [`${commodity.volumetricWeight} ft3 \n`, `${commodity.chargedWeight} Vlb`],
+            margin: [0, 0, 0, 40],
+          },
+        ];
+  
+        // Add the commodity row to the array
+        commodityRows.push(commodityRow);
+      });
+    }
+
+
     // Fetch the logo image dynamically
     fetch(logo)
       .then((response) => response.blob())
@@ -17,394 +53,382 @@ const GeneratePickUpPDF = () => {
         // Convert the image blob to a data URL
         const reader = new FileReader();
         reader.onload = (event) => {
-          const dataURL = event.target.result;
-          setImgUrl(dataURL);
-        };
-        reader.readAsDataURL(imageBlob);
-      })
-      .catch((error) => {
-        console.error("Error loading image:", error);
-      });
+          imgUrl = event.target.result;
 
-    fetch(barcode)
-      .then((response) => response.blob())
-      .then((imageBlob) => {
-        // Convert the image blob to a data URL
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const dataURL = event.target.result;
-          setbarcodeUrl(dataURL);
-        };
-        reader.readAsDataURL(imageBlob);
-      })
-      .catch((error) => {
-        console.error("Error loading image:", error);
-      });
-  }, []);
+          // Fetch the barcode image dynamically
+          fetch(barcode)
+            .then((response) => response.blob())
+            .then((barcodeBlob) => {
+              // Convert the barcode image blob to a data URL
+              const barcodeReader = new FileReader();
+              barcodeReader.onload = (barcodeEvent) => {
+                barcodeUrl = barcodeEvent.target.result;
 
-  useEffect(() => {
-    if (imgUrl && barcodeUrl) {
-      // Once the image data URL is available, create the PDF
-      const pdfGenerator = pdfMake.createPdf(pdf);
-      pdfGenerator.getBlob((blob) => {
-        const pdfUrl = URL.createObjectURL(blob);
-        seturl(pdfUrl);
-      });
-    }
-  }, [imgUrl, barcodeUrl]);
-
-  const pdf = {
-    content: [
-      {
-        columns: [
-          [{ image: imgUrl, fit: [100, 100] }],
-          {
-            text: [
-              "Issued By \n",
-              "PressEx Logistics \n",
-              "Tel: (305)4567884, Fax: 786-9998847 \n",
-              "2020 NW 129 AVE SUITE 201 \n",
-              "MIAMI, FLORIDA 33182 \n",
-              "UNITED STATES",
-            ],
-          },
-          {
-            stack: [
-              { image: barcodeUrl, fit: [100, 200], alignment: "right" },
-              { text: "8000325", bold: true, alignment: "right", fontSize: 20 },
-            ],
-          },
-        ],
-      },
-      {
-        columns: [
-          [
-            {}, // Empty cell for the logo image (rowspan: 2)
-          ],
-          {
-            style: "tableExample",
-            table: {
-              width: "*",
-              body: [["Received By:", "Juan Felipe Jaramillo"]],
-            },
-          },
-          {
-            style: "tableExample",
-            table: {
-              width: "*",
-              body: [["Received Date", "09/15/2023"]],
-              margin: [5, 0, 5, 0],
-            },
-          },
-        ],
-      },
-      {
-        columns: [
-          {
-            style: "tableExample",
-            table: {
-              width: "*",
-              body: [["Pickup Date", "09/15/2023"]],
-            },
-          },
-          {
-            style: "tableExample",
-            table: {
-              width: "*",
-              body: [["Delivery Date", "09/15/2023"]],
-            },
-          },
-          {
-            style: "tableExample",
-            table: {
-              width: "*",
-              body: [["Carrier", "Forward Air, INC"]],
-            },
-          },
-        ],
-      },
-      {
-        table: {
-          widths: ["33%", "33%", "33%"],
-          body: [
-            [
-              {
-                text: "Pickup Company",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Delivery Company",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "PRO Number",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            [
-              {
-                text: "Krones INC.",
-              },
-              {
-                text: "ALPLA NICARAGUA SA",
-              },
-              {
-                text: "7000911635 - ALPLA NICARAGUA SA",
-              },
-            ],
-            [
-              {
-                text: [
-                  "PILOT FREIGHT SERVICES \n",
-                  "104050 S. OAKVIEW \n",
-                  "PARKWAY - STE# 400 \n",
-                  "OAK VIEW, WISCONSIN 53132 \n",
-                  "USA \n\n",
-                  "Tel: (305 4567884), Fax: 786-9998847",
-                ],
-                margin: [0, 0, 0, 20],
-              },
-              {
-                text: [
-                  "PressEx Logistics, LLC \n",
-                  "2020 NW 129 AVE SUITE 201 \n",
-                  "MIAMI, FLORIDA 33182 \n",
-                  "UNITED STATES \n",
-                  "USA \n\n",
-                  "Tel: (305 4567884), Fax: 786-9998847",
-                ],
-                margin: [0, 0, 0, 10],
-              },
-              {
-                text: ["Tracking Number: \n", "700106746441"],
-                margin: [0, 0, 0, 10],
-              },
-            ],
-            [
-              {
-                text: "Original Shipper Information",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Final Consignee Information",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Supplier Information",
-                bold: true,
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            [
-              {
-                text: "Original Shipper Name.",
-              },
-              {
-                text: "Final Consignee Name",
-              },
-              {
-                text: "Supplier Name",
-              },
-            ],
-            [
-              {
-                text: "Driver: Juan Felipe Jaramillo.",
-              },
-              {
-                text: "Invoice: 700106746441",
-              },
-              {
-                style: "tableExample",
-                table: {
-                  width: "100%",
-                  body: [
-                    ["Description", "Price"],
-                    ["Delivery", "50"],
-                    ["Taxes", "25"],
+                // Create the PDF document
+                const pdf = {
+                  content: [
+                    {
+                      columns: [
+                        [{ image: imgUrl, fit: [100, 100] }],
+                        {
+                          text: [
+                            `Issued By \n`,
+                            `${data.issuedBy?.name || `PressEx Logistics`} \n`,
+                            `Tel: ${data.issuedBy?.phone || `(305)456788`}, Fax: ${data.issuedBy?.fax || `786-9998847`} \n`,
+                            `${data.issuedBy?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
+                            `${data.issuedBy?.city || `MIAMI`}, ${data.issuedBy?.state || `FLORIDA`} ${data.issuedBy?.zipCode || `33182`} \n`,
+                            `${data.issuedBy?.country || `USA`}`,
+                          ],
+                        },
+                        {
+                          stack: [
+                            { image: barcodeUrl, fit: [100, 200], alignment: `right` },
+                            {
+                              text: `${data.issuedBy?.number || `33182`}`,
+                              bold: true,
+                              alignment: `right`,
+                              fontSize: 20,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        [
+                          {}, // Empty cell for the logo image (rowspan: 2)
+                        ],
+                        {
+                          style: `tableExample`,
+                          table: {
+                            width: `*`,
+                            body: [[`Received By:`, `${data.employee?.name || ``}`]],
+                          },
+                        },
+                        {
+                          style: `tableExample`,
+                          table: {
+                            width: `*`,
+                            body: [[`Received Date`, `${data.creationDate || ``}`]],
+                            margin: [5, 0, 5, 0],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          style: `tableExample`,
+                          table: {
+                            width: `*`,
+                            body: [[`Pickup Date`, `${data.pickUpDate || ``}`]],
+                          },
+                        },
+                        {
+                          style: `tableExample`,
+                          table: {
+                            width: `*`,
+                            body: [[`Delivery Date`, `${data.deliveryDate || ``}`]],
+                          },
+                        },
+                        {
+                          style: `tableExample`,
+                          table: {
+                            width: `*`,
+                            body: [[`Carrier`, `${data.mainCarrier?.name || ``}`]],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      table: {
+                        widths: [`33%`, `33%`, `33%`],
+                        body: [
+                          [
+                            {
+                              text: `Pickup Company`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Delivery Company`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `PRO Number`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                          ],
+                          [
+                            {
+                              text: `${data.PickUpLocation?.name || ``}`,
+                            },
+                            {
+                              text: `${data.deliveryLocation?.name || ``}`,
+                            },
+                            {
+                              text: `${data.proNumber || ``}`,
+                            },
+                          ],
+                          [
+                            {
+                              text: [
+                                `${data.PickUpLocation?.name || `PressEx Logistics`} \n`,
+                            `${data.PickUpLocation?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
+                            `${data.PickUpLocation?.city || `MIAMI`}, ${data.PickUpLocation?.state || `FLORIDA`} ${data.PickUpLocation?.zipCode || `33182`} \n`,
+                            `${data.PickUpLocation?.country || `USA`}`,
+                            `Tel: ${data.PickUpLocation?.phone || `(305)456788`}, Fax: ${data.PickUpLocation?.fax || `786-9998847`} \n`,
+                              ],
+                              margin: [0, 0, 0, 20],
+                            },
+                            {
+                              text: [
+                                `${data.deliveryLocation?.name || `PressEx Logistics`} \n`,
+                            `${data.deliveryLocation?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
+                            `${data.deliveryLocation?.city || `MIAMI`}, ${data.deliveryLocation?.state || `FLORIDA`} ${data.deliveryLocation?.zipCode || `33182`} \n`,
+                            `${data.deliveryLocation?.country || `USA`}`,
+                            `Tel: ${data.deliveryLocation?.phone || `(305)456788`}, Fax: ${data.deliveryLocation?.fax || `786-9998847`} \n`,
+                              ],
+                              margin: [0, 0, 0, 10],
+                            },
+                            {
+                              text: [`Tracking Number: \n`, `${data.trackingNumber || ``}`],
+                              margin: [0, 0, 0, 10],
+                            },
+                          ],
+                          [
+                            {
+                              text: `Original Shipper Information`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Final Consignee Information`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Supplier Information`,
+                              bold: true,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                          ],
+                          [
+                            {
+                              text: `${data.shipper?.name || ``}`,
+                            },
+                            {
+                              text: `${data.consignee?.name || ``}`,
+                            },
+                            {
+                              text: `${data.supplier?.name || ``}`,
+                            },
+                          ],
+                          [
+                            {
+                              text: `Driver: Juan Felipe Jaramillo.`,
+                            },
+                            {
+                              text: `Invoice: ${data.invoiceNumber || ``}`,
+                            },
+                            {
+                              style: `tableExample`,
+                              table: {
+                                width: `100%`,
+                                body: [
+                                  [`Description`, `Price`],
+                                  [`Delivery`, `50`],
+                                  [`Taxes`, `25`],
+                                ],
+                              },
+                            },
+                          ],
+                        ],
+                      },
+                    },
+                    {
+                      table: {
+                        widths: [`5%`, `10%`, `20%`, `30%`, `10%`, `10%`, `15%`],
+                        body: [
+                          [
+                            {
+                              text: `Pcs`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Package`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Dimensions`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Description`,
+                              fillColor: `#CCCCCC`,
+                              colSpan: 2,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {},
+                            {
+                              text: `Weight`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Volume`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                          ],
+                          [
+                            {
+                              text: `PO Number`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                              colSpan: 2,
+                            },
+                            {},
+                            {
+                              text: `Invoice Number`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                            {
+                              text: `Notes`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                              colSpan: 2,
+                            },
+                            {},
+                            {},
+                            {
+                              text: `Volume Weight`,
+                              fillColor: `#CCCCCC`,
+                              margin: [0, 0, 0, 0],
+                            },
+                          ],
+                          [
+                            {
+                              text: [`1; Pallet \n`],
+                              colSpan: 2,
+                              margin: [0, 0, 0, 200],
+                            },
+                            {},
+                            {
+                              text: `48.00x32.00x48.00 in`,
+                            },
+                            {
+                              text: `adhesives`,
+                              colSpan: 2,
+                              margin: [0, 0, 0, 40],
+                            },
+                            {},
+                            {
+                              text: `1,416.00 lb`,
+                              margin: [0, 0, 0, 40],
+                            },
+                            {
+                              text: [`42.67 ft3 \n`, `444.18 Vlb`],
+                              margin: [0, 0, 0, 40],
+                            },
+                          ],
+                          [
+                            {
+                              text: `Signature:`,
+                              colSpan: 4,
+                              rowSpan: 2,
+                            },
+                            {},
+                            {},
+                            {},
+                            {
+                              text: `Pieces`,
+                            },
+                            {
+                              text: `Weight`,
+                            },
+                            {
+                              text: [`volume`],
+                            },
+                          ],
+                          [
+                            {},
+                            {},
+                            {},
+                            {},
+                            {
+                              text: `1`,
+                            },
+                            {
+                              text: [`642.29 kg\n`, `1,416.00 lb`],
+                            },
+                            {
+                              text: [`42.67 ft3\n`, `444.18 Vlb`],
+                            },
+                          ],
+                        ],
+                      },
+                    },
                   ],
-                },
-              },
-            ],
-          ],
-        },
-      },
-      {
-        table: {
-          widths: ["5%", "10%", "20%", "30%", "10%", "10%", "15%"],
-          body: [
-            [
-              {
-                text: "Pcs",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Package",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Dimensions",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Description",
-                fillColor: "#CCCCCC",
-                colSpan: 2,
-                margin: [0, 0, 0, 0],
-              },
-              {},
-              {
-                text: "Weight",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Volume",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            [
-              {
-                text: "PO Number",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-                colSpan: 2,
-              },
-              {},
-              {
-                text: "Invoice Number",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-              {
-                text: "Notes",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-                colSpan: 2,
-              },
-              {},
-              {},
-              {
-                text: "Volume Weight",
-                fillColor: "#CCCCCC",
-                margin: [0, 0, 0, 0],
-              },
-            ],
-            [
-              {
-                text: ["1; Pallet \n"],
-                colSpan: 2,
-                margin: [0, 0, 0, 200],
-              },
-              {},
-              {
-                text: "48.00x32.00x48.00 in",
-              },
-              {
-                text: "adhesives",
-                colSpan: 2,
-                margin: [0, 0, 0, 40],
-              },
-              {},
-              {
-                text: "1,416.00 lb",
-                margin: [0, 0, 0, 40],
-              },
-              {
-                text: ["42.67 ft3 \n", "444.18 Vlb"],
-                margin: [0, 0, 0, 40],
-              },
-            ],
-            [
-              {
-                text: "Signature:",
-                colSpan: 4,
-                rowSpan: 2,
-              },
-              {},
-              {},
-              {},
-              {
-                text: "Pieces",
-              },
-              {
-                text: "Weight",
-              },
-              {
-                text: ["volume"],
-              },
-            ],
-            [
-              {},
-              {},
-              {},
-              {},
-              {
-                text: "1",
-              },
-              {
-                text: ["642.29 kg\n", "1,416.00 lb"],
-              },
-              {
-                text: ["42.67 ft3\n", "444.18 Vlb"],
-              },
-            ],
-          ],
-        },
-      },
-    ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        margin: [0, 0, 0, 5],
-      },
-      subheader: {
-        fontSize: 16,
-        bold: true,
-        margin: [0, 10, 0, 5],
-      },
-      tableExample: {
-        margin: [0, 0, 0, 5],
-        alignment: "right",
-        width: "100%",
-      },
-      tableHeader: {
-        bold: true,
-        fontSize: 13,
-        color: "black",
-      },
-    },
-    defaultStyle: {
-      fontSize: 10, // Set the desired font size here (e.g., 10)
-    },
-  };
+                  styles: {
+                    header: {
+                      fontSize: 18,
+                      bold: true,
+                      margin: [0, 0, 0, 5],
+                    },
+                    subheader: {
+                      fontSize: 16,
+                      bold: true,
+                      margin: [0, 10, 0, 5],
+                    },
+                    tableExample: {
+                      margin: [0, 0, 0, 5],
+                      alignment: `right`,
+                      width: `100%`,
+                    },
+                    tableHeader: {
+                      bold: true,
+                      fontSize: 13,
+                      color: `black`,
+                    },
+                  },
+                  defaultStyle: {
+                    fontSize: 10, // Set the desired font size here (e.g., 10)
+                  },
+                };
+                // Generate the PDF
+                const pdfGenerator = pdfMake.createPdf(pdf);
+                pdfGenerator.getBlob((blob) => {
+                  const pdfUrl = URL.createObjectURL(blob);
+                  resolve(pdfUrl);
+                });
+              };
 
-  return (
-    <>
-      <div>
-        {url && (
-          <a href={url} target="_blank" rel="noreferrer">
-            GO TO PDF
-          </a>
-        )}
-      </div>
-    </>
-  );
+              barcodeReader.readAsDataURL(barcodeBlob);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        };
+
+        reader.readAsDataURL(imageBlob);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 };
 
 export default GeneratePickUpPDF;

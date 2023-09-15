@@ -494,6 +494,7 @@ const PickupOrderCreationForm = ({
   }, [formData]);
 
   const sendData = async () => {
+    console.log(formData.commodities, commodities);
     let rawData = {
       // GENERAL TAB
       status: 1,
@@ -519,7 +520,7 @@ const PickupOrderCreationForm = ({
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
       // COMMODITIES TAB
-      pieces: formData.commodities,
+      pieces: commodities,
     };
     const response = await (creating
       ? PickupService.createPickup(rawData)

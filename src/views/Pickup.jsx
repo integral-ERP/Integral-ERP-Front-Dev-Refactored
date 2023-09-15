@@ -36,7 +36,8 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
     "PRO Number",
     "Tracking Number",
     "Invoice Number",
-    "Purchase Order number"
+    "Purchase Order number",
+    "View PDF"
   ];
 
   const updatePickupOrders = (url = null) => {

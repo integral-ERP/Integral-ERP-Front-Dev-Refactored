@@ -14,7 +14,7 @@ import Ports from "../views/Ports";
 import Countries from "../views/Countries"
 import Locations from "../views/Locations"
 import Pickup from "../views/Pickup";
-import GeneratePickUpPDF from "../views/others/GeneratePickUpPDF";
+
 export const RoutesConfiguration = () => {
   return (
     <Router>
@@ -40,7 +40,6 @@ export const RoutesConfiguration = () => {
         <Route path="/maintenance/countries" element={<Countries />} />
         <Route path="/maintenance/locations" element={<Locations />} />
         <Route path="/warehouse/pickup" element={<Pickup />} />
-        <Route path="/pdf" element={<GeneratePickUpPDF />} />
       </Routes>
     </Router>
   );

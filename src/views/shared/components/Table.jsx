@@ -7,6 +7,8 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import { VariableSizeList as List } from "react-window";
 import "../../../styles/components/Table.scss";
+import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+
 const Table = ({
   data,
   columns,
@@ -101,6 +103,18 @@ const Table = ({
     " Weight": "weight",
     " Volumetric Weight": "volumetricWeight",
     " Charged Weight": "chargedWeight",
+  };
+
+  const generatePDF = () => {
+    generatePickUpPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        console.log("PDF URL:", pdfUrl);
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
   };
 
   const handleColumnVisibilityChange = (columnName) => {
@@ -310,6 +324,10 @@ const Table = ({
   const getCellValue = (row, columnName) => {
     if (columnName === "Delete") {
       return ""; // Handle special columns as needed
+    }
+
+    if (columnName === "View PDF") {
+      return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
     // Check if columnNameToProperty contains a "." indicating a nested property
@@ -526,14 +544,12 @@ const Table = ({
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {columnName === "Delete" ? (
+                      {columnName === "View PDF" ? (
                         <button
                           type="button"
-                          onClick={(e) =>
-                            elementDelete(e.target.getAttribute("data-key"))
-                          }
+                          onClick={generatePDF}
                         >
-                          <i className="fas fa-trash"></i>
+                          <i className="fas fa-file-pdf"></i>
                         </button>
                       ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
