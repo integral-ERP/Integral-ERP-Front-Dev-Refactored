@@ -2,75 +2,161 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { useState, useEffect } from "react";
+import logo from "../../img/logo.png";
+import barcode from "../../img/bars.png";
 const GeneratePickUpPDF = () => {
   const [url, seturl] = useState(null);
-
-  const createPDF = (data) => {
-
-    
-    const pdfGenerator = pdfMake.createPdf(pdf);
-    pdfGenerator.getBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      seturl(url);
-    });
-  };
+  const [imgUrl, setImgUrl] = useState(null);
+  const [barcodeUrl, setbarcodeUrl] = useState(null);
 
   useEffect(() => {
-    createPDF();
-  }, [])
+    // Fetch the logo image dynamically
+    fetch(logo)
+      .then((response) => response.blob())
+      .then((imageBlob) => {
+        // Convert the image blob to a data URL
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const dataURL = event.target.result;
+          setImgUrl(dataURL);
+        };
+        reader.readAsDataURL(imageBlob);
+      })
+      .catch((error) => {
+        console.error("Error loading image:", error);
+      });
+
+    fetch(barcode)
+      .then((response) => response.blob())
+      .then((imageBlob) => {
+        // Convert the image blob to a data URL
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const dataURL = event.target.result;
+          setbarcodeUrl(dataURL);
+        };
+        reader.readAsDataURL(imageBlob);
+      })
+      .catch((error) => {
+        console.error("Error loading image:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (imgUrl && barcodeUrl) {
+      // Once the image data URL is available, create the PDF
+      const pdfGenerator = pdfMake.createPdf(pdf);
+      pdfGenerator.getBlob((blob) => {
+        const pdfUrl = URL.createObjectURL(blob);
+        seturl(pdfUrl);
+      });
+    }
+  }, [imgUrl, barcodeUrl]);
 
   const pdf = {
     content: [
       {
         columns: [
-          [
-            { text: "PressEx Logistics", style: "header" },
-            "2020 NW 129th. Ave. Ste. 201",
-            "Miami, FL 33182.",
-            "UNITED STATES",
-          ],
+          [{ image: imgUrl, fit: [100, 100] }],
           {
-            width: "*",
+            text: [
+              "Issued By \n",
+              "PressEx Logistics \n",
+              "Tel: (305)4567884, Fax: 786-9998847 \n",
+              "2020 NW 129 AVE SUITE 201 \n",
+              "MIAMI, FLORIDA 33182 \n",
+              "UNITED STATES",
+            ],
+          },
+          {
             stack: [
-              { text: "PickUp Order", style: "header", alignment: "right" },
-              {
-                style: "tableExample",
-                table: {
-                  widths: ["*", "*"], // Set all columns to take equal width
-                  body: [
-                    ["Pickup Number", "810001491"],
-                    ["Creation Date/Time", "AUG/24/2023 02:03 PM"],
-                    ["Pick-up Date/Time", "AUG/24/2023 02:03 PM"],
-                    ["Delivery Date", "AUG/24/2023 02:03 PM"],
-                    ["Employee", "Inland Freight"],
-                  ],
-                },
-              },
+              { image: barcodeUrl, fit: [100, 200], alignment: "right" },
+              { text: "8000325", bold: true, alignment: "right", fontSize: 20 },
             ],
           },
         ],
       },
       {
+        columns: [
+          [
+            {}, // Empty cell for the logo image (rowspan: 2)
+          ],
+          {
+            style: "tableExample",
+            table: {
+              width: "*",
+              body: [["Received By:", "Juan Felipe Jaramillo"]],
+            },
+          },
+          {
+            style: "tableExample",
+            table: {
+              width: "*",
+              body: [["Received Date", "09/15/2023"]],
+              margin: [5, 0, 5, 0],
+            },
+          },
+        ],
+      },
+      {
+        columns: [
+          {
+            style: "tableExample",
+            table: {
+              width: "*",
+              body: [["Pickup Date", "09/15/2023"]],
+            },
+          },
+          {
+            style: "tableExample",
+            table: {
+              width: "*",
+              body: [["Delivery Date", "09/15/2023"]],
+            },
+          },
+          {
+            style: "tableExample",
+            table: {
+              width: "*",
+              body: [["Carrier", "Forward Air, INC"]],
+            },
+          },
+        ],
+      },
+      {
         table: {
-          widths: ["15%", "*", "15%", "*"],
+          widths: ["33%", "33%", "33%"],
           body: [
             [
               {
-                text: "Pickup Information",
+                text: "Pickup Company",
                 bold: true,
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2,
               },
-              {},
               {
-                text: "Delivery Information",
+                text: "Delivery Company",
                 bold: true,
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2,
               },
-              {},
+              {
+                text: "PRO Number",
+                bold: true,
+                fillColor: "#CCCCCC",
+                margin: [0, 0, 0, 0],
+              },
+            ],
+            [
+              {
+                text: "Krones INC.",
+              },
+              {
+                text: "ALPLA NICARAGUA SA",
+              },
+              {
+                text: "7000911635 - ALPLA NICARAGUA SA",
+              },
             ],
             [
               {
@@ -79,101 +165,76 @@ const GeneratePickUpPDF = () => {
                   "104050 S. OAKVIEW \n",
                   "PARKWAY - STE# 400 \n",
                   "OAK VIEW, WISCONSIN 53132 \n",
-                  "USA",
+                  "USA \n\n",
+                  "Tel: (305 4567884), Fax: 786-9998847",
                 ],
                 margin: [0, 0, 0, 20],
-                colSpan: 2,
               },
-              {},
               {
                 text: [
                   "PressEx Logistics, LLC \n",
                   "2020 NW 129 AVE SUITE 201 \n",
                   "MIAMI, FLORIDA 33182 \n",
                   "UNITED STATES \n",
-                  "USA",
+                  "USA \n\n",
                   "Tel: (305 4567884), Fax: 786-9998847",
                 ],
-                margin: [0, 0, 0, 20],
-                colSpan: 2,
+                margin: [0, 0, 0, 10],
               },
-              {},
-            ],
-            // Rest of the rows with 4 columns each
-            [
-              "Shipper",
-              "KRONES INC",
-              "Consignee",
-              "ALPLA NICARAGUA SA",
+              {
+                text: ["Tracking Number: \n", "700106746441"],
+                margin: [0, 0, 0, 10],
+              },
             ],
             [
               {
-                text: 'Inland Carrier and Supplier Information',
-                margin: [0, 0, 0, 0],
-                colSpan: 4,
-                bold: true,
-                fillColor: "#CCCCCC",
-                alignment: 'center'
-              }
-            ],
-            [
-              "Carrier Name",
-              "Forward Air, INC",
-              "Driver License",
-              "1234198060",
-            ],
-            [
-              "PRO Number",
-              "1234198060",
-              "Supplier Name",
-              "ALPLA NICARAGUA SA",
-            ],
-            [
-              "Tracking Number",
-              "1234198060",
-              "Invoice Number",
-              "1234198060",
-            ],
-            [
-              "Driver Name",
-              "Juan Felipe Jaramillo",
-              "P.O Number",
-              "7000911635 - ALPLA NICARAGUA SA",
-            ],
-            [
-              {
-                text: "Notes",
+                text: "Original Shipper Information",
                 bold: true,
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2,
               },
-              {},
               {
-                text: "Applicable Charges",
+                text: "Final Consignee Information",
                 bold: true,
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2,
               },
-              {},
+              {
+                text: "Supplier Information",
+                bold: true,
+                fillColor: "#CCCCCC",
+                margin: [0, 0, 0, 0],
+              },
             ],
             [
               {
-                text: [
-                  "Pickup red. 7000911635 - Alpla Nicaragua \n",
-                  "SLI en el pickup order \n",
-                ],
-                margin: [0, 0, 0, 20],
-                colSpan: 2,
+                text: "Original Shipper Name.",
               },
-              {},
               {
-                text: [''],
-                margin: [0, 0, 0, 20],
-                colSpan: 2,
+                text: "Final Consignee Name",
               },
-              {},
+              {
+                text: "Supplier Name",
+              },
+            ],
+            [
+              {
+                text: "Driver: Juan Felipe Jaramillo.",
+              },
+              {
+                text: "Invoice: 700106746441",
+              },
+              {
+                style: "tableExample",
+                table: {
+                  width: "100%",
+                  body: [
+                    ["Description", "Price"],
+                    ["Delivery", "50"],
+                    ["Taxes", "25"],
+                  ],
+                },
+              },
             ],
           ],
         },
@@ -214,14 +275,14 @@ const GeneratePickUpPDF = () => {
                 text: "Volume",
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-              }
+              },
             ],
             [
               {
                 text: "PO Number",
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2
+                colSpan: 2,
               },
               {},
               {
@@ -233,7 +294,7 @@ const GeneratePickUpPDF = () => {
                 text: "Notes",
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-                colSpan: 2
+                colSpan: 2,
               },
               {},
               {},
@@ -241,58 +302,51 @@ const GeneratePickUpPDF = () => {
                 text: "Volume Weight",
                 fillColor: "#CCCCCC",
                 margin: [0, 0, 0, 0],
-              }
+              },
             ],
             [
               {
-                text: [
-                  "1; Pallet \n",
-                ],
+                text: ["1; Pallet \n"],
                 colSpan: 2,
                 margin: [0, 0, 0, 200],
               },
               {},
               {
-                text: '48.00x32.00x48.00 in',
+                text: "48.00x32.00x48.00 in",
               },
               {
-                text: 'adhesives',
+                text: "adhesives",
                 colSpan: 2,
                 margin: [0, 0, 0, 40],
               },
               {},
               {
-                text: '1,416.00 lb',
+                text: "1,416.00 lb",
                 margin: [0, 0, 0, 40],
               },
               {
-                text: [
-                  '42.67 ft3 \n',
-                  '444.18 Vlb',
-                ],
+                text: ["42.67 ft3 \n", "444.18 Vlb"],
                 margin: [0, 0, 0, 40],
-              }
+              },
             ],
             [
               {
-                text: 'Signature:',
+                text: "Signature:",
                 colSpan: 4,
-                rowSpan: 2
+                rowSpan: 2,
               },
               {},
               {},
               {},
               {
-                text: 'Pieces'
+                text: "Pieces",
               },
               {
-                text: 'Weight'
+                text: "Weight",
               },
               {
-                text: [
-                  'volume'
-                ]
-              }
+                text: ["volume"],
+              },
             ],
             [
               {},
@@ -300,49 +354,45 @@ const GeneratePickUpPDF = () => {
               {},
               {},
               {
-                text: '1'
+                text: "1",
               },
               {
-                text: ['642.29 kg\n', '1,416.00 lb']
+                text: ["642.29 kg\n", "1,416.00 lb"],
               },
               {
-                text: [
-                  '42.67 ft3\n',
-                  "444.18 Vlb"
-                ]
-              }
+                text: ["42.67 ft3\n", "444.18 Vlb"],
+              },
             ],
           ],
         },
-      }
+      },
     ],
     styles: {
       header: {
         fontSize: 18,
         bold: true,
-        margin: [0, 0, 0, 5]
+        margin: [0, 0, 0, 5],
       },
       subheader: {
         fontSize: 16,
         bold: true,
-        margin: [0, 10, 0, 5]
+        margin: [0, 10, 0, 5],
       },
       tableExample: {
         margin: [0, 0, 0, 5],
         alignment: "right",
-        width: "100%"
+        width: "100%",
       },
       tableHeader: {
         bold: true,
         fontSize: 13,
-        color: 'black'
-      }
+        color: "black",
+      },
     },
     defaultStyle: {
       fontSize: 10, // Set the desired font size here (e.g., 10)
     },
   };
-  
 
   return (
     <>
