@@ -71,7 +71,7 @@ const Table = ({
     Date: "creationDate",
     "Ship Date": "pickUpDate",
     "Delivery Date": "deliveryDate",
-    Pieces: "",
+    Pieces: "commodities",
     "Pickup Orders": "",
     Volume: "",
     Carrier: "",

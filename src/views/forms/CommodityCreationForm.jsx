@@ -28,7 +28,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
       width: formData.width,
       weight: formData.weight,
       volumetricWeight: formData.volumetricWeight,
-      chargedWeight: formData.chargedWeight
+      chargedWeight: formData.volumetricWeight
       // TODO: add fields for volumetric weight and charged weight
     }
     setCommodities([...commodities, body])

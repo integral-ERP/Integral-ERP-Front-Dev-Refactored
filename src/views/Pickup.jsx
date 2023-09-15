@@ -16,6 +16,7 @@ const Pickup = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
 const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const columns = [
     "Status",
     "Number",
@@ -41,7 +42,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
       .then((response) => {
-        
+        setcurrentPickupNumber(response.data.results.slice(-1)[0].number || 0);
         setpickupOrders((prevCustomers) => {
           const newData = [...prevCustomers, ...response.data.results];
           return newData;
@@ -87,6 +88,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
+    console.log("Selected PickupOrder", selectedPickupOrder);
   };
 
   const handleEditPickupOrders = () => {
@@ -191,6 +193,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
               closeModal={closeModal}
               creating={false}
               onpickupOrderDataChange={handlePickupOrdersDataChange}
+              currentPickUpNumber={currentPickupNumber}
+              setcurrentPickUpNumber={setcurrentPickupNumber}
             />
           </ModalForm>
         )}
@@ -202,6 +206,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
               closeModal={closeModal}
               creating={true}
               onpickupOrderDataChange={handlePickupOrdersDataChange}
+              currentPickUpNumber={currentPickupNumber}
+              setcurrentPickUpNumber={setcurrentPickupNumber}
             />
           </ModalForm>
         )}

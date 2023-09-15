@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import CarrierService from "../../services/CarrierService";
 import Alert from "@mui/material/Alert";
@@ -18,12 +18,14 @@ import PickupService from "../../services/PickupService";
 import IncomeChargeForm from "./IncomeChargeForm";
 import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
-import { debounce } from "lodash"; // Import debounce for input throttling
+
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
   creating,
   onpickupOrderDataChange,
+  currentPickUpNumber,
+  setcurrentPickUpNumber,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -42,10 +44,15 @@ const PickupOrderCreationForm = ({
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
+  const pickupNumber = currentPickUpNumber + 1;
+  const [defaultValueDestinationAgent, setdefaultValueDestinationAgent] =
+    useState(null);
+    const [canRender, setcanRender] = useState(false);
+
   const formFormat = {
     // GENERAL TAB
     status: "",
-    number: "8000325",
+    number: pickupNumber,
     createdDateAndTime: today,
     pickupDateAndTime: today,
     deliveryDateAndTime: today,
@@ -73,9 +80,6 @@ const PickupOrderCreationForm = ({
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
-    // SUPPLIER TAB
-    supplierId: "",
-    supplierInfo: "",
     invoiceNumber: "",
     purchaseOrderNumber: "",
     // CHARGES TAB
@@ -124,8 +128,7 @@ const PickupOrderCreationForm = ({
     }`;
     setFormData({
       ...formData,
-      pickupOrderId: id,
-      pickupOrderType: type,
+      pickupLocationId: id,
       pickupInfo: info,
     });
   };
@@ -154,8 +157,7 @@ const PickupOrderCreationForm = ({
     }`;
     setFormData({
       ...formData,
-      deliveryId: id,
-      deliveryType: type,
+      deliveryLocationId: id,
       deliveryLocationInfo: info,
     });
   };
@@ -248,115 +250,91 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
-    let result;
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
-    setFormData({
-      ...formData,
-      supplierId: id,
-      supplierType: type,
-      supplierInfo: info,
-    });
-  };
-
   // Your remote data fetching function
   const loadIssuedByOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = issuedByOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadDestinationAgentOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = destinationAgentOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadEmployeeOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = employeeOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadShipperOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = shipperOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadPickupLocationOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = pickupLocationOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadConsigneeOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = consigneeOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadDeliveryLocationsOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = deliveryLocationOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
+
     callback(results);
   };
 
   const loadCarrierOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
-    console.log(query);
+
     const results = carrierOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
-    console.log(results);
     callback(results);
   };
-
-  // Throttle the input change to avoid sending too many requests
   //const debouncedSearch = debounce(loadOptions, 300); // Adjust the debounce time as needed TODO: check if necessary
 
   useEffect(() => {
-    if (!creating && pickupOrder) {
+    console.log("checking for edit", "join:", !creating && pickupOrder != null);
+    if (!creating && pickupOrder != null) {
+      console.log("Selected Pickup:", pickupOrder);
       let updatedFormData = {
         // GENERAL TAB
         status: pickupOrder.status,
@@ -412,21 +390,19 @@ const PickupOrderCreationForm = ({
           pickupOrder.mainCarrier?.country || ""
         } - ${pickupOrder.mainCarrier?.zipCode || ""}`,
         // SUPPLIER TAB
-        supplierId: pickupOrder.supplierKey,
-        supplierInfo: `${pickupOrder.supplier?.streetNumber || ""} - ${
-          pickupOrder.supplier?.city || ""
-        } - ${pickupOrder.supplier?.state || ""} - ${
-          pickupOrder.supplier?.country || ""
-        } - ${pickupOrder.supplier?.zipCode || ""}`,
         invoiceNumber: pickupOrder.invoiceNumber,
         purchaseOrderNumber: pickupOrder.purchaseOrderNum,
         // CHARGES TAB
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
-      }; // Create a copy of the existing formData
-
-      setFormData(updatedFormData); // Update formData once with all the changes
-      console.log(updatedFormData);
+      };
+      console.log("Form Data to be updated:", updatedFormData);
+      setFormData(updatedFormData);
+      const value = destinationAgentOptions.find((option) => updatedFormData.destinationAgentId == option.id);
+      console.log("OPTION:", value);
+      setdefaultValueDestinationAgent(value);
+      setcanRender(true);
+      console.log(value, canRender);
     }
   }, [creating, pickupOrder]);
 
@@ -501,13 +477,21 @@ const PickupOrderCreationForm = ({
     setConsigneeOptions(consigneeOptions);
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
-
-    console.log("carriers:", carrierOptions);
   };
 
   useEffect(() => {
     fetchFormData();
   }, []);
+
+  useEffect(() => {
+    if (creating) {
+      setFormData({ ...formData, number: pickupNumber });
+    }
+  }, [pickupNumber]);
+
+  useEffect(() => {
+    console.log("Updated form data:", formData);
+  }, [formData]);
 
   const sendData = async () => {
     let rawData = {
@@ -531,7 +515,6 @@ const PickupOrderCreationForm = ({
       trackingNumber: formData.trackingNumber,
       mainCarrierKey: formData.mainCarrierdId,
       // SUPPLIER TAB
-      supplierKey: formData.supplierId,
       invoiceNumber: formData.invoiceNumber,
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
@@ -544,6 +527,7 @@ const PickupOrderCreationForm = ({
 
     if (response.status >= 200 && response.status <= 300) {
       console.log("Pickup Order successfully created/updated:", response.data);
+      setcurrentPickUpNumber(currentPickUpNumber + 1);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -657,6 +641,8 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="issuedby"
+            defaultValue={issuedByOptions[0]}
+            defaultInputValue={issuedByOptions[0]}
             value={formData.issuedById}
             onChange={(e) => {
               handleIssuedBySelection(e);
@@ -683,23 +669,32 @@ const PickupOrderCreationForm = ({
           <label htmlFor="destinationAgent" className="company-form__label">
             Destination Agent:
           </label>
-          <AsyncSelect
+          {!creating ? (canRender && <AsyncSelect
             id="destinationAgent"
-            value={formData.destinationAgentId}
             onChange={(e) => {
               handleDestinationAgentSelection(e);
             }}
             loadOptions={loadDestinationAgentOptions}
             isClearable={true}
-            placeholder="Search and select..."
             defaultOptions={destinationAgentOptions}
             getOptionLabel={(option) => option.name}
             getOptionValue={(option) => option.id}
-          />
+            defaultValue={defaultValueDestinationAgent}
+          />):(<AsyncSelect
+            id="destinationAgent"
+            onChange={(e) => {
+              handleDestinationAgentSelection(e);
+            }}
+            loadOptions={loadDestinationAgentOptions}
+            isClearable={true}
+            defaultOptions={destinationAgentOptions}
+            getOptionLabel={(option) => option.name}
+            getOptionValue={(option) => option.id}
+          />)}
         </div>
         <div className="company-form__section">
           <Input
-            type="text"
+            type="number"
             inputName="pickupnumber"
             placeholder="Pickup Order Number..."
             value={formData.number}
@@ -755,7 +750,7 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="employee"
-            value={formData.employeeId}
+            defaultValue={formData.employeeId}
             onChange={(e) => {
               handleEmployeeSelection(e);
             }}
@@ -781,7 +776,7 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="shipper"
-            value={formData.shipperId}
+            defaultValue={formData.shipperId}
             onChange={(e) => {
               handleShipperSelection(e);
             }}
@@ -808,7 +803,7 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="pickup"
-            value={formData.pickupLocationId}
+            defaultValue={formData.pickupLocationId}
             onChange={(e) => {
               handlePickUpSelection(e);
             }}
@@ -868,7 +863,7 @@ const PickupOrderCreationForm = ({
           <div className="custom-select">
             <AsyncSelect
               id="consignee"
-              value={formData.consigneeId}
+              defaultValue={formData.consigneeId}
               onChange={(e) => handleConsigneeSelection(e)}
               loadOptions={loadConsigneeOptions}
               isClearable={true}
@@ -896,7 +891,7 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="delivery"
-            value={formData.deliveryLocationId}
+            defaultValue={formData.deliveryLocationId}
             onChange={(e) => {
               handleDeliveryLocationSelection(e);
             }}
@@ -932,7 +927,7 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="mainCarrier"
-            value={formData.mainCarrierdId}
+            defaultValue={formData.mainCarrierdId}
             onChange={(e) => {
               handleMainCarrierSelection(e);
             }}
@@ -1086,7 +1081,6 @@ const PickupOrderCreationForm = ({
         <Table
           data={commodities}
           columns={[
-            "Status",
             " Length",
             " Height",
             " Width",
