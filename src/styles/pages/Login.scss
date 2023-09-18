@@ -38,17 +38,22 @@ body {
 }
 
 #login {
-  width: 100%;
+  width: 80%;
   padding: 8% 6% 6% 6%;
   max-width: 50rem;
   background-color: #ffffffd4;
   border-radius: 5%;
   box-sizing: border-box;
   opacity: 0.9;
+  margin: 0 10% 0 10%;
   
   input {
     font-family: 'Overpass', sans-serif;
+<<<<<<< HEAD
     font-size: 200%;
+=======
+    font-size: 1.7rem;
+>>>>>>> 3147938c8a3fabf5126d767603215224eb49c915
     color: #1b262c;
     display: block;
     width: 100%;
@@ -128,7 +133,11 @@ body {
 .text-log {
   font-weight: 600;
   padding: 2rem 0 0 0;
+<<<<<<< HEAD
   font-size: 2rem;
+=======
+  font-size: 1.7rem;
+>>>>>>> 3147938c8a3fabf5126d767603215224eb49c915
   text-align: left;
   color: rgb(112, 112, 112);
 }

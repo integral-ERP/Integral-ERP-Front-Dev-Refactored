@@ -18,8 +18,9 @@
 }
 
 .sidebar.close {
+  text-align: center;
+  min-width: 2.5rem;
   width: 3%;
-  padding: 0px 0 0 0.5%;
 }
 
 .content-page {
@@ -57,9 +58,15 @@
 
 .sidebar .logo-details .logo_name {
   text-align: center;
+<<<<<<< HEAD
   width: 90%;
   height: 50%;
   margin: 0% 1% 0rem 2%;
+=======
+  width: 60%;
+  height: 45%;
+  margin: 5% 3% 1.2rem 5rem;
+>>>>>>> 3147938c8a3fabf5126d767603215224eb49c915
   transition: 0.3s ease;
   transition-delay: 0.1s;
 }
@@ -72,7 +79,7 @@
 
 .sidebar .nav-links {
   height: 100%;
-  padding: 0px 0 100px 0;
+  padding: 0px 0 0px 0;
   overflow: auto;
 }
 
@@ -108,7 +115,7 @@
   display: block;
 }
 
-.sidebar .nav-links li i {
+.sidebar .nav-links li i {  // Flecha e icono
   height: 4rem;
   min-width: 4rem;
   text-align: center;
@@ -117,11 +124,12 @@
   font-size: 200%;
   margin: 0 0 0 0%;
   cursor: pointer;
-  transition: all 1s ease;
+  transition: all 0.5s ease;
 }
 
 .sidebar .nav-links li.showMenu i.arrow {
-  transform: rotate(-180deg);
+  transform: rotate(180deg);
+
 }
 
 .sidebar.close .nav-links i.arrow {

@@ -60,3 +60,38 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 .colums-form label:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
 }
+// ---------------------------------------------------------
+// td {
+//   text-align: left;
+//   padding: 0px 8px 0px 12%;
+//   border-bottom: 1px solid #888888;
+// }
+
+
+.tr-margen{
+  border: 1px solid #a3a3a3de;
+  // white-space: nowrap;
+  font-size: small;
+}
+
+.tr-margen:nth-child(odd) {
+  background-color: #ffffff;
+  white-space: nowrap;
+}
+
+.tr-margen:nth-child(even) {
+  background-color: #c1c1c178;
+}
+
+.tr-margen:hover {
+  font-weight: bold ;
+  background:rgb(177, 220, 255);
+}
+
+.text-head{
+  background-color: gray;
+  font-size: medium;
+}
+.prueba{
+  width: 100%;
+}

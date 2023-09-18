@@ -52,14 +52,14 @@
     }
   
     &__options-container {
-      position: absolute;
-      bottom: 0px;
-      display: flex;
-      justify-content: flex-end;
-      width: 100%;
-      background-color: whitesmoke;
-      border: 3px solid whitesmoke;
-      width: 95%;
+      position: static;
+    bottom: 0px;
+    display: flex;
+    width: 100%;
+    background-color: whitesmoke;
+    /* border: 8px solid whitesmoke; */
+    /* width: 70%; */
+    justify-content: space-evenly;
   
       &__option {
         margin: 15px;
@@ -85,7 +85,7 @@
       }
   
       & td {
-        padding: 12px 15px;
+        // padding: 12px 15px;
         text-align: left;
       }
   
