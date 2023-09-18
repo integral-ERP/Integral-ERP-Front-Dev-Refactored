@@ -382,13 +382,13 @@ const Table = ({
         </div>
       )}
       <div className="generic-table">
-        <table className="table table-hover">
-          <thead>
+        <table className="table-hover ">
+          <thead className="text-head">
             <tr>
               {columnOrder.map(
                 (columnName, columnIndex) =>
                   visibleColumns[columnName] && (
-                    <th
+                    <th 
                       key={columnName}
                       draggable
                       onDragStart={(e) => handleDragStart(e, columnIndex)}
@@ -405,7 +405,7 @@ const Table = ({
             {filteredData.map((row, rowIndex) => (
               <tr
                 key={row.id}
-                className={`table-row ${
+                className={`table-row  tr-margen${
                   selectedRow && selectedRow.id === row.id
                     ? "table-primary"
                     : ""

@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
-import logo from "../../../img/logotex.png"
-import logotext from "../../../img/logorem.png"
+import logo from "../../../img/logotext.png"
+import logotext from "../../../img/logoblanco2.png"
 import usuario from "../../../img/usuario.png"
 
 const Sidebar = () => {

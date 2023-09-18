@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
 * {
   margin: 0;
   padding: 0;
@@ -19,29 +18,14 @@
 }
 
 .sidebar.close {
+  text-align: center;
+  min-width: 2.5rem;
   width: 3%;
-  padding: 0px 0 0 0.5%;
 }
 
 .content-page {
-  // width: 100vw;
-  // height: 94%;
-  // text-align: center;
-  // padding: 20px;
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // position: absolute;
-  // top: 6%;
-  // padding-left: 270px;
-  // position: fixed;
-  // top: 0;
-  // margin: 6vh 0 0 2rem;
-  // left: 0;
-  // width: -webkit-fill-available;
-  // transition: all 0.5s ease;
   width: 99vw;
-  height: 99%;
+  height: 95%;
   text-align: center;
   padding: 10px;
   display: flex;
@@ -61,8 +45,6 @@
   width: 100%;
   display: flex;
   align-items: center;
-
-
 }
 
 .sidebar .logo-details i {
@@ -75,25 +57,23 @@
 }
 
 .sidebar .logo-details .logo_name {
-  width: 70%;
-  height: 55%;
-  margin: 0 0 1rem 2rem;
+  text-align: center;
+  width: 60%;
+  height: 45%;
+  margin: 5% 3% 1.2rem 5rem;
   transition: 0.3s ease;
   transition-delay: 0.1s;
-  background-image: url('../../img/logo.png');
 }
 
 .sidebar.close .logo-details .logo_name {
   transition-delay: 0s;
   opacity: 0;
   pointer-events: none;
-  width: 200px;
-  background-image: url('../../img/logo.png');
 }
 
 .sidebar .nav-links {
   height: 100%;
-  padding: 0px 0 100px 0;
+  padding: 0px 0 0px 0;
   overflow: auto;
 }
 
@@ -102,7 +82,7 @@
 }
 
 .sidebar.close .nav-links {
-  overflow: visiable;
+  overflow: visible;
 }
 
 .sidebar .nav-links::-webkit-scrollbar {
@@ -129,20 +109,21 @@
   display: block;
 }
 
-.sidebar .nav-links li i {
+.sidebar .nav-links li i {  // Flecha e icono
   height: 4rem;
   min-width: 4rem;
-  text-align: left;
+  text-align: center;
   line-height: 4rem;
   color: #fff;
   font-size: 200%;
   margin: 0 0 0 0%;
   cursor: pointer;
-  transition: all 1s ease;
+  transition: all 0.5s ease;
 }
 
 .sidebar .nav-links li.showMenu i.arrow {
-  transform: rotate(-180deg);
+  transform: rotate(180deg);
+
 }
 
 .sidebar.close .nav-links i.arrow {

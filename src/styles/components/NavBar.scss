@@ -31,9 +31,22 @@ color: var(--primary-color);
 }
 
 .logo{
-position: absolute;
-width: 3%;
-min-width: 4rem;
-padding: 0px;
-margin: -1rem 0px 4% 0px;
+  position: absolute;
+  width: 13%;
+  min-width: 3rem;
+  padding: 0px;
+  margin: 0 0% 1vh 0.8vh;
 }
+// ---------------------------------------------------------------------
+.nav{
+    font-weight: bold;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    font-size: initial;
+    width: 100%;
+    color: red;
+}
+
