@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    color: #153A61;
   
     &__tabs-button-container {
       margin-bottom: 20px;
@@ -21,7 +22,7 @@
     }
   
     &__section {
-      margin: 5px;
+      margin: 0;
       margin-bottom: 15px;
     }
   
@@ -53,13 +54,14 @@
   
     &__options-container {
       position: static;
-    bottom: 0px;
-    display: flex;
-    width: 100%;
-    background-color: whitesmoke;
-    /* border: 8px solid whitesmoke; */
-    /* width: 70%; */
-    justify-content: space-evenly;
+      bottom: 0px;
+      display: flex;
+      width: 40%;
+      // background-color: whitesmoke;
+      /* border: 8px solid whitesmoke; */
+      /* width: 70%; */
+      justify-content: space-evenly;
+      height: 3rem;
   
       &__option {
         margin: 15px;
@@ -125,25 +127,31 @@
 
     form{
         margin: 5%;
-        width: 50%;
+        width: 70%;
         margin-top: 3%;
     }
 
     .form-input{
-      width: 60%;
+      width: 70%;
       background: whitesmoke;
       color: black;
-      height: 35px;
+      height: 3rem;
+      padding: 0 0 0 1rem;
+      font-size: initial;
     }
 
     .form-label{
-      width: 40%;
+      width: 70%;
+      text-align: left;
+      font-size: initial;
+      font-weight: bold;
     }
 
     .form-textarea{
-      width: 60%;
+      width: 70%;
       background: whitesmoke;
       color: black;
+      font-size: initial;
     }
 
     .form-checkbox{

@@ -89,9 +89,78 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .text-head{
-  background-color: gray;
+  background-color: rgba(128, 128, 128, 0.589);
   font-size: medium;
+  white-space: nowrap;
+  border: solid 2px rgba(128, 128, 128, 0.459);
+
+}
+.th-separate{
+  border-inline: 1px solid rgb(255, 255, 255);
+
 }
 .prueba{
   width: 100%;
 }
+// --------------------------------------------
+.containerr {  
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "cont-one cont-two";
+  font-size: initial;
+  font-weight:bolder;
+}
+
+.cont-one { 
+  width: 120%;
+  grid-area: cont-one; }
+
+.cont-two { 
+  width: 120%;
+  grid-area: cont-two; }
+// -----------------------------------------------------
+.button-save{
+  // background-color: #18bc9c;
+  width: 10rem;
+  height: 3rem;
+  border-radius: 1rem ;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: rgb(63, 160, 54);
+  cursor: pointer;
+  transition: background-color 0.7s ease;
+}
+
+.button-cancel{
+  // background-color: #69696954; 
+  width: 10rem;
+  height: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: rgb(88, 0, 0);
+  cursor: pointer;
+  transition: background-color 0.7s ease;
+}
+
+.button-save:hover {
+  background-color: #1c3f19; 
+  border-color: rgba(255, 0, 0, 0);
+  color: white;
+}
+.button-cancel:hover {
+  background-color: #471c1c; 
+  color: white;
+}
+

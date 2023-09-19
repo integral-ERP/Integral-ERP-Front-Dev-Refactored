@@ -20,7 +20,7 @@
   }
   
   .modal__container {
-    position: static;
+    position: relative;
     background-color: white;
     // min-width: 800px;
     // max-width: 1080px;
@@ -36,11 +36,21 @@
   }
   
   .modal__close {
+    height: 3.3rem;
+    width: 3.3rem;
+    border-radius: 17px;
+    font-size: 2rem;
     position: absolute;
-    top: 1rem;
     right: 1rem;
-    background: whitesmoke;
-    border: 3px solid whitesmoke;
-    color: black;
+    background: #153A61;
+    color: #ffffff;
+    transition: background-color 0.7s ease;
+  }
+  .modal__close:hover {
+    background-color: rgb(88, 0, 0);; 
+    height: 3.5rem;
+    width: 3.5rem;
+    color: white;
+    font-size: 2.2rem;
   }
   
