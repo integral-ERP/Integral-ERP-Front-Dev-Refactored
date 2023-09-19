@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import { toXML } from "jstoxml";
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
-import { VariableSizeList as List } from "react-window";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 
@@ -25,15 +24,19 @@ const Table = ({
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
   const [showColumnMenu, setShowColumnMenu] = useState(false);
-  const [columnWidths, setColumnWidths] = useState(() => {
-    const initialWidths = {};
-    columns.forEach((columnName) => {
-      initialWidths[columnName] = 100; // Set an initial width (e.g., 100 pixels)
-    });
-    return initialWidths;
-  });
-
+  const [dateFilter, setDateFilter] = useState("all");
   const navigate = useNavigate();
+  const currentDate = new Date(); // Moved outside the switch statement
+  const startOfWeek = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate() - currentDate.getDay()
+  );
+  const endOfWeek = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate() + (6 - currentDate.getDay())
+  );
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const initialVisibility = {};
     columns.forEach((columnName) => {
@@ -101,15 +104,51 @@ const Table = ({
     " Length": "length",
     " Height": "height",
     " Weight": "weight",
+    " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Charged Weight": "chargedWeight",
   };
 
+  const handleSearch = (row) => {
+    const lowerCaseSearchQuery = searchQuery.toLowerCase();
+    const searchMatch = Object.values(row).some((value) =>
+      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
+    );
+    const rowDate = new Date(row.creationDate);
+    console.log("DATE", rowDate);
+    let dateMatch = false;
+    switch(dateFilter) {
+      case "all":
+          dateMatch = true;
+          break;
+        case "today":
+          dateMatch = rowDate === currentDate;
+          break;
+        case "this-week": 
+        dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
+          break;
+        case "this-month":
+          dateMatch = (
+            rowDate.getMonth() === currentDate.getMonth() &&
+            rowDate.getFullYear() === currentDate.getFullYear()
+          );
+          break;
+        case "this-year":
+          dateMatch = rowDate.getFullYear() === currentDate.getFullYear();
+          break;
+        default:
+          dateMatch = true; // "all" or unknown filter, include all rows
+          break;
+    }
+    return searchMatch && dateMatch;
+  };
+
+  const filteredData = data.filter((row) => handleSearch(row));
+  
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
-        console.log("PDF URL:", pdfUrl);
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -118,47 +157,15 @@ const Table = ({
   };
 
   const handleColumnVisibilityChange = (columnName) => {
-    const handleColumnVisibilityChange = (columnName) => {
-      setVisibleColumns((prevVisibility) => ({
-        ...prevVisibility,
-        [columnName]: !prevVisibility[columnName],
-      }));
-
-      // Adjust the column width when it's shown/hidden
-      setColumnWidths((prevWidths) => {
-        const newWidths = { ...prevWidths };
-        if (prevVisibility[columnName]) {
-          // If the column is shown, set its width to the initial width
-          newWidths[columnName] = 100; // Adjust this value as needed
-        } else {
-          // If the column is hidden, set its width to 0
-          newWidths[columnName] = 0;
-        }
-        return newWidths;
-      });
-    };
     setVisibleColumns((prevVisibility) => ({
       ...prevVisibility,
       [columnName]: !prevVisibility[columnName],
     }));
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   const handleFormatChange = (event) => {
     setSelectedFormat(event.target.value);
   };
-
-  const handleSearch = (row) => {
-    const lowerCaseSearchQuery = searchQuery.toLowerCase();
-    return Object.values(row).some((value) =>
-      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
-    );
-  };
-
-  const filteredData = data.filter((row) => handleSearch(row));
 
   const handleExport = () => {
     if (selectedFormat === "csv") {
@@ -241,7 +248,6 @@ const Table = ({
           const importedData = JSON.parse(content);
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported JSON data:", importedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
         }
@@ -250,7 +256,6 @@ const Table = ({
           const importedData = Papa.parse(content, { header: true }).data;
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported CSV data:", importedData);
         } catch (error) {
           console.error("Error parsing CSV file:", error);
         }
@@ -261,7 +266,6 @@ const Table = ({
           const importedData = xmlToJs(xmlDoc);
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported XML data:", importedData);
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
@@ -277,13 +281,9 @@ const Table = ({
     e.dataTransfer.setData("text/plain", columnIndex);
   };
 
-  const handleDragOver = (e, columnIndex) => {
+  const handleDragOver = (e) => {
     // Prevent the default behavior to allow dropping
     e.preventDefault();
-  };
-
-  const getItemSize = () => {
-    return 30;
   };
 
   const handleDrop = (e, targetColumnIndex) => {
@@ -368,11 +368,14 @@ const Table = ({
 
     return widths;
   }, {});
+  
+  const handleSearchChange = (event) => {
+  setSearchQuery(event.target.value);
+};
 
-  const rowBackgroundClass = (selected) =>
-    selected ? "table-row table-primary" : "table-row";
-  const cellBackgroundClass = (selected) =>
-    selected ? "generic-table__td selected" : "generic-table__td";
+  const handleDateFilter = (value) => {
+    setDateFilter(value);
+  };
 
   return (
     <>
@@ -397,6 +400,19 @@ const Table = ({
               placeholder="Search..."
               className="search-input"
             />
+          </div>
+          <div className="date-filter">
+            <label>Date Filter:</label>
+            <select
+              value={dateFilter}
+              onChange={(e) => handleDateFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="today">Today</option>
+              <option value="this-week">This Week</option>
+              <option value="this-month">This Month</option>
+              <option value="this-year">This Year</option>
+            </select>
           </div>
           <button
             className="generic-button"
@@ -545,10 +561,7 @@ const Table = ({
                       }}
                     >
                       {columnName === "View PDF" ? (
-                        <button
-                          type="button"
-                          onClick={generatePDF}
-                        >
+                        <button type="button" onClick={generatePDF}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
                       ) : typeof columnNameToProperty[columnName] ===
@@ -560,6 +573,10 @@ const Table = ({
                         )
                       ) : columnNameToProperty[columnName]?.includes(".") ? (
                         getPropertyValue(row, columnNameToProperty[columnName])
+                      ) : Array.isArray(
+                          row[columnNameToProperty[columnName]]
+                        ) ? (
+                        row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                       ) : (
                         row[columnNameToProperty[columnName]]
                       )}

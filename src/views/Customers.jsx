@@ -40,11 +40,7 @@ const Customers = () => {
     CustomerService.getCustomers(url)
       .then((response) => {
         if(customers !== response.data.results){
-          setcustomers((prevCustomers) => {
-            const newData = [...prevCustomers, ...response.data.results];
-            return newData;
-          });
-          
+          setcustomers([...customers, ...response.data.results].reverse());
         }
         if (response.data.next) {
           setNextPageURL(response.data.next);

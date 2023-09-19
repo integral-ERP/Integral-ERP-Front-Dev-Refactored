@@ -40,12 +40,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const fetchWarehouseProvidersData = (url = null) => {
     WarehouseProviderService.getWarehouseProviders(url)
       .then((response) => {
-        
-        setwarehouseProviders((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setwarehouseProviders([...warehouseProviders, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

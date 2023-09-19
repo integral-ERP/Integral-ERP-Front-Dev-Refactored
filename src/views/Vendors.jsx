@@ -40,12 +40,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const fetchvendorsData = (url = null) => {
     VendorService.getVendors(url)
       .then((response) => {
-        
-        setvendors((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setvendors([...vendors, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

@@ -69,7 +69,20 @@ const GeneratePickUpPDF = (data) => {
                   content: [
                     {
                       columns: [
-                        [{ image: imgUrl, fit: [100, 100] }],
+                        {
+                          stack: [
+                            {
+                              image: imgUrl,
+                              fit: [100, 100]
+                            },
+                            {
+                              text: "Pick-up Order",
+                              fontSize: 18,
+                              bold: true,
+                              margin: [0, 10, 0, 0] // Adjust margin as needed
+                            }
+                          ],
+                        },
                         {
                           text: [
                             `Issued By \n`,

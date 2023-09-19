@@ -520,7 +520,7 @@ const PickupOrderCreationForm = ({
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
       // COMMODITIES TAB
-      pieces: commodities,
+      commodities: commodities,
     };
     const response = await (creating
       ? PickupService.createPickup(rawData)

@@ -49,11 +49,7 @@ const Carrier = () => {
   const updateCarriers = (url = null) => {
     CarrierService.getCarriers(url)
       .then((response) => {
-        
-        setCarriers((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
+        setCarriers([...carriers, ...response.data.results].reverse())
 
         if (response.data.next) {
           setNextPageURL(response.data.next);

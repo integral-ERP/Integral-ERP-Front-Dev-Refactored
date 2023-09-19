@@ -49,12 +49,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const fetchForwardingAgentsData = (url = null) => {
     ForwardingAgentService.getForwardingAgents(url)
       .then((response) => {
-        
-        setforwardingAgents((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setforwardingAgents([...forwardingAgents, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

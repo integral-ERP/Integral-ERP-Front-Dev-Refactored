@@ -57,7 +57,6 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
   useEffect(() => {
     console.log(formData);
     if(formData.height && formData.width && formData.length){
-      console.log("Hola");
       const volWeight = ((formData.height * formData.width * formData.length) / 1728).toFixed(2);
       setformData({...formData, volumetricWeight: volWeight});
       console.log(volWeight);
@@ -115,16 +114,16 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Volumetric Weight:</label>
+          <label className="centered-label">Volume:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight} readOnly/>
             <span className="input-group-text">in3</span>
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Charged Weight:</label>
+          <label className="centered-label">Chargeable Weight:</label>
           <div className="input-group ">
-            <input type="number" className="form-control" aria-label="" value={formData.ratedWeight}
+            <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight}
               onChange={(e) =>
                 setformData({ ...formData, ratedWeight: e.target.value })
               }/>

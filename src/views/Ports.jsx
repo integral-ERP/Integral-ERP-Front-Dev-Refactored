@@ -36,12 +36,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const fetchportsData = (url = null) => {
     PortService.getPorts(url)
       .then((response) => {
-        
-        setports((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setports([...ports, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

@@ -50,12 +50,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     const fetchEmployeesData = (url = null) => {
       EmployeeService.getEmployees(url)
         .then((response) => {
-          
-          setemployees((prevCustomers) => {
-            const newData = [...prevCustomers, ...response.data.results];
-            return newData;
-          });
-  
+          setemployees([...employees, ...response.data.results]);
           if (response.data.next) {
             setNextPageURL(response.data.next);
           }

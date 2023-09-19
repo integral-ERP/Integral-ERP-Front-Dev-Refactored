@@ -43,12 +43,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
       .then((response) => {
-        setcurrentPickupNumber(response.data.results.slice(-1)[0].number || 0);
-        setpickupOrders((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setpickupOrders([...pickupOrders, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -164,6 +159,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
           onEdit={handleEditPickupOrders}
           onAdd={handleAddPickupOrder}
           title="Pick-up Orders"
+          setData={setpickupOrders}
         />
 
         {showSuccessAlert && (

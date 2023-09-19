@@ -36,12 +36,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const fetchpackageTypesData = (url = null) => {
     PackageTypeService.getPackageTypes(url)
       .then((response) => {
-        
-        setpackageTypes((prevCustomers) => {
-          const newData = [...prevCustomers, ...response.data.results];
-          return newData;
-        });
-
+        setpackageTypes([...packageTypes, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
