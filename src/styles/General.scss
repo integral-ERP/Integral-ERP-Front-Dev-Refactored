@@ -72,11 +72,22 @@
 .export-dropdown {
   select,
   label {
+    width: 150%;
+    // margin: 0% 2% 0% 0px;
+    // display: flex;
+    // align-items: center;
+    // border-radius: 10px;
+    // height: 4rem;
+    // padding: 0 1% 0 1%;
+    // flex-direction: row;
+    // align-content: stretch;
+    // justify-content: flex-end;
+
     max-width: 36rem;
     height: 3rem;
     font-size: medium;
     display: flex;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
   }
 
@@ -100,6 +111,7 @@
 }
 
 .generic-table {
+  margin: 0 0 0 0%;
   width: 100%;
   overflow-x: scroll;
   border-collapse: collapse;
@@ -167,7 +179,7 @@
 }
 .text-export{
   font-weight: bolder;
-  width: 13rem;
+  width: 30rem;
 }
 
 .search{

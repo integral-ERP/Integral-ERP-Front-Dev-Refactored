@@ -5,13 +5,8 @@ import { Link } from "react-router-dom";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
-<<<<<<< HEAD
-import logo from "../../../img/logotextblanco.png"
-// import logotext from "../../../img/logoblanco.png"
-=======
 import logo from "../../../img/logotext.png"
 import logotext from "../../../img/logoblanco2.png"
->>>>>>> 3147938c8a3fabf5126d767603215224eb49c915
 import usuario from "../../../img/usuario.png"
 
 const Sidebar = () => {
@@ -40,7 +35,7 @@ const Sidebar = () => {
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo_name" src={logo} alt="Logo" />
-          {/* <img className="logo" src={logotext} alt="Logo_texto" /> */}
+          <img className="logo" src={logotext} alt="Logo_texto" />
           {/* <span className="logo_name">Logo</span> */}
         </div>
         <ul className="nav-links">

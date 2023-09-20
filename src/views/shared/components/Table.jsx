@@ -388,7 +388,7 @@ const Table = ({
               {columnOrder.map(
                 (columnName, columnIndex) =>
                   visibleColumns[columnName] && (
-                    <th 
+                    <th className="th-separate"
                       key={columnName}
                       draggable
                       onDragStart={(e) => handleDragStart(e, columnIndex)}

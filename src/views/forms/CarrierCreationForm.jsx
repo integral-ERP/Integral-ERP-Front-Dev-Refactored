@@ -288,8 +288,10 @@ const CarrierCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
+        <div class="containerr">
+      <div class="cont-one">
         <div className="company-form__section">
-          <label htmlFor="carrierType" className="company-form__label">
+          <label htmlFor="carrierType" className="form-label">
             Carrier Type:
           </label>
           <select
@@ -364,7 +366,9 @@ const CarrierCreationForm = ({
             label="Fax"
           />
         </div>
-        <div className="company-form__section">
+      </div>{/* ----------------------------END ONE---------------------------------- */}
+      <div class="cont-two">
+      <div className="company-form__section">
           <Input
             type="email"
             inputName="email"
@@ -425,6 +429,7 @@ const CarrierCreationForm = ({
           />
         </div>
         <div className="company-form__section">
+          
           <Input
             type="text"
             inputName="idNumber"
@@ -435,7 +440,10 @@ const CarrierCreationForm = ({
             }
             label="Identification Number"
           />
-          <select
+          
+        </div>
+        <p className="textId">Tipo de documento</p>
+        <select
             name="identificacionNumber"
             id="identificacionNumber"
             className="form-input"
@@ -443,8 +451,14 @@ const CarrierCreationForm = ({
             <option value="CC">CC</option>
             <option value="CE">CE</option>
             <option value="NIT">NIT</option>
-          </select>
-        </div>
+        </select>
+      </div>{/* ----------------------------END TWO---------------------------------- */}
+      
+    </div>
+    
+        
+       
+        
       </form>
       <form
         className={`tab-pane fade ${
@@ -656,10 +670,10 @@ const CarrierCreationForm = ({
         </div>
       </form>
       <div className="company-form__options-container">
-        <button className="company-form__option btn btn-primary" onClick={sendData}>
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="company-form__option btn btn-secondary" onClick={closeModal}>
+        <button className="button-cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>

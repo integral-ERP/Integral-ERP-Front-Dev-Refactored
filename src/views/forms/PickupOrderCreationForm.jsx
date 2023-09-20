@@ -47,7 +47,7 @@ const PickupOrderCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [defaultValueDestinationAgent, setdefaultValueDestinationAgent] =
     useState(null);
-    const [canRender, setcanRender] = useState(false);
+  const [canRender, setcanRender] = useState(false);
 
   const formFormat = {
     // GENERAL TAB
@@ -94,11 +94,9 @@ const PickupOrderCreationForm = ({
     const result = await (type === "forwarding-agent"
       ? ForwardingAgentService.getForwardingAgentById(id)
       : WarehouseProviderService.getWarehouseProviderByID(id));
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -121,11 +119,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
@@ -150,11 +146,9 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       deliveryLocationId: id,
@@ -195,11 +189,9 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       consigneeId: id,
@@ -222,11 +214,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       shipperId: id,
@@ -238,11 +228,9 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.streetNumber || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
-    }`;
+    const info = `${result.data.streetNumber || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zipCode || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -343,52 +331,38 @@ const PickupOrderCreationForm = ({
         pickupDateAndTime: pickupOrder.pickUpDate,
         deliveryDateAndTime: pickupOrder.deliveryDate,
         issuedById: pickupOrder.issuedByKey,
-        issuedByInfo: `${pickupOrder.issuedBy?.streetNumber || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issuedBy?.zipCode || ""}`,
+        issuedByInfo: `${pickupOrder.issuedBy?.streetNumber || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issuedBy?.zipCode || ""}`,
         destinationAgentId: pickupOrder.destinationAgentKey,
         employeeId: pickupOrder.employeekey,
         // PICKUP TAB
         shipperId: pickupOrder.shipperkey,
-        shipperInfo: `${pickupOrder.shipper?.streetNumber || ""} - ${
-          pickupOrder.shipper?.city || ""
-        } - ${pickupOrder.shipper?.state || ""} - ${
-          pickupOrder.shipper?.country || ""
-        } - ${pickupOrder.shipper?.zipCode || ""}`,
+        shipperInfo: `${pickupOrder.shipper?.streetNumber || ""} - ${pickupOrder.shipper?.city || ""
+          } - ${pickupOrder.shipper?.state || ""} - ${pickupOrder.shipper?.country || ""
+          } - ${pickupOrder.shipper?.zipCode || ""}`,
         pickupLocationId: pickupOrder.PickUpLocationkey,
-        pickupLocationInfo: `${
-          pickupOrder.PickUpLocation?.streetNumber || ""
-        } - ${pickupOrder.PickUpLocation?.city || ""} - ${
-          pickupOrder.PickUpLocation?.state || ""
-        } - ${pickupOrder.PickUpLocation?.country || ""} - ${
-          pickupOrder.PickUpLocation?.zipCode || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.PickUpLocation?.streetNumber || ""
+          } - ${pickupOrder.PickUpLocation?.city || ""} - ${pickupOrder.PickUpLocation?.state || ""
+          } - ${pickupOrder.PickUpLocation?.country || ""} - ${pickupOrder.PickUpLocation?.zipCode || ""
+          }`,
         // DELIVERY TAB
         consigneeId: pickupOrder.consigneekey,
-        consigneeInfo: `${pickupOrder.consignee?.streetNumber || ""} - ${
-          pickupOrder.consignee?.city || ""
-        } - ${pickupOrder.consignee?.state || ""} - ${
-          pickupOrder.consignee?.country || ""
-        } - ${pickupOrder.consignee?.zipCode || ""}`,
+        consigneeInfo: `${pickupOrder.consignee?.streetNumber || ""} - ${pickupOrder.consignee?.city || ""
+          } - ${pickupOrder.consignee?.state || ""} - ${pickupOrder.consignee?.country || ""
+          } - ${pickupOrder.consignee?.zipCode || ""}`,
         deliveryLocationId: pickupOrder.deliveryLocationkey,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocation?.streetNumber || ""
-        } - ${pickupOrder.deliveryLocation?.city || ""} - ${
-          pickupOrder.deliveryLocation?.state || ""
-        } - ${pickupOrder.deliveryLocation?.country || ""} - ${
-          pickupOrder.deliveryLocation?.zipCode || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocation?.streetNumber || ""
+          } - ${pickupOrder.deliveryLocation?.city || ""} - ${pickupOrder.deliveryLocation?.state || ""
+          } - ${pickupOrder.deliveryLocation?.country || ""} - ${pickupOrder.deliveryLocation?.zipCode || ""
+          }`,
         // CARRIER TAB
         proNumber: pickupOrder.proNumber,
         trackingNumber: pickupOrder.trackingNumber,
         mainCarrierdId: pickupOrder.mainCarrierKey,
-        mainCarrierInfo: `${pickupOrder.mainCarrier?.streetNumber || ""} - ${
-          pickupOrder.mainCarrier?.city || ""
-        } - ${pickupOrder.mainCarrier?.state || ""} - ${
-          pickupOrder.mainCarrier?.country || ""
-        } - ${pickupOrder.mainCarrier?.zipCode || ""}`,
+        mainCarrierInfo: `${pickupOrder.mainCarrier?.streetNumber || ""} - ${pickupOrder.mainCarrier?.city || ""
+          } - ${pickupOrder.mainCarrier?.state || ""} - ${pickupOrder.mainCarrier?.country || ""
+          } - ${pickupOrder.mainCarrier?.zipCode || ""}`,
         // SUPPLIER TAB
         invoiceNumber: pickupOrder.invoiceNumber,
         purchaseOrderNumber: pickupOrder.purchaseOrderNum,
@@ -629,9 +603,8 @@ const PickupOrderCreationForm = ({
         </li>
       </ul>
       <form
-        className={`tab-pane fade ${
-          activeTab === "general" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "general" ? "show active" : ""
+          } company-form__general-form`}
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
@@ -680,7 +653,7 @@ const PickupOrderCreationForm = ({
             getOptionLabel={(option) => option.name}
             getOptionValue={(option) => option.id}
             defaultValue={defaultValueDestinationAgent}
-          />):(<AsyncSelect
+          />) : (<AsyncSelect
             id="destinationAgent"
             onChange={(e) => {
               handleDestinationAgentSelection(e);
@@ -764,9 +737,8 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${
-          activeTab === "pickup" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "pickup" ? "show active" : ""
+          } company-form__general-form`}
         id="pickup"
         style={{ display: activeTab === "pickup" ? "block" : "none" }}
       >
@@ -850,9 +822,8 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${
-          activeTab === "delivery" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "delivery" ? "show active" : ""
+          } company-form__general-form`}
         id="delivery"
         style={{ display: activeTab === "delivery" ? "block" : "none" }}
       >
@@ -915,9 +886,8 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${
-          activeTab === "carrier" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "carrier" ? "show active" : ""
+          } company-form__general-form`}
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
@@ -975,9 +945,8 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${
-          activeTab === "charges" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "charges" ? "show active" : ""
+          } company-form__general-form`}
         id="charges"
         style={{ display: activeTab === "charges" ? "block" : "none" }}
       >
@@ -1017,7 +986,7 @@ const PickupOrderCreationForm = ({
             >
               <path
                 d="M19.1426 23.6543C17.8477 24.123 16.4531 24.375 15 24.375C13.5469 24.375 12.1465 24.1172 10.8574 23.6543C10.8398 23.6484 10.8281 23.6426 10.8105 23.6367C9.05273 22.9922 7.48242 21.9551 6.20508 20.625C4.10156 18.4336 2.8125 15.4629 2.8125 12.1875C2.8125 5.45508 8.26758 0 15 0C21.7324 0 27.1875 5.45508 27.1875 12.1875C27.1875 15.4629 25.8984 18.4336 23.7949 20.625C23.7363 20.6836 23.6777 20.748 23.6191 20.8066C22.3652 22.0605 20.8418 23.0391 19.1484 23.6543H19.1426ZM15 5.38477C14.3496 5.38477 13.8223 5.91211 13.8223 6.5625V6.91406C13.4941 6.98438 13.1836 7.08398 12.8906 7.21289C12.0117 7.61133 11.2559 8.34961 11.0684 9.42188C10.9629 10.0195 11.0215 10.5938 11.2676 11.1211C11.5137 11.6367 11.8945 12 12.2812 12.2637C12.9609 12.7266 13.8574 12.9961 14.543 13.2012L14.6719 13.2422C15.4863 13.4883 16.043 13.6758 16.3887 13.9277C16.5352 14.0332 16.5879 14.1152 16.6055 14.1621C16.623 14.209 16.6582 14.3145 16.6172 14.5547C16.582 14.7598 16.4707 14.9297 16.1484 15.0703C15.791 15.2227 15.2109 15.2988 14.4609 15.1816C14.1094 15.123 13.4824 14.9121 12.9258 14.7188C12.7969 14.6777 12.6738 14.6309 12.5508 14.5957C11.9355 14.3906 11.2734 14.7246 11.0684 15.3398C10.8633 15.9551 11.1973 16.6172 11.8125 16.8223C11.8828 16.8457 11.9707 16.875 12.0703 16.9102C12.5332 17.0684 13.2598 17.3145 13.8164 17.4434V17.8125C13.8164 18.4629 14.3438 18.9902 14.9941 18.9902C15.6445 18.9902 16.1719 18.4629 16.1719 17.8125V17.4902C16.4824 17.4316 16.7871 17.3438 17.0742 17.2207C17.9941 16.8281 18.7383 16.0664 18.9258 14.9531C19.0312 14.3438 18.9844 13.7637 18.75 13.2305C18.5215 12.7031 18.1523 12.3164 17.7598 12.0293C17.0449 11.5137 16.1016 11.2266 15.3926 11.0098L15.3457 10.998C14.5137 10.7461 13.9512 10.5703 13.5938 10.3301C13.4414 10.2246 13.3945 10.1543 13.3828 10.125C13.3711 10.1074 13.3418 10.0312 13.377 9.83203C13.3945 9.7207 13.4883 9.52734 13.8574 9.35742C14.2324 9.1875 14.8184 9.09375 15.5332 9.20508C15.7852 9.24609 16.582 9.39844 16.8047 9.45703C17.4316 9.62109 18.0703 9.25195 18.2402 8.625C18.4102 7.99805 18.0352 7.35938 17.4082 7.18945C17.1504 7.11914 16.5645 7.00195 16.1777 6.93164V6.5625C16.1777 5.91211 15.6504 5.38477 15 5.38477ZM2.8125 20.625H3.75C4.89258 22.1426 6.32812 23.4199 7.98047 24.375H3.75V26.25H15H26.25V24.375H22.0195C23.6719 23.4199 25.1133 22.1426 26.25 20.625H27.1875C28.7402 20.625 30 21.8848 30 23.4375V27.1875C30 28.7402 28.7402 30 27.1875 30H2.8125C1.25977 30 0 28.7402 0 27.1875V23.4375C0 21.8848 1.25977 20.625 2.8125 20.625Z"
-                fill="#C11111"
+                fill="#Cbs-nav-link-color: 11"
               />
             </svg>
             Add Expense Charge
@@ -1045,18 +1014,17 @@ const PickupOrderCreationForm = ({
             "Amt + Tax",
             "Currency",
           ]}
-          onSelect={() => {}} // Make sure this line is correct
+          onSelect={() => { }} // Make sure this line is correct
           selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          onAdd={() => {}}
+          onDelete={() => { }}
+          onEdit={() => { }}
+          onAdd={() => { }}
           showOptions={false}
         />
       </form>
       <form
-        className={`tab-pane fade ${
-          activeTab === "commodities" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "commodities" ? "show active" : ""
+          } company-form__general-form`}
         id="commodities"
         style={{ display: activeTab === "commodities" ? "block" : "none" }}
       >
@@ -1089,11 +1057,11 @@ const PickupOrderCreationForm = ({
             " Charged Weigth",
             " Delete",
           ]}
-          onSelect={() => {}} // Make sure this line is correct
+          onSelect={() => { }} // Make sure this line is correct
           selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          onAdd={() => {}}
+          onDelete={() => { }}
+          onEdit={() => { }}
+          onAdd={() => { }}
           showOptions={false}
         />
       </form>
