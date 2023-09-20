@@ -24,9 +24,13 @@ const Table = ({
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
   const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [dateFilter, setDateFilter] = useState("all");
+  const [startDate, setstartDate] = useState("");
+  const [finishDate, setfinishDate] = useState("");
+  const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const navigate = useNavigate();
-  const currentDate = new Date(); // Moved outside the switch statement
+  const currentDate = new Date();
   const startOfWeek = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -114,37 +118,46 @@ const Table = ({
     const searchMatch = Object.values(row).some((value) =>
       value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
     );
-    const rowDate = new Date(row.creationDate);
-    console.log("DATE", rowDate);
     let dateMatch = false;
-    switch(dateFilter) {
-      case "all":
+    const dateColumn = selectedDateFilter;
+    if (dateColumn && dateColumn in columnNameToProperty) {
+      const propertyName = columnNameToProperty[dateColumn];
+      const rowDate = new Date(row[propertyName]);
+      switch (dateFilter) {
+        case "all":
           dateMatch = true;
           break;
         case "today":
-          dateMatch = rowDate === currentDate;
+          dateMatch = rowDate.toDateString() === currentDate.toDateString();
           break;
-        case "this-week": 
-        dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
+        case "this-week":
+          dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
           break;
         case "this-month":
-          dateMatch = (
+          dateMatch =
             rowDate.getMonth() === currentDate.getMonth() &&
-            rowDate.getFullYear() === currentDate.getFullYear()
-          );
+            rowDate.getFullYear() === currentDate.getFullYear();
           break;
         case "this-year":
           dateMatch = rowDate.getFullYear() === currentDate.getFullYear();
           break;
+        case "between":
+          console.log("start Date", startDate, "finish date", finishDate, "applies?", rowDate >= startDate && rowDate <= finishDate, rowDate);
+          dateMatch = rowDate >= new Date(startDate) && rowDate <= new Date(finishDate);
+          break;
         default:
           dateMatch = true; // "all" or unknown filter, include all rows
           break;
+      }
+      return searchMatch && dateMatch;
+    } else {
+      dateMatch = true;
     }
+
     return searchMatch && dateMatch;
   };
-
   const filteredData = data.filter((row) => handleSearch(row));
-  
+
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
@@ -368,13 +381,17 @@ const Table = ({
 
     return widths;
   }, {});
-  
+
   const handleSearchChange = (event) => {
-  setSearchQuery(event.target.value);
-};
+    setSearchQuery(event.target.value);
+  };
 
   const handleDateFilter = (value) => {
     setDateFilter(value);
+  };
+
+  const handleDateFilterChange = (value) => {
+    setSelectedDateFilter(value);
   };
 
   return (
@@ -401,24 +418,115 @@ const Table = ({
               className="search-input"
             />
           </div>
-          <div className="date-filter">
-            <label>Date Filter:</label>
-            <select
-              value={dateFilter}
-              onChange={(e) => handleDateFilter(e.target.value)}
+          {showFilterMenu && (
+            <div
+              className="modal"
+              style={{ display: showFilterMenu ? "block" : "none" }}
             >
-              <option value="all">All</option>
-              <option value="today">Today</option>
-              <option value="this-week">This Week</option>
-              <option value="this-month">This Month</option>
-              <option value="this-year">This Year</option>
-            </select>
-          </div>
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Filter Dates</h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                      onClick={() => setShowFilterMenu(!showFilterMenu)}
+                    >
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="date-filter">
+                      <label>Date Filter:</label>
+                      <div className="date-range">
+                        <label>Start Date:</label>
+                        <input
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setstartDate(e.target.value)}
+                        />
+                      </div>
+                      <div className="date-range">
+                        <label>End Date:</label>
+                        <input
+                          type="date"
+                          value={finishDate}
+                          onChange={(e) => setfinishDate(e.target.value)}
+                        />
+                      </div>
+                      <select
+                        value={dateFilter}
+                        onChange={(e) => handleDateFilter(e.target.value)}
+                        style={{ margin: "5px" }}
+                      >
+                        <option value="all">All</option>
+                        <option value="today">Today</option>
+                        <option value="this-week">This Week</option>
+                        <option value="this-month">This Month</option>
+                        <option value="this-year">This Year</option>
+                      </select>
+                      <div
+                        className="radio-container"
+                        style={{ display: "flex", width: "250px" }}
+                      >
+                        {columns.map(
+                          (columnName) =>
+                            columnName.toLowerCase().includes("date") && (
+                              <label key={columnName}>
+                                <input
+                                  type="radio"
+                                  value={columnName}
+                                  checked={selectedDateFilter === columnName}
+                                  onChange={(e) =>
+                                    handleDateFilterChange(e.target.value)
+                                  }
+                                />
+                                {columnName}
+                              </label>
+                            )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setShowFilterMenu(!showFilterMenu);
+                        // Apply custom date range filter here
+                        handleDateFilter("between");
+                      }}
+                    >
+                      Apply Filter
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                      onClick={() => setShowFilterMenu(!showFilterMenu)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <button
             className="generic-button"
             onClick={() => setShowColumnMenu(!showColumnMenu)}
           >
             <i className="fas fa-eye menu-icon fa-3x ne"></i>
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowFilterMenu(!showFilterMenu)}
+            className="generic-button"
+          >
+            <i className="fas fa-filter menu-icon fa-3x ne"></i>
           </button>
           {showColumnMenu && (
             <div
