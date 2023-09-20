@@ -1,56 +1,52 @@
 /* ModalForms.scss */
 
 .modal-form {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-color: rgba(0, 0, 0, 0.75);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
-  
-    &.is-open {
-      display: flex;
-      padding: 0 0 0 5%;
-    }
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+
+  &.is-open {
+    display: flex;
+    padding: 0 0 0 5%;
   }
-  
-  .modal__container {
-    position: relative;
-    background-color: white;
-    // min-width: 800px;
-    // max-width: 1080px;
-    // min-height: 600px;
-    // max-height: 1080px;
-    // height: 600px;
-    height: 90vh;
-    width: 70%;
-    overflow-y: auto;
-    padding: 1rem;
-    overflow-x: hidden;
-    color: black;
-  }
-  
-  .modal__close {
-    height: 3.3rem;
-    width: 3.3rem;
-    border-radius: 17px;
-    font-size: 2rem;
-    position: absolute;
-    right: 1rem;
-    background: #153A61;
-    color: #ffffff;
-    transition: background-color 0.7s ease;
-  }
-  .modal__close:hover {
-    background-color: rgb(88, 0, 0);; 
-    height: 3.5rem;
-    width: 3.5rem;
-    color: white;
-    font-size: 2.2rem;
-  }
-  
+}
+
+.modal__container {
+  position: relative;
+  background-color: white;
+  height: 90vh;
+  width: 70%;
+  overflow-y: auto;
+  padding: 1rem;
+  overflow-x: hidden;
+  color: black;
+  border-radius: 1rem;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal__close {
+  height: 3.3rem;
+  width: 3.3rem;
+  border-radius: 17px;
+  font-size: 2rem;
+  position: absolute;
+  right: 1rem;
+  background: #153A61;
+  color: #ffffff;
+  transition: background-color 0.7s ease;
+}
+.modal__close:hover {
+  background-color: rgb(88, 0, 0);; 
+  height: 3.5rem;
+  width: 3.5rem;
+  color: white;
+  font-size: 2.2rem;
+}

@@ -288,174 +288,171 @@ const CarrierCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-        <div class="containerr">
-      <div class="cont-one">
-        <div className="company-form__section">
-          <label htmlFor="carrierType" className="form-label">
-            Carrier Type:
-          </label>
+      <div class="containerr">
+        <div class="cont-one">
+          <div className="company-form__section">
+            <label htmlFor="carrierType" className="form-label">
+              Carrier Type:
+            </label>
+            <select
+              id="carrierType"
+              className="form-input"
+              value={formData.carrierType}
+              onChange={(e) => handleTypeChange(e)}
+            >
+              <option value="Land">Land</option>
+              <option value="Air">Air</option>
+              <option value="Ocean">Ocean</option>
+            </select>
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="name"
+              placeholder="Name"
+              value={formData.name}
+              changeHandler={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              label="Name"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="ccode"
+              placeholder="Carrier Code"
+              value={formData.carrierCode}
+              changeHandler={(e) =>
+                setFormData({ ...formData, carrierCode: e.target.value })
+              }
+              label="Carrier Code"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="phone"
+              placeholder="Phone"
+              value={formData.phone}
+              changeHandler={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              label="Phone"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="mphone"
+              placeholder="Mobile Phone"
+              value={formData.mobilePhone}
+              changeHandler={(e) =>
+                setFormData({ ...formData, mobilePhone: e.target.value })
+              }
+              label="Mobile Phone"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="fax"
+              placeholder="fax"
+              value={formData.fax}
+              changeHandler={(e) =>
+                setFormData({ ...formData, fax: e.target.value })
+              }
+              label="Fax"
+            />
+          </div>
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        <div class="cont-two">
+          <div className="company-form__section">
+            <Input
+              type="email"
+              inputName="email"
+              placeholder="email"
+              value={formData.email}
+              changeHandler={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              label="Email"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="website"
+              placeholder="website"
+              value={formData.website}
+              changeHandler={(e) =>
+                setFormData({ ...formData, website: e.target.value })
+              }
+              label="Website"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="rnumber"
+              placeholder="rnumber"
+              value={formData.referentNumber}
+              changeHandler={(e) =>
+                setFormData({ ...formData, referentNumber: e.target.value })
+              }
+              label="Reference Number"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="contactFN"
+              placeholder="contactFN"
+              value={formData.contactFirstName}
+              changeHandler={(e) =>
+                setFormData({ ...formData, contactFirstName: e.target.value })
+              }
+              label="Contact First Name"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="contactLN"
+              placeholder="contactLN"
+              value={formData.contactLastName}
+              changeHandler={(e) =>
+                setFormData({ ...formData, contactLastName: e.target.value })
+              }
+              label="Contact Last Name"
+            />
+          </div>
+          <div className="company-form__section">
+            
+            <Input
+              type="text"
+              inputName="idNumber"
+              placeholder="idNumber"
+              value={formData.idNumber}
+              changeHandler={(e) =>
+                setFormData({ ...formData, idNumber: e.target.value })
+              }
+              label="Identification Number"
+            />
+            
+          </div>
+          <p className="textId">Tipo de documento</p>
           <select
-            id="carrierType"
-            className="form-input"
-            value={formData.carrierType}
-            onChange={(e) => handleTypeChange(e)}
-          >
-            <option value="Land">Land</option>
-            <option value="Air">Air</option>
-            <option value="Ocean">Ocean</option>
-          </select>
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="name"
-            placeholder="Name"
-            value={formData.name}
-            changeHandler={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-            label="Name"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="ccode"
-            placeholder="Carrier Code"
-            value={formData.carrierCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, carrierCode: e.target.value })
-            }
-            label="Carrier Code"
-          />
-        </div>
-
-        <div className="company-form__section">
-          <Input
-            type="number"
-            inputName="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            changeHandler={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-            label="Phone"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="number"
-            inputName="mphone"
-            placeholder="Mobile Phone"
-            value={formData.mobilePhone}
-            changeHandler={(e) =>
-              setFormData({ ...formData, mobilePhone: e.target.value })
-            }
-            label="Mobile Phone"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="number"
-            inputName="fax"
-            placeholder="fax"
-            value={formData.fax}
-            changeHandler={(e) =>
-              setFormData({ ...formData, fax: e.target.value })
-            }
-            label="Fax"
-          />
-        </div>
-      </div>{/* ----------------------------END ONE---------------------------------- */}
-      <div class="cont-two">
-      <div className="company-form__section">
-          <Input
-            type="email"
-            inputName="email"
-            placeholder="email"
-            value={formData.email}
-            changeHandler={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            label="Email"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="website"
-            placeholder="website"
-            value={formData.website}
-            changeHandler={(e) =>
-              setFormData({ ...formData, website: e.target.value })
-            }
-            label="Website"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="rnumber"
-            placeholder="rnumber"
-            value={formData.referentNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, referentNumber: e.target.value })
-            }
-            label="Reference Number"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="contactFN"
-            placeholder="contactFN"
-            value={formData.contactFirstName}
-            changeHandler={(e) =>
-              setFormData({ ...formData, contactFirstName: e.target.value })
-            }
-            label="Contact First Name"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="contactLN"
-            placeholder="contactLN"
-            value={formData.contactLastName}
-            changeHandler={(e) =>
-              setFormData({ ...formData, contactLastName: e.target.value })
-            }
-            label="Contact Last Name"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="idNumber"
-            placeholder="idNumber"
-            value={formData.idNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, idNumber: e.target.value })
-            }
-            label="Identification Number"
-          />
-          
-        </div>
-      </div>{/* ----------------------------END TWO---------------------------------- */}
-      
-    </div>
-    <select
             name="identificacionNumber"
             id="identificacionNumber"
             className="form-input"
-          >
+            >
             <option value="CC">CC</option>
             <option value="CE">CE</option>
             <option value="NIT">NIT</option>
-      </select>
-        
-       
-        
+          </select>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
+      </div>
       </form>
       <form
         className={`tab-pane fade ${

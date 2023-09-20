@@ -72,15 +72,18 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
   border: 1px solid #a3a3a3de;
   // white-space: nowrap;
   font-size: small;
+  border-inline: 1px solid rgb(0, 0, 0);
 }
 
 .tr-margen:nth-child(odd) {
   background-color: #ffffff;
   white-space: nowrap;
+  border-inline: 1px solid rgb(0, 0, 0);
 }
 
 .tr-margen:nth-child(even) {
   background-color: #c1c1c178;
+  border: 1px solid rgb(0, 0, 0);
 }
 
 .tr-margen:hover {
@@ -97,7 +100,6 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 .th-separate{
   border-inline: 1px solid rgb(255, 255, 255);
-
 }
 .prueba{
   width: 100%;
@@ -139,7 +141,6 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .button-cancel{
-  // background-color: #69696954; 
   width: 10rem;
   height: 3rem;
   border-radius: 1rem;
@@ -156,11 +157,33 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 
 .button-save:hover {
   background-color: #1c3f19; 
-  border-color: rgba(255, 0, 0, 0);
+  width: 10.2rem;
+  height: 3.2rem;
   color: white;
+  font-size: 1.8rem;
 }
 .button-cancel:hover {
   background-color: #471c1c; 
+  width: 10.2rem;
+  height: 3.2rem;
   color: white;
+  font-size: 1.8rem;
 }
 
+// .borrador{
+//   width: 70%;
+//   display: flex;
+//   margin: 0 0 0 15%;
+//   background: #ccc;
+// }
+
+.textId{
+  margin: 0 0 0 15%;
+  width: 100%;
+  text-align: left;
+  // margin-bottom: 0.5rem;
+}
+
+td{
+  border-inline: 1px solid rgb(255, 255, 255) !important;
+}

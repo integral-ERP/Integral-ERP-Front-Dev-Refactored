@@ -53,10 +53,11 @@
 }
 
 .startup-wizard-form__section {
-  margin: 5px;
-  margin-bottom: 15px;
-  text-align: left;
-  width: 50%;
+  margin: 0 5px 0 5px;
+  /* margin-bottom: 15px; */
+  text-align: right;
+  width: 60%;
+  /* margin: 0 5px 0 10rem; */
 }
 
 .startup-wizard-form__label {
