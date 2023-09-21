@@ -215,7 +215,6 @@ const PortsCreationForm = ({
         </div>
         <label className="form-label">Transportation method</label>
         <div className="method">
-          <hr />
           <div className="checkbox_container">
             <Input
               type="checkbox"
@@ -272,9 +271,10 @@ const PortsCreationForm = ({
               label="Border Crossing Point"
             />
           </div>
+          
         </div>
-        <hr />
-        <div className="company-form__section">
+
+        <div className="check-port">
           <Input
             type="checkbox"
             inputName="usedbycompany"

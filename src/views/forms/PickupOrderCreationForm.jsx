@@ -609,7 +609,7 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="issuedby" className="company-form__label">
+          <label htmlFor="issuedby" className="form-label">
             Issued By:
           </label>
           <AsyncSelect
@@ -639,7 +639,7 @@ const PickupOrderCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="destinationAgent" className="company-form__label">
+          <label htmlFor="destinationAgent" className="form-label">
             Destination Agent:
           </label>
           {!creating ? (canRender && <AsyncSelect
@@ -718,7 +718,7 @@ const PickupOrderCreationForm = ({
           </LocalizationProvider>
         </div>
         <div className="company-form__section">
-          <label htmlFor="employee" className="company-form__label">
+          <label htmlFor="employee" className="form-label">
             Employee:
           </label>
           <AsyncSelect
@@ -743,7 +743,7 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "pickup" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="shipper" className="company-form__label">
+          <label htmlFor="shipper" className="form-label">
             Shipper:
           </label>
           <AsyncSelect
@@ -770,7 +770,7 @@ const PickupOrderCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="pickup" className="company-form__label">
+          <label htmlFor="pickup" className="form-label">
             Pick-up Location:
           </label>
           <AsyncSelect
@@ -828,7 +828,7 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "delivery" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="consignee" className="company-form__label">
+          <label htmlFor="consignee" className="form-label">
             Consignee:
           </label>
           <div className="custom-select">
@@ -857,7 +857,7 @@ const PickupOrderCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="delivery" className="company-form__label">
+          <label htmlFor="delivery" className="form-label">
             Delivery Location:
           </label>
           <AsyncSelect
@@ -892,7 +892,7 @@ const PickupOrderCreationForm = ({
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="mainCarrier" className="company-form__label">
+          <label htmlFor="mainCarrier" className="form-label">
             Carrier:
           </label>
           <AsyncSelect
@@ -1067,13 +1067,13 @@ const PickupOrderCreationForm = ({
       </form>
       <div className="company-form__options-container">
         <button
-          className="company-form__option btn btn-primary"
+          className="button-save"
           onClick={sendData}
         >
           Save
         </button>
         <button
-          className="company-form__option btn btn-secondary"
+          className="button-cancel"
           onClick={closeModal}
         >
           Cancel

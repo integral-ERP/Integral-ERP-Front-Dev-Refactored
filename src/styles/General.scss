@@ -191,10 +191,52 @@
   margin: 0 0% 0 0;
 }
 .method{
-  margin: 0 5px 0 5px;
+  margin: 0 5px 0 30%;
   text-align: right;
-  width: 80%;
+  width: 70%;
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.check-port{
+  width: 115%;
+  border-top: solid 1px rgba(128, 128, 128, 0.404);
+  margin: 1rem 0 0 0;
+}
+
+.css-13cymwt-control{
+  width: 70% !important;
+  margin: 0 0 0 15% !important;
+  font-size: medium;
+}
+.css-1nmdiq5-menu{
+  background: white !important;
+  font-size: medium !important;
+  z-index: 1000 !important;
+}
+
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+  // background: red !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 2.2rem !important;
+  font-weight: bold !important;
+  color: #153a61 !important;
+  margin: 0rem 0 0 -1.4rem !important
+  // width: 100% !important;
+  // margin: 5rem !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+  margin: 2rem 0 1rem 0rem !important;
+  // background: red !important;
+  font-size: small !important;
+}
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+  border: 1px solid rgba(240, 8, 8, 0) !important;
+  font-size: small !important;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  height: 2.5rem !important;
 }

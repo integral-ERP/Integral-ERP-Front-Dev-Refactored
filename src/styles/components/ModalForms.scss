@@ -42,6 +42,7 @@
   background: #153A61;
   color: #ffffff;
   transition: background-color 0.7s ease;
+  z-index: 1000;
 }
 .modal__close:hover {
   background-color: rgb(88, 0, 0);; 

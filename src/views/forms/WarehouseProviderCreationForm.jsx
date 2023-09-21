@@ -180,114 +180,120 @@ const WarehouseProviderCreationForm = ({
           id="general"
           style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="name"
-            placeholder="Name"
-            value={formData.name}
-            changeHandler={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-            label="Name"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            changeHandler={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-            label="Phone"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="mphone"
-            placeholder="Mobile Phone"
-            value={formData.mobilePhone}
-            changeHandler={(e) =>
-              setFormData({ ...formData, mobilePhone: e.target.value })
-            }
-            label="Mobile Phone"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="fax"
-            placeholder="fax"
-            value={formData.fax}
-            changeHandler={(e) =>
-              setFormData({ ...formData, fax: e.target.value })
-            }
-            label="Fax"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="email"
-            inputName="email"
-            placeholder="email"
-            value={formData.email}
-            changeHandler={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            label="Email"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="website"
-            placeholder="website"
-            value={formData.website}
-            changeHandler={(e) =>
-              setFormData({ ...formData, website: e.target.value })
-            }
-            label="Website"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="rnumber"
-            placeholder="rnumber"
-            value={formData.referentNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, referentNumber: e.target.value })
-            }
-            label="Reference Number"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="contactFN"
-            placeholder="contactFN"
-            value={formData.contactFirstName}
-            changeHandler={(e) =>
-              setFormData({ ...formData, contactFirstName: e.target.value })
-            }
-            label="Contact First Name"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="contactLN"
-            placeholder="contactLN"
-            value={formData.contactLastName}
-            changeHandler={(e) =>
-              setFormData({ ...formData, contactLastName: e.target.value })
-            }
-            label="Contact Last Name"
-          />
-        </div>
+      <div class="containerr">
+        <div class="cont-one">
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="name"
+              placeholder="Name"
+              value={formData.name}
+              changeHandler={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              label="Name"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="mphone"
+              placeholder="Mobile Phone"
+              value={formData.mobilePhone}
+              changeHandler={(e) =>
+                setFormData({ ...formData, mobilePhone: e.target.value })
+              }
+              label="Mobile Phone"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="email"
+              inputName="email"
+              placeholder="email"
+              value={formData.email}
+              changeHandler={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              label="Email"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="rnumber"
+              placeholder="rnumber"
+              value={formData.referentNumber}
+              changeHandler={(e) =>
+                setFormData({ ...formData, referentNumber: e.target.value })
+              }
+              label="Reference Number"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="contactLN"
+              placeholder="contactLN"
+              value={formData.contactLastName}
+              changeHandler={(e) =>
+                setFormData({ ...formData, contactLastName: e.target.value })
+              }
+              label="Contact Last Name"
+            />
+          </div>
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        <div class="cont-two">
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="phone"
+              placeholder="Phone"
+              value={formData.phone}
+              changeHandler={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              label="Phone"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="fax"
+              placeholder="fax"
+              value={formData.fax}
+              changeHandler={(e) =>
+                setFormData({ ...formData, fax: e.target.value })
+              }
+              label="Fax"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="website"
+              placeholder="website"
+              value={formData.website}
+              changeHandler={(e) =>
+                setFormData({ ...formData, website: e.target.value })
+              }
+              label="Website"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="contactFN"
+              placeholder="contactFN"
+              value={formData.contactFirstName}
+              changeHandler={(e) =>
+                setFormData({ ...formData, contactFirstName: e.target.value })
+              }
+              label="Contact First Name"
+            />
+          </div>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
+      </div>
       </form>
       <form
          className={`tab-pane fade ${
@@ -309,13 +315,13 @@ const WarehouseProviderCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-country" className="company-form__label">
+          <label htmlFor="wp-country" className="form-label">
             Country
           </label>
           <select
             name="wp-country"
             id="wp-country"
-            className="company-form__input"
+            className="form-input"
             value={formData.country}
             onChange={(e) => handleCountryChange(e)}
           >
@@ -341,13 +347,13 @@ const WarehouseProviderCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-state" className="company-form__label">
+          <label htmlFor="wp-state" className="form-label">
             State:
           </label>
           <select
             name="wp-state"
             id="wp-state"
-            className="company-form__input"
+            className="form-input"
             value={formData.state}
             onChange={(e) => handleStateChange(e)}
           >
@@ -373,13 +379,13 @@ const WarehouseProviderCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-city" className="company-form__label">
+          <label htmlFor="wp-city" className="form-label">
             City:
           </label>
           <select
             name="wp-city"
             id="wp-city"
-            className="company-form__input"
+            className="form-input"
             value={formData.city}
             onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           >
@@ -418,10 +424,10 @@ const WarehouseProviderCreationForm = ({
         </div>
       </form>
       <div className="company-form__options-container">
-        <button className="company-form__option btn btn-primary" onClick={sendData}>
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="company-form__option btn btn-secondary" onClick={closeModal}>
+        <button className="button-cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>

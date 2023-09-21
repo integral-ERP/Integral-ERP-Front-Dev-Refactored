@@ -170,13 +170,6 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
   font-size: 1.8rem;
 }
 
-// .borrador{
-//   width: 70%;
-//   display: flex;
-//   margin: 0 0 0 15%;
-//   background: #ccc;
-// }
-
 .textId{
   margin: 0 0 0 15%;
   width: 100%;
@@ -186,4 +179,13 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 
 td{
   border-inline: 1px solid rgb(255, 255, 255) !important;
+}
+
+.tr-margentable-primary{
+  background: #a0a0a0ad;
+  font-style: italic;
+  font-size: larger;
+  font-weight: bold;
+  border: 2px solid;
+  white-space: nowrap;
 }
