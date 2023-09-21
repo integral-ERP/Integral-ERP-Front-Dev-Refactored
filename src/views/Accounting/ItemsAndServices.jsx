@@ -3,15 +3,15 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import CarrierCreationForm from "../forms/CarrierCreationForm";
+import ItemAndServiceCreationForm from "../forms/ItemAndServiceCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
-import ItemsAndServicesService from "../../services/ItemsAndServices";
+import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import Sidebar from "../shared/components/SideBar";
 
 const ItemsAndServices = () => {
     const [itemsAndServices, setItemsAndServices] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedeItemAndService, setSelectedCarrier] = useState(null);
+  const [selectedeItemAndService, setSelectedItemAndService] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
@@ -64,29 +64,29 @@ const ItemsAndServices = () => {
     };
   }, [nextPageURL]);
 
-  const handleCarrierDataChange = () => {
+  const handleItemAndServiceDataChange = () => {
     updateItemsAndServices();
   };
 
-  const handleSelectCarrier = (carrier) => {
-    setSelectedCarrier(carrier);
+  const handleSelectItemAndService = (itemAndService) => {
+    setSelectedItemAndService(itemAndService);
   };
 
-  const handleEditCarrier = () => {
+  const handleEditItemAndService = () => {
     if (selectedeItemAndService) {
       openModal();
     } else {
-      alert("Please select a carrier to edit.");
+      alert("Please select an Item and Service to edit.");
     }
   };
 
-  const handleAddCarrier = () => {
+  const handleAddItemAndService = () => {
     openModal();
   };
 
-  const handleDeleteCarrier = () => {
+  const handleDeleteItemAndService = () => {
     if (selectedeItemAndService) {
-      ItemsAndServicesService.deleteCarrier(selectedeItemAndService.id)
+      ItemsAndServicesService.deleteItemAndService(selectedeItemAndService.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
@@ -105,7 +105,7 @@ const ItemsAndServices = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a carrier to delete.");
+      alert("Please select an Item and Service to delete.");
     }
   };
 
@@ -113,11 +113,11 @@ const ItemsAndServices = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isCarrierButton = clickedElement.classList.contains("ne");
+      const isItemAndServiceButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isCarrierButton && !isTableRow) {
-        setSelectedCarrier(null);
+      if (!isItemAndServiceButton && !isTableRow) {
+        setSelectedItemAndService(null);
       }
     };
 
@@ -138,11 +138,11 @@ const ItemsAndServices = () => {
         <Table
           data={itemsAndServices}
           columns={columns}
-          onSelect={handleSelectCarrier} // Make sure this line is correct
+          onSelect={handleSelectItemAndService} // Make sure this line is correct
           selectedRow={selectedeItemAndService}
-          onDelete={handleDeleteCarrier}
-          onEdit={handleEditCarrier}
-          onAdd={handleAddCarrier}
+          onDelete={handleDeleteItemAndService}
+          onEdit={handleEditItemAndService}
+          onAdd={handleAddItemAndService}
           title="Items & Services"
         />
 
@@ -153,7 +153,7 @@ const ItemsAndServices = () => {
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Carrier deleted successfully!</strong>
+            <strong>Item and Service deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -163,28 +163,28 @@ const ItemsAndServices = () => {
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Carrier. Please try again</strong>
+            <strong>Error deleting Item and Service. Please try again</strong>
           </Alert>
         )}
 
         {selectedeItemAndService !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={selectedeItemAndService}
+            <ItemAndServiceCreationForm
+              itemAndService={selectedeItemAndService}
               closeModal={closeModal}
               creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
             />
           </ModalForm>
         )}
 
         {selectedeItemAndService === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={null}
+            <ItemAndServiceCreationForm
+              itemAndService={null}
               closeModal={closeModal}
               creating={true}
-              onCarrierDataChange={handleCarrierDataChange}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
             />
           </ModalForm>
         )}

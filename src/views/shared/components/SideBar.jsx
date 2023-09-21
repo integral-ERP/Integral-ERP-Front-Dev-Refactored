@@ -210,7 +210,9 @@ const Sidebar = () => {
                 <a href="#">Chart of Accounts</a>
               </li>
               <li>
-                <a href="#">Items & Services</a>
+              <Link to={"/accounting/itemsandservices"}>
+              Items & Services
+                </Link>
               </li>
               <li>
                 <a href="#">Invoices</a>
