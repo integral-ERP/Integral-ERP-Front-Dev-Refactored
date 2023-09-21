@@ -53,9 +53,11 @@
 }
 
 .startup-wizard-form__section {
-  margin: 5px;
-  margin-bottom: 15px;
-  text-align: left;
+  margin: 0 5px 0 5px;
+  /* margin-bottom: 15px; */
+  text-align: right;
+  width: 60%;
+  /* margin: 0 5px 0 10rem; */
 }
 
 .startup-wizard-form__label {
@@ -194,7 +196,7 @@
 .table-container {
   height: auto;
   max-height: 140px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .startup-wizard-form__other-addresses-form {

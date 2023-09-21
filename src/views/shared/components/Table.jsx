@@ -18,7 +18,6 @@ const Table = ({
   onAdd,
   title,
   showOptions,
-  elementDelete,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -80,12 +79,18 @@ const Table = ({
     Date: "creationDate",
     "Ship Date": "pickUpDate",
     "Delivery Date": "deliveryDate",
-    Pieces: "commodities",
+    "Pickup Name": "",
+    "Delivery Key": "",
+    Pieces: "",
     "Pickup Orders": "",
+    "Pickup Key": "",
+    Weight: "",
     Volume: "",
     Carrier: "",
-    "PRO Number": "proNumber",
-    "Tracking Number": "trackingNumber",
+    "Main Carrier Key": "",
+    "Inland Carrier Key": "",
+    "PRO Number": "",
+    "Tracking Number": "",
     "": "",
     "Invoice Number": "invoiceNumber",
     "Purchase Order number": "purchaseOrderNum",
@@ -404,21 +409,79 @@ const Table = ({
           <div className="title-container">
             <h1 className="title">{title}</h1>
           </div>
+          <div className="export-dropdown">
+              <label className="laver-export">
+                <span className="text-export">Export Format:</span>
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select Format</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div>
         </div>
       )}
 
       {showOptions && (
         <div className="button-container">
-          <div className="search-container">
+
+<div className="action-buttons">
+            <button className="generic-button" onClick={onAdd}>
+              <i className="fas fa-plus menu-icon fa-3x"></i>
+            </button>
+            <button className="generic-button ne" onClick={onEdit}>
+              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+            </button>
+            <button className="generic-button ne" onClick={onDelete}>
+              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+            </button>
+
             <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Search..."
-              className="search-input"
+              type="file"
+              accept=".json, .csv, .xml"
+              onChange={handleImport}
+              className="hidden-input"
+              id="import-input"
             />
+            <button className="generic-button ne" onClick={onDelete}>
+              <i
+                className="fas fa-upload menu-icon fa-3x"
+                onClick={() => document.getElementById("import-input").click()}
+              ></i>
+            </button>
+
+            {/* <div className="export-dropdown">     IMPORT///EXPORT
+              <label>
+                Export Format:
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select Format</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div> */}
           </div>
-          {showFilterMenu && (
+          <div className="search">
+            <div className="search-container">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                className="search-input"
+              />
+            </div>
+            {showFilterMenu && (
             <div
               className="modal"
               style={{ display: showFilterMenu ? "block" : "none" }}
@@ -513,12 +576,11 @@ const Table = ({
               </div>
             </div>
           )}
-          <button
-            className="generic-button"
-            onClick={() => setShowColumnMenu(!showColumnMenu)}
-          >
+          <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
             <i className="fas fa-eye menu-icon fa-3x ne"></i>
-          </button>
+            </button>
+          </div>
+          
           <button
             type="button"
             onClick={() => setShowFilterMenu(!showFilterMenu)}
@@ -527,10 +589,7 @@ const Table = ({
             <i className="fas fa-filter menu-icon fa-3x ne"></i>
           </button>
           {showColumnMenu && (
-            <div
-              className="modal"
-              style={{ display: showColumnMenu ? "block" : "none" }}
-            >
+            <div className="modal" style={{display: showColumnMenu ? "block": "none"}}>
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -560,11 +619,7 @@ const Table = ({
                     ))}
                   </div>
                   <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => setShowColumnMenu(!showColumnMenu)}
-                    >
+                    <button type="button" className="btn btn-primary" onClick={() => setShowColumnMenu(!showColumnMenu)}>
                       Save changes
                     </button>
                     <button
@@ -580,63 +635,22 @@ const Table = ({
               </div>
             </div>
           )}
-          <div className="action-buttons">
-            <button className="generic-button" onClick={onAdd}>
-              <i className="fas fa-plus menu-icon fa-3x"></i>
-            </button>
-            <button className="generic-button ne" onClick={onEdit}>
-              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-            </button>
-            <button className="generic-button ne" onClick={onDelete}>
-              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-            </button>
-
-            <input
-              type="file"
-              accept=".json, .csv, .xml"
-              onChange={handleImport}
-              className="hidden-input"
-              id="import-input"
-            />
-            <button className="generic-button ne" onClick={onDelete}>
-              <i
-                className="fas fa-upload menu-icon fa-3x"
-                onClick={() => document.getElementById("import-input").click()}
-              ></i>
-            </button>
-
-            <div className="export-dropdown">
-              <label>
-                Export Format:
-                <select value={selectedFormat} onChange={handleFormatChange}>
-                  <option value="">Select Format</option>
-                  <option value="json">JSON</option>
-                  <option value="csv">CSV</option>
-                  <option value="pdf">PDF</option>
-                  <option value="xml">XML</option>
-                </select>
-              </label>
-              <button className="generic-button" onClick={handleExport}>
-                <i className="fas fa-file-export menu-icon fa-3x"></i>
-              </button>
-            </div>
-          </div>
+          
         </div>
       )}
       <div className="generic-table">
-        <table className="table table-hover">
-          <thead>
+        <table className="table-hover ">
+          <thead className="text-head">
             <tr>
               {columnOrder.map(
                 (columnName, columnIndex) =>
-                  visibleColumns[columnName] && ( // Check if the column should be visible
-                    <th
+                  visibleColumns[columnName] && (
+                    <th className="th-separate"
                       key={columnName}
                       draggable
                       onDragStart={(e) => handleDragStart(e, columnIndex)}
                       onDragOver={(e) => handleDragOver(e, columnIndex)}
                       onDrop={(e) => handleDrop(e, columnIndex)}
-                      style={{ minWidth: columnWidthsCalculated[columnName] }}
                     >
                       {columnName}
                     </th>
@@ -648,7 +662,7 @@ const Table = ({
             {filteredData.map((row, rowIndex) => (
               <tr
                 key={row.id}
-                className={`table-row ${
+                className={`table-row  tr-margen${
                   selectedRow && selectedRow.id === row.id
                     ? "table-primary"
                     : ""

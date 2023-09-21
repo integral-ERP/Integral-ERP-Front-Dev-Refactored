@@ -142,13 +142,13 @@ const PortsCreationForm = ({
         style={{ display: activeTab === "port" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="wp-country" className="company-form__label">
+          <label htmlFor="wp-country" className="form-label">
             Country
           </label>
           <select
             name="wp-country"
             id="wp-country"
-            className="company-form__input"
+            className="form-input"
             value={formData.country}
             onChange={(e) => handleCountryChange(e)}
           >
@@ -213,9 +213,8 @@ const PortsCreationForm = ({
             label="Subdivision"
           />
         </div>
-        <label className="company-form__label">Transportation method</label>
-        <div className="startup-wizard-form__section">
-          <hr />
+        <label className="form-label">Transportation method</label>
+        <div className="method">
           <div className="checkbox_container">
             <Input
               type="checkbox"
@@ -272,9 +271,10 @@ const PortsCreationForm = ({
               label="Border Crossing Point"
             />
           </div>
+          
         </div>
-        <hr />
-        <div className="company-form__section">
+
+        <div className="check-port">
           <Input
             type="checkbox"
             inputName="usedbycompany"
@@ -308,13 +308,13 @@ const PortsCreationForm = ({
       </form>
       <div className="company-form__options-container">
         <button
-          className="company-form__option btn btn-primary"
+          className="button-save"
           onClick={sendData}
         >
           Save
         </button>
         <button
-          className="company-form__option btn btn-secondary"
+          className="button-cancel"
           onClick={closeModal}
         >
           Cancel

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import "../../../styles/components/SideBar.scss";
+
+import "../../../styles/components/mystyle.scss";
+
 import { useModal } from "../../../hooks/useModal";
 import { Link } from "react-router-dom";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
-import logo from "../../../img/logotext.png"
-import logotext from "../../../img/logoblanco2.png"
-import usuario from "../../../img/usuario.png"
+import logo from "../../../img/logo.png"
 
 const Sidebar = () => {
   const [close, setClose] = useState(false);
@@ -34,9 +35,8 @@ const Sidebar = () => {
       <div className={`sidebar ${close ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
-          <img className="logo_name" src={logo} alt="Logo" />
-          <img className="logo" src={logotext} alt="Logo_texto" />
-          {/* <span className="logo_name">Logo</span> */}
+          <img className="logo" src={logo} alt="Logo_texto" />
+          <span className="logo_name">pressex</span>
         </div>
         <ul className="nav-links">
           <li>
@@ -44,7 +44,6 @@ const Sidebar = () => {
               <i className="bx bx-home"></i>
               <span className="link_name">Home</span>
             </Link>
-
             <ul className="sub-menu blank">
               <li>
                 <a className="link_name" href="#">
@@ -411,7 +410,19 @@ const Sidebar = () => {
               </li>
             </ul>
           </li>
+          <li>
+            <div className="profile-details">
+              <div className="profile-content">
+                <img src="image/profile.jpg" alt="profile" />
+              </div>
 
+              <div className="name-job">
+                <div className="profile_name">Usuario</div>
+                <div className="job">Rol</div>
+              </div>
+              <i className="bx bx-log-out"></i>
+            </div>
+          </li>
         </ul>
       </div>
       <section className="home-section">
@@ -420,21 +431,6 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={handleDropdownClose}
           ></i>
-          <span className="text"> Xpress Logistic</span>
-
-          <div className="rith">
-          <div className="profile-user">
-              <div className="profile-content">
-                <img className="img-usuario" src={usuario} alt="usuario" />
-              </div>
-              <div className="name-job">
-                <div className="profile_user">Usuario</div>
-                <div className="job">Rol</div>
-              </div>
-              <i className="bx bx-log-out profile-bx"></i>
-            </div>
-          </div>
-          
         </div>
       </section>
     </>

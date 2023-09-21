@@ -1,96 +1,106 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
+@import url("../styles/components/SideBar.scss");
 
 #root {
   width: 100%;
   height: 100vh;
 }
 
-.content-page {
-  background-color: #d9d9d9;
-  width: 100vw;
-  height: calc(100% - 60px);
-  text-align: center;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  top: 6%;
-  padding-left: 270px;
-}
+
 
 .title {
-  margin: 20px;
+  margin: 0px;
+  font-size: x-large;
 }
+
 .header-container {
+    height: 6%; 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    background-color: #f0f0f0;
+    padding: 0px;
+    /* background-color: #f0f0f0; */
     width: 100%;
-  }
+    margin: 0;
+}
   
-  .back-button {
-    height: 80px;
-    background: #153a61;
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 80px;
-    margin-right: 20px;
-  }
+.back-button {
+  height: 3rem;
+  background: #153a6100;
+  border: solid 1px ;
+  color: #153a61;
+  border-radius: 50%;
+  width: 3rem;
+  margin: 0 3% 0 1%;
+  font-size: smaller;
+  padding: 0 0 0.1% 0.1%;
+}
   
-  .title-container {
-    flex: 1; /* Take remaining space */
-    text-align: center;
-    
-    border-radius: 20px;
-    border: 1px solid #fff;
-    background: #153a61;
-    color: white;
-  }
+.title-container {
+  flex: 1;
+  text-align: left;
+  color: #153a61;
+}
 
 .button-container {
-  margin: 10px;
+  margin: 1% 3% 1% 0%;
   background: white;
-  padding: 15px;
-  border-radius: 20px;
+  padding: 0px;
+  // border-radius: 20px;
   align-items: center;
-  width: 100%;
-  height: 80px;
+  width: 97%;
+  height: 0px;
   justify-content: space-between;
+  // border: solid;
 }
 
 .menu-icon {
   background: none;
   border: none;
   color: #153a61;
-  margin-left: 10px;
+  margin: 0.5rem;
+  font-size: x-large;
 }
 
 .generic-button {
   background: none;
-  border: none;
+  border:  solid rgb(224, 224, 224);
+  margin: 0 0 0 6%;
+  border-radius: 50%;
 }
 
 .export-dropdown {
   select,
   label {
-    height: 40px;
-    font-size: 14px;
+    width: 150%;
+    // margin: 0% 2% 0% 0px;
+    // display: flex;
+    // align-items: center;
+    // border-radius: 10px;
+    // height: 4rem;
+    // padding: 0 1% 0 1%;
+    // flex-direction: row;
+    // align-content: stretch;
+    // justify-content: flex-end;
+
+    max-width: 36rem;
+    height: 3rem;
+    font-size: medium;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
   }
 
-  margin: 15px;
+  margin: 0% 2% 0% 0px;
   display: flex;
   align-items: center;
-  margin-left: 25px;
-  border: 1px solid #153a61;
   border-radius: 10px;
-  height: 60px;
-  padding: 10px;
+  height: 4rem;
+  padding: 0 1% 0 1%;
   select {
-    margin-left: 10px;
+    margin-left: 5px;
+    padding: 0;
+    border: solid 1px #dfdfdf
   }
 }
 
@@ -101,9 +111,9 @@
 }
 
 .generic-table {
+  margin: 0 0 0 0%;
   width: 100%;
   overflow-x: scroll;
-  overflow-y: scroll;
   border-collapse: collapse;
 }
 
@@ -157,4 +167,76 @@
 
 .charge-buttons{
   margin: 10px;
+}
+
+.laver-export´{
+  margin: 0% 2% 0% 0px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    height: 49px;
+    padding: 0 1% 0 1%;
+}
+.text-export{
+  font-weight: bolder;
+  width: 30rem;
+}
+
+.search{
+  // background-color: red;
+  display: flex;
+  width: 30%;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0% 0 0;
+}
+.method{
+  margin: 0 5px 0 30%;
+  text-align: right;
+  width: 70%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.check-port{
+  width: 115%;
+  border-top: solid 1px rgba(128, 128, 128, 0.404);
+  margin: 1rem 0 0 0;
+}
+
+.css-13cymwt-control{
+  width: 70% !important;
+  margin: 0 0 0 15% !important;
+  font-size: medium;
+}
+.css-1nmdiq5-menu{
+  background: white !important;
+  font-size: medium !important;
+  z-index: 1000 !important;
+}
+
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+  // background: red !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 2.2rem !important;
+  font-weight: bold !important;
+  color: #153a61 !important;
+  margin: 0rem 0 0 -1.4rem !important
+  // width: 100% !important;
+  // margin: 5rem !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+  margin: 2rem 0 1rem 0rem !important;
+  // background: red !important;
+  font-size: small !important;
+}
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+  border: 1px solid rgba(240, 8, 8, 0) !important;
+  font-size: small !important;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  height: 2.5rem !important;
 }

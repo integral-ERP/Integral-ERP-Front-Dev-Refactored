@@ -146,9 +146,9 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
 
   return (
     <>
+    <div className="dashboard__layout">
       <div className="dashboard__sidebar">
         <Sidebar />
-      </div>
       <div className="content-page">
         <Table
           data={pickupOrders}
@@ -208,6 +208,8 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
             />
           </ModalForm>
         )}
+        </div>  
+      </div>
       </div>
     </>
   );

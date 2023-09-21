@@ -21,7 +21,7 @@ const Dashboard = () => {
       <div className="dashboard__sidebar">
         <Sidebar />
       </div>
-
+      {/* <h1>Hola mundo</h1> */}
       <div className="dashboard__content">
         <div className="content__options">
           <div className="content__info">

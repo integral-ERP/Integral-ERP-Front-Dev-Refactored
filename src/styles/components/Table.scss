@@ -1,31 +1,33 @@
-.button-container {
+.button-container{
   display: flex;
   justify-content: space-between;
-  overflow-y: hidden;
-  min-height: 80px;
+  // overflow-y: hidden;
+  min-height: 5%;
 }
 
-.search-container {
-  width: 30%;
+.search-container{
+  width: 100%; 
+  margin: 0 1rem 0 0;
+
 }
 
 .modal-body {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next row */
-  justify-content: space-between; /* Distribute items evenly horizontally */
-  align-content: flex-start; /* Align items at the start of each row */
-  max-width: 400px; /* Adjust the maximum width as needed */
-  margin: 0 auto; /* Center the content horizontally */
+display: flex;
+flex-wrap: wrap; /* Allow items to wrap to the next row */
+justify-content: space-between; /* Distribute items evenly horizontally */
+align-content: flex-start; /* Align items at the start of each row */
+max-width: 400px; /* Adjust the maximum width as needed */
+margin: 0 auto; /* Center the content horizontally */
 }
 
 .modal-body label {
-  width: 45%; /* Adjust the width to control the number of columns */
-  margin-bottom: 10px; /* Add some vertical spacing between rows */
+width: 45%; /* Adjust the width to control the number of columns */
+margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .colums-form {
   position: absolute; /* Positioning menu absolutely relative to the container */
-
+  
   right: 0; /* Align with the right edge of the container */
   background-color: #fff; /* White background */
   border: 1px solid #ccc; /* Gray border */
@@ -58,34 +60,132 @@
 .colums-form label:hover {
   background-color: #f0f0f0; /* Light gray background on hover */
 }
+// ---------------------------------------------------------
+// td {
+//   text-align: left;
+//   padding: 0px 8px 0px 12%;
+//   border-bottom: 1px solid #888888;
+// }
 
-.rendered-list {
+
+.tr-margen{
+  border: 1px solid #a3a3a3de;
+  // white-space: nowrap;
+  font-size: small;
+  border-inline: 1px solid rgb(0, 0, 0);
+}
+
+.tr-margen:nth-child(odd) {
+  background-color: #ffffff;
+  white-space: nowrap;
+  border-inline: 1px solid rgb(0, 0, 0);
+}
+
+.tr-margen:nth-child(even) {
+  background-color: #c1c1c178;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.tr-margen:hover {
+  font-weight: bold ;
+  background:rgb(177, 220, 255);
+}
+
+.text-head{
+  background-color: rgba(128, 128, 128, 0.589);
+  font-size: medium;
+  white-space: nowrap;
+  border: solid 2px rgba(128, 128, 128, 0.459);
+
+}
+.th-separate{
+  border-inline: 1px solid rgb(255, 255, 255);
+}
+.prueba{
   width: 100%;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+}
+// --------------------------------------------
+.containerr {  
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "cont-one cont-two";
+  font-size: initial;
+  font-weight:bolder;
 }
 
-.rendered-list::-webkit-scrollbar {
-  display: none;
+.cont-one { 
+  width: 120%;
+  grid-area: cont-one; }
+
+.cont-two { 
+  width: 120%;
+  grid-area: cont-two; }
+// -----------------------------------------------------
+.button-save{
+  // background-color: #18bc9c;
+  width: 10rem;
+  height: 3rem;
+  border-radius: 1rem ;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: rgb(63, 160, 54);
+  cursor: pointer;
+  transition: background-color 0.7s ease;
 }
 
-/* Define CSS styles for row and cell backgrounds */
-.table-row {
-  background-color: #fff; /* Default row background color */
-  /* Add other row styles as needed */
+.button-cancel{
+  width: 10rem;
+  height: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: rgb(88, 0, 0);
+  cursor: pointer;
+  transition: background-color 0.7s ease;
 }
 
-.table-row.table-primary {
-  background-color: #007bff; /* Selected row background color */
-  color: #fff; /* Text color for selected row */
+.button-save:hover {
+  background-color: #1c3f19; 
+  width: 10.2rem;
+  height: 3.2rem;
+  color: white;
+  font-size: 1.8rem;
+}
+.button-cancel:hover {
+  background-color: #471c1c; 
+  width: 10.2rem;
+  height: 3.2rem;
+  color: white;
+  font-size: 1.8rem;
 }
 
-.generic-table__td {
-  padding: 8px; /* Adjust padding as needed */
-  /* Add other cell styles as needed */
+.textId{
+  margin: 0 0 0 15%;
+  width: 100%;
+  text-align: left;
+  // margin-bottom: 0.5rem;
 }
 
-.generic-table__td.selected {
-  background-color: #007bff; /* Selected cell background color */
-  color: #fff; /* Text color for selected cell */
+td{
+  border-inline: 1px solid rgb(255, 255, 255) !important;
+}
+
+.tr-margentable-primary{
+  background: #a0a0a0ad;
+  font-style: italic;
+  font-size: larger;
+  font-weight: bold;
+  border: 2px solid;
+  white-space: nowrap;
 }
