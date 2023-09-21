@@ -2,19 +2,20 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import LoginPage from "../views/Login";
 import Home from "../views/Home";
 import Dashboard from "../views/Dashboard";
-import Maintenance from "../views/Maintenance";
-import Carriers from "../views/Carriers";
-import WarehouseProviders from "../views/WarehouseProviders";
-import ForwardingAgents from "../views/ForwardingAgents";
-import Customers from "../views/Customers";
-import Vendors from "../views/Vendors";
-import Employees from "../views/Employees";
-import PackageType from "../views/PackageType";
-import Ports from "../views/Ports";
-import Countries from "../views/Countries"
-import Locations from "../views/Locations"
-import Pickup from "../views/Pickup";
-import GeneratePickUpPDF from "../views/others/GeneratePickUpPDF";
+import Maintenance from "../views/Manteinance/Maintenance";
+import Carriers from "../views/Manteinance/Carriers";
+import WarehouseProviders from "../views/Manteinance/WarehouseProviders";
+import ForwardingAgents from "../views/Manteinance/ForwardingAgents";
+import Customers from "../views/Manteinance/Customers";
+import Vendors from "../views/Manteinance/Vendors";
+import Employees from "../views/Manteinance/Employees";
+import PackageType from "../views/Manteinance/PackageType";
+import Ports from "../views/Manteinance/Ports";
+import Countries from "../views/Manteinance/Countries"
+import Locations from "../views/Manteinance/Locations"
+import Pickup from "../views/Warehouse/Pickup";
+import ItemsAndServices from "../views/Accounting/ItemsAndServices";
+
 export const RoutesConfiguration = () => {
   return (
     <Router>
@@ -40,7 +41,7 @@ export const RoutesConfiguration = () => {
         <Route path="/maintenance/countries" element={<Countries />} />
         <Route path="/maintenance/locations" element={<Locations />} />
         <Route path="/warehouse/pickup" element={<Pickup />} />
-        <Route path="/pdf" element={<GeneratePickUpPDF />} />
+        <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
       </Routes>
     </Router>
   );

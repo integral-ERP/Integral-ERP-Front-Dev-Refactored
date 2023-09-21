@@ -11,7 +11,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
     width: 0,
     height: 0,
     volumetricWeight: 0,
-    ratedWeight: 0,
+    chargedWeight: 0,
   };
 
   const [formData, setformData] = useState(formFormat);
@@ -35,32 +35,12 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
     console.log(commodities);
   }
 
-  const sendDataCommodity = async () => {
-    
-
-    const response = await CommoditiesService.createCommodity(body);
-      
-
-    if (response.status >= 200 && response.status <= 300) {
-      console.log("Commodity successfully created/updated:", response.data);
-      // TODO: push response.data into current pieces array data to show in table 
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-        setShowSuccessAlert(false);
-      }, 5000);
-    } else {
-      console.log("Something went wrong:", response);
-      setShowErrorAlert(true);
-    }
-  }
-
   useEffect(() => {
     console.log(formData);
     if(formData.height && formData.width && formData.length){
-      console.log("Hola");
-      const volWeight = ((formData.height * formData.width * formData.length) / 1728).toFixed(2);
-      setformData({...formData, volumetricWeight: volWeight});
-      console.log(volWeight);
+      const volWeight = ((formData.height * formData.width * formData.length) / 166).toFixed(0);
+      const ratedWeight = formData.volumetricWeight >= formData.weight ? formData.volumetricWeight : formData.weight;
+      setformData({...formData, volumetricWeight: volWeight, chargedWeight: ratedWeight});
     }
   }, [formData.height, formData.length, formData.width]);
   
@@ -115,16 +95,16 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Volumetric Weight:</label>
+          <label className="centered-label">Volume:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight} readOnly/>
             <span className="input-group-text">in3</span>
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Charged Weight:</label>
+          <label className="centered-label">Chargeable Weight:</label>
           <div className="input-group ">
-            <input type="number" className="form-control" aria-label="" value={formData.ratedWeight}
+            <input type="number" className="form-control" aria-label="" value={formData.chargedWeight}
               onChange={(e) =>
                 setformData({ ...formData, ratedWeight: e.target.value })
               }/>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
@@ -6,6 +6,8 @@ import { toXML } from "jstoxml";
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
+import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+
 const Table = ({
   data,
   columns,
@@ -21,7 +23,23 @@ const Table = ({
   const [selectedFormat, setSelectedFormat] = useState("");
   const [columnOrder, setColumnOrder] = useState(columns);
   const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [dateFilter, setDateFilter] = useState("all");
+  const [startDate, setstartDate] = useState("");
+  const [finishDate, setfinishDate] = useState("");
+  const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const navigate = useNavigate();
+  const currentDate = new Date();
+  const startOfWeek = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate() - currentDate.getDay()
+  );
+  const endOfWeek = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate() + (6 - currentDate.getDay())
+  );
   const [visibleColumns, setVisibleColumns] = useState(() => {
     const initialVisibility = {};
     columns.forEach((columnName) => {
@@ -74,8 +92,86 @@ const Table = ({
     "PRO Number": "",
     "Tracking Number": "",
     "": "",
-    "Invoice Number": "",
-    "Purchase Order number": "",
+    "Invoice Number": "invoiceNumber",
+    "Purchase Order number": "purchaseOrderNum",
+    "Pickup Name": "PickUpLocation.name",
+    "Pickup Address": "PickUpLocation.streetNumber",
+    "Delivery Name": "deliveryLocation.name",
+    "Delivery Address": "deliveryLocation.streetNumber",
+    "Carrier Name": "mainCarrier.name",
+    "Carrier Address": "mainCarrier.streetNumber",
+    Description: "description",
+    Prepaid: "prepaid",
+    Quantity: "quantity",
+    Price: "price",
+    Amount: "amount",
+    "Tax Code": "taxCode",
+    "Tax Rate": "taxRate",
+    "Tax Amt": "taxAMT",
+    "Amt + Tax": "amtTAX",
+    Currency: "currency",
+    " Length": "length",
+    " Height": "height",
+    " Weight": "weight",
+    " Width": "width",
+    " Volumetric Weight": "volumetricWeight",
+    " Chargeable Weight": "chargedWeight",
+  };
+
+  const handleSearch = (row) => {
+    const lowerCaseSearchQuery = searchQuery.toLowerCase();
+    const searchMatch = Object.values(row).some((value) =>
+      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
+    );
+    let dateMatch = false;
+    const dateColumn = selectedDateFilter;
+    if (dateColumn && dateColumn in columnNameToProperty) {
+      const propertyName = columnNameToProperty[dateColumn];
+      const rowDate = new Date(row[propertyName]);
+      switch (dateFilter) {
+        case "all":
+          dateMatch = true;
+          break;
+        case "today":
+          dateMatch = rowDate.toDateString() === currentDate.toDateString();
+          break;
+        case "this-week":
+          dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
+          break;
+        case "this-month":
+          dateMatch =
+            rowDate.getMonth() === currentDate.getMonth() &&
+            rowDate.getFullYear() === currentDate.getFullYear();
+          break;
+        case "this-year":
+          dateMatch = rowDate.getFullYear() === currentDate.getFullYear();
+          break;
+        case "between":
+          console.log("start Date", startDate, "finish date", finishDate, "applies?", rowDate >= startDate && rowDate <= finishDate, rowDate);
+          dateMatch = rowDate >= new Date(startDate) && rowDate <= new Date(finishDate);
+          break;
+        default:
+          dateMatch = true; // "all" or unknown filter, include all rows
+          break;
+      }
+      return searchMatch && dateMatch;
+    } else {
+      dateMatch = true;
+    }
+
+    return searchMatch && dateMatch;
+  };
+  const filteredData = data.filter((row) => handleSearch(row));
+
+  const generatePDF = () => {
+    generatePickUpPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
   };
 
   const handleColumnVisibilityChange = (columnName) => {
@@ -85,22 +181,9 @@ const Table = ({
     }));
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   const handleFormatChange = (event) => {
     setSelectedFormat(event.target.value);
   };
-
-  const handleSearch = (row) => {
-    const lowerCaseSearchQuery = searchQuery.toLowerCase();
-    return Object.values(row).some((value) =>
-      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
-    );
-  };
-
-  const filteredData = data.filter((row) => handleSearch(row));
 
   const handleExport = () => {
     if (selectedFormat === "csv") {
@@ -183,7 +266,6 @@ const Table = ({
           const importedData = JSON.parse(content);
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported JSON data:", importedData);
         } catch (error) {
           console.error("Error parsing JSON file:", error);
         }
@@ -192,7 +274,6 @@ const Table = ({
           const importedData = Papa.parse(content, { header: true }).data;
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported CSV data:", importedData);
         } catch (error) {
           console.error("Error parsing CSV file:", error);
         }
@@ -203,7 +284,6 @@ const Table = ({
           const importedData = xmlToJs(xmlDoc);
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
-          console.log("Imported XML data:", importedData);
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
@@ -219,7 +299,7 @@ const Table = ({
     e.dataTransfer.setData("text/plain", columnIndex);
   };
 
-  const handleDragOver = (e, columnIndex) => {
+  const handleDragOver = (e) => {
     // Prevent the default behavior to allow dropping
     e.preventDefault();
   };
@@ -242,6 +322,81 @@ const Table = ({
 
     // Update the state with the new column order
     setColumnOrder(newColumnOrder);
+  };
+
+  function getPropertyValue(obj, propertyName) {
+    const parts = propertyName ? propertyName.split(".") : [];
+    let value = obj;
+    for (const part of parts) {
+      if (value && typeof value === "object" && part in value) {
+        value = value[part];
+      } else {
+        value = undefined; // Property not found or object structure is not as expected
+        break;
+      }
+    }
+    return value;
+  }
+
+  // Function to get the value from a row for a given column name
+  const getCellValue = (row, columnName) => {
+    if (columnName === "Delete") {
+      return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
+    }
+
+    if (columnName === "View PDF") {
+      return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
+    }
+
+    // Check if columnNameToProperty contains a "." indicating a nested property
+    if (columnNameToProperty[columnName]?.includes(".")) {
+      return getPropertyValue(row, columnNameToProperty[columnName]);
+    } else {
+      return row[columnNameToProperty[columnName]];
+    }
+  };
+
+  // Function to calculate the width needed to display a text
+  const getTextWidth = (text) => {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    context.font = "14px Arial"; // You can adjust the font size and font family as needed
+    const textMetrics = context.measureText(text);
+    return textMetrics.width;
+  };
+
+  // Calculate the maximum width needed for each column
+  const columnWidthsCalculated = columns.reduce((widths, columnName) => {
+    const maxColumnWidth = Math.max(
+      ...filteredData.map((row) => {
+        const value =
+          columnName === "Delete"
+            ? "" // Handle special columns as needed
+            : getCellValue(row, columnName);
+
+        // Calculate the width needed for the current cell
+        const cellWidth = getTextWidth(value);
+
+        return cellWidth;
+      })
+    );
+
+    // Use a minimum width (e.g., 100 pixels) to prevent columns from being too narrow
+    widths[columnName] = Math.max(maxColumnWidth, 100);
+
+    return widths;
+  }, {});
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleDateFilter = (value) => {
+    setDateFilter(value);
+  };
+
+  const handleDateFilterChange = (value) => {
+    setSelectedDateFilter(value);
   };
 
   return (
@@ -326,11 +481,113 @@ const Table = ({
                 className="search-input"
               />
             </div>
-            <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
+            {showFilterMenu && (
+            <div
+              className="modal"
+              style={{ display: showFilterMenu ? "block" : "none" }}
+            >
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Filter Dates</h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                      onClick={() => setShowFilterMenu(!showFilterMenu)}
+                    >
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="date-filter">
+                      <label>Date Filter:</label>
+                      <div className="date-range">
+                        <label>Start Date:</label>
+                        <input
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setstartDate(e.target.value)}
+                        />
+                      </div>
+                      <div className="date-range">
+                        <label>End Date:</label>
+                        <input
+                          type="date"
+                          value={finishDate}
+                          onChange={(e) => setfinishDate(e.target.value)}
+                        />
+                      </div>
+                      <select
+                        value={dateFilter}
+                        onChange={(e) => handleDateFilter(e.target.value)}
+                        style={{ margin: "5px" }}
+                      >
+                        <option value="all">All</option>
+                        <option value="today">Today</option>
+                        <option value="this-week">This Week</option>
+                        <option value="this-month">This Month</option>
+                        <option value="this-year">This Year</option>
+                      </select>
+                      <div
+                        className="radio-container"
+                        style={{ display: "flex", width: "250px" }}
+                      >
+                        {columns.map(
+                          (columnName) =>
+                            columnName.toLowerCase().includes("date") && (
+                              <label key={columnName}>
+                                <input
+                                  type="radio"
+                                  value={columnName}
+                                  checked={selectedDateFilter === columnName}
+                                  onChange={(e) =>
+                                    handleDateFilterChange(e.target.value)
+                                  }
+                                />
+                                {columnName}
+                              </label>
+                            )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setShowFilterMenu(!showFilterMenu);
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                      onClick={() => setShowFilterMenu(!showFilterMenu)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <button className="generic-button" onClick={() => setShowColumnMenu(!showColumnMenu)}>
             <i className="fas fa-eye menu-icon fa-3x ne"></i>
             </button>
           </div>
           
+          <button
+            type="button"
+            onClick={() => setShowFilterMenu(!showFilterMenu)}
+            className="generic-button"
+          >
+            <i className="fas fa-filter menu-icon fa-3x ne"></i>
+          </button>
           {showColumnMenu && (
             <div className="modal" style={{display: showColumnMenu ? "block": "none"}}>
               <div className="modal-dialog" role="document">
@@ -410,26 +667,41 @@ const Table = ({
                     ? "table-primary"
                     : ""
                 }`}
-                onClick={() => {
-                  onSelect(row);
-                }}
+                onClick={() => onSelect(row)}
               >
-                {columnOrder.map(
-                  (columnName) =>
-                    visibleColumns[columnName] && (
-                      <td key={columnName} className="generic-table__td">
-                        {typeof row[columnNameToProperty[columnName]] ===
+                {columnOrder.map((columnName) =>
+                  visibleColumns[columnName] ? (
+                    <td
+                      key={columnName}
+                      data-key={row.id}
+                      className="generic-table__td"
+                      style={{
+                        minWidth: columnWidthsCalculated[columnName],
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {columnName === "View PDF" ? (
+                        <button type="button" onClick={generatePDF}>
+                          <i className="fas fa-file-pdf"></i>
+                        </button>
+                      ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
-                          row[columnNameToProperty[columnName]] ? (
-                            <i className="fas fa-check"></i>
-                          ) : (
-                            <i className="fas fa-times"></i>
-                          )
+                        row[columnNameToProperty[columnName]] ? (
+                          <i className="fas fa-check"></i>
                         ) : (
+                          <i className="fas fa-times"></i>
+                        )
+                      ) : columnNameToProperty[columnName]?.includes(".") ? (
+                        getPropertyValue(row, columnNameToProperty[columnName])
+                      ) : Array.isArray(
                           row[columnNameToProperty[columnName]]
-                        )}
-                      </td>
-                    )
+                        ) ? (
+                        row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                      ) : (
+                        row[columnNameToProperty[columnName]]
+                      )}
+                    </td>
+                  ) : null
                 )}
               </tr>
             ))}

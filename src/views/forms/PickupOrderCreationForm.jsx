@@ -468,6 +468,7 @@ const PickupOrderCreationForm = ({
   }, [formData]);
 
   const sendData = async () => {
+    console.log(formData.commodities, commodities);
     let rawData = {
       // GENERAL TAB
       status: 1,
@@ -493,7 +494,7 @@ const PickupOrderCreationForm = ({
       purchaseOrderNum: formData.purchaseOrderNumber,
       // CHARGES TAB
       // COMMODITIES TAB
-      pieces: formData.commodities,
+      commodities: commodities,
     };
     const response = await (creating
       ? PickupService.createPickup(rawData)
@@ -1054,7 +1055,7 @@ const PickupOrderCreationForm = ({
             " Width",
             " Weight",
             " Volumetric Weight",
-            " Charged Weigth",
+            " Chargeable Weight",
             " Delete",
           ]}
           onSelect={() => { }} // Make sure this line is correct
