@@ -1,8 +1,8 @@
-import Sidebar from "./shared/components/SideBar";
-import ModalForm from "./shared/components/ModalForm";
-import { useModal } from "../hooks/useModal";
+import Sidebar from "../shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import { useModal } from "../../hooks/useModal";
 import { Link } from "react-router-dom";
-import "../styles/pages/Maintenance.scss"
+import "../../styles/pages/Maintenance.scss"
 //import StartUpWizardForm from "../../components/StartUpWizardForm/StartUpWizardForm";
 
 const Maintenance = () => {

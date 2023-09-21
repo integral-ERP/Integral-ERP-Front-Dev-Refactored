@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import PortsCreationForm from "./forms/PortCreationForms";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import PortService from "../services/PortServices";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import PortsCreationForm from "../forms/PortCreationForms";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import PortService from "../../services/PortServices";
+import Sidebar from "../shared/components/SideBar";
 
 const Ports = () => {
   const [ports, setports] = useState([]);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table"
-import CountriesService from "../services/CountriesService"
-import Sidebar from "./shared/components/SideBar";
+import Table from "../shared/components/Table"
+import CountriesService from "../../services/CountriesService"
+import Sidebar from "../shared/components/SideBar";
 
 const Countries = () => {
   const [countries, setcountries] = useState([]);

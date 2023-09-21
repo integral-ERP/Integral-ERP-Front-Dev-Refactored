@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import ForwardingAgentsCreationForm from "./forms/ForwardingAgentCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import ForwardingAgentService from "../services/ForwardingAgentService";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import ForwardingAgentService from "../../services/ForwardingAgentService";
+import Sidebar from "../shared/components/SideBar";
 
 const ForwardingAgents = () => {
   const [forwardingAgents, setforwardingAgents] = useState([]);

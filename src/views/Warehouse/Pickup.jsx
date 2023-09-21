@@ -1,40 +1,49 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import LocationsCreationForm from "./forms/LocationCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import LocationService from "../services/LocationService";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import PickupOrderCreationForm from "../forms/PickupOrderCreationForm";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import PickupService from "../../services/PickupService";
+import Sidebar from "../shared/components/SideBar";
 
-const Locations = () => {
-  const [locations, setlocations] = useState([]);
+const Pickup = () => {
+  const [pickupOrders, setpickupOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedLocation, setselectedLocation] = useState(null);
+  const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
 const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const columns = [
     "Status",
-    "Code",
-    "Description",
-    "Empty",
-    "Type",
-    "Zone",
-    "Length",
-    "Width",
-    "Height",
-    "Volume",
+    "Number",
+    "Date",
+    "Ship Date",
+    "Delivery Date",
+    "Pickup Name",
+    "Pickup Address",
+    "Delivery Name",
+    "Delivery Address",
+    "Pieces",
+    "Pickup Orders",
     "Weight",
-    "Max. Weight",
-    "Disable",
+    "Volume",
+    "Carrier Name",
+    "Carrier Address",
+    "PRO Number",
+    "Tracking Number",
+    "Invoice Number",
+    "Purchase Order number",
+    "View PDF"
   ];
-  const fetchlocationsData = (url = null) => {
-    LocationService.getLocations(url)
+
+  const updatePickupOrders = (url = null) => {
+    PickupService.getPickups(url)
       .then((response) => {
-        setlocations([...locations, ...response.data.results].reverse());
+        setpickupOrders([...pickupOrders, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -46,7 +55,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   useEffect(() => {
     if(!initialDataFetched){
-      fetchlocationsData();
+      updatePickupOrders();
       setInitialDataFetched(true);
     }
   }, []);
@@ -54,7 +63,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        fetchlocationsData(nextPageURL);
+        updatePickupOrders(nextPageURL);
       }
     });
 
@@ -69,36 +78,37 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     };
   }, [nextPageURL]);
 
-  const handlelocationsDataChange = () => {
-    fetchlocationsData();
+  const handlePickupOrdersDataChange = () => {
+    updatePickupOrders();
   };
 
-  const handleAddLocation = () => {
-    openModal();
+  const handleSelectPickupOrder = (PickupOrder) => {
+    setSelectedPickupOrder(PickupOrder);
+    console.log("Selected PickupOrder", selectedPickupOrder);
   };
 
-  const handleEditLocation = () => {
-    if (selectedLocation) {
+  const handleEditPickupOrders = () => {
+    if (selectedPickupOrder) {
       openModal();
     } else {
-      alert("Please select a Location to edit.");
+      alert("Please select a Pickup Order to edit.");
     }
   };
 
-  const handleSelectLocation = (wp) => {
-    setselectedLocation(wp);
+  const handleAddPickupOrder = () => {
+    openModal();
   };
 
-  const handleDeleteLocation = () => {
-    if (selectedLocation) {
-      LocationService.deleteLocation(selectedLocation.id)
+  const handleDeletePickupOrder = () => {
+    if (selectedPickupOrder) {
+        PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchlocationsData();
+            updatePickupOrders();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -110,7 +120,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           console.log(error);
         });
     } else {
-      alert("Please select a Location to delete.");
+      alert("Please select a Pickup Order to delete.");
     }
   };
 
@@ -118,11 +128,11 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isWPButton = clickedElement.classList.contains("ne");
-      const isTableRow = clickedElement.closest(".locations-table__row");
+      const isPickupOrdersButton = clickedElement.classList.contains("ne");
+      const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isWPButton && !isTableRow) {
-        setselectedLocation(null);
+      if (!isPickupOrdersButton && !isTableRow) {
+        setSelectedPickupOrder(null);
       }
     };
 
@@ -141,14 +151,15 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       </div>
       <div className="content-page">
         <Table
-          data={locations}
+          data={pickupOrders}
           columns={columns}
-          onSelect={handleSelectLocation} // Make sure this line is correct
-          selectedRow={selectedLocation}
-          onDelete={handleDeleteLocation}
-          onEdit={handleEditLocation}
-          onAdd={handleAddLocation}
-          title="Locations"
+          onSelect={handleSelectPickupOrder} // Make sure this line is correct
+          selectedRow={selectedPickupOrder}
+          onDelete={handleDeletePickupOrder}
+          onEdit={handleEditPickupOrders}
+          onAdd={handleAddPickupOrder}
+          title="Pick-up Orders"
+          setData={setpickupOrders}
         />
 
         {showSuccessAlert && (
@@ -158,7 +169,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Location deleted successfully!</strong>
+            <strong>Pick-up Order deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -168,26 +179,32 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Location. Please try again</strong>
+            <strong>Error deleting Pick-up Order. Please try again</strong>
           </Alert>
         )}
-        {selectedLocation !== null && (
+
+        {selectedPickupOrder !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <LocationsCreationForm
-              location={selectedLocation}
+            <PickupOrderCreationForm
+              pickupOrder={selectedPickupOrder}
               closeModal={closeModal}
               creating={false}
-              onlocationDataChange={handlelocationsDataChange}
+              onpickupOrderDataChange={handlePickupOrdersDataChange}
+              currentPickUpNumber={currentPickupNumber}
+              setcurrentPickUpNumber={setcurrentPickupNumber}
             />
           </ModalForm>
         )}
-        {selectedLocation === null && (
+
+        {selectedPickupOrder === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <LocationsCreationForm
-              location={null}
+            <PickupOrderCreationForm
+              pickupOrder={null}
               closeModal={closeModal}
               creating={true}
-              onlocationDataChange={handlelocationsDataChange}
+              onpickupOrderDataChange={handlePickupOrdersDataChange}
+              currentPickUpNumber={currentPickupNumber}
+              setcurrentPickUpNumber={setcurrentPickupNumber}
             />
           </ModalForm>
         )}
@@ -196,4 +213,4 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   );
 };
 
-export default Locations;
+export default Pickup;

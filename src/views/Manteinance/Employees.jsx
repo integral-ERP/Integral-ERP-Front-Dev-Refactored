@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import EmployeeCreationForm from "./forms/EmployeeCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import EmployeeService from "../services/EmployeeService";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import EmployeeCreationForm from "../forms/EmployeeCreationForm";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import EmployeeService from "../../services/EmployeeService";
+import Sidebar from "../shared/components/SideBar";
 
 const Employees = () => {
   const [employees, setemployees] = useState([]);

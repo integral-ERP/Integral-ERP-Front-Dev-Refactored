@@ -110,7 +110,7 @@ const Table = ({
     " Weight": "weight",
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
-    " Charged Weight": "chargedWeight",
+    " Chargeable Weight": "chargedWeight",
   };
 
   const handleSearch = (row) => {
@@ -336,7 +336,7 @@ const Table = ({
   // Function to get the value from a row for a given column name
   const getCellValue = (row, columnName) => {
     if (columnName === "Delete") {
-      return ""; // Handle special columns as needed
+      return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
     }
 
     if (columnName === "View PDF") {
@@ -496,11 +496,9 @@ const Table = ({
                       className="btn btn-primary"
                       onClick={() => {
                         setShowFilterMenu(!showFilterMenu);
-                        // Apply custom date range filter here
-                        handleDateFilter("between");
                       }}
                     >
-                      Apply Filter
+                      Save Changes
                     </button>
                     <button
                       type="button"

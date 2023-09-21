@@ -1,46 +1,35 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import WarehouseProviderCreationForm from "./forms/WarehouseProviderCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import WarehouseProviderService from "../services/WarehouseProviderService";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import CarrierCreationForm from "../forms/CarrierCreationForm";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import ItemsAndServicesService from "../../services/ItemsAndServices";
+import Sidebar from "../shared/components/SideBar";
 
-const WarehouseProviders = () => {
-  const [warehouseProviders, setwarehouseProviders] = useState([]);
+const ItemsAndServices = () => {
+    const [itemsAndServices, setItemsAndServices] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedWarehouseProvider, setselectedWarehouseProvider] =
-    useState(null);
+  const [selectedeItemAndService, setSelectedCarrier] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
-    "Name",
-    "Phone",
-    "Mobile Phone",
-    "Email",
-    "Fax",
-    "Website",
-    "Reference Number",
-    "Contact First Name",
-    "Contact Last Name",
-    "ID",
-    "Type ID",
-    "System ID",
-    "Street & Number",
-    "City",
-    "State",
-    "Country",
-    "Zip-Code",
+    "Code",
+    "Description",
+    "Account Name",
+    "Type",
+    "Amount",
+    "Currency",
+    "IATA Code"
   ];
-
-  const fetchWarehouseProvidersData = (url = null) => {
-    WarehouseProviderService.getWarehouseProviders(url)
+  const updateItemsAndServices = (url = null) => {
+    ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {
-        setwarehouseProviders([...warehouseProviders, ...response.data.results].reverse());
+        setItemsAndServices([...itemsAndServices, ...response.data.results].reverse())
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -52,7 +41,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   useEffect(() => {
     if(!initialDataFetched){
-      fetchWarehouseProvidersData();
+      updateItemsAndServices();
       setInitialDataFetched(true);
     }
   }, []);
@@ -60,7 +49,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        fetchWarehouseProvidersData(nextPageURL);
+        updateItemsAndServices(nextPageURL);
       }
     });
 
@@ -74,38 +63,37 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       observer.disconnect();
     };
   }, [nextPageURL]);
-  const handleWarehouseProviderDataChange = () => {
-    fetchWarehouseProvidersData();
+
+  const handleCarrierDataChange = () => {
+    updateItemsAndServices();
   };
 
-  const handleEditWarehouseProvider = () => {
-    if (selectedWarehouseProvider) {
+  const handleSelectCarrier = (carrier) => {
+    setSelectedCarrier(carrier);
+  };
+
+  const handleEditCarrier = () => {
+    if (selectedeItemAndService) {
       openModal();
     } else {
-      alert("Please select a warehouse provider to edit.");
+      alert("Please select a carrier to edit.");
     }
   };
 
-  const handleSelectWarehouseProvider = (wp) => {
-    setselectedWarehouseProvider(wp);
-  };
-
-  const handleAddWarehouseProvider = () => {
+  const handleAddCarrier = () => {
     openModal();
   };
 
-  const handleDeleteWarehouseProvider = () => {
-    if (selectedWarehouseProvider) {
-      WarehouseProviderService.deleteWarehouseProvider(
-        selectedWarehouseProvider.id
-      )
+  const handleDeleteCarrier = () => {
+    if (selectedeItemAndService) {
+      ItemsAndServicesService.deleteCarrier(selectedeItemAndService.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchWarehouseProvidersData();
+            updateItemsAndServices();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -117,7 +105,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           console.log(error);
         });
     } else {
-      alert("Please select a warehouse provider to delete.");
+      alert("Please select a carrier to delete.");
     }
   };
 
@@ -125,11 +113,11 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isWPButton = clickedElement.classList.contains("ne");
+      const isCarrierButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isWPButton && !isTableRow) {
-        setselectedWarehouseProvider(null);
+      if (!isCarrierButton && !isTableRow) {
+        setSelectedCarrier(null);
       }
     };
 
@@ -148,14 +136,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       </div>
       <div className="content-page">
         <Table
-          data={warehouseProviders}
+          data={itemsAndServices}
           columns={columns}
-          onSelect={handleSelectWarehouseProvider} // Make sure this line is correct
-          selectedRow={selectedWarehouseProvider}
-          onDelete={handleDeleteWarehouseProvider}
-          onEdit={handleEditWarehouseProvider}
-          onAdd={handleAddWarehouseProvider}
-          title="Warehouse Providers"
+          onSelect={handleSelectCarrier} // Make sure this line is correct
+          selectedRow={selectedeItemAndService}
+          onDelete={handleDeleteCarrier}
+          onEdit={handleEditCarrier}
+          onAdd={handleAddCarrier}
+          title="Items & Services"
         />
 
         {showSuccessAlert && (
@@ -165,7 +153,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Warehouse Provider deleted successfully!</strong>
+            <strong>Carrier deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -175,32 +163,34 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Warehouse Provider. Please try again</strong>
+            <strong>Error deleting Carrier. Please try again</strong>
           </Alert>
         )}
-        {selectedWarehouseProvider !== null && (
+
+        {selectedeItemAndService !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <WarehouseProviderCreationForm
-              warehouseProvider={selectedWarehouseProvider}
+            <CarrierCreationForm
+              carrier={selectedeItemAndService}
               closeModal={closeModal}
               creating={false}
-              onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
+              onCarrierDataChange={handleCarrierDataChange}
             />
           </ModalForm>
         )}
-        {selectedWarehouseProvider === null && (
+
+        {selectedeItemAndService === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <WarehouseProviderCreationForm
-              warehouseProvider={null}
+            <CarrierCreationForm
+              carrier={null}
               closeModal={closeModal}
               creating={true}
-              onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
+              onCarrierDataChange={handleCarrierDataChange}
             />
           </ModalForm>
         )}
       </div>
     </>
   );
-};
+}
 
-export default WarehouseProviders;
+export default ItemsAndServices;

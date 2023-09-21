@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import ModalForm from "../shared/components/ModalForm";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import VendorsCreationForm from "./forms/VendorCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import VendorService from "../services/VendorService";
-import Sidebar from "./shared/components/SideBar";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import CustomersCreationForm from "../forms/CustomerCreationForm";
+import CustomerService from "../../services/CustomerService";
+import Table from "../shared/components/Table";
+import Sidebar from "../shared/components/SideBar";
 
-const Vendors = () => {
-  const [vendors, setvendors] = useState([]);
+const Customers = () => {
+  const [customers, setcustomers] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedVendor, setselectedVendor] = useState(null);
+  const [selectedCustomer, setselectedCustomer] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -28,19 +28,20 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Contact Last Name",
     "ID",
     "Type ID",
+    "System ID",
     "Street & Number",
     "City",
     "State",
     "Country",
     "Zip-Code",
-
-    "System ID",
   ];
 
-  const fetchvendorsData = (url = null) => {
-    VendorService.getVendors(url)
+  const fetchCustomersData = (url = null) => {
+    CustomerService.getCustomers(url)
       .then((response) => {
-        setvendors([...vendors, ...response.data.results].reverse());
+        if(customers !== response.data.results){
+          setcustomers([...customers, ...response.data.results].reverse());
+        }
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -51,8 +52,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
-      fetchvendorsData();
+    if (!initialDataFetched) {
+      fetchCustomersData();
       setInitialDataFetched(true);
     }
   }, []);
@@ -60,7 +61,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        fetchvendorsData(nextPageURL);
+        console.log("Fetching next page of data...", customers.length);
+        fetchCustomersData(nextPageURL);
       }
     });
 
@@ -75,49 +77,32 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     };
   }, [nextPageURL]);
 
-  const handleVendorsDataChange = () => {
-    fetchvendorsData();
+  const handleWarehouseProviderDataChange = () => {
+    fetchCustomersData();
   };
 
-  const handleEditVendor = () => {
-    if (selectedVendor) {
+  const handleEditCustomer = () => {
+    if (selectedCustomer) {
       openModal();
     } else {
-      alert("Please select a Vendor to edit.");
+      alert("Please select a Customer to edit.");
     }
   };
 
-  const handleSelectVendor = (wp) => {
-    setselectedVendor(wp);
+  const handleSelectCustomer = (wp) => {
+    setselectedCustomer(wp);
   };
 
-  const handleAddVendor = () => {
-    openModal();
-  };
-
-  const handleDeleteVendor = () => {
-    if (selectedVendor) {
-      VendorService.deleteVendor(selectedVendor.id)
-        .then((response) => {
-          if (response.status == 204) {
-            setShowSuccessAlert(true);
-            setTimeout(() => {
-              setShowSuccessAlert(false);
-            }, 3000);
-            fetchvendorsData();
-          } else {
-            setShowErrorAlert(true);
-            setTimeout(() => {
-              setShowErrorAlert(false);
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  const handleDeleteCustomer = () => {
+    if (selectedCustomer) {
+      CustomerService.deleteCustomer(selectedCustomer.id);
     } else {
-      alert("Please select a Vendor to delete.");
+      alert("Please select a Customer to delete.");
     }
+  };
+
+  const handleAddCustomer = () => {
+    openModal();
   };
 
   useEffect(() => {
@@ -128,7 +113,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       const isTableRow = clickedElement.closest(".table-row");
 
       if (!isWPButton && !isTableRow) {
-        setselectedVendor(null);
+        setselectedCustomer(null);
       }
     };
 
@@ -147,14 +132,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       </div>
       <div className="content-page">
         <Table
-          data={vendors}
+          data={customers}
           columns={columns}
-          onSelect={handleSelectVendor} // Make sure this line is correct
-          selectedRow={selectedVendor}
-          onDelete={handleDeleteVendor}
-          onEdit={handleEditVendor}
-          onAdd={handleAddVendor}
-          title="Vendors"
+          onSelect={handleSelectCustomer} // Make sure this line is correct
+          selectedRow={selectedCustomer}
+          onDelete={handleDeleteCustomer}
+          onEdit={handleEditCustomer}
+          onAdd={handleAddCustomer}
+          title="Customers"
         />
 
         {showSuccessAlert && (
@@ -164,7 +149,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Vendor deleted successfully!</strong>
+            <strong>Customer deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -174,26 +159,26 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Vendor. Please try again</strong>
+            <strong>Error deleting Customer. Please try again</strong>
           </Alert>
         )}
-        {selectedVendor !== null && (
+        {selectedCustomer !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <VendorsCreationForm
-              vendor={selectedVendor}
+            <CustomersCreationForm
+              customer={selectedCustomer}
               closeModal={closeModal}
               creating={false}
-              onvendorDataChange={handleVendorsDataChange}
+              onCustomerDataChange={handleWarehouseProviderDataChange}
             />
           </ModalForm>
         )}
-        {selectedVendor === null && (
+        {selectedCustomer === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <VendorsCreationForm
-              vendor={null}
+            <CustomersCreationForm
+              customer={null}
               closeModal={closeModal}
               creating={true}
-              onvendorDataChange={handleVendorsDataChange}
+              onCustomerDataChange={handleWarehouseProviderDataChange}
             />
           </ModalForm>
         )}
@@ -202,4 +187,4 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   );
 };
 
-export default Vendors;
+export default Customers;

@@ -10,9 +10,12 @@ const GeneratePickUpPDF = (data) => {
     let barcodeUrl = null;
 
     const commodityRows = [];
-
+    let totalPieces = 0;
+    let totalWeight = 0;
+    let totalVolume = 0;
     // Loop through the commodities array and create a table row for each item
     if(data.commodities){
+      totalPieces = data.commodities.length;
       data.commodities?.forEach((commodity, index) => {
         const commodityRow = [
           {
@@ -39,7 +42,8 @@ const GeneratePickUpPDF = (data) => {
             margin: [0, 0, 0, 40],
           },
         ];
-  
+        totalWeight += commodity.weight;
+        totalVolume += commodity.volumetricWeight;
         // Add the commodity row to the array
         commodityRows.push(commodityRow);
       });
@@ -228,7 +232,7 @@ const GeneratePickUpPDF = (data) => {
                               margin: [0, 0, 0, 0],
                             },
                             {
-                              text: `Supplier Information`,
+                              text: `Charges`,
                               bold: true,
                               fillColor: `#CCCCCC`,
                               margin: [0, 0, 0, 0],
@@ -382,13 +386,13 @@ const GeneratePickUpPDF = (data) => {
                             {},
                             {},
                             {
-                              text: `1`,
+                              text: totalPieces,
                             },
                             {
-                              text: [`642.29 kg\n`, `1,416.00 lb`],
+                              text: [`${totalWeight} kg\n`, `${totalWeight / 2.205} lb`],
                             },
                             {
-                              text: [`42.67 ft3\n`, `444.18 Vlb`],
+                              text: [`${totalVolume} ft3\n`, `${totalVolume /  35.315} m3`],
                             },
                           ],
                         ],

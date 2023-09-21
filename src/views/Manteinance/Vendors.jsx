@@ -1,49 +1,46 @@
 import { useState, useEffect } from "react";
-import Table from "./shared/components/Table";
+import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "./shared/components/ModalForm";
-import PickupOrderCreationForm from "./forms/PickupOrderCreationForm";
-import { useModal } from "../hooks/useModal"; // Import the useModal hook
-import PickupService from "../services/PickupService";
-import Sidebar from "./shared/components/SideBar";
+import ModalForm from "../shared/components/ModalForm";
+import VendorsCreationForm from "../forms/VendorCreationForm";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import VendorService from "../../services/VendorService";
+import Sidebar from "../shared/components/SideBar";
 
-const Pickup = () => {
-  const [pickupOrders, setpickupOrders] = useState([]);
+const Vendors = () => {
+  const [vendors, setvendors] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
+  const [selectedVendor, setselectedVendor] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
 const [initialDataFetched, setInitialDataFetched] = useState(false);
-const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const columns = [
-    "Status",
-    "Number",
-    "Date",
-    "Ship Date",
-    "Delivery Date",
-    "Pickup Name",
-    "Pickup Address",
-    "Delivery Name",
-    "Delivery Address",
-    "Pieces",
-    "Pickup Orders",
-    "Weight",
-    "Volume",
-    "Carrier Name",
-    "Carrier Address",
-    "PRO Number",
-    "Tracking Number",
-    "Invoice Number",
-    "Purchase Order number",
-    "View PDF"
+    "Name",
+    "Phone",
+    "Mobile Phone",
+    "Email",
+    "Fax",
+    "Website",
+    "Reference Number",
+    "Contact First Name",
+    "Contact Last Name",
+    "ID",
+    "Type ID",
+    "Street & Number",
+    "City",
+    "State",
+    "Country",
+    "Zip-Code",
+
+    "System ID",
   ];
 
-  const updatePickupOrders = (url = null) => {
-    PickupService.getPickups(url)
+  const fetchvendorsData = (url = null) => {
+    VendorService.getVendors(url)
       .then((response) => {
-        setpickupOrders([...pickupOrders, ...response.data.results].reverse());
+        setvendors([...vendors, ...response.data.results].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -55,7 +52,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
 
   useEffect(() => {
     if(!initialDataFetched){
-      updatePickupOrders();
+      fetchvendorsData();
       setInitialDataFetched(true);
     }
   }, []);
@@ -63,7 +60,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        updatePickupOrders(nextPageURL);
+        fetchvendorsData(nextPageURL);
       }
     });
 
@@ -78,37 +75,36 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
     };
   }, [nextPageURL]);
 
-  const handlePickupOrdersDataChange = () => {
-    updatePickupOrders();
+  const handleVendorsDataChange = () => {
+    fetchvendorsData();
   };
 
-  const handleSelectPickupOrder = (PickupOrder) => {
-    setSelectedPickupOrder(PickupOrder);
-    console.log("Selected PickupOrder", selectedPickupOrder);
-  };
-
-  const handleEditPickupOrders = () => {
-    if (selectedPickupOrder) {
+  const handleEditVendor = () => {
+    if (selectedVendor) {
       openModal();
     } else {
-      alert("Please select a Pickup Order to edit.");
+      alert("Please select a Vendor to edit.");
     }
   };
 
-  const handleAddPickupOrder = () => {
+  const handleSelectVendor = (wp) => {
+    setselectedVendor(wp);
+  };
+
+  const handleAddVendor = () => {
     openModal();
   };
 
-  const handleDeletePickupOrder = () => {
-    if (selectedPickupOrder) {
-        PickupService.deletePickup(selectedPickupOrder.id)
+  const handleDeleteVendor = () => {
+    if (selectedVendor) {
+      VendorService.deleteVendor(selectedVendor.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updatePickupOrders();
+            fetchvendorsData();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -120,7 +116,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
           console.log(error);
         });
     } else {
-      alert("Please select a Pickup Order to delete.");
+      alert("Please select a Vendor to delete.");
     }
   };
 
@@ -128,11 +124,11 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isPickupOrdersButton = clickedElement.classList.contains("ne");
+      const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isPickupOrdersButton && !isTableRow) {
-        setSelectedPickupOrder(null);
+      if (!isWPButton && !isTableRow) {
+        setselectedVendor(null);
       }
     };
 
@@ -151,15 +147,14 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
       </div>
       <div className="content-page">
         <Table
-          data={pickupOrders}
+          data={vendors}
           columns={columns}
-          onSelect={handleSelectPickupOrder} // Make sure this line is correct
-          selectedRow={selectedPickupOrder}
-          onDelete={handleDeletePickupOrder}
-          onEdit={handleEditPickupOrders}
-          onAdd={handleAddPickupOrder}
-          title="Pick-up Orders"
-          setData={setpickupOrders}
+          onSelect={handleSelectVendor} // Make sure this line is correct
+          selectedRow={selectedVendor}
+          onDelete={handleDeleteVendor}
+          onEdit={handleEditVendor}
+          onAdd={handleAddVendor}
+          title="Vendors"
         />
 
         {showSuccessAlert && (
@@ -169,7 +164,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Pick-up Order deleted successfully!</strong>
+            <strong>Vendor deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -179,32 +174,26 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Pick-up Order. Please try again</strong>
+            <strong>Error deleting Vendor. Please try again</strong>
           </Alert>
         )}
-
-        {selectedPickupOrder !== null && (
+        {selectedVendor !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PickupOrderCreationForm
-              pickupOrder={selectedPickupOrder}
+            <VendorsCreationForm
+              vendor={selectedVendor}
               closeModal={closeModal}
               creating={false}
-              onpickupOrderDataChange={handlePickupOrdersDataChange}
-              currentPickUpNumber={currentPickupNumber}
-              setcurrentPickUpNumber={setcurrentPickupNumber}
+              onvendorDataChange={handleVendorsDataChange}
             />
           </ModalForm>
         )}
-
-        {selectedPickupOrder === null && (
+        {selectedVendor === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PickupOrderCreationForm
-              pickupOrder={null}
+            <VendorsCreationForm
+              vendor={null}
               closeModal={closeModal}
               creating={true}
-              onpickupOrderDataChange={handlePickupOrdersDataChange}
-              currentPickUpNumber={currentPickupNumber}
-              setcurrentPickUpNumber={setcurrentPickupNumber}
+              onvendorDataChange={handleVendorsDataChange}
             />
           </ModalForm>
         )}
@@ -213,4 +202,4 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   );
 };
 
-export default Pickup;
+export default Vendors;

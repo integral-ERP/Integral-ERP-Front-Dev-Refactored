@@ -1087,7 +1087,7 @@ const PickupOrderCreationForm = ({
             " Width",
             " Weight",
             " Volumetric Weight",
-            " Charged Weigth",
+            " Chargeable Weight",
             " Delete",
           ]}
           onSelect={() => {}} // Make sure this line is correct
