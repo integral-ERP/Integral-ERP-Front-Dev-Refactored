@@ -136,6 +136,11 @@
   width: 100px;
 }
 
+.medium-select{
+  width: 200px;
+  margin: 10px;
+}
+
 .startup-wizard-form__options-container {
   position: absolute;
   bottom: 0px;

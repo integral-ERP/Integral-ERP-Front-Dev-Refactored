@@ -11,7 +11,7 @@ const ItemAndServiceCreationForm = ({
   creating,
   onitemAndServiceDataChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState("definition");
   const [currencies, setcurrencies] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -149,7 +149,7 @@ const ItemAndServiceCreationForm = ({
           <div className="cont-one">
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Type:</label>
-              <select className="short-input">
+              <select className="medium-select">
                 <option value="">Select an option</option>
                 <option value="other">Other</option>
                 <option value="freight">Freight</option>
@@ -185,14 +185,14 @@ const ItemAndServiceCreationForm = ({
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Account:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Price:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
@@ -213,7 +213,7 @@ const ItemAndServiceCreationForm = ({
           <div className="cont-two">
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Tax Code:</label>
-              <select className="short-input">
+              <select className="medium-select">
                 <option value="">Select an option</option>
                 <option value="freight">Freight</option>
               </select>
@@ -231,35 +231,35 @@ const ItemAndServiceCreationForm = ({
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Expense Item:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Preferred Vendor:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">3rd party liability account:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">3rd party asset account:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
             <div className="company-form__section" style={{ display: "flex" }}>
               <label htmlFor="">Currency:</label>
-              <select className="company-form__input">
+              <select className="medium-select">
                 <option value="">Select a currency</option>
                 {Object.entries(currencies).map(
                   ([currencyCode, currencyName]) => (
