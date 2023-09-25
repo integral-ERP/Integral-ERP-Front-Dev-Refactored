@@ -609,7 +609,9 @@ const PickupOrderCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-        <div className="company-form__section">
+      <div class="containerr">
+        <div class="cont-one">
+          <div className="company-form__section">
           <label htmlFor="issuedby" className="form-label">
             Issued By:
           </label>
@@ -676,6 +678,9 @@ const PickupOrderCreationForm = ({
             label="Number"
           />
         </div>
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        
+        <div class="cont-two">
         <div className="company-form__section">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
@@ -718,6 +723,10 @@ const PickupOrderCreationForm = ({
             />
           </LocalizationProvider>
         </div>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
+            
+        </div>
+        
         <div className="company-form__section">
           <label htmlFor="employee" className="form-label">
             Employee:

@@ -133,6 +133,7 @@
 
 .table-hover {
   width: 100%;
+  text-align: center;
 }
 
 .alert-notification{
@@ -243,4 +244,15 @@
 
 .css-i4bv87-MuiSvgIcon-root {
   height: 2.5rem !important;
+}
+
+.css-13cymwt-control{
+  min-height: 3rem !important;
+  width: 70% !important;
+  background: whitesmoke !important;
+  color: black !important;
+  height: 0rem !important;
+  padding: 0 0 0 0rem !important;
+  font-size: small !important;
+
 }

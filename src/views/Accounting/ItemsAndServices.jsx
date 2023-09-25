@@ -131,9 +131,9 @@ const ItemsAndServices = () => {
 
   return (
     <>
+    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
         <Sidebar />
-      </div>
       <div className="content-page">
         <Table
           data={itemsAndServices}
@@ -188,7 +188,9 @@ const ItemsAndServices = () => {
             />
           </ModalForm>
         )}
+        </div>
       </div>
+    </div>
     </>
   );
 }
