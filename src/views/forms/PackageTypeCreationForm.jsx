@@ -158,7 +158,7 @@ const PackageTypesCreationForm = ({
         style={{ display: activeTab === "description" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="wp-name" className="company-form__label">
+          <label htmlFor="wp-name" className="form-label">
             Type:
           </label>
           <select
@@ -188,7 +188,7 @@ const PackageTypesCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-mobilePhone" className="company-form__label">
+          <label htmlFor="wp-mobilePhone" className="form-label">
             Container Code:
           </label>
           <select
@@ -207,7 +207,7 @@ const PackageTypesCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-equip" className="company-form__label">
+          <label htmlFor="wp-equip" className="form-label">
             Container Equip. Type:
           </label>
           <select
@@ -227,7 +227,7 @@ const PackageTypesCreationForm = ({
         </div>
         {formData.type === 'Container' && (
           <div className="startup-wizard-form__section">
-            <label htmlFor="wp-equip" className="company-form__label">
+            <label htmlFor="wp-equip" className="form-label">
               Method:
             </label>
             <hr />
@@ -287,7 +287,7 @@ const PackageTypesCreationForm = ({
             }
             label="Length"
           />
-          <label htmlFor="length" className="company-form__label">
+          <label htmlFor="length" className="form-label font-right">
             in
           </label>
         </div>
@@ -302,7 +302,7 @@ const PackageTypesCreationForm = ({
             }
             label="Width"
           />
-          <label htmlFor="width" className="company-form__label">
+          <label htmlFor="width" className="form-label font-right">
             in
           </label>
         </div>
@@ -317,7 +317,7 @@ const PackageTypesCreationForm = ({
             }
             label="Height"
           />
-          <label htmlFor="height" className="company-form__label">
+          <label htmlFor="height" className="form-label font-right">
             in
           </label>
         </div>
@@ -332,7 +332,7 @@ const PackageTypesCreationForm = ({
             }
             label="Volume"
           />
-          <label htmlFor="volume" className="company-form__label">
+          <label htmlFor="volume" className="form-label font-right">
             ft<sup>3</sup>
           </label>
         </div>
@@ -347,7 +347,7 @@ const PackageTypesCreationForm = ({
             }
             label="Weight"
           />
-          <label htmlFor="weight" className="company-form__label">
+          <label htmlFor="weight" className="form-label font-right">
             lb
           </label>
         </div>
@@ -362,16 +362,16 @@ const PackageTypesCreationForm = ({
             }
             label="Max. Weight"
           />
-          <label htmlFor="max-weight" className="company-form__label">
+          <label htmlFor="max-weight" className="form-label font-right">
             lb
           </label>
         </div>
       </form>
       <div className="company-form__options-container">
-        <button className="company-form__option btn btn-primary" onClick={sendData}>
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="company-form__option btn btn-secondary" onClick={closeModal}>
+        <button className="button-cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>

@@ -133,12 +133,12 @@ const LocationsCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-fax" className="company-form__label">
+          <label htmlFor="wp-fax" className="form-label">
             Type
           </label>
           <select name="wp-fax"
             id="wp-fax"
-            className="company-form__input"
+            className="form-input"
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
             value={formData.type}>
             <option value="">Select a type</option>
@@ -153,12 +153,12 @@ const LocationsCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-fax" className="company-form__label">
+          <label htmlFor="wp-fax" className="form-label">
             Zone
           </label>
           <select name="wp-fax"
             id="wp-fax"
-            className="company-form__input"
+            className="form-input"
             onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
             value={formData.zone}>
             <option value="">Select a zone</option>
@@ -175,9 +175,9 @@ const LocationsCreationForm = ({
             changeHandler={(e) =>
               setFormData({ ...formData, length: e.target.value })
             }
-            label="Length"
+            label="Lengtht"
           />
-          <label htmlFor="">in</label>
+          <label htmlFor="" className="form-label font-right">in</label>
         </div>
         <div className="company-form__section">
         <Input
@@ -190,7 +190,7 @@ const LocationsCreationForm = ({
             }
             label="Width"
           />
-          <label htmlFor="">in</label>
+          <label htmlFor="" className="form-label font-right">in</label>
           
         </div>
         <div className="company-form__section">
@@ -204,7 +204,7 @@ const LocationsCreationForm = ({
             }
             label="Height"
           />
-          <label htmlFor="">in</label>
+          <label htmlFor="" className="form-label font-right">in</label>
           
         </div>
         <div className="company-form__section">
@@ -220,10 +220,10 @@ const LocationsCreationForm = ({
         </div>
       </form>
       <div className="company-form__options-container">
-        <button className="company-form__option btn btn-primary" onClick={sendData}>
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="company-form__option btn btn-secondary" onClick={closeModal}>
+        <button className="button-cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>

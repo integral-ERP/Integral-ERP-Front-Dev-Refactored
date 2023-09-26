@@ -685,6 +685,7 @@ const PickupOrderCreationForm = ({
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="Creation Date and Time"
+              className="font-right"
               value={dayjs(formData.createdDateAndTime)}
               onChange={(e) =>
                 setFormData({

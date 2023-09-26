@@ -235,7 +235,7 @@
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
   margin: 2rem 0 1rem 0rem !important;
   // background: red !important;
-  font-size: small !important;
+  font-size: 1.5rem !important;
 }
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
   border: 1px solid rgba(240, 8, 8, 0) !important;
@@ -250,9 +250,39 @@
   min-height: 3rem !important;
   width: 70% !important;
   background: whitesmoke !important;
-  color: black !important;
+  color: rgb(252, 6, 6) !important;
   height: 0rem !important;
   padding: 0 0 0 0rem !important;
   font-size: small !important;
 
 }
+
+.company-form__input{
+  font-size: initial;
+  padding: 0 !important;
+}
+
+.font-right{
+  text-align: right !important;
+}
+
+.css-1jqq78o-placeholder{
+  color: red !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+  height: 3rem !important;
+  text-align: center;
+  margin: 10px !important;
+}
+
+.css-art2ul-ValueContainer2{
+  // background: rgb(21, 255, 0) !important;
+  height: 3rem !important;
+}
+
+.css-1xc3v61-indicatorContainer{
+  // background-color: #153a61;
+  height: 3rem;
+}
+
