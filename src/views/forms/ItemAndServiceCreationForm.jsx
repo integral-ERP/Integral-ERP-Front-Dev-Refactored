@@ -197,7 +197,7 @@ const ItemAndServiceCreationForm = ({
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo" >
               <Input
                 type="checkbox"
                 inputName="resale"
@@ -208,7 +208,7 @@ const ItemAndServiceCreationForm = ({
                 label="It is a resale item"
               />
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="createResale"
@@ -271,7 +271,7 @@ const ItemAndServiceCreationForm = ({
                 )}
               </select>
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="3rdPartyBilling"
@@ -282,7 +282,7 @@ const ItemAndServiceCreationForm = ({
                 label="Enforce 3rd party billing"
               />
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="inactive"

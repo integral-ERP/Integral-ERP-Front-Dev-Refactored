@@ -125,6 +125,13 @@
   margin: 10px;
 }
 
+.short-income {
+  width: 100px;
+  height: 30px;
+  margin: 10px 0 10px 0;
+}
+
+
 .centered-label{
   display: flex;
   align-items: center;
@@ -132,6 +139,7 @@
 }
 
 .medium-input{
+  height: 3rem;
   margin: 10px;
   width: 100px;
 }

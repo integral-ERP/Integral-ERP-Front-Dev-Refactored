@@ -108,65 +108,73 @@ const LocationsCreationForm = ({
           activeTab === "identification" ? "active" : "hidden"
         }`}
       >
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="code"
-            placeholder="Code"
-            value={formData.code}
-            changeHandler={(e) =>
-              setFormData({ ...formData, code: e.target.value })
-            }
-            label="Code"
-          />
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="description"
-            placeholder="Description"
-            value={formData.description}
-            changeHandler={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            label="Description"
-          />
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-fax" className="form-label">
-            Type
-          </label>
-          <select name="wp-fax"
-            id="wp-fax"
-            className="form-input"
-            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-            value={formData.type}>
-            <option value="">Select a type</option>
-            <option value="Receiving">Receiving</option>
-            <option value="Storage">Storage</option>
-            <option value="Replenishment">Replenishment</option>
-            <option value="Picking">Picking</option>
-            <option value="Quality Control">Quality Control</option>
-            <option value="Shipping">Shipping</option>
-            <option value="Mobile">Mobile</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-fax" className="form-label">
-            Zone
-          </label>
-          <select name="wp-fax"
-            id="wp-fax"
-            className="form-input"
-            onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
-            value={formData.zone}>
-            <option value="">Select a zone</option>
-            <option value="Default Zone">Default Zone</option>
-            {companyAddress && <option value={companyAddress}>{companyAddress}</option>}
-          </select>
-        </div>
-        <div className="company-form__section">
+      <div class="containerr">
+        <div class="cont-one">
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="code"
+              placeholder="Code"
+              value={formData.code}
+              changeHandler={(e) =>
+                setFormData({ ...formData, code: e.target.value })
+              }
+              label="Code"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="description"
+              placeholder="Description"
+              value={formData.description}
+              changeHandler={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              label="Description"
+            />
+          </div>
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        <div class="cont-two">
+          <div className="company-form__section">
+            <label htmlFor="wp-fax" className="form-label">
+              Type
+            </label>
+            <select name="wp-fax"
+              id="wp-fax"
+              className="form-input"
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              value={formData.type}>
+              <option value="">Select a type</option>
+              <option value="Receiving">Receiving</option>
+              <option value="Storage">Storage</option>
+              <option value="Replenishment">Replenishment</option>
+              <option value="Picking">Picking</option>
+              <option value="Quality Control">Quality Control</option>
+              <option value="Shipping">Shipping</option>
+              <option value="Mobile">Mobile</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="company-form__section">
+            <label htmlFor="wp-fax" className="form-label">
+              Zone
+            </label>
+            <select name="wp-fax"
+              id="wp-fax"
+              className="form-input"
+              onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
+              value={formData.zone}>
+              <option value="">Select a zone</option>
+              <option value="Default Zone">Default Zone</option>
+              {companyAddress && <option value={companyAddress}>{companyAddress}</option>}
+            </select>
+          </div>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
+      </div>
+        
+        
+        <div className="company-form__section margin-zero">
         <Input
             type="number"
             inputName="length"
@@ -179,7 +187,7 @@ const LocationsCreationForm = ({
           />
           <label htmlFor="" className="form-label font-right">in</label>
         </div>
-        <div className="company-form__section">
+        <div className="company-form__section margin-zero">
         <Input
             type="number"
             inputName="width"
@@ -193,7 +201,7 @@ const LocationsCreationForm = ({
           <label htmlFor="" className="form-label font-right">in</label>
           
         </div>
-        <div className="company-form__section">
+        <div className="company-form__section ">
         <Input
             type="number"
             inputName="height"
@@ -207,7 +215,7 @@ const LocationsCreationForm = ({
           <label htmlFor="" className="form-label font-right">in</label>
           
         </div>
-        <div className="company-form__section">
+        <div className="company-form__section with-si">
         <Input
             type="checkbox"
             inputName="isempty"

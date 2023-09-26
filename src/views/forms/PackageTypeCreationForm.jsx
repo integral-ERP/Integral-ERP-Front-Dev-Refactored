@@ -163,7 +163,7 @@ const PackageTypesCreationForm = ({
           </label>
           <select
             name="package-type"
-            className="company-form__input"
+            className="form-input"
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
           >
@@ -193,7 +193,7 @@ const PackageTypesCreationForm = ({
           </label>
           <select
             name="container-code"
-            className="company-form__input"
+            className="form-input"
             value={formData.containerCode}
             onChange={(e) => setFormData({ ...formData, containerCode: e.target.value })}
             disabled={formData.type !== 'Container'}
@@ -212,7 +212,7 @@ const PackageTypesCreationForm = ({
           </label>
           <select
             name="wp-equip"
-            className="company-form__input"
+            className="form-input"
             value={formData.containerEquipType}
             onChange={(e) => setFormData({ ...formData, containerEquipType: e.target.value })}
             disabled={formData.type !== 'Container'}
@@ -276,96 +276,108 @@ const PackageTypesCreationForm = ({
         id="dimensions"
         style={{ display: activeTab === "dimensions" ? "block" : "none" }}
       >
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="length"
-            placeholder="Length"
-            value={formData.length}
-            changeHandler={(e) =>
-              setFormData({ ...formData, length: e.target.value })
-            }
-            label="Length"
-          />
-          <label htmlFor="length" className="form-label font-right">
-            in
-          </label>
+        <div class="containerr">
+          <div class="cont-one">
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="length"
+                placeholder="Length"
+                value={formData.length}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, length: e.target.value })
+                }
+                label="Length"
+                />
+              <label htmlFor="length" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="height"
+                placeholder="height"
+                value={formData.height}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, height: e.target.value })
+                }
+                label="Height"
+              />
+              <label htmlFor="height" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="weight"
+                placeholder="Weight"
+                value={formData.weight}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, weight: e.target.value })
+                }
+                label="Weight"
+              />
+              <label htmlFor="weight" className="form-label font-right">
+                lb
+              </label>
+            </div>
+          </div>{/* ----------------------------END ONE---------------------------------- */}
+          <div class="cont-two">
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="width"
+                placeholder="Width"
+                value={formData.width}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, width: e.target.value })
+                }
+                label="Width"
+              />
+              <label htmlFor="width" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="volume"
+                placeholder="Volume"
+                value={formData.volume}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, volume: e.target.value })
+                }
+                label="Volume"
+              />
+              <label htmlFor="volume" className="form-label font-right">
+                ft<sup>3</sup>
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="maxweight"
+                placeholder="Max. Weight"
+                value={formData.maxWeight}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, maxWeight: e.target.value })
+                }
+                label="Max. Weight"
+              />
+              <label htmlFor="max-weight" className="form-label font-right">
+                lb
+              </label>
+            </div>
+          </div>{/* ----------------------------END TWO---------------------------------- */}
         </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="width"
-            placeholder="Width"
-            value={formData.width}
-            changeHandler={(e) =>
-              setFormData({ ...formData, width: e.target.value })
-            }
-            label="Width"
-          />
-          <label htmlFor="width" className="form-label font-right">
-            in
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="height"
-            placeholder="height"
-            value={formData.height}
-            changeHandler={(e) =>
-              setFormData({ ...formData, height: e.target.value })
-            }
-            label="Height"
-          />
-          <label htmlFor="height" className="form-label font-right">
-            in
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="volume"
-            placeholder="Volume"
-            value={formData.volume}
-            changeHandler={(e) =>
-              setFormData({ ...formData, volume: e.target.value })
-            }
-            label="Volume"
-          />
-          <label htmlFor="volume" className="form-label font-right">
-            ft<sup>3</sup>
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="weight"
-            placeholder="Weight"
-            value={formData.weight}
-            changeHandler={(e) =>
-              setFormData({ ...formData, weight: e.target.value })
-            }
-            label="Weight"
-          />
-          <label htmlFor="weight" className="form-label font-right">
-            lb
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="maxweight"
-            placeholder="Max. Weight"
-            value={formData.maxWeight}
-            changeHandler={(e) =>
-              setFormData({ ...formData, maxWeight: e.target.value })
-            }
-            label="Max. Weight"
-          />
-          <label htmlFor="max-weight" className="form-label font-right">
-            lb
-          </label>
-        </div>
+        
+        
+        
+        
+        
+        
       </form>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>

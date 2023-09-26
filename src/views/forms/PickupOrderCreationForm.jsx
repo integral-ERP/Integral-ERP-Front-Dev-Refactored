@@ -680,7 +680,7 @@ const PickupOrderCreationForm = ({
         </div>
         </div>{/* ----------------------------END ONE---------------------------------- */}
         
-        <div class="cont-two">
+        <div class="cont-two__space">
         <div className="company-form__section">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker

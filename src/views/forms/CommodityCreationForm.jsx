@@ -47,10 +47,10 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
 
   return (
     <div className="income-charge-form">
-      <h2>Commodity Creation Form</h2>
+      <h3>Commodity Creation Form</h3>
       <div className="form-row">
         <div className="form-column">
-          <label className="centered-label">Weigth:</label>
+          <label className="form-label__change">Weigth:</label>
           <div className="input-group ">
             <input
               type="number"
@@ -65,7 +65,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Length:</label>
+          <label className="form-label__change">Length:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.length}
               onChange={(e) =>
@@ -75,7 +75,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Width:</label>
+          <label className="form-label__change">Width:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.width}
               onChange={(e) =>
@@ -85,7 +85,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Height:</label>
+          <label className="form-label__change">Height:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.height}
               onChange={(e) =>
@@ -95,14 +95,14 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Volume:</label>
+          <label className="form-label__change">Volume:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight} readOnly/>
             <span className="input-group-text">in3</span>
           </div>
         </div>
         <div className="form-column ">
-          <label className="centered-label">Chargeable Weight:</label>
+          <label className="form-label__change">Chargeable Weight:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.chargedWeight}
               onChange={(e) =>

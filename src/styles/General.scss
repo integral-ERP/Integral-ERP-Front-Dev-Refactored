@@ -73,21 +73,11 @@
   select,
   label {
     width: 150%;
-    // margin: 0% 2% 0% 0px;
-    // display: flex;
-    // align-items: center;
-    // border-radius: 10px;
-    // height: 4rem;
-    // padding: 0 1% 0 1%;
-    // flex-direction: row;
-    // align-content: stretch;
-    // justify-content: flex-end;
 
     max-width: 36rem;
     height: 3rem;
     font-size: medium;
     display: flex;
-    // justify-content: center;
     align-items: center;
   }
 
@@ -210,11 +200,11 @@
   margin: 1rem 0 0 0;
 }
 
-.css-13cymwt-control{
-  width: 70% !important;
-  margin: 0 0 0 15% !important;
-  font-size: medium;
-}
+// .css-13cymwt-control{
+//   width: 100% !important;
+//   margin: 0 0 0 0% !important;
+//   font-size: medium;
+// }
 .css-1nmdiq5-menu{
   background: white !important;
   font-size: medium !important;
@@ -227,9 +217,9 @@
   font-size: 2.2rem !important;
   font-weight: bold !important;
   color: #153a61 !important;
-  margin: 0rem 0 0 -1.4rem !important
+  margin: 0rem 0 0 -1.4rem !important;
   // width: 100% !important;
-  // margin: 5rem !important;
+  margin:  0 0 0 0  !important;
 }
 
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
@@ -248,30 +238,26 @@
 
 .css-13cymwt-control{
   min-height: 3rem !important;
-  width: 70% !important;
-  background: whitesmoke !important;
+  width: 100% !important;
+  background: rgba(245, 245, 245, 0) !important;
   color: rgb(252, 6, 6) !important;
   height: 0rem !important;
   padding: 0 0 0 0rem !important;
   font-size: small !important;
-
 }
 
 .company-form__input{
   font-size: initial;
-  padding: 0 !important;
+  padding: 0 !important;  
 }
 
 .font-right{
   text-align: right !important;
-}
-
-.css-1jqq78o-placeholder{
-  color: red !important;
+  // height: 7rem !important;
 }
 
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
-  height: 3rem !important;
+  height: 1rem !important;
   text-align: center;
   margin: 10px !important;
 }
@@ -286,3 +272,66 @@
   height: 3rem;
 }
 
+.margin-zero{
+  margin: 0 !important;
+}
+
+.with-si{
+  margin: 0 0 2rem 25% !important;
+  width: 50% !important;
+}
+
+.with-fo{
+  margin: 0 0 1rem 4% !important;
+  width: 100% !important;
+}
+
+.css-t3ipsp-control{
+  margin: 0 0 0 0rem !important;
+  min-height: 3rem !important;
+  width: 100% !important;
+  background: whitesmoke !important;
+  // color: rgb(252, 6, 6) !important;
+  height: 0rem !important;
+  padding: 0 0 0 0rem !important;
+  font-size: small !important;
+}
+.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root{
+  // font-size: small !important;
+  color: rgb(0, 0, 0) !important;
+  text-align: left !important;
+
+}
+
+#issuedby, #destinationAgent, #employee, #shipper, #consignee{
+  min-width: 10px;
+  width: 70%;
+  height: 3rem;
+  font-size: initial;
+  // border: 1px solid;
+  text-align: left;
+  margin: 0 0 0 15% ;
+}
+
+#pickup, #delivery, #mainCarrier{
+  // min-width: 10px;
+  width: 70%;
+  // height: 3rem;
+  // font-size: initial;
+  // border: 1px solid;
+  // text-align: left;
+  margin: 0 0 0 15% ;
+}
+
+.css-1jqq78o-placeholder{
+  width: 100% !important;
+  color: rgb(146, 146, 146) !important;
+}
+
+.with-ni{
+  width: 90%;
+}
+
+.input-group-text{
+  font-weight: bold !important;
+}

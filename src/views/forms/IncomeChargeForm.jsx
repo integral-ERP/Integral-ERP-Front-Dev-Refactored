@@ -39,14 +39,15 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
 
   return (
     <div className="income-charge-form">
-      <h2>Income Charge Form</h2>
+      <h3>Income Charge Form</h3>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="charge" className="centered-label">
+          <label htmlFor="charge" className="form-label__change">
             Charge
           </label>
           <select
             id="charge"
+            className="with-ni"
             value={charge}
             onChange={(e) => setCharge(e.target.value)}
           >
@@ -54,11 +55,12 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             <option value="option1">Option 1</option>
             <option value="option2">Option 2</option>
           </select>
-          <label htmlFor="applyTo" className="centered-label">
+          <label htmlFor="applyTo" className="form-label__change">
             Apply to
           </label>
           <select
             id="applyTo"
+            className="with-ni"
             value={applyTo}
             onChange={(e) => setApplyTo(e.target.value)}
           >
@@ -66,11 +68,12 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             <option value="option1">Option 1</option>
             <option value="option2">Option 2</option>
           </select>
-          <label htmlFor="applyBy" className="centered-label">
+          <label htmlFor="applyBy" className="form-label__change">
             Apply by
           </label>
           <select
             id="applyBy"
+            className="with-ni"
             value={applyBy}
             onChange={(e) => setApplyBy(e.target.value)}
           >
@@ -80,11 +83,12 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
           </select>
         </div>
         <div className="form-column">
-          <label htmlFor="currency" className="centered-label">
+          <label htmlFor="currency" className="form-label__change">
             Currency
           </label>
           <select
             id="currency"
+            className="with-ni"
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
           >
@@ -95,11 +99,12 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
               </option>
             ))}
           </select>
-          <label htmlFor="paidAs" className="centered-label">
+          <label htmlFor="paidAs" className="form-label__change">
             Paid as
           </label>
           <select
             id="paidAs"
+            className="with-ni"
             value={paidAs}
             onChange={(e) => setPaidAs(e.target.value)}
           >
@@ -119,7 +124,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
       </div>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="numberOfPieces" className="centered-label">
+          <label htmlFor="numberOfPieces" className="form-label__change">
             No. of Pieces
           </label>
           <input
@@ -131,19 +136,19 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
           />
         </div>
         <div className="form-column">
-          <label htmlFor="grossWeight" className="centered-label">
+          <label htmlFor="grossWeight" className="form-label__change">
             Gross Weight
           </label>
           <div style={{ display: "flex" }}>
             <input
-              className="short-input"
+              className="short-income"
               type="number"
               id="grossWeight"
               value={grossWeight}
               onChange={(e) => setGrossWeight(e.target.value)}
             />
             <select
-              className="short-input"
+              className="short-income"
               id="weightUnit"
               value={weightUnit}
               onChange={(e) => setWeightUnit(e.target.value)}
@@ -155,7 +160,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
         </div>
 
         <div className="form-column">
-          <label htmlFor="rateCharge" className="centered-label">
+          <label htmlFor="rateCharge" className="form-label__change">
             Rate Charge
           </label>
           <select
@@ -172,7 +177,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
       </div>
       <div className="form-row">
           <div className="form-column">
-            <label htmlFor="grossVolume" className="centered-label">
+            <label htmlFor="grossVolume" className="form-label__change">
               Gross Volume
             </label>
             <div style={{ display: "flex" }}>
@@ -195,7 +200,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             </div>
           </div>
           <div className="form-column">
-            <label htmlFor="chargeableWeight" className="centered-label">
+            <label htmlFor="chargeableWeight" className="form-label__change">
               Chargeable Weight (vlb)
             </label>
             <input
@@ -207,7 +212,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             />
           </div>
           <div className="form-column">
-            <label htmlFor="totalAmount" className="centered-label">
+            <label htmlFor="totalAmount" className="form-label__change">
               Total Amount
             </label>
             <input
@@ -222,14 +227,14 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
       <div className="form-row">
         <div className="form-column">
           <button
-            className="generic-button btn btn-primary"
+            className="button-save__change"
             style={{ marginRight: "10px" }}
             type="button"
           >
             Create Charge
           </button>
           <button
-            className="generic-button btn btn-primary"
+            className="button-cancel"
             type="button"
             onClick={() => onCancel(false)}
           >
