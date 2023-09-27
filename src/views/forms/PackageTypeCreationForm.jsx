@@ -158,12 +158,12 @@ const PackageTypesCreationForm = ({
         style={{ display: activeTab === "description" ? "block" : "none" }}
       >
         <div className="company-form__section">
-          <label htmlFor="wp-name" className="company-form__label">
+          <label htmlFor="wp-name" className="form-label">
             Type:
           </label>
           <select
             name="package-type"
-            className="company-form__input"
+            className="form-input"
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
           >
@@ -188,12 +188,12 @@ const PackageTypesCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-mobilePhone" className="company-form__label">
+          <label htmlFor="wp-mobilePhone" className="form-label">
             Container Code:
           </label>
           <select
             name="container-code"
-            className="company-form__input"
+            className="form-input"
             value={formData.containerCode}
             onChange={(e) => setFormData({ ...formData, containerCode: e.target.value })}
             disabled={formData.type !== 'Container'}
@@ -207,12 +207,12 @@ const PackageTypesCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-          <label htmlFor="wp-equip" className="company-form__label">
+          <label htmlFor="wp-equip" className="form-label">
             Container Equip. Type:
           </label>
           <select
             name="wp-equip"
-            className="company-form__input"
+            className="form-input"
             value={formData.containerEquipType}
             onChange={(e) => setFormData({ ...formData, containerEquipType: e.target.value })}
             disabled={formData.type !== 'Container'}
@@ -227,7 +227,7 @@ const PackageTypesCreationForm = ({
         </div>
         {formData.type === 'Container' && (
           <div className="startup-wizard-form__section">
-            <label htmlFor="wp-equip" className="company-form__label">
+            <label htmlFor="wp-equip" className="form-label">
               Method:
             </label>
             <hr />
@@ -276,102 +276,114 @@ const PackageTypesCreationForm = ({
         id="dimensions"
         style={{ display: activeTab === "dimensions" ? "block" : "none" }}
       >
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="length"
-            placeholder="Length"
-            value={formData.length}
-            changeHandler={(e) =>
-              setFormData({ ...formData, length: e.target.value })
-            }
-            label="Length"
-          />
-          <label htmlFor="length" className="company-form__label">
-            in
-          </label>
+        <div class="containerr">
+          <div class="cont-one">
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="length"
+                placeholder="Length"
+                value={formData.length}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, length: e.target.value })
+                }
+                label="Length"
+                />
+              <label htmlFor="length" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="height"
+                placeholder="height"
+                value={formData.height}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, height: e.target.value })
+                }
+                label="Height"
+              />
+              <label htmlFor="height" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="weight"
+                placeholder="Weight"
+                value={formData.weight}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, weight: e.target.value })
+                }
+                label="Weight"
+              />
+              <label htmlFor="weight" className="form-label font-right">
+                lb
+              </label>
+            </div>
+          </div>{/* ----------------------------END ONE---------------------------------- */}
+          <div class="cont-two">
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="width"
+                placeholder="Width"
+                value={formData.width}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, width: e.target.value })
+                }
+                label="Width"
+              />
+              <label htmlFor="width" className="form-label font-right">
+                in
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="volume"
+                placeholder="Volume"
+                value={formData.volume}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, volume: e.target.value })
+                }
+                label="Volume"
+              />
+              <label htmlFor="volume" className="form-label font-right">
+                ft<sup>3</sup>
+              </label>
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="maxweight"
+                placeholder="Max. Weight"
+                value={formData.maxWeight}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, maxWeight: e.target.value })
+                }
+                label="Max. Weight"
+              />
+              <label htmlFor="max-weight" className="form-label font-right">
+                lb
+              </label>
+            </div>
+          </div>{/* ----------------------------END TWO---------------------------------- */}
         </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="width"
-            placeholder="Width"
-            value={formData.width}
-            changeHandler={(e) =>
-              setFormData({ ...formData, width: e.target.value })
-            }
-            label="Width"
-          />
-          <label htmlFor="width" className="company-form__label">
-            in
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="height"
-            placeholder="height"
-            value={formData.height}
-            changeHandler={(e) =>
-              setFormData({ ...formData, height: e.target.value })
-            }
-            label="Height"
-          />
-          <label htmlFor="height" className="company-form__label">
-            in
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="volume"
-            placeholder="Volume"
-            value={formData.volume}
-            changeHandler={(e) =>
-              setFormData({ ...formData, volume: e.target.value })
-            }
-            label="Volume"
-          />
-          <label htmlFor="volume" className="company-form__label">
-            ft<sup>3</sup>
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="weight"
-            placeholder="Weight"
-            value={formData.weight}
-            changeHandler={(e) =>
-              setFormData({ ...formData, weight: e.target.value })
-            }
-            label="Weight"
-          />
-          <label htmlFor="weight" className="company-form__label">
-            lb
-          </label>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="number"
-            inputName="maxweight"
-            placeholder="Max. Weight"
-            value={formData.maxWeight}
-            changeHandler={(e) =>
-              setFormData({ ...formData, maxWeight: e.target.value })
-            }
-            label="Max. Weight"
-          />
-          <label htmlFor="max-weight" className="company-form__label">
-            lb
-          </label>
-        </div>
+        
+        
+        
+        
+        
+        
       </form>
       <div className="company-form__options-container">
-        <button className="company-form__option btn btn-primary" onClick={sendData}>
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="company-form__option btn btn-secondary" onClick={closeModal}>
+        <button className="button-cancel" onClick={closeModal}>
           Cancel
         </button>
       </div>

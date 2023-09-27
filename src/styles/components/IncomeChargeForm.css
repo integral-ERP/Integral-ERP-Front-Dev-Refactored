@@ -1,7 +1,7 @@
 .income-charge-form {
-    max-width: 600px;
+    max-width: 80%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -18,8 +18,11 @@
   }
   
   .form-column {
+    display: flex;
     flex: 1;
     margin-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
   }
   
   label {

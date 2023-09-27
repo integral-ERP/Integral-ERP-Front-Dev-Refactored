@@ -113,10 +113,10 @@ const IncomeChargeForm = ({
 
   return (
     <div className="income-charge-form">
-      <h2>Income Charge Form</h2>
+      <h3>Income Charge Form</h3>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="charge" className="centered-label">
+          <label htmlFor="charge" className="form-label__change">
             Charge
           </label>
           <select
@@ -134,7 +134,7 @@ const IncomeChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="applyTo" className="centered-label">
+          <label htmlFor="applyTo" className="form-label__change">
             Apply to
           </label>
           <select
@@ -162,7 +162,7 @@ const IncomeChargeForm = ({
               </option>
             )}
           </select>
-          <label htmlFor="applyBy" className="centered-label">
+          <label htmlFor="applyBy" className="form-label__change">
             Apply by
           </label>
           <select
@@ -180,7 +180,7 @@ const IncomeChargeForm = ({
           </select>
         </div>
         <div className="form-column">
-          <label htmlFor="currency" className="centered-label">
+          <label htmlFor="currency" className="form-label__change">
             Currency
           </label>
           <select
@@ -197,7 +197,7 @@ const IncomeChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="paidAs" className="centered-label">
+          <label htmlFor="paidAs" className="form-label__change">
             Paid as
           </label>
           <select
@@ -227,7 +227,7 @@ const IncomeChargeForm = ({
       </div>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="numberOfPieces" className="centered-label">
+          <label htmlFor="numberOfPieces" className="form-label__change">
             No. of Pieces
           </label>
           <input
@@ -252,7 +252,7 @@ const IncomeChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="grossWeight" className="centered-label">
+          <label htmlFor="grossWeight" className="form-label__change">
             Gross Weight
           </label>
           <div style={{ display: "flex" }}>
@@ -381,7 +381,7 @@ const IncomeChargeForm = ({
       <div className="form-row">
         <div className="form-column">
           <button
-            className="generic-button btn btn-primary"
+            className="button-save__change"
             style={{ marginRight: "10px" }}
             type="button"
             onClick={createCharge}
@@ -389,7 +389,7 @@ const IncomeChargeForm = ({
             Create Charge
           </button>
           <button
-            className="generic-button btn btn-primary"
+            className="button-cancel"
             type="button"
             onClick={() => onCancel(false)}
           >

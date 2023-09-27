@@ -125,11 +125,19 @@
   margin: 10px;
 }
 
-.short-input-2{
+.short-income {
+  width: 100px;
+  height: 30px;
+  margin: 10px 0 10px 0;
+}
+
+.short-income-kgs {
   width: 50px;
   height: 30px;
-  margin-top: 10px;
+  margin: 10px 0 10px 0;
+  padding:0 0 0 0.5rem;
 }
+
 
 .centered-label{
   display: flex;
@@ -138,6 +146,7 @@
 }
 
 .medium-input{
+  height: 3rem;
   margin: 10px;
   width: 100px;
 }

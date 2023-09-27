@@ -156,9 +156,9 @@ const Carrier = () => {
 
   return (
     <>
+    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
         <Sidebar />
-      </div>
       <div className="content-page">
         <Table
           data={carriers}
@@ -213,7 +213,9 @@ const Carrier = () => {
             />
           </ModalForm>
         )}
+        </div>
       </div>
+    </div>
     </>
   );
 };

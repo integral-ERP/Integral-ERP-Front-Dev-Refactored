@@ -129,9 +129,9 @@
     height: 150px;
   }
 
-  form{
-      margin:  5% 5% 1% 5%;
-      width: 70%;
+  .form{
+      margin:  1% 5% 1% 5%;
+      width: 90%;
       margin-top: 3%;
   }
 
@@ -150,6 +150,11 @@
     font-size: initial;
     font-weight: bold;
     margin-bottom: 0rem;
+    &__change{
+      font-weight: bold;
+      font-size: small;
+      margin: 0;
+    }
   }
 
   .form-textarea{

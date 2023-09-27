@@ -147,9 +147,9 @@ const ItemAndServiceCreationForm = ({
       >
         <div className="containerr">
           <div className="cont-one">
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Type:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Type:</label>
+              <select className="form-input">
                 <option value="">Select an option</option>
                 <option value="other">Other</option>
                 <option value="freight">Freight</option>
@@ -183,21 +183,21 @@ const ItemAndServiceCreationForm = ({
                 label="Code"
               />
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Account:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Account:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Price:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Price:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo" >
               <Input
                 type="checkbox"
                 inputName="resale"
@@ -208,17 +208,7 @@ const ItemAndServiceCreationForm = ({
                 label="It is a resale item"
               />
             </div>
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Tax Code:</label>
-              <select className="medium-select">
-                <option value="">Select an option</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="createResale"
@@ -229,37 +219,48 @@ const ItemAndServiceCreationForm = ({
                 label="Create related resale item automatically"
               />
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Expense Item:</label>
-              <select className="medium-select">
+          </div>
+          {/* ----------------------------END ONE---------------------------------- */}
+          <div className="cont-two">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Tax Code:</label>
+              <select className="form-input">
+                <option value="">Select an option</option>
+                <option value="freight">Freight</option>
+              </select>
+            </div>
+            
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Expense Item:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Preferred Vendor:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor=""className="form-label">Preferred Vendor:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">3rd party liability account:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor=""className="form-label">3rd party liability account:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">3rd party asset account:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">3rd party asset account:</label>
+              <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" style={{ display: "flex" }}>
-              <label htmlFor="">Currency:</label>
-              <select className="medium-select">
+            <div className="company-form__section" >
+              <label htmlFor="" className="form-label">Currency:</label>
+              <select className="form-input">
                 <option value="">Select a currency</option>
                 {Object.entries(currencies).map(
                   ([currencyCode, currencyName]) => (
@@ -270,7 +271,7 @@ const ItemAndServiceCreationForm = ({
                 )}
               </select>
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="3rdPartyBilling"
@@ -281,7 +282,7 @@ const ItemAndServiceCreationForm = ({
                 label="Enforce 3rd party billing"
               />
             </div>
-            <div className="company-form__section">
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="inactive"
