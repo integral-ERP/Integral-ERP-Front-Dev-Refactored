@@ -6,28 +6,28 @@ class ForwardingAgentService{
     }
 
     async createForwardingAgent(data) {
-        const response = await axios.post(`${this.BASE_URL}forWardingAgents/`, data);
+        const response = await axios.post(`${this.BASE_URL}agent/`, data);
         return response;
       }
     
       async updateForwardingAgent(id, data) {
-        const response = await axios.put(`${this.BASE_URL}forWardingAgents/${id}/`, data);
+        const response = await axios.put(`${this.BASE_URL}agent/${id}/`, data);
         return response;
       }
     
       async getForwardingAgents(url = null){
-        const apiUrl = url || `${this.BASE_URL}forWardingAgents/`;
+        const apiUrl = url || `${this.BASE_URL}agent/`;
         const response = await axios.get(apiUrl);
         return response;
       }
 
       async getForwardingAgentById(id){
-        const response = await axios.get(`${this.BASE_URL}forWardingAgents/${id}`);
+        const response = await axios.get(`${this.BASE_URL}agent/${id}`);
         return response;
       }
     
       async deleteForwardingAgent(id) {
-          const response = await axios.delete(`${this.BASE_URL}forWardingAgents/${id}/`);
+          const response = await axios.delete(`${this.BASE_URL}agent/${id}/`);
           return response;
       }
 }

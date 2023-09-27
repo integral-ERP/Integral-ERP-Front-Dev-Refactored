@@ -6,28 +6,28 @@ class ItemsAndServicesService{
   }
 
   async createItemAndService(data) {
-    const response = await axios.post(`${this.BASE_URL}itemandservice/`, data);
+    const response = await axios.post(`${this.BASE_URL}ItemServices/`, data);
     return response;
   }
 
   async updateItemsAndServices(id, data) {
-    const response = await axios.put(`${this.BASE_URL}itemandservice/${id}/`, data);
+    const response = await axios.put(`${this.BASE_URL}ItemServices/${id}/`, data);
     return response;
   }
 
   async getItemsAndServices(url = null) {
-    const apiUrl = url || `${this.BASE_URL}itemandservice/`;
+    const apiUrl = url || `${this.BASE_URL}ItemServices/`;
     const response = await axios.get(apiUrl);
     return response;
   }
 
   async getItemAndServiceById(id){
-    const response = await axios.get(`${this.BASE_URL}itemandservice/${id}`);
+    const response = await axios.get(`${this.BASE_URL}ItemServices/${id}`);
     return response;
   }
 
   async deleteItemAndService(id) {
-      const response = await axios.delete(`${this.BASE_URL}itemandservice/${id}/`);
+      const response = await axios.delete(`${this.BASE_URL}ItemServices/${id}/`);
       return response;
   }
 }

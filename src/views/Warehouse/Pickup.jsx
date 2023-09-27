@@ -15,8 +15,8 @@ const Pickup = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
-const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const columns = [
     "Status",
     "Number",
@@ -28,7 +28,6 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
     "Delivery Name",
     "Delivery Address",
     "Pieces",
-    "Pickup Orders",
     "Weight",
     "Volume",
     "Carrier Name",
@@ -37,13 +36,16 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
     "Tracking Number",
     "Invoice Number",
     "Purchase Order number",
-    "View PDF"
+    "View PDF",
   ];
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
       .then((response) => {
-        setpickupOrders([...pickupOrders, ...response.data.results].reverse());
+        const newPickups = response.data.results.filter((newCarrier) => {
+          return !pickupOrders.some((existingCarrier) => existingCarrier.id === newCarrier.id);
+        });
+        setpickupOrders([...pickupOrders, ...newPickups].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -54,7 +56,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       updatePickupOrders();
       setInitialDataFetched(true);
     }
@@ -101,7 +103,7 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-        PickupService.deletePickup(selectedPickupOrder.id)
+      PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
@@ -146,70 +148,70 @@ const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
 
   return (
     <>
-    <div className="dashboard__layout">
-      <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page">
-        <Table
-          data={pickupOrders}
-          columns={columns}
-          onSelect={handleSelectPickupOrder} // Make sure this line is correct
-          selectedRow={selectedPickupOrder}
-          onDelete={handleDeletePickupOrder}
-          onEdit={handleEditPickupOrders}
-          onAdd={handleAddPickupOrder}
-          title="Pick-up Orders"
-          setData={setpickupOrders}
-        />
-
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Pick-up Order deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Pick-up Order. Please try again</strong>
-          </Alert>
-        )}
-
-        {selectedPickupOrder !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PickupOrderCreationForm
-              pickupOrder={selectedPickupOrder}
-              closeModal={closeModal}
-              creating={false}
-              onpickupOrderDataChange={handlePickupOrdersDataChange}
-              currentPickUpNumber={currentPickupNumber}
-              setcurrentPickUpNumber={setcurrentPickupNumber}
+      <div className="dashboard__layout">
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page">
+            <Table
+              data={pickupOrders}
+              columns={columns}
+              onSelect={handleSelectPickupOrder} // Make sure this line is correct
+              selectedRow={selectedPickupOrder}
+              onDelete={handleDeletePickupOrder}
+              onEdit={handleEditPickupOrders}
+              onAdd={handleAddPickupOrder}
+              title="Pick-up Orders"
+              setData={setpickupOrders}
             />
-          </ModalForm>
-        )}
 
-        {selectedPickupOrder === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PickupOrderCreationForm
-              pickupOrder={null}
-              closeModal={closeModal}
-              creating={true}
-              onpickupOrderDataChange={handlePickupOrdersDataChange}
-              currentPickUpNumber={currentPickupNumber}
-              setcurrentPickUpNumber={setcurrentPickupNumber}
-            />
-          </ModalForm>
-        )}
-        </div>  
-      </div>
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Pick-up Order deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Pick-up Order. Please try again</strong>
+              </Alert>
+            )}
+
+            {selectedPickupOrder !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <PickupOrderCreationForm
+                  pickupOrder={selectedPickupOrder}
+                  closeModal={closeModal}
+                  creating={false}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </ModalForm>
+            )}
+
+            {selectedPickupOrder === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <PickupOrderCreationForm
+                  pickupOrder={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </ModalForm>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

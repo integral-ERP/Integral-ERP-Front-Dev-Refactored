@@ -30,6 +30,26 @@ class PickupService{
       const response = await axios.delete(`${this.BASE_URL}pickUpOrder/${id}/`);
       return response;
   }
+
+  async createConsignee(data){
+    const response = await axios.post(`${this.BASE_URL}consignee/`, data);
+    return response;
+  }
+
+  async createDeliveryLocation(data){
+    const response = await axios.post(`${this.BASE_URL}deliveryLocation/`, data);
+    return response;
+  }
+
+  async createPickUpLocation(data){
+    const response = await axios.post(`${this.BASE_URL}pickUpLocation/`, data);
+    return response;
+  }
+
+  async createShipper(data){
+    const response = await axios.post(`${this.BASE_URL}shipper/`, data);
+    return response;
+  }
 }
 
 export default new PickupService();

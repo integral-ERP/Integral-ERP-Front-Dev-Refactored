@@ -5,7 +5,7 @@ import CurrenciesService from "../../services/CurrencyService";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import Input from "../shared/components/Input";
 
-const IncomeChargeForm = ({
+const ExpenseChargeForm = ({
   onCancel,
   charges,
   setcharges,
@@ -20,7 +20,7 @@ const IncomeChargeForm = ({
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
   const formFormat = {
-    type: "income",
+    type: "expense",
     charge: "",
     currency: "",
     applyTo: "",
@@ -35,6 +35,7 @@ const IncomeChargeForm = ({
     chargeableWeight: 0,
     totalAmount: 0,
     show: false,
+    description: "",
   };
   console.log(commodities);
   const [formData, setformData] = useState(formFormat);
@@ -113,11 +114,11 @@ const IncomeChargeForm = ({
 
   return (
     <div className="income-charge-form">
-      <h2>Income Charge Form</h2>
+      <h2>Expense Charge Form</h2>
       <div className="form-row">
         <div className="form-column">
           <label htmlFor="charge" className="centered-label">
-            Charge
+            Freight Service Class
           </label>
           <select
             id="charge"
@@ -162,22 +163,6 @@ const IncomeChargeForm = ({
               </option>
             )}
           </select>
-          <label htmlFor="applyBy" className="centered-label">
-            Apply by
-          </label>
-          <select
-            id="applyBy"
-            value={formData.applyBy}
-            onChange={(e) =>
-              setformData({ ...formData, applyBy: e.target.value })
-            }
-          >
-            {/* Add options for applyBy */}
-            <option value="weight">Weight</option>
-            <option value="pieces">Pieces</option>
-            <option value="volume">Volume</option>
-            <option value="container">Container</option>
-          </select>
         </div>
         <div className="form-column">
           <label htmlFor="currency" className="centered-label">
@@ -211,21 +196,39 @@ const IncomeChargeForm = ({
             <option value="prepaid">Prepaid</option>
             <option value="collect">Collect</option>
           </select>
-          <label htmlFor="description" className="centered-label">
-            Description:
-          </label>
-          <input
-            name="description"
-            type="text"
-            placeholder="Description..."
-            value={formData.description}
-            onChange={(e) =>
-              setformData({ ...formData, description: e.target.value })
-            }
-          />
         </div>
       </div>
       <div className="form-row">
+        <label htmlFor="description" className="centered-label">
+          Description:
+        </label>
+        <input
+          name="description"
+          type="text"
+          placeholder="Description..."
+          value={formData.description}
+          onChange={(e) =>
+            setformData({ ...formData, description: e.target.value })
+          }
+        />
+      </div>
+      <div className="form-row">
+        <label htmlFor="applyBy" className="centered-label">
+          Apply By
+        </label>
+        <select
+          id="applyBy"
+          value={formData.applyBy}
+          onChange={(e) =>
+            setformData({ ...formData, applyBy: e.target.value })
+          }
+        >
+          {/* Add options for applyBy */}
+          <option value="weight">Weight</option>
+          <option value="pieces">Pieces</option>
+          <option value="volume">Volume</option>
+          <option value="container">Container</option>
+        </select>
         <div className="form-column">
           <label htmlFor="numberOfPieces" className="centered-label">
             No. of Pieces
@@ -401,12 +404,12 @@ const IncomeChargeForm = ({
   );
 };
 
-IncomeChargeForm.propTypes = {
+ExpenseChargeForm.propTypes = {
   onCancel: propTypes.func,
 };
 
-IncomeChargeForm.defaultProps = {
+ExpenseChargeForm.defaultProps = {
   onCancel: null,
 };
 
-export default IncomeChargeForm;
+export default ExpenseChargeForm;
