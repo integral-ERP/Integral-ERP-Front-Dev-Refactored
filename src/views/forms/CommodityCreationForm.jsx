@@ -49,8 +49,8 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
     <div className="income-charge-form">
       <h3>Commodity Creation Form</h3>
       <div className="form-row">
-        <div className="form-column">
-          <label className="form-label__change">Weigth:</label>
+        <div className="form-column-create">
+          <label className="form-label__change ">Weigth:</label>
           <div className="input-group ">
             <input
               type="number"
@@ -64,7 +64,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
             <span className="input-group-text">lb</span>
           </div>
         </div>
-        <div className="form-column ">
+        <div className="form-column-create">
           <label className="form-label__change">Length:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.length}
@@ -74,7 +74,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
             <span className="input-group-text">in</span>
           </div>
         </div>
-        <div className="form-column ">
+        <div className="form-column-create">
           <label className="form-label__change">Width:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.width}
@@ -84,7 +84,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
             <span className="input-group-text">in</span>
           </div>
         </div>
-        <div className="form-column ">
+        <div className="form-column-create">
           <label className="form-label__change">Height:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.height}
@@ -94,14 +94,14 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
             <span className="input-group-text">in</span>
           </div>
         </div>
-        <div className="form-column ">
+        <div className="form-column-create">
           <label className="form-label__change">Volume:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.volumetricWeight} readOnly/>
             <span className="input-group-text">in3</span>
           </div>
         </div>
-        <div className="form-column ">
+        <div className="form-column-create">
           <label className="form-label__change">Chargeable Weight:</label>
           <div className="input-group ">
             <input type="number" className="form-control" aria-label="" value={formData.chargedWeight}
@@ -109,11 +109,11 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
                 setformData({ ...formData, ratedWeight: e.target.value })
               }/>
             <span className="input-group-text">lb</span>
-          </div>
-          <div className="form-row" style={{ marginTop: "20px" }}>
-            <div className="form-column">
+          </div>          
+        </div>
+        <div className="table-hover">
               <button
-                className="generic-button btn btn-primary"
+                className="button-save pick "
                 style={{ marginRight: "10px" }}
                 type="button"
                 onClick={addCommodity}
@@ -121,15 +121,13 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
                 <i className="fas fa-check-circle"></i>
               </button>
               <button
-                className="generic-button btn btn-primary"
+                className="button-cancel pick "
                 type="button"
                 onClick={() => onCancel(false)}
               >
                 <i className="fas fa-times-circle"></i>
               </button>
             </div>
-          </div>
-        </div>
       </div>
       {showSuccessAlert && (
         <Alert

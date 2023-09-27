@@ -148,7 +148,7 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
               onChange={(e) => setGrossWeight(e.target.value)}
             />
             <select
-              className="short-income"
+              className="short-income-kgs"
               id="weightUnit"
               value={weightUnit}
               onChange={(e) => setWeightUnit(e.target.value)}
@@ -182,14 +182,14 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             </label>
             <div style={{ display: "flex" }}>
               <input
-                className="short-input"
+                className="short-income"
                 type="number"
                 id="grossVolume"
                 value={grossVolume}
                 onChange={(e) => setGrossVolume(e.target.value)}
               />
               <select
-                className="medium-input"
+                className="short-income-kgs"
                 id="volumeUnit"
                 value={volumeUnit}
                 onChange={(e) => setVolumeUnit(e.target.value)}
@@ -224,8 +224,8 @@ const IncomeChargeForm = ({ onCancel, charges, setcharges }) => {
             />
           </div>
         </div>
-      <div className="form-row">
-        <div className="form-column">
+      <div className="">
+        <div className="table-hover">
           <button
             className="button-save__change"
             style={{ marginRight: "10px" }}
