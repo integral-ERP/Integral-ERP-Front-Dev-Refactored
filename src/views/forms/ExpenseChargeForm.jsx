@@ -111,17 +111,17 @@ const ExpenseChargeForm = ({
     const total = unit * rate;
     setformData({ ...formData, rateCharge: rate, totalAmount: total });
   };
-
   return (
     <div className="income-charge-form">
-      <h2>Expense Charge Form</h2>
+      <h2 className=" tab-pane">Expense Charge Form</h2>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="charge" className="centered-label">
+          <label htmlFor="charge" className="text-comm">
             Freight Service Class
           </label>
           <select
             id="charge"
+            class="form-input"
             value={formData.charge}
             onChange={(e) =>
               setformData({ ...formData, charge: e.target.value })
@@ -135,11 +135,12 @@ const ExpenseChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="applyTo" className="centered-label">
+          <label htmlFor="applyTo" className="text-comm  tab-pane">
             Apply to
           </label>
           <select
             id="applyTo"
+            class="form-input"
             value={formData.applyTo}
             onChange={(e) =>
               setformData({ ...formData, applyTo: e.target.value })
@@ -165,11 +166,12 @@ const ExpenseChargeForm = ({
           </select>
         </div>
         <div className="form-column">
-          <label htmlFor="currency" className="centered-label">
+          <label htmlFor="currency" className="text-comm">
             Currency
           </label>
           <select
             id="currency"
+            class="form-input"
             value={formData.currency}
             onChange={(e) =>
               setformData({ ...formData, currency: e.target.value })
@@ -182,11 +184,12 @@ const ExpenseChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="paidAs" className="centered-label">
+          <label htmlFor="paidAs" className="text-comm  tab-pane">
             Paid as
           </label>
           <select
             id="paidAs"
+            class="form-input"
             value={formData.paidAs}
             onChange={(e) =>
               setformData({ ...formData, paidAs: e.target.value })
@@ -198,51 +201,31 @@ const ExpenseChargeForm = ({
           </select>
         </div>
       </div>
-      <div className="form-row">
-        <label htmlFor="description" className="centered-label">
-          Description:
-        </label>
-        <input
-          name="description"
-          type="text"
-          placeholder="Description..."
-          value={formData.description}
-          onChange={(e) =>
-            setformData({ ...formData, description: e.target.value })
-          }
-        />
-      </div>
-      <div className="form-row">
-        <label htmlFor="applyBy" className="centered-label">
-          Apply By
-        </label>
-        <select
-          id="applyBy"
-          value={formData.applyBy}
-          onChange={(e) =>
-            setformData({ ...formData, applyBy: e.target.value })
-          }
-        >
-          {/* Add options for applyBy */}
-          <option value="weight">Weight</option>
-          <option value="pieces">Pieces</option>
-          <option value="volume">Volume</option>
-          <option value="container">Container</option>
-        </select>
-        <div className="form-column">
-          <label htmlFor="numberOfPieces" className="centered-label">
+      
+      <div class="containerr">
+        <div class="cont-one">
+          <div className="form-colum">
+            <label htmlFor="description" className="text-comm">
+              Description:
+            </label>
+            <input
+              name="description"
+              type="text"
+              class="form-input"
+              placeholder="Description..."
+              value={formData.description}
+              onChange={(e) =>
+                setformData({ ...formData, description: e.target.value })
+              }
+            />
+          </div>
+          <div className="form-column  tab-pane">
+          <label htmlFor="numberOfPieces" className="text-comm">
             No. of Pieces
           </label>
           <input
-            style={{
-              backgroundColor: `${
-                formData.applyBy === "pieces" ||
-                formData.applyBy === "container"
-                  ? ""
-                  : "lightgray"
-              }`,
-            }}
-            className="short-input"
+            
+            className="form-input"
             type="number"
             id="numberOfPieces"
             readOnly={
@@ -255,18 +238,12 @@ const ExpenseChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="grossWeight" className="centered-label">
+          <label htmlFor="grossWeight" className="text-comm">
             Gross Weight
           </label>
-          <div style={{ display: "flex" }}>
+          <div className="input-space">
             <input
-              className="short-input"
-              style={{
-                backgroundColor: `${
-                  formData.applyBy === "weight" ? "" : "lightgray"
-                }`,
-                marginRight: "0px",
-              }}
+              className="with-space"
               type="number"
               id="grossWeight"
               readOnly={formData.applyBy !== "weight"}
@@ -276,7 +253,7 @@ const ExpenseChargeForm = ({
               }
             />
             <select
-              className="short-input-2"
+              className="add-select"
               id="weightUnit"
               value={formData.weightUnit}
               onChange={(e) =>
@@ -289,12 +266,12 @@ const ExpenseChargeForm = ({
           </div>
         </div>
         <div className="form-column">
-          <label htmlFor="grossVolume" className="centered-label">
+          <label htmlFor="grossVolume" className="text-comm">
             Gross Volume
           </label>
-          <div style={{ display: "flex" }}>
+          <div className="input-space">
             <input
-              className="short-input"
+              className="with-space"
               style={{
                 backgroundColor: `${
                   formData.applyBy === "volume" ? "" : "lightgray"
@@ -310,7 +287,7 @@ const ExpenseChargeForm = ({
               }
             />
             <select
-              className="short-input-2"
+              className="add-select"
               id="volumeUnit"
               value={formData.volumeUnit}
               onChange={(e) =>
@@ -322,16 +299,34 @@ const ExpenseChargeForm = ({
             </select>
           </div>
         </div>
-      </div>
-      <div className="form-row">
-        <div className="form-column">
-          <label htmlFor="chargeableWeight" className="centered-label">
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        <div class="cont-two">
+          <div className="form-colum">
+            <label htmlFor="applyBy" className="text-comm">
+              Apply By
+            </label>
+            <select
+              class="form-input"
+              id="applyBy"
+              value={formData.applyBy}
+              onChange={(e) =>
+                setformData({ ...formData, applyBy: e.target.value })
+              }
+            >
+              {/* Add options for applyBy */}
+              <option value="weight">Weight</option>
+              <option value="pieces">Pieces</option>
+              <option value="volume">Volume</option>
+              <option value="container">Container</option>
+            </select>
+          </div>
+          {/* <div className="form-ro"> */}
+        <div className="form-column  tab-pane">
+          <label htmlFor="chargeableWeight" className="text-comm">
             Chargeable Weight (vlb)
           </label>
           <input
-            style={{ backgroundColor: "lightgray" }}
-            className="short-input"
-            type="number"
+            className="form-input"
             readOnly
             id="chargeableWeight"
             value={formData.chargeableWeight}
@@ -341,11 +336,11 @@ const ExpenseChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="rateCharge" className="centered-label">
+          <label htmlFor="rateCharge" className="text-comm">
             Rate Charge
           </label>
           <input
-            className="short-input"
+            className="form-input"
             type="number"
             id="rateCharge"
             value={formData.rateCharge}
@@ -353,11 +348,11 @@ const ExpenseChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="totalAmount" className="centered-label">
+          <label htmlFor="totalAmount" className="text-comm">
             Total Amount
           </label>
           <input
-            className="short-input"
+            className="form-input"
             type="number"
             id="totalAmount"
             readOnly
@@ -367,6 +362,7 @@ const ExpenseChargeForm = ({
             }
           />
         </div>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
       </div>
       <div className="form-row">
         <div className="form-column">
@@ -382,9 +378,9 @@ const ExpenseChargeForm = ({
         </div>
       </div>
       <div className="form-row">
-        <div className="form-column">
+        <div className="table-hover charge-buttons">
           <button
-            className="generic-button btn btn-primary"
+            className="button-save__change"
             style={{ marginRight: "10px" }}
             type="button"
             onClick={createCharge}
@@ -392,7 +388,7 @@ const ExpenseChargeForm = ({
             Create Charge
           </button>
           <button
-            className="generic-button btn btn-primary"
+            className="button-cancel"
             type="button"
             onClick={() => onCancel(false)}
           >

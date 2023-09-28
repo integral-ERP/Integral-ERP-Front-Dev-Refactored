@@ -1238,7 +1238,7 @@ const PickupOrderCreationForm = ({
         <div className="company-form__section">
           <button
             type="button"
-            className="btn btn-primary btn-lg"
+            className="button-addpiece"
             onClick={() =>
               setshowCommodityCreationForm(!showCommodityCreationForm)
             }
