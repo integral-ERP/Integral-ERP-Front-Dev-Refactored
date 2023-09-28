@@ -42,10 +42,13 @@ const Pickup = () => {
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
       .then((response) => {
-        const newPickups = response.data.results.filter((newCarrier) => {
-          return !pickupOrders.some((existingCarrier) => existingCarrier.id === newCarrier.id);
+        const newPickupOrders = response.data.results.filter((pickupOrder) => {
+          const pickupOrderId = pickupOrder.id;
+          return !pickupOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-        setpickupOrders([...pickupOrders, ...newPickups].reverse());
+        
+        setpickupOrders([...pickupOrders, ...newPickupOrders]);
+        console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -106,11 +109,13 @@ const Pickup = () => {
       PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
+            const newPickupOrders = pickupOrders.filter((order) => order.id !== selectedPickupOrder.id);
+            setpickupOrders(newPickupOrders);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updatePickupOrders();
+            //updatePickupOrders();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

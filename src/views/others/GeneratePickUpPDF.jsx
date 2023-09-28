@@ -90,18 +90,18 @@ const GeneratePickUpPDF = (data) => {
                         {
                           text: [
                             `Issued By \n`,
-                            `${data.issuedBy?.name || `PressEx Logistics`} \n`,
-                            `Tel: ${data.issuedBy?.phone || `(305)456788`}, Fax: ${data.issuedBy?.fax || `786-9998847`} \n`,
-                            `${data.issuedBy?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
-                            `${data.issuedBy?.city || `MIAMI`}, ${data.issuedBy?.state || `FLORIDA`} ${data.issuedBy?.zipCode || `33182`} \n`,
-                            `${data.issuedBy?.country || `USA`}`,
+                            `${data.issued_byObj?.name || ``} \n`,
+                            `Tel: ${data.issued_byObj?.phone || ``}, Fax: ${data.issued_byObj?.fax || ``} \n`,
+                            `${data.issued_byObj?.street_and_number || ``} \n`,
+                            `${data.issued_byObj?.city || ``}, ${data.issuedBy?.state || ``} ${data.issued_byObj?.zipCode || ``} \n`,
+                            `${data.issued_byObj?.country || ``}`,
                           ],
                         },
                         {
                           stack: [
                             { image: barcodeUrl, fit: [100, 200], alignment: `right` },
                             {
-                              text: `${data.issuedBy?.number || `33182`}`,
+                              text: `${data.number || ``}`,
                               bold: true,
                               alignment: `right`,
                               fontSize: 20,
@@ -119,14 +119,14 @@ const GeneratePickUpPDF = (data) => {
                           style: `tableExample`,
                           table: {
                             width: `*`,
-                            body: [[`Received By:`, `${data.employee?.name || ``}`]],
+                            body: [[`Received By:`, `${data.employeeObj?.name || ``}`]],
                           },
                         },
                         {
                           style: `tableExample`,
                           table: {
                             width: `*`,
-                            body: [[`Received Date`, `${data.creationDate || ``}`]],
+                            body: [[`Received Date`, `${data.creation_date || ``}`]],
                             margin: [5, 0, 5, 0],
                           },
                         },
@@ -138,21 +138,21 @@ const GeneratePickUpPDF = (data) => {
                           style: `tableExample`,
                           table: {
                             width: `*`,
-                            body: [[`Pickup Date`, `${data.pickUpDate || ``}`]],
+                            body: [[`Pickup Date`, `${data.pick_up_date || ``}`]],
                           },
                         },
                         {
                           style: `tableExample`,
                           table: {
                             width: `*`,
-                            body: [[`Delivery Date`, `${data.deliveryDate || ``}`]],
+                            body: [[`Delivery Date`, `${data.delivery_date || ``}`]],
                           },
                         },
                         {
                           style: `tableExample`,
                           table: {
                             width: `*`,
-                            body: [[`Carrier`, `${data.mainCarrier?.name || ``}`]],
+                            body: [[`Carrier`, `${data.main_carrierObj?.name || ``}`]],
                           },
                         },
                       ],
@@ -183,38 +183,38 @@ const GeneratePickUpPDF = (data) => {
                           ],
                           [
                             {
-                              text: `${data.PickUpLocation?.name || ``}`,
+                              text: `${data.pickUpLocationObj?.data?.obj?.name || ``}`,
                             },
                             {
-                              text: `${data.deliveryLocation?.name || ``}`,
+                              text: `${data.deliveryLocationObj?.data?.obj?.name || ``}`,
                             },
                             {
-                              text: `${data.proNumber || ``}`,
+                              text: `${data.pro_number || ``}`,
                             },
                           ],
                           [
                             {
                               text: [
-                                `${data.PickUpLocation?.name || `PressEx Logistics`} \n`,
-                            `${data.PickUpLocation?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
-                            `${data.PickUpLocation?.city || `MIAMI`}, ${data.PickUpLocation?.state || `FLORIDA`} ${data.PickUpLocation?.zipCode || `33182`} \n`,
-                            `${data.PickUpLocation?.country || `USA`}`,
-                            `Tel: ${data.PickUpLocation?.phone || `(305)456788`}, Fax: ${data.PickUpLocation?.fax || `786-9998847`} \n`,
+                                `${data.pickUpLocationObj?.data?.obj?.name || ``} \n`,
+                            `${data.pickUpLocationObj?.data?.obj?.streetNumber || ``} \n`,
+                            `${data.pickUpLocationObj?.data?.obj?.city || ``}, ${data.pickUpLocationObj?.data?.obj?.state || ``} ${data.pickUpLocationObj?.data?.obj?.zipCode || ``} \n`,
+                            `${data.pickUpLocationObj?.data?.obj?.country || ``}`,
+                            `Tel: ${data.pickUpLocationObj?.data?.obj?.phone || ``}, Fax: ${data.pickUpLocationObj?.data?.obj?.fax || ``} \n`,
                               ],
                               margin: [0, 0, 0, 20],
                             },
                             {
                               text: [
-                                `${data.deliveryLocation?.name || `PressEx Logistics`} \n`,
-                            `${data.deliveryLocation?.streetNumber || `2020 NW 129 AVE SUITE 201`} \n`,
-                            `${data.deliveryLocation?.city || `MIAMI`}, ${data.deliveryLocation?.state || `FLORIDA`} ${data.deliveryLocation?.zipCode || `33182`} \n`,
-                            `${data.deliveryLocation?.country || `USA`}`,
-                            `Tel: ${data.deliveryLocation?.phone || `(305)456788`}, Fax: ${data.deliveryLocation?.fax || `786-9998847`} \n`,
+                                `${data.deliveryLocation?.data?.obj?.name || ``} \n`,
+                            `${data.deliveryLocation?.data?.obj?.streetNumber || ``} \n`,
+                            `${data.deliveryLocation?.data?.obj?.city || ``}, ${data.deliveryLocation?.data?.obj?.state || ``} ${data.deliveryLocation?.data?.obj?.zipCode || ``} \n`,
+                            `${data.deliveryLocation?.data?.obj?.country || `USA`}`,
+                            `Tel: ${data.deliveryLocation?.data?.obj?.phone || ``}, Fax: ${data.deliveryLocation?.data?.obj?.fax || ``} \n`,
                               ],
                               margin: [0, 0, 0, 10],
                             },
                             {
-                              text: [`Tracking Number: \n`, `${data.trackingNumber || ``}`],
+                              text: [`Tracking Number: \n`, `${data.tracking_number || ``}`],
                               margin: [0, 0, 0, 10],
                             },
                           ],
@@ -240,13 +240,12 @@ const GeneratePickUpPDF = (data) => {
                           ],
                           [
                             {
-                              text: `${data.shipper?.name || ``}`,
+                              text: `${data.shipperObj?.data?.obj?.name || ``}`,
                             },
                             {
-                              text: `${data.consignee?.name || ``}`,
+                              text: `${data.consigneeObj?.data?.obj?.name || ``}`,
                             },
                             {
-                              text: `${data.supplier?.name || ``}`,
                             },
                           ],
                           [
@@ -254,7 +253,7 @@ const GeneratePickUpPDF = (data) => {
                               text: `Driver: Juan Felipe Jaramillo.`,
                             },
                             {
-                              text: `Invoice: ${data.invoiceNumber || ``}`,
+                              text: `Invoice: ${data.invoice_number || ``}`,
                             },
                             {
                               style: `tableExample`,
@@ -265,6 +264,7 @@ const GeneratePickUpPDF = (data) => {
                                   [`Delivery`, `50`],
                                   [`Taxes`, `25`],
                                 ],
+                                rowSpan: 2
                               },
                             },
                           ],
