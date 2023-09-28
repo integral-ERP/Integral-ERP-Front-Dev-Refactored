@@ -365,7 +365,7 @@ const CarrierCreationForm = ({
               label="Fax"
             />
           </div>
-        </div>{/* ----------------------------END ONE---------------------------------- */}
+        </div>{/* -------------------------END ONE---------------------------------- */}
         <div class="cont-two">
           <div className="company-form__section">
             <Input
