@@ -103,10 +103,10 @@ const PickupOrderCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -130,10 +130,10 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -160,10 +160,10 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -208,10 +208,10 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setconsignee(result.data);
     setFormData({
@@ -236,10 +236,10 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setshipper(result.data);
     setFormData({
@@ -253,10 +253,10 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.streetNumber || ""} - ${
+    const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zipCode || ""
+      result.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -358,52 +358,52 @@ const PickupOrderCreationForm = ({
         pickupDateAndTime: pickupOrder.pickUpDate,
         deliveryDateAndTime: pickupOrder.deliveryDate,
         issuedById: pickupOrder.issuedByKey,
-        issuedByInfo: `${pickupOrder.issuedBy?.streetNumber || ""} - ${
+        issuedByInfo: `${pickupOrder.issuedBy?.street_and_number || ""} - ${
           pickupOrder.issuedBy?.city || ""
         } - ${pickupOrder.issuedBy?.state || ""} - ${
           pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issuedBy?.zipCode || ""}`,
+        } - ${pickupOrder.issuedBy?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destinationAgentKey,
         employeeId: pickupOrder.employeekey,
         // PICKUP TAB
         shipperId: pickupOrder.shipperkey,
-        shipperInfo: `${pickupOrder.shipper?.streetNumber || ""} - ${
+        shipperInfo: `${pickupOrder.shipper?.street_and_number || ""} - ${
           pickupOrder.shipper?.city || ""
         } - ${pickupOrder.shipper?.state || ""} - ${
           pickupOrder.shipper?.country || ""
-        } - ${pickupOrder.shipper?.zipCode || ""}`,
+        } - ${pickupOrder.shipper?.zip_code || ""}`,
         pickupLocationId: pickupOrder.PickUpLocationkey,
         pickupLocationInfo: `${
-          pickupOrder.PickUpLocation?.streetNumber || ""
+          pickupOrder.PickUpLocation?.street_and_number || ""
         } - ${pickupOrder.PickUpLocation?.city || ""} - ${
           pickupOrder.PickUpLocation?.state || ""
         } - ${pickupOrder.PickUpLocation?.country || ""} - ${
-          pickupOrder.PickUpLocation?.zipCode || ""
+          pickupOrder.PickUpLocation?.zip_code || ""
         }`,
         // DELIVERY TAB
         consigneeId: pickupOrder.consigneekey,
-        consigneeInfo: `${pickupOrder.consignee?.streetNumber || ""} - ${
+        consigneeInfo: `${pickupOrder.consignee?.street_and_number || ""} - ${
           pickupOrder.consignee?.city || ""
         } - ${pickupOrder.consignee?.state || ""} - ${
           pickupOrder.consignee?.country || ""
-        } - ${pickupOrder.consignee?.zipCode || ""}`,
+        } - ${pickupOrder.consignee?.zip_code || ""}`,
         deliveryLocationId: pickupOrder.deliveryLocationkey,
         deliveryLocationInfo: `${
-          pickupOrder.deliveryLocation?.streetNumber || ""
+          pickupOrder.deliveryLocation?.street_and_number || ""
         } - ${pickupOrder.deliveryLocation?.city || ""} - ${
           pickupOrder.deliveryLocation?.state || ""
         } - ${pickupOrder.deliveryLocation?.country || ""} - ${
-          pickupOrder.deliveryLocation?.zipCode || ""
+          pickupOrder.deliveryLocation?.zip_code || ""
         }`,
         // CARRIER TAB
         proNumber: pickupOrder.proNumber,
         trackingNumber: pickupOrder.trackingNumber,
         mainCarrierdId: pickupOrder.mainCarrierKey,
-        mainCarrierInfo: `${pickupOrder.mainCarrier?.streetNumber || ""} - ${
+        mainCarrierInfo: `${pickupOrder.mainCarrier?.street_and_number || ""} - ${
           pickupOrder.mainCarrier?.city || ""
         } - ${pickupOrder.mainCarrier?.state || ""} - ${
           pickupOrder.mainCarrier?.country || ""
-        } - ${pickupOrder.mainCarrier?.zipCode || ""}`,
+        } - ${pickupOrder.mainCarrier?.zip_code || ""}`,
         // SUPPLIER TAB
         invoiceNumber: pickupOrder.invoiceNumber,
         purchaseOrderNumber: pickupOrder.purchaseOrderNum,
@@ -603,26 +603,26 @@ const PickupOrderCreationForm = ({
     }
   };
 
+  const checkUpdatesComplete = () => {
+    console.log("Checking for updates");
+    if (
+      shipperRequest !== null &&
+      deliverylocation !== null &&
+      pickuplocation !== null &&
+      consigneeRequest !== null
+    ) {
+      setAllStateUpdatesComplete(true);
+    }
+  };
+
   useEffect(() => {
     console.log("SHIPPER:", shipperRequest);
     console.log("DELIVERY LOCATION:", deliverylocation);
     console.log("PICKUP LOCATION:", pickuplocation);
     console.log("CONSIGNEE REQUEST:", consigneeRequest);
-    const checkUpdatesComplete = () => {
-      console.log("Checking for updates");
-      if (
-        shipperRequest !== null &&
-        deliverylocation !== null &&
-        pickuplocation !== null &&
-        consigneeRequest !== null
-      ) {
-        setAllStateUpdatesComplete(true);
-      }
-    };
 
     // Check if updates are complete initially
     checkUpdatesComplete();
-
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
@@ -680,7 +680,13 @@ const PickupOrderCreationForm = ({
       };
       createPickUp();
     }
-  }, [shipperRequest, deliverylocation, pickuplocation, consigneeRequest]);
+  }, [
+    shipperRequest,
+    deliverylocation,
+    pickuplocation,
+    consigneeRequest,
+    allStateUpdatesComplete,
+  ]);
 
   const handleSelectChange = (e) => {
     setFormData({ ...formData, consigneeId: e.target.value });
@@ -776,131 +782,132 @@ const PickupOrderCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-      <div class="containerr">
-        <div class="cont-one">
-          <div className="company-form__section">
-          <label htmlFor="issuedby" className="form-label">
-            Issued By:
-          </label>
-          <AsyncSelect
-            id="issuedby"
-            defaultValue={issuedByOptions[0]}
-            defaultInputValue={issuedByOptions[0]}
-            value={formData.issuedById}
-            onChange={(e) => {
-              handleIssuedBySelection(e);
-            }}
-            loadOptions={loadIssuedByOptions}
-            isClearable={true}
-            placeholder="Search and select..."
-            defaultOptions={issuedByOptions}
-            getOptionLabel={(option) => option.name}
-            getOptionValue={(option) => option.id}
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="textarea"
-            inputName="issuedbyinfo"
-            placeholder="Issued By..."
-            value={formData.issuedByInfo}
-            readonly={true}
-            label=""
-          />
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="destinationAgent" className="form-label">
-            Destination Agent:
-          </label>
-          {!creating ? (
-            canRender && (
+        <div className="containerr">
+          <div className="cont-one">
+            <div className="company-form__section">
+              <label htmlFor="issuedby" className="form-label">
+                Issued By:
+              </label>
               <AsyncSelect
-                id="destinationAgent"
+                id="issuedby"
+                defaultValue={issuedByOptions[0]}
+                defaultInputValue={issuedByOptions[0]}
+                value={formData.issuedById}
                 onChange={(e) => {
-                  handleDestinationAgentSelection(e);
+                  handleIssuedBySelection(e);
                 }}
-                loadOptions={loadDestinationAgentOptions}
+                loadOptions={loadIssuedByOptions}
                 isClearable={true}
-                defaultOptions={destinationAgentOptions}
+                placeholder="Search and select..."
+                defaultOptions={issuedByOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
-                defaultValue={defaultValueDestinationAgent}
               />
-            )
-          ) : (
-            <AsyncSelect
-              id="destinationAgent"
-              onChange={(e) => {
-                handleDestinationAgentSelection(e);
-              }}
-              loadOptions={loadDestinationAgentOptions}
-              isClearable={true}
-              defaultOptions={destinationAgentOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          )}
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="issuedbyinfo"
+                placeholder="Issued By..."
+                value={formData.issuedByInfo}
+                readonly={true}
+                label=""
+              />
+            </div>
+            <div className="company-form__section">
+              <label htmlFor="destinationAgent" className="form-label">
+                Destination Agent:
+              </label>
+              {!creating ? (
+                canRender && (
+                  <AsyncSelect
+                    id="destinationAgent"
+                    onChange={(e) => {
+                      handleDestinationAgentSelection(e);
+                    }}
+                    loadOptions={loadDestinationAgentOptions}
+                    isClearable={true}
+                    defaultOptions={destinationAgentOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                    defaultValue={defaultValueDestinationAgent}
+                  />
+                )
+              ) : (
+                <AsyncSelect
+                  id="destinationAgent"
+                  onChange={(e) => {
+                    handleDestinationAgentSelection(e);
+                  }}
+                  loadOptions={loadDestinationAgentOptions}
+                  isClearable={true}
+                  defaultOptions={destinationAgentOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              )}
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="pickupnumber"
+                placeholder="Pickup Order Number..."
+                value={formData.number}
+                readonly={true}
+                label="Number"
+              />
+            </div>
+          </div>
+          {/* ----------------------------END ONE---------------------------------- */}
+
+          <div className="cont-two__space">
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Creation Date and Time"
+                  className="font-right"
+                  value={dayjs(formData.createdDateAndTime)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Pick-up Date and Time"
+                  value={dayjs(formData.pickupDateAndTime)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Delivery Date and Time"
+                  value={dayjs(formData.deliveryDateAndTime)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+          </div>
+          {/* ----------------------------END TWO---------------------------------- */}
         </div>
-        <div className="company-form__section">
-          <Input
-            type="number"
-            inputName="pickupnumber"
-            placeholder="Pickup Order Number..."
-            value={formData.number}
-            readonly={true}
-            label="Number"
-          />
-        </div>
-        </div>{/* ----------------------------END ONE---------------------------------- */}
-        
-        <div class="cont-two__space">
-        <div className="company-form__section">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Creation Date and Time"
-              className="font-right"
-              value={dayjs(formData.createdDateAndTime)}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                })
-              }
-            />
-          </LocalizationProvider>
-        </div>
-        <div className="company-form__section">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Pick-up Date and Time"
-              value={dayjs(formData.pickupDateAndTime)}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                })
-              }
-            />
-          </LocalizationProvider>
-        </div>
-        <div className="company-form__section">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Delivery Date and Time"
-              value={dayjs(formData.deliveryDateAndTime)}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                })
-              }
-            />
-          </LocalizationProvider>
-        </div>
-        </div>{/* ----------------------------END TWO---------------------------------- */}
-            
-        </div>
-        
+
         <div className="company-form__section">
           <label htmlFor="employee" className="form-label">
             Employee:
@@ -927,90 +934,95 @@ const PickupOrderCreationForm = ({
         id="pickup"
         style={{ display: activeTab === "pickup" ? "block" : "none" }}
       >
-      <div class="containerr">
-        <div class="cont-one">
-          <div className="company-form__section">
-            <label htmlFor="shipper" className="form-label">
-              Shipper:
-            </label>
-            <AsyncSelect
-              id="shipper"
-              defaultValue={formData.shipperId}
-              onChange={(e) => {
-                handleShipperSelection(e);
-              }}
-              loadOptions={loadShipperOptions}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={shipperOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
+        <div className="containerr">
+          <div className="cont-one">
+            <div className="company-form__section">
+              <label htmlFor="shipper" className="form-label">
+                Shipper:
+              </label>
+              <AsyncSelect
+                id="shipper"
+                defaultValue={formData.shipperId}
+                onChange={(e) => {
+                  handleShipperSelection(e);
+                }}
+                loadOptions={loadShipperOptions}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={shipperOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="shipperinfo"
+                placeholder="Shipper Location..."
+                value={formData.shipperInfo}
+                readonly={true}
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="invoiceNumber"
+                placeholder="Invoice Number..."
+                value={formData.invoiceNumber}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, invoiceNumber: e.target.value })
+                }
+                label="Invoice Number"
+              />
+            </div>
           </div>
-          <div className="company-form__section">
-            <Input
-              type="textarea"
-              inputName="shipperinfo"
-              placeholder="Shipper Location..."
-              value={formData.shipperInfo}
-              readonly={true}
-            />
+          {/* ----------------------------END ONE---------------------------------- */}
+          <div className="cont-two">
+            <div className="company-form__section">
+              <label htmlFor="pickup" className="form-label">
+                Pick-up Location:
+              </label>
+              <AsyncSelect
+                id="pickup"
+                defaultValue={formData.pickupLocationId}
+                onChange={(e) => {
+                  handlePickUpSelection(e);
+                }}
+                loadOptions={loadPickupLocationOptions}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={pickupLocationOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="pickupinfo"
+                placeholder="Pick-up Location..."
+                readonly={true}
+                value={formData.pickupInfo}
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="purchaseOrderNumber"
+                placeholder="Purchase Order Number..."
+                value={formData.purchaseOrderNumber}
+                changeHandler={(e) =>
+                  setFormData({
+                    ...formData,
+                    purchaseOrderNumber: e.target.value,
+                  })
+                }
+                label="Purchase Order Number"
+              />
+            </div>
           </div>
-          <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="invoiceNumber"
-            placeholder="Invoice Number..."
-            value={formData.invoiceNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, invoiceNumber: e.target.value })
-            }
-            label="Invoice Number"
-          />
+          {/* ----------------------------END TWO---------------------------------- */}
         </div>
-        </div>{/* ----------------------------END ONE---------------------------------- */}
-        <div class="cont-two">
-          <div className="company-form__section">
-            <label htmlFor="pickup" className="form-label">
-              Pick-up Location:
-            </label>
-            <AsyncSelect
-              id="pickup"
-              defaultValue={formData.pickupLocationId}
-              onChange={(e) => {
-                handlePickUpSelection(e);
-              }}
-              loadOptions={loadPickupLocationOptions}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={pickupLocationOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="textarea"
-              inputName="pickupinfo"
-              placeholder="Pick-up Location..."
-              readonly={true}
-              value={formData.pickupInfo}
-            />
-          </div>
-          <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="purchaseOrderNumber"
-            placeholder="Purchase Order Number..."
-            value={formData.purchaseOrderNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, purchaseOrderNumber: e.target.value })
-            }
-            label="Purchase Order Number"
-          />
-        </div>
-        </div>{/* ----------------------------END TWO---------------------------------- */}
-      </div>
       </form>
       <form
         className={`tab-pane fade ${

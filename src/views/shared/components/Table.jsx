@@ -63,7 +63,7 @@ const Table = ({
     City: "city",
     State: "state",
     Country: "country",
-    "Zip-Code": "zipCode",
+    "Zip-Code": "zip_code",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
     "Method Code": "methodCode",
