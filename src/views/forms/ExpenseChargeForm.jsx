@@ -24,7 +24,7 @@ const ExpenseChargeForm = ({
     charge: "",
     currency: "",
     applyTo: "",
-    applyBy: "",
+    applyBy: "weight",
     paidAs: "",
     numberOfPieces: 0,
     grossWeight: 0,
