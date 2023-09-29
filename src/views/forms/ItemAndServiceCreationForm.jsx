@@ -23,6 +23,7 @@ const ItemAndServiceCreationForm = ({
     amount: "",
     currency: "",
     iataCode: "",
+    price: 0.0
   });
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const ItemAndServiceCreationForm = ({
       description: formData.description,
       accountName: formData.accountName,
       type: formData.type,
-      amount: formData.amount,
+      amount: formData.price,
       currency: formData.currency,
       iataCode: formData.iataCode,
     };
@@ -191,11 +192,15 @@ const ItemAndServiceCreationForm = ({
               </select>
             </div>
             <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Price:</label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select>
+              <Input
+                type="number"
+                inputName="price"
+                value={formData.price}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, price: e.target.value })
+                }
+                label="Price"
+              />
             </div>
             <div className="company-form__section with-fo" >
               <Input
@@ -361,7 +366,7 @@ const ItemAndServiceCreationForm = ({
         >
           <AlertTitle>Success</AlertTitle>
           <strong>
-            Vendor {creating ? "created" : "updated"} successfully!
+            Item and Service {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
       )}
@@ -373,7 +378,7 @@ const ItemAndServiceCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Vendor. Please try again
+            Error {creating ? "creating" : "updating"} Item and Service. Please try again
           </strong>
         </Alert>
       )}
