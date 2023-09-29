@@ -116,10 +116,11 @@ const IncomeChargeForm = ({
       <h3>Income Charge Form</h3>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="charge" className="form-label__change">
+          <label htmlFor="charge" className="text-comm">
             Charge
           </label>
           <select
+          className="form-input"
             id="charge"
             value={formData.charge}
             onChange={(e) =>
@@ -134,11 +135,12 @@ const IncomeChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="applyTo" className="form-label__change">
+          <label htmlFor="applyTo" className="text-comm">
             Apply to
           </label>
           <select
             id="applyTo"
+            className="form-input"
             value={formData.applyTo}
             onChange={(e) =>
               setformData({ ...formData, applyTo: e.target.value })
@@ -162,11 +164,12 @@ const IncomeChargeForm = ({
               </option>
             )}
           </select>
-          <label htmlFor="applyBy" className="form-label__change">
+          <label htmlFor="applyBy" className="text-comm">
             Apply by
           </label>
           <select
             id="applyBy"
+            className="form-input"
             value={formData.applyBy}
             onChange={(e) =>
               setformData({ ...formData, applyBy: e.target.value })
@@ -180,11 +183,12 @@ const IncomeChargeForm = ({
           </select>
         </div>
         <div className="form-column">
-          <label htmlFor="currency" className="form-label__change">
+          <label htmlFor="currency" className="text-comm">
             Currency
           </label>
           <select
             id="currency"
+            className="form-input"
             value={formData.currency}
             onChange={(e) =>
               setformData({ ...formData, currency: e.target.value })
@@ -197,11 +201,12 @@ const IncomeChargeForm = ({
               </option>
             ))}
           </select>
-          <label htmlFor="paidAs" className="form-label__change">
+          <label htmlFor="paidAs" className="text-comm">
             Paid as
           </label>
           <select
             id="paidAs"
+            className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
               setformData({ ...formData, paidAs: e.target.value })
@@ -211,12 +216,13 @@ const IncomeChargeForm = ({
             <option value="prepaid">Prepaid</option>
             <option value="collect">Collect</option>
           </select>
-          <label htmlFor="description" className="centered-label">
+          <label htmlFor="description" className="text-comm">
             Description:
           </label>
           <input
             name="description"
             type="text"
+            className="form-input"
             placeholder="Description..."
             value={formData.description}
             onChange={(e) =>
@@ -226,8 +232,8 @@ const IncomeChargeForm = ({
         </div>
       </div>
       <div className="form-row">
-        <div className="form-column">
-          <label htmlFor="numberOfPieces" className="form-label__change">
+        <div className="form-column ">
+          <label htmlFor="numberOfPieces" className="text-comm">
             No. of Pieces
           </label>
           <input
@@ -239,7 +245,7 @@ const IncomeChargeForm = ({
                   : "lightgray"
               }`,
             }}
-            className="short-input"
+            className="form-input"
             type="number"
             id="numberOfPieces"
             readOnly={
@@ -252,12 +258,12 @@ const IncomeChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="grossWeight" className="form-label__change">
+          <label htmlFor="grossWeight" className="text-comm">
             Gross Weight
           </label>
-          <div style={{ display: "flex" }}>
+          <div className="input-space">
             <input
-              className="short-input"
+              className="with-space"
               style={{
                 backgroundColor: `${
                   formData.applyBy === "weight" ? "" : "lightgray"
@@ -273,7 +279,7 @@ const IncomeChargeForm = ({
               }
             />
             <select
-              className="short-input-2"
+              className="add-select"
               id="weightUnit"
               value={formData.weightUnit}
               onChange={(e) =>
@@ -286,12 +292,12 @@ const IncomeChargeForm = ({
           </div>
         </div>
         <div className="form-column">
-          <label htmlFor="grossVolume" className="centered-label">
+          <label htmlFor="grossVolume" className="text-comm">
             Gross Volume
           </label>
-          <div style={{ display: "flex" }}>
+          <div className="input-space">
             <input
-              className="short-input"
+              className="with-space"
               style={{
                 backgroundColor: `${
                   formData.applyBy === "volume" ? "" : "lightgray"
@@ -307,7 +313,7 @@ const IncomeChargeForm = ({
               }
             />
             <select
-              className="short-input-2"
+              className="add-select"
               id="volumeUnit"
               value={formData.volumeUnit}
               onChange={(e) =>
@@ -322,12 +328,12 @@ const IncomeChargeForm = ({
       </div>
       <div className="form-row">
         <div className="form-column">
-          <label htmlFor="chargeableWeight" className="centered-label">
+          <label htmlFor="chargeableWeight" className="text-comm">
             Chargeable Weight (vlb)
           </label>
           <input
             style={{ backgroundColor: "lightgray" }}
-            className="short-input"
+            className="form-input"
             type="number"
             readOnly
             id="chargeableWeight"
@@ -338,11 +344,11 @@ const IncomeChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="rateCharge" className="centered-label">
+          <label htmlFor="rateCharge" className="text-comm">
             Rate Charge
           </label>
           <input
-            className="short-input"
+            className="form-input"
             type="number"
             id="rateCharge"
             value={formData.rateCharge}
@@ -350,11 +356,11 @@ const IncomeChargeForm = ({
           />
         </div>
         <div className="form-column">
-          <label htmlFor="totalAmount" className="centered-label">
+          <label htmlFor="totalAmount" className="text-comm">
             Total Amount
           </label>
           <input
-            className="short-input"
+            className="form-input"
             type="number"
             id="totalAmount"
             readOnly
@@ -379,7 +385,7 @@ const IncomeChargeForm = ({
         </div>
       </div>
       <div className="form-row">
-        <div className="form-column">
+        <div className="table-hover charge-buttons">
           <button
             className="button-save__change"
             style={{ marginRight: "10px" }}

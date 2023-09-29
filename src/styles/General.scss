@@ -331,3 +331,40 @@
 .form-column-create{
   text-align: left !important;
 }
+
+.text-comm{
+  width: 70%;
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0rem;
+  &__space{
+    width: 800%;
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0rem;
+  }
+}
+
+.num-com{
+  text-align: left;
+  font-size: 1.2rem !important;
+  margin-left: calc(var(--bs-border-width) * -1);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  
+}
+.with-space{
+  display: block;
+  width: 52%;
+  padding: 0rem 0 0 0.75rem;
+  font-size: medium;
+}
+.input-space{
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 110%;
+  justify-content: center;
+}
