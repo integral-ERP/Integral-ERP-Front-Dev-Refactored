@@ -36,6 +36,7 @@ const ExpenseChargeForm = ({
     totalAmount: 0,
     show: false,
     description: "",
+    status: "",
   };
   console.log(commodities);
   const [formData, setformData] = useState(formFormat);
@@ -85,9 +86,12 @@ const ExpenseChargeForm = ({
     // Resto del código del useEffect (obtención de monedas y servicios)
   }, [commodities]);
 
+
+
   const createCharge = () => {
     const charge = {
       ...formData,
+      quantity: 1
     };
     setcharges([...charges, charge]);
     console.log(charge);
@@ -121,7 +125,7 @@ const ExpenseChargeForm = ({
           </label>
           <select
             id="charge"
-            class="form-input"
+            className="form-input"
             value={formData.charge}
             onChange={(e) =>
               setformData({ ...formData, charge: e.target.value })
@@ -140,7 +144,7 @@ const ExpenseChargeForm = ({
           </label>
           <select
             id="applyTo"
-            class="form-input"
+            className="form-input"
             value={formData.applyTo}
             onChange={(e) =>
               setformData({ ...formData, applyTo: e.target.value })
@@ -171,7 +175,7 @@ const ExpenseChargeForm = ({
           </label>
           <select
             id="currency"
-            class="form-input"
+            className="form-input"
             value={formData.currency}
             onChange={(e) =>
               setformData({ ...formData, currency: e.target.value })
@@ -189,10 +193,10 @@ const ExpenseChargeForm = ({
           </label>
           <select
             id="paidAs"
-            class="form-input"
+            className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
             }
           >
             {/* Add options for paidAs */}
@@ -202,8 +206,8 @@ const ExpenseChargeForm = ({
         </div>
       </div>
       
-      <div class="containerr">
-        <div class="cont-one">
+      <div className="containerr">
+        <div className="cont-one">
           <div className="form-colum">
             <label htmlFor="description" className="text-comm">
               Description:
@@ -211,7 +215,7 @@ const ExpenseChargeForm = ({
             <input
               name="description"
               type="text"
-              class="form-input"
+              className="form-input"
               placeholder="Description..."
               value={formData.description}
               onChange={(e) =>
@@ -300,13 +304,13 @@ const ExpenseChargeForm = ({
           </div>
         </div>
         </div>{/* ----------------------------END ONE---------------------------------- */}
-        <div class="cont-two">
+        <div className="cont-two">
           <div className="form-colum">
             <label htmlFor="applyBy" className="text-comm">
               Apply By
             </label>
             <select
-              class="form-input"
+              className="form-input"
               id="applyBy"
               value={formData.applyBy}
               onChange={(e) =>

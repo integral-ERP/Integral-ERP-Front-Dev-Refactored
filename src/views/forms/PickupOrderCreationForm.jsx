@@ -792,7 +792,7 @@ const PickupOrderCreationForm = ({
                 id="issuedby"
                 defaultValue={issuedByOptions[0]}
                 defaultInputValue={issuedByOptions[0]}
-                value={formData.issuedById}
+                
                 onChange={(e) => {
                   handleIssuedBySelection(e);
                 }}
@@ -1223,13 +1223,13 @@ const PickupOrderCreationForm = ({
           )}
         </div>
         <Table
-          data={mockDataCharges}
+          data={charges}
           columns={[
             "Status",
+            "Type",
             "Description",
             "Quantity",
             "Price",
-            "Amount",
             "Currency",
           ]}
           onSelect={() => {}} // Make sure this line is correct

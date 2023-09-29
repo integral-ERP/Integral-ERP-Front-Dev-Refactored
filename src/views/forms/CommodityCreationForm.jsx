@@ -30,7 +30,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
       weight: formData.weight,
       volumetricWeight: formData.volumetricWeight,
       chargedWeight: formData.volumetricWeight,
-      description: ""
+      description: formData.description
       // TODO: add fields for volumetric weight and charged weight
     }
     setCommodities([...commodities, body])
@@ -113,6 +113,20 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
             <span className="input-group-text num-com">lb</span>
           </div>          
         </div>
+        <label htmlFor="description" className="text-comm">
+            Description:
+          </label>
+          <input
+            name="description"
+            type="text"
+            className="form-input"
+            placeholder="Description..."
+            value={formData.description}
+            onChange={(e) =>
+              setformData({ ...formData, description: e.target.value })
+            }
+            style={{width: '100%'}}
+          />
         <div className="table-hover charge-buttons">
               <button
                 className="button-save pick "

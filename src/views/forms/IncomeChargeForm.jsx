@@ -35,6 +35,7 @@ const IncomeChargeForm = ({
     chargeableWeight: 0,
     totalAmount: 0,
     show: false,
+    status: "",
   };
   console.log(commodities);
   const [formData, setformData] = useState(formFormat);
@@ -87,6 +88,7 @@ const IncomeChargeForm = ({
   const createCharge = () => {
     const charge = {
       ...formData,
+      quantity: 1
     };
     setcharges([...charges, charge]);
     console.log(charge);
@@ -209,7 +211,7 @@ const IncomeChargeForm = ({
             className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
             }
           >
             {/* Add options for paidAs */}

@@ -58,7 +58,8 @@ const GeneratePickUpPDF = (data) => {
       ];
       commodityRows.push(commodityRow);
     }
-
+    console.log("DATA", data);
+    console.log("DELIVERY OBJECT", data.deliveryLocationObj?.data?.obj);
     const chargeRows = [];
 
     if(data.charges){
@@ -68,16 +69,14 @@ const GeneratePickUpPDF = (data) => {
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
-              colSpan: 2,
               margin: [0, 0, 0, 0],
             },
             {
-              text: charge.description || 'MOCK DESCRIPTION', // Display the charge description
+              text: charge.description,
               margin: [0, 0, 0, 0],
             },
             {
-              text: `$${charge.totalAmount.toFixed(2)} ${charge.currency}`, // Display the totalAmount and currency
-              colSpan: 2,
+              text: `$${parseInt(charge.totalAmount)} ${charge.currency}`, // Display the totalAmount and currency
               margin: [0, 0, 0, 0],
             },
           ];
@@ -130,9 +129,9 @@ const GeneratePickUpPDF = (data) => {
                           text: [
                             `Issued By \n`,
                             `${data.issued_byObj?.name || ``} \n`,
-                            `Tel: ${data.issued_byObj?.phone || ``}, Fax: ${data.issued_byObj?.fax || ``} \n`,
+                            `${data.issued_byObj?.phone ? `Tel: ${data.issued_byObj.phone}, ` : ``}${data.issued_byObj?.fax ? `Fax: ${data.issued_byObj.fax}` : ``}\n`,
                             `${data.issued_byObj?.street_and_number || ``} \n`,
-                            `${data.issued_byObj?.city || ``}, ${data.issuedBy?.state || ``} ${data.issued_byObj?.zipCode || ``} \n`,
+                            `${data.issued_byObj?.city || ``}, ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``} \n`,
                             `${data.issued_byObj?.country || ``}`,
                           ],
                         },
@@ -235,20 +234,20 @@ const GeneratePickUpPDF = (data) => {
                             {
                               text: [
                                 `${data.pickUpLocationObj?.data?.obj?.name || ``} \n`,
-                            `${data.pickUpLocationObj?.data?.obj?.streetNumber || ``} \n`,
-                            `${data.pickUpLocationObj?.data?.obj?.city || ``}, ${data.pickUpLocationObj?.data?.obj?.state || ``} ${data.pickUpLocationObj?.data?.obj?.zipCode || ``} \n`,
+                            `${data.pickUpLocationObj?.data?.obj?.street_and_number || ``} \n`,
+                            `${data.pickUpLocationObj?.data?.obj?.city || ``}, ${data.pickUpLocationObj?.data?.obj?.state || ``} ${data.pickUpLocationObj?.data?.obj?.zip_code || ``} \n`,
                             `${data.pickUpLocationObj?.data?.obj?.country || ``}`,
-                            `Tel: ${data.pickUpLocationObj?.data?.obj?.phone || ``}, Fax: ${data.pickUpLocationObj?.data?.obj?.fax || ``} \n`,
+                            `${data.issued_byObj?.phone ? `Tel: ${data.issued_byObj.phone}, ` : ``}${data.issued_byObj?.fax ? `Fax: ${data.issued_byObj.fax}` : ``}\n`,
                               ],
                               margin: [0, 0, 0, 20],
                             },
                             {
                               text: [
-                                `${data.deliveryLocation?.data?.obj?.name || ``} \n`,
-                            `${data.deliveryLocation?.data?.obj?.streetNumber || ``} \n`,
-                            `${data.deliveryLocation?.data?.obj?.city || ``}, ${data.deliveryLocation?.data?.obj?.state || ``} ${data.deliveryLocation?.data?.obj?.zipCode || ``} \n`,
-                            `${data.deliveryLocation?.data?.obj?.country || `USA`}`,
-                            `Tel: ${data.deliveryLocation?.data?.obj?.phone || ``}, Fax: ${data.deliveryLocation?.data?.obj?.fax || ``} \n`,
+                                `${data.deliveryLocationObj?.data?.obj?.name || ``} \n`,
+                            `${data.deliveryLocationObj?.data?.obj?.street_and_number || ``} \n`,
+                            `${data.deliveryLocationObj?.data?.obj?.city || ``}, ${data.deliveryLocationObj?.data?.obj?.state || ``} ${data.deliveryLocationObj?.data?.obj?.zip_code || ``} \n`,
+                            `${data.deliveryLocationObj?.data?.obj?.country || ``}`,
+                            `${data.issued_byObj?.phone ? `Tel: ${data.issued_byObj.phone}, ` : ``}${data.issued_byObj?.fax ? `Fax: ${data.issued_byObj.fax}` : ``}\n`,
                               ],
                               margin: [0, 0, 0, 10],
                             },
@@ -280,11 +279,21 @@ const GeneratePickUpPDF = (data) => {
                           [
                             {
                               text: `${data.shipperObj?.data?.obj?.name || ``}`,
+                              rowSpan: 2
                             },
                             {
                               text: `${data.consigneeObj?.data?.obj?.name || ``}`,
                             },
                             {
+                              style: `tableExampleLeft`,
+                              table: {
+                                widths: ['28%', '40%', '32%'],
+                                body: [
+                                  ['Type', `Description`, `Price`],
+                                  ...chargeRows
+                                ],
+                              },
+                              rowSpan: 2
                             },
                           ],
                           [
@@ -294,15 +303,6 @@ const GeneratePickUpPDF = (data) => {
                               text: `Invoice: ${data.invoice_number || ``}`,
                             },
                             {
-                              style: `tableExample`,
-                              table: {
-                                widths: ['auto', '*', 'auto'], // Adjust column widths as needed
-                                body: [
-                                  ['Type', `Description`, `Price`],
-                                  ...chargeRows
-                                ],
-                                rowSpan: 2
-                              },
                             },
                           ],
                         ],
@@ -426,6 +426,11 @@ const GeneratePickUpPDF = (data) => {
                     tableExample: {
                       margin: [0, 0, 0, 5],
                       alignment: `right`,
+                      width: `100%`,
+                    },
+                    tableExampleLeft:{
+                      margin: [0, 0, 0, 5],
+                      alignment: `left`,
                       width: `100%`,
                     },
                     tableHeader: {
