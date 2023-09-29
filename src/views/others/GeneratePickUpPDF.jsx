@@ -11,44 +11,83 @@ const GeneratePickUpPDF = (data) => {
 
     const commodityRows = [];
     let totalPieces = 0;
-    let totalWeight = 0;
-    let totalVolume = 0;
+    let totalWeight = 0.0;
+    let totalVolume = 0.0;
     // Loop through the commodities array and create a table row for each item
     if(data.commodities){
       totalPieces = data.commodities.length;
+      let firstRowText = '';
+      let thirdRowText = '';
+      let fourthRowText = '';
+      let sixthRowText = '';
+      let seventhRowText = '';
       data.commodities?.forEach((commodity, index) => {
-        const commodityRow = [
-          {
-            text: `${index + 1}; Pallet \n`,
-            colSpan: 2,
-            margin: [0, 0, 0, 200],
-          },
-          {},
-          {
-            text: `${commodity.length}x${commodity.width}x${commodity.height} in`,
-          },
-          {
-            text: 'adhesives', // You may replace this with the actual description
-            colSpan: 2,
-            margin: [0, 0, 0, 40],
-          },
-          {},
-          {
-            text: `${commodity.weight} lb`,
-            margin: [0, 0, 0, 40],
-          },
-          {
-            text: [`${commodity.volumetricWeight} ft3 \n`, `${commodity.chargedWeight} Vlb`],
-            margin: [0, 0, 0, 40],
-          },
-        ];
-        totalWeight += commodity.weight;
-        totalVolume += commodity.volumetricWeight;
-        // Add the commodity row to the array
-        commodityRows.push(commodityRow);
+        firstRowText += `${index + 1}; Pallet \n`;
+        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
+        fourthRowText += `${commodity.description} \n`;
+        sixthRowText += `${commodity.weight} lbs \n`;
+        seventhRowText += `${commodity.volumetricWeight} ft3 \n`, `${commodity.chargedWeight} Vlb \n`;
+        totalWeight += parseFloat(commodity.weight);
+        totalVolume += parseFloat(commodity.volumetricWeight);
       });
+      const commodityRow = [
+        {
+          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+          text: firstRowText,
+          colSpan: 2,
+          margin: [0, 0, 0, 200],
+        },
+        {},
+        {
+          text: thirdRowText,
+        },
+        {
+          text: fourthRowText,
+          colSpan: 2,
+          margin: [0, 0, 0, 40],
+        },
+        {},
+        {
+          text: sixthRowText,
+          margin: [0, 0, 0, 40],
+        },
+        {
+          text: seventhRowText,
+          margin: [0, 0, 0, 40],
+        },
+      ];
+      commodityRows.push(commodityRow);
     }
 
+    const chargeRows = [];
+
+    if(data.charges){
+      data.charges.forEach((charge) => {
+        if (charge.show) { // Check if the charge should be shown based on the "show" property
+          console.log("CARGO", charge);
+          const chargeRow = [
+            {
+              text: charge.type, // Display the charge type
+              colSpan: 2,
+              margin: [0, 0, 0, 0],
+            },
+            {
+              text: charge.description || 'MOCK DESCRIPTION', // Display the charge description
+              margin: [0, 0, 0, 0],
+            },
+            {
+              text: `$${charge.totalAmount.toFixed(2)} ${charge.currency}`, // Display the totalAmount and currency
+              colSpan: 2,
+              margin: [0, 0, 0, 0],
+            },
+          ];
+          console.log("ROW", chargeRow);
+          // Add the charge row to the array
+          chargeRows.push(chargeRow);
+        }
+      });
+      console.log(chargeRows);
+    }
 
     // Fetch the logo image dynamically
     fetch(logo)
@@ -250,7 +289,6 @@ const GeneratePickUpPDF = (data) => {
                           ],
                           [
                             {
-                              text: `Driver: Juan Felipe Jaramillo.`,
                             },
                             {
                               text: `Invoice: ${data.invoice_number || ``}`,
@@ -258,11 +296,10 @@ const GeneratePickUpPDF = (data) => {
                             {
                               style: `tableExample`,
                               table: {
-                                width: `100%`,
+                                widths: ['auto', '*', 'auto'], // Adjust column widths as needed
                                 body: [
-                                  [`Description`, `Price`],
-                                  [`Delivery`, `50`],
-                                  [`Taxes`, `25`],
+                                  ['Type', `Description`, `Price`],
+                                  ...chargeRows
                                 ],
                                 rowSpan: 2
                               },
@@ -336,31 +373,7 @@ const GeneratePickUpPDF = (data) => {
                               margin: [0, 0, 0, 0],
                             },
                           ],
-                          [
-                            {
-                              text: [`1; Pallet \n`],
-                              colSpan: 2,
-                              margin: [0, 0, 0, 200],
-                            },
-                            {},
-                            {
-                              text: `48.00x32.00x48.00 in`,
-                            },
-                            {
-                              text: `adhesives`,
-                              colSpan: 2,
-                              margin: [0, 0, 0, 40],
-                            },
-                            {},
-                            {
-                              text: `1,416.00 lb`,
-                              margin: [0, 0, 0, 40],
-                            },
-                            {
-                              text: [`42.67 ft3 \n`, `444.18 Vlb`],
-                              margin: [0, 0, 0, 40],
-                            },
-                          ],
+                          ...commodityRows,
                           [
                             {
                               text: `Signature:`,
@@ -389,10 +402,10 @@ const GeneratePickUpPDF = (data) => {
                               text: totalPieces,
                             },
                             {
-                              text: [`${totalWeight} kg\n`, `${totalWeight / 2.205} lb`],
+                              text: [`${totalWeight} kg\n`, `${(totalWeight / 2.205).toFixed(2)} lb`],
                             },
                             {
-                              text: [`${totalVolume} ft3\n`, `${totalVolume /  35.315} m3`],
+                              text: [`${totalVolume} ft3\n`, `${(totalVolume /  35.315).toFixed(2)} m3`],
                             },
                           ],
                         ],

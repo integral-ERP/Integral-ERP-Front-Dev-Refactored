@@ -18,7 +18,6 @@ import IncomeChargeForm from "./IncomeChargeForm";
 import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
-import { create } from "lodash";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -492,6 +491,7 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (creating) {
+      console.log("Setting new pickup number:", pickupNumber, "old pickup number:", currentPickUpNumber);
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);

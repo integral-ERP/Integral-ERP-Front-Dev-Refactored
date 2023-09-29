@@ -12,6 +12,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
     height: 0,
     volumetricWeight: 0,
     chargedWeight: 0,
+    description: ""
   };
 
   const [formData, setformData] = useState(formFormat);
@@ -28,7 +29,8 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
       width: formData.width,
       weight: formData.weight,
       volumetricWeight: formData.volumetricWeight,
-      chargedWeight: formData.volumetricWeight
+      chargedWeight: formData.volumetricWeight,
+      description: ""
       // TODO: add fields for volumetric weight and charged weight
     }
     setCommodities([...commodities, body])
@@ -109,6 +111,15 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
                 setformData({ ...formData, ratedWeight: e.target.value })
               }/>
             <span className="input-group-text">lb</span>
+          </div>          
+        </div>
+        <div className="form-column-create" style={{width: "100%"}}>
+          <label className="form-label__change">Description:</label>
+          <div className="" style={{width: "100%"}}>
+            <input type="text" className="" aria-label="" value={formData.description}
+              onChange={(e) =>
+                setformData({ ...formData, description: e.target.value })
+              }/>
           </div>          
         </div>
         <div className="table-hover">

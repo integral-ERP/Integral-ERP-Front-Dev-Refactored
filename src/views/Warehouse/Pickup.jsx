@@ -66,6 +66,12 @@ const Pickup = () => {
   }, []);
 
   useEffect(() => {
+    if (initialDataFetched) {
+      setcurrentPickupNumber(pickupOrders[0].number);
+    }
+  }, [pickupOrders]);
+
+  useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
         updatePickupOrders(nextPageURL);
