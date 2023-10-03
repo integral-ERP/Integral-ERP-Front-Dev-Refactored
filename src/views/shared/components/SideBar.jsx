@@ -394,7 +394,7 @@ const Sidebar = () => {
                 <a href="#">Email Templates</a>
               </li>
               <li>
-                <a href="#">Measurement Units</a>
+                <Link to={"/Configuration/measurementunits"}>Measurement Units</Link>
               </li>
               <li>
                 <a href="#">Clauses</a>
