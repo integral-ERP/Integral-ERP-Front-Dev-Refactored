@@ -17,6 +17,7 @@ import Pickup from "../views/Warehouse/Pickup";
 import ItemsAndServices from "../views/Accounting/ItemsAndServices";
 
 import MeasurementUnits from "../views/Configuration/MeasurementUnits";
+import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
 
 export const RoutesConfiguration = () => {
   return (
@@ -39,6 +40,7 @@ export const RoutesConfiguration = () => {
         <Route path="/warehouse/pickup" element={<Pickup />} />
         <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
         <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
+        <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
       </Routes>
     </Router>
   );
