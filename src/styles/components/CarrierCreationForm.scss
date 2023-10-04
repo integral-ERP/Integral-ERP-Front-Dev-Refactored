@@ -61,9 +61,6 @@
     bottom: 0px;
     display: flex;
     width: 40%;
-    // background-color: whitesmoke;
-    /* border: 8px solid whitesmoke; */
-    /* width: 70%; */
     justify-content: space-evenly;
     height: 3rem;
 
@@ -183,7 +180,12 @@
   .form-checkbox{
     height: 2rem;
     width: 2rem;
-  }
+  }  
+}
+.meaure{
+  display: flex;
+  align-items: flex-start !important;
+  padding: 0 0 0 3rem;
 }
 
 #charges, #commodities {
