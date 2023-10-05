@@ -207,7 +207,9 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a href="#">Chart of Accounts</a>
+                <Link to={"/accounting/chartofaccounts"}>
+                Chart of Accounts
+                </Link>
               </li>
               <li>
               <Link to={"/accounting/itemsandservices"}>
@@ -394,7 +396,7 @@ const Sidebar = () => {
                 <a href="#">Email Templates</a>
               </li>
               <li>
-                <a href="#">Measurement Units</a>
+                <Link to={"/Configuration/measurementunits"}>Measurement Units</Link>
               </li>
               <li>
                 <a href="#">Clauses</a>

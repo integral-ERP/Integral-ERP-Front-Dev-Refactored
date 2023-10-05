@@ -8,7 +8,7 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import WarehouseProviderService from "../../services/WarehouseProviderService";
 import Sidebar from "../shared/components/SideBar";
 
-const WarehouseProviders = () => {
+const WarehouseProviders = () => { 
   const [warehouseProviders, setwarehouseProviders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedWarehouseProvider, setselectedWarehouseProvider] =

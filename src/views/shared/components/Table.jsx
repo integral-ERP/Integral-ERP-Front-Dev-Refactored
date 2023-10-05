@@ -440,6 +440,7 @@ const Table = ({
             <button className="generic-button" onClick={onAdd}>
               <i className="fas fa-plus menu-icon fa-3x"></i>
             </button>
+            
             <button className="generic-button ne" onClick={onEdit}>
               <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
             </button>
@@ -460,28 +461,13 @@ const Table = ({
                 onClick={() => document.getElementById("import-input").click()}
               ></i>
             </button>
-
-            {/* <div className="export-dropdown">     IMPORT///EXPORT
-              <label>
-                Export Format:
-                <select value={selectedFormat} onChange={handleFormatChange}>
-                  <option value="">Select Format</option>
-                  <option value="json">JSON</option>
-                  <option value="csv">CSV</option>
-                  <option value="pdf">PDF</option>
-                  <option value="xml">XML</option>
-                </select>
-              </label>
-              <button className="generic-button" onClick={handleExport}>
-                <i className="fas fa-file-export menu-icon fa-3x"></i>
-              </button>
-            </div> */}
           </div>
+          <div className="position-search">
           <div className="search">
             <div className="search-container">
               <input
                 type="text"
-                value={searchQuery}
+                value={searchQuery}           
                 onChange={handleSearchChange}
                 placeholder="Search..."
                 className="search-input"
@@ -652,6 +638,8 @@ const Table = ({
             </div>
           )}
         </div>
+          </div>
+          
       )}
       <div className="generic-table">
         <table className="table-hover ">

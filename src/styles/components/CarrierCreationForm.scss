@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   color: #153A61;
-
+ 
   &__tabs-button-container {
     margin-bottom: 20px;
     background-color: rgba(240, 240, 240, 255);
@@ -61,9 +61,6 @@
     bottom: 0px;
     display: flex;
     width: 40%;
-    // background-color: whitesmoke;
-    /* border: 8px solid whitesmoke; */
-    /* width: 70%; */
     justify-content: space-evenly;
     height: 3rem;
 
@@ -142,9 +139,25 @@
     height: 3rem;
     padding: 0 0 0 1rem;
     font-size: initial;
+    &__exten{
+      width: 20rem;
+      background: whitesmoke;
+      color: black;
+      height: 3rem;
+      padding: 0 0 0 1rem;
+      font-size: initial;
+    }
+    &__num{
+      width: 6rem;
+      background: whitesmoke;
+      color: black;
+      height: 3rem;
+      padding: 0 0 0 1rem;
+      font-size: initial;
+    }
   }
 
-  .form-label{
+  .form-label{ 
     width: 70%;
     text-align: left;
     font-size: initial;
@@ -167,7 +180,12 @@
   .form-checkbox{
     height: 2rem;
     width: 2rem;
-  }
+  }  
+}
+.meaure{
+  display: flex;
+  align-items: flex-start !important;
+  padding: 0 0 0 3rem;
 }
 
 #charges, #commodities {

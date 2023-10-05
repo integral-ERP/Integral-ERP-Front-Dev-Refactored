@@ -16,6 +16,9 @@ import Locations from "../views/Manteinance/Locations"
 import Pickup from "../views/Warehouse/Pickup";
 import ItemsAndServices from "../views/Accounting/ItemsAndServices";
 
+import MeasurementUnits from "../views/Configuration/MeasurementUnits";
+import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
+
 export const RoutesConfiguration = () => {
   return (
     <Router>
@@ -25,14 +28,8 @@ export const RoutesConfiguration = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/maintenance/carriers" element={<Carriers />} />
-        <Route
-          path="/maintenance/warehouseProviders"
-          element={<WarehouseProviders />}
-        />
-        <Route
-          path="/maintenance/forwardingAgents"
-          element={<ForwardingAgents />}
-        />
+        <Route path="/maintenance/warehouseProviders" element={<WarehouseProviders />} />
+        <Route path="/maintenance/forwardingAgents" element={<ForwardingAgents />} />
         <Route path="/maintenance/customers" element={<Customers />} />
         <Route path="/maintenance/vendors" element={<Vendors />} />
         <Route path="/maintenance/employees" element={<Employees />} />
@@ -42,6 +39,8 @@ export const RoutesConfiguration = () => {
         <Route path="/maintenance/locations" element={<Locations />} />
         <Route path="/warehouse/pickup" element={<Pickup />} />
         <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
+        <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
+        <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
       </Routes>
     </Router>
   );
