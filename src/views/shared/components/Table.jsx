@@ -18,6 +18,11 @@ const Table = ({
   onAdd,
   title,
   showOptions,
+  handleContextMenu,
+  showContextMenu,
+  contextMenuPosition,
+  setShowContextMenu,
+  handleOptionClick
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -440,7 +445,7 @@ const Table = ({
             <button className="generic-button" onClick={onAdd}>
               <i className="fas fa-plus menu-icon fa-3x"></i>
             </button>
-            
+
             <button className="generic-button ne" onClick={onEdit}>
               <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
             </button>
@@ -463,103 +468,174 @@ const Table = ({
             </button>
           </div>
           <div className="position-search">
-          <div className="search">
-            <div className="search-container">
-              <input
-                type="text"
-                value={searchQuery}           
-                onChange={handleSearchChange}
-                placeholder="Search..."
-                className="search-input"
-              />
+            <div className="search">
+              <div className="search-container">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  placeholder="Search..."
+                  className="search-input"
+                />
+              </div>
+              {showFilterMenu && (
+                <div
+                  className="modal"
+                  style={{ display: showFilterMenu ? "block" : "none" }}
+                >
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title">Filter Dates</h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                          onClick={() => setShowFilterMenu(!showFilterMenu)}
+                        >
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div className="modal-body">
+                        <div className="date-filter">
+                          <label>Date Filter:</label>
+                          <div className="date-range">
+                            <label>Start Date:</label>
+                            <input
+                              type="date"
+                              value={startDate}
+                              onChange={(e) => setstartDate(e.target.value)}
+                            />
+                          </div>
+                          <div className="date-range">
+                            <label>End Date:</label>
+                            <input
+                              type="date"
+                              value={finishDate}
+                              onChange={(e) => setfinishDate(e.target.value)}
+                            />
+                          </div>
+                          <select
+                            value={dateFilter}
+                            onChange={(e) => handleDateFilter(e.target.value)}
+                            style={{ margin: "5px" }}
+                          >
+                            <option value="all">All</option>
+                            <option value="today">Today</option>
+                            <option value="this-week">This Week</option>
+                            <option value="this-month">This Month</option>
+                            <option value="this-year">This Year</option>
+                          </select>
+                          <div
+                            className="radio-container"
+                            style={{ display: "flex", width: "250px" }}
+                          >
+                            {columns.map(
+                              (columnName) =>
+                                columnName.toLowerCase().includes("date") && (
+                                  <label key={columnName}>
+                                    <input
+                                      type="radio"
+                                      value={columnName}
+                                      checked={
+                                        selectedDateFilter === columnName
+                                      }
+                                      onChange={(e) =>
+                                        handleDateFilterChange(e.target.value)
+                                      }
+                                    />
+                                    {columnName}
+                                  </label>
+                                )
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => {
+                            setShowFilterMenu(!showFilterMenu);
+                          }}
+                        >
+                          Save Changes
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                          onClick={() => setShowFilterMenu(!showFilterMenu)}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <button
+                className="generic-button"
+                onClick={() => setShowColumnMenu(!showColumnMenu)}
+              >
+                <i className="fas fa-eye menu-icon fa-3x ne"></i>
+              </button>
             </div>
-            {showFilterMenu && (
+
+            <button
+              type="button"
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="generic-button"
+            >
+              <i className="fas fa-filter menu-icon fa-3x ne"></i>
+            </button>
+            {showColumnMenu && (
               <div
                 className="modal"
-                style={{ display: showFilterMenu ? "block" : "none" }}
+                style={{ display: showColumnMenu ? "block" : "none" }}
               >
                 <div className="modal-dialog" role="document">
                   <div className="modal-content">
                     <div className="modal-header">
-                      <h5 className="modal-title">Filter Dates</h5>
+                      <h5 className="modal-title">Show Columns</h5>
                       <button
                         type="button"
                         className="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
-                        onClick={() => setShowFilterMenu(!showFilterMenu)}
+                        onClick={() => setShowColumnMenu(!showColumnMenu)}
                       >
                         <span aria-hidden="true"></span>
                       </button>
                     </div>
                     <div className="modal-body">
-                      <div className="date-filter">
-                        <label>Date Filter:</label>
-                        <div className="date-range">
-                          <label>Start Date:</label>
+                      {columns.map((columnName) => (
+                        <label key={columnName}>
                           <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setstartDate(e.target.value)}
+                            type="checkbox"
+                            checked={visibleColumns[columnName]}
+                            onChange={() =>
+                              handleColumnVisibilityChange(columnName)
+                            }
                           />
-                        </div>
-                        <div className="date-range">
-                          <label>End Date:</label>
-                          <input
-                            type="date"
-                            value={finishDate}
-                            onChange={(e) => setfinishDate(e.target.value)}
-                          />
-                        </div>
-                        <select
-                          value={dateFilter}
-                          onChange={(e) => handleDateFilter(e.target.value)}
-                          style={{ margin: "5px" }}
-                        >
-                          <option value="all">All</option>
-                          <option value="today">Today</option>
-                          <option value="this-week">This Week</option>
-                          <option value="this-month">This Month</option>
-                          <option value="this-year">This Year</option>
-                        </select>
-                        <div
-                          className="radio-container"
-                          style={{ display: "flex", width: "250px" }}
-                        >
-                          {columns.map(
-                            (columnName) =>
-                              columnName.toLowerCase().includes("date") && (
-                                <label key={columnName}>
-                                  <input
-                                    type="radio"
-                                    value={columnName}
-                                    checked={selectedDateFilter === columnName}
-                                    onChange={(e) =>
-                                      handleDateFilterChange(e.target.value)
-                                    }
-                                  />
-                                  {columnName}
-                                </label>
-                              )
-                          )}
-                        </div>
-                      </div>
+                          {columnName}
+                        </label>
+                      ))}
                     </div>
                     <div className="modal-footer">
                       <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => {
-                          setShowFilterMenu(!showFilterMenu);
-                        }}
+                        onClick={() => setShowColumnMenu(!showColumnMenu)}
                       >
-                        Save Changes
+                        Save changes
                       </button>
                       <button
                         type="button"
                         className="btn btn-secondary"
                         data-bs-dismiss="modal"
-                        onClick={() => setShowFilterMenu(!showFilterMenu)}
+                        onClick={() => setShowColumnMenu(!showColumnMenu)}
                       >
                         Close
                       </button>
@@ -568,78 +644,8 @@ const Table = ({
                 </div>
               </div>
             )}
-            <button
-              className="generic-button"
-              onClick={() => setShowColumnMenu(!showColumnMenu)}
-            >
-              <i className="fas fa-eye menu-icon fa-3x ne"></i>
-            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setShowFilterMenu(!showFilterMenu)}
-            className="generic-button"
-          >
-            <i className="fas fa-filter menu-icon fa-3x ne"></i>
-          </button>
-          {showColumnMenu && (
-            <div
-              className="modal"
-              style={{ display: showColumnMenu ? "block" : "none" }}
-            >
-              <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Show Columns</h5>
-                    <button
-                      type="button"
-                      className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                      onClick={() => setShowColumnMenu(!showColumnMenu)}
-                    >
-                      <span aria-hidden="true"></span>
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    {columns.map((columnName) => (
-                      <label key={columnName}>
-                        <input
-                          type="checkbox"
-                          checked={visibleColumns[columnName]}
-                          onChange={() =>
-                            handleColumnVisibilityChange(columnName)
-                          }
-                        />
-                        {columnName}
-                      </label>
-                    ))}
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={() => setShowColumnMenu(!showColumnMenu)}
-                    >
-                      Save changes
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                      onClick={() => setShowColumnMenu(!showColumnMenu)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-          </div>
-          
       )}
       <div className="generic-table">
         <table className="table-hover ">
@@ -663,7 +669,7 @@ const Table = ({
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row, rowIndex) => (
+            {filteredData.map((row) => (
               <tr
                 key={row.id}
                 className={`table-row  tr-margen${
@@ -672,6 +678,7 @@ const Table = ({
                     : ""
                 }`}
                 onClick={() => onSelect(row)}
+                onContextMenu={(e) => handleContextMenu(e, row)}
               >
                 {columnOrder.map((columnName) =>
                   visibleColumns[columnName] ? (
@@ -712,6 +719,23 @@ const Table = ({
           </tbody>
         </table>
       </div>
+      {showContextMenu && (
+        <div
+          className="context-menu"
+          style={{
+            position: "absolute",
+            top: contextMenuPosition.y,
+            left: contextMenuPosition.x,
+          }}
+        >
+          <ul>
+            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
+            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
+            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
+          </ul>
+          {/* ... */}
+        </div>
+      )}
     </>
   );
 };

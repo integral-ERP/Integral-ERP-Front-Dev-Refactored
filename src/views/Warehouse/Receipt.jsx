@@ -4,27 +4,19 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
 import PickupOrderCreationForm from "../forms/PickupOrderCreationForm";
+import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
-import PickupService from "../../services/PickupService";
+import ReceiptService from "../../services/ReceiptService";
 import Sidebar from "../shared/components/SideBar";
-import ContextMenu from "../others/ContextMenu";
 
-const Pickup = () => {
-  const [pickupOrders, setpickupOrders] = useState([]);
+const Receipt = () => {
+  const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
-
-  const [contextMenuPosition, setContextMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
-  const [showContextMenu, setShowContextMenu] = useState(false);
-
   const columns = [
     "Status",
     "Number",
@@ -47,52 +39,16 @@ const Pickup = () => {
     "View PDF",
   ];
 
-  const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent the browser's default context menu
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    setContextMenuPosition({ x: clickX, y: clickY });
-    setShowContextMenu(true);
-  };
-
-  const handleOptionClick = (option) => {
-    // Handle the context menu option click here
-    console.log("Option clicked:", option);
-    setShowContextMenu(false);
-  };
-
-  useEffect(() => {
-    const handleDocumentClick = (e) => {
-      // Check if the click is inside the context menu or a table row
-      const contextMenu = document.querySelector(".context-menu");
-      if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
-        setShowContextMenu(false);
-      }
-    };
-  
-    // Add the event listener when the component mounts
-    document.addEventListener("click", handleDocumentClick);
-  
-    // Remove the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
-
-
-  const updatePickupOrders = (url = null) => {
-    PickupService.getPickups(url)
+  const updatereceipts = (url = null) => {
+    ReceiptService.getReceipts(url)
       .then((response) => {
-        const newPickupOrders = response.data.results.filter((pickupOrder) => {
+        const newreceipts = response.data.results.filter((pickupOrder) => {
           const pickupOrderId = pickupOrder.id;
-          return !pickupOrders.some(
-            (existingPickupOrder) => existingPickupOrder.id === pickupOrderId
-          );
+          return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-
-        setpickupOrders([...pickupOrders, ...newPickupOrders]);
-        console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
+        
+        setreceipts([...receipts, ...newreceipts]);
+        console.log("NEW ORDERS", [...receipts, ...newreceipts]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -104,21 +60,15 @@ const Pickup = () => {
 
   useEffect(() => {
     if (!initialDataFetched) {
-      updatePickupOrders();
+      updatereceipts();
       setInitialDataFetched(true);
     }
   }, []);
 
   useEffect(() => {
-    if (initialDataFetched) {
-      setcurrentPickupNumber(pickupOrders[0].number + 1);
-    }
-  }, [pickupOrders]);
-
-  useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        updatePickupOrders(nextPageURL);
+        updatereceipts(nextPageURL);
       }
     });
 
@@ -133,15 +83,16 @@ const Pickup = () => {
     };
   }, [nextPageURL]);
 
-  const handlePickupOrdersDataChange = () => {
-    updatePickupOrders();
+  const handlereceiptsDataChange = () => {
+    updatereceipts();
   };
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
+    console.log("Selected PickupOrder", selectedPickupOrder);
   };
 
-  const handleEditPickupOrders = () => {
+  const handleEditreceipts = () => {
     if (selectedPickupOrder) {
       openModal();
     } else {
@@ -155,18 +106,16 @@ const Pickup = () => {
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-      PickupService.deletePickup(selectedPickupOrder.id)
+      ReceiptService.deleteReceipt(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
-            const newPickupOrders = pickupOrders.filter(
-              (order) => order.id !== selectedPickupOrder.id
-            );
-            setpickupOrders(newPickupOrders);
+            const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
+            setreceipts(newreceipts);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            //updatePickupOrders();
+            //updatereceipts();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -186,10 +135,10 @@ const Pickup = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isPickupOrdersButton = clickedElement.classList.contains("ne");
+      const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isPickupOrdersButton && !isTableRow) {
+      if (!isreceiptsButton && !isTableRow) {
         setSelectedPickupOrder(null);
       }
     };
@@ -209,19 +158,15 @@ const Pickup = () => {
           <Sidebar />
           <div className="content-page">
             <Table
-              data={pickupOrders}
+              data={receipts}
               columns={columns}
               onSelect={handleSelectPickupOrder} // Make sure this line is correct
               selectedRow={selectedPickupOrder}
               onDelete={handleDeletePickupOrder}
-              onEdit={handleEditPickupOrders}
+              onEdit={handleEditreceipts}
               onAdd={handleAddPickupOrder}
               title="Pick-up Orders"
-              setData={setpickupOrders}
-              handleContextMenu={handleContextMenu}
-              showContextMenu={showContextMenu}
-              contextMenuPosition={contextMenuPosition}
-              setShowContextMenu={setShowContextMenu}
+              setData={setreceipts}
             />
 
             {showSuccessAlert && (
@@ -247,26 +192,22 @@ const Pickup = () => {
 
             {selectedPickupOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
+                <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
                   creating={false}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  onpickupOrderDataChange={handlereceiptsDataChange}
                 />
               </ModalForm>
             )}
 
             {selectedPickupOrder === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
+                <ReceiptCreationForm
                   pickupOrder={null}
                   closeModal={closeModal}
                   creating={true}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  onpickupOrderDataChange={handlereceiptsDataChange}
                 />
               </ModalForm>
             )}
@@ -277,4 +218,4 @@ const Pickup = () => {
   );
 };
 
-export default Pickup;
+export default Receipt;

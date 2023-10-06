@@ -368,3 +368,37 @@
   width: 110%;
   justify-content: center;
 }
+
+/* Context Menu Styles */
+.context-menu {
+  position: absolute;
+  background-color: #fff; /* Background color */
+  border: 1px solid #ccc; /* Border */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Box shadow */
+  z-index: 1000; /* Ensure it appears above other content */
+  padding: 8px; /* Padding */
+  min-width: 150px; /* Minimum width */
+  height: max-content;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  font-size: 14px;
+}
+
+.context-menu li {
+  margin: 5px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth background color transition on hover */
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0; /* Background color on hover */
+}
+
+.context-menu li:last-child {
+  margin-bottom: 0;
+}
