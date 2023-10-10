@@ -119,6 +119,8 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
+    "Note":"note",
+    "Account Number": "accountNumber",
   };
 
   const handleSearch = (row) => {
