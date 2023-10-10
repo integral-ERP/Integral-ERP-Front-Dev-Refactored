@@ -13,11 +13,12 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Table from "../shared/components/Table";
-import PickupService from "../../services/PickupService";
+import ReceiptService from "../../services/ReceiptService";
 import IncomeChargeForm from "./IncomeChargeForm";
 import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
+import EventCreationForm from "./EventCreationForm";
 import "../../styles/components/ReceipCreationForm.scss";
 
 const ReceiptCreationForm = ({
@@ -29,28 +30,30 @@ const ReceiptCreationForm = ({
   setcurrentPickUpNumber,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
+  const [notes, setNotes] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [showExpenseForm, setshowExpenseForm] = useState(false);
+  const [showEventForm, setshowEventForm] = useState(false);
   const [consignee, setconsignee] = useState(null);
+  
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
-  const [pickuplocation, setpickuplocation] = useState(null);
-  const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [attachments, setattachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
   const [shipperOptions, setShipperOptions] = useState([]);
-  const [pickupLocationOptions, setPickupLocationOptions] = useState([]);
-  const [deliveryLocationOptions, setDeliveryLocationOptions] = useState([]);
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
@@ -116,63 +119,6 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handlePickUpSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setFormData({
-      ...formData,
-      pickupLocationId: id,
-      pickupInfo: info,
-      pickupLocationType: type,
-    });
-  };
-
-  const handleDeliveryLocationSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    if (type === "carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setFormData({
-      ...formData,
-      deliveryLocationId: id,
-      deliveryLocationInfo: info,
-      deliveryLocationType: type,
-    });
-  };
-
   const handleDestinationAgentSelection = async (event) => {
     const id = event.id;
     setFormData({
@@ -222,6 +168,16 @@ const ReceiptCreationForm = ({
     });
   };
 
+  const handleClientToBillSelection = async (event) => {
+    const type = event.target.value;
+    console.log("CLIENT TO BILL EVENT",event);
+    setFormData({
+      ...formData,
+      clientToBillId: type == 'shipper' ? formData.shipperId : formData.consigneeId,
+      clientToBillType: type,
+    });
+  }
+
   const handleShipperSelection = async (event) => {
     const id = event.id;
     const type = event.type;
@@ -248,6 +204,13 @@ const ReceiptCreationForm = ({
       shipperType: type,
       shipperInfo: info,
     });
+  };
+
+  const handleFileUpload = (event) => {
+    const files = event.target.files;
+
+    // Add the uploaded files to the state variable
+    setattachments([...attachments, ...files]);
   };
 
   const handleMainCarrierSelection = async (event) => {
@@ -306,30 +269,10 @@ const ReceiptCreationForm = ({
     callback(results);
   };
 
-  const loadPickupLocationOptions = (inputValue, callback) => {
-    const query = inputValue.toLowerCase();
-
-    const results = pickupLocationOptions.filter((fw) =>
-      fw.name.toLowerCase().includes(query)
-    );
-
-    callback(results);
-  };
-
   const loadConsigneeOptions = (inputValue, callback) => {
     const query = inputValue.toLowerCase();
 
     const results = consigneeOptions.filter((fw) =>
-      fw.name.toLowerCase().includes(query)
-    );
-
-    callback(results);
-  };
-
-  const loadDeliveryLocationsOptions = (inputValue, callback) => {
-    const query = inputValue.toLowerCase();
-
-    const results = deliveryLocationOptions.filter((fw) =>
       fw.name.toLowerCase().includes(query)
     );
 
@@ -457,23 +400,14 @@ const ReceiptCreationForm = ({
       ...vendorsWithType,
       ...forwardingAgentsWithType,
     ];
-    const pickupLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
+
     const consigneeOptions = [
       ...customersWithType,
       ...vendorsWithType,
       ...forwardingAgentsWithType,
       ...carriersWithType,
     ];
-    const deliveryLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
+
 
     const carrierOptions = [...carriersWithType];
 
@@ -482,9 +416,7 @@ const ReceiptCreationForm = ({
     setDestinationAgentOptions(destinationAgentOptions);
     setEmployeeOptions(employeeOptions);
     setShipperOptions(shipperOptions);
-    setPickupLocationOptions(pickupLocationOptions);
     setConsigneeOptions(consigneeOptions);
-    setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
   };
 
@@ -492,7 +424,13 @@ const ReceiptCreationForm = ({
     fetchFormData();
   }, []);
 
+  const addNotes = () => {
+    setFormData({...formData, notes: notes})
+  }
+
+
   useEffect(() => {
+    console.log("PICKUP NUMBER", currentPickUpNumber, pickupNumber);
     if (creating) {
       console.log(
         "Setting new pickup number:",
@@ -527,61 +465,10 @@ const ReceiptCreationForm = ({
         [consigneeName]: formData.consigneeId,
       };
 
-      const response = await PickupService.createConsignee(consignee);
+      const response = await ReceiptService.createConsignee(consignee);
       if (response.status === 201) {
         console.log("CONSIGNEE ID", response.data.id);
         setconsigneeRequest(response.data.id);
-      }
-    }
-
-    let deliveryLocationName = "";
-    if (formData.deliveryLocationType === "customer") {
-      console.log("its a customer");
-      deliveryLocationName = "customerid";
-    }
-    if (formData.deliveryLocationType === "vendor") {
-      deliveryLocationName = "vendorid";
-    }
-    if (formData.deliveryLocationType === "forwarding-agent") {
-      deliveryLocationName = "agentid";
-    }
-    if (formData.deliveryLocationType === "carrier") {
-      deliveryLocationName = "carrierid";
-    }
-    if (deliveryLocationName !== "") {
-      const consignee = {
-        [deliveryLocationName]: formData.deliveryLocationId,
-      };
-
-      const response = await PickupService.createDeliveryLocation(consignee);
-      if (response.status === 201) {
-        console.log("DELIVERY LOCATION ID", response.data.id);
-        setdeliverylocation(response.data.id);
-      }
-    }
-
-    let pickUpLocationName = "";
-    if (formData.pickupLocationType === "customer") {
-      pickUpLocationName = "customerid";
-    }
-    if (formData.pickupLocationType === "vendor") {
-      pickUpLocationName = "vendorid";
-    }
-    if (formData.pickupLocationType === "forwarding-agent") {
-      pickUpLocationName = "agentid";
-    }
-    if (formData.pickupLocationType === "carrier") {
-      pickUpLocationName = "carrierid";
-    }
-    if (pickUpLocationName !== "") {
-      const consignee = {
-        [pickUpLocationName]: formData.deliveryLocationId,
-      };
-
-      const response = await PickupService.createPickUpLocation(consignee);
-      if (response.status === 201) {
-        console.log("PICKUP LOCATION ID", response.data.id);
-        setpickuplocation(response.data.id);
       }
     }
 
@@ -603,10 +490,29 @@ const ReceiptCreationForm = ({
         [shipperName]: formData.shipperId,
       };
 
-      const response = await PickupService.createShipper(consignee);
+      const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
         console.log("SHIPPER ID", response.data.id);
         setshipperRequest(response.data.id);
+      }
+    }
+
+    let clientToBillName = "";
+    if (formData.clientToBillType === "shipper") {
+      clientToBillName = "shipperid";
+    }
+    if (formData.shipperType === "consignee") {
+      clientToBillName = "consigneeid";
+    }
+    if (clientToBillName !== "") {
+      const clientToBill = {
+        [clientToBillName]: formData.clientToBillId,
+      };
+
+      const response = await ReceiptService.createClientToBill(clientToBill);
+      if (response.status === 201) {
+        console.log("CLIENT TO BILL ID", response.data.id);
+        setclientToBillRequest(response.data.id);
       }
     }
   };
@@ -615,9 +521,8 @@ const ReceiptCreationForm = ({
     console.log("Checking for updates");
     if (
       shipperRequest !== null &&
-      deliverylocation !== null &&
-      pickuplocation !== null &&
-      consigneeRequest !== null
+      consigneeRequest !== null &&
+      clientToBillRequest !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -625,52 +530,36 @@ const ReceiptCreationForm = ({
 
   useEffect(() => {
     console.log("SHIPPER:", shipperRequest);
-    console.log("DELIVERY LOCATION:", deliverylocation);
-    console.log("PICKUP LOCATION:", pickuplocation);
     console.log("CONSIGNEE REQUEST:", consigneeRequest);
+    console.log("CLIENT TO BILL REQUEST:", clientToBillRequest);
 
     // Check if updates are complete initially
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          // GENERAL TAB
-          status: 1,
+          status: 2,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
-          pick_up_date: formData.pickupDateAndTime,
-          delivery_date: formData.deliveryDateAndTime,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-          // PICKUP TAB
           shipper: shipperRequest,
-          shipperType: "",
-          pick_up_location: pickuplocation,
-          // DELIVERY TAB
           consignee: consigneeRequest,
-          delivery_location: deliverylocation,
-          // CARRIER TAB
-          pro_number: formData.proNumber,
-          tracking_number: formData.trackingNumber,
-          inland_carrier: formData.mainCarrierdId,
+          client_to_bill: clientToBillRequest,
           main_carrier: formData.mainCarrierdId,
-          // SUPPLIER TAB
-          invoice_number: formData.invoiceNumber,
-          purchase_order_number: formData.purchaseOrderNumber,
-          // CHARGES TAB
-          // COMMODITIES TAB
           commodities: commodities,
           charges: charges,
-          supplier: formData.shipperId,
+          events: events,
+          attachments: attachments
         };
         const response = await (creating
-          ? PickupService.createPickup(rawData)
-          : PickupService.updatePickup(pickupOrder.id, rawData));
+          ? ReceiptService.createReceipt(rawData)
+          : ReceiptService.updateReceipt(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
           console.log(
-            "Pickup Order successfully created/updated:",
+            "Warehouse Recipt successfully created/updated:",
             response.data
           );
           setcurrentPickUpNumber(currentPickUpNumber + 1);
@@ -690,17 +579,10 @@ const ReceiptCreationForm = ({
     }
   }, [
     shipperRequest,
-    deliverylocation,
-    pickuplocation,
     consigneeRequest,
     allStateUpdatesComplete,
+    clientToBillRequest
   ]);
-
-  const handleSelectChange = (e) => {
-    setFormData({ ...formData, consigneeId: e.target.value });
-  };
-
-  const mockDataCharges = [];
 
   return (
     <div className="company-form">
@@ -819,32 +701,6 @@ const ReceiptCreationForm = ({
             role="tab"
           >
             Notes
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#internalNotes"
-            aria-selected={activeTab === "internalNotes"}
-            onClick={() => setActiveTab("internalNotes")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Internal Notes
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#more"
-            aria-selected={activeTab === "more"}
-            onClick={() => setActiveTab("more")}
-            tabIndex="-1"
-            role="tab"
-          >
-            More Info
           </a>
         </li>
       </ul>
@@ -974,7 +830,6 @@ const ReceiptCreationForm = ({
                 inputName="entryNumber"
                 placeholder="Entry Number..."
                 value={formData.entryNumber}
-                readonly={true}
                 label="Entry Number"
               />
             </div>
@@ -1095,23 +950,13 @@ const ReceiptCreationForm = ({
         <div className="containerr">
           <div className="cont-one">
             <div className="company-form__section">
-              <label htmlFor="shipper" className="form-label">
+              <label htmlFor="clientToBill" className="form-label">
                 Client to Bill:
               </label>
-              {/* TODO: CONECTAR A API CLIENT TO BILL Y CARGAR OPCIONES*/}
-              <AsyncSelect
-                id="shipper"
-                defaultValue={formData.shipperId}
-                onChange={(e) => {
-                  handleShipperSelection(e);
-                }}
-                loadOptions={loadShipperOptions}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={shipperOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+              <select name="clientToBill" id="clientToBill" onChange={(e) => handleClientToBillSelection(e)}>
+                <option value="consignee">Consignee</option>
+                <option value="shipper">Shipper</option>
+              </select>
             </div>
             <div className="company-form__section">
               <label htmlFor="shipper" className="form-label">
@@ -1259,50 +1104,50 @@ const ReceiptCreationForm = ({
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
-         <div className="containerr">
+        <div className="containerr">
           <div className="cont-one">
-          <div className="company-form__section">
-          <label htmlFor="mainCarrier" className="form-label">
-            Carrier:
-          </label>
-          <AsyncSelect
-            id="mainCarrier"
-            defaultValue={formData.mainCarrierdId}
-            onChange={(e) => {
-              handleMainCarrierSelection(e);
-            }}
-            loadOptions={loadCarrierOptions}
-            isClearable={true}
-            placeholder="Search and select..."
-            defaultOptions={carrierOptions}
-            getOptionLabel={(option) => option.name}
-            getOptionValue={(option) => option.id}
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="driverName"
-            placeholder="Driver's Name..."
-            value={formData.driverName}
-            changeHandler={(e) =>
-              setFormData({ ...formData, driverName: e.target.value })
-            }
-            label="Driver Name"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="proNumber"
-            placeholder="PRO Number..."
-            value={formData.proNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, proNumber: e.target.value })
-            }
-            label="PRO Number"
-          />
-        </div>
+            <div className="company-form__section">
+              <label htmlFor="mainCarrier" className="form-label">
+                Carrier:
+              </label>
+              <AsyncSelect
+                id="mainCarrier"
+                defaultValue={formData.mainCarrierdId}
+                onChange={(e) => {
+                  handleMainCarrierSelection(e);
+                }}
+                loadOptions={loadCarrierOptions}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={carrierOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="driverName"
+                placeholder="Driver's Name..."
+                value={formData.driverName}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, driverName: e.target.value })
+                }
+                label="Driver Name"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="proNumber"
+                placeholder="PRO Number..."
+                value={formData.proNumber}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, proNumber: e.target.value })
+                }
+                label="PRO Number"
+              />
+            </div>
           </div>
           {/* ----------------------------END ONE---------------------------------- */}
           <div className="cont-two">
@@ -1465,6 +1310,103 @@ const ReceiptCreationForm = ({
           showOptions={false}
         />
       </form>
+      <form
+        className={`tab-pane fade ${
+          activeTab === "events" ? "show active" : ""
+        } company-form__general-form`}
+        id="events"
+        style={{ display: activeTab === "events" ? "block" : "none" }}
+      >
+        <div className="company-form__section">
+          <button
+            type="button"
+            className="btn btn-primary btn-lg charge-buttons"
+            onClick={() => {
+              setshowEventForm(!showEventForm);
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+            >
+              <path
+                d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+                fill="white"
+              />
+            </svg>
+            Add Event
+          </button>
+          {showEventForm && (
+            <EventCreationForm
+              onCancel={setshowEventForm}
+              events={events}
+              setevents={setEvents}
+            ></EventCreationForm>
+          )}
+        </div>
+        <Table
+          data={events}
+          columns={[
+            "Date",
+            "Name",
+            "Location",
+            "Details",
+            "Include In Tracking",
+            "Created In",
+            "Created By",
+            "Created On",
+            "Last Modified By",
+            "Last Modified On",
+          ]}
+          onSelect={() => {}} // Make sure this line is correct
+          selectedRow={{}}
+          onDelete={() => {}}
+          onEdit={() => {}}
+          onAdd={() => {}}
+          showOptions={false}
+        />
+      </form>
+      <form
+        className={`tab-pane fade ${
+          activeTab === "attachments" ? "show active" : ""
+        } company-form__general-form`}
+        id="attachments"
+        style={{ display: activeTab === "attachments" ? "block" : "none" }}
+      >
+        <div className="company-form__section">
+          <input type="file" multiple onChange={handleFileUpload} />
+          <ul>
+            {attachments.map((attachment) => (
+              <li key={attachment.name}>{attachment.name}</li>
+            ))}
+          </ul>
+        </div>
+      </form>
+      <form
+        className={`tab-pane fade ${
+          activeTab === "notes" ? "show active" : ""
+        } company-form__general-form`}
+        id="notes"
+        style={{ display: activeTab === "notes" ? "block" : "none" }}
+      >
+       <input
+        name="notes"
+        type="text"
+        className="form-input"
+        placeholder="Notes..."
+        onChange={(e) => setNotes([...notes, e.target.value])}
+        style={{ width: "100%" }}
+      />
+      <button type="button" onClick={addNotes}>Add</button>
+      <Input
+      value={formData.notes}
+      readonly
+      type="text">
+      </Input>
+      </form>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
@@ -1481,7 +1423,7 @@ const ReceiptCreationForm = ({
         >
           <AlertTitle>Success</AlertTitle>
           <strong>
-            Pick up Order {creating ? "created" : "updated"} successfully!
+          Warehouse Receipt {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
       )}
@@ -1493,7 +1435,7 @@ const ReceiptCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Pick up Order. Please try
+            Error {creating ? "creating" : "updating"} Warehouse Receipt. Please try
             again
           </strong>
         </Alert>

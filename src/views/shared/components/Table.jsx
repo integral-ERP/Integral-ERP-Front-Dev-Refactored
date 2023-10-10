@@ -22,7 +22,7 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
-  handleOptionClick
+  handleOptionClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -95,7 +95,6 @@ const Table = ({
     "Carrier Address": "main_carrierObj.street_and_number",
     Weight: "",
     Volume: "",
-    Carrier: "",
     "Main Carrier Key": "",
     "Inland Carrier Key": "",
     "PRO Number": "pro_number",
@@ -119,6 +118,17 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
+    Location: "location",
+    Details: "details",
+    "Include In Tracking": "includeInTracking",
+    "Created In": "",
+    "Created By": "",
+    "Created On": "",
+    "Last Modified By": "",
+    "Last Modified On": "",
+    "Shipper": "shipperObj.data.obj.name",
+    "Consignee": "consigneeObj.data.obj.name",
+    "Carrier": "mainCarrierObj.data.obj.name",
   };
 
   const handleSearch = (row) => {
@@ -729,9 +739,15 @@ const Table = ({
           }}
         >
           <ul>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
           </ul>
           {/* ... */}
         </div>
