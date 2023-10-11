@@ -30,7 +30,7 @@ const ReceiptCreationForm = ({
   setcurrentPickUpNumber,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
-  const [notes, setNotes] = useState([]);
+  const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
@@ -98,6 +98,9 @@ const ReceiptCreationForm = ({
     // CHARGES TAB
     // COMMODITIES TAB
     commodities: [],
+    notes: [],
+    charges: [],
+    events: []
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -425,7 +428,9 @@ const ReceiptCreationForm = ({
   }, []);
 
   const addNotes = () => {
-    setFormData({...formData, notes: notes})
+    const updatedNotes = [...formData.notes, note];
+
+    setFormData({...formData, notes: updatedNotes})
   }
 
 
@@ -537,6 +542,10 @@ const ReceiptCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("ATTACHMENTS:", attachments);
+        console.log("EVENTS", events);
+        console.log("PIECES:", commodities);
+        console.log("CARGOS:", charges);
         let rawData = {
           status: 2,
           number: formData.number,
@@ -551,7 +560,8 @@ const ReceiptCreationForm = ({
           commodities: commodities,
           charges: charges,
           events: events,
-          attachments: attachments
+          attachments: attachments,
+          notes: formData.notes
         };
         const response = await (creating
           ? ReceiptService.createReceipt(rawData)
@@ -1397,7 +1407,7 @@ const ReceiptCreationForm = ({
         type="text"
         className="form-input"
         placeholder="Notes..."
-        onChange={(e) => setNotes([...notes, e.target.value])}
+        onChange={(e) => setNote(e.target.value)}
         style={{ width: "100%" }}
       />
       <button type="button" onClick={addNotes}>Add</button>

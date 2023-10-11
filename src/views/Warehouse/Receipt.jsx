@@ -28,7 +28,7 @@ const Receipt = () => {
     "Pieces",
     "Weight",
     "Volume",
-    "View PDF",
+    "View Receipt PDF",
   ];
 
   const updatereceipts = (url = null) => {

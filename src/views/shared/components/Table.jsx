@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
 
 const Table = ({
   data,
@@ -128,7 +129,7 @@ const Table = ({
     "Last Modified On": "",
     "Shipper": "shipperObj.data.obj.name",
     "Consignee": "consigneeObj.data.obj.name",
-    "Carrier": "mainCarrierObj.data.obj.name",
+    "Carrier": "mainCarrierObj.name",
   };
 
   const handleSearch = (row) => {
@@ -195,6 +196,17 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
   };
+
+  const GenerateRecPDF = () => {
+    GenerateReceiptPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  }
 
   const handleColumnVisibilityChange = (columnName) => {
     setVisibleColumns((prevVisibility) => ({
@@ -705,7 +717,9 @@ const Table = ({
                         <button type="button" onClick={generatePDF}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
-                      ) : typeof columnNameToProperty[columnName] ===
+                      ) : columnName === 'View Receipt PDF' ? (<button type="button" onClick={GenerateRecPDF}>
+                      <i className="fas fa-file-pdf"></i>
+                    </button>) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
                           <i className="fas fa-check"></i>
