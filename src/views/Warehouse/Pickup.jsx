@@ -9,6 +9,7 @@ import PickupService from "../../services/PickupService";
 import Sidebar from "../shared/components/SideBar";
 import ContextMenu from "../others/ContextMenu";
 
+
 const Pickup = () => {
   const [pickupOrders, setpickupOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
@@ -222,7 +223,9 @@ const Pickup = () => {
               showContextMenu={showContextMenu}
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
+              
             />
+            
 
             {showSuccessAlert && (
               <Alert

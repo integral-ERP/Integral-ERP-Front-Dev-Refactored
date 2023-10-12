@@ -9,12 +9,12 @@
 
 
 .title {
-  margin: 0px;
-  font-size: x-large;
+  margin: -12px;
+  font-size: 22px;
 }
 
 .header-container {
-    height: 6%; 
+    height: 10%; 
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -101,17 +101,20 @@
 
 .generic-table {
   margin: 3% 0 0 0%;
-  width: 80%;
+  width: 85%;
   overflow-x: scroll;
   border-collapse: collapse;
   -webkit-box-shadow: 1px 2px 17px -1px rgba(0,0,0,0.42);
   -moz-box-shadow: 1px 2px 17px -1px rgba(0,0,0,0.42);
   box-shadow: 1px 2px 17px -1px rgba(0,0,0,0.42);
+  border-radius: 15px;
+  background: white ;
+  
 }
 
 .action-buttons {
   display: flex;
-  margin-right: 10px;
+  margin-right: 16px;
 }
 
 .table {
@@ -125,8 +128,10 @@
 }
 
 .table-hover {
+  border-collapse: separate;
   width: 100%;
   text-align: center;
+  margin: 8px;
 }
 
 .alert-notification{
@@ -233,13 +238,14 @@
 }
 
 .css-13cymwt-control{
-  min-height: 3rem !important;
+  min-height: 4rem !important;
   width: 78% !important;
-  background: rgba(245, 245, 245, 0) !important;
+  background: #EBEBEB !important;
   color: rgb(252, 6, 6) !important;
   height: 0rem !important;
-  padding: 0 0 0 0rem !important;
+  padding: 0 0 0 8rem !important;
   font-size: small !important;
+  border-color: #545151;
 }
 
 .company-form__input{

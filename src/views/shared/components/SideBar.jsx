@@ -424,7 +424,7 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={handleDropdownClose}
           ></i>
-          <span className="text"> Xpress Logistic</span>
+          <span className="text">Integralerp</span>
 
           <div className="rith">
           <div className="profile-user">

@@ -69,7 +69,7 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 
 
 .tr-margen{
-  border: 1px solid #a3a3a3de;
+  border: 1px solid #ffffff;
   // white-space: nowrap;
   font-size: small;
   border-inline: 1px solid rgb(0, 0, 0);
@@ -92,14 +92,15 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .text-head{
-  background-color: rgba(128, 128, 128, 0.589);
-  font-size: medium;
+  background-color: #CED3D9;
+  font-size: small;
   white-space: nowrap;
-  border: solid 2px rgba(128, 128, 128, 0.459);
+  border: solid 0px rgba(180, 180, 180);
 
 }
 .th-separate{
-  border-inline: 1px solid rgb(255, 255, 255);
+  border-radius: 8px;
+  white-space: pre-line;
 }
 .add-select{
   width: 5rem;
@@ -117,13 +118,12 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
   // margin: 1rem 0 1rem 0rem;
   // margin: 0 0 0 -21%;
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr auto 1fr; /* Tres columnas con la segunda siendo auto */
   grid-template-rows: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-  grid-template-areas: "cont-one cont-two";
+  gap: 0px;
+  grid-template-areas: "cont-one cont-two cont-three";
   font-size: initial;
-  font-weight:bolder;
+  font-weight: bolder;
   width: 100% !important;
 }
 
@@ -302,6 +302,6 @@ td{
 }
 
 .position-search{
-  width: 50rem;
+  width: 68rem;
   display: flex;
 }
