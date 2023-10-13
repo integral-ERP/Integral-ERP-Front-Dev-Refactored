@@ -33,7 +33,7 @@ const  ChartOfAccountsCreationForm = ({
     console.log("Creating=", creating);
     console.log("Chart Of Accounts=", chartOfAccount);
     if (!creating && chartOfAccount) {
-      console.log("Editing Chart Of Accounts...", chartOfAccounts);
+      console.log("Editing Chart Of Accounts...", chartOfAccount);
       setFormData({
         name: chartOfAccount.name || "",
         type: chartOfAccount.type || "",

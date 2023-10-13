@@ -9,7 +9,7 @@ class ItemsAndServicesService{
     const response = await axios.post(`${this.BASE_URL}ItemServices/`, data);
     return response;
   }
-
+ 
   async updateItemsAndServices(id, data) {
     const response = await axios.put(`${this.BASE_URL}ItemServices/${id}/`, data);
     return response;
