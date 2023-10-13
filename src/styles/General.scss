@@ -336,7 +336,11 @@
 }
 
 .form-column-create{
-  text-align: left !important;
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+  
+
 }
 
 .text-comm{
