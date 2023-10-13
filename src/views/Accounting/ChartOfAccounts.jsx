@@ -9,9 +9,9 @@ import ChartOfAccountsSerice from "../../services/ChartOfAccountsSerice";
 import Sidebar from "../shared/components/SideBar";
 
 const ChartOfAccounts = () => {
-  const [ChartOfAccounts, setChartOfAccounts] = useState([]);
+  const [chartOfAccounts, setChartOfAccounts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedeChartOfAccounts, setSelectedChartOfAccounts] = useState(null);
+  const [selectedChartOfAccounts, setSelectedChartOfAccounts] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
@@ -27,7 +27,7 @@ const ChartOfAccounts = () => {
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsSerice.getChartOfAccounts(url)
       .then((response) => {
-        setChartOfAccounts([...ChartOfAccounts, ...response.data.results].reverse())
+        setChartOfAccounts([...chartOfAccounts, ...response.data.results].reverse())
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -67,15 +67,15 @@ const ChartOfAccounts = () => {
     updateChartOfAccounts();
   };
 
-  const handleSelectChartOfAccounts = (ChartOfAccounts) => {
-    setSelectedChartOfAccounts(ChartOfAccounts);
+  const handleSelectChartOfAccounts = (chartOfAccount) => {
+    setSelectedChartOfAccounts(chartOfAccount);
   };
 
   const handleEditChartOfAccounts = () => {
-    if (selectedeChartOfAccounts) {
+    if (selectedChartOfAccounts) {
       openModal();
     } else {
-      alert("Please select an Item and Service to edit.");
+      alert("Please select a Chart Of Accounts to edit.");
     }
   };
 
@@ -84,8 +84,8 @@ const ChartOfAccounts = () => {
   };
 
   const handleDeleteChartOfAccounts = () => {
-    if (selectedeChartOfAccounts) {
-      ChartOfAccountsService.deleteChartOfAccounts(selectedeChartOfAccounts.id)
+    if (selectedChartOfAccounts) {
+      ChartOfAccountsSerice.deleteChartOfAccounts(selectedChartOfAccounts.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
@@ -104,7 +104,7 @@ const ChartOfAccounts = () => {
           console.log(error);
         });
     } else {
-      alert("Please select an Item and Service to delete.");
+      alert("Please select a Chart Of Accounts to delete.");
     }
   };
 
@@ -135,10 +135,10 @@ const ChartOfAccounts = () => {
         <Sidebar />
       <div className="content-page">
         <Table
-          data={ChartOfAccounts}
+          data={chartOfAccounts}
           columns={columns}
           onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
-          selectedRow={selectedeChartOfAccounts}
+          selectedRow={selectedChartOfAccounts}
           onDelete={handleDeleteChartOfAccounts}
           onEdit={handleEditChartOfAccounts}
           onAdd={handleAddChartOfAccounts}
@@ -152,7 +152,7 @@ const ChartOfAccounts = () => {
             className="alert-notification"
           >
             <AlertTitle>Success</AlertTitle>
-            <strong>Item and Service deleted successfully!</strong>
+            <strong>Chart Of Accounts deleted successfully!</strong>
           </Alert>
         )}
         {showErrorAlert && (
@@ -162,14 +162,14 @@ const ChartOfAccounts = () => {
             className="alert-notification"
           >
             <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Item and Service. Please try again</strong>
+            <strong>Error deleting Chart Of Accounts. Please try again</strong>
           </Alert>
         )}
 
-        {selectedeChartOfAccounts !== null && (
+        {selectedChartOfAccounts !== null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
             <ChartOfAccountsCreationForm
-              ChartOfAccounts={selectedeChartOfAccounts}
+              chartOfAccount={selectedChartOfAccounts}
               closeModal={closeModal}
               creating={false}
               onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
@@ -177,10 +177,10 @@ const ChartOfAccounts = () => {
           </ModalForm>
         )}
 
-        {selectedeChartOfAccounts === null && (
+        {selectedChartOfAccounts === null && (
           <ModalForm isOpen={isOpen} closeModal={closeModal}>
             <ChartOfAccountsCreationForm
-              ChartOfAccounts={null}
+              chartOfAccount={null}
               closeModal={closeModal}
               creating={true}
               onChartOfAccountsDataChange={handleChartOfAccountsDataChange}

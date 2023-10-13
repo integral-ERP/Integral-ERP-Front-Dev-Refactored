@@ -5,6 +5,9 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import CurrencyService from "../../services/CurrencyService";
+
+import ChartOfAccountsSerice from "../../services/ChartOfAccountsSerice";
+
 const ItemAndServiceCreationForm = ({
   itemAndService,
   closeModal,
@@ -13,6 +16,7 @@ const ItemAndServiceCreationForm = ({
 }) => {
   const [activeTab, setActiveTab] = useState("definition");
   const [currencies, setcurrencies] = useState([]);
+  const [accounst, setaccounts] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,6 +29,8 @@ const ItemAndServiceCreationForm = ({
     iataCode: "",
     price: 0.0
   });
+
+  const [itemsAndServicestype, setItemsAndServicestype] = useState("");
 
   useEffect(() => {
     if (!creating && itemAndService) {
@@ -83,6 +89,21 @@ const ItemAndServiceCreationForm = ({
       setShowErrorAlert(true);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const accountData = await ChartOfAccountsSerice.getChartOfAccounts();
+      setaccounts(accountData.data.results);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleType = (type)=> {
+    setItemsAndServicestype(type)
+    setFormData({...formData, type:type})
+  }
+
 
   return (
     <div className="company-form">
@@ -149,8 +170,16 @@ const ItemAndServiceCreationForm = ({
         <div className="containerr">
           <div className="cont-one">
             <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Type:</label>
-              <select className="form-input">
+              <label htmlFor="" className="form-label">
+                Type:
+              </label>
+              <select 
+                  className="form-input"
+                  id="type"
+                  value={formData.type}
+                  onChange={(e) => 
+                    handleType(e.target.value )}
+              >
                 <option value="">Select an option</option>
                 <option value="other">Other</option>
                 <option value="freight">Freight</option>
@@ -185,11 +214,33 @@ const ItemAndServiceCreationForm = ({
               />
             </div>
             <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Account:</label>
+            <label htmlFor="accountNameType" className="form-label">
+              Account:
+            </label>
+            <select
+              id="accountName"
+              className="form-input"
+              inputName="accountName"
+                onChange={(e) => 
+                  setFormData({ ...formData, accountName: e.target.value })}
+                >
+              <option value="">Select an Account Name</option>
+                {accounst.map((accountNames) => (
+                  <option
+                    key={accountNames.id}
+                    value={accountNames.id}
+                    data-key={accountNames.type}
+                  >
+
+                    {accountNames.name + " || " + accountNames.type}
+                    
+                </option>))}
+            </select>
+              {/* <label htmlFor="" className="form-label">Account:</label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
-              </select>
+              </select> */}
             </div>
             <div className="company-form__section" >
               <Input
@@ -265,7 +316,8 @@ const ItemAndServiceCreationForm = ({
             </div>
             <div className="company-form__section" >
               <label htmlFor="" className="form-label">Currency:</label>
-              <select className="form-input">
+              <select className="form-input"
+              >
                 <option value="">Select a currency</option>
                 {Object.entries(currencies).map(
                   ([currencyCode, currencyName]) => (

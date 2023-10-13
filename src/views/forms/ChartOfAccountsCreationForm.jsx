@@ -5,26 +5,55 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import ChartOfAccountsSerice from "../../services/ChartOfAccountsSerice";
 import CurrencyService from "../../services/CurrencyService";
-import { filter } from "lodash";
+
 const  ChartOfAccountsCreationForm = ({
-  // itemAndService,
+  chartOfAccount,
   closeModal,
-  creating,
-  // onitemAndServiceDataChange,
+  creating, 
+  onchartOfAccountsDataChange,
 }) => {
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [ChartOfAccounts, setChartOfAccounts] = useState([])
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [currencies, setcurrencies] = useState([]);
 
-  const [formData, setFormData] = useState({
+  const formFormat ={
     name: "",
     type: "",
     accountNumber: "",
     parentAccount: "",
     currency:"",
     note: "",
-  });
+  };
+
+  const [formData, setFormData] = useState({ formFormat });
+// -------------------------------------------------------------
+  useEffect(() => {
+    console.log("Creating=", creating);
+    console.log("Chart Of Accounts=", chartOfAccount);
+    if (!creating && chartOfAccount) {
+      console.log("Editing Chart Of Accounts...", chartOfAccount);
+      setFormData({
+        name: chartOfAccount.name || "",
+        type: chartOfAccount.type || "",
+        accountNumber: chartOfAccount.accountNumber || "",
+        parentAccount: chartOfAccount.parentAccount || "",
+        currency: chartOfAccount.currency || "",
+        note: chartOfAccount.note || "",
+      });
+    }
+  }, [creating, chartOfAccount]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const currenciesData = await CurrencyService.getCurrencies();
+      setcurrencies(currenciesData.data);
+    };
+
+    fetchData();
+  }, []);
+  // -------------------------------------------------------------
 
   const sendData = async () => {
     let rawData = {
@@ -37,22 +66,17 @@ const  ChartOfAccountsCreationForm = ({
     };
     console.log("DATA:", formData);
     const response = await (creating
-      ? ChartOfAccountsSerice.createChartOfAccountsSerice(rawData)
-      : ChartOfAccountsSerice.updateChartOfAccountsSerice(
-        chartOfAccountsSerice.id,
-          rawData
-        ));
+      ? ChartOfAccountsSerice.createChartOfAccounts(rawData)
+      : ChartOfAccountsSerice.updateChartOfAccounts(chartOfAccount.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Prueba successfully created/updated:",
-        response.data
-      );
+      console.log("Prueba successfully created/updated:", response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onChartOfAccountsSericeeDataChange();
+        onchartOfAccountsDataChange();
         setShowSuccessAlert(false);
+        // setFormData(formFormat)
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -133,7 +157,7 @@ const  ChartOfAccountsCreationForm = ({
         style={{ display: activeTab === "definition" ? "block" : "none" }}
       >
         <div className="">
-            <div className="company-form__section">
+          <div className="company-form__section">
             <label htmlFor="type" className="form-label">
               Type:
             </label>
@@ -270,6 +294,20 @@ const  ChartOfAccountsCreationForm = ({
 
     </div>
   );
+};
+
+ChartOfAccountsCreationForm.propTypes = {
+  ChartOfAccounts: propTypes.object,
+  closeModal: propTypes.func,
+  creating: propTypes.bool.isRequired,
+  onchartOfAccountsDataChange: propTypes.func,
+};
+
+ChartOfAccountsCreationForm.defaultProps = {
+  ChartOfAccounts: {},
+  closeModal: null,
+  creating: false,
+  onchartOfAccountsDataChange: null,
 };
 
 export default ChartOfAccountsCreationForm;

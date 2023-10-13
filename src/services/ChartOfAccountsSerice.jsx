@@ -5,7 +5,7 @@ class ChartOfAccountsSerice{
         this.BASE_URL = import.meta.env.VITE_BASE_API_URL;
       }
 
-      async createChartOfAccountsSerice(data) {
+      async createChartOfAccounts(data) {
         const response = await axios.post(`${this.BASE_URL}chartAccounts/`, data);
         return response;
       }
