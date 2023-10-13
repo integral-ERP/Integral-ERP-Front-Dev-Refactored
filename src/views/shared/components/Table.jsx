@@ -7,7 +7,8 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
-
+import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
+import ContextMenu from "../../others/ContextMenu";
 const Table = ({
   data,
   columns,
@@ -22,7 +23,8 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
-  handleOptionClick
+  contextMenuOptions,
+  handleOptionClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -95,7 +97,6 @@ const Table = ({
     "Carrier Address": "main_carrierObj.street_and_number",
     Weight: "",
     Volume: "",
-    Carrier: "",
     "Main Carrier Key": "",
     "Inland Carrier Key": "",
     "PRO Number": "pro_number",
@@ -119,9 +120,17 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
-    "Note":"note",
-    "Account Number": "accountNumber",
-    "Code": "code" ,
+    Location: "location",
+    Details: "details",
+    "Include In Tracking": "includeInTracking",
+    "Created In": "",
+    "Created By": "",
+    "Created On": "",
+    "Last Modified By": "",
+    "Last Modified On": "",
+    "Shipper": "shipperObj.data.obj.name",
+    "Consignee": "consigneeObj.data.obj.name",
+    "Carrier": "mainCarrierObj.name",
   };
 
   const handleSearch = (row) => {
@@ -188,6 +197,17 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
   };
+
+  const GenerateRecPDF = () => {
+    GenerateReceiptPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  }
 
   const handleColumnVisibilityChange = (columnName) => {
     setVisibleColumns((prevVisibility) => ({
@@ -698,7 +718,9 @@ const Table = ({
                         <button type="button" onClick={generatePDF}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
-                      ) : typeof columnNameToProperty[columnName] ===
+                      ) : columnName === 'View Receipt PDF' ? (<button type="button" onClick={GenerateRecPDF}>
+                      <i className="fas fa-file-pdf"></i>
+                    </button>) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
                           <i className="fas fa-check"></i>
@@ -723,21 +745,7 @@ const Table = ({
         </table>
       </div>
       {showContextMenu && (
-        <div
-          className="context-menu"
-          style={{
-            position: "absolute",
-            top: contextMenuPosition.y,
-            left: contextMenuPosition.x,
-          }}
-        >
-          <ul>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-          </ul>
-          {/* ... */}
-        </div>
+        <ContextMenu x={contextMenuPosition.x} y={contextMenuPosition.y} options={contextMenuOptions} />
       )}
     </>
   );

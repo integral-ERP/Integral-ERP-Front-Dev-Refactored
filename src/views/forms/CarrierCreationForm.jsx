@@ -76,9 +76,6 @@ const CarrierCreationForm = ({
   };
 
   useEffect(() => {
-  
-    console.log("Creating=", creating);
-    console.log("carrier=", carrier);
     if (!creating && carrier) {
       console.log("Editing carrier...", carrier);
       let updatedFormData = {

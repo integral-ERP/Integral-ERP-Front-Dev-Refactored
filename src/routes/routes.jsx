@@ -15,6 +15,7 @@ import Countries from "../views/Manteinance/Countries"
 import Locations from "../views/Manteinance/Locations"
 import Pickup from "../views/Warehouse/Pickup";
 import ItemsAndServices from "../views/Accounting/ItemsAndServices";
+import Receipt from "../views/Warehouse/Receipt";
 
 import MeasurementUnits from "../views/Configuration/MeasurementUnits";
 import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
@@ -38,6 +39,7 @@ export const RoutesConfiguration = () => {
         <Route path="/maintenance/countries" element={<Countries />} />
         <Route path="/maintenance/locations" element={<Locations />} />
         <Route path="/warehouse/pickup" element={<Pickup />} />
+        <Route path="/warehouse/receipt" element={<Receipt />} />
         <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
         <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
         <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
