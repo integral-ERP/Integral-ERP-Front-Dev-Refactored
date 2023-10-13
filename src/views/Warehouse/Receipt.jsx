@@ -60,7 +60,7 @@ const Receipt = () => {
   useEffect(() => {
     if (initialDataFetched) {
       console.log("recibo:", receipts[0]);
-      const number = receipts[0]?.number || 0;
+      const number = receipts[receipts.length - 1]?.number || 0;
       console.log("NUMERO", number);
       setcurrentPickupNumber(number + 1);
     }

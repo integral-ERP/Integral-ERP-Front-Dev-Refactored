@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
-
+import ContextMenu from "../../others/ContextMenu";
 const Table = ({
   data,
   columns,
@@ -23,6 +23,7 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
+  contextMenuOptions,
   handleOptionClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -744,27 +745,7 @@ const Table = ({
         </table>
       </div>
       {showContextMenu && (
-        <div
-          className="context-menu"
-          style={{
-            position: "absolute",
-            top: contextMenuPosition.y,
-            left: contextMenuPosition.x,
-          }}
-        >
-          <ul>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-          </ul>
-          {/* ... */}
-        </div>
+        <ContextMenu x={contextMenuPosition.x} y={contextMenuPosition.y} options={contextMenuOptions} />
       )}
     </>
   );
