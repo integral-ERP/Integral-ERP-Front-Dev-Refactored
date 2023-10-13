@@ -16,19 +16,27 @@ const Receipt = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Status",
     "Number",
     "Date",
-    "Shipper",
-    "Consignee",
-    "Carrier",
+    "Ship Date",
+    "Delivery Date",
+    "Pickup Name",
+    "Pickup Address",
+    "Delivery Name",
+    "Delivery Address",
     "Pieces",
     "Weight",
     "Volume",
-    "View Receipt PDF",
+    "Carrier Name",
+    "Carrier Address",
+    "PRO Number",
+    "Tracking Number",
+    "Invoice Number",
+    "Purchase Order number",
+    "View PDF",
   ];
 
   const updatereceipts = (url = null) => {
@@ -56,15 +64,6 @@ const Receipt = () => {
       setInitialDataFetched(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (initialDataFetched) {
-      console.log("recibo:", receipts[0]);
-      const number = receipts[receipts.length - 1]?.number || 0;
-      console.log("NUMERO", number);
-      setcurrentPickupNumber(number + 1);
-    }
-  }, [receipts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -166,7 +165,7 @@ const Receipt = () => {
               onDelete={handleDeletePickupOrder}
               onEdit={handleEditreceipts}
               onAdd={handleAddPickupOrder}
-              title="Warehouse Receipts"
+              title="Pick-up Orders"
               setData={setreceipts}
             />
 
@@ -177,7 +176,7 @@ const Receipt = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Success</AlertTitle>
-                <strong>Receipt Order deleted successfully!</strong>
+                <strong>Pick-up Order deleted successfully!</strong>
               </Alert>
             )}
             {showErrorAlert && (
@@ -187,7 +186,7 @@ const Receipt = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Receipt. Please try again</strong>
+                <strong>Error deleting Pick-up Order. Please try again</strong>
               </Alert>
             )}
 
@@ -198,8 +197,6 @@ const Receipt = () => {
                   closeModal={closeModal}
                   creating={false}
                   onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
             )}
@@ -211,8 +208,6 @@ const Receipt = () => {
                   closeModal={closeModal}
                   creating={true}
                   onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
             )}
