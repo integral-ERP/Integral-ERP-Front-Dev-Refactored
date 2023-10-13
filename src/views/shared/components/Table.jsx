@@ -120,6 +120,7 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
+
     Location: "location",
     Details: "details",
     "Include In Tracking": "includeInTracking",
@@ -131,6 +132,11 @@ const Table = ({
     "Shipper": "shipperObj.data.obj.name",
     "Consignee": "consigneeObj.data.obj.name",
     "Carrier": "mainCarrierObj.name",
+
+    "Note":"note",
+    "Account Number": "accountNumber",
+    "Code": "code" ,
+
   };
 
   const handleSearch = (row) => {
