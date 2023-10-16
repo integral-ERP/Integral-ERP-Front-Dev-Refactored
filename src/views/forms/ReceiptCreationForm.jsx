@@ -275,12 +275,48 @@ const ReceiptCreationForm = ({
     setFormData({ ...formData, notes: updatedNotes });
   };
 
+  const loadShipperOption = async (id, type) => {
+    
+    let option = null;
+    if(type === "customer"){
+      option = await CustomerService.getCustomerById(id);
+    }
+    if(type === "vendor"){
+      option = await VendorService.getVendorByID(id);
+    }
+    if(type === "agent"){
+      option = await ForwardingAgentService.getForwardingAgentById(id);
+    }
+    if(type === "carrier"){
+      option = await CarrierService.getCarrierById(id);
+    }
+    setdefaultValueConsignee(option.data);
+  }
+
+  const loadConsigneeOption = async (id, type) => {
+    console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
+    let option = null;
+    if(type === "customer"){
+      option = await CustomerService.getCustomerById(id);
+    }
+    if(type === "vendor"){
+      option = await VendorService.getVendorByID(id);
+    }
+    if(type === "agent"){
+      option = await ForwardingAgentService.getForwardingAgentById(id);
+    }
+    console.log("SHIPPER FOUND:", option.data);
+    setdefaultValueShipper(option.data);
+  }
+
   useEffect(() => {
     console.log("checking for edit", "join:", !creating && pickupOrder != null);
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       console.log("Selected Pickup:", pickupOrder);
+      loadShipperOption(pickupOrder.shipperObj?.data?.obj?.id, pickupOrder.shipperObj?.data?.obj?.type_person);
+      loadConsigneeOption(pickupOrder.consigneeObj?.data?.obj?.id, pickupOrder.consigneeObj?.data?.obj?.type_person);
       let updatedFormData = {
         // GENERAL TAB
         status: pickupOrder.status,
