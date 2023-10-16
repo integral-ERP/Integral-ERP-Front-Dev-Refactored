@@ -62,8 +62,6 @@ const ReceiptCreationForm = ({
   const [supplierOptions, setSupplierOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
-  const [defaultValueDestinationAgent, setdefaultValueDestinationAgent] =
-    useState(null);
   const [canRender, setcanRender] = useState(false);
 
   const formFormat = {
@@ -280,6 +278,8 @@ const ReceiptCreationForm = ({
   useEffect(() => {
     console.log("checking for edit", "join:", !creating && pickupOrder != null);
     if (!creating && pickupOrder != null) {
+      setcommodities(pickupOrder.commodities);
+      setcharges(pickupOrder.charges);
       console.log("Selected Pickup:", pickupOrder);
       let updatedFormData = {
         // GENERAL TAB
@@ -348,16 +348,11 @@ const ReceiptCreationForm = ({
         // CHARGES TAB
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
+        charges: pickupOrder.charges
       };
       console.log("Form Data to be updated:", updatedFormData);
-      setFormData(updatedFormData);
-      const value = destinationAgentOptions.find(
-        (option) => updatedFormData.destinationAgentId == option.id
-      );
-      console.log("OPTION:", value);
-      setdefaultValueDestinationAgent(value);
+      setFormData(updatedFormData);     
       setcanRender(true);
-      console.log(value, canRender);
     }
   }, [creating, pickupOrder]);
 
