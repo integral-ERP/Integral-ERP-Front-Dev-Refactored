@@ -5,7 +5,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
 import ChartOfAccountsCreationForm from "../forms/ChartOfAccountsCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
-import ChartOfAccountsSerice from "../../services/ChartOfAccountsSerice";
+import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
 
 const ChartOfAccounts = () => {
@@ -25,9 +25,11 @@ const ChartOfAccounts = () => {
     "Note",
   ];
   const updateChartOfAccounts = (url = null) => {
-    ChartOfAccountsSerice.getChartOfAccounts(url)
+    ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
-        setChartOfAccounts([...chartOfAccounts, ...response.data.results].reverse())
+        setChartOfAccounts(
+          [...chartOfAccounts, ...response.data.results].reverse()
+        );
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -39,7 +41,7 @@ const ChartOfAccounts = () => {
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       updateChartOfAccounts();
       setInitialDataFetched(true);
     }
@@ -85,7 +87,7 @@ const ChartOfAccounts = () => {
 
   const handleDeleteChartOfAccounts = () => {
     if (selectedChartOfAccounts) {
-      ChartOfAccountsSerice.deleteChartOfAccounts(selectedChartOfAccounts.id)
+      ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
@@ -130,68 +132,70 @@ const ChartOfAccounts = () => {
 
   return (
     <>
-    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page">
-        <Table
-          data={chartOfAccounts}
-          columns={columns}
-          onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
-          selectedRow={selectedChartOfAccounts}
-          onDelete={handleDeleteChartOfAccounts}
-          onEdit={handleEditChartOfAccounts}
-          onAdd={handleAddChartOfAccounts}
-          title="Chart Of Accounts"
-        />
-
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Chart Of Accounts deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Chart Of Accounts. Please try again</strong>
-          </Alert>
-        )}
-
-        {selectedChartOfAccounts !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ChartOfAccountsCreationForm
-              chartOfAccount={selectedChartOfAccounts}
-              closeModal={closeModal}
-              creating={false}
-              onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page">
+            <Table
+              data={chartOfAccounts}
+              columns={columns}
+              onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
+              selectedRow={selectedChartOfAccounts}
+              onDelete={handleDeleteChartOfAccounts}
+              onEdit={handleEditChartOfAccounts}
+              onAdd={handleAddChartOfAccounts}
+              title="Chart Of Accounts"
             />
-          </ModalForm>
-        )}
 
-        {selectedChartOfAccounts === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ChartOfAccountsCreationForm
-              chartOfAccount={null}
-              closeModal={closeModal}
-              creating={true}
-              onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
-            />
-          </ModalForm>
-        )}
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Chart Of Accounts deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>
+                  Error deleting Chart Of Accounts. Please try again
+                </strong>
+              </Alert>
+            )}
+
+            {selectedChartOfAccounts !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ChartOfAccountsCreationForm
+                  chartOfAccount={selectedChartOfAccounts}
+                  closeModal={closeModal}
+                  creating={false}
+                  onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
+                />
+              </ModalForm>
+            )}
+
+            {selectedChartOfAccounts === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ChartOfAccountsCreationForm
+                  chartOfAccount={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
+                />
+              </ModalForm>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
-}
+};
 
 export default ChartOfAccounts;

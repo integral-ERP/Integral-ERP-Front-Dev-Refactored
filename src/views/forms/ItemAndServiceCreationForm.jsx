@@ -6,7 +6,7 @@ import Input from "../shared/components/Input";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import CurrencyService from "../../services/CurrencyService";
 
-import ChartOfAccountsSerice from "../../services/ChartOfAccountsSerice";
+import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 
 const ItemAndServiceCreationForm = ({
   itemAndService,
@@ -27,7 +27,7 @@ const ItemAndServiceCreationForm = ({
     amount: "",
     currency: "",
     iataCode: "",
-    price: 0.0
+    price: 0.0,
   });
 
   const [itemsAndServicestype, setItemsAndServicestype] = useState("");
@@ -92,18 +92,17 @@ const ItemAndServiceCreationForm = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const accountData = await ChartOfAccountsSerice.getChartOfAccounts();
+      const accountData = await ChartOfAccountsService.getChartOfAccounts();
       setaccounts(accountData.data.results);
     };
 
     fetchData();
   }, []);
 
-  const handleType = (type)=> {
-    setItemsAndServicestype(type)
-    setFormData({...formData, type:type})
-  }
-
+  const handleType = (type) => {
+    setItemsAndServicestype(type);
+    setFormData({ ...formData, type: type });
+  };
 
   return (
     <div className="company-form">
@@ -169,16 +168,15 @@ const ItemAndServiceCreationForm = ({
       >
         <div className="containerr">
           <div className="cont-one">
-            <div className="company-form__section" >
+            <div className="company-form__section">
               <label htmlFor="" className="form-label">
                 Type:
               </label>
-              <select 
-                  className="form-input"
-                  id="type"
-                  value={formData.type}
-                  onChange={(e) => 
-                    handleType(e.target.value )}
+              <select
+                className="form-input"
+                id="type"
+                value={formData.type}
+                onChange={(e) => handleType(e.target.value)}
               >
                 <option value="">Select an option</option>
                 <option value="other">Other</option>
@@ -213,36 +211,36 @@ const ItemAndServiceCreationForm = ({
                 label="Code"
               />
             </div>
-            <div className="company-form__section" >
-            <label htmlFor="accountNameType" className="form-label">
-              Account:
-            </label>
-            <select
-              id="accountName"
-              className="form-input"
-              inputName="accountName"
-                onChange={(e) => 
-                  setFormData({ ...formData, accountName: e.target.value })}
-                >
-              <option value="">Select an Account Name</option>
+            <div className="company-form__section">
+              <label htmlFor="accountNameType" className="form-label">
+                Account:
+              </label>
+              <select
+                id="accountName"
+                className="form-input"
+                inputName="accountName"
+                onChange={(e) =>
+                  setFormData({ ...formData, accountName: e.target.value })
+                }
+              >
+                <option value="">Select an Account Name</option>
                 {accounst.map((accountNames) => (
                   <option
                     key={accountNames.id}
                     value={accountNames.id}
                     data-key={accountNames.type}
                   >
-
                     {accountNames.name + " || " + accountNames.type}
-                    
-                </option>))}
-            </select>
+                  </option>
+                ))}
+              </select>
               {/* <label htmlFor="" className="form-label">Account:</label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select> */}
             </div>
-            <div className="company-form__section" >
+            <div className="company-form__section">
               <Input
                 type="number"
                 inputName="price"
@@ -253,7 +251,7 @@ const ItemAndServiceCreationForm = ({
                 label="Price"
               />
             </div>
-            <div className="company-form__section with-fo" >
+            <div className="company-form__section with-fo">
               <Input
                 type="checkbox"
                 inputName="resale"
@@ -278,46 +276,57 @@ const ItemAndServiceCreationForm = ({
           </div>
           {/* ----------------------------END ONE---------------------------------- */}
           <div className="cont-two">
-            <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Tax Code:</label>
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                Tax Code:
+              </label>
               <select className="form-input">
                 <option value="">Select an option</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            
-            <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Expense Item:</label>
+
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                Expense Item:
+              </label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" >
-              <label htmlFor=""className="form-label">Preferred Vendor:</label>
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                Preferred Vendor:
+              </label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" >
-              <label htmlFor=""className="form-label">3rd party liability account:</label>
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                3rd party liability account:
+              </label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" >
-              <label htmlFor="" className="form-label">3rd party asset account:</label>
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                3rd party asset account:
+              </label>
               <select className="form-input">
                 <option value="">Select an account</option>
                 <option value="freight">Freight</option>
               </select>
             </div>
-            <div className="company-form__section" >
-              <label htmlFor="" className="form-label">Currency:</label>
-              <select className="form-input"
-              >
+            <div className="company-form__section">
+              <label htmlFor="" className="form-label">
+                Currency:
+              </label>
+              <select className="form-input">
                 <option value="">Select a currency</option>
                 {Object.entries(currencies).map(
                   ([currencyCode, currencyName]) => (
@@ -334,7 +343,10 @@ const ItemAndServiceCreationForm = ({
                 inputName="3rdPartyBilling"
                 value={formData.thirdPartyBilling}
                 changeHandler={(e) =>
-                  setFormData({ ...formData, thirdPartyBilling: e.target.checked })
+                  setFormData({
+                    ...formData,
+                    thirdPartyBilling: e.target.checked,
+                  })
                 }
                 label="Enforce 3rd party billing"
               />
@@ -430,7 +442,8 @@ const ItemAndServiceCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Item and Service. Please try again
+            Error {creating ? "creating" : "updating"} Item and Service. Please
+            try again
           </strong>
         </Alert>
       )}
