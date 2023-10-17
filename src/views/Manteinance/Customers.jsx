@@ -95,9 +95,26 @@ const Customers = () => {
 
   const handleDeleteCustomer = () => {
     if (selectedCustomer) {
-      CustomerService.deleteCustomer(selectedCustomer.id);
+      CustomerService.deleteCustomer(selectedCustomer.id).then((response) => {
+        if (response.status == 204) {
+          setShowSuccessAlert(true);
+          setTimeout(() => {
+            setShowSuccessAlert(false);
+          }, 3000);
+          const newreceipts = customers.filter((order) => order.id !== selectedCustomer.id);
+            setcustomers(newreceipts);
+        } else {
+          setShowErrorAlert(true);
+          setTimeout(() => {
+            setShowErrorAlert(false);
+          }, 3000);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     } else {
-      alert("Please select a Customer to delete.");
+      alert("Please select a Employee to delete.");
     }
   };
 

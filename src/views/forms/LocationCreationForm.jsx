@@ -108,8 +108,8 @@ const LocationsCreationForm = ({
           activeTab === "identification" ? "active" : "hidden"
         }`}
       >
-      <div class="containerr">
-        <div class="cont-one">
+      <div className="containerr">
+        <div className="cont-one">
           <div className="company-form__section">
             <Input
               type="text"
@@ -135,7 +135,7 @@ const LocationsCreationForm = ({
             />
           </div>
         </div>{/* ----------------------------END ONE---------------------------------- */}
-        <div class="cont-two">
+        <div className="cont-two">
           <div className="company-form__section">
             <label htmlFor="wp-fax" className="form-label">
               Type

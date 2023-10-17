@@ -100,7 +100,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchportsData();
+            const newreceipts = ports.filter((order) => order.id !== selectedPort.id);
+            setports(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

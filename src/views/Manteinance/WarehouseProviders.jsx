@@ -105,7 +105,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchWarehouseProvidersData();
+            const newreceipts = WarehouseProviders.filter((order) => order.id !== selectedWarehouseProvider.id);
+            setwarehouseProviders(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

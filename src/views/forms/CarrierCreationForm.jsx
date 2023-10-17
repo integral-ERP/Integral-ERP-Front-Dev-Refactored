@@ -288,8 +288,8 @@ const CarrierCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-      <div class="containerr">
-        <div class="cont-one">
+      <div className="containerr">
+        <div className="cont-one">
           <div className="company-form__section">
             <label htmlFor="carrierType" className="form-label">
               Carrier Type:
@@ -366,7 +366,7 @@ const CarrierCreationForm = ({
             />
           </div>
         </div>{/* -------------------------END ONE---------------------------------- */}
-        <div class="cont-two">
+        <div className="cont-two">
           <div className="company-form__section">
             <Input
               type="email"

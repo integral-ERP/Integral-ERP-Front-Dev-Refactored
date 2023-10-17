@@ -3,7 +3,6 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import PickupOrderCreationForm from "../forms/PickupOrderCreationForm";
 import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReceiptService from "../../services/ReceiptService";
