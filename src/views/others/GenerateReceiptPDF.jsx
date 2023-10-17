@@ -137,6 +137,26 @@ const GenerateReceiptPDF = (data) => {
                     ],
                   },
                   {
+                    text: [
+                      `Issued By \n`,
+                      `${data.issued_byObj?.name || ``} \n`,
+                      `${
+                        data.issued_byObj?.phone
+                          ? `Tel: ${data.issued_byObj.phone}, `
+                          : ``
+                      }${
+                        data.issued_byObj?.fax
+                          ? `Fax: ${data.issued_byObj.fax}`
+                          : ``
+                      }\n`,
+                      `${data.issued_byObj?.street_and_number || ``} \n`,
+                      `${data.issued_byObj?.city || ``}, ${
+                        data.issuedBy?.state || ``
+                      } ${data.issued_byObj?.zip_code || ``} \n`,
+                      `${data.issued_byObj?.country || ``}`,
+                    ],
+                  },
+                  {
                     stack: [
                       {
                         image: barcodeImage,
@@ -160,7 +180,7 @@ const GenerateReceiptPDF = (data) => {
                       body: [
                         [`Receipt Number`, `${data.number || ``}`],
                         [`Received Date/Time`, `${data.creation_date || ``}`],
-                        [`Received By`, `${data.number || ``}`]
+                        [`Received By`, `${data.employeeObj?.name || ``}`]
                       ],
                       margin: [5, 0, 5, 0],
                     },
@@ -278,11 +298,11 @@ const GenerateReceiptPDF = (data) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Drivers License`,
+                        text: `Suppliers Name`,
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.driversLicense || ``}`,
+                        text: `${data.mainCarrierObj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       }
                     ],
@@ -296,39 +316,21 @@ const GenerateReceiptPDF = (data) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Suppliers Name`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.mainCarrierObj?.name || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
                         text: `Tracking Number`,
                         margin: [0, 0, 0, 0],
                       },
                       {
                         text: `${data.tracking_number|| ``}`,
                         margin: [0, 0, 0, 0],
-                      },
+                      }
+                    ],
+                    [
                       {
                         text: `Invoice Number`,
                         margin: [0, 0, 0, 0],
                       },
                       {
                         text: `${data.invoice_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
-                        text: `Driver Name`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.driversName|| ``}`,
                         margin: [0, 0, 0, 0],
                       },
                       {

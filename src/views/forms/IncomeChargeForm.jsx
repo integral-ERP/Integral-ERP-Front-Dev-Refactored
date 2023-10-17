@@ -16,7 +16,6 @@ const IncomeChargeForm = ({
 }) => {
   // Define state variables for form inputs
 
-  console.log("Consignee:", consignee, "Agent:", agent, "Shipper:", shipper);
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
   const formFormat = {

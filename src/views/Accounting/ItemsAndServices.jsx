@@ -9,7 +9,7 @@ import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import Sidebar from "../shared/components/SideBar";
 
 const ItemsAndServices = () => {
-    const [itemsAndServices, setItemsAndServices] = useState([]);
+  const [itemsAndServices, setItemsAndServices] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedeItemAndService, setSelectedItemAndService] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -19,7 +19,7 @@ const ItemsAndServices = () => {
   const columns = [
     "Code",
     "Description",
-    "Account Name",
+    // "Account Name",
     "Type",
     "Amount",
     "Currency",

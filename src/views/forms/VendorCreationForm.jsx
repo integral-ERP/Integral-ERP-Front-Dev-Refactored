@@ -179,8 +179,8 @@ const VendorsCreationForm = ({
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
-        <div class="containerr">
-          <div class="cont-one">
+        <div className="containerr">
+          <div className="cont-one">
               <div className="company-form__section">
                 <Input
                   type="text"
@@ -230,7 +230,7 @@ const VendorsCreationForm = ({
               />
             </div>
           </div>{/* ----------------------------END ONE---------------------------------- */}
-          <div class="cont-two">
+          <div className="cont-two">
             <div className="company-form__section">
               <Input
                   type="number"
