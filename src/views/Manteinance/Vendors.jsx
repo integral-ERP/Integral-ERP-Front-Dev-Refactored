@@ -104,7 +104,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchvendorsData();
+            const newreceipts = vendors.filter((order) => order.id !== selectedVendor.id);
+            setvendors(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

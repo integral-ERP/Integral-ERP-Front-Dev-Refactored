@@ -60,6 +60,10 @@ const ReceiptCreationForm = ({
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [supplierOptions, setSupplierOptions] = useState([]);
+  const [defaultValueShipper, setdefaultValueShipper] =
+    useState(null);
+    const [defaultValueConsignee, setdefaultValueConsignee] =
+    useState(null);
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);

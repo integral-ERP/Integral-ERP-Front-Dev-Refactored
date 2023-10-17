@@ -112,7 +112,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchForwardingAgentsData();
+            const newreceipts = forwardingAgents.filter((order) => order.id !== selectedForwardingAgent.id);
+            setforwardingAgents(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

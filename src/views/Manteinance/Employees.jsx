@@ -48,9 +48,15 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     ];
 
     const fetchEmployeesData = (url = null) => {
+      console.log("url", url);
       EmployeeService.getEmployees(url)
         .then((response) => {
-          setemployees([...employees, ...response.data.results]);
+          const newEmployees = response.data.results.filter((pickupOrder) => {
+            const pickupOrderId = pickupOrder.id;
+            return !employees.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
+          });
+          console.log("NEW EMPLOYEES", newEmployees);
+          setemployees([...employees, ...newEmployees].reverse());
           if (response.data.next) {
             setNextPageURL(response.data.next);
           }
@@ -113,7 +119,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           setTimeout(() => {
             setShowSuccessAlert(false);
           }, 3000);
-          fetchEmployeesData();
+          const newreceipts = employees.filter((order) => order.id !== selectedEmployee.id);
+            setemployees(newreceipts);
         } else {
           setShowErrorAlert(true);
           setTimeout(() => {
