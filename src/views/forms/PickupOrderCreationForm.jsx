@@ -54,10 +54,8 @@ const PickupOrderCreationForm = ({
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
-  const [defaultValueShipper, setdefaultValueShipper] =
-    useState(null);
-    const [defaultValueConsignee, setdefaultValueConsignee] =
-    useState(null);
+  const [defaultValueShipper, setdefaultValueShipper] = useState(null);
+  const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
 
   const formFormat = {
@@ -104,9 +102,11 @@ const PickupOrderCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -129,9 +129,11 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
@@ -157,9 +159,11 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       deliveryLocationId: id,
@@ -203,9 +207,11 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setconsignee(result.data);
     setFormData({
       ...formData,
@@ -229,9 +235,11 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setshipper(result.data);
     setFormData({
       ...formData,
@@ -244,9 +252,11 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -261,8 +271,14 @@ const PickupOrderCreationForm = ({
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       console.log("CALLING LOAD SHIPPER OPTION");
-      loadShipperOption(pickupOrder.shipperObj?.data?.obj?.id, pickupOrder.shipperObj?.data?.obj?.type_person);
-      loadConsigneeOption(pickupOrder.consigneeObj?.data?.obj?.id, pickupOrder.consigneeObj?.data?.obj?.type_person);
+      loadShipperOption(
+        pickupOrder.shipperObj?.data?.obj?.id,
+        pickupOrder.shipperObj?.data?.obj?.type_person
+      );
+      loadConsigneeOption(
+        pickupOrder.consigneeObj?.data?.obj?.id,
+        pickupOrder.consigneeObj?.data?.obj?.type_person
+      );
       let updatedFormData = {
         status: pickupOrder.status,
         number: pickupOrder.number,
@@ -329,7 +345,7 @@ const PickupOrderCreationForm = ({
         // CHARGES TAB
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
-        charges: pickupOrder.charges
+        charges: pickupOrder.charges,
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -401,38 +417,37 @@ const PickupOrderCreationForm = ({
   };
 
   const loadShipperOption = async (id, type) => {
-    
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if(type === "carrier"){
+    if (type === "carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option.data);
-  }
+  };
 
   const loadConsigneeOption = async (id, type) => {
     console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
     console.log("SHIPPER FOUND:", option.data);
     setdefaultValueShipper(option.data);
-  }
+  };
 
   useEffect(() => {
     fetchFormData();
@@ -440,7 +455,12 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (creating) {
-      console.log("Setting new pickup number:", pickupNumber, "old pickup number:", currentPickUpNumber);
+      console.log(
+        "Setting new pickup number:",
+        pickupNumber,
+        "old pickup number:",
+        currentPickUpNumber
+      );
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
@@ -714,8 +734,9 @@ const PickupOrderCreationForm = ({
         </li>
       </ul>
       <form
-        className={`tab-pane fade ${activeTab === "general" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "general" ? "show active" : ""
+        } company-form__general-form`}
         id="general"
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
@@ -761,7 +782,6 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleDestinationAgentSelection(e);
                     }}
-                    
                     isClearable={true}
                     defaultOptions={destinationAgentOptions}
                     getOptionLabel={(option) => option.name}
@@ -777,7 +797,6 @@ const PickupOrderCreationForm = ({
                   onChange={(e) => {
                     handleDestinationAgentSelection(e);
                   }}
-                  
                   isClearable={true}
                   defaultOptions={destinationAgentOptions}
                   getOptionLabel={(option) => option.name}
@@ -809,8 +828,7 @@ const PickupOrderCreationForm = ({
                 label="Number"
               />
 
-              <div className="company-form__section">
-              </div>
+              <div className="company-form__section"></div>
               <label htmlFor="employee" className="form-label">
                 Employee:
               </label>
@@ -833,16 +851,16 @@ const PickupOrderCreationForm = ({
             {/* --------------------------- END TWO -------------------- */}
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Creation Date and Time"
-                className="font-right"
-                value={dayjs(formData.createdDateAndTime)}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                  })
-                }
+                <DateTimePicker
+                  label="Creation Date and Time"
+                  className="font-right"
+                  value={dayjs(formData.createdDateAndTime)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
                 />
               </LocalizationProvider>
             </div>
@@ -880,8 +898,9 @@ const PickupOrderCreationForm = ({
 
       </form>
       <form
-        className={`tab-pane fade ${activeTab === "pickup" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "pickup" ? "show active" : ""
+        } company-form__general-form`}
         id="pickup"
         style={{ display: activeTab === "pickup" ? "block" : "none" }}
       >
@@ -893,7 +912,6 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="shipper"
-                
                 onChange={(e) => {
                   handleShipperSelection(e);
                 }}
@@ -935,7 +953,6 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="pickup"
-                
                 onChange={(e) => {
                   handlePickUpSelection(e);
                 }}
@@ -978,8 +995,9 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${activeTab === "delivery" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "delivery" ? "show active" : ""
+        } company-form__general-form`}
         id="delivery"
         style={{ display: activeTab === "delivery" ? "block" : "none" }}
       >
@@ -993,7 +1011,6 @@ const PickupOrderCreationForm = ({
           <div className="custom-select">
             <AsyncSelect
               id="consignee"
-              
               onChange={(e) => handleConsigneeSelection(e)}
               value={defaultValueConsignee}
               isClearable={true}
@@ -1022,7 +1039,6 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="delivery"
-            
             onChange={(e) => {
               handleDeliveryLocationSelection(e);
             }}
@@ -1051,8 +1067,9 @@ const PickupOrderCreationForm = ({
 
       </form>
       <form
-        className={`tab-pane fade ${activeTab === "carrier" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "carrier" ? "show active" : ""
+        } company-form__general-form`}
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
@@ -1064,7 +1081,6 @@ const PickupOrderCreationForm = ({
           </label>
           <AsyncSelect
             id="mainCarrier"
-            
             onChange={(e) => {
               handleMainCarrierSelection(e);
             }}
@@ -1119,8 +1135,9 @@ const PickupOrderCreationForm = ({
         </div>
       </form>
       <form
-        className={`tab-pane fade ${activeTab === "charges" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "charges" ? "show active" : ""
+        } company-form__general-form`}
         id="charges"
         style={{ display: activeTab === "charges" ? "block" : "none" }}
       >
@@ -1200,17 +1217,18 @@ const PickupOrderCreationForm = ({
             "Price",
             "Currency",
           ]}
-          onSelect={() => { }} // Make sure this line is correct
+          onSelect={() => {}} // Make sure this line is correct
           selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
+          onDelete={() => {}}
+          onEdit={() => {}}
+          onAdd={() => {}}
           showOptions={false}
         />
       </form>
       <form
-        className={`tab-pane fade ${activeTab === "commodities" ? "show active" : ""
-          } company-form__general-form`}
+        className={`tab-pane fade ${
+          activeTab === "commodities" ? "show active" : ""
+        } company-form__general-form`}
         id="commodities"
         style={{ display: activeTab === "commodities" ? "block" : "none" }}
       >
@@ -1243,11 +1261,11 @@ const PickupOrderCreationForm = ({
             " Chargeable Weight",
             " Delete",
           ]}
-          onSelect={() => { }} // Make sure this line is correct
+          onSelect={() => {}} // Make sure this line is correct
           selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
+          onDelete={() => {}}
+          onEdit={() => {}}
+          onAdd={() => {}}
           showOptions={false}
         />
       </form>
