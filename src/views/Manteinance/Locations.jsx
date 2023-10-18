@@ -98,7 +98,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchlocationsData();
+            const newreceipts = locations.filter((order) => order.id !== selectedLocation.id);
+            setlocations(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

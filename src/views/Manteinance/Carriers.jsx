@@ -118,7 +118,8 @@ const Carrier = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateCarriers();
+            const newreceipts = carriers.filter((order) => order.id !== selectedCarrier.id);
+            setCarriers(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

@@ -1,19 +1,12 @@
-const ContextMenu = ({ x, y, onClose, onOptionClick }) => {
+const ContextMenu = ({ x, y, onClose, options }) => {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: y,
-        left: x,
-        backgroundColor: 'white',
-        border: '1px solid #ccc',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
-      }}
-    >
+    <div>
       <ul>
-        <li onClick={() => onOptionClick('Option 1')}>Option 1</li>
-        <li onClick={() => onOptionClick('Option 2')}>Option 2</li>
-        <li onClick={() => onOptionClick('Option 3')}>Option 3</li>
+        {options.map((option, index) => (
+          <li key={index} className="ne" onClick={() => option.handler()}>
+            {option.label}
+          </li>
+        ))}
       </ul>
     </div>
   );

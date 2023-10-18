@@ -100,7 +100,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            fetchpackageTypesData();
+            const newreceipts = packageTypes.filter((order) => order.id !== selectedPackageType.id);
+            setpackageTypes(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

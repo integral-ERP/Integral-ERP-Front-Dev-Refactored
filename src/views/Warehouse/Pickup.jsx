@@ -7,18 +7,19 @@ import PickupOrderCreationForm from "../forms/PickupOrderCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PickupService from "../../services/PickupService";
 import Sidebar from "../shared/components/SideBar";
-import ContextMenu from "../others/ContextMenu";
-
+import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 
 const Pickup = () => {
   const [pickupOrders, setpickupOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
+  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
 
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -56,12 +57,6 @@ const Pickup = () => {
     setShowContextMenu(true);
   };
 
-  const handleOptionClick = (option) => {
-    // Handle the context menu option click here
-    console.log("Option clicked:", option);
-    setShowContextMenu(false);
-  };
-
   useEffect(() => {
     const handleDocumentClick = (e) => {
       // Check if the click is inside the context menu or a table row
@@ -71,16 +66,15 @@ const Pickup = () => {
         setShowContextMenu(false);
       }
     };
-  
+
     // Add the event listener when the component mounts
     document.addEventListener("click", handleDocumentClick);
-  
+
     // Remove the event listener when the component unmounts
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
-
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
@@ -203,6 +197,33 @@ const Pickup = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if(createWarehouseReceipt){
+      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+      openModalReceiptCreation();
+    }
+  }, [createWarehouseReceipt])
+  
+
+  const contextMenuOptions = [
+    {
+      label: "Create Warehouse Receipt",
+      handler: () => setCreateWarehouseReceipt(true)
+    },
+    {
+      label: "Option 2",
+      handler: () => {
+        // Handle Option 2
+      },
+    },
+    {
+      label: "Option 3",
+      handler: () => {
+        // Handle Option 3
+      },
+    },
+  ];
+
   return (
     <>
       <div className="dashboard__layout">
@@ -223,7 +244,7 @@ const Pickup = () => {
               showContextMenu={showContextMenu}
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
-              
+              contextMenuOptions={contextMenuOptions}
             />
             
 
@@ -270,6 +291,20 @@ const Pickup = () => {
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </ModalForm>
+            )}
+
+            {selectedPickupOrder !== null && createWarehouseReceipt && (
+              <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
+                <ReceiptCreationForm
+                  pickupOrder={selectedPickupOrder}
+                  closeModal={closeModalReceiptCreation}
+                  creating={true}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromPickUp={true}
                 />
               </ModalForm>
             )}
