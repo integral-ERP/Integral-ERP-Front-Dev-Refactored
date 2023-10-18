@@ -29,7 +29,11 @@
   overflow-x: hidden;
   color: black;
   border-radius: 1rem;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+  background-image: url("../../img/fondoform.jpg");
+  background-size: 300px 280px;         
+  background-position: right bottom; 
+  background-repeat: no-repeat; 
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 10);
 }
 
 .modal__close {

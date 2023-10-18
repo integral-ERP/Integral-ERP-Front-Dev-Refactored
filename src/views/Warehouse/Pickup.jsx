@@ -12,7 +12,11 @@ import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 const Pickup = () => {
   const [pickupOrders, setpickupOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
+  const [
+    isOpenReceiptCreation,
+    openModalReceiptCreation,
+    closeModalReceiptCreation,
+  ] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -198,17 +202,16 @@ const Pickup = () => {
   }, []);
 
   useEffect(() => {
-    if(createWarehouseReceipt){
+    if (createWarehouseReceipt) {
       console.log("OPENING UP NEW MODAL FOR RECEIPTS");
       openModalReceiptCreation();
     }
-  }, [createWarehouseReceipt])
-  
+  }, [createWarehouseReceipt]);
 
   const contextMenuOptions = [
     {
       label: "Create Warehouse Receipt",
-      handler: () => setCreateWarehouseReceipt(true)
+      handler: () => setCreateWarehouseReceipt(true),
     },
     {
       label: "Option 2",
@@ -295,7 +298,10 @@ const Pickup = () => {
             )}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
-              <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
+              <ModalForm
+                isOpen={isOpenReceiptCreation}
+                closeModal={closeModalReceiptCreation}
+              >
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModalReceiptCreation}

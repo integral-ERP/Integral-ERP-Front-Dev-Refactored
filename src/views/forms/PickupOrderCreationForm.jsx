@@ -54,10 +54,8 @@ const PickupOrderCreationForm = ({
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
-  const [defaultValueShipper, setdefaultValueShipper] =
-    useState(null);
-    const [defaultValueConsignee, setdefaultValueConsignee] =
-    useState(null);
+  const [defaultValueShipper, setdefaultValueShipper] = useState(null);
+  const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
 
   const formFormat = {
@@ -273,8 +271,14 @@ const PickupOrderCreationForm = ({
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       console.log("CALLING LOAD SHIPPER OPTION");
-      loadShipperOption(pickupOrder.shipperObj?.data?.obj?.id, pickupOrder.shipperObj?.data?.obj?.type_person);
-      loadConsigneeOption(pickupOrder.consigneeObj?.data?.obj?.id, pickupOrder.consigneeObj?.data?.obj?.type_person);
+      loadShipperOption(
+        pickupOrder.shipperObj?.data?.obj?.id,
+        pickupOrder.shipperObj?.data?.obj?.type_person
+      );
+      loadConsigneeOption(
+        pickupOrder.consigneeObj?.data?.obj?.id,
+        pickupOrder.consigneeObj?.data?.obj?.type_person
+      );
       let updatedFormData = {
         status: pickupOrder.status,
         number: pickupOrder.number,
@@ -341,7 +345,7 @@ const PickupOrderCreationForm = ({
         // CHARGES TAB
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
-        charges: pickupOrder.charges
+        charges: pickupOrder.charges,
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -413,38 +417,37 @@ const PickupOrderCreationForm = ({
   };
 
   const loadShipperOption = async (id, type) => {
-    
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if(type === "carrier"){
+    if (type === "carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option.data);
-  }
+  };
 
   const loadConsigneeOption = async (id, type) => {
     console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
     console.log("SHIPPER FOUND:", option.data);
     setdefaultValueShipper(option.data);
-  }
+  };
 
   useEffect(() => {
     fetchFormData();
@@ -452,7 +455,12 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (creating) {
-      console.log("Setting new pickup number:", pickupNumber, "old pickup number:", currentPickUpNumber);
+      console.log(
+        "Setting new pickup number:",
+        pickupNumber,
+        "old pickup number:",
+        currentPickUpNumber
+      );
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
@@ -774,7 +782,6 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleDestinationAgentSelection(e);
                     }}
-                    
                     isClearable={true}
                     defaultOptions={destinationAgentOptions}
                     getOptionLabel={(option) => option.name}
@@ -790,7 +797,6 @@ const PickupOrderCreationForm = ({
                   onChange={(e) => {
                     handleDestinationAgentSelection(e);
                   }}
-                  
                   isClearable={true}
                   defaultOptions={destinationAgentOptions}
                   getOptionLabel={(option) => option.name}
@@ -798,6 +804,20 @@ const PickupOrderCreationForm = ({
                 />
               )}
             </div>
+            {/* <div className="company-form__section">
+              <Input
+                type="number"
+                inputName="pickupnumber"
+                placeholder="Pickup Order Number..."
+                value={formData.number}
+                readonly={true}
+                label="Number"
+              />
+            </div>  */}
+          </div>
+          {/* ----------------------------END ONE---------------------------------- */}
+          {/* --------------------------- INIT TWO -------------------- */}
+          <div className="cont-two__space">
             <div className="company-form__section">
               <Input
                 type="number"
@@ -807,11 +827,28 @@ const PickupOrderCreationForm = ({
                 readonly={true}
                 label="Number"
               />
+
+              <div className="company-form__section"></div>
+              <label htmlFor="employee" className="form-label">
+                Employee:
+              </label>
+              <AsyncSelect
+                id="employee"
+                defaultValue={formData.employeeId}
+                onChange={(e) => {
+                  handleEmployeeSelection(e);
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={employeeOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
             </div>
           </div>
-          {/* ----------------------------END ONE---------------------------------- */}
 
-          <div className="cont-two__space">
+          <div className="cont-three__space">
+            {/* --------------------------- END TWO -------------------- */}
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
@@ -859,25 +896,6 @@ const PickupOrderCreationForm = ({
           {/* ----------------------------END TWO---------------------------------- */}
         </div>
 
-        <div className="company-form__section">
-          <label htmlFor="employee" className="form-label">
-            Employee:
-          </label>
-          <AsyncSelect
-            id="employee"
-            onChange={(e) => {
-              handleEmployeeSelection(e);
-            }}
-            value={employeeOptions.find(
-              (option) => option.id === formData.employeeId
-            )}
-            isClearable={true}
-            placeholder="Search and select..."
-            defaultOptions={employeeOptions}
-            getOptionLabel={(option) => option.name}
-            getOptionValue={(option) => option.id}
-          />
-        </div>
       </form>
       <form
         className={`tab-pane fade ${
@@ -894,7 +912,6 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="shipper"
-                
                 onChange={(e) => {
                   handleShipperSelection(e);
                 }}
@@ -936,7 +953,6 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="pickup"
-                
                 onChange={(e) => {
                   handlePickUpSelection(e);
                 }}
@@ -985,6 +1001,9 @@ const PickupOrderCreationForm = ({
         id="delivery"
         style={{ display: activeTab === "delivery" ? "block" : "none" }}
       >
+
+      <div>
+        <div>
         <div className="company-form__section">
           <label htmlFor="consignee" className="form-label">
             Consignee:
@@ -992,7 +1011,6 @@ const PickupOrderCreationForm = ({
           <div className="custom-select">
             <AsyncSelect
               id="consignee"
-              
               onChange={(e) => handleConsigneeSelection(e)}
               value={defaultValueConsignee}
               isClearable={true}
@@ -1003,7 +1021,6 @@ const PickupOrderCreationForm = ({
             />
           </div>
         </div>
-
         <div className="company-form__section">
           <Input
             type="textarea"
@@ -1014,13 +1031,14 @@ const PickupOrderCreationForm = ({
             label=""
           />
         </div>
+        </div>
+        <div>
         <div className="company-form__section">
           <label htmlFor="delivery" className="form-label">
             Delivery Location:
           </label>
           <AsyncSelect
             id="delivery"
-            
             onChange={(e) => {
               handleDeliveryLocationSelection(e);
             }}
@@ -1044,6 +1062,9 @@ const PickupOrderCreationForm = ({
             label=""
           />
         </div>
+        </div>
+      </div>
+
       </form>
       <form
         className={`tab-pane fade ${
@@ -1052,13 +1073,14 @@ const PickupOrderCreationForm = ({
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
+        <div>
+          <div>
         <div className="company-form__section">
           <label htmlFor="mainCarrier" className="form-label">
             Carrier:
           </label>
           <AsyncSelect
             id="mainCarrier"
-            
             onChange={(e) => {
               handleMainCarrierSelection(e);
             }}
@@ -1082,6 +1104,9 @@ const PickupOrderCreationForm = ({
             label="Return Address"
           />
         </div>
+        </div>
+
+        <div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -1105,6 +1130,8 @@ const PickupOrderCreationForm = ({
             }
             label="Tracking Number"
           />
+        </div>
+        </div>
         </div>
       </form>
       <form

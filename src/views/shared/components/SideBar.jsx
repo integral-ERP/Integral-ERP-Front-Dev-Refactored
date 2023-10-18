@@ -9,6 +9,7 @@ import logo from "../../../img/logotext.png"
 import logotext from "../../../img/logoblanco2.png"
 import usuario from "../../../img/usuario.png"
 
+
 const Sidebar = () => {
   const [close, setClose] = useState(false);
   useModal(false);
@@ -424,7 +425,7 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={handleDropdownClose}
           ></i>
-          <span className="text"> Xpress Logistic</span>
+          <span className="text">Integralerp</span>
 
           <div className="rith">
           <div className="profile-user">

@@ -583,6 +583,7 @@ const Table = ({
                 onClick={() => setShowColumnMenu(!showColumnMenu)}
               >
                 <i className="fas fa-eye menu-icon fa-3x ne"></i>
+                
               </button>
             </div>
 

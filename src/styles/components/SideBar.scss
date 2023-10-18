@@ -7,6 +7,9 @@
 }
 
 .sidebar {
+  -webkit-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
+  -moz-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
+  box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
   position: fixed;
   top: 0;
   left: 0;
@@ -35,9 +38,11 @@
   padding-left: 23rem;
   position: fixed;
   top: 0;
-  margin: 6vh 0 0 2rem;
+  margin: 10vh 0 0 2rem;
   left: 0;
   transition: all 0.5s ease;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .sidebar .logo-details {
@@ -306,8 +311,9 @@
 }
 
 .img-usuario {
-  width: 9%;
-  margin: 0 4% 0 0
+  width: 100%;
+  height: auto;
+  padding: 10px;
 }
 
 .rith {
@@ -336,8 +342,8 @@
 
 .home-section {
   position: relative;
-  background: white;
-  height: 5vh;
+  background:#153A61;
+  height: 8vh;
   left: 25rem;
   width: calc(100% - 25rem);
   transition: all 0.5s ease-in-out;
@@ -361,7 +367,7 @@
 
 .home-section .home-content .bx-menu,
 .home-section .home-content .text {
-  color: #153A61;
+  color: #ffffff;
   font-size: 400%;
 }
 
@@ -371,12 +377,15 @@
 }
 
 .home-section .home-content .text {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 600;
-  width: 50%;
-  margin: 0 0 0 2rem;
+  width: 80%;
+  margin: 1 41 0 2rem;
 }
 
+.name-job{
+  color: #ffffff;
+}
 // -------------------------------------------------------------------------------------------------
 .prueba {
   position: absolute;

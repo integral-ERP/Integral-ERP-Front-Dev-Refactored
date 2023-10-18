@@ -191,3 +191,50 @@
 #charges, #commodities {
   width: 90%;
 }
+
+.nav-tabs .nav-item.open .nav-link, .nav-tabs .nav-item.open .nav-link:focus,
+.nav-tabs .nav-item.open .nav-link:hover, .nav-tabs .nav-link.active, 
+.nav-tabs .nav-link.active:focus, .nav-tabs .nav-link.active:hover {
+  background-color: #153A61 !important;
+  border-radius: 10px;
+  color: #ffffff !important;
+}
+
+.nav-tabs {
+  --bs-nav-tabs-border-width: var(--bs-border-width);
+  --bs-nav-tabs-border-color: #ecf0f1;
+  border: solid 1px #C1C1C1;
+  border-radius: 15px;
+  background: #C1C1C1;
+  --bs-nav-link-color: #626262;
+  --bs-nav-link-hover-color: #040404;
+  --bs-nav-link-disabled-color: #95a5a6;
+  border: 1px solid #666666;
+  color: white;
+  & li {
+    transition: background 1s ease;
+  }
+  & li > a{
+    transition: color 1s ease;
+    color: #82918e !important;
+  }
+  & li:hover{
+    background: rgb(170, 168, 168);
+    & a{
+      color: black !important;
+    }
+  }
+}
+
+.nav-tabs .nav-link {
+  margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
+  border: var(--bs-nav-tabs-border-width) solid transparent;
+  border-top-left-radius: var(--bs-nav-tabs-border-radius);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-top-right-radius: 1;
+}
+
+.nav-link:focus, .nav-link:hover {
+  color: #575757;
+}
