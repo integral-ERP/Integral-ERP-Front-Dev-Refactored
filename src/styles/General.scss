@@ -100,7 +100,6 @@
 }
 
 .generic-table {
-  margin: 3% 0 0 0%;
   width: 85%;
   overflow-x: scroll;
   border-collapse: collapse;
@@ -109,6 +108,7 @@
   box-shadow: 1px 2px 17px -1px rgba(0,0,0,0.42);
   border-radius: 15px;
   background: white ;
+  margin-inline: auto;
   
 }
 
@@ -411,3 +411,32 @@
 .context-menu li:last-child {
   margin-bottom: 0;
 }
+
+.company-form__section{
+}
+
+#delivery, #carrier {
+  & > div:first-child{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    & > div:first-child, & > div:last-child{
+      width: 100%;
+    }
+  }
+}
+
+#carrier{
+  & > div:first-child{
+    & > div:last-child{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 66px;
+      
+    }
+  }
+}
+
+

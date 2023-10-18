@@ -1017,6 +1017,9 @@ const PickupOrderCreationForm = ({
         id="delivery"
         style={{ display: activeTab === "delivery" ? "block" : "none" }}
       >
+
+      <div>
+        <div>
         <div className="company-form__section">
           <label htmlFor="consignee" className="form-label">
             Consignee:
@@ -1035,7 +1038,6 @@ const PickupOrderCreationForm = ({
             />
           </div>
         </div>
-
         <div className="company-form__section">
           <Input
             type="textarea"
@@ -1046,6 +1048,8 @@ const PickupOrderCreationForm = ({
             label=""
           />
         </div>
+        </div>
+        <div>
         <div className="company-form__section">
           <label htmlFor="delivery" className="form-label">
             Delivery Location:
@@ -1074,6 +1078,9 @@ const PickupOrderCreationForm = ({
             label=""
           />
         </div>
+        </div>
+      </div>
+
       </form>
       <form
         className={`tab-pane fade ${activeTab === "carrier" ? "show active" : ""
@@ -1081,6 +1088,8 @@ const PickupOrderCreationForm = ({
         id="carrier"
         style={{ display: activeTab === "carrier" ? "block" : "none" }}
       >
+        <div>
+          <div>
         <div className="company-form__section">
           <label htmlFor="mainCarrier" className="form-label">
             Carrier:
@@ -1109,6 +1118,9 @@ const PickupOrderCreationForm = ({
             label="Return Address"
           />
         </div>
+        </div>
+
+        <div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -1132,6 +1144,8 @@ const PickupOrderCreationForm = ({
             }
             label="Tracking Number"
           />
+        </div>
+        </div>
         </div>
       </form>
       <form
