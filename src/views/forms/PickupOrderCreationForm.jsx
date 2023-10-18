@@ -266,44 +266,6 @@ const PickupOrderCreationForm = ({
       let updatedFormData = {
         status: pickupOrder.status,
         number: pickupOrder.number,
-<<<<<<< HEAD
-        createdDateAndTime: pickupOrder.creationDate,
-        pickupDateAndTime: pickupOrder.pickUpDate,
-        deliveryDateAndTime: pickupOrder.deliveryDate,
-        issuedById: pickupOrder.issuedByKey,
-        issuedByInfo: `${pickupOrder.issuedBy?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
-          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
-          } - ${pickupOrder.issuedBy?.zip_code || ""}`,
-        destinationAgentId: pickupOrder.destinationAgentKey,
-        employeeId: pickupOrder.employeekey,
-        // PICKUP TAB
-        shipperId: pickupOrder.shipperkey,
-        shipperInfo: `${pickupOrder.shipper?.street_and_number || ""} - ${pickupOrder.shipper?.city || ""
-          } - ${pickupOrder.shipper?.state || ""} - ${pickupOrder.shipper?.country || ""
-          } - ${pickupOrder.shipper?.zip_code || ""}`,
-        pickupLocationId: pickupOrder.PickUpLocationkey,
-        pickupLocationInfo: `${pickupOrder.PickUpLocation?.street_and_number || ""
-          } - ${pickupOrder.PickUpLocation?.city || ""} - ${pickupOrder.PickUpLocation?.state || ""
-          } - ${pickupOrder.PickUpLocation?.country || ""} - ${pickupOrder.PickUpLocation?.zip_code || ""
-          }`,
-        // DELIVERY TAB
-        consigneeId: pickupOrder.consigneekey,
-        consigneeInfo: `${pickupOrder.consignee?.street_and_number || ""} - ${pickupOrder.consignee?.city || ""
-          } - ${pickupOrder.consignee?.state || ""} - ${pickupOrder.consignee?.country || ""
-          } - ${pickupOrder.consignee?.zip_code || ""}`,
-        deliveryLocationId: pickupOrder.deliveryLocationkey,
-        deliveryLocationInfo: `${pickupOrder.deliveryLocation?.street_and_number || ""
-          } - ${pickupOrder.deliveryLocation?.city || ""} - ${pickupOrder.deliveryLocation?.state || ""
-          } - ${pickupOrder.deliveryLocation?.country || ""} - ${pickupOrder.deliveryLocation?.zip_code || ""
-          }`,
-        // CARRIER TAB
-        proNumber: pickupOrder.proNumber,
-        trackingNumber: pickupOrder.trackingNumber,
-        mainCarrierdId: pickupOrder.mainCarrierKey,
-        mainCarrierInfo: `${pickupOrder.mainCarrier?.street_and_number || ""} - ${pickupOrder.mainCarrier?.city || ""
-          } - ${pickupOrder.mainCarrier?.state || ""} - ${pickupOrder.mainCarrier?.country || ""
-          } - ${pickupOrder.mainCarrier?.zip_code || ""}`,
-=======
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
@@ -361,7 +323,6 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
->>>>>>> 366e5af0b3e32c6da74b56907e0df6cd946944b4
         // SUPPLIER TAB
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -766,15 +727,9 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="issuedby"
-<<<<<<< HEAD
-                defaultValue={issuedByOptions[0]}
-                defaultInputValue={issuedByOptions[0]}
-
-=======
                 value={issuedByOptions.find(
                   (option) => option.id === formData.issuedById
                 )}
->>>>>>> 366e5af0b3e32c6da74b56907e0df6cd946944b4
                 onChange={(e) => {
                   handleIssuedBySelection(e);
                 }}
@@ -865,7 +820,6 @@ const PickupOrderCreationForm = ({
                 onChange={(e) => {
                   handleEmployeeSelection(e);
                 }}
-                loadOptions={loadEmployeeOptions}
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={employeeOptions}
@@ -924,28 +878,6 @@ const PickupOrderCreationForm = ({
           {/* ----------------------------END TWO---------------------------------- */}
         </div>
 
-<<<<<<< HEAD
-=======
-        <div className="company-form__section">
-          <label htmlFor="employee" className="form-label">
-            Employee:
-          </label>
-          <AsyncSelect
-            id="employee"
-            onChange={(e) => {
-              handleEmployeeSelection(e);
-            }}
-            value={employeeOptions.find(
-              (option) => option.id === formData.employeeId
-            )}
-            isClearable={true}
-            placeholder="Search and select..."
-            defaultOptions={employeeOptions}
-            getOptionLabel={(option) => option.name}
-            getOptionValue={(option) => option.id}
-          />
-        </div>
->>>>>>> 366e5af0b3e32c6da74b56907e0df6cd946944b4
       </form>
       <form
         className={`tab-pane fade ${activeTab === "pickup" ? "show active" : ""
