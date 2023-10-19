@@ -19,8 +19,6 @@ import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import EventCreationForm from "./EventCreationForm";
-import ShipperService from "../../services/ShipperService";
-import ConsigneeService from "../../services/ConsigneeService";
 import "../../styles/components/ReceipCreationForm.scss";
 
 const ReceiptCreationForm = ({
@@ -225,11 +223,6 @@ const ReceiptCreationForm = ({
       shipperInfo: info,
     });
   };
-
-  useEffect(() => {
-    console.log("FORM DATA CHANGED, NEW FORM DATA:", formData);
-  }, [formData])
-  
 
   const handleFileUpload = (event) => {
     const files = event.target.files;

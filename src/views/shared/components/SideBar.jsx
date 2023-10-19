@@ -6,7 +6,6 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png"
-import logotext from "../../../img/logoblanco2.png"
 import usuario from "../../../img/usuario.png"
 
 
@@ -34,10 +33,7 @@ const Sidebar = () => {
     <>
       <div className={`sidebar ${close ? "close" : ""}`}>
         <div className="logo-details">
-          {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo_name" src={logo} alt="Logo" />
-          <img className="logo" src={logotext} alt="Logo_texto" />
-          {/* <span className="logo_name">Logo</span> */}
         </div>
         <ul className="nav-links">
           <li>
