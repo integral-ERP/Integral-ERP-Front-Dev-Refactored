@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
-import logo from "../../../img/logotext.png"
-import logotext from "../../../img/logoblanco2.png"
-import usuario from "../../../img/usuario.png"
-
+import logo from "../../../img/logotext.png";
+import usuario from "../../../img/usuario.png";
 
 const Sidebar = () => {
   const [close, setClose] = useState(false);
@@ -36,7 +34,7 @@ const Sidebar = () => {
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo_name" src={logo} alt="Logo" />
-          <img className="logo" src={logotext} alt="Logo_texto" />
+
           {/* <span className="logo_name">Logo</span> */}
         </div>
         <ul className="nav-links">
@@ -48,18 +46,17 @@ const Sidebar = () => {
 
             <ul className="sub-menu blank">
               <li>
-                <a className="link_name" href="#">
-                  Home
-                </a>
+                <Link className="link_name">Home</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "warehouse" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-building"></i>
                 <span className="link_name">Warehouse</span>
-              </a>
+              </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("warehouse")}
@@ -67,33 +64,31 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Warehouse
-                </a>
+                <Link className="link_name">Warehouse</Link>
               </li>
               <li>
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
               </li>
               <li>
-                <a href="#">Reception</a>
+                <Link to={"/warehouse/reception"}>Reception</Link>
               </li>
               <li>
-                <a href="#">Release</a>
+                <Link to={"/warehouse/release"}>Release</Link>
               </li>
               <li>
-                <a href="#">Commodities</a>
+                <Link to={"/warehouse/commodities"}>Commodities</Link>
               </li>
               <li>
-                <a href="#">Pre Alerts</a>
+                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "shipments" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-paper-plane"></i>
                 <span className="link_name">Shipments</span>
-              </a>
+              </Link>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("shipments")}
@@ -101,27 +96,23 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Shipments
-                </a>
+                <Link className="link_name">Shipments</Link>
               </li>
               <li>
-                <a href="#">Shipment list</a>
+                <Link to={"/shipments"}>Shipment List</Link>
               </li>
               <li>
-                <a href="#">New master</a>
-              </li>
-              <li>
-                <a href="#">Master list</a>
+                <Link to={"/shipments/master"}>Master List</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "rates" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-bar-chart-alt-2"></i>
                 <span className="link_name">Rates</span>
-              </a>
+              </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("rates")}
@@ -129,27 +120,26 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Rates
-                </a>
+                <Link className="link_name">Rates</Link>
               </li>
               <li>
-                <a href="#">Standard Rates</a>
+                <Link to={"/rates/standard"}>Standard Rates</Link>
               </li>
               <li>
-                <a href="#">Client Rates</a>
+                <Link to={"/rates/client"}>Client Rates</Link>
               </li>
               <li>
-                <a href="#">Carrier Rates</a>
+                <Link to={"/rates/carrier"}>Carrier Rates</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "customs" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
+                {" "}
                 <i className="bx bx-book-open"></i>
                 <span className="link_name">Customs</span>
-              </a>
+              </Link>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("customs")}
@@ -157,45 +147,46 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Customs
-                </a>
+                <Link className="link_name">Customs</Link>
               </li>
               <li>
-                <a href="#">1166 XML Import</a>
+                <Link to={"/customs/1166xml"}>1166 XML Import</Link>
               </li>
               <li>
-                <a href="#">1138 XML Export</a>
+                <Link to={"/customs/1138xml"}>1138 XML Export</Link>
               </li>
               <li>
-                <a href="#">1084 XML Duties </a>
+                <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
               </li>
               <li>
-                <a href="#">IBA report in txt</a>
+                <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
               </li>
               <li>
-                <a href="#">Simplified Duties </a>
+                <Link to={"/customs/simplifiedduties"}>Simplified Duties</Link>
               </li>
               <li>
-                <a href="#">Proof of Delivery</a>
+                <Link to={"/customs/proofDelivery"}>Proof of Delivery</Link>
               </li>
               <li>
-                <a href="#">Value Proposals </a>
+                <Link to={"/customs/valueproposals"}>Value Proposals</Link>
               </li>
               <li>
-                <a href="#">Changes in Custom's </a>
+                <Link to={"/customs/changesincustoms"}>
+                  Changes in Custom's
+                </Link>
               </li>
               <li>
-                <a href="#">Aprehensions</a>
+                <Link to={"/customs/aprehensions"}>Aprehensions</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "accounting" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-money-withdraw"></i>
                 <span className="link_name">Accounting</span>
-              </a>
+              </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("accounting")}
@@ -203,34 +194,32 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Accounting
-                </a>
+                <Link className="link_name">Accounting</Link>
               </li>
               <li>
                 <Link to={"/accounting/chartofaccounts"}>
-                Chart of Accounts
+                  Chart of Accounts
                 </Link>
               </li>
               <li>
-              <Link to={"/accounting/itemsandservices"}>
-              Items & Services
+                <Link to={"/accounting/itemsandservices"}>
+                  Items & Services
                 </Link>
               </li>
               <li>
-                <a href="#">Invoices</a>
+                <Link to={"/accounting/invoices"}>Invoices</Link>
               </li>
               <li>
-                <a href="#">Bills</a>
+                <Link to={"/accounting/bills"}>Bills</Link>
               </li>
               <li>
-                <a href="#">Collections</a>
+                <Link to={"/accounting/collections"}>Collections</Link>
               </li>
               <li>
-                <a href="#">Deposits</a>
+                <Link to={"/accounting/deposits"}>Deposits</Link>
               </li>
               <li>
-                <a href="#">Payments</a>
+                <Link to={"/accounting/payments"}>Payments</Link>
               </li>
             </ul>
           </li>
@@ -238,10 +227,10 @@ const Sidebar = () => {
             className={`arrow  ${more === "onlineCustomer" ? "showMenu" : ""}`}
           >
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-user-circle"></i>
-                <span className="link_name">Online Customer</span>
-              </a>
+                <span className="link_name">Online Customer</span>{" "}
+              </Link>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("onlineCustomer")}
@@ -249,33 +238,34 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Online Customer
-                </a>
+                <Link className="link_name">Online Customer</Link>
               </li>
               <li>
+                <Link to={"warehouse/prealerts"}>Pre Alerts</Link>
                 <a href="#">pre alerts</a>
               </li>
               <li>
-                <a href="#">Items & Services</a>
+                <Link to={"/accounting/itemsandservices"}>
+                  Items & Services
+                </Link>
               </li>
               <li>
-                <a href="#">Instructions</a>
+                <Link to={"/onlineUser/instructions"}>Instructions</Link>
               </li>
               <li>
-                <a href="#">Payments</a>
+                <Link to={"accounting/payments"}>Payments</Link>
               </li>
               <li>
-                <a href="#">Shipments</a>
+                <Link to={"shipments"}>Shipments</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "agent" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-briefcase"></i>
                 <span className="link_name">Agent</span>
-              </a>
+              </Link>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("agent")}
@@ -283,33 +273,28 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Agent
-                </a>
+                <Link className="link_name">Agent</Link>
               </li>
               <li>
-                <a href="#">Search</a>
+                <Link to={"/agent/search"}>Search </Link>
               </li>
               <li>
-                <a href="#">New Reception</a>
+                <Link to={"/warehouse/reception"}>Reception</Link>
               </li>
               <li>
-                <a href="#">New Shipment</a>
+                <Link to={"shipments"}>Shipment List</Link>
               </li>
               <li>
-                <a href="#">Payments</a>
-              </li>
-              <li>
-                <a href="#">Shipment list</a>
+                <Link to={"accounting/payments"}>Payments</Link>
               </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "maintenance" ? "showMenu" : ""}`}>
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-cog"></i>
                 <span className="link_name">Maintenance</span>
-              </a>
+              </Link>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("maintenance")}
@@ -317,11 +302,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link to={"/maintenance"}>
-                  <a className="link_name" href="#">
-                    Maintenance
-                  </a>
-                </Link>
+                <Link className="link_name"> Maintenance</Link>
               </li>
               <li>
                 <Link to={"/maintenance/carriers"}>Carriers</Link>
@@ -363,10 +344,11 @@ const Sidebar = () => {
             className={`arrow  ${more === "configuration" ? "showMenu" : ""}`}
           >
             <div className="icon-link">
-              <a href="#">
+              <Link>
                 <i className="bx bx-universal-access"></i>
                 <span className="link_name">Configuration</span>
-              </a>
+              </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("configuration")}
@@ -374,9 +356,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Configuration
-                </a>
+                <Link className="link_name"> Configuration</Link>
               </li>
               <li>
                 <a onClick={openCompanyForm}>Company</a>
@@ -388,35 +368,42 @@ const Sidebar = () => {
   </ModalForm>*/}
               </li>
               <li>
-                <a href="#">Air Operations</a>
+                <Link to={"/configuration/airoperations"}>Air Operations</Link>
               </li>
               <li>
-                <a href="#">Document Numbers</a>
+                <Link to={"/configuration/documentnumbers"}>
+                  Document Numbers
+                </Link>
               </li>
               <li>
-                <a href="#">Email Templates</a>
+                <Link to={"/configuration/emailtemplates"}>
+                  Email Templates
+                </Link>
               </li>
               <li>
-                <Link to={"/Configuration/measurementunits"}>Measurement Units</Link>
+                <Link to={"/Configuration/measurementunits"}>
+                  Measurement Units
+                </Link>
               </li>
               <li>
-                <a href="#">Clauses</a>
+                <Link to={"/configuration/clauses"}>Clauses</Link>
               </li>
               <li>
-                <a href="#">Events</a>
+                <Link to={"/configuration/events"}>Events</Link>
               </li>
               <li>
-                <a href="#">Ocean Operations</a>
+                <Link to={"/configuration/oceanoperations"}>
+                  Ocean Operations
+                </Link>
               </li>
               <li>
-                <a href="#">Payment Terms</a>
+                <Link to={"/configuration/paymentterms"}>Payment Terms</Link>
               </li>
               <li>
-                <a href="#">Shipment Documents</a>
+                <Link to={"/configuration/shipmentdocuments"}></Link>
               </li>
             </ul>
           </li>
-
         </ul>
       </div>
       <section className="home-section">
@@ -428,7 +415,7 @@ const Sidebar = () => {
           <span className="text">Integralerp</span>
 
           <div className="rith">
-          <div className="profile-user">
+            <div className="profile-user">
               <div className="profile-content">
                 <img className="img-usuario" src={usuario} alt="usuario" />
               </div>
@@ -439,7 +426,6 @@ const Sidebar = () => {
               <i className="bx bx-log-out profile-bx"></i>
             </div>
           </div>
-          
         </div>
       </section>
     </>
