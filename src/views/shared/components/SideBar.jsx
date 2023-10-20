@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import "../../../styles/components/SideBar.scss";
 import { useModal } from "../../../hooks/useModal";
 import { Link } from "react-router-dom";
+import { GlobalContext } from "../../../context/global";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
@@ -12,6 +13,9 @@ import usuario from "../../../img/usuario.png"
 
 const Sidebar = () => {
   const [close, setClose] = useState(false);
+  // const [isHiddeShowSidebar, setIsHiddeShowSidebar] = useState(true);
+  const { hideShowSlider, setHideShowSlider, controlSlider, setcontrolSlider} = useContext(GlobalContext)
+
   useModal(false);
   const handleDropdownClose = (index) => {
     setClose(!close);
@@ -30,16 +34,40 @@ const Sidebar = () => {
     }
   };
 
+  const sidebarContainerRef = useRef();
+
+  const handleHideSidebar = (isClose = false) => {
+    if (isClose){
+      setHideShowSlider(true)
+      return
+    } 
+
+    if (hideShowSlider) {
+      setHideShowSlider(true);
+    } else {
+      setHideShowSlider(false);
+    }
+    setHideShowSlider((prev) => !prev)
+  }
+
+  useEffect(() => {
+    if (controlSlider) {
+      console.log("hola")
+      handleHideSidebar(true)
+    } 
+    setcontrolSlider(false)
+  }, [controlSlider])
+
   return (
-    <>
-      <div className={`sidebar ${close ? "close" : ""}`}>
+    <div className="sidebar-container">
+      <div onClick={() => { handleHideSidebar() }} className={`sidebar ${hideShowSlider ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo_name" src={logo} alt="Logo" />
           <img className="logo" src={logotext} alt="Logo_texto" />
           {/* <span className="logo_name">Logo</span> */}
         </div>
-        <ul className="nav-links">
+        <ul onClick={(event) => { event.stopPropagation() }} className="nav-links">
           <li>
             <Link to={"/dashboard"}>
               <i className="bx bx-home"></i>
@@ -209,12 +237,12 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/chartofaccounts"}>
-                Chart of Accounts
+                  Chart of Accounts
                 </Link>
               </li>
               <li>
-              <Link to={"/accounting/itemsandservices"}>
-              Items & Services
+                <Link to={"/accounting/itemsandservices"}>
+                  Items & Services
                 </Link>
               </li>
               <li>
@@ -419,7 +447,7 @@ const Sidebar = () => {
 
         </ul>
       </div>
-      <section className="home-section">
+      <section onClick={(event) => { event.stopPropagation() }} className="home-section">
         <div className="home-content">
           <i
             className="bx bx-menu menu__icon"
@@ -428,7 +456,7 @@ const Sidebar = () => {
           <span className="text">Integralerp</span>
 
           <div className="rith">
-          <div className="profile-user">
+            <div className="profile-user">
               <div className="profile-content">
                 <img className="img-usuario" src={usuario} alt="usuario" />
               </div>
@@ -439,10 +467,11 @@ const Sidebar = () => {
               <i className="bx bx-log-out profile-bx"></i>
             </div>
           </div>
-          
+
         </div>
       </section>
-    </>
+
+    </div>
   );
 };
 

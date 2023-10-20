@@ -1,3 +1,4 @@
+import { useContext } from "react"
 import "../../../styles/components/DashboardReport.scss"
 import alerta from "../../../img/alerta.png"
 import mensaje from "../../../img/mensaje.png"
@@ -5,9 +6,11 @@ import paquete from "../../../img/paquete.png"
 import graficaBarra from "../../../img/graficaBarras.png"
 import graficaCircular from "../../../img/graficaCircular.png"
 import iconoTrend from "../../../img/icons8-grafico-64.png"
+import { GlobalContext } from "../../../context/global"
 
 const DashboardReport = () => {
-    return <div className="dashboard-container">
+    const { hideShowSlider } = useContext(GlobalContext)
+    return <div className="dashboard-container" style={ !hideShowSlider ? { marginLeft: "32rem" } : {marginInline:"auto"} }>
 
         <header>
             <div>

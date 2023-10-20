@@ -22,7 +22,7 @@
 .modal__container {
   position: relative;
   background-color: white;
-  height: 90vh;
+  height: max-content;
   width: 70%;
   overflow-y: auto;
   padding: 1rem;

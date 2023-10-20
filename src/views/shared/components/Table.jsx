@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
@@ -7,7 +7,7 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
-
+import { GlobalContext } from "../../../context/global";
 const Table = ({
   data,
   columns,
@@ -119,10 +119,18 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
-    "Note":"note",
+    "Note": "note",
     "Account Number": "accountNumber",
-    "Code": "code" ,
+    "Code": "code",
   };
+
+  const { setHideShowSlider, setcontrolSlider} = useContext(GlobalContext);
+
+  const handleOpenCloseSlider = () => {
+    onAdd();
+    setcontrolSlider(true)
+    setHideShowSlider(true)
+  }
 
   const handleSearch = (row) => {
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
@@ -445,7 +453,7 @@ const Table = ({
       {showOptions && (
         <div className="button-container">
           <div className="action-buttons">
-            <button className="generic-button" onClick={onAdd}>
+            <button className="generic-button" onClick={handleOpenCloseSlider}>
               <i className="fas fa-plus menu-icon fa-3x"></i>
             </button>
 
@@ -583,7 +591,7 @@ const Table = ({
                 onClick={() => setShowColumnMenu(!showColumnMenu)}
               >
                 <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                
+
               </button>
             </div>
 
@@ -676,11 +684,10 @@ const Table = ({
             {filteredData.map((row) => (
               <tr
                 key={row.id}
-                className={`table-row  tr-margen${
-                  selectedRow && selectedRow.id === row.id
+                className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
                     ? "table-primary"
                     : ""
-                }`}
+                  }`}
                 onClick={() => onSelect(row)}
                 onContextMenu={(e) => handleContextMenu(e, row)}
               >
@@ -709,8 +716,8 @@ const Table = ({
                       ) : columnNameToProperty[columnName]?.includes(".") ? (
                         getPropertyValue(row, columnNameToProperty[columnName])
                       ) : Array.isArray(
-                          row[columnNameToProperty[columnName]]
-                        ) ? (
+                        row[columnNameToProperty[columnName]]
+                      ) ? (
                         row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                       ) : (
                         row[columnNameToProperty[columnName]]

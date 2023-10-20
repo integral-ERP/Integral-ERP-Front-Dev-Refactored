@@ -3,7 +3,7 @@
   background-size: cover; /* Hace que la imagen ocupe toda la pantalla */
   background-attachment: fixed; /* Fija la imagen para que no se desplace con el contenido */
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-position: 11px 50px;
   background-repeat: no-repeat;
 }
