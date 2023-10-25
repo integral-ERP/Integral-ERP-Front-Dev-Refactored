@@ -11,18 +11,179 @@
 
 }
 
+.modal-view{
+  overflow-y: hidden;
+  position: absolute;
+  background: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.589);
+  right: 100px;
+  padding: 10px;
+  margin-top: 45px;
+  border-radius: 10px;
+}
+
+.modal-view .modal-header{
+  padding: 10px;
+  border-bottom: 1px solid #000;
+}
+.modal-view .modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  gap: 10px;
+}
+
+.modal-view  .modal-content .modal-body{
+  width: 250px ;
+  height: 250px;
+  overflow-y: auto;
+  padding: 15px;
+}
+.modal-view .modal-content .modal-body label{
+  width: 100%;
+
+}
+.modal-view .modal-content .modal-body::-webkit-scrollbar {
+    width: 6px;
+    height: 30px;
+    margin-right: 5px;
+    padding: 10px;
+}
+
+.modal-view .modal-content .modal-body::-webkit-scrollbar-track {
+    width: 5px;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.modal-view .modal-content .modal-body::-webkit-scrollbar-thumb {
+    background-color: #153A61;
+    /* Ajusta el color del thumb si lo deseas */
+    border-radius: 3px;
+}
+
+//------------------------------------------------------------//
+.modal-filter{
+  overflow-y: hidden;
+  position: absolute;
+  background: white;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.589);
+  top: 75px;
+  right: 100px;
+  padding: 10px;
+  margin-top: 45px;
+  border-radius: 10px;
+}
+
+
+.modal-filter .modal-header{
+  padding: 10px;
+  border-bottom: 1px solid #000;
+
+}
+
+.modal-filter .modal-header h5{
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  font-size: medium;
+  color: #7F8C8D;
+}
+
+.modal-filter .modal-footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  gap: 10px;
+}
+
+.modal-filter  .modal-content .modal-body{
+  width: 350px ;
+  height: 235px;
+  overflow-y: auto;
+  padding: 15px;
+}
+.modal-filter .modal-content .modal-body label{
+  width: 100%;
+
+}
+.modal-filter .modal-content .modal-body::-webkit-scrollbar {
+    width: 6px;
+    height: 30px;
+    margin-right: 5px;
+    padding: 10px;
+}
+
+.modal-filter .modal-content .modal-body::-webkit-scrollbar-track {
+    width: 5px;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.modal-filter .modal-content .modal-body::-webkit-scrollbar-thumb {
+    background-color: #153A61;
+    /* Ajusta el color del thumb si lo deseas */
+    border-radius: 3px;
+}
+
+.modal-filter .modal-content .modal-body .date-filter .date-range{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.modal-filter .modal-content .modal-body .date-filter .date-range .date-box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 0px;
+}
+.modal-filter .modal-content .modal-body .date-filter .date-range .date-box .date-label{
+  color: #153A61;
+  font-weight: bold;
+  border: 2px solid #E0E0E0;
+  padding: 0px 5px;
+  border-radius: 5px;
+}
+
+
+.modal-filter .modal-content .modal-body .date-filter .date-range .react-datepicker{
+  background-color: transparent;
+  border: none;
+}
+
+.modal-filter .modal-content .modal-body .date-filter .date-range .react-datepicker .react-datepicker__header{
+  border: none;
+  background-color: transparent;
+}
+
+
+
+//-------------------------------------------------------------//
 .modal-body {
+// display: flex;
+// flex-wrap: wrap; /* Allow items to wrap to the next row */
+// justify-content: space-between; /* Distribute items evenly horizontally */
+// align-content: flex-start; /* Align items at the start of each row */
+// max-width: 400px; /* Adjust the maximum width as needed */
+// margin: 0 auto; /* Center the content horizontally */
 display: flex;
-flex-wrap: wrap; /* Allow items to wrap to the next row */
-justify-content: space-between; /* Distribute items evenly horizontally */
-align-content: flex-start; /* Align items at the start of each row */
-max-width: 400px; /* Adjust the maximum width as needed */
-margin: 0 auto; /* Center the content horizontally */
+width: 100px;
+flex-direction: column;
+justify-content: start;
+
+
+
 }
 
 .modal-body label {
-width: 45%; /* Adjust the width to control the number of columns */
-margin-bottom: 10px; /* Add some vertical spacing between rows */
+width: 0px; /* Adjust the width to control the number of columns */
+margin-bottom: 10px;
+display: flex; /* Add some vertical spacing between rows */
 }
 
 .colums-form {
@@ -92,15 +253,15 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 
 .text-head{
-  background-color: #CED3D9;
   font-size: small;
   white-space: nowrap;
   border: solid 0px rgba(180, 180, 180);
 
 }
 .th-separate{
-  border-radius: 8px;
   white-space: pre-line;
+  color: #153A61;
+  padding: 10px;
 }
 .add-select{
   width: 5rem;
@@ -115,7 +276,7 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 }
 // --------------------------------------------
 .containerr {
-  display: grid;
+  display: flex;
   grid-template-areas: "cont-one cont-two cont-three";
   font-size: initial;
   font-weight: bolder;
@@ -124,6 +285,10 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
 .cont-one { 
   width: 100%;
   grid-area: cont-one; 
+  border-radius: 2px;
+  box-shadow: 0px 1px 10px;
+  padding: 10px;
+  margin: 10px;
   &__space{
     margin: 1.3rem 0 0 0;
     width: 100%;
@@ -131,6 +296,7 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
     display: flex;
     flex-direction: column;
     align-items: center;
+    
   }}
 
 .cont-two { 
@@ -138,6 +304,10 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
   grid-area: cont-two; 
   &__space{
     margin: 1.3rem 0 0 0;
+    border-radius: 2px;
+    box-shadow: 0px 1px 10px;
+    padding: 10px;
+    margin: 10px;
   }
   &__space{
     width: 100%;
@@ -145,9 +315,17 @@ margin-bottom: 10px; /* Add some vertical spacing between rows */
     display: flex;
     flex-direction: column;
     align-items: center;
+    
   }
 }
 
+.cont-three__space{
+  border-radius: 2px;
+  box-shadow: 0px 1px 10px;
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+}
 // -----------------------------------------------------
 .button-save {
   width: 10rem;

@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 import { GlobalContext } from "../../../context/global";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 const Table = ({
   data,
   columns,
@@ -30,8 +33,8 @@ const Table = ({
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [dateFilter, setDateFilter] = useState("all");
-  const [startDate, setstartDate] = useState("");
-  const [finishDate, setfinishDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const navigate = useNavigate();
   const currentDate = new Date();
@@ -124,13 +127,14 @@ const Table = ({
     "Code": "code",
   };
 
-  const { setHideShowSlider, setcontrolSlider} = useContext(GlobalContext);
+  const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const handleOpenCloseSlider = () => {
     onAdd();
     setcontrolSlider(true)
     setHideShowSlider(true)
   }
+
 
   const handleSearch = (row) => {
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
@@ -432,52 +436,11 @@ const Table = ({
           <div className="title-container">
             <h1 className="title">{title}</h1>
           </div>
-          <div className="export-dropdown">
-            <label className="laver-export">
-              <span className="text-export">Export Format:</span>
-              <select value={selectedFormat} onChange={handleFormatChange}>
-                <option value="">Select Format</option>
-                <option value="json">JSON</option>
-                <option value="csv">CSV</option>
-                <option value="pdf">PDF</option>
-                <option value="xml">XML</option>
-              </select>
-            </label>
-            <button className="generic-button" onClick={handleExport}>
-              <i className="fas fa-file-export menu-icon fa-3x"></i>
-            </button>
-          </div>
         </div>
       )}
 
       {showOptions && (
         <div className="button-container">
-          <div className="action-buttons">
-            <button className="generic-button" onClick={handleOpenCloseSlider}>
-              <i className="fas fa-plus menu-icon fa-3x"></i>
-            </button>
-
-            <button className="generic-button ne" onClick={onEdit}>
-              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-            </button>
-            <button className="generic-button ne" onClick={onDelete}>
-              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-            </button>
-
-            <input
-              type="file"
-              accept=".json, .csv, .xml"
-              onChange={handleImport}
-              className="hidden-input"
-              id="import-input"
-            />
-            <button className="generic-button ne" onClick={onDelete}>
-              <i
-                className="fas fa-upload menu-icon fa-3x"
-                onClick={() => document.getElementById("import-input").click()}
-              ></i>
-            </button>
-          </div>
           <div className="position-search">
             <div className="search">
               <div className="search-container">
@@ -489,9 +452,35 @@ const Table = ({
                   className="search-input"
                 />
               </div>
+              <div className="action-buttons">
+                <button className="generic-button" onClick={handleOpenCloseSlider}>
+                  <i className="fas fa-plus menu-icon fa-3x"></i>
+                </button>
+
+                <button className="generic-button ne" onClick={onEdit}>
+                  <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+                </button>
+                <button className="generic-button ne" onClick={onDelete}>
+                  <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+                </button>
+
+                <input
+                  type="file"
+                  accept=".json, .csv, .xml"
+                  onChange={handleImport}
+                  className="hidden-input"
+                  id="import-input"
+                />
+                <button className="generic-button ne" onClick={onDelete}>
+                  <i
+                    className="fas fa-upload menu-icon fa-3x"
+                    onClick={() => document.getElementById("import-input").click()}
+                  ></i>
+                </button>
+              </div>
               {showFilterMenu && (
                 <div
-                  className="modal"
+                  className="modal-filter"
                   style={{ display: showFilterMenu ? "block" : "none" }}
                 >
                   <div className="modal-dialog" role="document">
@@ -510,22 +499,23 @@ const Table = ({
                       </div>
                       <div className="modal-body">
                         <div className="date-filter">
-                          <label>Date Filter:</label>
                           <div className="date-range">
-                            <label>Start Date:</label>
-                            <input
-                              type="date"
-                              value={startDate}
-                              onChange={(e) => setstartDate(e.target.value)}
-                            />
-                          </div>
-                          <div className="date-range">
-                            <label>End Date:</label>
-                            <input
-                              type="date"
-                              value={finishDate}
-                              onChange={(e) => setfinishDate(e.target.value)}
-                            />
+                            <div className="date-box">
+                              <span className="date-label">Start Date:</span>
+                              <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                inline
+                              />
+                            </div>
+                            <div className="date-box">
+                              <span className="date-label">End Date:</span>
+                              <DatePicker
+                                selected={finishDate}
+                                onChange={(date) => setFinishDate(date)}
+                                inline
+                              />
+                            </div>
                           </div>
                           <select
                             value={dateFilter}
@@ -586,25 +576,11 @@ const Table = ({
                   </div>
                 </div>
               )}
-              <button
-                className="generic-button"
-                onClick={() => setShowColumnMenu(!showColumnMenu)}
-              >
-                <i className="fas fa-eye menu-icon fa-3x ne"></i>
 
-              </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setShowFilterMenu(!showFilterMenu)}
-              className="generic-button"
-            >
-              <i className="fas fa-filter menu-icon fa-3x ne"></i>
-            </button>
             {showColumnMenu && (
               <div
-                className="modal"
+                className="modal-view"
                 style={{ display: showColumnMenu ? "block" : "none" }}
               >
                 <div className="modal-dialog" role="document">
@@ -657,6 +633,37 @@ const Table = ({
               </div>
             )}
           </div>
+          <div className="export-box">
+            <div className="export-dropdown">
+              <label className="laver-export">
+                <span className="text-export">Export Format:</span>
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div>
+            <button
+              className="generic-button"
+              onClick={() => setShowColumnMenu(!showColumnMenu)}
+            >
+              <i className="fas fa-eye menu-icon fa-3x ne"></i>
+
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="generic-button"
+            >
+              <i className="fas fa-filter menu-icon fa-3x ne"></i>
+            </button>
+          </div>
         </div>
       )}
       <div className="generic-table">
@@ -685,8 +692,8 @@ const Table = ({
               <tr
                 key={row.id}
                 className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                    ? "table-primary"
-                    : ""
+                  ? "table-primary"
+                  : ""
                   }`}
                 onClick={() => onSelect(row)}
                 onContextMenu={(e) => handleContextMenu(e, row)}
