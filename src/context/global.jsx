@@ -5,13 +5,12 @@ export const GlobalProvider = ({ children }) => {
 
     const [hideShowSlider, setHideShowSlider] = useState(false);
 
-    const [controlSlider, setcontrolSlider] = useState("otro-vacio");
+    const [controlSlider, setcontrolSlider] = useState(true);
     const values = useMemo(() => ({
         hideShowSlider,
         setHideShowSlider, controlSlider, setcontrolSlider
     }), 
     [hideShowSlider, setHideShowSlider, controlSlider, setcontrolSlider]);
 
-    return (<GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>)
-    
+    return (<GlobalContext.Provider value={values}>{children}</GlobalContext.Provider>)  
 }

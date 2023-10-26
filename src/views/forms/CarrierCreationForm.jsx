@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import CarrierService from "../../services/CarrierService";
 import Alert from "@mui/material/Alert";
@@ -213,13 +213,12 @@ const CarrierCreationForm = ({
       methodCode: selectedCarrierType,
     });
   };
-  
-  const[ColorPestaña] = useState(true);
+
   return (
     <div className="company-form">
       <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation" style={ColorPestaña ? {background:"blue", border: "2px solid red"}:{background:"#C1C1C1"}}>
-          <a style={ColorPestaña ? {color:"white"}:{color:"black"}}
+        <li className="nav-item" role="presentation">
+          <a
             className="nav-link"
             data-bs-toggle="tab"
             href="#general"
@@ -227,7 +226,7 @@ const CarrierCreationForm = ({
             onClick={() => setActiveTab("general")}
             role="tab"
           >
-            Genera
+            General
           </a>
         </li>
         <li className="nav-item" role="presentation">

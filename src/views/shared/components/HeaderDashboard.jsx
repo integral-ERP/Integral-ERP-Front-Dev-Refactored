@@ -4,10 +4,10 @@ import BUTTONS_LIST from "../../../constants/dashboard"
 import "../../../styles/components/HeaderDashboard.scss"
 import { GlobalContext } from "../../../context/global"
 
-    const HeaderDashboard = () => {
+const HeaderDashboard = () => {
     const { hideShowSlider } = useContext(GlobalContext)
 
-    return (<div className= "header-dashboard__container" style={ !hideShowSlider ? { marginLeft: "32rem" } : {marginInline:"auto"} }>
+    return (<div className="header-dashboard__container" style={!hideShowSlider ? { marginLeft: "32rem" } : { marginInline: "auto" }}>
         <header>
             <div>
                 <h1>HOME</h1>
