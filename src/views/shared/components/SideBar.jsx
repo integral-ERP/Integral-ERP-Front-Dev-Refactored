@@ -98,7 +98,7 @@ const Sidebar = () => {
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
               </li>
               <li>
-                <Link to={"/warehouse/reception"}>Reception</Link>
+                <Link to={"/warehouse/receipt"}>Reception</Link>
               </li>
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
@@ -233,8 +233,6 @@ const Sidebar = () => {
               <li>
                 <Link to={"/accounting/itemsandservices"}>
                   Items & Services
-                <Link to={"/accounting/itemsandservices"}>
-                  Items & Services
                 </Link>
               </li>
               <li>
@@ -310,7 +308,7 @@ const Sidebar = () => {
                 <Link to={"/agent/search"}>Search </Link>
               </li>
               <li>
-                <Link to={"/warehouse/reception"}>Reception</Link>
+                <Link to={"/warehouse/receipt"}>Reception</Link>
               </li>
               <li>
                 <Link to={"shipments"}>Shipment List</Link>
