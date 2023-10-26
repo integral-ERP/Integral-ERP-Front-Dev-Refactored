@@ -1,9 +1,8 @@
 import "../styles/pages/Dashboard.scss";
 import Sidebar from "./shared/components/SideBar"
 import { useState, useEffect } from "react";
-import NavBar from "./shared/components/NavBar";
 import TRMService from "../services/TRMService";
-import HeaderDashboard from "./shared/components/headerDashboard";
+import HeaderDashboard from "./shared/components/HeaderDashboard";
 import DashboardReport from "./shared/components/DashboardReport";
 const Dashboard = () => {
 
@@ -20,7 +19,6 @@ const Dashboard = () => {
   return (
     <div className="dashboard__layout">
       <div className="dashboard__sidebar">
-      
         <Sidebar />
         <HeaderDashboard />
         <DashboardReport />
