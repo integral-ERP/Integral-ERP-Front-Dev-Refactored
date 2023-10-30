@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Table from "../shared/components/Table";
+import ReceiptService from "../../services/ReceiptService";
 import AsyncSelect from "react-select/async";
 import ReleaseService from "../../services/ReleaseService";
 const ReleaseOrderCreationForm = ({
@@ -25,7 +25,6 @@ const ReleaseOrderCreationForm = ({
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [formDataUpdated, setFormDataUpdated] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
@@ -33,21 +32,24 @@ const ReleaseOrderCreationForm = ({
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [clientToBill, setClientToBill] = useState(null);
+  const [releasedTo, setReleasedTo] = useState(null);
   const today = dayjs().format("YYYY-MM-DD");
-  const pickupNumber = currentReleaseNumber + 1;
+  const pickupNumber = currentReleaseNumber ? currentReleaseNumber + 1 : 1;
   const [canRender, setcanRender] = useState(false);
   const [commodities, setcommodities] = useState([]);
-
+  const [selectedReceipts, setSelectedReceipts] = useState([]);
+  const [selectedCommodities, setSelectedCommodities] = useState([]);
+  const [warehouseReceipts, setWarehouseReceipts] = useState([]);
   const formFormat = {
     status: 3,
-    number: 0,
+    number: 1,
     creation_date: today,
     release_date: today,
     employeeId: "",
     issuedById: "",
     issuedByType: "",
     releasedToId: "",
-    releasodToType: "",
+    releasedToType: "",
     releasedToInfo: "",
     clientToBillId: "",
     clientToBillType: "",
@@ -93,18 +95,30 @@ const ReleaseOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    const type = event.target.value;
-    const id =
-      type === "shipper"
-        ? formData.shipperId
-        : type === "consignee"
-        ? formData.consigneeId
-        : "";
-    setFormData({
-      ...formData,
-      clientToBillId: id,
-      clientToBillType: type,
-    });
+    console.log(event.target);
+    const type = event.target?.value || "";
+    if (type === "other") {
+      setFormData({ ...formData, clientToBillType: type });
+    } else if (type === "releasedTo") {
+      setFormData({
+        ...formData,
+        clientToBillType: formData.releasedToType,
+        clientToBillId: formData.releasedToId,
+      });
+      console.log(
+        "CHANGING CLIENT TO BILL TYPE",
+        type,
+        "RELEASE ID",
+        formData.releasedToId,
+        "RELEASE TYPE",
+        formData.releasedToType
+      );
+    } else {
+      const id = event.id;
+      const type = event.type;
+      console.log("id", id, "type", type);
+      setFormData({ ...formData, clientToBillType: type, clientToBillId: id });
+    }
   };
 
   const handleMainCarrierSelection = async (event) => {
@@ -119,17 +133,17 @@ const ReleaseOrderCreationForm = ({
     const id = event.id;
     const type = event.type;
     let result;
-    if(type === "customer"){
-        result = await CustomerService.getCustomerById(id);
+    if (type === "customer") {
+      result = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
-        result = await VendorService.getVendorByID(id);
+    if (type === "vendor") {
+      result = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
-        result = await ForwardingAgentService.getForwardingAgentById(id);
+    if (type === "agent") {
+      result = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if(type === "carrier"){
-        result = await CarrierService.getCarrierById(id);
+    if (type === "carrier") {
+      result = await CarrierService.getCarrierById(id);
     }
     const info = `${result.data.street_and_number || ""} - ${
       result.data.city || ""
@@ -140,9 +154,31 @@ const ReleaseOrderCreationForm = ({
       ...formData,
       releasedToId: id,
       releasedToInfo: info,
-      releasodToType: type
+      releasedToType: type,
     });
-  }
+  };
+
+  const handleReceiptSelection = (receiptNumber) => {
+    if (selectedReceipts.includes(receiptNumber)) {
+      setSelectedReceipts(
+        selectedReceipts.filter((num) => num !== receiptNumber)
+      );
+    } else {
+      setSelectedReceipts([...selectedReceipts, receiptNumber]);
+    }
+  };
+
+  // Function to handle selecting/unselecting a commodity within a receipt
+  const handleCommoditySelection = (receiptNumber, commodityID) => {
+    // TODO: FIX BUG MULTIPLE COMMODITIES WITH SAME ID
+    const commodityList = []
+    warehouseReceipts.forEach((receipt) => {
+      commodityList.push(...receipt.commodities)
+    })
+    const commodity = commodityList.find((com) => com.id == commodityID); // Use === to compare IDs
+    
+    setcommodities([...commodities, commodity])
+  };
 
   useEffect(() => {
     console.log(
@@ -223,10 +259,22 @@ const ReleaseOrderCreationForm = ({
     setCarrierOptions(carrierOptions);
   };
 
+  const fetchReceipts = async () => {
+    ReceiptService.getReceipts()
+      .then((response) => {
+        const newreceipts = response.data.results;
+        setWarehouseReceipts([...newreceipts]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
     if (creating) {
       fetchFormData();
     }
+    fetchReceipts();
   }, []);
 
   useEffect(() => {
@@ -236,24 +284,80 @@ const ReleaseOrderCreationForm = ({
   }, [pickupNumber]);
 
   const sendData = async () => {
-    let clientToBillName = "";
-    if (formData.clientToBillType === "shipper") {
-      clientToBillName = "shipperid";
+    let releasedToName = "";
+    if (formData.releasedToType === "customer") {
+      releasedToName = "customerid";
     }
-    if (formData.clientToBillType === "consignee") {
-      clientToBillName = "consigneeid";
+    if (formData.releasedToType === "vendor") {
+      releasedToName = "vendorid";
+    }
+    if (formData.releasedToType === "agent") {
+      releasedToName = "agentid";
+    }
+    if (formData.releasedToType === "carrier") {
+      releasedToName = "carrierid";
+    }
+
+    if (releasedToName !== "") {
+      const releasedToC = {
+        [releasedToName]: formData.releasedToId,
+      };
+
+      const response = await ReleaseService.createReleasedTo(releasedToC);
+      if (response.status === 201) {
+        console.log("RELEASED TO ID", response.data.id);
+        setReleasedTo(response.data.id);
+      }
+    }
+    let clientToBillName = "";
+
+    if (formData.releasedToType === "releasedTo") {
+      switch (formData.releasedToType) {
+        case "customer":
+          clientToBillName = "customerid";
+          break;
+        case "vendor":
+          clientToBillName = "vendorid";
+          break;
+        case "agent":
+          clientToBillName = "agentid";
+          break;
+        case "carrier":
+          clientToBillName = "carrierid";
+          break;
+        default:
+          break;
+      }
+    }
+    if (formData.clientToBillType === "customer") {
+      clientToBillName = "customerid";
+    }
+    if (formData.clientToBillType === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.clientToBillType === "agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.clientToBillType === "carrier") {
+      clientToBillName = "carrierid";
     }
     if (clientToBillName !== "") {
       const clientToBill = {
         [clientToBillName]: formData.clientToBillId,
       };
 
-      const response = await ReleaseService.createClientToBill(clientToBill);
+      const response = await ReleaseService.createReleasedTo(clientToBill);
       if (response.status === 201) {
         console.log("CLIENT TO BILL ID", response.data.id);
         setClientToBill(response.data.id);
       }
     }
+    console.log(
+      "SENDING DATA",
+      clientToBillName,
+      "type",
+      formData.clientToBillType
+    );
   };
 
   const checkUpdatesComplete = () => {
@@ -261,6 +365,11 @@ const ReleaseOrderCreationForm = ({
       setAllStateUpdatesComplete(true);
     }
   };
+
+  const addSingleCommodity = (commodity) => {
+    setcommodities([...commodities, commodity]);
+    console.log("COMMODITIES", commodities);
+  }
 
   useEffect(() => {
     checkUpdatesComplete();
@@ -271,19 +380,19 @@ const ReleaseOrderCreationForm = ({
           number: formData.number,
           creation_date: formData.creation_date,
           release_date: formData.release_date,
-          employeeId: formData.employeeId,
-          issuedById: formData.issuedById,
+          employee: formData.employeeId,
+          issued_by: formData.issuedById,
           issuedByType: formData.issuedByType,
-          releasedToId: formData.releasedToId,
-          releasodToType: formData.releasodToType,
-          clientToBillId: formData.clientToBillId,
-          clientToBillType: formData.clientToBillType,
-          carrierId: formData.carrierId,
+          released_to: releasedTo,
+          releasodToType: formData.releasedToType,
+          client_to_bill: clientToBill,
+          client_to_bill_type: formData.clientToBillType,
+          carrier: formData.carrierId,
           pro_number: formData.pro_number,
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
-          warehouseReceiptId: formData.warehouseReceiptId,
-          commodities: formData.commodities,
+          warehouse_receipt: formData.warehouseReceiptId,
+          commodities: commodities,
         };
         const response = await (creating
           ? ReleaseService.createRelease(rawData)
@@ -312,7 +421,7 @@ const ReleaseOrderCreationForm = ({
   }, [allStateUpdatesComplete, clientToBill]);
 
   return (
-<div className="company-form">
+    <div className="company-form">
       <ul className="nav nav-tabs" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -461,7 +570,7 @@ const ReleaseOrderCreationForm = ({
                 )
               ) : (
                 <AsyncSelect
-                  id="destinationAgent"
+                  id="releasedTo"
                   onChange={(e) => {
                     handleReleasedToSelection(e);
                   }}
@@ -474,6 +583,38 @@ const ReleaseOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               )}
+            </div>
+            <div className="company-form__section">
+              <label htmlFor="clientToBill" className="form-label">
+                Client to Bill:
+              </label>
+              <select
+                name="clientToBill"
+                id="clientToBill"
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+              >
+                <option value="">Select an Option</option>
+                <option value="releasedTo">Released To</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div className="company-form__section">
+              <AsyncSelect
+                id="releasedToOther"
+                isDisabled={formData.clientToBillType !== "other"}
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+                value={releasedToOptions.find(
+                  (option) => option.id === formData.releasedToId
+                )}
+                isClearable={true}
+                defaultOptions={releasedToOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
             </div>
           </div>
         </div>
@@ -539,7 +680,10 @@ const ReleaseOrderCreationForm = ({
                 placeholder="Purchase Order Number..."
                 value={formData.purchase_order_number}
                 changeHandler={(e) =>
-                  setFormData({ ...formData, purchase_order_number: e.target.value })
+                  setFormData({
+                    ...formData,
+                    purchase_order_number: e.target.value,
+                  })
                 }
                 label="Purchase Order Number"
               />
@@ -554,89 +698,36 @@ const ReleaseOrderCreationForm = ({
         id="cargo"
         style={{ display: activeTab === "cargo" ? "block" : "none" }}
       >
-        <div className="company-form__section">
-          <button
-            type="button"
-            className="btn btn-primary btn-lg charge-buttons"
-            onClick={() => {
-              setshowIncomeForm(!showIncomeForm);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-            >
-              <path
-                d="M19.1426 23.6543C17.8477 24.123 16.4531 24.375 15 24.375C13.5469 24.375 12.1465 24.1172 10.8574 23.6543C10.8398 23.6484 10.8281 23.6426 10.8105 23.6367C9.05273 22.9922 7.48242 21.9551 6.20508 20.625C4.10156 18.4336 2.8125 15.4629 2.8125 12.1875C2.8125 5.45508 8.26758 0 15 0C21.7324 0 27.1875 5.45508 27.1875 12.1875C27.1875 15.4629 25.8984 18.4336 23.7949 20.625C23.7363 20.6836 23.6777 20.748 23.6191 20.8066C22.3652 22.0605 20.8418 23.0391 19.1484 23.6543H19.1426ZM15 5.38477C14.3496 5.38477 13.8223 5.91211 13.8223 6.5625V6.91406C13.4941 6.98438 13.1836 7.08398 12.8906 7.21289C12.0117 7.61133 11.2559 8.34961 11.0684 9.42188C10.9629 10.0195 11.0215 10.5938 11.2676 11.1211C11.5137 11.6367 11.8945 12 12.2812 12.2637C12.9609 12.7266 13.8574 12.9961 14.543 13.2012L14.6719 13.2422C15.4863 13.4883 16.043 13.6758 16.3887 13.9277C16.5352 14.0332 16.5879 14.1152 16.6055 14.1621C16.623 14.209 16.6582 14.3145 16.6172 14.5547C16.582 14.7598 16.4707 14.9297 16.1484 15.0703C15.791 15.2227 15.2109 15.2988 14.4609 15.1816C14.1094 15.123 13.4824 14.9121 12.9258 14.7188C12.7969 14.6777 12.6738 14.6309 12.5508 14.5957C11.9355 14.3906 11.2734 14.7246 11.0684 15.3398C10.8633 15.9551 11.1973 16.6172 11.8125 16.8223C11.8828 16.8457 11.9707 16.875 12.0703 16.9102C12.5332 17.0684 13.2598 17.3145 13.8164 17.4434V17.8125C13.8164 18.4629 14.3438 18.9902 14.9941 18.9902C15.6445 18.9902 16.1719 18.4629 16.1719 17.8125V17.4902C16.4824 17.4316 16.7871 17.3438 17.0742 17.2207C17.9941 16.8281 18.7383 16.0664 18.9258 14.9531C19.0312 14.3438 18.9844 13.7637 18.75 13.2305C18.5215 12.7031 18.1523 12.3164 17.7598 12.0293C17.0449 11.5137 16.1016 11.2266 15.3926 11.0098L15.3457 10.998C14.5137 10.7461 13.9512 10.5703 13.5938 10.3301C13.4414 10.2246 13.3945 10.1543 13.3828 10.125C13.3711 10.1074 13.3418 10.0312 13.377 9.83203C13.3945 9.7207 13.4883 9.52734 13.8574 9.35742C14.2324 9.1875 14.8184 9.09375 15.5332 9.20508C15.7852 9.24609 16.582 9.39844 16.8047 9.45703C17.4316 9.62109 18.0703 9.25195 18.2402 8.625C18.4102 7.99805 18.0352 7.35938 17.4082 7.18945C17.1504 7.11914 16.5645 7.00195 16.1777 6.93164V6.5625C16.1777 5.91211 15.6504 5.38477 15 5.38477ZM2.8125 20.625H3.75C4.89258 22.1426 6.32812 23.4199 7.98047 24.375H3.75V26.25H15H26.25V24.375H22.0195C23.6719 23.4199 25.1133 22.1426 26.25 20.625H27.1875C28.7402 20.625 30 21.8848 30 23.4375V27.1875C30 28.7402 28.7402 30 27.1875 30H2.8125C1.25977 30 0 28.7402 0 27.1875V23.4375C0 21.8848 1.25977 20.625 2.8125 20.625Z"
-                fill="#24AF0D"
+        {warehouseReceipts.map((receipt) => (
+          <div key={receipt.number}>
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedReceipts.includes(receipt.number)}
+                onChange={() => handleReceiptSelection(receipt.number)}
               />
-            </svg>
-            Add Income Charge
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary btn-lg charge-buttons"
-            onClick={() => {
-              setshowExpenseForm(!showExpenseForm);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-            >
-              <path
-                d="M19.1426 23.6543C17.8477 24.123 16.4531 24.375 15 24.375C13.5469 24.375 12.1465 24.1172 10.8574 23.6543C10.8398 23.6484 10.8281 23.6426 10.8105 23.6367C9.05273 22.9922 7.48242 21.9551 6.20508 20.625C4.10156 18.4336 2.8125 15.4629 2.8125 12.1875C2.8125 5.45508 8.26758 0 15 0C21.7324 0 27.1875 5.45508 27.1875 12.1875C27.1875 15.4629 25.8984 18.4336 23.7949 20.625C23.7363 20.6836 23.6777 20.748 23.6191 20.8066C22.3652 22.0605 20.8418 23.0391 19.1484 23.6543H19.1426ZM15 5.38477C14.3496 5.38477 13.8223 5.91211 13.8223 6.5625V6.91406C13.4941 6.98438 13.1836 7.08398 12.8906 7.21289C12.0117 7.61133 11.2559 8.34961 11.0684 9.42188C10.9629 10.0195 11.0215 10.5938 11.2676 11.1211C11.5137 11.6367 11.8945 12 12.2812 12.2637C12.9609 12.7266 13.8574 12.9961 14.543 13.2012L14.6719 13.2422C15.4863 13.4883 16.043 13.6758 16.3887 13.9277C16.5352 14.0332 16.5879 14.1152 16.6055 14.1621C16.623 14.209 16.6582 14.3145 16.6172 14.5547C16.582 14.7598 16.4707 14.9297 16.1484 15.0703C15.791 15.2227 15.2109 15.2988 14.4609 15.1816C14.1094 15.123 13.4824 14.9121 12.9258 14.7188C12.7969 14.6777 12.6738 14.6309 12.5508 14.5957C11.9355 14.3906 11.2734 14.7246 11.0684 15.3398C10.8633 15.9551 11.1973 16.6172 11.8125 16.8223C11.8828 16.8457 11.9707 16.875 12.0703 16.9102C12.5332 17.0684 13.2598 17.3145 13.8164 17.4434V17.8125C13.8164 18.4629 14.3438 18.9902 14.9941 18.9902C15.6445 18.9902 16.1719 18.4629 16.1719 17.8125V17.4902C16.4824 17.4316 16.7871 17.3438 17.0742 17.2207C17.9941 16.8281 18.7383 16.0664 18.9258 14.9531C19.0312 14.3438 18.9844 13.7637 18.75 13.2305C18.5215 12.7031 18.1523 12.3164 17.7598 12.0293C17.0449 11.5137 16.1016 11.2266 15.3926 11.0098L15.3457 10.998C14.5137 10.7461 13.9512 10.5703 13.5938 10.3301C13.4414 10.2246 13.3945 10.1543 13.3828 10.125C13.3711 10.1074 13.3418 10.0312 13.377 9.83203C13.3945 9.7207 13.4883 9.52734 13.8574 9.35742C14.2324 9.1875 14.8184 9.09375 15.5332 9.20508C15.7852 9.24609 16.582 9.39844 16.8047 9.45703C17.4316 9.62109 18.0703 9.25195 18.2402 8.625C18.4102 7.99805 18.0352 7.35938 17.4082 7.18945C17.1504 7.11914 16.5645 7.00195 16.1777 6.93164V6.5625C16.1777 5.91211 15.6504 5.38477 15 5.38477ZM2.8125 20.625H3.75C4.89258 22.1426 6.32812 23.4199 7.98047 24.375H3.75V26.25H15H26.25V24.375H22.0195C23.6719 23.4199 25.1133 22.1426 26.25 20.625H27.1875C28.7402 20.625 30 21.8848 30 23.4375V27.1875C30 28.7402 28.7402 30 27.1875 30H2.8125C1.25977 30 0 28.7402 0 27.1875V23.4375C0 21.8848 1.25977 20.625 2.8125 20.625Z"
-                fill="red"
-              />
-            </svg>
-            Add Expense Charge
-          </button>
-          {showIncomeForm && (
-            <IncomeChargeForm
-              onCancel={setshowIncomeForm}
-              charges={charges}
-              setcharges={setcharges}
-              commodities={commodities}
-              agent={agent}
-              consignee={consignee}
-              shipper={shipper}
-            ></IncomeChargeForm>
-          )}
-          {showExpenseForm && (
-            <ExpenseChargeForm
-              onCancel={setshowIncomeForm}
-              charges={charges}
-              setcharges={setcharges}
-              commodities={commodities}
-              agent={agent}
-              consignee={consignee}
-              shipper={shipper}
-            ></ExpenseChargeForm>
-          )}
-        </div>
-        <Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => {}} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          onAdd={() => {}}
-          showOptions={false}
-        />
+              {receipt.number}
+            </label>
+            {selectedReceipts.includes(receipt.number) &&
+              receipt.commodities.length > 0 && (
+                <select
+                  multiple
+                  value={selectedCommodities
+                    .filter((item) => item.receiptNumber === receipt.number)
+                    .map((item) => item.commodities)}
+                  onChange={(e) =>
+                    handleCommoditySelection(receipt.number, e.target.value)
+                  }
+                >
+                  {receipt.commodities.map((commodity) => (
+                    <option key={commodity.id} value={commodity.id}>
+                      {commodity.description}
+                    </option>
+                  ))}
+                </select>
+              )}
+          </div>
+        ))}
       </form>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
@@ -666,8 +757,8 @@ const ReleaseOrderCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Release Order. Please
-            try again
+            Error {creating ? "creating" : "updating"} Release Order. Please try
+            again
           </strong>
         </Alert>
       )}

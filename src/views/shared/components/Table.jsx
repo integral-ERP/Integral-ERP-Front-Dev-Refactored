@@ -7,7 +7,8 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
-
+import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
+import GenerateReleasePDF from "../../others/GenerateReleasePDF";
 const Table = ({
   data,
   columns,
@@ -122,6 +123,8 @@ const Table = ({
     "Note":"note",
     "Account Number": "accountNumber",
     "Code": "code" ,
+    "Release Date": "release_date",
+    "Released to": "releasedToObj.data.obj.name",
   };
 
   const handleSearch = (row) => {
@@ -188,6 +191,28 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
   };
+
+  const generatePDFReceipt = () => {
+    GenerateReceiptPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  }
+
+  const generatePDFRelease = () => {
+    GenerateReleasePDF(selectedRow)
+    .then((pdfUrl) => {
+      // Now you have the PDF URL, you can use it as needed
+      window.open(pdfUrl, "_blank");
+    })
+    .catch((error) => {
+      console.error("Error generating PDF:", error);
+    });
+  }
 
   const handleColumnVisibilityChange = (columnName) => {
     setVisibleColumns((prevVisibility) => ({
@@ -359,7 +384,7 @@ const Table = ({
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
     }
 
-    if (columnName === "View PDF") {
+    if (columnName === "View PDF" || columnName === 'View Receipt PDF') {
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
@@ -699,7 +724,15 @@ const Table = ({
                         <button type="button" onClick={generatePDF}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
-                      ) : typeof columnNameToProperty[columnName] ===
+                      ) : columnName === "View Receipt PDF" ? (
+                        <button type="button" onClick={generatePDFReceipt}>
+                          <i className="fas fa-file-pdf"></i>
+                        </button>
+                      ): columnName === "View Release PDF" ? (
+                        <button type="button" onClick={generatePDFRelease}>
+                          <i className="fas fa-file-pdf"></i>
+                        </button>
+                      ): typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
                           <i className="fas fa-check"></i>

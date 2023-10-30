@@ -1,783 +1,454 @@
-import "../../styles/components/MyCompanyForm.css";
-import CountriesService from "../../services/CountriesService";
-import CompanyService from "../../services/CompanyService";
-import CurrenciesService from "../../services/CurrencyService";
+import "../../styles/components/MyCompanyForm.css"
+import axios from "axios";
 import { useState, useEffect } from "react";
-import propTypes from "prop-types"; // Import propTypes from 'prop-types'
-const MyCompanyForm = (props) => {
-  const formFormat = {
-    companyType: {
-      logisticsProvi: false,
-      distribution: false,
-      airlineCarrier: false,
-      oceanCarrier: false,
-      companyWarehouse: false,
-    },
+const MyCompanyForm = () => {
+  const BASE_URL = import.meta.env.VITE_BASE_API_URL;
+  const [activeTab, setActiveTab] = useState("general");
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+  const [companyData, setCompanyData] = useState({});
+  const apiKey = import.meta.env.VITE_COUNTRIES_API_KEY;
+const countriesUrl = import.meta.env.VITE_COUNTRIES_API_URL;
 
-    importSchedule: {
-      schedulesB: false,
-      schedulesD: false,
-      schedulesK: false,
-    },
+const [countries, setCountries] = useState([]);
+const [selectedCountry, setSelectedCountry] = useState("");
+const [states, setStates] = useState([]);
+const [selectedState, setSelectedState] = useState("");
+const [cities, setCities] = useState([]);
 
-    companyInfo: {
-      nameCompany: "",
-      phone: 0,
-      fax: 0,
-      email: "",
-      webSide: "",
-      firstNameContac: "",
-      lasNameContac: "",
-    },
 
-    addressInfo: {
-      streetNumber: "",
-      city: "",
-      country: "",
-      state: "",
-      zipCode: "",
-    },
+const handleCountryChange = (event) => {
+  setSelectedCountry(
+    event.target.options[event.target.selectedIndex].getAttribute("data-key")
+  );
+};
 
-    CompanyLogo: {
-      imgName: "",
-      imgLogo: null,
-    },
+const handleStateChange = (event) => {
+  setSelectedState(
+    event.target.options[event.target.selectedIndex].getAttribute("data-key")
+  );
+};
 
-    companyRegisCode: {
-      iataCode: "",
-      fmc: "",
-      scacCodeUs: "",
-      tsaNumber: "",
-    },
-
-    newSystemCurrency: {
-      localCurrency: "",
-      companyMoreCurren: false,
-    },
+useEffect(() => {
+  const headers = {
+    "X-CSCAPI-KEY": apiKey,
   };
 
-  const [formData, setformData] = useState(formFormat);
-  const [activeTab, setActiveTab] = useState(0);
-  const [message, setMessage] = useState("");
-  const [currencies, setcurrencies] = useState({});
-  const [countries, setCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedCountryCode, setselectedCountryCode] = useState("");
-  const [selectedStateCode, setselectedStateCode] = useState("");
-  const [states, setStates] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
-  const [cities, setCities] = useState([]);
-  const [selectedFile, setselectedFile] = useState(null);
-  const [requestsError, setrequestsError] = useState(false);
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setselectedFile(URL.createObjectURL(file));
-    console.log("selected file:", selectedFile);
-    setformData({...formData, selectedFileName: file.name, rawFileLogo: file})
-  };
-
-  const handleRadioChange = (option) => {
-    const updatedCompanyType = {
-      logisticsProvi: false,
-      distribution: false,
-      airlineCarrier: false,
-      oceanCarrier: false,
-      companyWarehouse: false,
-    };
-    updatedCompanyType[option] = true;
-    switch (option) {
-      case "logisticsProvi":
-        setlogisticsProvi(true);
-        setdistribution(false);
-        setairlineCarrier(false);
-        setoceanCarrier(false);
-        setformData({...formData, logisticsProvi: true});
-        break;
-      case "distribution":
-        setlogisticsProvi(false);
-        setdistribution(true);
-        setairlineCarrier(false);
-        setoceanCarrier(false);
-
-        break;
-      case "airlineCarrier":
-        setlogisticsProvi(false);
-        setdistribution(false);
-        setairlineCarrier(true);
-        setoceanCarrier(false);
-
-        break;
-      case "oceanCarrier":
-        setlogisticsProvi(false);
-        setdistribution(false);
-        setairlineCarrier(false);
-        setoceanCarrier(true);
-
-        break;
-      default:
-        // If companyWarehouse is selected or none of the above, set it to true and others to false
-        setlogisticsProvi(false);
-        setdistribution(false);
-        setairlineCarrier(false);
-        setoceanCarrier(false);
-    }
-    setCompanyType(updatedCompanyType);
-  };
-
-  const handleScheduleSelection = (option) => {
-    const updatedSchedule = { ...importSchedule };
-    updatedSchedule[option] = true;
-    setimportSchedule(updatedSchedule);
-    switch (option) {
-      case "schedulesB":
-        setschedulesB(!schedulesB);
-        break;
-      case "schedulesD":
-        setschedulesD(!schedulesD);
-        break;
-      case "schedulesK":
-        setschedulesK(!schedulesK);
-        break;
-      default:
-        setschedulesB(false);
-        setschedulesD(false);
-        setschedulesK(false);
-    }
-  };
-
-  const warehouseSelected = (event) => {
-    const updatedCompanyType = { ...companyType };
-    updatedCompanyType.companyWarehouse = event.target.checked;
-    setcompanyWarehouse(event.target.checked);
-    setCompanyType(updatedCompanyType);
-  };
-
-  const handleNextButtonClick = () => {
-    if (activeTab < 6) {
-      setActiveTab(activeTab + 1);
-    } else {
-      sendInformation();
-    }
-  };
-
-  const handleBrowseButtonClick = () => {
-    document.getElementById("imageFile").click();
-  };
-
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      console.log(file);
-      if (!file) {
-        resolve(null); // Resolve with null when the file is empty or null
-      } else {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          if (reader.readyState === FileReader.DONE) {
-            resolve(reader.result);
-          } else {
-            reject("FileReader failed to read the file.");
-          }
-        };
-        reader.onerror = reject;
-      }
+  axios
+    .get(countriesUrl, { headers })
+    .then((response) => {
+      setCountries(response.data);
+    })
+    .catch((error) => {
+      console.log("error", error);
     });
+}, [countriesUrl, apiKey]);
 
-  // Function to convert an image URL to base64
-  async function imageUrlToBase64(imageUrl) {
-    try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      // Convert the Blob to a base64 data URL
-      const base64String = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => resolve(reader.result);
+useEffect(() => {
+  if (selectedCountry) {
+    const headers = {
+      "X-CSCAPI-KEY": apiKey,
+    };
+
+    axios
+      .get(countriesUrl + selectedCountry + "/states", { headers })
+      .then((response) => {
+        setStates(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
       });
-      return base64String;
-    } catch (error) {
-      console.error("Error fetching or converting the image:", error);
-      return null;
-    }
   }
-  useEffect(() => {
-    console.log(selectedStateCode, selectedState);
-    if (states) {
-      setselectedStateCode(selectedStateCode);
-    }
-  }, [selectedStateCode, states, selectedState]);
+}, [selectedCountry, countriesUrl, apiKey]);
 
-  useEffect(() => {
-    // ... (existing code)
+useEffect(() => {
+  if (selectedCountry && selectedState) {
+    const headers = {
+      "X-CSCAPI-KEY": apiKey,
+    };
 
-    // Clear the message after 3 seconds
-    if (message) {
-      const timerId = setTimeout(() => {
-        setMessage(null);
-      }, 3000);
-
-      return () => clearTimeout(timerId);
-    }
-  }, [message]);
-
-  useEffect(() => {
-    CurrenciesService.getCurrencies()
+    axios
+      .get(
+        countriesUrl + selectedCountry + "/states/" + selectedState + "/cities",
+        { headers }
+      )
       .then((response) => {
-        setcurrencies(response.data);
+        setCities(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching currencies:", error);
+        console.log("error", error);
       });
-  }, []);
-
-  // useEffect to fetch the data from backend for each request
-  useEffect(() => {
-    CompanyService.getCompanyType()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setcompanyWarehouse(data.companyWarehouse);
-          setlogisticsProvi(data.logisticsProvi);
-          setoceanCarrier(data.oceanCarrier);
-          setairlineCarrier(data.airlineCarrier);
-          setdistribution(data.distribution);
-          setCompanyType(data);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching company type data:", error);
-      });
-
-    CompanyService.getCompanyInfo()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setName(data.nameCompany || "");
-          setPhone(data.phone || "");
-          setFax(data.fax || "");
-          setEmail(data.email || "");
-          setWebsite(data.webSide || "");
-          setContactFirstName(data.firstNameContac || "");
-          setContactLastName(data.lasNameContac || "");
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching company info data:", error);
-      });
-
-    CompanyService.getAddress()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setStreetNumber(data.streetNumber);
-          setCity(data.city);
-          setSelectedCountry(data.country);
-          setSelectedState(data.state);
-          setZipCode(data.zipCode);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching address info data:", error);
-      });
-
-    CompanyService.getCompanyLogo()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setselectedFile(data.imgLogo);
-          setSelectedFileName(data.imgName);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching company logo data:", error);
-      });
-
-    CompanyService.getCompanyRegistrationCodes()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setIataCode(data.iataCode);
-          setFmc(data.fmc);
-          setCustomsCode(data.scacCodeUs);
-          setTsaNumber(data.tsaNumber);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching company registration code data:", error);
-      });
-
-    CompanyService.getCompanySystemCurrency()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setSelectedCurrency(data.localCurrency);
-          setSystemCurrencyRetrieved(data);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching system currency data:", error);
-      });
-
-    CompanyService.getCompanyImportSchedule()
-      .then((response) => {
-        const data = response.data.length > 0 ? response.data.pop() : null;
-        if (data) {
-          setcompanyExists(true);
-          setcompanyID(data.id);
-          setschedulesB(data.schedulesB);
-          setschedulesD(data.schedulesD);
-          setschedulesK(data.schedulesK);
-          setimportSchedule(data);
-        }
-      })
-      .catch((error) => {
-        console.log("Error fetching import schedule data:", error);
-      });
-  }, []);
+  }
+}, [selectedCountry, selectedState, countriesUrl, apiKey]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const countriesData = await CountriesService.fetchCountries();
-      setCountries(countriesData.data);
+      let data = {};
+
+      try {
+        let response = await axios.get(`${BASE_URL}companyInfo`);
+        data = { ...data, companyData: response.data.pop() };
+
+        response = await axios.get(`${BASE_URL}addressInfo`);
+        data = { ...data, addressData: response.data.pop() };
+
+        response = await axios.get(`${BASE_URL}agent`);
+        data = { ...data, agentData: response.data.pop() };
+        setCompanyData(data);
+        console.log("Data:", data);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [BASE_URL]);
 
-  useEffect(() => {
-    if (selectedCountry) {
-      const fetchData = async () => {
-        const statesData = await CountriesService.fetchStates(
-          selectedCountryCode
-        );
-        setStates(statesData.data);
-      };
-      fetchData();
-    }
-  }, [selectedCountry, selectedCountryCode]);
-
-  useEffect(() => {
-    if (selectedCountry && selectedState) {
-      const fetchData = async () => {
-        const citiesData = await CountriesService.fetchCities(
-          selectedCountryCode,
-          selectedStateCode
-        );
-        setCities(citiesData.data);
-      };
-      fetchData();
-    }
-  }, [selectedCountry, selectedState, selectedCountryCode, selectedStateCode]);
-
-  useEffect(() => {
-    if (requestsError) {
-      CompanyService.deleteCompanyType()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      CompanyService.deleteCompanyInfo()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      CompanyService.deleteCompanyLogo()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      CompanyService.deleteCompanyRegistrationCodes()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      CompanyService.deleteCompanySystemCurrency()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      CompanyService.deleteCompanyImportSchedule()
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-    }
-  }, [requestsError]);
-
-  const sendInformation = async () => {
-    const newCompanyInfo = {
-      nameCompany: name || document.getElementById("company-info_name").value,
-      phone:
-        parseInt(phone) || document.getElementById("company-info_phone").value,
-      fax: parseInt(fax) || document.getElementById("company-info_fax").value,
-      email: email || document.getElementById("company-info_email").value,
-      webSide: website || document.getElementById("company-info_website").value,
-      firstNameContac:
-        contactFirstName ||
-        document.getElementById("company-info_contactFirstName").value,
-      lasNameContac:
-        contactLastName ||
-        document.getElementById("company-info_contactLastName").value,
+  const addAddress = async () => {
+    event.preventDefault();
+    const addressData = {
+      streetNumber: document.getElementById("street&number").value,
+      city: document.getElementById("city").value,
+      country: document.getElementById("country").value,
+      state: document.getElementById("state").value,
+      zipCode: parseInt(document.getElementById("zipCode").value),
+      port: parseInt(document.getElementById("port").value),
     };
-
-    const newAddressInfo = {
-      streetNumber:
-        streetNumber ||
-        document.getElementById("address-info_street&number").value,
-      city: city || document.getElementById("address-info_city").value,
-      country:
-        selectedCountry ||
-        document.getElementById("address-info_country").value,
-      state:
-        selectedState || document.getElementById("address-info_state").value,
-      zipCode:
-        parseInt(zipCode) ||
-        document.getElementById("address-info_zipCode").value,
-    };
-
-    let newCompanyLogo = {};
-
-    newCompanyLogo = {
-      imgName: selectedFileName !== "" ? selectedFileName : "",
-      imgLogo: selectedFile
-        ? await imageUrlToBase64(selectedFile)
-        : (await toBase64(rawFileLogo)) || null,
-    };
-
-    const newCompanyRegisCode = {
-      iataCode:
-        iataCode || document.getElementById("company-regis_iataCode").value,
-      fmc: fmc || document.getElementById("company-regis_fmc").value,
-      scacCodeUs:
-        customsCode ||
-        document.getElementById("company-regis_customsCode").value,
-      tsaNumber:
-        tsaNumber || document.getElementById("company-regis_tsaNumber").value,
-    };
-
-    const newSystemCurrency = {
-      localCurrency:
-        selectedCurrency || document.getElementById("syst-curr_currency").value,
-      companyMoreCurren: false,
-    };
-
-    const response = companyExists
-      ? CompanyService.massUpdate(
-          companyID,
-          companyType,
-          newCompanyInfo,
-          newAddressInfo,
-          newCompanyLogo,
-          newCompanyRegisCode,
-          newSystemCurrency,
-          importSchedule
-        )
-      : CompanyService.massCreate(
-          companyID,
-          companyType,
-          newCompanyInfo,
-          newAddressInfo,
-          newCompanyLogo,
-          newCompanyRegisCode,
-          newSystemCurrency,
-          importSchedule
-        );
-
-    if (response.status === 1) {
-      // All requests were successful, no need to proceed with delete requests
-      setMessage("Datos almacenados correctamente!");
-      setcompanyExists(true);
-      console.log("All requests completed successfully!");
-      setcompanyExists(true);
-      setcompanyID(1);
-    } else {
-      console.log("Hubo un error al crear los datos...", response.error);
-      if (!companyExists) {
-        setrequestsError(true);
-      }
+    console.log(addressData);
+    try {
+      const response = await axios.post(
+        `${BASE_URL}address/`,
+        addressData,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Add Address Response:", response.data);
+      // Handle success or perform additional actions
+    } catch (error) {
+      console.log("Add Address Error:", error);
+      // Handle error or show error message
     }
   };
 
-  {
-    /*
-
-
-          <button
-            type="button"
-            className="startup-wizard-form__button"
-            onClick={handleAddCurrency}
-          >
-            Add Currency
-          </button>
-<div className="startup-wizard-form__section">
-          Selected Currencies:
-          <ul>
-            {selectedCurrencies.map((currencyCode) => (
-              <li key={currencyCode}>{currencyCode}</li>
-            ))}
-          </ul>
-        </div>*/
-  }
-
   return (
-    <div className="startup-wizard-form">
-      <div className="startup-wizard-form__tabs-button-container">
+    <div className="company-form">
+      <div className="company-form__tabs-button-container">
         <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "company type" ? "active" : "unactive"
+          className={`company-form__tabs-button ${
+            activeTab === "general" ? "active" : "unactive"
           }`}
-          onClick={() => setActiveTab(0)}
-          disabled={activeTab === 0 ? true : false}
+          onClick={() => handleTabClick("general")}
         >
-          Company Type
+          General
         </button>
         <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "company info" ? "active" : ""
+          className={`company-form__tabs-button ${
+            activeTab === "address" ? "active" : ""
           }`}
-          onClick={() => setActiveTab(1)}
+          onClick={() => handleTabClick("address")}
         >
-          Company Info
+          Address
         </button>
         <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "address info" ? "active" : ""
+          className={`company-form__tabs-button ${
+            activeTab === "billing" ? "active" : ""
           }`}
-          onClick={() => setActiveTab(2)}
+          onClick={() => handleTabClick("billing")}
         >
-          Address Info
+          Billing Address
         </button>
         <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "company logo" ? "active" : ""
+          className={`company-form__tabs-button ${
+            activeTab === "otherAddresses" ? "active" : ""
           }`}
-          onClick={() => setActiveTab(3)}
+          onClick={() => handleTabClick("otherAddresses")}
         >
-          Company Logo
+          Other Addresses
         </button>
         <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "company registration codes" ? "active" : ""
+          className={`company-form__tabs-button ${
+            activeTab === "agent" ? "active" : ""
           }`}
-          onClick={() => setActiveTab(4)}
+          onClick={() => handleTabClick("agent")}
         >
-          Company Registration Codes
-        </button>
-        <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "system currencies" ? "active" : ""
-          }`}
-          onClick={() => setActiveTab(5)}
-        >
-          System Currencies
-        </button>
-        <button
-          className={`startup-wizard-form__tabs-button ${
-            activeTab === "schedules" ? "active" : ""
-          }`}
-          onClick={() => setActiveTab(6)}
-        >
-          Import schedules B-D-K
+          Agent
         </button>
       </div>
       <form
-        className={`startup-wizard-form__general-form ${
-          activeTab == 0 ? "active" : "hidden"
+        className={`company-form__general-form ${
+          activeTab === "general" ? "active" : "hidden"
         }`}
       >
-        {/* ... */}
-        <fieldset className="startup-wizard-form__fieldset">
-          <div className="startup-wizard-form__section">
-            <label>
-              <input
-                type="radio"
-                name="companyType"
-                value="logisticsProvi"
-                onChange={() => handleRadioChange("logisticsProvi")}
-                checked={logisticsProvi}
-                className="startup-wizard-form__input-checkbox"
-              />
-              Logistics Provider (Freight forwarder, NVOCC, Courier, Ground
-              Carrier, Warehouse Provider)
-            </label>
-          </div>
-          <div className="startup-wizard-form__section">
-            <label>
-              <input
-                type="radio"
-                name="companyType"
-                value="distribution"
-                onChange={() => handleRadioChange("distribution")}
-                checked={distribution}
-                className="startup-wizard-form__input-checkbox"
-              />
-              Distribution / Wholesale company
-            </label>
-          </div>
-          <div className="startup-wizard-form__section">
-            <label>
-              <input
-                type="radio"
-                name="companyType"
-                value="airlineCarrier"
-                onChange={() => handleRadioChange("airlineCarrier")}
-                checked={airlineCarrier}
-                className="startup-wizard-form__input-checkbox"
-              />
-              Airline Carrier
-            </label>
-          </div>
-          <div className="startup-wizard-form__section">
-            <label>
-              <input
-                type="radio"
-                name="companyType"
-                value="oceanCarrier"
-                onChange={() => handleRadioChange("oceanCarrier")}
-                checked={oceanCarrier}
-                className="startup-wizard-form__input-checkbox"
-              />
-              Ocean Carrier
-            </label>
-          </div>
-        </fieldset>
-        <hr />
-        <div className="startup-wizard-form__section">
-          <label>
-            <input
-              type="checkbox"
-              name="bondedWarehouse"
-              className="startup-wizard-form__input-checkbox"
-              id="warehouse"
-              checked={companyWarehouse}
-              onChange={warehouseSelected}
-            />
-            Yes, this company has a bonded warehouse
-          </label>
-        </div>
-      </form>
-      <form
-        className={`startup-wizard-form__company-info-form ${
-          activeTab === 1 ? "active" : "hidden"
-        }`}
-      >
-        {/* ... */}
-        <div className="startup-wizard-form__section">
-          <label htmlFor="name" className="startup-wizard-form__label">
+        <div className="company-form__section">
+          <label htmlFor="name" className="company-form__label">
             Name:
           </label>
           <input
             type="text"
             name="name"
-            id="company-info_name"
-            className="startup-wizard-form__input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="name"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.nameCompany : ""}
+          />
+          <button className="company-form__button">
+            <i className="fas fa-search"></i>
+          </button>
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="entityId" className="company-form__label">
+            Entity ID:
+          </label>
+          <input
+            type="text"
+            name="entityId"
+            id="entityId"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.id : ""}
+
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label htmlFor="phone" className="startup-wizard-form__label">
+        <div className="company-form__section">
+          <label htmlFor="phone" className="company-form__label">
             Phone
           </label>
           <input
             type="number"
-            name="company-info_phone"
-            id="company-info_phone"
-            className="startup-wizard-form__input input-number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            name="phone"
+            id="phone"
+            className="company-form__input input-number"
+            defaultValue={companyData.companyData ? companyData.companyData.phone : ""}
+          />
+          <input
+            type="number"
+            name="phone2"
+            id="phone2"
+            className="company-form__input input-number"
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label htmlFor="fax" className="startup-wizard-form__label">
+        <div className="company-form__section">
+          <label htmlFor="mobilePhone" className="company-form__label">
+            Mobile Phone:
+          </label>
+          <input
+            type="number"
+            name="mobilePhone"
+            id="mobilePhone"
+            className="company-form__input input-number"
+            defaultValue={companyData.companyData ? companyData.companyData.phone : ""}
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="fax" className="company-form__label">
             Fax:
           </label>
           <input
             type="number"
-            name="company-info_fax"
-            id="company-info_fax"
-            className="startup-wizard-form__input input-number"
-            value={fax}
-            onChange={(e) => setFax(e.target.value)}
+            name="fax"
+            id="fax"
+            className="company-form__input input-number"
+            defaultValue={companyData.companyData ? companyData.companyData.fax : ""}
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label htmlFor="email" className="startup-wizard-form__label">
+        <div className="company-form__section">
+          <label htmlFor="email" className="company-form__label">
             Email:
           </label>
           <input
             type="text"
-            name="company-info_email"
-            id="company-info_email"
-            className="startup-wizard-form__input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            id="email"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.email : ""}
           />
+          <button className="company-form__button">
+            <i className="fas fa-pen"></i>
+          </button>
         </div>
-        <div className="startup-wizard-form__section">
-          <label htmlFor="website" className="startup-wizard-form__label">
+        <div className="company-form__section">
+          <label htmlFor="website" className="company-form__label">
             Website:
           </label>
           <input
             type="text"
-            name="company-info_website"
-            id="company-info_website"
-            className="startup-wizard-form__input"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
+            name="website"
+            id="website"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.email : ""}
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="contactFirstName"
-            className="startup-wizard-form__label"
-          >
+        <div className="company-form__section">
+          <label htmlFor="accountNumber" className="company-form__label">
+            Account Number:
+          </label>
+          <input
+            type="number"
+            name="accountNumber"
+            id="accountNumber"
+            className="company-form__input input-number"
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="contactFirstName" className="company-form__label">
             Contact First Name:
           </label>
           <input
             type="text"
-            name="company-info_contactFirstName"
-            id="company-info_contactFirstName"
-            className="startup-wizard-form__input"
-            value={contactFirstName}
-            onChange={(e) => setContactFirstName(e.target.value)}
+            name="contactFirstName"
+            id="contactFirstName"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.firstNameContac : ""}
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="contactLastName"
-            className="startup-wizard-form__label"
-          >
+        <div className="company-form__section">
+          <label htmlFor="contactLastName" className="company-form__label">
             Contact Last Name:
           </label>
           <input
             type="text"
-            name="company-info_contactLastName"
-            id="company-info_contactLastName"
-            className="startup-wizard-form__input"
-            value={contactLastName}
-            onChange={(e) => setContactLastName(e.target.value)}
+            name="contactLastName"
+            id="contactLastName"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.lasNameContac : ""}
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="identificacionNumber" className="company-form__label">
+            Identification Number:
+          </label>
+          <input
+            type="text"
+            name="id"
+            id="id"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.id : ""}
+          />
+          <select
+            name="identificacionNumber"
+            id="identificacionNumber"
+            className="company-form__input"
+          ></select>
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="division" className="company-form__label">
+            Division:
+          </label>
+          <select
+            name="division"
+            id="division"
+            className="company-form__input"
+          ></select>
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="magayaNetworkID" className="company-form__label">
+            Magaya Network ID:
+          </label>
+          <input
+            type="text"
+            name="magayaNetworkID"
+            id="magayaNetworkID"
+            className="company-form__input"
+            defaultValue={companyData.companyData ? companyData.companyData.nameCompany : ""}
           />
         </div>
       </form>
       <form
-        className={`startup-wizard-form__address-form ${
-          activeTab === 2 ? "active" : "hidden"
+        className={`company-form__address-form ${
+          activeTab === "address" ? "active" : "hidden"
         }`}
       >
-        {/* ... */}
+        <div className="company-form__section">
+          <label htmlFor="street&number" className="company-form__label">
+            Street & Number:
+          </label>
+          <textarea
+            type="text"
+            name="street&number"
+            id="street&number"
+            className="company-form__input"
+            defaultValue={ companyData.addressData ? companyData.addressData.streetNumber : "" }
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="city" className="company-form__label">
+            City:
+          </label>
+          <input
+            type="text"
+            name="city"
+            id="city"
+            className="company-form__input"
+            defaultValue={ companyData.addressData ? companyData.addressData.city : "" }
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="country" className="company-form__label">
+            Country
+          </label>
+          <select
+            name="country"
+            id="country"
+            className="company-form__input"
+            defaultValue={ companyData.addressData ? companyData.addressData.country : "" }
+          >
+            <option
+              value={ companyData.addressData ? companyData.addressData.country : "" }
+            >
+             { companyData.addressData ? companyData.addressData.country : "" }
+            </option>
+          </select>
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="state" className="company-form__label">
+            State:
+          </label>
+          <select
+            name="state"
+            id="state"
+            className="company-form__input"
+            defaultValue={ companyData.addressData ? companyData.addressData.state : "" }
+          >
+            <option
+              value={ companyData.addressData ? companyData.addressData.state : "" }
+            >
+              { companyData.addressData ? companyData.addressData.state : "" }
+            </option>
+          </select>
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="zipCode" className="company-form__label">
+            Zip Code:
+          </label>
+          <input
+            type="text"
+            name="zipCode"
+            id="zipCode"
+            className="company-form__input"
+            defaultValue={ companyData.addressData ? companyData.addressData.zipCode : "" }
+          />
+        </div>
+        <div className="company-form__section">
+          <label htmlFor="port" className="company-form__label">
+            Port:
+          </label>
+          <select
+            name="port"
+            id="port"
+            className="company-form__input"
+          >
+            <option
+            >
+            </option>
+          </select>
+        </div>
+        <button onClick={addAddress}>Add</button>
+      </form>
+      <form
+        className={`company-form__billing-address-form ${
+          activeTab === "billing" ? "active" : "hidden"
+        }`}
+      >
         <div className="startup-wizard-form__section">
           <label htmlFor="street&number" className="startup-wizard-form__label">
             Street & Number:
@@ -787,22 +458,20 @@ const MyCompanyForm = (props) => {
             name="address-info_street&number"
             id="address-info_street&number"
             className="startup-wizard-form__input"
-            value={streetNumber || ""}
-            onChange={(e) => setStreetNumber(e.target.value)}
+            defaultValue={ companyData.addressData ? companyData.addressData.streetNumber : "" }
           />
         </div>
         <div className="startup-wizard-form__section">
           <label htmlFor="country" className="startup-wizard-form__label">
-            Country:
+            Country
           </label>
           <select
             name="address-info_country"
             id="address-info_country"
             className="startup-wizard-form__input"
-            onChange={(e) => handleCountryChange(e)}
-            value={selectedCountry}
+            onChange={handleCountryChange}
+            defaultValue={ companyData.addressData ? companyData.addressData.country : "" }
           >
-            <option value="">Select a country</option>
             {countries.map((country) => (
               <option
                 key={country.iso2}
@@ -814,7 +483,6 @@ const MyCompanyForm = (props) => {
             ))}
           </select>
         </div>
-
         <div className="startup-wizard-form__section">
           <label htmlFor="state" className="startup-wizard-form__label">
             State:
@@ -823,10 +491,9 @@ const MyCompanyForm = (props) => {
             name="address-info_state"
             id="address-info_state"
             className="startup-wizard-form__input"
-            onChange={(e) => handleStateChange(e)}
-            value={selectedState}
+            onChange={handleStateChange}
+            defaultValue={ companyData.addressData ? companyData.addressData.state : "" }
           >
-            <option value="">Select a state</option>
             {states.map((state) => (
               <option key={state.iso2} value={state.name} data-key={state.iso2}>
                 {state.name}
@@ -840,10 +507,9 @@ const MyCompanyForm = (props) => {
           </label>
           <select
             name="city"
-            id="address-info_city"
+            id="city-select"
             className="startup-wizard-form__input"
-            onChange={(e) => setCity(e.target.value)}
-            value={city}
+            defaultValue={ companyData.addressData ? companyData.addressData.city : "" }
           >
             <option value="">Select a city</option>
             {cities.map((city) => (
@@ -862,253 +528,127 @@ const MyCompanyForm = (props) => {
             name="address-info_zipCode"
             id="address-info_zipCode"
             className="startup-wizard-form__input"
-            value={zipCode}
-            onChange={(e) => setZipCode(e.target.value)}
+            defaultValue={ companyData.addressData ? companyData.addressData.zipCode : "" }
           />
         </div>
-      </form>
-      <form
-        className={`startup-wizard-form__logo-form ${
-          activeTab === 3 ? "active" : "hidden"
-        }`}
-      >
-        {/* ... */}
-        <div className="startup-wizard-form__section">
-          <label htmlFor="imageFile" className="startup-wizard-form__label">
-            File Name:
+        <div className="company-form__section">
+          <label htmlFor="b-port" className="company-form__label">
+            Port:
           </label>
-          <input
-            type="file"
-            id="imageFile"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="startup-wizard-form__file-input startup-wizard-form__file-input"
-          />
-          <input
-            type="text"
-            onClick={handleBrowseButtonClick}
-            className="startup-wizard-form__input"
-            value={selectedFileName || ""}
-          />
-          <button
-            className="startup-wizard-form__browse-button"
-            onClick={handleBrowseButtonClick}
-            type="button"
+          <select
+            name="b-port"
+            id="port"
+            className="company-form__input"
+            
           >
-            Browse
-          </button>
-        </div>
-        <div className="startup-wizard-form__section img-container">
-          <img
-            src={selectedFile}
-            className="startup-wizard-form__image-preview"
-            id="preview"
-          />
+            <option
+              
+            >
+              
+            </option>
+          </select>
         </div>
       </form>
-
       <form
-        className={`startup-wizard-form__regis-form ${
-          activeTab === 4 ? "active" : "hidden"
+        className={`company-form__other-addresses-form ${
+          activeTab === "otherAddresses" ? "active" : "hidden"
         }`}
       >
-        {/* ... */}
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="mobilePhone"
-            className="startup-wizard-form__label large-label"
-          >
+        <table className="company-form__table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Contact Name</th>
+              <th>Country</th>
+              <th>Port</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Street & Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            {companyData.addressData &&
+              companyData.addressData.length > 0 &&
+              companyData.addressData.map((address, index) => (
+                <tr key={index}>
+                  <td>{address.description || "Test desc"}</td>
+                  <td>{address.contactName || "Admin"}</td>
+                  <td>{address.country}</td>
+                  <td>{address.port}</td>
+                  <td>{address.city}</td>
+                  <td>{address.state}</td>
+                  <td>{address.streetNumber}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div className="company-form__addresses-options">
+          <button className="company-form__option">Add...</button>
+          <button className="company-form__option">Edit...</button>
+          <button className="company-form__option">Delete</button>
+        </div>
+      </form>
+      <form
+        className={`company-form__agent-form ${
+          activeTab === "agent" ? "active" : "hidden"
+        }`}
+      >
+        <div className="company-form__section">
+          <label htmlFor="mobilePhone" className="company-form__label">
             IATA Code:
           </label>
           <input
             type="text"
-            name="company-regis_iataCode"
-            id="company-regis_iataCode"
-            className="startup-wizard-form__input input-number"
-            value={iataCode}
-            onChange={(e) => setIataCode(e.target.value)}
+            name="iataCode"
+            id="iataCode"
+            className="company-form__input input-number"
+            defaultValue={ companyData.agentData ? companyData.agentData.iataCode : "" }
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="fmc"
-            className="startup-wizard-form__label large-label"
-          >
+        <div className="company-form__section">
+          <label htmlFor="fmc" className="company-form__label">
             FMC:
           </label>
           <input
             type="text"
-            name="company-regis_fmc"
-            id="company-regis_fmc"
-            className="startup-wizard-form__input input-number"
-            value={fmc}
-            onChange={(e) => setFmc(e.target.value)}
+            name="fmc"
+            id="fmc"
+            className="company-form__input input-number"
+            defaultValue={ companyData.agentData ? companyData.agentData.fmc : "" }
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="customsCode"
-            className="startup-wizard-form__label large-label"
-          >
+        <div className="company-form__section">
+          <label htmlFor="customsCode" className="company-form__label">
             SCAC Code or US Customs code:
           </label>
           <input
             type="text"
-            name="company-regis_customsCode"
-            id="company-regis_customsCode"
-            className="startup-wizard-form__input"
-            value={customsCode}
-            onChange={(e) => setCustomsCode(e.target.value)}
+            name="customsCode"
+            id="customsCode"
+            className="company-form__input"
+            defaultValue={ companyData.agentData ? companyData.agentData.scacCodeUs : "" }
           />
         </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="tsaNumber"
-            className="startup-wizard-form__label large-label"
-          >
+        <div className="company-form__section">
+          <label htmlFor="tsaNumber" className="company-form__label">
             TSA Number:
           </label>
           <input
             type="text"
-            name="company-regis_tsaNumber"
-            id="company-regis_tsaNumber"
-            className="startup-wizard-form__input"
-            value={tsaNumber}
-            onChange={(e) => setTsaNumber(e.target.value)}
+            name="tsaNumber"
+            id="tsaNumber"
+            className="company-form__input"
+            defaultValue={ companyData.agentData ? companyData.agentData.tsaNumber : "" }
           />
         </div>
       </form>
-      <form
-        className={`startup-wizard-form__currency-form ${
-          activeTab === 5 ? "active" : "hidden"
-        }`}
-      >
-        <div className="startup-wizard-form__section">
-          <h2 className="startup-wizard-form__title">System Currencies</h2>
-        </div>
-        <hr className="section_separator" />
-        <div className="startup-wizard-form__section"></div>
-        <div className="startup-wizard-form__section">
-          <label htmlFor="mobilePhone" className="startup-wizard-form__label">
-            Please, select your local currency
-          </label>
-        </div>
-        <label
-          htmlFor="mobilePhone"
-          className="startup-wizard-form__label"
-          id="left-text"
-        >
-          Local currency
-        </label>
-
-        <div className="startup-wizard-form__section">
-          <select
-            name="syst-curr_currency"
-            id="syst-curr_currency"
-            className="startup-wizard-form__input"
-            value={selectedCurrency}
-            onChange={(e) => setSelectedCurrency(e.target.value)}
-          >
-            {Object.entries(currencies).map(([currencyCode, currencyName]) => (
-              <option key={currencyCode} value={currencyCode}>
-                {currencyCode} - {currencyName}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="startup-wizard-form__section">
-          <label className="startup-wizard-form__label" id="left-text">
-            Current currency:
-          </label>
-          <label className="startup-wizard-form__label" id="left-text">
-            {systemCurrencyRetrieved?.localCurrency || ""}
-          </label>
-        </div>
-      </form>
-      <form
-        className={`startup-wizard-form__schedule-form ${
-          activeTab === 6 ? "active" : "hidden"
-        }`}
-      >
-        {/* ... */}
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="mobilePhone"
-            className="startup-wizard-form__label large-label"
-          >
-            <input
-              type="checkbox"
-              name="schedulesB"
-              id="schedulesB"
-              className="startup-wizard-form__input-checkbox"
-              onChange={() => handleScheduleSelection("schedulesB")}
-              checked={schedulesB}
-            />
-            Schedules B (Commodity Classification)
-          </label>
-        </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="mobilePhone"
-            className="startup-wizard-form__label large-label"
-          >
-            <input
-              type="checkbox"
-              name="schedulesD"
-              id="schedulesD"
-              className="startup-wizard-form__input-checkbox"
-              onChange={() => handleScheduleSelection("schedulesD")}
-              checked={schedulesD}
-            />
-            Schedules D (United States Ports)
-          </label>
-        </div>
-        <div className="startup-wizard-form__section">
-          <label
-            htmlFor="mobilePhone"
-            className="startup-wizard-form__label large-label"
-          >
-            <input
-              type="checkbox"
-              name="schedulesK"
-              id="schedulesK"
-              className="startup-wizard-form__input-checkbox"
-              onChange={() => handleScheduleSelection("schedulesK")}
-              checked={schedulesK}
-            />
-            Schedules K (Other Countries Ports)
-          </label>
-        </div>
-        <div className="startup-wizard-form__section">
-          <h2 className="startup-wizard-form__title">{message || ""}</h2>
-        </div>
-      </form>
-      <div className="startup-wizard-form__options-container">
-        <button
-          className="startup-wizard-form__option"
-          onClick={() => handleNextButtonClick()}
-          type="button"
-        >
-          {activeTab >= 6 ? "Finish" : "Next"}
-        </button>
-        <button
-          className="startup-wizard-form__option"
-          onClick={props.closeModal}
-        >
-          Cancel
-        </button>
-        <button className="startup-wizard-form__option">Help</button>
+      <div className="company-form__options-container">
+        <button className="company-form__option">OK</button>
+        <button className="company-form__option">Cancel</button>
+        <button className="company-form__option">Help</button>
       </div>
     </div>
   );
-};
-
-MyCompanyForm.propTypes = {
-  closeModal: propTypes.func,
-};
-
-MyCompanyForm.defaultProps = {
-  closeModal: null,
 };
 
 export default MyCompanyForm;
