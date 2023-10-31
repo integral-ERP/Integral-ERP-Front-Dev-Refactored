@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,8 +7,10 @@ import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReceiptService from "../../services/ReceiptService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Receipt = () => {
+  const {hideShowSlider } = useContext(GlobalContext)
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -156,7 +158,7 @@ const Receipt = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={receipts}
               columns={columns}

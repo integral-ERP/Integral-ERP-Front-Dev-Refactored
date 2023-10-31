@@ -744,11 +744,21 @@ const ReceiptCreationForm = ({
     clientToBillRequest,
   ]);
 
+  const[colorTab, setcolorTab] = useState(true);
+  useEffect(() => {
+    const listItems = document.querySelectorAll(".nav-item")
+    if(!listItems) return
+    for(const item of listItems){ 
+      item.addEventListener("click", () => {
+        setcolorTab(false)
+      })
+    }
+  }, [])
   return (
     <div className="company-form">
       <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
+        <li className="nav-item" role="presentation" style={colorTab ? {background: "#153A61", borderRadius: "10px"} :{}}>
+          <a style={colorTab ? {color: "white"} : {}}
             className="nav-link"
             data-bs-toggle="tab"
             href="#general"
@@ -872,8 +882,11 @@ const ReceiptCreationForm = ({
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
         <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
+
+
+         <div className="general-reception">
+           <div>
+             <div className="company-form__section">
               <Input
                 type="number"
                 inputName="number"
@@ -898,6 +911,13 @@ const ReceiptCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
+            </div>
+
+
+
+
+
+            <div>
             <div className="company-form__section">
               <label htmlFor="employee" className="form-label">
                 Employee:
@@ -971,6 +991,12 @@ const ReceiptCreationForm = ({
                 />
               )}
             </div>
+            </div>
+
+
+
+
+            <div>
             <div className="company-form__section">
               <Input
                 type="number"
@@ -980,6 +1006,10 @@ const ReceiptCreationForm = ({
                 label="Entry Number"
               />
             </div>
+            </div>
+
+
+
           </div>
         </div>
       </form>
@@ -1076,9 +1106,9 @@ const ReceiptCreationForm = ({
             </div>
           </div>
           {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
+          {/* <div className="cont-two">
             <div className="company-form__section"></div>
-          </div>
+          </div> */}
         </div>
       </form>
       <form

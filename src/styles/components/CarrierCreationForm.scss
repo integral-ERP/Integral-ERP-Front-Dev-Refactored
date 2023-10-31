@@ -4,6 +4,9 @@
   align-items: center;
   width: 100%;
   color: #153A61;
+  padding: 35px;
+
+  
  
   &__tabs-button-container {
     margin-bottom: 20px;
@@ -134,11 +137,12 @@
 
   .form-input{
     width: 70%;
-    background: whitesmoke;
+    background: white;
     color: black;
     height: 3rem;
     padding: 0 0 0 1rem;
     font-size: initial;
+
     &__exten{
       width: 20rem;
       background: whitesmoke;
@@ -172,7 +176,7 @@
 
   .form-textarea{
     width: 70%;
-    background: whitesmoke;
+    background: white;
     color: black;
     font-size: initial;
     border-color: #bbb0b0;
@@ -197,7 +201,7 @@
 .nav-tabs .nav-item.open .nav-link:hover, .nav-tabs .nav-link.active, 
 .nav-tabs .nav-link.active:focus, .nav-tabs .nav-link.active:hover {
   background-color: #153A61 !important;
-  border-radius: 10px;
+  border-radius: 5px;
   color: #ffffff !important;
 }
 
@@ -205,19 +209,22 @@
   --bs-nav-tabs-border-width: var(--bs-border-width);
   --bs-nav-tabs-border-color: #ecf0f1;
   border: solid 1px #C1C1C1;
-  border-radius: 15px;
+  border-radius: 5px;
   background: #C1C1C1;
   --bs-nav-link-color: #626262;
   --bs-nav-link-hover-color: #040404;
   --bs-nav-link-disabled-color: #95a5a6;
   border: 1px solid #666666;
   color: white;
+
   & li {
     transition: background 1s ease;
   }
   & li > a{
     transition: color 1s ease;
     color: #82918e;
+    font-size: 15px;
+    font-weight: bold;
   }
   & li:hover{
     background: rgb(170, 168, 168);

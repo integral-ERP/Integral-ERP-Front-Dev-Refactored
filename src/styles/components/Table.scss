@@ -301,7 +301,11 @@ display: flex; /* Add some vertical spacing between rows */
 
 .cont-two { 
   width: 100%;
-  grid-area: cont-two; 
+  border-radius: 2px;
+  box-shadow: 0px 1px 10px;
+  padding: 10px;
+  margin: 10px; 
+
   &__space{
     margin: 1.3rem 0 0 0;
     border-radius: 2px;
@@ -322,10 +326,24 @@ display: flex; /* Add some vertical spacing between rows */
 .cont-three__space{
   border-radius: 2px;
   box-shadow: 0px 1px 10px;
-  padding: 10px;
+  padding: 20px;
   margin: 10px;
   width: 100%;
 }
+
+
+.general-reception{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  & > div{
+    border-radius: 2px;
+    box-shadow: 0px 1px 10px;
+    padding: 10px;
+    margin: 10px; 
+  }
+} 
+
 // -----------------------------------------------------
 .button-save {
   width: 10rem;
@@ -480,19 +498,6 @@ td{
 
 .css-1u3bzj6-MuiFormControl-root-MuiTextField-root 
 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  position: relative;
-  min-width: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  vertical-align: top;
-  background: #EBEBEB;
+  background: white;
   border-radius: 10px;
 }

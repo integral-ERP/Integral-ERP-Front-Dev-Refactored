@@ -7,11 +7,13 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
+import logoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
+import logoIntegral from "../../../img/integral.png"
+
 
 const Sidebar = () => {
   const [close, setClose] = useState(false);
-  // const [isHiddeShowSidebar, setIsHiddeShowSidebar] = useState(true);
   const { hideShowSlider, setHideShowSlider, controlSlider, setcontrolSlider} = useContext(GlobalContext)
 
   useModal(false);
@@ -40,6 +42,7 @@ const Sidebar = () => {
       return
     } 
 
+
     if (hideShowSlider) {
       setHideShowSlider(true);
     } else {
@@ -50,7 +53,6 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (controlSlider) {
-      console.log("hola")
       handleHideSidebar(true)
     } 
     setcontrolSlider(false)
@@ -58,11 +60,11 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar-container">
-      <div onClick={() => { handleHideSidebar() }} className={`sidebar ${hideShowSlider ? "close" : ""}`}>
+      <div className={`sidebar ${hideShowSlider ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
+          <img className="logo_icon" src={logoBlanco} alt="logo-blanco"/>
           <img className="logo_name" src={logo} alt="Logo" />
-
           {/* <span className="logo_name">Logo</span> */}
         </div>
         <ul onClick={(event) => { event.stopPropagation() }} className="nav-links">
@@ -439,9 +441,10 @@ const Sidebar = () => {
         <div className="home-content">
           <i
             className="bx bx-menu menu__icon"
-            onClick={handleDropdownClose}
+            onClick={() => { handleHideSidebar() }} 
           ></i>
-          <span className="text">Integralerp</span>
+          <img className="logo_integral" src={logoIntegral} alt="logo"/>
+   {/*        <span className="text">Integral</span> */}
 
           <div className="rith">
             <div className="profile-user">

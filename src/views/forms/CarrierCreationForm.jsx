@@ -290,7 +290,6 @@ const CarrierCreationForm = ({
         style={{ display: activeTab === "general" ? "block" : "none" }}
       >
       <div className="containerr">
-        <div className="cont-one">
           <div className="company-form__section">
             <label htmlFor="carrierType" className="form-label">
               Carrier Type:
@@ -366,7 +365,7 @@ const CarrierCreationForm = ({
               label="Fax"
             />
           </div>
-        </div>{/* -------------------------END ONE---------------------------------- */}
+        {/* -------------------------END ONE---------------------------------- */}
         <div className="cont-two">
           <div className="company-form__section">
             <Input

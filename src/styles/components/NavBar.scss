@@ -39,16 +39,14 @@ color: var(--primary-color);
 }
 // ---------------------------------------------------------------------
 .nav{
-  
-    font-weight: bold;
     display: flex;
     flex-wrap: wrap;
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
-    font-size: initial;
+    font-size: 15px;
+    font-weight: bold;
     width: 100%;
-    color: red;
     --bs-nav-link-color: #ffffff;
     
 }
