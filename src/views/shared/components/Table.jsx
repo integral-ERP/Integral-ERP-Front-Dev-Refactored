@@ -23,7 +23,8 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
-  handleOptionClick
+  handleOptionClick,
+  onInspect,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -120,9 +121,9 @@ const Table = ({
     " Width": "width",
     " Volumetric Weight": "volumetricWeight",
     " Chargeable Weight": "chargedWeight",
-    "Note":"note",
+    Note: "note",
     "Account Number": "accountNumber",
-    "Code": "code" ,
+    Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
   };
@@ -201,18 +202,18 @@ const Table = ({
       .catch((error) => {
         console.error("Error generating PDF:", error);
       });
-  }
+  };
 
   const generatePDFRelease = () => {
     GenerateReleasePDF(selectedRow)
-    .then((pdfUrl) => {
-      // Now you have the PDF URL, you can use it as needed
-      window.open(pdfUrl, "_blank");
-    })
-    .catch((error) => {
-      console.error("Error generating PDF:", error);
-    });
-  }
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
 
   const handleColumnVisibilityChange = (columnName) => {
     setVisibleColumns((prevVisibility) => ({
@@ -384,7 +385,7 @@ const Table = ({
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
     }
 
-    if (columnName === "View PDF" || columnName === 'View Receipt PDF') {
+    if (columnName === "View PDF" || columnName === "View Receipt PDF") {
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
@@ -608,7 +609,6 @@ const Table = ({
                 onClick={() => setShowColumnMenu(!showColumnMenu)}
               >
                 <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                
               </button>
             </div>
 
@@ -728,11 +728,23 @@ const Table = ({
                         <button type="button" onClick={generatePDFReceipt}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
-                      ): columnName === "View Release PDF" ? (
+                      ) : columnName === "View Release PDF" ? (
                         <button type="button" onClick={generatePDFRelease}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
-                      ): typeof columnNameToProperty[columnName] ===
+                      ) : columnName === "Options" ? (
+                        <>
+                          <button type="button" onClick={onDelete}>
+                          <i className="fas fa-trash"></i>
+                          </button>
+                          <button type="button" onClick={onEdit}>
+                          <i className="fas fa-pencil-alt"></i>
+                          </button>
+                          <button type="button" onClick={onInspect}>
+                          <i className="fas fa-eye"></i>
+                          </button>
+                        </>
+                      ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
                           <i className="fas fa-check"></i>
@@ -766,9 +778,15 @@ const Table = ({
           }}
         >
           <ul>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
-            <li onClick={() => handleOptionClick("Option 1")}>Create Warehouse Receipt</li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
           </ul>
           {/* ... */}
         </div>

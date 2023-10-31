@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import PackageTypeService from "../../services/PackageTypeService";
 
-const RepackingForm = ({ commodities }) => {
+const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
+  const [internalCommodities, setinternalCommodities] = useState([]);
   const formFormat = {
     package_type_id: "",
     weight: 0,
@@ -11,7 +12,8 @@ const RepackingForm = ({ commodities }) => {
     height: 0,
     volumetricWeight: 0,
     chargedWeight: 0,
-    description: ""
+    description: "",
+    useInternalWeight: false
   };
   const [formData, setformData] = useState(formFormat);
 
@@ -25,8 +27,52 @@ const RepackingForm = ({ commodities }) => {
       });
   }, []);
 
+  const handleCommoditySelection = (e) => {
+    const selectedCommodityIds = Array.from(e.target.selectedOptions, (option) => option.value);
+    const selectedCommodities = commodities.filter((item) => selectedCommodityIds.includes(item.id + ''));
+    console.log("LISTA DE IDS", selectedCommodityIds, "LISTA DE OBJETOS", selectedCommodities, "ORIGINALES", commodities);
+    setinternalCommodities(selectedCommodities);
+    console.log("COMMODITIES INTERNAS:", internalCommodities);
+  };
+
+  const handleRepack = () => {
+    let internalWeight = 0;
+    if(formData.useInternalWeight){
+      internalCommodities.forEach(element => {
+        internalWeight += Number(element.weight);
+      });
+    }
+
+    const selectedCommodityIds = internalCommodities.map( com => String(com.id))
+
+    const filteredCommodities = commodities.filter((commodity) => {
+      console.log("COMMODITIES SELECCIONADAS", selectedCommodityIds, "COMMODITY ACTUAL", commodity, "CONDICION", selectedCommodityIds.includes(String(commodity.id)));
+      return !selectedCommodityIds.includes(String(commodity.id));
+    });
+
+  console.log("FILTERED COMMODITIES:", filteredCommodities);
+
+    const newCommodity = {
+      ...formData,
+      weight: formData.weight + internalWeight, 
+      containsCommodities: true,
+      internalCommodities: internalCommodities,
+    };
+
+    // Add the new commodity to the commodities array.
+    setCommodities([...filteredCommodities, newCommodity]);
+
+    // Reset the form to its initial state.
+    setformData(formFormat);
+    setinternalCommodities([]);
+    console.log("NEW COMMODITIES:", commodities);
+    // You can also perform any other actions or validations here if needed.
+  };
+  
+
   return (
-    <>
+    <div className="income-charge-form">
+      <h3>Repacking Form</h3>
       <div>
         <label htmlFor="containerType">Container Type:</label>
         <select name="containerType" id="containerType" onChange={(e) => {setformData({...formData, package_type_id: e.target.value})}}>
@@ -117,15 +163,20 @@ const RepackingForm = ({ commodities }) => {
             }
             style={{width: '100%'}}
           />
+          <label htmlFor="">use internal commodity weight</label>
+          <input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/>
       </div>
       <div>
-        <select name="commodities" id="commodities" multiple>
+        <select name="commodities" id="commodities" multiple onChange={(e) => handleCommoditySelection(e)}>
             {commodities.map((item) => {
                 return <option value={item.id} key={item.id}>{item.description}</option>
             })}
         </select>
       </div>
-    </>
+      <div>
+        <button type="button" onClick={handleRepack}>Repack</button>
+      </div>
+    </div>
   );
 };
 
