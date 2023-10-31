@@ -218,7 +218,6 @@ const ItemAndServiceCreationForm = ({
               <select
                 id="accountName"
                 className="form-input"
-                inputName="accountName"
                 onChange={(e) =>
                   setFormData({ ...formData, accountName: e.target.value })
                 }

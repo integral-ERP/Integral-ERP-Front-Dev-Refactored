@@ -382,7 +382,7 @@ const Table = ({
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
     }
 
-    if (columnName === "View PDF") {
+    if (columnName === "View PDF" || columnName === 'View Receipt PDF') {
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 

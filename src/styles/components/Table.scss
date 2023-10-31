@@ -289,6 +289,7 @@ display: flex; /* Add some vertical spacing between rows */
   box-shadow: 0px 1px 10px;
   padding: 10px;
   margin: 10px;
+
   &__space{
     margin: 1.3rem 0 0 0;
     width: 100%;
@@ -500,4 +501,16 @@ td{
 {
   background: white;
   border-radius: 10px;
+}
+
+.release{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  & > div{
+    border-radius: 2px;
+    box-shadow: 0px 1px 10px;
+    padding: 10px;
+    margin: 10px; 
+  }
 }

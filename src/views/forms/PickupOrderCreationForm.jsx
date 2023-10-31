@@ -1277,6 +1277,7 @@ const PickupOrderCreationForm = ({
           onAdd={() => {}}
           showOptions={false}
         />
+        <button type="button">Repack</button>
       </form>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
