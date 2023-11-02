@@ -346,11 +346,11 @@ const Sidebar = () => {
             className={`arrow  ${more === "configuration" ? "showMenu" : ""}`}
           >
             <div className="icon-link">
-              <Link></Link>
-              <a href="#">
+              <Link>
                 <i className="bx bx-universal-access"></i>
                 <span className="link_name">Configuration</span>
-              </a>
+              </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("configuration")}
@@ -358,28 +358,33 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <a className="link_name" href="#">
-                  Configuration
-                </a>
+                <Link className="link_name">Configuration</Link>
               </li>
               <li>
-                <a onClick={openCompanyForm}>Company</a>
-                <ModalForm
-                  isOpen={isOpenCompanyForm}
-                  closeModal={closeCompanyForm}
-                >
-                  <MyCompanyForm closeModal={closeCompanyForm}></MyCompanyForm>
-                </ModalForm>
-                */
+                <Link onClick={openCompanyForm}>
+                  Company
+                  <ModalForm
+                    isOpen={isOpenCompanyForm}
+                    closeModal={closeCompanyForm}
+                  >
+                    <MyCompanyForm
+                      closeModal={closeCompanyForm}
+                    ></MyCompanyForm>
+                  </ModalForm>
+                </Link>
               </li>
               <li>
-                <a href="#">Air Operations</a>
+                <Link to={"/Configuration/airoperations"}>Air Operations</Link>
               </li>
               <li>
-                <a href="#">Document Numbers</a>
+                <Link to={"/Configuration/documentnumbers"}>
+                  Document Numbers
+                </Link>
               </li>
               <li>
-                <a href="#">Email Templates</a>
+                <Link to={"/Configuration/emailtemplates"}>
+                  Email Templates
+                </Link>
               </li>
               <li>
                 <Link to={"/Configuration/measurementunits"}>
@@ -387,19 +392,23 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
-                <a href="#">Clauses</a>
+                <Link to={"/Configuration/clauses"}>Clauses</Link>
               </li>
               <li>
-                <a href="#">Events</a>
+                <Link to={"/Configuration/events"}>Events</Link>
               </li>
               <li>
-                <a href="#">Ocean Operations</a>
+                <Link to={"/Configuration/oceanoperations"}>
+                  Ocean Operations
+                </Link>
               </li>
               <li>
-                <a href="#">Payment Terms</a>
+                <Link to={"/Configuration/paymentterms"}>Payment Terms</Link>
               </li>
               <li>
-                <a href="#">Shipment Documents</a>
+                <Link to={"/Configuration/shipmentdocuments"}>
+                  Shipment Documents
+                </Link>
               </li>
             </ul>
           </li>
