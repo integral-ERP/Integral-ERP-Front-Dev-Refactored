@@ -1309,8 +1309,9 @@ const PickupOrderCreationForm = ({
           onClick={() => {
             setshowRepackingForm(!showRepackingForm);
           }}
+          className="button-save"
         >
-          Repack
+          Repacking
         </button>
       </form>
       <div className="company-form__options-container">
@@ -1347,7 +1348,7 @@ const PickupOrderCreationForm = ({
         </Alert>
       )}
       {showCommodityInspect && (
-        <div>
+        <div className="repacking-container">
           <p>{selectedCommodity.description}</p>
           <p>Weight: {selectedCommodity.weight}</p>
           <p>Height: {selectedCommodity.height}</p>
@@ -1360,14 +1361,14 @@ const PickupOrderCreationForm = ({
           </p>
           {selectedCommodity.internalCommodities.map((com) => {
             return (
-              <div key={com.id}>
+              <div key={com.id} className="card">
                 <p>{com.description}</p>
                 <p>Weight: {com.weight}</p>
                 <p>Height: {com.height}</p>
                 <p>Width: {com.width}</p>
                 <p>Length: {com.length}</p>
-                <p>Volumetric Weight: {com.volumetricWeigth}</p>
-                <p>Chargeable Weight: {com.chargeableWeight}</p>
+                <p>Volumetric Weight: {com.volumetricWeight}</p>
+                <p>Chargeable Weight: {com.chargedWeight}</p>
                 <p>
                   Repacked?:{" "}
                   {com.containsCommodities ? "Yes" : "No"}

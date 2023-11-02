@@ -48,8 +48,8 @@ const GenerateReleasePDF = (data) => {
       let ninenthRowText = "";
       data.commodities?.forEach((commodity) => {
         firstRowText += `1 \n`;
-        secondRowText = "1000";
-        thirdRowText = "A-3-1";
+        secondRowText = data.warehouseReceiptObj?.number || "1001";
+        thirdRowText = commodity.locationCode|| "D-5A";
         fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fifthRowText = "Box";
         sixthRowText += `${commodity.description} \n`;
@@ -254,7 +254,7 @@ const GenerateReleasePDF = (data) => {
               },
               {
                 table: {
-                  widths: [`auto`, `auto`, `auto`, `auto`, `auto`, `auto`, `auto`, `auto`, `auto`],
+                  widths: [`auto`, `auto`, `auto`, `auto`, `*`, `*`, `auto`, `auto`, `auto`],
                   body: [
                     [
                       {
@@ -308,8 +308,9 @@ const GenerateReleasePDF = (data) => {
                     ],
                     ...commodityRows,
 
-                  ],
+                  ]
                 },
+                margin: [0, 50, 0, 20]
               },
             ],
             styles: {
@@ -324,7 +325,7 @@ const GenerateReleasePDF = (data) => {
                 margin: [0, 10, 0, 5],
               },
               tableExample: {
-                margin: [0, 0, 0, 5],
+                margin: [20, 20, 20, 5],
                 alignment: `right`,
                 width: `100%`,
               },

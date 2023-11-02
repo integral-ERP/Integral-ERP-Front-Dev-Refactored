@@ -4,6 +4,7 @@ import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CommoditiesService from "../../services/CommoditiesService";
+import LocationService from "../../services/LocationService";
 const CommodityCreationForm = ({
   onCancel,
   commodities,
@@ -19,12 +20,14 @@ const CommodityCreationForm = ({
     volumetricWeight: 0,
     chargedWeight: 0,
     description: "",
+    locationId: "",
+    locationCode: ""
   };
 
   const [formData, setformData] = useState(formFormat);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-
+  const [locations, setlocations] = useState([]);
   const [internalID, setinternalID] = useState(0);
 
   const addCommodity = () => {
@@ -38,8 +41,9 @@ const CommodityCreationForm = ({
       chargedWeight: formData.volumetricWeight,
       description: formData.description,
       internalCommodities: [],
-      containsCommodities: false
-      // TODO: add fields for volumetric weight and charged weight
+      containsCommodities: false,
+      locationId: formData.locationId,
+      locationCode: formData.locationCode
     };
     if (editing) {
       const indexToEdit = commodities.findIndex(
@@ -85,9 +89,18 @@ const CommodityCreationForm = ({
         volumetricWeight: commodity.volumetricWeight,
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
+        locationId: commodity.locationId,
+        locationCode: commodity.locationCode
       };
       setformData(formFormat);
     }
+  }, []);
+
+  useEffect(() => {
+    LocationService.getLocations()
+    .then(response => {
+      setlocations(response.data.results);
+    })
   }, []);
 
   return (
@@ -196,6 +209,12 @@ const CommodityCreationForm = ({
           }
           style={{ width: "100%" }}
         />
+        <label htmlFor="location" className="text-comm" style={{marginTop: "10px"}}>Location:</label>
+        <select name="location" id="location" onChange={(e) => {setformData({...formData, locationId: e.target.value, locationCode: e.target.options[e.target.selectedIndex].getAttribute("data-key")})}}>
+          <option value="">Select an option</option>
+          {locations.map(location => {
+            return (<option key={location.id} value={location.id} data-key={location.code}>{location.code}</option>)})}
+        </select>
         <div className="table-hover charge-buttons">
           <button
             className="button-save pick "

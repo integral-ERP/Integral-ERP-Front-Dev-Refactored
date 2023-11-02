@@ -67,7 +67,7 @@ const Sidebar = () => {
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
               </li>
               <li>
-                <Link to={"/warehouse/reception"}>Reception</Link>
+                <Link to={"/warehouse/receipt"}>Reception</Link>
               </li>
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
@@ -96,8 +96,9 @@ const Sidebar = () => {
                 <Link className="link_name">Shipments</Link>
               </li>
               <li>
-                <Link to={"/shipments"}>Shipment List</Link>
+                <Link to={"/shipments"}>Shipment list</Link>
               </li>
+
               <li>
                 <Link to={"/shipments/master"}>Master List</Link>
               </li>
@@ -133,10 +134,10 @@ const Sidebar = () => {
           <li className={`arrow  ${more === "customs" ? "showMenu" : ""}`}>
             <div className="icon-link">
               <Link>
-                {" "}
                 <i className="bx bx-book-open"></i>
                 <span className="link_name">Customs</span>
               </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("customs")}
@@ -156,20 +157,20 @@ const Sidebar = () => {
                 <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
               </li>
               <li>
-                <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
+                <Link to={"/customs/ibareport"}>IBA report in txt</Link>
               </li>
               <li>
                 <Link to={"/customs/simplifiedduties"}>Simplified Duties</Link>
               </li>
               <li>
-                <Link to={"/customs/proofDelivery"}>Proof of Delivery</Link>
+                <Link to={"/customs/proofdelivery"}>Proof of Delivery</Link>
               </li>
               <li>
-                <Link to={"/customs/valueproposals"}>Value Proposals</Link>
+                <Link to={"/customs/valueproposal"}>Value Proposals</Link>
               </li>
               <li>
                 <Link to={"/customs/changesincustoms"}>
-                  Changes in Custom's
+                  Changes in Custom's{" "}
                 </Link>
               </li>
               <li>
@@ -183,7 +184,6 @@ const Sidebar = () => {
                 <i className="bx bx-money-withdraw"></i>
                 <span className="link_name">Accounting</span>
               </Link>
-
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("accounting")}
@@ -217,6 +217,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/payments"}>Payments</Link>
+                <a href="#">Payments</a>
               </li>
             </ul>
           </li>
@@ -226,7 +227,7 @@ const Sidebar = () => {
             <div className="icon-link">
               <Link>
                 <i className="bx bx-user-circle"></i>
-                <span className="link_name">Online Customer</span>{" "}
+                <span className="link_name">Online Customer</span>
               </Link>
               <i
                 className="bx bxs-chevron-down arrow"
@@ -238,8 +239,7 @@ const Sidebar = () => {
                 <Link className="link_name">Online Customer</Link>
               </li>
               <li>
-                <Link to={"warehouse/prealerts"}>Pre Alerts</Link>
-                <a href="#">pre alerts</a>
+                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>
@@ -247,13 +247,13 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
-                <Link to={"/onlineUser/instructions"}>Instructions</Link>
+                <Link to={"/accounting/instructions"}>Instructions</Link>
               </li>
               <li>
-                <Link to={"accounting/payments"}>Payments</Link>
+                <Link to={"/accounting/payments"}>Payments</Link>
               </li>
               <li>
-                <Link to={"shipments"}>Shipments</Link>
+                <Link to={"/shipments"}>Shipments</Link>
               </li>
             </ul>
           </li>
@@ -263,6 +263,7 @@ const Sidebar = () => {
                 <i className="bx bx-briefcase"></i>
                 <span className="link_name">Agent</span>
               </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("agent")}
@@ -273,16 +274,16 @@ const Sidebar = () => {
                 <Link className="link_name">Agent</Link>
               </li>
               <li>
-                <Link to={"/agent/search"}>Search </Link>
+                <Link to={"/agent/search"}>Search</Link>
               </li>
               <li>
-                <Link to={"/warehouse/reception"}>Reception</Link>
+                <Link to={"/agent/newreception"}>New Reception</Link>
               </li>
               <li>
-                <Link to={"shipments"}>Shipment List</Link>
+                <Link to={"/shipments"}>Shipment list</Link>
               </li>
               <li>
-                <Link to={"accounting/payments"}>Payments</Link>
+                <Link to={"/accounting/payments"}>Payments</Link>
               </li>
             </ul>
           </li>
@@ -299,7 +300,11 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name"> Maintenance</Link>
+                <Link to={"/maintenance"}>
+                  <a className="link_name" href="#">
+                    Maintenance
+                  </a>
+                </Link>
               </li>
               <li>
                 <Link to={"/maintenance/carriers"}>Carriers</Link>
@@ -341,11 +346,11 @@ const Sidebar = () => {
             className={`arrow  ${more === "configuration" ? "showMenu" : ""}`}
           >
             <div className="icon-link">
-              <Link>
+              <Link></Link>
+              <a href="#">
                 <i className="bx bx-universal-access"></i>
                 <span className="link_name">Configuration</span>
-              </Link>
-
+              </a>
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("configuration")}
@@ -353,7 +358,9 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name"> Configuration</Link>
+                <a className="link_name" href="#">
+                  Configuration
+                </a>
               </li>
               <li>
                 <a onClick={openCompanyForm}>Company</a>
@@ -363,19 +370,16 @@ const Sidebar = () => {
                 >
                   <MyCompanyForm closeModal={closeCompanyForm}></MyCompanyForm>
                 </ModalForm>
+                */
               </li>
               <li>
-                <Link to={"/configuration/airoperations"}>Air Operations</Link>
+                <a href="#">Air Operations</a>
               </li>
               <li>
-                <Link to={"/configuration/documentnumbers"}>
-                  Document Numbers
-                </Link>
+                <a href="#">Document Numbers</a>
               </li>
               <li>
-                <Link to={"/configuration/emailtemplates"}>
-                  Email Templates
-                </Link>
+                <a href="#">Email Templates</a>
               </li>
               <li>
                 <Link to={"/Configuration/measurementunits"}>
@@ -383,21 +387,19 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
-                <Link to={"/configuration/clauses"}>Clauses</Link>
+                <a href="#">Clauses</a>
               </li>
               <li>
-                <Link to={"/configuration/events"}>Events</Link>
+                <a href="#">Events</a>
               </li>
               <li>
-                <Link to={"/configuration/oceanoperations"}>
-                  Ocean Operations
-                </Link>
+                <a href="#">Ocean Operations</a>
               </li>
               <li>
-                <Link to={"/configuration/paymentterms"}>Payment Terms</Link>
+                <a href="#">Payment Terms</a>
               </li>
               <li>
-                <Link to={"/configuration/shipmentdocuments"}></Link>
+                <a href="#">Shipment Documents</a>
               </li>
             </ul>
           </li>

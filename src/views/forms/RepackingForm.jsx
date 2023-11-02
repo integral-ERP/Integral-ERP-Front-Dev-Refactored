@@ -18,7 +18,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const [formData, setformData] = useState(formFormat);
 
   useEffect(() => {
-    PackageTypeService.getContainerTypes()
+    PackageTypeService.getPackageTypes()
       .then((response) => {
         setpackTypes(response.data.results);
       })
@@ -54,7 +54,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
 
     const newCommodity = {
       ...formData,
-      weight: formData.weight + internalWeight, 
+      weight: Number(formData.weight) + internalWeight, 
       containsCommodities: true,
       internalCommodities: internalCommodities,
     };
