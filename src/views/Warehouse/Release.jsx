@@ -3,7 +3,7 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import ReceiptCreationForm from "../forms/ReceiptCreationForm";
+import ReleaseOrderCreationForm from "../forms/ReleaseOrderCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReleaseService from "../../services/ReleaseService";
 import Sidebar from "../shared/components/SideBar";
@@ -187,26 +187,26 @@ const Release = () => {
 
             {selectedReleaseOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReceiptCreationForm
-                  pickupOrder={selectedReleaseOrder}
+                <ReleaseOrderCreationForm
+                  releaseOrder={selectedReleaseOrder}
                   closeModal={closeModal}
                   creating={false}
-                  onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentReleaseNumber}
-                  setcurrentPickUpNumber={setcurrentReleaseNumber}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
               </ModalForm>
             )}
 
             {selectedReleaseOrder === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReceiptCreationForm
-                  pickupOrder={null}
+                <ReleaseOrderCreationForm
+                  releaseOrder={null}
                   closeModal={closeModal}
                   creating={true}
-                  onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentReleaseNumber}
-                  setcurrentPickUpNumber={setcurrentReleaseNumber}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
               </ModalForm>
             )}

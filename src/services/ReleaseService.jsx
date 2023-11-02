@@ -55,6 +55,11 @@ class ReleaseService{
     const response = await axios.post(`${this.BASE_URL}clientToBill/`, data);
     return response;
   }
+
+  async createReleasedTo(data){
+    const response = await axios.post(`${this.BASE_URL}releasedTo/`, data);
+    return response
+  }
 }
 
 export default new ReleaseService();

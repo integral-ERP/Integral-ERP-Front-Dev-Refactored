@@ -32,10 +32,7 @@ const Sidebar = () => {
     <>
       <div className={`sidebar ${close ? "close" : ""}`}>
         <div className="logo-details">
-          {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo_name" src={logo} alt="Logo" />
-
-          {/* <span className="logo_name">Logo</span> */}
         </div>
         <ul className="nav-links">
           <li>
@@ -360,12 +357,12 @@ const Sidebar = () => {
               </li>
               <li>
                 <a onClick={openCompanyForm}>Company</a>
-                {/*<ModalForm
+                <ModalForm
                   isOpen={isOpenCompanyForm}
                   closeModal={closeCompanyForm}
                 >
                   <MyCompanyForm closeModal={closeCompanyForm}></MyCompanyForm>
-  </ModalForm>*/}
+                </ModalForm>
               </li>
               <li>
                 <Link to={"/configuration/airoperations"}>Air Operations</Link>
