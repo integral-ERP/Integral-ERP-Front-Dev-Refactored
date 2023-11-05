@@ -30,9 +30,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const handleCommoditySelection = (e) => {
     const selectedCommodityIds = Array.from(e.target.selectedOptions, (option) => option.value);
     const selectedCommodities = commodities.filter((item) => selectedCommodityIds.includes(item.id + ''));
-    console.log("LISTA DE IDS", selectedCommodityIds, "LISTA DE OBJETOS", selectedCommodities, "ORIGINALES", commodities);
     setinternalCommodities(selectedCommodities);
-    console.log("COMMODITIES INTERNAS:", internalCommodities);
   };
 
   const handleRepack = () => {
@@ -42,15 +40,10 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         internalWeight += Number(element.weight);
       });
     }
-
     const selectedCommodityIds = internalCommodities.map( com => String(com.id))
-
     const filteredCommodities = commodities.filter((commodity) => {
-      console.log("COMMODITIES SELECCIONADAS", selectedCommodityIds, "COMMODITY ACTUAL", commodity, "CONDICION", selectedCommodityIds.includes(String(commodity.id)));
       return !selectedCommodityIds.includes(String(commodity.id));
     });
-
-  console.log("FILTERED COMMODITIES:", filteredCommodities);
 
     const newCommodity = {
       ...formData,
@@ -65,7 +58,6 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     // Reset the form to its initial state.
     setformData(formFormat);
     setinternalCommodities([]);
-    console.log("NEW COMMODITIES:", commodities);
     // You can also perform any other actions or validations here if needed.
   };
   

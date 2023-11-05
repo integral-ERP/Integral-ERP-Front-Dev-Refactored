@@ -126,6 +126,7 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
+    "Location": "locationCode"
   };
 
   const handleSearch = (row) => {
