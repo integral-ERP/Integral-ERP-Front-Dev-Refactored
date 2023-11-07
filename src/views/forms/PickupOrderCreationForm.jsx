@@ -19,7 +19,7 @@ import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
-
+import "../../styles/components/PickupOrderCreationForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -768,6 +768,7 @@ const PickupOrderCreationForm = ({
                 Issued By:
               </label>
               <AsyncSelect
+                className="select_field"
                 id="issuedby"
                 value={issuedByOptions.find(
                   (option) => option.id === formData.issuedById
@@ -1300,7 +1301,9 @@ const PickupOrderCreationForm = ({
           onEdit={() => {
             setshowCommodityEditForm(!showCommodityEditForm);
           }}
-          onInspect={() => {setshowCommodityInspect(!showCommodityInspect)}}
+          onInspect={() => {
+            setshowCommodityInspect(!showCommodityInspect);
+          }}
           onAdd={() => {}}
           showOptions={false}
         />
@@ -1369,10 +1372,7 @@ const PickupOrderCreationForm = ({
                 <p>Length: {com.length}</p>
                 <p>Volumetric Weight: {com.volumetricWeight}</p>
                 <p>Chargeable Weight: {com.chargedWeight}</p>
-                <p>
-                  Repacked?:{" "}
-                  {com.containsCommodities ? "Yes" : "No"}
-                </p>
+                <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
               </div>
             );
           })}
