@@ -27,6 +27,26 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(formData);
+    if (formData.height && formData.width && formData.length) {
+      const volWeight = (
+        (formData.height * formData.width * formData.length) /
+        166
+      ).toFixed(0);
+      const ratedWeight =
+        formData.volumetricWeight >= formData.weight
+          ? formData.volumetricWeight
+          : formData.weight;
+      setformData({
+        ...formData,
+        volumetricWeight: volWeight,
+        chargedWeight: ratedWeight,
+      });
+    }
+  }, [formData.height, formData.length, formData.width]);
+
+
   const handleCommoditySelection = (e) => {
     const selectedCommodityIds = Array.from(e.target.selectedOptions, (option) => option.value);
     const selectedCommodities = commodities.filter((item) => selectedCommodityIds.includes(item.id + ''));
@@ -47,7 +67,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
 
     const newCommodity = {
       ...formData,
-      weight: Number(formData.weight) + internalWeight, 
+      weight: internalWeight, 
       containsCommodities: true,
       internalCommodities: internalCommodities,
     };
@@ -90,6 +110,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
               onChange={(e) =>
                 setformData({ ...formData, weight: e.target.value })
               }
+              disabled={formData.useInternalWeight}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
