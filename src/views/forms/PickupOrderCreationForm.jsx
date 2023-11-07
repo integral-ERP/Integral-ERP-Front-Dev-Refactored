@@ -605,6 +605,21 @@ const PickupOrderCreationForm = ({
     }
   };
 
+  const updateSelectedCommodity = (updatedInternalCommodities) => {
+    const updatedCommodity = { ...selectedCommodity };
+    updatedCommodity.internalCommodities = updatedInternalCommodities;
+    setselectedCommodity(updatedCommodity);
+
+    const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+
+    if(index != -1){
+      const commoditiesCopy = [...commodities];
+      commoditiesCopy[index] = updatedCommodity;
+      setcommodities(commoditiesCopy);
+    }
+  };
+  
+
   useEffect(() => {
     // Check if updates are complete initially
     checkUpdatesComplete();
@@ -1283,14 +1298,29 @@ const PickupOrderCreationForm = ({
               editing={true}
             ></CommodityCreationForm>
           )}
+          {selectedCommodity?.containsCommodities &&
+            selectedCommodity.internalCommodities.map(
+              (internalCommodity, index) => (
+                <CommodityCreationForm
+                  key={index}
+                  onCancel={() => {}}
+                  commodities={selectedCommodity.internalCommodities}
+                  setCommodities={updateSelectedCommodity}
+                  commodity={internalCommodity}
+                  editing={true}
+                ></CommodityCreationForm>
+              )
+            )}
         </div>
         <Table
           data={commodities}
           columns={[
+            "Description",
             " Length",
             " Height",
             " Width",
             " Weight",
+            "Location",
             " Volumetric Weight",
             " Chargeable Weight",
             "Options",
