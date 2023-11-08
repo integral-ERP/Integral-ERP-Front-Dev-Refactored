@@ -61,7 +61,7 @@ const PaymentTermsCreationForm = ({
       discountDays: formData.discountDays,
       inactive: formData.inactive,
     };
-    console.log("DATA:", formData);
+    console.log("DATA = ", formData);
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
@@ -70,7 +70,9 @@ const PaymentTermsCreationForm = ({
         ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Prueba successfully created/updated:", response.data);
+      console.log(
+        "Prueba successfully created/updated:",
+         response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -108,7 +110,7 @@ const PaymentTermsCreationForm = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log(PaymentTerms);
+    console.log("Imprimir = ",PaymentTerms);
   };
 
   useEffect(() => {
@@ -130,10 +132,10 @@ const PaymentTermsCreationForm = ({
   };
   const filteredData = PaymentTerms.filter((row) => handleSearch(row));
 
-  const handleType = (type) => {
-    setAccountype(type);
-    setFormData({ ...formData, type: type });
-  };
+  // const handleType = (type) => {
+  //   setAccountype(type);
+  //   setFormData({ ...formData, type: type });
+  // };
   //--------------------------------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -309,3 +311,5 @@ PaymentTermsCreationForm.defaultProps = {
 };
 
 export default PaymentTermsCreationForm;
+
+

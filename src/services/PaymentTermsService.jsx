@@ -1,7 +1,7 @@
 import axios from "axios";
 
-class PaymentTermsService {
-  constructor() {
+class PaymentTermsService{
+  constructor(){ 
     this.BASE_URL = import.meta.env.VITE_BASE_API_URL;
   }
 
@@ -11,10 +11,7 @@ class PaymentTermsService {
   }
 
   async updatePaymentTerm(id, data) {
-    const response = await axios.put(
-      `${this.BASE_URL}paymentTerms/${id}/`,
-      data
-    );
+    const response = await axios.put(`${this.BASE_URL}paymentTerms/${id}/`, data);
     return response;
   }
 
@@ -24,14 +21,14 @@ class PaymentTermsService {
     return response;
   }
 
-  async getPaymentTermById(id) {
+  async getPaymentTermById(id){
     const response = await axios.get(`${this.BASE_URL}paymentTerms/${id}`);
     return response;
   }
 
   async deletePaymentTerm(id) {
-    const response = await axios.delete(`${this.BASE_URL}paymentTerms/${id}/`);
-    return response;
+      const response = await axios.delete(`${this.BASE_URL}paymentTerms/${id}/`);
+      return response;
   }
 }
 

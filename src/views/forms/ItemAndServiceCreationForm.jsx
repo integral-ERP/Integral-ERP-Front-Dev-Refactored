@@ -119,45 +119,7 @@ const ItemAndServiceCreationForm = ({
             Definition
           </a>
         </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#automaticCreation"
-            aria-selected={activeTab === "automaticCreation"}
-            onClick={() => setActiveTab("automaticCreation")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Automatic Creation
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#notes"
-            aria-selected={activeTab === "notes"}
-            onClick={() => setActiveTab("notes")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Notes
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#other"
-            aria-selected={activeTab === "other"}
-            onClick={() => setActiveTab("other")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Other
-          </a>
-        </li>
+        
       </ul>
       <form
         className={`tab-pane fade ${
@@ -246,119 +208,8 @@ const ItemAndServiceCreationForm = ({
                 label="Price"
               />
             </div>
-            <div className="company-form__section with-fo">
-              <Input
-                type="checkbox"
-                inputName="resale"
-                value={formData.resale}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, resale: e.target.checked })
-                }
-                label="It is a resale item"
-              />
-            </div>
-            <div className="company-form__section with-fo">
-              <Input
-                type="checkbox"
-                inputName="createResale"
-                value={formData.createResale}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, createResale: e.target.checked })
-                }
-                label="Create related resale item automatically"
-              />
-            </div>
           </div>
           {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                Tax Code:
-              </label>
-              <select className="form-input">
-                <option value="">Select an option</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                Expense Item:
-              </label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                Preferred Vendor:
-              </label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                3rd party liability account:
-              </label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                3rd party asset account:
-              </label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select>
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="" className="form-label">
-                Currency:
-              </label>
-              <select className="form-input">
-                <option value="">Select a currency</option>
-                {Object.entries(currencies).map(
-                  ([currencyCode, currencyName]) => (
-                    <option key={currencyCode} value={currencyCode}>
-                      {currencyCode} - {currencyName}
-                    </option>
-                  )
-                )}
-              </select>
-            </div>
-            <div className="company-form__section with-fo">
-              <Input
-                type="checkbox"
-                inputName="3rdPartyBilling"
-                value={formData.thirdPartyBilling}
-                changeHandler={(e) =>
-                  setFormData({
-                    ...formData,
-                    thirdPartyBilling: e.target.checked,
-                  })
-                }
-                label="Enforce 3rd party billing"
-              />
-            </div>
-            <div className="company-form__section with-fo">
-              <Input
-                type="checkbox"
-                inputName="inactive"
-                value={formData.inactive}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, inactive: e.target.checked })
-                }
-                label="Inactive"
-              />
-            </div>
-          </div>
-          {/* ----------------------------END TWO---------------------------------- */}
         </div>
       </form>
       <form
