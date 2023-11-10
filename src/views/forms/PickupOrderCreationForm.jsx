@@ -19,6 +19,7 @@ import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
+import ReleaseService from "../../services/ReleaseService";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -41,6 +42,7 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
@@ -89,6 +91,8 @@ const PickupOrderCreationForm = ({
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
+    client_to_bill: "",
+    client_to_bill_type: "",
     // CARRIER TAB
     proNumber: "",
     trackingNumber: "",
@@ -285,6 +289,30 @@ const PickupOrderCreationForm = ({
     });
   };
 
+  const handleClientToBillSelection = async (event) => {
+    const type = event.target?.value || "";
+    if (type === "other") {
+      setFormData({ ...formData, client_to_bill_type: type });
+    } else if (type === "shipper" || type === "consignee") {
+      const id =
+        type === "shipper"
+          ? formData.shipperId
+          : type === "consignee"
+          ? formData.consigneeId
+          : "";
+      setFormData({
+        ...formData,
+        client_to_bill: id,
+        client_to_bill_type: type,
+      });
+    } else {
+      const id = event.id;
+      const type = event.type;
+      console.log("id", id, "type", type);
+      setFormData({ ...formData, client_to_bill_type: type, client_to_bill: id });
+    }
+  };
+
   useEffect(() => {
     console.log("checking for edit", "join:", !creating && pickupOrder != null);
     if (!creating && pickupOrder != null) {
@@ -426,6 +454,12 @@ const PickupOrderCreationForm = ({
 
     const carrierOptions = [...carriersWithType];
 
+    const clientToBillOptions = [
+      ...customersWithType,
+      forwardingAgentsWithType,
+    ];
+    console.log("Setting Released to options:", clientToBillOptions);
+
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
@@ -435,6 +469,7 @@ const PickupOrderCreationForm = ({
     setConsigneeOptions(consigneeOptions);
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
+    setReleasedToOptions(clientToBillOptions);
   };
 
   const loadShipperOption = async (id, type) => {
@@ -591,6 +626,50 @@ const PickupOrderCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
+
+    let clientToBillName = "";
+
+    if (formData.releasedToType === "releasedTo") {
+      switch (formData.releasedToType) {
+        case "customer":
+          clientToBillName = "customerid";
+          break;
+        case "vendor":
+          clientToBillName = "vendorid";
+          break;
+        case "agent":
+          clientToBillName = "agentid";
+          break;
+        case "carrier":
+          clientToBillName = "carrierid";
+          break;
+        default:
+          break;
+      }
+    }
+    if (formData.client_to_bill_type === "customer") {
+      clientToBillName = "customerid";
+    }
+    if (formData.client_to_bill_type === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.client_to_bill_type === "agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.client_to_bill_type === "carrier") {
+      clientToBillName = "carrierid";
+    }
+    if (clientToBillName !== "") {
+      const clientToBill = {
+        [clientToBillName]: formData.clientToBillId,
+      };
+
+      const response = await ReleaseService.createClientToBill(clientToBill);
+      if (response.status === 201) {
+        console.log("CLIENT TO BILL ID", response.data.id);
+        setFormData({...formData,client_to_bill: response.data.id});
+      }
+    }
   };
 
   const checkUpdatesComplete = () => {
@@ -599,7 +678,8 @@ const PickupOrderCreationForm = ({
       shipperRequest !== null &&
       deliverylocation !== null &&
       pickuplocation !== null &&
-      consigneeRequest !== null
+      consigneeRequest !== null &&
+      formData.client_to_bill !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -610,15 +690,16 @@ const PickupOrderCreationForm = ({
     updatedCommodity.internalCommodities = updatedInternalCommodities;
     setselectedCommodity(updatedCommodity);
 
-    const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+    const index = commodities.findIndex(
+      (com) => com.id == selectedCommodity.id
+    );
 
-    if(index != -1){
+    if (index != -1) {
       const commoditiesCopy = [...commodities];
       commoditiesCopy[index] = updatedCommodity;
       setcommodities(commoditiesCopy);
     }
   };
-  
 
   useEffect(() => {
     // Check if updates are complete initially
@@ -642,6 +723,8 @@ const PickupOrderCreationForm = ({
           // DELIVERY TAB
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
+          client_to_bill_type: formData.client_to_bill_type,
+          client_to_bill: formData.client_to_bill,
           // CARRIER TAB
           pro_number: formData.proNumber,
           tracking_number: formData.trackingNumber,
@@ -1065,6 +1148,22 @@ const PickupOrderCreationForm = ({
                 label=""
               />
             </div>
+            <div className="company-form__section">
+              <label htmlFor="language">Client to Bill:</label>
+              <select
+                name="clientToBill"
+                id="clientToBill"
+                className="form-input"
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+              >
+                <option value="">Select an option</option>
+                <option value="shipper">Shipper</option>
+                <option value="consignee">Ultimate Consignee</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
           </div>
           <div>
             <div className="company-form__section">
@@ -1094,6 +1193,22 @@ const PickupOrderCreationForm = ({
                 value={formData.deliveryLocationInfo}
                 readonly={true}
                 label=""
+              />
+            </div>
+            <div className="company-form__section">
+              <AsyncSelect
+                id="releasedToOther"
+                isDisabled={formData.client_to_bill_type !== "other"}
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+                value={releasedToOptions.find(
+                  (option) => option.id === formData.client_to_bill
+                )}
+                isClearable={true}
+                defaultOptions={releasedToOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
               />
             </div>
           </div>

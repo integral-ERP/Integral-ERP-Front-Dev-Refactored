@@ -344,7 +344,7 @@ const ReleaseOrderCreationForm = ({
         [clientToBillName]: formData.clientToBillId,
       };
 
-      const response = await ReleaseService.createReleasedTo(clientToBill);
+      const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         console.log("CLIENT TO BILL ID", response.data.id);
         setClientToBill(response.data.id);
