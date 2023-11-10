@@ -36,7 +36,7 @@ const IncomeChargeForm = ({
     show: false,
     status: "",
   };
-  console.log("Comodities= ", commodities);
+  console.log(commodities);
   const [formData, setformData] = useState(formFormat);
   useEffect(() => {
     CurrenciesService.getCurrencies()
@@ -90,7 +90,7 @@ const IncomeChargeForm = ({
       quantity: 1
     };
     setcharges([...charges, charge]);
-    console.log("charte" ,charge);
+    console.log(charge);
   };
 
   const handleChargeRateChange = (e) => {

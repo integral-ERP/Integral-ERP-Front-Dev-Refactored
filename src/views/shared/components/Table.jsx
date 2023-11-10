@@ -126,25 +126,7 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    "Location": "locationCode",
-    //---------------------
-    "Note":"note",
-    "Account": "accountNumber",
-    "Code": "code" ,
-    "Due Days" : "dueDays",
-    "Discount Percentage" : "discountPercentage",
-    "Discount Days" : "discountDays",
-    "Inactive" : "inactive",
-
-    "Transaction Date" : "trasaDate",
-    "Due Date" : "due",
-    "type" : "typeName",
-    "Apply" : "issuedByName",
-    "Payment Temse": "paymentByDesc",
-    "Account Name" : "accountByName",
-    "Type 2" : "typeByCode",
-    "Biling Address" : "bilingAddres",
-    "Price" : "price",
+    "Location": "locationCode"
   };
 
   const handleSearch = (row) => {

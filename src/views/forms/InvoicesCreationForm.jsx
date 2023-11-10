@@ -20,8 +20,6 @@ import ForwardingAgentService from "../../services/ForwardingAgentService";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 
-import React, { createContext, useContext } from 'react';
-
 const invoiceCreationForm = ({
   invoice,
   closeModal,
@@ -32,20 +30,16 @@ const invoiceCreationForm = ({
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
   const [apply, setapplys] = useState([]);
-
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [paymentByOptions, setPaymentByOptions] = useState([]);
   const [accountByOptions, setAccountByOptions] = useState([]);
-  const [typeByOptions, setptypeByOptions] = useState([]);
   
   const [paymentTem, setPaymentTems] = useState([]);
   const [account, setAccountTems] = useState([]);
-  const [typeService, setTypeServiceTems] =useState([])
 
 
   const [charges, setcharges] = useState([]);
   const [type, settypes] = useState([]);
-  const [types, settype] = useState([]);
   const [issuedby, setIssuedby] = useState(null);
   const [payment, setpayments] = useState([]);
   const [accounst, setaccounts] = useState([]);
@@ -59,7 +53,6 @@ const invoiceCreationForm = ({
 const formFormat = {
   number: "",
   account: "",
-  typeService: "",
   paymentTem: "",
   division: "",
   apply: "",
@@ -80,13 +73,10 @@ const formFormat = {
   currency:"United States Dollar",
   invoice: "",
   typeName: "",
-  typeById: "",
-  typeByCode: "",
 
 };
 
 const [formData, setformData] = useState(formFormat);
-const total = createContext();
 const [resultado, setResultado] = useState(0);
 // --------------------------------------------------------------------------------
 const handleChargeRateChange = (e) => {
@@ -139,19 +129,6 @@ const handleChargeRateChange = (e) => {
     });
   };
   //------------------------------------------------------------------------------------
-  const handleTypeServiceBySelection = async (event) => {
-    const id = event.id;
-    const code = event.code;
-    const result = await ItemsAndServicesService.getItemAndServiceById(id);
-    settype(result.data)
-    setformData({
-      ...formData,
-      typeById: id,
-      typeByCode: code,
-    });
-  };
-  //------------------------------------------------------------------------------------
- 
   useEffect(() => {
     const fetchData = async () => {
       const typeData = await ItemsAndServicesService.getItemsAndServices();
@@ -171,7 +148,6 @@ const handleChargeRateChange = (e) => {
       setformData({
         number: invoice.number || "",
         account: invoice.account || "",
-        typeService: invoice.typeService || "",
         paymentTem: invoice.paymentTem || "",
         division: invoice.division || "",
         apply: invoice.apply || "",
@@ -189,7 +165,7 @@ const handleChargeRateChange = (e) => {
 
         paymentByDesc: invoice.paymentByDesc,
         accountByName: invoice.accountByName || "",
-        typeByCode: invoice.typeByCode || "",
+        typeName: invoice.typeName || "",
         
       });
     }
@@ -199,7 +175,6 @@ const handleChargeRateChange = (e) => {
     let rawData = {
       number: formData.number,
       account: formData.account,
-      typeService: formData.typeService,
       paymentTem: formData.paymentTem,
       division: formData.division,
       apply: formData.apply,
@@ -220,9 +195,6 @@ const handleChargeRateChange = (e) => {
       //----------
       accountById: formData.accountById,
       accountByName: formData.accountByName,
-      //----------
-      typeById: formData.typeById,
-      typeByCode: formData.typeByCode,
       // accountByType: formData.accountByType,
     };
     console.log("DATA:", formData);
@@ -249,8 +221,6 @@ const handleChargeRateChange = (e) => {
       apply: formData.apply,
       paymentTem: formData.paymentTem,
       account: formData.account,
-      typeService: formData.typeService,
-
     };
     
     console.log("DATA CURTOMER:", formData);
@@ -314,8 +284,7 @@ const handleChargeRateChange = (e) => {
 const fetchFormData = async () => {  
   const forwardingAgents= (await ForwardingAgentService.getForwardingAgents()).data.results;
   const paiment         = (await PaymentTermsService.getPaymentTerms()).data.results;
-  const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-  const type          = (await ItemsAndServicesService.getItemsAndServices()).data.results;
+  const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;;
   // Function to add 'type' property to an array of objects
   const addTypeToObjects = (arr, type) =>
     arr.map((obj) => ({ ...obj, type }));
@@ -324,18 +293,15 @@ const fetchFormData = async () => {
   const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents,"forwarding-agent");
   const paymentsWithType          = addTypeToObjects(paiment,"paiment-termn");
   const accountWithType           = addTypeToObjects(accoun, "accounten-termn");
-  const typeWithType              = addTypeToObjects(type, "type");
 
   // Merge the arrays
   const issuedByOptions = [...forwardingAgentsWithType];
   const paymentByOptions = [...paymentsWithType];
   const accountByOptions = [...accountWithType];
-  const typeByOptions = [...typeWithType];
 
   setIssuedByOptions(issuedByOptions);
   setPaymentByOptions(paymentByOptions);
   setAccountByOptions(accountByOptions);
-  setptypeByOptions(typeByOptions);
 
 };
 
@@ -522,7 +488,7 @@ const handleType = (type) => {
     <div className="form-row">
       <div className="form-column">
       <div className="containerr">
-        {/* <div className="company-form__section">
+        <div className="company-form__section">
           <label htmlFor="typeNameType" className="form-label"> 
           Type: 
           </label>
@@ -544,24 +510,8 @@ const handleType = (type) => {
               </option>
             ))}
           </select>
-        </div> */}
-        {/* --------------------------------------------------------------------------------------- */}
-        <div className="company-form__section">
-            <label htmlFor="typeService" className="form-label">
-            Type 2:
-            </label>
-            <AsyncSelect
-              id="typeService"
-              value={typeService.find((option) => option.id === formData.typeService)}
-              onChange={(e) => {handleTypeServiceBySelection(e);}}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={typeByOptions}
-              getOptionLabel={(option) => option.code}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-      {/* --------------------------------------------------------------------------------------- */}
+        </div>
+        {/* --------------------------------------------- */}
         <div className="company-form__section">
           <Input
             type="text"
@@ -670,7 +620,6 @@ const handleType = (type) => {
         columns={[
           "Status",
           "type",
-          "Type 2",
           "Description",
           "Prepaid",
           "Quantity",

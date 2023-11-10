@@ -19,7 +19,6 @@ const Invoices = () => {
   const columns = [
     "Number",
     "Account Name",
-    "Type 2",
     "Transaction Date",
     "Due Date",
     "Apply",
