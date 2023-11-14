@@ -1052,7 +1052,9 @@ const PickupOrderCreationForm = ({
                 onChange={(e) => {
                   handleShipperSelection(e);
                 }}
-                value={defaultValueShipper}
+                value={shipperOptions.find(
+                  (option) => option.id === formData.shipperId
+                )}
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={shipperOptions}
@@ -1148,7 +1150,9 @@ const PickupOrderCreationForm = ({
                 <AsyncSelect
                   id="consignee"
                   onChange={(e) => handleConsigneeSelection(e)}
-                  value={defaultValueConsignee}
+                  value={consigneeOptions.find(
+                    (option) => option.id === formData.consigneeId
+                  )}
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={consigneeOptions}

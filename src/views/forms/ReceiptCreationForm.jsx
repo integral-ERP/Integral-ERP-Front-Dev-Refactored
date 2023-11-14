@@ -1387,13 +1387,15 @@ const ReceiptCreationForm = ({
         <Table
           data={commodities}
           columns={[
+            "Description",
             " Length",
             " Height",
             " Width",
             " Weight",
+            "Location",
             " Volumetric Weight",
             " Chargeable Weight",
-            " Delete",
+            "Options",
           ]}
           onSelect={handleSelectCommodity} // Make sure this line is correct
           selectedRow={selectedCommodity}
@@ -1407,6 +1409,15 @@ const ReceiptCreationForm = ({
           onAdd={() => {}}
           showOptions={false}
         />
+        <button
+          type="button"
+          onClick={() => {
+            setshowRepackingForm(!showRepackingForm);
+          }}
+          className="button-save"
+        >
+          Repacking
+        </button>
       </form>
       <form
         className={`tab-pane fade ${
