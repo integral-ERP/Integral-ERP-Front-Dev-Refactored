@@ -269,11 +269,6 @@ const PickupOrderCreationForm = ({
     setcommodities(newCommodities);
   };
 
-  const handleCommodityInspect = () => {
-    if (selectedCommodity) {
-    }
-  };
-
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
@@ -702,6 +697,30 @@ const PickupOrderCreationForm = ({
   };
 
   useEffect(() => {
+    const handleModalClick = (event) => {
+      // Check if the click is inside your modal content
+      const clickedElement = event.target;
+      const isTableRow = clickedElement.closest(".table-row");
+      console.log("HANDLE MODAL CLICK EVENT");
+      if (!isTableRow) {
+        // Click is outside the modal content, close the modal
+        setselectedCommodity(null);
+        setshowCommodityEditForm(false);
+        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.querySelector(".pickup").addEventListener("click", handleModalClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.querySelector(".pickup").removeEventListener("click", handleModalClick);
+    };
+  }, []);
+
+
+  useEffect(() => {
     // Check if updates are complete initially
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
@@ -772,7 +791,7 @@ const PickupOrderCreationForm = ({
   ]);
 
   return (
-    <div className="company-form">
+    <div className="company-form pickup">
       <ul className="nav nav-tabs" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -1412,7 +1431,7 @@ const PickupOrderCreationForm = ({
               editing={true}
             ></CommodityCreationForm>
           )}
-          {selectedCommodity?.containsCommodities &&
+          {showCommodityEditForm && selectedCommodity?.containsCommodities &&
             selectedCommodity.internalCommodities.map(
               (internalCommodity, index) => (
                 <CommodityCreationForm

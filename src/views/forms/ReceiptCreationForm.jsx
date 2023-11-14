@@ -20,6 +20,7 @@ import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import EventCreationForm from "./EventCreationForm";
 import "../../styles/components/ReceipCreationForm.scss";
+import RepackingForm from "./RepackingForm";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -65,6 +66,12 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
+
+  //repacking
+  const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
+  const [showCommodityInspect, setshowCommodityInspect] = useState(false);
+  const [showRepackingForm, setshowRepackingForm] = useState(false);
+  const [selectedCommodity, setselectedCommodity] = useState(null);
 
   const formFormat = {
     // GENERAL TAB
@@ -265,6 +272,57 @@ const ReceiptCreationForm = ({
       mainCarrierInfo: info,
     });
   };
+
+  //repacking
+  const handleSelectCommodity = (commodity) => {
+    setselectedCommodity(commodity);
+  };
+
+  const handleCommodityDelete = () => {
+    const newCommodities = commodities.filter(
+      (com) => com.id != selectedCommodity.id
+    );
+    setcommodities(newCommodities);
+  };
+
+  const updateSelectedCommodity = (updatedInternalCommodities) => {
+    const updatedCommodity = { ...selectedCommodity };
+    updatedCommodity.internalCommodities = updatedInternalCommodities;
+    setselectedCommodity(updatedCommodity);
+
+    const index = commodities.findIndex(
+      (com) => com.id == selectedCommodity.id
+    );
+
+    if (index != -1) {
+      const commoditiesCopy = [...commodities];
+      commoditiesCopy[index] = updatedCommodity;
+      setcommodities(commoditiesCopy);
+    }
+  };
+
+  useEffect(() => {
+    const handleModalClick = (event) => {
+      // Check if the click is inside your modal content
+      const clickedElement = event.target;
+      const isTableRow = clickedElement.closest(".table-row");
+      console.log("HANDLE MODAL CLICK EVENT");
+      if (!isTableRow) {
+        // Click is outside the modal content, close the modal
+        setselectedCommodity(null);
+        setshowCommodityEditForm(false);
+        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.querySelector(".receipt").addEventListener("click", handleModalClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.querySelector(".receipt").removeEventListener("click", handleModalClick);
+    };
+  }, []);
 
   const addNotes = () => {
     const updatedNotes = [...formData.notes, note];
@@ -738,7 +796,7 @@ const ReceiptCreationForm = ({
   ]);
 
   return (
-    <div className="company-form">
+    <div className="company-form receipt">
       <ul className="nav nav-tabs" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -1312,6 +1370,12 @@ const ReceiptCreationForm = ({
           >
             Add Piece
           </button>
+          {showRepackingForm && (
+            <RepackingForm
+              commodities={commodities}
+              setCommodities={setcommodities}
+            ></RepackingForm>
+          )}
           {showCommodityCreationForm && (
             <CommodityCreationForm
               onCancel={setshowCommodityCreationForm}
@@ -1331,10 +1395,15 @@ const ReceiptCreationForm = ({
             " Chargeable Weight",
             " Delete",
           ]}
-          onSelect={() => {}} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
+          onSelect={handleSelectCommodity} // Make sure this line is correct
+          selectedRow={selectedCommodity}
+          onDelete={handleCommodityDelete}
+          onEdit={() => {
+            setshowCommodityEditForm(!showCommodityEditForm);
+          }}
+          onInspect={() => {
+            setshowCommodityInspect(!showCommodityInspect);
+          }}
           onAdd={() => {}}
           showOptions={false}
         />
@@ -1471,6 +1540,34 @@ const ReceiptCreationForm = ({
             try again
           </strong>
         </Alert>
+      )}
+      {showCommodityInspect && (
+        <div className="repacking-container">
+          <p>{selectedCommodity.description}</p>
+          <p>Weight: {selectedCommodity.weight}</p>
+          <p>Height: {selectedCommodity.height}</p>
+          <p>Width: {selectedCommodity.width}</p>
+          <p>Length: {selectedCommodity.length}</p>
+          <p>Volumetric Weight: {selectedCommodity.volumetricWeigth}</p>
+          <p>Chargeable Weight: {selectedCommodity.chargeableWeight}</p>
+          <p>
+            Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}
+          </p>
+          {selectedCommodity.internalCommodities.map((com) => {
+            return (
+              <div key={com.id} className="card">
+                <p>{com.description}</p>
+                <p>Weight: {com.weight}</p>
+                <p>Height: {com.height}</p>
+                <p>Width: {com.width}</p>
+                <p>Length: {com.length}</p>
+                <p>Volumetric Weight: {com.volumetricWeight}</p>
+                <p>Chargeable Weight: {com.chargedWeight}</p>
+                <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
