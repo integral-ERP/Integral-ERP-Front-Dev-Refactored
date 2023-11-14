@@ -715,7 +715,7 @@ const PickupOrderCreationForm = ({
 
     // Remove the event listener when the component unmounts
     return () => {
-      document.querySelector(".pickup").removeEventListener("click", handleModalClick);
+      document.querySelector(".pickup")?.removeEventListener("click", handleModalClick);
     };
   }, []);
 

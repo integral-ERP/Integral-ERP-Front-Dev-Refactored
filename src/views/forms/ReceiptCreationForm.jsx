@@ -320,7 +320,7 @@ const ReceiptCreationForm = ({
 
     // Remove the event listener when the component unmounts
     return () => {
-      document.querySelector(".receipt").removeEventListener("click", handleModalClick);
+      document.querySelector(".receipt")?.removeEventListener("click", handleModalClick);
     };
   }, []);
 
