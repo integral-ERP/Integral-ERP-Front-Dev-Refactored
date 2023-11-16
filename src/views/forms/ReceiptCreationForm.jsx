@@ -21,6 +21,7 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import EventCreationForm from "./EventCreationForm";
 import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
+import PickupService from "../../services/PickupService";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -531,7 +532,7 @@ const ReceiptCreationForm = ({
 
       let updatedFormData = {
         // GENERAL TAB
-        status: pickupOrder.status,
+        status: 4,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -769,6 +770,10 @@ const ReceiptCreationForm = ({
           : ReceiptService.updateReceipt(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
+          if(fromPickUp){
+            const newPickup = {...pickupOrder, status: 7};
+            PickupService.updatePickup(pickupOrder.id, newPickup);
+          }
           console.log(
             "Warehouse Receipt successfully created/updated:",
             response.data

@@ -42,8 +42,8 @@ const ReleaseOrderCreationForm = ({
   const [selectedCommodities, setSelectedCommodities] = useState([]);
   const [warehouseReceipts, setWarehouseReceipts] = useState([]);
   const formFormat = {
-    status: 3,
-    number: 1,
+    status: 14,
+    number: pickupNumber,
     creation_date: today,
     release_date: today,
     employeeId: "",
@@ -280,6 +280,16 @@ const ReleaseOrderCreationForm = ({
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
+
+  useEffect(() => {
+
+    // this might be with selected receipts instead of commodities
+    if(commodities.length > 0){
+      setFormData({...formData, status: 1})
+    }
+  
+  }, [commodities])
+  
 
   const sendData = async () => {
     let releasedToName = "";

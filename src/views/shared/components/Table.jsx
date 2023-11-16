@@ -212,6 +212,12 @@ const Table = ({
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
           </span>
         );
+        case "14":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
+          </span>
+        );
     }
   };
 

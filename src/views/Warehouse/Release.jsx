@@ -17,6 +17,11 @@ const Release = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [showContextMenu, setShowContextMenu] = useState(false);
   const columns = [
     "Status",
     "Number",
@@ -146,6 +151,59 @@ const Release = () => {
     };
   }, []);
 
+  const setInTransit = async () => {
+    console.log("Changing");
+    if(selectedReleaseOrder){
+      const updatedPickuporder = {...selectedReleaseOrder, status: 6};
+      const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
+      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      if (response.status === 200){
+        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        window.location.reload(true);
+        // TODO: REFRESH WINDOW 
+      }
+      console.log(response);
+    }else{
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+  const setDelivered = async () => {
+    console.log("Changing");
+    if(selectedReleaseOrder){
+      const updatedPickuporder = {...selectedReleaseOrder, status: 9};
+      const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
+      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      if (response.status === 200){
+        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        window.location.reload(true);
+        // TODO: REFRESH WINDOW 
+      }
+      console.log(response);
+    }else{
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+  const contextMenuOptions = [
+    {
+      label: "Set/Reset In Transit",
+      handler: setInTransit,
+    },
+    {
+      label: "Set/Reset Delivered",
+      handler: setDelivered,
+    },
+  ];
+
+  const handleContextMenu = (e) => {
+    e.preventDefault(); // Prevent the browser's default context menu
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    setContextMenuPosition({ x: clickX, y: clickY });
+    setShowContextMenu(true);
+  };
+
   return (
     <>
       <div className="dashboard__layout">
@@ -162,6 +220,11 @@ const Release = () => {
               onAdd={handleAddReleaseOrder}
               title="Release Orders"
               setData={setReleaseOrders}
+              handleContextMenu={handleContextMenu}
+              showContextMenu={showContextMenu}
+              contextMenuPosition={contextMenuPosition}
+              setShowContextMenu={setShowContextMenu}
+              contextMenuOptions={contextMenuOptions}
             />
 
             {showSuccessAlert && (
