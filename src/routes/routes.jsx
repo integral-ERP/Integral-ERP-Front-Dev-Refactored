@@ -11,14 +11,16 @@ import Vendors from "../views/Manteinance/Vendors";
 import Employees from "../views/Manteinance/Employees";
 import PackageType from "../views/Manteinance/PackageType";
 import Ports from "../views/Manteinance/Ports";
-import Countries from "../views/Manteinance/Countries"
-import Locations from "../views/Manteinance/Locations"
+import Countries from "../views/Manteinance/Countries";
+import Locations from "../views/Manteinance/Locations";
 import Pickup from "../views/Warehouse/Pickup";
 import ItemsAndServices from "../views/Accounting/ItemsAndServices";
 import Receipt from "../views/Warehouse/Receipt";
 import Release from "../views/Warehouse/Release";
 import MeasurementUnits from "../views/Configuration/MeasurementUnits";
 import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
+import Invoices from "../views/Accounting/Invoices";
+import PaymentTerms from "../views/Configuration/PaymentTerms";
 
 export const RoutesConfiguration = () => {
   return (
@@ -29,8 +31,14 @@ export const RoutesConfiguration = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/maintenance/carriers" element={<Carriers />} />
-        <Route path="/maintenance/warehouseProviders" element={<WarehouseProviders />} />
-        <Route path="/maintenance/forwardingAgents" element={<ForwardingAgents />} />
+        <Route
+          path="/maintenance/warehouseProviders"
+          element={<WarehouseProviders />}
+        />
+        <Route
+          path="/maintenance/forwardingAgents"
+          element={<ForwardingAgents />}
+        />
         <Route path="/maintenance/customers" element={<Customers />} />
         <Route path="/maintenance/vendors" element={<Vendors />} />
         <Route path="/maintenance/employees" element={<Employees />} />
@@ -41,9 +49,20 @@ export const RoutesConfiguration = () => {
         <Route path="/warehouse/pickup" element={<Pickup />} />
         <Route path="/warehouse/receipt" element={<Receipt />} />
         <Route path="/warehouse/release" element={<Release />} />
-        <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
-        <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
-        <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
+        <Route
+          path="/accounting/itemsandservices"
+          element={<ItemsAndServices />}
+        />
+        <Route
+          path="/configuration/measurementunits"
+          element={<MeasurementUnits />}
+        />
+        <Route
+          path="/accounting/chartofaccounts"
+          element={<ChartOfAccounts />}
+        />
+        <Route path="/accounting/Invoices" element={<Invoices />} />
+        <Route path="/Configuration/PaymentTerms" element={<PaymentTerms />} />
       </Routes>
     </Router>
   );
