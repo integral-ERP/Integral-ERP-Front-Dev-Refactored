@@ -6,6 +6,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const [internalCommodities, setinternalCommodities] = useState([]);
   const formFormat = {
     package_type_id: "",
+    package_type_description: "",
     weight: 0,
     length: 0,
     width: 0,
@@ -87,7 +88,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       <h3>Repacking Form</h3>
       <div>
         <label htmlFor="containerType">Container Type:</label>
-        <select name="containerType" id="containerType" onChange={(e) => {setformData({...formData, package_type_id: e.target.value})}}>
+        <select name="containerType" id="containerType" onChange={(e) => {setformData({...formData, package_type_id: e.target.value, package_type_description: e.target.options[e.target.selectedIndex].text})}}>
           <option value="">Select an option</option>
           {packTypes.map((type) => {
             return (

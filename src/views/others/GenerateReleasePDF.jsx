@@ -48,59 +48,65 @@ const GenerateReleasePDF = (data) => {
       let ninenthRowText = "";
       data.commodities?.forEach((commodity) => {
         firstRowText += `1 \n`;
-        secondRowText = data.warehouseReceiptObj?.number || "1001";
-        thirdRowText = commodity.locationCode|| "D-5A";
+        secondRowText = data.warehouseReceiptObj?.number || "";
+        thirdRowText = commodity.locationCode || "";
         fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fifthRowText = "Box";
         sixthRowText += `${commodity.description} \n`;
         seventhRowText += `${commodity.weight} lbs \n`;
         eigthRowText += `${commodity.volumetricWeight} ft3 \n`;
-         ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
+        ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
+
+        if (commodity.containsCommodities && commodity.internalCommodities) {
+          commodity.internalCommodities.forEach((internalCommodity) => {
+            // Add the information for each internal commodity
+            thirdRowText += commodity.locationCode || "";
+            fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+            fifthRowText += `${internalCommodity.package_type_description} \n`;
+            sixthRowText += `${internalCommodity.description} lbs \n`;
+            seventhRowText += `${internalCommodity.weight} lbs \n`;
+            eigthRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+            ninenthRowText = `${internalCommodity.chargedWeight} Vlb \n`;
+            totalWeight += parseFloat(internalCommodity.weight);
+            totalVolume += parseFloat(internalCommodity.volumetricWeight);
+          });
+        }
       });
       const commodityRow = [
         {
           // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
           text: firstRowText,
-          
         },
         {
           // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
           text: secondRowText,
-        
         },
         {
           text: thirdRowText,
         },
         {
           text: fourthRowText,
-      
-        
         },
         {
           // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
           text: fifthRowText,
-        
         },
         {
           text: sixthRowText,
-        
         },
         {
           text: seventhRowText,
-        
         },
         {
           // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
           text: eigthRowText,
-        
         },
         {
           // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
           text: ninenthRowText,
-        
-        }
+        },
       ];
       commodityRows.push(commodityRow);
     }
@@ -248,13 +254,23 @@ const GenerateReleasePDF = (data) => {
                     table: {
                       widths: ["28%", "40%", "32%"],
                       body: [["Type", `Description`, `Price`], ...chargeRows],
-                    }
+                    },
                   },
                 ],
               },
               {
                 table: {
-                  widths: [`auto`, `auto`, `auto`, `auto`, `*`, `*`, `auto`, `auto`, `auto`],
+                  widths: [
+                    `auto`,
+                    `auto`,
+                    `auto`,
+                    `auto`,
+                    `*`,
+                    `*`,
+                    `auto`,
+                    `auto`,
+                    `auto`,
+                  ],
                   body: [
                     [
                       {
@@ -307,10 +323,9 @@ const GenerateReleasePDF = (data) => {
                       },
                     ],
                     ...commodityRows,
-
-                  ]
+                  ],
                 },
-                margin: [0, 50, 0, 20]
+                margin: [0, 50, 0, 20],
               },
             ],
             styles: {

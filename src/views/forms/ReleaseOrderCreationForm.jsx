@@ -42,8 +42,8 @@ const ReleaseOrderCreationForm = ({
   const [selectedCommodities, setSelectedCommodities] = useState([]);
   const [warehouseReceipts, setWarehouseReceipts] = useState([]);
   const formFormat = {
-    status: 3,
-    number: 1,
+    status: 14,
+    number: pickupNumber,
     creation_date: today,
     release_date: today,
     employeeId: "",
@@ -281,6 +281,16 @@ const ReleaseOrderCreationForm = ({
     }
   }, [pickupNumber]);
 
+  useEffect(() => {
+
+    // this might be with selected receipts instead of commodities
+    if(commodities.length > 0){
+      setFormData({...formData, status: 1})
+    }
+  
+  }, [commodities])
+  
+
   const sendData = async () => {
     let releasedToName = "";
     if (formData.releasedToType === "customer") {
@@ -344,7 +354,7 @@ const ReleaseOrderCreationForm = ({
         [clientToBillName]: formData.clientToBillId,
       };
 
-      const response = await ReleaseService.createReleasedTo(clientToBill);
+      const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         console.log("CLIENT TO BILL ID", response.data.id);
         setClientToBill(response.data.id);

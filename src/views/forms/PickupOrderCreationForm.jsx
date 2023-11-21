@@ -19,6 +19,7 @@ import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
+import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/PickupOrderCreationForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -41,6 +42,7 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
@@ -89,6 +91,8 @@ const PickupOrderCreationForm = ({
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
+    client_to_bill: "",
+    client_to_bill_type: "",
     // CARRIER TAB
     proNumber: "",
     trackingNumber: "",
@@ -265,11 +269,6 @@ const PickupOrderCreationForm = ({
     setcommodities(newCommodities);
   };
 
-  const handleCommodityInspect = () => {
-    if (selectedCommodity) {
-    }
-  };
-
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
@@ -283,6 +282,34 @@ const PickupOrderCreationForm = ({
       mainCarrierdId: id,
       mainCarrierInfo: info,
     });
+  };
+
+  const handleClientToBillSelection = async (event) => {
+    const type = event.target?.value || "";
+    if (type === "other") {
+      setFormData({ ...formData, client_to_bill_type: type });
+    } else if (type === "shipper" || type === "consignee") {
+      const id =
+        type === "shipper"
+          ? formData.shipperId
+          : type === "consignee"
+          ? formData.consigneeId
+          : "";
+      setFormData({
+        ...formData,
+        client_to_bill: id,
+        client_to_bill_type: type,
+      });
+    } else {
+      const id = event.id;
+      const type = event.type;
+      console.log("id", id, "type", type);
+      setFormData({
+        ...formData,
+        client_to_bill_type: type,
+        client_to_bill: id,
+      });
+    }
   };
 
   useEffect(() => {
@@ -426,6 +453,12 @@ const PickupOrderCreationForm = ({
 
     const carrierOptions = [...carriersWithType];
 
+    const clientToBillOptions = [
+      ...customersWithType,
+      forwardingAgentsWithType,
+    ];
+    console.log("Setting Released to options:", clientToBillOptions);
+
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
@@ -435,6 +468,7 @@ const PickupOrderCreationForm = ({
     setConsigneeOptions(consigneeOptions);
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
+    setReleasedToOptions(clientToBillOptions);
   };
 
   const loadShipperOption = async (id, type) => {
@@ -591,6 +625,50 @@ const PickupOrderCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
+
+    let clientToBillName = "";
+
+    if (formData.releasedToType === "releasedTo") {
+      switch (formData.releasedToType) {
+        case "customer":
+          clientToBillName = "customerid";
+          break;
+        case "vendor":
+          clientToBillName = "vendorid";
+          break;
+        case "agent":
+          clientToBillName = "agentid";
+          break;
+        case "carrier":
+          clientToBillName = "carrierid";
+          break;
+        default:
+          break;
+      }
+    }
+    if (formData.client_to_bill_type === "customer") {
+      clientToBillName = "customerid";
+    }
+    if (formData.client_to_bill_type === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.client_to_bill_type === "agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.client_to_bill_type === "carrier") {
+      clientToBillName = "carrierid";
+    }
+    if (clientToBillName !== "") {
+      const clientToBill = {
+        [clientToBillName]: formData.clientToBillId,
+      };
+
+      const response = await ReleaseService.createClientToBill(clientToBill);
+      if (response.status === 201) {
+        console.log("CLIENT TO BILL ID", response.data.id);
+        setFormData({ ...formData, client_to_bill: response.data.id });
+      }
+    }
   };
 
   const checkUpdatesComplete = () => {
@@ -599,7 +677,8 @@ const PickupOrderCreationForm = ({
       shipperRequest !== null &&
       deliverylocation !== null &&
       pickuplocation !== null &&
-      consigneeRequest !== null
+      consigneeRequest !== null &&
+      formData.client_to_bill !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -610,15 +689,48 @@ const PickupOrderCreationForm = ({
     updatedCommodity.internalCommodities = updatedInternalCommodities;
     setselectedCommodity(updatedCommodity);
 
-    const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+    const index = commodities.findIndex(
+      (com) => com.id == selectedCommodity.id
+    );
 
-    if(index != -1){
+    if (index != -1) {
       const commoditiesCopy = [...commodities];
       commoditiesCopy[index] = updatedCommodity;
       setcommodities(commoditiesCopy);
     }
   };
-  
+
+  useEffect(() => {
+    const handleModalClick = (event) => {
+      // Check if the click is inside your modal content
+      const clickedElement = event.target;
+      const isForm = clickedElement.closest(".income-charge-form")
+      console.log("CLOSEST", isForm);
+      console.log("HANDLE MODAL CLICK EVENT");
+      if (!isForm) {
+        // Click is outside the modal content, close the modal
+        setselectedCommodity(null);
+        setshowCommodityEditForm(false);
+        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.querySelector(".pickup").addEventListener("click", handleModalClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.querySelector(".pickup")?.removeEventListener("click", handleModalClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("TRYING TO CHANGE STATUS");
+    if (commodities.length > 0) {
+      console.log("CHANGING STATUS");
+      setFormData({ ...formData, status: 5 });
+    }
+  }, [commodities]);
 
   useEffect(() => {
     // Check if updates are complete initially
@@ -627,7 +739,7 @@ const PickupOrderCreationForm = ({
       const createPickUp = async () => {
         let rawData = {
           // GENERAL TAB
-          status: 1,
+          status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           pick_up_date: formData.pickupDateAndTime,
@@ -642,6 +754,8 @@ const PickupOrderCreationForm = ({
           // DELIVERY TAB
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
+          client_to_bill_type: formData.client_to_bill_type,
+          client_to_bill: formData.client_to_bill,
           // CARRIER TAB
           pro_number: formData.proNumber,
           tracking_number: formData.trackingNumber,
@@ -689,7 +803,7 @@ const PickupOrderCreationForm = ({
   ]);
 
   return (
-    <div className="company-form">
+    <div className="company-form pickup">
       <ul className="nav nav-tabs" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -951,7 +1065,9 @@ const PickupOrderCreationForm = ({
                 onChange={(e) => {
                   handleShipperSelection(e);
                 }}
-                value={defaultValueShipper}
+                value={shipperOptions.find(
+                  (option) => option.id === formData.shipperId
+                )}
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={shipperOptions}
@@ -1047,7 +1163,9 @@ const PickupOrderCreationForm = ({
                 <AsyncSelect
                   id="consignee"
                   onChange={(e) => handleConsigneeSelection(e)}
-                  value={defaultValueConsignee}
+                  value={consigneeOptions.find(
+                    (option) => option.id === formData.consigneeId
+                  )}
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={consigneeOptions}
@@ -1065,6 +1183,22 @@ const PickupOrderCreationForm = ({
                 readonly={true}
                 label=""
               />
+            </div>
+            <div className="company-form__section">
+              <label htmlFor="language">Client to Bill:</label>
+              <select
+                name="clientToBill"
+                id="clientToBill"
+                className="form-input"
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+              >
+                <option value="">Select an option</option>
+                <option value="shipper">Shipper</option>
+                <option value="consignee">Ultimate Consignee</option>
+                <option value="other">Other</option>
+              </select>
             </div>
           </div>
           <div>
@@ -1095,6 +1229,22 @@ const PickupOrderCreationForm = ({
                 value={formData.deliveryLocationInfo}
                 readonly={true}
                 label=""
+              />
+            </div>
+            <div className="company-form__section">
+              <AsyncSelect
+                id="releasedToOther"
+                isDisabled={formData.client_to_bill_type !== "other"}
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+                value={releasedToOptions.find(
+                  (option) => option.id === formData.client_to_bill
+                )}
+                isClearable={true}
+                defaultOptions={releasedToOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
               />
             </div>
           </div>
@@ -1298,7 +1448,8 @@ const PickupOrderCreationForm = ({
               editing={true}
             ></CommodityCreationForm>
           )}
-          {selectedCommodity?.containsCommodities &&
+          {showCommodityEditForm &&
+            selectedCommodity?.containsCommodities &&
             selectedCommodity.internalCommodities.map(
               (internalCommodity, index) => (
                 <CommodityCreationForm
@@ -1381,18 +1532,38 @@ const PickupOrderCreationForm = ({
         </Alert>
       )}
       {showCommodityInspect && (
-        <div className="repacking-container">
-          <p>{selectedCommodity.description}</p>
-          <p>Weight: {selectedCommodity.weight}</p>
-          <p>Height: {selectedCommodity.height}</p>
-          <p>Width: {selectedCommodity.width}</p>
-          <p>Length: {selectedCommodity.length}</p>
-          <p>Volumetric Weight: {selectedCommodity.volumetricWeigth}</p>
-          <p>Chargeable Weight: {selectedCommodity.chargeableWeight}</p>
+        <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
           <p>
-            Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}
+            {selectedCommodity?.description
+              ? selectedCommodity.description
+              : ""}
           </p>
-          {selectedCommodity.internalCommodities.map((com) => {
+          <p>
+            Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+          </p>
+          <p>
+            Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+          </p>
+          <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+          <p>
+            Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+          </p>
+          <p>
+            Volumetric Weight:{" "}
+            {selectedCommodity?.volumetricWeigth
+              ? selectedCommodity.volumetricWeigth
+              : 0}
+          </p>
+          <p>
+            Chargeable Weight:{" "}
+            {selectedCommodity?.chargeableWeight
+              ? selectedCommodity.chargeableWeight
+              : 0}
+          </p>
+          <p>
+            Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+          </p>
+          {selectedCommodity?.internalCommodities.map((com) => {
             return (
               <div key={com.id} className="card">
                 <p>{com.description}</p>
