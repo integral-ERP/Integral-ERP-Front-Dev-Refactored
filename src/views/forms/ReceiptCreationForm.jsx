@@ -306,9 +306,10 @@ const ReceiptCreationForm = ({
     const handleModalClick = (event) => {
       // Check if the click is inside your modal content
       const clickedElement = event.target;
-      const isTableRow = clickedElement.closest(".table-row");
+      const isForm = clickedElement.closest(".income-charge-form")
+      console.log("CLOSEST", isForm);
       console.log("HANDLE MODAL CLICK EVENT");
-      if (!isTableRow) {
+      if (!isForm) {
         // Click is outside the modal content, close the modal
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
@@ -317,11 +318,11 @@ const ReceiptCreationForm = ({
     };
 
     // Add the event listener when the component mounts
-    document.querySelector(".receipt").addEventListener("click", handleModalClick);
+    document.querySelector(".pickup").addEventListener("click", handleModalClick);
 
     // Remove the event listener when the component unmounts
     return () => {
-      document.querySelector(".receipt")?.removeEventListener("click", handleModalClick);
+      document.querySelector(".pickup")?.removeEventListener("click", handleModalClick);
     };
   }, []);
 

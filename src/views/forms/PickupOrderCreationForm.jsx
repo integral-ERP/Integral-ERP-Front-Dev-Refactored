@@ -304,7 +304,11 @@ const PickupOrderCreationForm = ({
       const id = event.id;
       const type = event.type;
       console.log("id", id, "type", type);
-      setFormData({ ...formData, client_to_bill_type: type, client_to_bill: id });
+      setFormData({
+        ...formData,
+        client_to_bill_type: type,
+        client_to_bill: id,
+      });
     }
   };
 
@@ -662,7 +666,7 @@ const PickupOrderCreationForm = ({
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         console.log("CLIENT TO BILL ID", response.data.id);
-        setFormData({...formData,client_to_bill: response.data.id});
+        setFormData({ ...formData, client_to_bill: response.data.id });
       }
     }
   };
@@ -700,9 +704,10 @@ const PickupOrderCreationForm = ({
     const handleModalClick = (event) => {
       // Check if the click is inside your modal content
       const clickedElement = event.target;
-      const isTableRow = clickedElement.closest(".table-row");
+      const isForm = clickedElement.closest(".income-charge-form")
+      console.log("CLOSEST", isForm);
       console.log("HANDLE MODAL CLICK EVENT");
-      if (!isTableRow) {
+      if (!isForm) {
         // Click is outside the modal content, close the modal
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
@@ -719,6 +724,13 @@ const PickupOrderCreationForm = ({
     };
   }, []);
 
+  useEffect(() => {
+    console.log("TRYING TO CHANGE STATUS");
+    if (commodities.length > 0) {
+      console.log("CHANGING STATUS");
+      setFormData({ ...formData, status: 5 });
+    }
+  }, [commodities]);
 
   useEffect(() => {
     // Check if updates are complete initially
@@ -727,7 +739,7 @@ const PickupOrderCreationForm = ({
       const createPickUp = async () => {
         let rawData = {
           // GENERAL TAB
-          status: 1,
+          status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           pick_up_date: formData.pickupDateAndTime,
@@ -1435,7 +1447,8 @@ const PickupOrderCreationForm = ({
               editing={true}
             ></CommodityCreationForm>
           )}
-          {showCommodityEditForm && selectedCommodity?.containsCommodities &&
+          {showCommodityEditForm &&
+            selectedCommodity?.containsCommodities &&
             selectedCommodity.internalCommodities.map(
               (internalCommodity, index) => (
                 <CommodityCreationForm
@@ -1518,18 +1531,38 @@ const PickupOrderCreationForm = ({
         </Alert>
       )}
       {showCommodityInspect && (
-        <div className="repacking-container">
-          <p>{selectedCommodity.description}</p>
-          <p>Weight: {selectedCommodity.weight}</p>
-          <p>Height: {selectedCommodity.height}</p>
-          <p>Width: {selectedCommodity.width}</p>
-          <p>Length: {selectedCommodity.length}</p>
-          <p>Volumetric Weight: {selectedCommodity.volumetricWeigth}</p>
-          <p>Chargeable Weight: {selectedCommodity.chargeableWeight}</p>
+        <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
           <p>
-            Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}
+            {selectedCommodity?.description
+              ? selectedCommodity.description
+              : ""}
           </p>
-          {selectedCommodity.internalCommodities.map((com) => {
+          <p>
+            Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+          </p>
+          <p>
+            Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+          </p>
+          <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+          <p>
+            Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+          </p>
+          <p>
+            Volumetric Weight:{" "}
+            {selectedCommodity?.volumetricWeigth
+              ? selectedCommodity.volumetricWeigth
+              : 0}
+          </p>
+          <p>
+            Chargeable Weight:{" "}
+            {selectedCommodity?.chargeableWeight
+              ? selectedCommodity.chargeableWeight
+              : 0}
+          </p>
+          <p>
+            Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+          </p>
+          {selectedCommodity?.internalCommodities.map((com) => {
             return (
               <div key={com.id} className="card">
                 <p>{com.description}</p>
