@@ -4,7 +4,7 @@ import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CommoditiesService from "../../services/CommoditiesService";
-const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
+const CommodityCreationForm = ({onCancel, commodities, setCommodities, setShowCommoditiesCreationForm }) => {
   const formFormat = {
     weight: 0,
     length: 0,
@@ -33,6 +33,7 @@ const CommodityCreationForm = ({ onCancel, commodities, setCommodities }) => {
       description: formData.description
       // TODO: add fields for volumetric weight and charged weight
     }
+    setShowCommoditiesCreationForm(true)
     setCommodities([...commodities, body])
     console.log(commodities);
   }

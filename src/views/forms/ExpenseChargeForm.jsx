@@ -89,6 +89,7 @@ const ExpenseChargeForm = ({
 
 
   const createCharge = () => {
+    onCancel(true)
     const charge = {
       ...formData,
       quantity: 1

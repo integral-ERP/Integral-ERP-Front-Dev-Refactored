@@ -111,6 +111,8 @@
   border-radius: 10px;
   background: white ;
   margin-inline: auto;
+  margin-bottom: 30px;
+  margin-top: 30px;
   
 }
 
@@ -133,7 +135,7 @@
 .table-hover {
   border-collapse: separate;
   width: 100%;
-  height: 35vh;
+  height: 16vh;
   text-align: center;
   margin: 8px;
 }
@@ -216,19 +218,16 @@
 }
 
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
-  // background: red !important;
   font-family: "Poppins", sans-serif !important;
-  font-size: 2.2rem !important;
+  font-size: 20px !important;
   font-weight: bold !important;
   color: #153a61 !important;
   margin: 0rem 0 0 -1.4rem !important;
-  // width: 100% !important;
   margin:  0 0 0 0  !important;
 }
 
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
   margin: 2rem 0 1rem 0rem !important;
-  // background: red !important;
   font-size: 1.5rem !important;
 }
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
@@ -242,11 +241,10 @@
 
 .css-13cymwt-control{
   min-height: 4rem !important;
-  width: 78% !important;
+  width: 81% !important;
   background: white;
   color: rgb(252, 6, 6) !important;
   height: 0rem !important;
-  padding: 0 0 0 8rem !important;
   font-size: small !important;
 }
 
@@ -333,9 +331,7 @@
   font-weight: bold !important;
 }
 
-.tab-pane{
-  margin: 2rem 0 1rem 0 !important;
-}
+
 
 .text-comm{
   width: 70%;
@@ -436,4 +432,6 @@
   }
 } */
 
-
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  margin-top: 10px;
+}

@@ -5,7 +5,11 @@
   width: 100%;
   color: #153A61;
   padding: 35px;
+  //background: white;
 
+  .form-textarea{
+    width: 90% !important;
+  }
   
  
   &__tabs-button-container {
@@ -164,7 +168,7 @@
   .form-label{ 
     width: 70%;
     text-align: left;
-    font-size: initial;
+    font-size: 15px;
     font-weight: bold;
     margin-bottom: 0rem;
     &__change{
