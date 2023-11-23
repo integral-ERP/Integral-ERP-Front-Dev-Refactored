@@ -19,7 +19,6 @@ const ItemsAndServices = () => {
   const columns = [
     "Code",
     "Description",
-    // "Account Name",
     "Type",
     "Amount",
     "Currency",

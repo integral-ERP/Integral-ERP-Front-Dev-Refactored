@@ -20,7 +20,7 @@ import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
-
+import "../../styles/components/PickupOrderCreationForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -911,6 +911,7 @@ const PickupOrderCreationForm = ({
                 Issued By:
               </label>
               <AsyncSelect
+                className="select_field"
                 id="issuedby"
                 value={issuedByOptions.find(
                   (option) => option.id === formData.issuedById
