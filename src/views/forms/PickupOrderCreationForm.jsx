@@ -67,7 +67,7 @@ const PickupOrderCreationForm = ({
 
   const formFormat = {
     // GENERAL TAB
-    status: "",
+    status: 14,
     number: pickupNumber,
     createdDateAndTime: today,
     pickupDateAndTime: today,
@@ -524,6 +524,13 @@ const PickupOrderCreationForm = ({
     console.log("Updated form data:", formData);
   }, [formData]);
 
+  useEffect(() => {
+    if(commodities && commodities.length >= 1){
+      setFormData({...formData, status: 5});
+    }
+  }, [commodities])
+  
+
   const sendData = async () => {
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
@@ -658,9 +665,16 @@ const PickupOrderCreationForm = ({
     if (formData.client_to_bill_type === "carrier") {
       clientToBillName = "carrierid";
     }
+    if (formData.client_to_bill_type === "shipper") {
+      clientToBillName = "shipperid";
+    }
+    if (formData.client_to_bill_type === "consignee") {
+      clientToBillName = "consigneeid";
+    }
+    console.log("CREATING CLIENT TO BILL", clientToBillName, formData.client_to_bill_type);
     if (clientToBillName !== "") {
       const clientToBill = {
-        [clientToBillName]: formData.clientToBillId,
+        [clientToBillName]: formData.client_to_bill,
       };
 
       const response = await ReleaseService.createClientToBill(clientToBill);
@@ -716,7 +730,7 @@ const PickupOrderCreationForm = ({
     };
 
     // Add the event listener when the component mounts
-    document.querySelector(".pickup").addEventListener("click", handleModalClick);
+    document.querySelector(".pickup")?.addEventListener("click", handleModalClick);
 
     // Remove the event listener when the component unmounts
     return () => {

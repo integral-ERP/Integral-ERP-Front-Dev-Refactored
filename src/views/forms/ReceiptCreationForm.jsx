@@ -318,7 +318,7 @@ const ReceiptCreationForm = ({
     };
 
     // Add the event listener when the component mounts
-    document.querySelector(".pickup").addEventListener("click", handleModalClick);
+    document.querySelector(".pickup")?.addEventListener("click", handleModalClick);
 
     // Remove the event listener when the component unmounts
     return () => {
