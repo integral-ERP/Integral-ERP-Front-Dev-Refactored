@@ -7,7 +7,7 @@ class InvoicesCharguesService{
 
   async createInvoiceCharge(data) {
     const response = await axios.post(`${this.BASE_URL}invoiceCharge/`, data);
-    return response;
+    return respons
   }
  
   async updateInvoicesCharges(id, data) {

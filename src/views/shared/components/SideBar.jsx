@@ -217,7 +217,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/payments"}>Payments</Link>
-                <a href="#">Payments</a>
+                {/* <a href="#">Payments</a> */}
               </li>
             </ul>
           </li>

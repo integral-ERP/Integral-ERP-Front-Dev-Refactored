@@ -8,8 +8,8 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
 
-const ChartOfAccounts = () => {
-  const [chartOfAccounts, setChartOfAccounts] = useState([]);
+const ChartOfAccounts  = () => {
+  const [chartofAccounts, setChartOfAccounts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedChartOfAccounts, setSelectedChartOfAccounts] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -18,19 +18,18 @@ const ChartOfAccounts = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
-    "Type",
+    "Type Chart",
     "Account Number",
-    // "Parent Account",
     "Currency",
     "Note",
+    
   ];
+
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
-        setChartOfAccounts(
-          [...chartOfAccounts, ...response.data.results].reverse()
-        );
-
+        setChartOfAccounts([...response.data.results].reverse());
+       
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -65,19 +64,19 @@ const ChartOfAccounts = () => {
     };
   }, [nextPageURL]);
 
-  const handleChartOfAccountsDataChange = () => {
+  const handleChartOfAccountDataChange = () => {
     updateChartOfAccounts();
   };
 
-  const handleSelectChartOfAccounts = (chartOfAccount) => {
-    setSelectedChartOfAccounts(chartOfAccount);
+  const handleSelectChartOfAccounts = (ChartOFAccounts) => {
+    setSelectedChartOfAccounts(ChartOFAccounts);
   };
 
   const handleEditChartOfAccounts = () => {
     if (selectedChartOfAccounts) {
       openModal();
     } else {
-      alert("Please select a Chart Of Accounts to edit.");
+      alert("Please select a Chart Of Accounts  Order to edit.");
     }
   };
 
@@ -90,6 +89,10 @@ const ChartOfAccounts = () => {
       ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts.id)
         .then((response) => {
           if (response.status == 204) {
+            const newChartOfAccounts = chartofAccounts.filter(
+              (order) => order.id !== selectedChartOfAccounts.id
+            );
+            setChartOfAccounts(newChartOfAccounts);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
@@ -106,7 +109,7 @@ const ChartOfAccounts = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a Chart Of Accounts to delete.");
+      alert("Please select a Chart Of Accounts  Order to delete.");
     }
   };
 
@@ -114,10 +117,10 @@ const ChartOfAccounts = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isChartOfAccountsButton = clickedElement.classList.contains("ne");
+      const isChartOfAccountButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isChartOfAccountsButton && !isTableRow) {
+      if (!isChartOfAccountButton && !isTableRow) {
         setSelectedChartOfAccounts(null);
       }
     };
@@ -129,15 +132,15 @@ const ChartOfAccounts = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
-
+  
   return (
     <>
-      <div className="dashboard__sidebar">
+      <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
           <div className="content-page">
             <Table
-              data={chartOfAccounts}
+              data={chartofAccounts}
               columns={columns}
               onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
               selectedRow={selectedChartOfAccounts}
@@ -164,19 +167,17 @@ const ChartOfAccounts = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>
-                  Error deleting Chart Of Accounts. Please try again
-                </strong>
+                <strong>Error deleting Chart Of Accounts. Please try again</strong>
               </Alert>
             )}
 
             {selectedChartOfAccounts !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ChartOfAccountsCreationForm
-                  chartOfAccount={selectedChartOfAccounts}
+                  ChartAccounts={selectedChartOfAccounts}
                   closeModal={closeModal}
                   creating={false}
-                  onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
+                  onDataChange={handleChartOfAccountDataChange}
                 />
               </ModalForm>
             )}
@@ -184,10 +185,10 @@ const ChartOfAccounts = () => {
             {selectedChartOfAccounts === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ChartOfAccountsCreationForm
-                  chartOfAccount={null}
+                  ChartAccounts={null}
                   closeModal={closeModal}
                   creating={true}
-                  onChartOfAccountsDataChange={handleChartOfAccountsDataChange}
+                  onDataChange={handleChartOfAccountDataChange}
                 />
               </ModalForm>
             )}
@@ -198,4 +199,4 @@ const ChartOfAccounts = () => {
   );
 };
 
-export default ChartOfAccounts;
+export default ChartOfAccounts ;

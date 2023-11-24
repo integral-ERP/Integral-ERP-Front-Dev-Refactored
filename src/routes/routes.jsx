@@ -21,6 +21,7 @@ import MeasurementUnits from "../views/Configuration/MeasurementUnits";
 import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
 import Invoices from "../views/Accounting/Invoices";
 import PaymentTerms from "../views/Configuration/PaymentTerms";
+import Payments from "../views/Accounting/Payments";
 
 export const RoutesConfiguration = () => {
   return (
@@ -49,20 +50,12 @@ export const RoutesConfiguration = () => {
         <Route path="/warehouse/pickup" element={<Pickup />} />
         <Route path="/warehouse/receipt" element={<Receipt />} />
         <Route path="/warehouse/release" element={<Release />} />
-        <Route
-          path="/accounting/itemsandservices"
-          element={<ItemsAndServices />}
-        />
-        <Route
-          path="/configuration/measurementunits"
-          element={<MeasurementUnits />}
-        />
-        <Route
-          path="/accounting/chartofaccounts"
-          element={<ChartOfAccounts />}
-        />
+        <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
+        <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
+        <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
         <Route path="/accounting/Invoices" element={<Invoices />} />
         <Route path="/Configuration/PaymentTerms" element={<PaymentTerms />} />
+        <Route path="/accounting/Payments" element={<Payments />} />
       </Routes>
     </Router>
   );

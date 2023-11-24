@@ -9,7 +9,7 @@ import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
 import GenerateReleasePDF from "../../others/GenerateReleasePDF";
-import ContextMenu from "../../others/ContextMenu";
+import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 const Table = ({
   data,
   columns,
@@ -24,7 +24,6 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
-  contextMenuOptions,
   handleOptionClick,
   onInspect,
 }) => {
@@ -128,97 +127,27 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    Location: "locationCode",
-  };
-
-  const getStatus = (statusCode) => {
-    console.log("STATUS", statusCode);
-    switch (statusCode.toString()) {
-      case "1":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Loaded
-          </span>
-        );
-      case "2":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#D0D3D1' }}></i>Pending
-          </span>
-        );
-      case "3":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#A8A96C' }}></i>Ordered
-          </span>
-        );
-      case "4":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#69D8D0' }}></i>On Hand
-          </span>
-        );
-      case "5":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#4C9548' }}></i>Arriving
-          </span>
-        );
-      case "6":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#78C95E' }}></i>In Transit
-          </span>
-        );
-      case "7":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#E4DE6E' }}></i>In Process
-          </span>
-        );
-      case "8":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#DD4848' }}></i>At Destination
-          </span>
-        );
-      case "9":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#4893FA' }}></i>Delivered
-          </span>
-        );
-      case "10":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#ff2525' }}></i>Deleted
-          </span>
-        );
-      case "11":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#73d800' }}></i>Release
-          </span>
-        );
-      case "12":
-        return (
-          <span>
-            <i className="fas fa-box"style={{ color: '#ffee00' }}></i>On Hold
-          </span>
-        );
-      case "13":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
-          </span>
-        );
-        case "14":
-        return (
-          <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
-          </span>
-        );
-    }
+    "Location": "locationCode",
+     //---------------------Cristian
+     "Account": "accountNumber",
+     "Due Days" : "dueDays",
+     "Discount Percentage" : "discountPercentage",
+     "Discount Days" : "discountDays",
+     "Inactive" : "inactive",
+ 
+     "Transaction Date" : "trasaDate",
+     "Due Date" : "due",
+     "Type Name" : "typeName",
+     "Apply" : "issuedByName",
+     "Payment Temse": "paymentByDesc",
+     "Account Name" : "accountByName",
+     "Type Code" : "typeByCode",
+     "Biling Address" : "bilingAddres",
+     
+     "Type Items & Service": "typeByCode",
+     "type Chart": "typeByCode",
+     "Type Chart":"typeChart",
+     "Account Type" : "accountByType",
   };
 
   const handleSearch = (row) => {
@@ -299,6 +228,17 @@ const Table = ({
 
   const generatePDFRelease = () => {
     GenerateReleasePDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
+
+  const generatePDFInvoice = () => {
+    GenerateInvoicePDF(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -825,20 +765,22 @@ const Table = ({
                         <button type="button" onClick={generatePDFRelease}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
+                      ) : columnName === "Invoice PDF" ? (
+                        <button type="button" onClick={generatePDFInvoice}>
+                          <i className="fas fa-file-pdf"></i>
+                        </button>
                       ) : columnName === "Options" ? (
                         <>
                           <button type="button" onClick={onDelete}>
-                            <i className="fas fa-trash"></i>
+                          <i className="fas fa-trash"></i>
                           </button>
                           <button type="button" onClick={onEdit}>
-                            <i className="fas fa-pencil-alt"></i>
+                          <i className="fas fa-pencil-alt"></i>
                           </button>
                           <button type="button" onClick={onInspect}>
-                            <i className="fas fa-eye"></i>
+                          <i className="fas fa-eye"></i>
                           </button>
                         </>
-                      ) : columnName === "Status" ? (
-                        getStatus(row[columnNameToProperty[columnName]])
                       ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
@@ -864,14 +806,27 @@ const Table = ({
         </table>
       </div>
       {showContextMenu && (
-        <ContextMenu
-          x={contextMenuPosition.x}
-          y={contextMenuPosition.y}
-          options={contextMenuOptions}
-          onClose={() => {
-            setShowContextMenu(false);
+        <div
+          className="context-menu"
+          style={{
+            position: "absolute",
+            top: contextMenuPosition.y,
+            left: contextMenuPosition.x,
           }}
-        />
+        >
+          <ul>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+            <li onClick={() => handleOptionClick("Option 1")}>
+              Create Warehouse Receipt
+            </li>
+          </ul>
+          {/* ... */}
+        </div>
       )}
     </>
   );
