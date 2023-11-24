@@ -218,6 +218,7 @@ const ItemAndServiceCreationForm = ({
               <select
                 id="accountName"
                 className="form-input"
+                inputName="accountName"
                 onChange={(e) =>
                   setFormData({ ...formData, accountName: e.target.value })
                 }
@@ -233,11 +234,6 @@ const ItemAndServiceCreationForm = ({
                   </option>
                 ))}
               </select>
-              {/* <label htmlFor="" className="form-label">Account:</label>
-              <select className="form-input">
-                <option value="">Select an account</option>
-                <option value="freight">Freight</option>
-              </select> */}
             </div>
             <div className="company-form__section">
               <Input

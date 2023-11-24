@@ -17,7 +17,11 @@ const Pickup = () => {
   const { hideShowSlider } = useContext(GlobalContext)
   const [pickupOrders, setpickupOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
+  const [
+    isOpenReceiptCreation,
+    openModalReceiptCreation,
+    closeModalReceiptCreation,
+  ] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -204,29 +208,58 @@ const Pickup = () => {
   }, []);
 
   useEffect(() => {
-    if(createWarehouseReceipt){
+    if (createWarehouseReceipt) {
       console.log("OPENING UP NEW MODAL FOR RECEIPTS");
       openModalReceiptCreation();
     }
-  }, [createWarehouseReceipt])
-  
+  }, [createWarehouseReceipt]);
+
+  const setInTransit = async () => {
+    console.log("Changing");
+    if(selectedPickupOrder){
+      const updatedPickuporder = {...selectedPickupOrder, status: 6};
+      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      if (response.status === 200){
+        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        window.location.reload(true);
+        // TODO: REFRESH WINDOW 
+      }
+      console.log(response);
+    }else{
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+  const setDelivered = async () => {
+    console.log("Changing");
+    if(selectedPickupOrder){
+      const updatedPickuporder = {...selectedPickupOrder, status: 9};
+      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      if (response.status === 200){
+        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        window.location.reload(true);
+        // TODO: REFRESH WINDOW 
+      }
+      console.log(response);
+    }else{
+      alert("Please select a pickup order to continue.");
+    }
+  }
 
   const contextMenuOptions = [
     {
       label: "Create Warehouse Receipt",
-      handler: () => setCreateWarehouseReceipt(true)
+      handler: () => setCreateWarehouseReceipt(true),
     },
     {
-      label: "Option 2",
-      handler: () => {
-        // Handle Option 2
-      },
+      label: "Set/Reset In Transit",
+      handler: setInTransit,
     },
     {
-      label: "Option 3",
-      handler: () => {
-        // Handle Option 3
-      },
+      label: "Set/Reset Delivered",
+      handler: setDelivered,
     },
   ];
 
@@ -304,7 +337,10 @@ const Pickup = () => {
             )}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
-              <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
+              <ModalForm
+                isOpen={isOpenReceiptCreation}
+                closeModal={closeModalReceiptCreation}
+              >
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModalReceiptCreation}

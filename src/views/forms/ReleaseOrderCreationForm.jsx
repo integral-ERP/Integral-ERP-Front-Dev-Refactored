@@ -38,12 +38,13 @@ const ReleaseOrderCreationForm = ({
   const pickupNumber = currentReleaseNumber ? currentReleaseNumber + 1 : 1;
   const [canRender, setcanRender] = useState(false);
   const [commodities, setcommodities] = useState([]);
+  const [releaseIDs, setreleaseIDs] = useState([]);
   const [selectedReceipts, setSelectedReceipts] = useState([]);
   const [selectedCommodities, setSelectedCommodities] = useState([]);
   const [warehouseReceipts, setWarehouseReceipts] = useState([]);
   const formFormat = {
-    status: 3,
-    number: 1,
+    status: 14,
+    number: pickupNumber,
     creation_date: today,
     release_date: today,
     employeeId: "",
@@ -170,15 +171,18 @@ const ReleaseOrderCreationForm = ({
   };
 
   // Function to handle selecting/unselecting a commodity within a receipt
-  const handleCommoditySelection = (receiptNumber, commodityID) => {
+  const handleCommoditySelection = (receiptNumber, commodityID, id) => {
     // TODO: FIX BUG MULTIPLE COMMODITIES WITH SAME ID
-    const commodityList = []
+    const commodityList = [];
+    const set = new Set(releaseIDs);
+    set.add(id);
+    setreleaseIDs([...set]);
     warehouseReceipts.forEach((receipt) => {
-      commodityList.push(...receipt.commodities)
-    })
+      commodityList.push(...receipt.commodities);
+    });
     const commodity = commodityList.find((com) => com.id == commodityID); // Use === to compare IDs
-    
-    setcommodities([...commodities, commodity])
+
+    setcommodities([...commodities, commodity]);
   };
 
   useEffect(() => {
@@ -191,31 +195,25 @@ const ReleaseOrderCreationForm = ({
       setcommodities(releaseOrder.commodities);
       console.log("Selected Release Order:", releaseOrder);
       let updatedFormData = {
-        releasedToId: releaseOrder.releasedToId,
-        releasodToType: releaseOrder.releasodToType,
-        clientToBillId: releaseOrder.clientToBillId,
-        clientToBillType: releaseOrder.clientToBillId,
-        warehouseReceiptId: releaseOrder.releasedToId,
         status: releaseOrder.status,
         number: releaseOrder.number,
         creation_date: releaseOrder.creation_date,
         release_date: releaseOrder.release_date,
-        issuedById: releaseOrder.issued_by,
-        issuedByType: releaseOrder.issued_by?.type,
-        destinationAgentId: releaseOrder.destination_agent,
-        employeeId: releaseOrder.employee,
+        employeeId: releaseOrder.employeeId,
+        issuedById: releaseOrder.issuedById,
+        issuedByType: releaseOrder.issuedByType,
+        releasedToId: releaseOrder.releasedToId,
+        releasedToType: releaseOrder.releasedToType,
+        releasedToInfo: releaseOrder.releasedToInfo,
+        clientToBillId: releaseOrder.clientToBillId,
+        clientToBillType: releaseOrder.clientToBillType,
+        carrierId: releaseOrder.carrierId,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
-        carrierId: releaseOrder.main_carrier,
         purchase_order_number: releaseOrder.purchase_order_number,
+        warehouseReceiptId: releaseOrder.warehouseReceiptId,
         commodities: releaseOrder.commodities,
-        releasedToInfo: `${
-          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.state || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,
+        charges: releaseOrder.charges
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -284,6 +282,16 @@ const ReleaseOrderCreationForm = ({
     }
   }, [pickupNumber]);
 
+  useEffect(() => {
+
+    // this might be with selected receipts instead of commodities
+    if(commodities.length > 0){
+      setFormData({...formData, status: 1})
+    }
+  
+  }, [commodities])
+  
+
   const sendData = async () => {
     let releasedToName = "";
     if (formData.releasedToType === "customer") {
@@ -347,7 +355,7 @@ const ReleaseOrderCreationForm = ({
         [clientToBillName]: formData.clientToBillId,
       };
 
-      const response = await ReleaseService.createReleasedTo(clientToBill);
+      const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         console.log("CLIENT TO BILL ID", response.data.id);
         setClientToBill(response.data.id);
@@ -370,11 +378,20 @@ const ReleaseOrderCreationForm = ({
   const addSingleCommodity = (commodity) => {
     setcommodities([...commodities, commodity]);
     console.log("COMMODITIES", commodities);
-  }
+  };
 
   useEffect(() => {
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
+
+      let charges = [];
+
+      releaseIDs.forEach((id) => {
+        const order = warehouseReceipts.find( receipt => receipt.id == id);
+        charges = [...charges, order.charges];
+      })
+
+      console.log("CARGOS", charges);
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
@@ -731,7 +748,7 @@ const ReleaseOrderCreationForm = ({
                 checked={selectedReceipts.includes(receipt.number)}
                 onChange={() => handleReceiptSelection(receipt.number)}
               />
-              {receipt.number}
+              {receipt.number} - {receipt.issued_byObj.name}
             </label>
             {selectedReceipts.includes(receipt.number) &&
               receipt.commodities.length > 0 && (
@@ -741,11 +758,16 @@ const ReleaseOrderCreationForm = ({
                     .filter((item) => item.receiptNumber === receipt.number)
                     .map((item) => item.commodities)}
                   onChange={(e) =>
-                    handleCommoditySelection(receipt.number, e.target.value)
+                    handleCommoditySelection(
+                      receipt.number,
+                      e.target.value,
+                      receipt.id
+                    )
                   }
                 >
                   {receipt.commodities.map((commodity) => (
                     <option key={commodity.id} value={commodity.id}>
+                      {commodity.height}x{commodity.width}x{commodity.length} -{" "}
                       {commodity.description}
                     </option>
                   ))}

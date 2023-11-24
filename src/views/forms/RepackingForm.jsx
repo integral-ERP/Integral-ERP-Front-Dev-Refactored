@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
 import PackageTypeService from "../../services/PackageTypeService";
 
-const RepackingForm = ({ commodities }) => {
+const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
+  const [internalCommodities, setinternalCommodities] = useState([]);
   const formFormat = {
     package_type_id: "",
+    package_type_description: "",
     weight: 0,
     length: 0,
     width: 0,
     height: 0,
     volumetricWeight: 0,
     chargedWeight: 0,
-    description: ""
+    description: "",
+    useInternalWeight: false
   };
   const [formData, setformData] = useState(formFormat);
 
   useEffect(() => {
-    PackageTypeService.getContainerTypes()
+    PackageTypeService.getPackageTypes()
       .then((response) => {
         setpackTypes(response.data.results);
       })
@@ -25,11 +28,67 @@ const RepackingForm = ({ commodities }) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(formData);
+    if (formData.height && formData.width && formData.length) {
+      const volWeight = (
+        (formData.height * formData.width * formData.length) /
+        166
+      ).toFixed(0);
+      const ratedWeight =
+        formData.volumetricWeight >= formData.weight
+          ? formData.volumetricWeight
+          : formData.weight;
+      setformData({
+        ...formData,
+        volumetricWeight: volWeight,
+        chargedWeight: ratedWeight,
+      });
+    }
+  }, [formData.height, formData.length, formData.width]);
+
+
+  const handleCommoditySelection = (e) => {
+    const selectedCommodityIds = Array.from(e.target.selectedOptions, (option) => option.value);
+    const selectedCommodities = commodities.filter((item) => selectedCommodityIds.includes(item.id + ''));
+    setinternalCommodities(selectedCommodities);
+  };
+
+  const handleRepack = () => {
+    let internalWeight = 0;
+    if(formData.useInternalWeight){
+      internalCommodities.forEach(element => {
+        internalWeight += Number(element.weight);
+      });
+    }
+    const selectedCommodityIds = internalCommodities.map( com => String(com.id))
+    const filteredCommodities = commodities.filter((commodity) => {
+      return !selectedCommodityIds.includes(String(commodity.id));
+    });
+
+    const newCommodity = {
+      ...formData,
+      weight: internalWeight, 
+      containsCommodities: true,
+      internalCommodities: internalCommodities,
+    };
+
+    // Add the new commodity to the commodities array.
+    setCommodities([...filteredCommodities, newCommodity]);
+
+    // Reset the form to its initial state.
+    setformData(formFormat);
+    setinternalCommodities([]);
+    // You can also perform any other actions or validations here if needed.
+  };
+  
+
   return (
-    <>
+    <div className="income-charge-form">
+      <h3>Repacking Form</h3>
       <div>
         <label htmlFor="containerType">Container Type:</label>
-        <select name="containerType" id="containerType" onChange={(e) => {setformData({...formData, package_type_id: e.target.value})}}>
+        <select name="containerType" id="containerType" onChange={(e) => {setformData({...formData, package_type_id: e.target.value, package_type_description: e.target.options[e.target.selectedIndex].text})}}>
           <option value="">Select an option</option>
           {packTypes.map((type) => {
             return (
@@ -52,6 +111,7 @@ const RepackingForm = ({ commodities }) => {
               onChange={(e) =>
                 setformData({ ...formData, weight: e.target.value })
               }
+              disabled={formData.useInternalWeight}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
@@ -117,15 +177,20 @@ const RepackingForm = ({ commodities }) => {
             }
             style={{width: '100%'}}
           />
+          <label htmlFor="">use internal commodity weight</label>
+          <input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/>
       </div>
       <div>
-        <select name="commodities" id="commodities" multiple>
+        <select name="commodities" id="commodities" multiple onChange={(e) => handleCommoditySelection(e)}>
             {commodities.map((item) => {
                 return <option value={item.id} key={item.id}>{item.description}</option>
             })}
         </select>
       </div>
-    </>
+      <div>
+        <button type="button" onClick={handleRepack}>Repack</button>
+      </div>
+    </div>
   );
 };
 

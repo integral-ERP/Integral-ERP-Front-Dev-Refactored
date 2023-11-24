@@ -129,8 +129,9 @@ const Sidebar = () => {
                 <Link className="link_name">Shipments</Link>
               </li>
               <li>
-                <Link to={"/shipments"}>Shipment List</Link>
+                <Link to={"/shipments"}>Shipment list</Link>
               </li>
+
               <li>
                 <Link to={"/shipments/master"}>Master List</Link>
               </li>
@@ -166,10 +167,10 @@ const Sidebar = () => {
           <li className={`arrow  ${more === "customs" ? "showMenu" : ""}`}>
             <div className="icon-link">
               <Link>
-                {" "}
                 <i className="bx bx-book-open"></i>
                 <span className="link_name">Customs</span>
               </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("customs")}
@@ -189,20 +190,20 @@ const Sidebar = () => {
                 <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
               </li>
               <li>
-                <Link to={"/customs/1084xml"}>1084 XML Duties</Link>
+                <Link to={"/customs/ibareport"}>IBA report in txt</Link>
               </li>
               <li>
                 <Link to={"/customs/simplifiedduties"}>Simplified Duties</Link>
               </li>
               <li>
-                <Link to={"/customs/proofDelivery"}>Proof of Delivery</Link>
+                <Link to={"/customs/proofdelivery"}>Proof of Delivery</Link>
               </li>
               <li>
-                <Link to={"/customs/valueproposals"}>Value Proposals</Link>
+                <Link to={"/customs/valueproposal"}>Value Proposals</Link>
               </li>
               <li>
                 <Link to={"/customs/changesincustoms"}>
-                  Changes in Custom's
+                  Changes in Custom's{" "}
                 </Link>
               </li>
               <li>
@@ -216,7 +217,6 @@ const Sidebar = () => {
                 <i className="bx bx-money-withdraw"></i>
                 <span className="link_name">Accounting</span>
               </Link>
-
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("accounting")}
@@ -251,6 +251,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/payments"}>Payments</Link>
+                <a href="#">Payments</a>
               </li>
             </ul>
           </li>
@@ -260,7 +261,7 @@ const Sidebar = () => {
             <div className="icon-link">
               <Link>
                 <i className="bx bx-user-circle"></i>
-                <span className="link_name">Online Customer</span>{" "}
+                <span className="link_name">Online Customer</span>
               </Link>
               <i
                 className="bx bxs-chevron-down arrow"
@@ -272,8 +273,7 @@ const Sidebar = () => {
                 <Link className="link_name">Online Customer</Link>
               </li>
               <li>
-                <Link to={"warehouse/prealerts"}>Pre Alerts</Link>
-                <a href="#">pre alerts</a>
+                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>
@@ -281,13 +281,13 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
-                <Link to={"/onlineUser/instructions"}>Instructions</Link>
+                <Link to={"/accounting/instructions"}>Instructions</Link>
               </li>
               <li>
-                <Link to={"accounting/payments"}>Payments</Link>
+                <Link to={"/accounting/payments"}>Payments</Link>
               </li>
               <li>
-                <Link to={"shipments"}>Shipments</Link>
+                <Link to={"/shipments"}>Shipments</Link>
               </li>
             </ul>
           </li>
@@ -297,6 +297,7 @@ const Sidebar = () => {
                 <i className="bx bx-briefcase"></i>
                 <span className="link_name">Agent</span>
               </Link>
+
               <i
                 className="bx bxs-chevron-down arrow"
                 onClick={() => handleDropdownMore("agent")}
@@ -307,16 +308,16 @@ const Sidebar = () => {
                 <Link className="link_name">Agent</Link>
               </li>
               <li>
-                <Link to={"/agent/search"}>Search </Link>
+                <Link to={"/agent/search"}>Search</Link>
               </li>
               <li>
                 <Link to={"/warehouse/receipt"}>Reception</Link>
               </li>
               <li>
-                <Link to={"shipments"}>Shipment List</Link>
+                <Link to={"/shipments"}>Shipment list</Link>
               </li>
               <li>
-                <Link to={"accounting/payments"}>Payments</Link>
+                <Link to={"/accounting/payments"}>Payments</Link>
               </li>
             </ul>
           </li>
@@ -333,7 +334,11 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name"> Maintenance</Link>
+                <Link to={"/maintenance"}>
+                  <a className="link_name" href="#">
+                    Maintenance
+                  </a>
+                </Link>
               </li>
               <li>
                 <Link to={"/maintenance/carriers"}>Carriers</Link>
@@ -387,27 +392,31 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name"> Configuration</Link>
+                <Link className="link_name">Configuration</Link>
               </li>
               <li>
-                <a onClick={openCompanyForm}>Company</a>
-                <ModalForm
-                  isOpen={isOpenCompanyForm}
-                  closeModal={closeCompanyForm}
-                >
-                  <MyCompanyForm closeModal={closeCompanyForm}></MyCompanyForm>
-  </ModalForm>*/
+                <Link onClick={openCompanyForm}>
+                  Company
+                  <ModalForm
+                    isOpen={isOpenCompanyForm}
+                    closeModal={closeCompanyForm}
+                  >
+                    <MyCompanyForm
+                      closeModal={closeCompanyForm}
+                    ></MyCompanyForm>
+                  </ModalForm>
+                </Link>
               </li>
               <li>
-                <Link to={"/configuration/airoperations"}>Air Operations</Link>
+                <Link to={"/Configuration/airoperations"}>Air Operations</Link>
               </li>
               <li>
-                <Link to={"/configuration/documentnumbers"}>
+                <Link to={"/Configuration/documentnumbers"}>
                   Document Numbers
                 </Link>
               </li>
               <li>
-                <Link to={"/configuration/emailtemplates"}>
+                <Link to={"/Configuration/emailtemplates"}>
                   Email Templates
                 </Link>
               </li>
@@ -417,21 +426,23 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li>
-                <Link to={"/configuration/clauses"}>Clauses</Link>
+                <Link to={"/Configuration/clauses"}>Clauses</Link>
               </li>
               <li>
-                <Link to={"/configuration/events"}>Events</Link>
+                <Link to={"/Configuration/events"}>Events</Link>
               </li>
               <li>
-                <Link to={"/configuration/oceanoperations"}>
+                <Link to={"/Configuration/oceanoperations"}>
                   Ocean Operations
                 </Link>
               </li>
               <li>
-                <Link to={"/configuration/paymentterms"}>Payment Terms</Link>
+                <Link to={"/Configuration/paymentterms"}>Payment Terms</Link>
               </li>
               <li>
-                <Link to={"/configuration/shipmentdocuments"}></Link>
+                <Link to={"/Configuration/shipmentdocuments"}>
+                  Shipment Documents
+                </Link>
               </li>
             </ul>
           </li>

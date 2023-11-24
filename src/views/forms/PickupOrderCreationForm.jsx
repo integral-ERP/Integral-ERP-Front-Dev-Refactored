@@ -18,9 +18,9 @@ import IncomeChargeForm from "./IncomeChargeForm";
 import CommodityCreationForm from "./CommodityCreationForm";
 import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
-
-import '../../styles/components/PickupOrderCreationForm.scss'
-
+import RepackingForm from "./RepackingForm";
+import ReleaseService from "../../services/ReleaseService";
+import "../../styles/components/PickupOrderCreationForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -41,8 +41,12 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
+  const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
+  const [showCommodityInspect, setshowCommodityInspect] = useState(false);
+  const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -58,10 +62,11 @@ const PickupOrderCreationForm = ({
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
+  const [selectedCommodity, setselectedCommodity] = useState(null);
 
   const formFormat = {
     // GENERAL TAB
-    status: "",
+    status: 14,
     number: pickupNumber,
     createdDateAndTime: today,
     pickupDateAndTime: today,
@@ -85,6 +90,8 @@ const PickupOrderCreationForm = ({
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
+    client_to_bill: "",
+    client_to_bill_type: "",
     // CARRIER TAB
     proNumber: "",
     trackingNumber: "",
@@ -137,6 +144,10 @@ const PickupOrderCreationForm = ({
       pickupInfo: info,
       pickupLocationType: type,
     });
+  };
+
+  const handleSelectCommodity = (commodity) => {
+    setselectedCommodity(commodity);
   };
 
   const handleDeliveryLocationSelection = async (event) => {
@@ -240,6 +251,13 @@ const PickupOrderCreationForm = ({
     });
   };
 
+  const handleCommodityDelete = () => {
+    const newCommodities = commodities.filter(
+      (com) => com.id != selectedCommodity.id
+    );
+    setcommodities(newCommodities);
+  };
+
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
@@ -253,7 +271,33 @@ const PickupOrderCreationForm = ({
     });
   };
 
-
+  const handleClientToBillSelection = async (event) => {
+    const type = event.target?.value || "";
+    if (type === "other") {
+      setFormData({ ...formData, client_to_bill_type: type });
+    } else if (type === "shipper" || type === "consignee") {
+      const id =
+        type === "shipper"
+          ? formData.shipperId
+          : type === "consignee"
+          ? formData.consigneeId
+          : "";
+      setFormData({
+        ...formData,
+        client_to_bill: id,
+        client_to_bill_type: type,
+      });
+    } else {
+      const id = event.id;
+      const type = event.type;
+      console.log("id", id, "type", type);
+      setFormData({
+        ...formData,
+        client_to_bill_type: type,
+        client_to_bill: id,
+      });
+    }
+  };
 
   useEffect(() => {
     console.log("checking for edit", "join:", !creating && pickupOrder != null);
@@ -379,6 +423,12 @@ const PickupOrderCreationForm = ({
 
     const carrierOptions = [...carriersWithType];
 
+    const clientToBillOptions = [
+      ...customersWithType,
+      forwardingAgentsWithType,
+    ];
+    console.log("Setting Released to options:", clientToBillOptions);
+
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
@@ -388,6 +438,7 @@ const PickupOrderCreationForm = ({
     setConsigneeOptions(consigneeOptions);
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
+    setReleasedToOptions(clientToBillOptions);
   };
 
   const loadShipperOption = async (id, type) => {
@@ -443,6 +494,13 @@ const PickupOrderCreationForm = ({
     console.log("Updated form data:", formData);
   }, [formData]);
   const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div"}, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
+
+  useEffect(() => {
+    if(commodities && commodities.length >= 1){
+      setFormData({...formData, status: 5});
+    }
+  }, [commodities])
+  
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
@@ -568,6 +626,57 @@ const PickupOrderCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
+
+    let clientToBillName = "";
+
+    if (formData.releasedToType === "releasedTo") {
+      switch (formData.releasedToType) {
+        case "customer":
+          clientToBillName = "customerid";
+          break;
+        case "vendor":
+          clientToBillName = "vendorid";
+          break;
+        case "agent":
+          clientToBillName = "agentid";
+          break;
+        case "carrier":
+          clientToBillName = "carrierid";
+          break;
+        default:
+          break;
+      }
+    }
+    if (formData.client_to_bill_type === "customer") {
+      clientToBillName = "customerid";
+    }
+    if (formData.client_to_bill_type === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.client_to_bill_type === "agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.client_to_bill_type === "carrier") {
+      clientToBillName = "carrierid";
+    }
+    if (formData.client_to_bill_type === "shipper") {
+      clientToBillName = "shipperid";
+    }
+    if (formData.client_to_bill_type === "consignee") {
+      clientToBillName = "consigneeid";
+    }
+    console.log("CREATING CLIENT TO BILL", clientToBillName, formData.client_to_bill_type);
+    if (clientToBillName !== "") {
+      const clientToBill = {
+        [clientToBillName]: formData.client_to_bill,
+      };
+
+      const response = await ReleaseService.createClientToBill(clientToBill);
+      if (response.status === 201) {
+        console.log("CLIENT TO BILL ID", response.data.id);
+        setFormData({ ...formData, client_to_bill: response.data.id });
+      }
+    }
   };
 
   const checkUpdatesComplete = () => {
@@ -576,11 +685,60 @@ const PickupOrderCreationForm = ({
       shipperRequest !== null &&
       deliverylocation !== null &&
       pickuplocation !== null &&
-      consigneeRequest !== null
+      consigneeRequest !== null &&
+      formData.client_to_bill !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
   };
+
+  const updateSelectedCommodity = (updatedInternalCommodities) => {
+    const updatedCommodity = { ...selectedCommodity };
+    updatedCommodity.internalCommodities = updatedInternalCommodities;
+    setselectedCommodity(updatedCommodity);
+
+    const index = commodities.findIndex(
+      (com) => com.id == selectedCommodity.id
+    );
+
+    if (index != -1) {
+      const commoditiesCopy = [...commodities];
+      commoditiesCopy[index] = updatedCommodity;
+      setcommodities(commoditiesCopy);
+    }
+  };
+
+  useEffect(() => {
+    const handleModalClick = (event) => {
+      // Check if the click is inside your modal content
+      const clickedElement = event.target;
+      const isForm = clickedElement.closest(".income-charge-form")
+      console.log("CLOSEST", isForm);
+      console.log("HANDLE MODAL CLICK EVENT");
+      if (!isForm) {
+        // Click is outside the modal content, close the modal
+        setselectedCommodity(null);
+        setshowCommodityEditForm(false);
+        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.querySelector(".pickup")?.addEventListener("click", handleModalClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.querySelector(".pickup")?.removeEventListener("click", handleModalClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("TRYING TO CHANGE STATUS");
+    if (commodities.length > 0) {
+      console.log("CHANGING STATUS");
+      setFormData({ ...formData, status: 5 });
+    }
+  }, [commodities]);
 
   useEffect(() => {
     // Check if updates are complete initially
@@ -589,7 +747,7 @@ const PickupOrderCreationForm = ({
       const createPickUp = async () => {
         let rawData = {
           // GENERAL TAB
-          status: 1,
+          status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           pick_up_date: formData.pickupDateAndTime,
@@ -604,6 +762,8 @@ const PickupOrderCreationForm = ({
           // DELIVERY TAB
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
+          client_to_bill_type: formData.client_to_bill_type,
+          client_to_bill: formData.client_to_bill,
           // CARRIER TAB
           pro_number: formData.proNumber,
           tracking_number: formData.trackingNumber,

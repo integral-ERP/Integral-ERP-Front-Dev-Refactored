@@ -6,23 +6,23 @@ class PackageTypeService{
   }
 
   async createPackageType(data) {
-    const response = await axios.post(`${this.BASE_URL}packType/`, data);
+    const response = await axios.post(`${this.BASE_URL}packageType/`, data);
     return response;
   }
 
   async updatePackageType(id, data) {
-    const response = await axios.put(`${this.BASE_URL}packType/${id}/`, data);
+    const response = await axios.put(`${this.BASE_URL}packageType/${id}/`, data);
     return response;
   }
 
   async getPackageTypes(url = null){
-    const apiUrl = url || `${this.BASE_URL}packType/`;
+    const apiUrl = url || `${this.BASE_URL}packageType/`;
     const response = await axios.get(apiUrl);
     return response;
   }
 
   async getPackageTypeById(id){
-    const response = await axios.get(`${this.BASE_URL}packType/${id}`);
+    const response = await axios.get(`${this.BASE_URL}packageType/${id}`);
     return response;
   }
 
