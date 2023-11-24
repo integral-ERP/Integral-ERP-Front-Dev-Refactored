@@ -252,6 +252,7 @@ const PickupOrderCreationForm = ({
   };
 
   const handleCommodityDelete = () => {
+    console.log("commodity id", selectedCommodity.id, "commodity list", commodities);
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
     );
@@ -712,7 +713,7 @@ const PickupOrderCreationForm = ({
     const handleModalClick = (event) => {
       // Check if the click is inside your modal content
       const clickedElement = event.target;
-      const isForm = clickedElement.closest(".income-charge-form")
+      const isForm = clickedElement.closest(".pickup")
       console.log("CLOSEST", isForm);
       console.log("HANDLE MODAL CLICK EVENT");
       if (!isForm) {
@@ -725,7 +726,6 @@ const PickupOrderCreationForm = ({
 
     // Add the event listener when the component mounts
     document.querySelector(".pickup")?.addEventListener("click", handleModalClick);
-
     // Remove the event listener when the component unmounts
     return () => {
       document.querySelector(".pickup")?.removeEventListener("click", handleModalClick);
@@ -821,7 +821,7 @@ const PickupOrderCreationForm = ({
   }, [])
   return (
 
-    <form className="company-form">
+    <form className="company-form pickup">
       <div className="name">Pick-Up creation form </div>
 
       <div className="form-label_name"><h3>General</h3><span></span></div>
@@ -980,7 +980,9 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleShipperSelection(e);
                     }}
-                    value={defaultValueShipper}
+                    value={shipperOptions.find(
+                      (option) => option.id === formData.shipperId
+                    )}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
@@ -1082,7 +1084,9 @@ const PickupOrderCreationForm = ({
                   <AsyncSelect
                     id="consignee"
                     onChange={(e) => handleConsigneeSelection(e)}
-                    value={defaultValueConsignee}
+                    value={consigneeOptions.find(
+                      (option) => option.id === formData.consigneeId
+                    )}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={consigneeOptions}
@@ -1103,6 +1107,23 @@ const PickupOrderCreationForm = ({
                   label="Address"
                 />
               </div>
+
+              <div className="company-form__section">
+              <label htmlFor="language">Client to Bill:</label>
+              <select
+                name="clientToBill"
+                id="clientToBill"
+                className="form-input"
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+              >
+                <option value="">Select an option</option>
+                <option value="shipper">Shipper</option>
+                <option value="consignee">Ultimate Consignee</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
 
             </div>
 
@@ -1140,6 +1161,23 @@ const PickupOrderCreationForm = ({
                   label="Address"
                 />
               </div>
+
+              <div className="company-form__section">
+              <AsyncSelect
+                id="releasedToOther"
+                isDisabled={formData.client_to_bill_type !== "other"}
+                onChange={(e) => {
+                  handleClientToBillSelection(e);
+                }}
+                value={releasedToOptions.find(
+                  (option) => option.id === formData.client_to_bill
+                )}
+                isClearable={true}
+                defaultOptions={releasedToOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
             </div>
 
             <div>
@@ -1234,36 +1272,121 @@ const PickupOrderCreationForm = ({
           >
             Add Piece
           </button> */}
-            {true && (
               <CommodityCreationForm
                 onCancel={setshowCommodityCreationForm}
                 commodities={commodities}
                 setCommodities={setcommodities}
                 setShowCommoditiesCreationForm={setshowCommodityCreationForm}
               ></CommodityCreationForm>
-            )}
           </div>
           {showCommodityCreationForm && (
             <><Table
-              data={commodities}
-              columns={[
-                " Length",
-                " Height",
-                " Width",
-                " Weight",
-                " Volumetric Weight",
-                " Chargeable Weight",
-                " Delete",
-              ]}
-              onSelect={() => { }} // Make sure this line is correct
-              selectedRow={{}}
-              onDelete={() => { }}
-              onEdit={() => { }}
-              onAdd={() => { }}
-              showOptions={false}
-            />
-              <button type="button">Repack</button></>
+            data={commodities}
+            columns={[
+              "Description",
+              " Length",
+              " Height",
+              " Width",
+              " Weight",
+              "Location",
+              " Volumetric Weight",
+              " Chargeable Weight",
+              "Options",
+            ]}
+            onSelect={handleSelectCommodity} // Make sure this line is correct
+            selectedRow={selectedCommodity}
+            onDelete={handleCommodityDelete}
+            onEdit={() => {
+              setshowCommodityEditForm(!showCommodityEditForm);
+            }}
+            onInspect={() => {
+              setshowCommodityInspect(!showCommodityInspect);
+            }}
+            onAdd={() => {}}
+            showOptions={false}
+          />
+              <button type="button"  onClick={() => {
+            setshowRepackingForm(!showRepackingForm);
+          }}>Repack</button></>
           )}
+          {showRepackingForm && (
+            <RepackingForm
+              commodities={commodities}
+              setCommodities={setcommodities}
+            ></RepackingForm>
+          )}
+          {showCommodityEditForm && (
+            <CommodityCreationForm
+              onCancel={setshowCommodityEditForm}
+              commodities={commodities}
+              setCommodities={setcommodities}
+              commodity={selectedCommodity}
+              editing={true}
+            ></CommodityCreationForm>
+          )}
+          {showCommodityEditForm &&
+            selectedCommodity?.containsCommodities &&
+            selectedCommodity.internalCommodities.map(
+              (internalCommodity, index) => (
+                <CommodityCreationForm
+                  key={index}
+                  onCancel={() => {}}
+                  commodities={selectedCommodity.internalCommodities}
+                  setCommodities={updateSelectedCommodity}
+                  commodity={internalCommodity}
+                  editing={true}
+                ></CommodityCreationForm>
+              )
+            )}
+            
+            {showCommodityInspect && (
+        <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
+          <p>
+            {selectedCommodity?.description
+              ? selectedCommodity.description
+              : ""}
+          </p>
+          <p>
+            Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+          </p>
+          <p>
+            Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+          </p>
+          <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+          <p>
+            Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+          </p>
+          <p>
+            Volumetric Weight:{" "}
+            {selectedCommodity?.volumetricWeigth
+              ? selectedCommodity.volumetricWeigth
+              : 0}
+          </p>
+          <p>
+            Chargeable Weight:{" "}
+            {selectedCommodity?.chargeableWeight
+              ? selectedCommodity.chargeableWeight
+              : 0}
+          </p>
+          <p>
+            Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+          </p>
+          {selectedCommodity?.internalCommodities.map((com) => {
+            return (
+              <div key={com.id} className="card">
+                <p>{com.description}</p>
+                <p>Weight: {com.weight}</p>
+                <p>Height: {com.height}</p>
+                <p>Width: {com.width}</p>
+                <p>Length: {com.length}</p>
+                <p>Volumetric Weight: {com.volumetricWeight}</p>
+                <p>Chargeable Weight: {com.chargedWeight}</p>
+                <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
         </div>
       </div>
 

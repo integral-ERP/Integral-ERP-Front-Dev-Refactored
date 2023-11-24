@@ -129,6 +129,99 @@ const Table = ({
     Note: "note",
     "Account Number": "accountNumber",
     "Code": "code",
+    "Release Date": "release_date",
+    "Released to": "releasedToObj.data.obj.name",
+    Location: "locationCode",
+  };
+
+  const getStatus = (statusCode) => {
+    console.log("STATUS", statusCode);
+    switch (statusCode.toString()) {
+      case "1":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Loaded
+          </span>
+        );
+      case "2":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#D0D3D1' }}></i>Pending
+          </span>
+        );
+      case "3":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#A8A96C' }}></i>Ordered
+          </span>
+        );
+      case "4":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#69D8D0' }}></i>On Hand
+          </span>
+        );
+      case "5":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#4C9548' }}></i>Arriving
+          </span>
+        );
+      case "6":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#78C95E' }}></i>In Transit
+          </span>
+        );
+      case "7":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#E4DE6E' }}></i>In Process
+          </span>
+        );
+      case "8":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#DD4848' }}></i>At Destination
+          </span>
+        );
+      case "9":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#4893FA' }}></i>Delivered
+          </span>
+        );
+      case "10":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#ff2525' }}></i>Deleted
+          </span>
+        );
+      case "11":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#73d800' }}></i>Release
+          </span>
+        );
+      case "12":
+        return (
+          <span>
+            <i className="fas fa-box"style={{ color: '#ffee00' }}></i>On Hold
+          </span>
+        );
+      case "13":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
+          </span>
+        );
+        case "14":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
+          </span>
+        );
+    }
   };
 
   const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
