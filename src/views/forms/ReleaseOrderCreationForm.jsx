@@ -69,11 +69,9 @@ const ReleaseOrderCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -147,11 +145,9 @@ const ReleaseOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       releasedToId: id,
@@ -285,12 +281,12 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
 
     // this might be with selected receipts instead of commodities
-    if(commodities.length > 0){
-      setFormData({...formData, status: 1})
+    if (commodities.length > 0) {
+      setFormData({ ...formData, status: 1 })
     }
-  
+
   }, [commodities])
-  
+
 
   const sendData = async () => {
     let releasedToName = "";
@@ -387,7 +383,7 @@ const ReleaseOrderCreationForm = ({
       let charges = [];
 
       releaseIDs.forEach((id) => {
-        const order = warehouseReceipts.find( receipt => receipt.id == id);
+        const order = warehouseReceipts.find(receipt => receipt.id == id);
         charges = [...charges, order.charges];
       })
 
@@ -437,240 +433,207 @@ const ReleaseOrderCreationForm = ({
       createPickUp();
     }
   }, [allStateUpdatesComplete, clientToBill]);
-  
-  const[colorTab, setcolorTab] = useState(true);
+
+  const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
     const listItems = document.querySelectorAll(".nav-item")
-    if(!listItems) return
-    for(const item of listItems){ 
+    if (!listItems) return
+    for (const item of listItems) {
       item.addEventListener("click", () => {
         setcolorTab(false)
       })
     }
   }, [])
   return (
-    <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation" style={colorTab ? {background: "#153A61", borderRadius: "10px"} :{}}>
-        <a style={colorTab ? {color: "white"} : {}}
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#general"
-            aria-selected={activeTab === "general"}
-            onClick={() => setActiveTab("general")}
-            role="tab"
-          >
-            General
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#carrier"
-            aria-selected={activeTab === "carrier"}
-            onClick={() => setActiveTab("carrier")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Carrier
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#cargo"
-            aria-selected={activeTab === "cargo"}
-            onClick={() => setActiveTab("cargo")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Cargo
-          </a>
-        </li>
-      </ul>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "general" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "general" ? "block" : "none" }}
-      >
+
+
+    <div className="company-form release-order">
+      <div className="name">Release creation form </div>
+      <div className="form-label_name"><h3>General</h3><span></span></div>
+      <div className="container-box">
         <div className="containerr">
-          <div className="release">
+          <div className="cont-one">
+            <div>
+              <div>
+                <div className="company-form__section">
+                  <Input
+                    type="number"
+                    inputName="number"
+                    placeholder="Number..."
+                    value={formData.number}
+                    readonly={true}
+                    label="Release Number"
+                  />
+                </div>
 
-          <div>
-            <div className="company-form__section">
-              <Input
-                type="number"
-                inputName="number"
-                placeholder="Number..."
-                value={formData.number}
-                readonly={true}
-                label="Release Number"
-              />
-            </div>
+                <div className="company-form__section">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Creation Date and Time"
+                      className="font-right"
+                      value={dayjs(formData.createdDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
 
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Creation Date and Time"
-                  className="font-right"
-                  value={dayjs(formData.createdDateAndTime)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
-
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Release Date and Time"
-                  className="font-right"
-                  value={dayjs(formData.createdDateAndTime)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
+                <div className="company-form__section">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Release Date and Time"
+                      className="font-right"
+                      value={dayjs(formData.createdDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+              </div>
             </div>
 
             <div>
-            <div className="company-form__section">
-              <label htmlFor="employee" className="form-label">
-                Employee:
-              </label>
-              <AsyncSelect
-                id="employee"
-                value={employeeOptions.find(
-                  (option) => option.id === formData.employeeId
-                )}
-                onChange={(e) => {
-                  handleEmployeeSelection(e);
-                }}
-                isClearable={true}
-                defaultOptions={employeeOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+              <div>
+                <div className="form-group">
+                  <div className="company-form__section">
+                    <label htmlFor="employee" className="form-label">
+                      Employee:
+                    </label>
+                    <AsyncSelect
+                      id="employee"
+                      value={employeeOptions.find(
+                        (option) => option.id === formData.employeeId
+                      )}
+                      onChange={(e) => {
+                        handleEmployeeSelection(e);
+                      }}
+                      isClearable={true}
+                      defaultOptions={employeeOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+                </div>
+
+
+                <div className="company-form__section">
+                  <div className="form-group">
+                    <label htmlFor="issuedBy" className="form-label">
+                      Issued By:
+                    </label>
+                    <AsyncSelect
+                      id="issuedBy"
+                      value={issuedByOptions.find(
+                        (option) => option.id === formData.issuedById
+                      )}
+                      onChange={(e) => {
+                        handleIssuedBySelection(e);
+                      }}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={issuedByOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+
+                </div>
+                <div className="company-form__section">
+                  <div className="form-group">
+                    <label htmlFor="releasedTo" className="form-label">
+                      Released To:
+                    </label>
+                    {!creating ? (
+                      canRender && (
+                        <AsyncSelect
+                          id="releasedTo"
+                          onChange={(e) => {
+                            handleReleasedToSelection(e);
+                          }}
+                          value={releasedToOptions.find(
+                            (option) => option.id === formData.releasedToId
+                          )}
+                          isClearable={true}
+                          defaultOptions={releasedToOptions}
+                          getOptionLabel={(option) => option.name}
+                          getOptionValue={(option) => option.id}
+                        />
+                      )
+                    ) : (
+                      <AsyncSelect
+                        id="releasedTo"
+                        onChange={(e) => {
+                          handleReleasedToSelection(e);
+                        }}
+                        value={releasedToOptions.find(
+                          (option) => option.id === formData.destinationAgentId
+                        )}
+                        isClearable={true}
+                        defaultOptions={releasedToOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                      />
+                    )}
+                  </div>
+
+                </div>
+              </div>
             </div>
 
-            <div className="company-form__section">
-              <label htmlFor="issuedBy" className="form-label">
-                Issued By:
-              </label>
-              <AsyncSelect
-                id="issuedBy"
-                value={issuedByOptions.find(
-                  (option) => option.id === formData.issuedById
-                )}
-                onChange={(e) => {
-                  handleIssuedBySelection(e);
-                }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={issuedByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="releasedTo" className="form-label">
-                Released To:
-              </label>
-              {!creating ? (
-                canRender && (
-                  <AsyncSelect
-                    id="releasedTo"
-                    onChange={(e) => {
-                      handleReleasedToSelection(e);
-                    }}
-                    value={releasedToOptions.find(
-                      (option) => option.id === formData.releasedToId
-                    )}
-                    isClearable={true}
-                    defaultOptions={releasedToOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                )
-              ) : (
-                <AsyncSelect
-                  id="releasedTo"
+            <div>
+              <div className="company-form__section">
+                <label htmlFor="clientToBill" className="form-label">
+                  Client to Bill:
+                </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
                   onChange={(e) => {
-                    handleReleasedToSelection(e);
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an Option</option>
+                  <option value="releasedTo">Released To</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="company-form__section">
+                <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.clientToBillType !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
                   }}
                   value={releasedToOptions.find(
-                    (option) => option.id === formData.destinationAgentId
+                    (option) => option.id === formData.releasedToId
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-              )}
+              </div>
             </div>
-            </div>
-
-            <div>
-            <div className="company-form__section">
-              <label htmlFor="clientToBill" className="form-label">
-                Client to Bill:
-              </label>
-              <select
-                name="clientToBill"
-                id="clientToBill"
-                onChange={(e) => {
-                  handleClientToBillSelection(e);
-                }}
-              >
-                <option value="">Select an Option</option>
-                <option value="releasedTo">Released To</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div className="company-form__section">
-              <AsyncSelect
-                id="releasedToOther"
-                isDisabled={formData.clientToBillType !== "other"}
-                onChange={(e) => {
-                  handleClientToBillSelection(e);
-                }}
-                value={releasedToOptions.find(
-                  (option) => option.id === formData.releasedToId
-                )}
-                isClearable={true}
-                defaultOptions={releasedToOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-           </div>
-
           </div>
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "carrier" ? "show active" : ""
-        } company-form__general-form`}
-        id="carrier"
-        style={{ display: activeTab === "carrier" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
+      </div>
+
+
+      <div className="form-label_name"><h3>Carrier</h3><span></span></div>
+      <div className="containerr">
+        <div className="cont-two">
+
+          <div className="company-form__section">
+            <div className="form-group">
               <label htmlFor="mainCarrier" className="form-label">
                 Carrier:
               </label>
@@ -689,93 +652,92 @@ const ReleaseOrderCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="proNumber"
-                placeholder="PRO Number..."
-                value={formData.pro_number}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, pro_number: e.target.value })
-                }
-                label="PRO Number"
-              />
-            </div>
           </div>
-          <div className="cont-two">
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="trackingNumber"
-                placeholder="Tracking Number..."
-                value={formData.trackingNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, trackingNumber: e.target.value })
-                }
-                label="Tracking Number"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="purchaseOrderNumber"
-                placeholder="Purchase Order Number..."
-                value={formData.purchase_order_number}
-                changeHandler={(e) =>
-                  setFormData({
-                    ...formData,
-                    purchase_order_number: e.target.value,
-                  })
-                }
-                label="Purchase Order Number"
-              />
-            </div>
+
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="proNumber"
+              placeholder="PRO Number..."
+              value={formData.pro_number}
+              changeHandler={(e) =>
+                setFormData({ ...formData, pro_number: e.target.value })
+              }
+              label="PRO Number"
+            />
           </div>
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "cargo" ? "show active" : ""
-        } company-form__general-form`}
-        id="cargo"
-        style={{ display: activeTab === "cargo" ? "flex" : "none" }}
-      >
-        {warehouseReceipts.map((receipt) => (
-          <div key={receipt.number}>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedReceipts.includes(receipt.number)}
-                onChange={() => handleReceiptSelection(receipt.number)}
-              />
-              {receipt.number} - {receipt.issued_byObj.name}
-            </label>
-            {selectedReceipts.includes(receipt.number) &&
-              receipt.commodities.length > 0 && (
-                <select
-                  multiple
-                  value={selectedCommodities
-                    .filter((item) => item.receiptNumber === receipt.number)
-                    .map((item) => item.commodities)}
-                  onChange={(e) =>
-                    handleCommoditySelection(
-                      receipt.number,
-                      e.target.value,
-                      receipt.id
-                    )
-                  }
-                >
-                  {receipt.commodities.map((commodity) => (
-                    <option key={commodity.id} value={commodity.id}>
-                      {commodity.height}x{commodity.width}x{commodity.length} -{" "}
-                      {commodity.description}
-                    </option>
-                  ))}
-                </select>
-              )}
+
+        <div className="cont-one">
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="trackingNumber"
+              placeholder="Tracking Number..."
+              value={formData.trackingNumber}
+              changeHandler={(e) =>
+                setFormData({ ...formData, trackingNumber: e.target.value })
+              }
+              label="Tracking Number"
+            />
           </div>
-        ))}
-      </form>
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="purchaseOrderNumber"
+              placeholder="Purchase Order Number..."
+              value={formData.purchase_order_number}
+              changeHandler={(e) =>
+                setFormData({
+                  ...formData,
+                  purchase_order_number: e.target.value,
+                })
+              }
+              label="Purchase Order Number"
+            />
+          </div>
+        </div>
+      </div>
+
+
+      <div className="form-label_name"><h3>Cargo</h3><span></span></div>
+      {warehouseReceipts.map((receipt) => (
+        <div key={receipt.number}>
+          <label>
+            <input
+              type="checkbox"
+              checked={selectedReceipts.includes(receipt.number)}
+              onChange={() => handleReceiptSelection(receipt.number)}
+            />
+            {receipt.number} - {receipt.issued_byObj.name}
+          </label>
+          {selectedReceipts.includes(receipt.number) &&
+            receipt.commodities.length > 0 && (
+              <select
+                multiple
+                value={selectedCommodities
+                  .filter((item) => item.receiptNumber === receipt.number)
+                  .map((item) => item.commodities)}
+                onChange={(e) =>
+                  handleCommoditySelection(
+                    receipt.number,
+                    e.target.value,
+                    receipt.id
+                  )
+                }
+              >
+                {receipt.commodities.map((commodity) => (
+                  <option key={commodity.id} value={commodity.id}>
+                    {commodity.height}x{commodity.width}x{commodity.length} -{" "}
+                    {commodity.description}
+                  </option>
+                ))}
+              </select>
+            )}
+        </div>
+      ))}
+
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

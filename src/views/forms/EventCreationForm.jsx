@@ -39,131 +39,137 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
 
   return (
     <div className="income-charge-form">
-      <h3>Event Creation Form</h3>
-      <div className="form-row">
-        <div className="form-column-create">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Date and Time"
-              className="font-right"
-              value={dayjs(formData.dateTime)}
-              onChange={(e) =>
-                setformData({
-                  ...formData,
-                  dateTime: dayjs(e).format("YYYY-MM-DDTHH:mm:ss"),
-                })
+      <h3>Expense Charge Form</h3>
+
+      <div>
+        <div className="form-row">
+          <div className="form-column-create">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Entry Date and Time"
+                className="font-right"
+                value={dayjs(formData.dateTime)}
+                onChange={(e) =>
+                  setformData({
+                    ...formData,
+                    dateTime: dayjs(e).format("YYYY-MM-DDTHH:mm:ss"),
+                  })
+                }
+              />
+            </LocalizationProvider>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-column-create">
+            <label className="text-comm">Event Type:</label>
+            <select name="eventType" id="eventType">
+              <option value="arrivedDestination">Arrived at Destination</option>
+              <option value="arrivedWarehouse">Arrived at Warehouse</option>
+              <option value="arrivedWarehouseMIA">
+                Arrived at Warehouse MIA
+              </option>
+              <option value="cargoPicked">Cargo has been picked</option>
+              <option value="cargoScannedIn">Cargo scanned in</option>
+              <option value="cargoScannedOut">Cargo scanned out</option>
+              <option value="cargoStatusUpdate">Cargo status update</option>
+              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
+              <option value="customsOnHold">Customs On-Hold</option>
+              <option value="customsRelease">Customs Release / Liberación</option>
+              <option value="deliveredToConsignee">Delivered to Consignee</option>
+              <option value="entryStatusUpdate">Entry Status Update</option>
+              <option value="externalTrackingUpdate">
+                External Tracking Update
+              </option>
+              <option value="inTransit">In Transit</option>
+              <option value="inBond">In Bond (7512)</option>
+              <option value="originDocument">Origin Document</option>
+              <option value="availablePickup">
+                Package Available for Pickup
+              </option>
+              <option value="cancelled">Package Cancelled</option>
+              <option value="delivered">Package Delivered</option>
+              <option value="error">Package Error</option>
+            </select>
+          </div>
+        </div>
+        <div className="form-row">
+          <label htmlFor="details" className="text-comm">
+            Details:
+          </label>
+          <input
+            name="details"
+            type="text"
+            className="form-input"
+            placeholder="Details..."
+            value={formData.details}
+            onChange={(e) => setformData({ ...formData, details: e.target.value })}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div className="form-row">
+          <div className="form-column-create">
+            <label className="text-comm">Location:</label>
+            <select name="eventType" id="eventType">
+              <option value="arrivedDestination">Arrived at Destination</option>
+              <option value="arrivedWarehouse">Arrived at Warehouse</option>
+              <option value="arrivedWarehouseMIA">
+                Arrived at Warehouse MIA
+              </option>
+              <option value="cargoPicked">Cargo has been picked</option>
+              <option value="cargoScannedIn">Cargo scanned in</option>
+              <option value="cargoScannedOut">Cargo scanned out</option>
+              <option value="cargoStatusUpdate">Cargo status update</option>
+              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
+              <option value="customsOnHold">Customs On-Hold</option>
+              <option value="customsRelease">Customs Release / Liberación</option>
+              <option value="deliveredToConsignee">Delivered to Consignee</option>
+              <option value="entryStatusUpdate">Entry Status Update</option>
+              <option value="externalTrackingUpdate">
+                External Tracking Update
+              </option>
+              <option value="inTransit">In Transit</option>
+              <option value="inBond">In Bond (7512)</option>
+              <option value="originDocument">Origin Document</option>
+              <option value="availablePickup">
+                Package Available for Pickup
+              </option>
+              <option value="cancelled">Package Cancelled</option>
+              <option value="delivered">Package Delivered</option>
+              <option value="error">Package Error</option>
+            </select>
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-column-create">
+            <Input
+              inputName="includeTracking"
+              changeHandler={(e) =>
+                setformData({ ...formData, includeInTracking: e.target.checked })
               }
-            />
-          </LocalizationProvider>
+              label="Include in Tracking"
+              name="includeTracking"
+              type="checkbox"
+            ></Input>
+                    <div className="table-hover charge-buttons">
+          <button
+            className="button-save pick "
+            style={{ marginRight: "10px" }}
+            type="button"
+            onClick={addEvent}
+          >
+            <i className="fas fa-check-circle"></i>
+          </button>
+          <button
+            className="button-cancel pick "
+            type="button"
+            onClick={() => onCancel(false)}
+          >
+            <i className="fas fa-times-circle"></i>
+          </button>
         </div>
-      </div>
-      <div className="form-row">
-        <div className="form-column-create">
-          <label className="text-comm">Event Type:</label>
-          <select name="eventType" id="eventType">
-            <option value="arrivedDestination">Arrived at Destination</option>
-            <option value="arrivedWarehouse">Arrived at Warehouse</option>
-            <option value="arrivedWarehouseMIA">
-              Arrived at Warehouse MIA
-            </option>
-            <option value="cargoPicked">Cargo has been picked</option>
-            <option value="cargoScannedIn">Cargo scanned in</option>
-            <option value="cargoScannedOut">Cargo scanned out</option>
-            <option value="cargoStatusUpdate">Cargo status update</option>
-            <option value="customsEntry">Customs Entry / Inicio Aduana</option>
-            <option value="customsOnHold">Customs On-Hold</option>
-            <option value="customsRelease">Customs Release / Liberación</option>
-            <option value="deliveredToConsignee">Delivered to Consignee</option>
-            <option value="entryStatusUpdate">Entry Status Update</option>
-            <option value="externalTrackingUpdate">
-              External Tracking Update
-            </option>
-            <option value="inTransit">In Transit</option>
-            <option value="inBond">In Bond (7512)</option>
-            <option value="originDocument">Origin Document</option>
-            <option value="availablePickup">
-              Package Available for Pickup
-            </option>
-            <option value="cancelled">Package Cancelled</option>
-            <option value="delivered">Package Delivered</option>
-            <option value="error">Package Error</option>
-          </select>
+          </div>
         </div>
-      </div>
-      <label htmlFor="details" className="text-comm">
-        Details:
-      </label>
-      <input
-        name="details"
-        type="text"
-        className="form-input"
-        placeholder="Details..."
-        value={formData.details}
-        onChange={(e) => setformData({ ...formData, details: e.target.value })}
-        style={{ width: "100%" }}
-      />
-      <div className="form-row">
-        <div className="form-column-create">
-          <label className="text-comm">Location:</label>
-          <select name="eventType" id="eventType">
-            <option value="arrivedDestination">Arrived at Destination</option>
-            <option value="arrivedWarehouse">Arrived at Warehouse</option>
-            <option value="arrivedWarehouseMIA">
-              Arrived at Warehouse MIA
-            </option>
-            <option value="cargoPicked">Cargo has been picked</option>
-            <option value="cargoScannedIn">Cargo scanned in</option>
-            <option value="cargoScannedOut">Cargo scanned out</option>
-            <option value="cargoStatusUpdate">Cargo status update</option>
-            <option value="customsEntry">Customs Entry / Inicio Aduana</option>
-            <option value="customsOnHold">Customs On-Hold</option>
-            <option value="customsRelease">Customs Release / Liberación</option>
-            <option value="deliveredToConsignee">Delivered to Consignee</option>
-            <option value="entryStatusUpdate">Entry Status Update</option>
-            <option value="externalTrackingUpdate">
-              External Tracking Update
-            </option>
-            <option value="inTransit">In Transit</option>
-            <option value="inBond">In Bond (7512)</option>
-            <option value="originDocument">Origin Document</option>
-            <option value="availablePickup">
-              Package Available for Pickup
-            </option>
-            <option value="cancelled">Package Cancelled</option>
-            <option value="delivered">Package Delivered</option>
-            <option value="error">Package Error</option>
-          </select>
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-column-create">
-          <Input
-            inputName="includeTracking"
-            changeHandler={(e) =>
-              setformData({ ...formData, includeInTracking: e.target.checked })
-            }
-            label="Include in Tracking"
-            name="includeTracking"
-            type="checkbox"
-          ></Input>
-        </div>
-      </div>
-      <div className="table-hover charge-buttons">
-        <button
-          className="button-save pick "
-          style={{ marginRight: "10px" }}
-          type="button"
-          onClick={addEvent}
-        >
-          <i className="fas fa-check-circle"></i>
-        </button>
-        <button
-          className="button-cancel pick "
-          type="button"
-          onClick={() => onCancel(false)}
-        >
-          <i className="fas fa-times-circle"></i>
-        </button>
       </div>
       {showSuccessAlert && (
         <Alert
