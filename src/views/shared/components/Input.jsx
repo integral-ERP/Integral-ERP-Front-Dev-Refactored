@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 const Input = (props) => {
+  console.log(props)
   let inputElement;
   let labelElement;
 
   switch (props.type) {
     case "textarea":
       inputElement = (
-        <textarea
+        <textarea id={props.inputName}
           className="form-textarea"
           name={props.inputName}
           rows="4"
@@ -19,7 +20,7 @@ const Input = (props) => {
       break;
     case "checkbox":
       inputElement = (
-        <input
+        <input id={props.inputName}
           className="form-checkbox form-check-input"
           name={props.inputName}
           type="checkbox"
@@ -31,7 +32,7 @@ const Input = (props) => {
       break;
     case "number":
       inputElement = (
-        <input
+        <input id={props.inputName}
           className="form-input"
           name={props.inputName}
           type="number"
@@ -44,7 +45,7 @@ const Input = (props) => {
       break;
     case "email":
       inputElement = (
-        <input
+        <input id={props.inputName}
           className="form-input"
           name={props.inputName}
           type="email"
@@ -57,7 +58,7 @@ const Input = (props) => {
       break;
     case "text":
       inputElement = (
-        <input
+        <input id={props.inputName}
           className="form-input"
           name={props.inputName}
           type={props.type}
@@ -70,7 +71,7 @@ const Input = (props) => {
       break;
     default:
       inputElement = (
-        <input
+        <input id={props.inputName}
           className="form-input"
           name={props.inputName}
           type="text"
@@ -78,6 +79,7 @@ const Input = (props) => {
           value={props.value}
           onChange={props.changeHandler}
           readOnly={props.readOnly || false}
+
         />
       );
       break;

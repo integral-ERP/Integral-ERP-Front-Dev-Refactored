@@ -62,7 +62,7 @@ const ReceiptCreationForm = ({
   const [supplierOptions, setSupplierOptions] = useState([]);
   const [defaultValueShipper, setdefaultValueShipper] =
     useState(null);
-    const [defaultValueConsignee, setdefaultValueConsignee] =
+  const [defaultValueConsignee, setdefaultValueConsignee] =
     useState(null);
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
@@ -125,11 +125,9 @@ const ReceiptCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -175,11 +173,9 @@ const ReceiptCreationForm = ({
       result = await CarrierService.getCarrierById(id);
     }
     console.log("RESULTADO", result.data);
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setconsignee(result.data);
     setFormData({
       ...formData,
@@ -195,8 +191,8 @@ const ReceiptCreationForm = ({
       type === "shipper"
         ? formData.shipperId
         : type === "consignee"
-        ? formData.consigneeId
-        : "";
+          ? formData.consigneeId
+          : "";
     setFormData({
       ...formData,
       clientToBillId: id,
@@ -219,9 +215,8 @@ const ReceiptCreationForm = ({
       result = await VendorService.getVendorByID(id);
     }
     const info = result?.data
-      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${
-          result.data.state || ""
-        } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
+      } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
       : formData.shipperInfo;
     setshipper(result?.data || shipper);
     setFormData({
@@ -262,11 +257,9 @@ const ReceiptCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -333,18 +326,18 @@ const ReceiptCreationForm = ({
   };
 
   const loadShipperOption = async (id, type) => {
-    
+
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if(type === "carrier"){
+    if (type === "carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option.data);
@@ -353,13 +346,13 @@ const ReceiptCreationForm = ({
   const loadConsigneeOption = async (id, type) => {
     console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
     let option = null;
-    if(type === "customer"){
+    if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
     }
-    if(type === "vendor"){
+    if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if(type === "agent"){
+    if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
     console.log("SHIPPER FOUND:", option.data);
@@ -383,58 +376,41 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         // PICKUP TAB
         shipperId: pickupOrder.shipper,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
         // DELIVERY TAB
         consigneeId: pickupOrder.consignee,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
         // CARRIER TAB
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
         // SUPPLIER TAB
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -444,7 +420,7 @@ const ReceiptCreationForm = ({
         charges: pickupOrder.charges
       };
       console.log("Form Data to be updated:", updatedFormData);
-      setFormData(updatedFormData);     
+      setFormData(updatedFormData);
       setcanRender(true);
     }
   }, [creating, pickupOrder]);
@@ -540,70 +516,51 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         // PICKUP TAB
         shipperId: pickupOrder.shipper,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
 
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
         // DELIVERY TAB
         consigneeId: pickupOrder.consignee,
         consignee: pickupOrder.consignee,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
         // CARRIER TAB
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
         // SUPPLIER TAB
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
+          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
+          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         //
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -624,7 +581,7 @@ const ReceiptCreationForm = ({
   }, [fromPickUp, pickupOrder]);
 
   useEffect(() => {
-    if(formDataUpdated){
+    if (formDataUpdated) {
       handleConsigneeSelection({
         id: pickupOrder.consigneeObj?.data?.obj?.id,
         type: pickupOrder.consigneeObj?.data?.obj?.type_person,
@@ -638,7 +595,7 @@ const ReceiptCreationForm = ({
       });
     }
   }, [formDataUpdated, pickupOrder])
-  
+
 
   const sendData = async () => {
     let consigneeName = "";
@@ -771,8 +728,8 @@ const ReceiptCreationForm = ({
           : ReceiptService.updateReceipt(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          if(fromPickUp){
-            const newPickup = {...pickupOrder, status: 7};
+          if (fromPickUp) {
+            const newPickup = { ...pickupOrder, status: 7 };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
           console.log(
@@ -801,203 +758,118 @@ const ReceiptCreationForm = ({
     clientToBillRequest,
   ]);
 
+  const [colorTab, setcolorTab] = useState(true);
+  useEffect(() => {
+    const listItems = document.querySelectorAll(".nav-item")
+    if (!listItems) return
+    for (const item of listItems) {
+      item.addEventListener("click", () => {
+        setcolorTab(false)
+      })
+    }
+  }, [])
+
   return (
     <div className="company-form receipt">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#general"
-            aria-selected={activeTab === "general"}
-            onClick={() => setActiveTab("general")}
-            role="tab"
-          >
-            General
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#shipper/consignee"
-            aria-selected={activeTab === "shipper/consignee"}
-            onClick={() => setActiveTab("shipper/consignee")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Shipper/Consignee
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#supplier"
-            aria-selected={activeTab === "supplier"}
-            onClick={() => setActiveTab("supplier")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Supplier
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#carrier"
-            aria-selected={activeTab === "carrier"}
-            onClick={() => setActiveTab("carrier")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Carrier
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#commodities"
-            aria-selected={activeTab === "commodities"}
-            onClick={() => setActiveTab("commodities")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Commodities
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#charges"
-            aria-selected={activeTab === "charges"}
-            onClick={() => setActiveTab("charges")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Charges
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#events"
-            aria-selected={activeTab === "events"}
-            onClick={() => setActiveTab("events")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Events
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#attachments"
-            aria-selected={activeTab === "attachments"}
-            onClick={() => setActiveTab("attachments")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Attachments
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#notes"
-            aria-selected={activeTab === "notes"}
-            onClick={() => setActiveTab("notes")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Notes
-          </a>
-        </li>
-      </ul>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "general" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "general" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
-              <Input
-                type="number"
-                inputName="number"
-                placeholder="Number..."
-                value={formData.number}
-                readonly={true}
-                label="Number"
-              />
-            </div>
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Entry Date and Time"
-                  className="font-right"
-                  value={dayjs(formData.createdDateAndTime)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
+      <div className="name">Receipt creation form </div>
+
+      <div className="form-label_name"><h3>General</h3><span></span></div>
+      <div className="container-box container-box-general">
+        <div className="containerr__general box-general">
+          <div>
+
+            <div>
+              <div className="company-form__section normal-input">
+                <Input
+                  type="number"
+                  inputName="number"
+                  placeholder="Number..."
+                  value={formData.number}
+                  readonly={true}
+                  label="Number"
                 />
-              </LocalizationProvider>
+              </div>
+
+              <div className="company-form__section data-details">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Entry Date and Time"
+                    className="font-right"
+                    value={dayjs(formData.createdDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
+              </div>
             </div>
-            <div className="company-form__section">
-              <label htmlFor="employee" className="form-label">
-                Employee:
-              </label>
-              <AsyncSelect
-                id="employee"
-                value={employeeOptions.find(
-                  (option) => option.id === formData.employeeId
-                )}
-                onChange={(e) => {
-                  handleEmployeeSelection(e);
-                }}
-                isClearable={true}
-                defaultOptions={employeeOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+
+            <div>
+              <div className="company-form__section">
+                <label htmlFor="employee" className="form-label">
+                  Employee:
+                </label>
+                <AsyncSelect
+                  id="employee"
+                  value={employeeOptions.find(
+                    (option) => option.id === formData.employeeId
+                  )}
+                  onChange={(e) => {
+                    handleEmployeeSelection(e);
+                  }}
+                  isClearable={true}
+                  defaultOptions={employeeOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+
+              <div className="company-form__section">
+                <label htmlFor="issuedBy" className="form-label">
+                  Issued By:
+                </label>
+                <AsyncSelect
+                  id="issuedBy"
+                  value={issuedByOptions.find(
+                    (option) => option.id === formData.issuedById
+                  )}
+                  onChange={(e) => {
+                    handleIssuedBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={issuedByOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
             </div>
-            <div className="company-form__section">
-              <label htmlFor="issuedBy" className="form-label">
-                Issued By:
-              </label>
-              <AsyncSelect
-                id="issuedBy"
-                value={issuedByOptions.find(
-                  (option) => option.id === formData.issuedById
-                )}
-                onChange={(e) => {
-                  handleIssuedBySelection(e);
-                }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={issuedByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="destinationAgent" className="form-label">
-                Destination Agent:
-              </label>
-              {!creating ? (
-                canRender && (
+
+            <div>
+              <div className="company-form__section">
+                <label htmlFor="destinationAgent" className="form-label">
+                  Destination Agent:
+                </label>
+                {!creating ? (
+                  canRender && (
+                    <AsyncSelect
+                      id="destinationAgent"
+                      onChange={(e) => {
+                        handleDestinationAgentSelection(e);
+                      }}
+                      value={destinationAgentOptions.find(
+                        (option) => option.id === formData.destinationAgentId
+                      )}
+                      isClearable={true}
+                      defaultOptions={destinationAgentOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  )
+                ) : (
                   <AsyncSelect
                     id="destinationAgent"
                     onChange={(e) => {
@@ -1011,142 +883,119 @@ const ReceiptCreationForm = ({
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
-                )
-              ) : (
-                <AsyncSelect
-                  id="destinationAgent"
-                  onChange={(e) => {
-                    handleDestinationAgentSelection(e);
-                  }}
-                  value={destinationAgentOptions.find(
-                    (option) => option.id === formData.destinationAgentId
-                  )}
-                  isClearable={true}
-                  defaultOptions={destinationAgentOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
+                )}
+              </div>
+
+              <div className="company-form__section">
+                <Input
+                  type="number"
+                  inputName="entryNumber"
+                  placeholder="Entry Number..."
+                  value={formData.entryNumber}
+                  label="Entry Number"
                 />
-              )}
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="number"
-                inputName="entryNumber"
-                placeholder="Entry Number..."
-                value={formData.entryNumber}
-                label="Entry Number"
-              />
+              </div>
             </div>
           </div>
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "shipper/consignee" ? "show active" : ""
-        } company-form__general-form`}
-        id="shipper/consignee"
-        style={{
-          display: activeTab === "shipper/consignee" ? "block" : "none",
-        }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
-              <label htmlFor="shipper" className="form-label">
-                Shipper:
-              </label>
-              <AsyncSelect
-                id="shipper"
-                value={shipperOptions.find(
-                  (option) => option.id === formData.shipperObjId
-                )}
-                onChange={(e) => {
-                  handleShipperSelection(e);
-                }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={shipperOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="shipperinfo"
-                placeholder="Shipper Location..."
-                value={formData.shipperInfo}
-                readonly={true}
-              />
-            </div>
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section">
-              <label htmlFor="consignee" className="form-label">
-                Consignee:
-              </label>
-              <div className="custom-select">
+      </div>
+
+
+      <div className="form-label_name"><h3>Shipper/Consignee</h3><span></span></div>
+      <div className="container-box">
+        <div className="containerr__shipper">
+          <div>
+
+            <div>
+              <div className="company-form__section">
+                <label htmlFor="shipper" className="form-label">
+                  Shipper:
+                </label>
                 <AsyncSelect
-                  id="consignee"
-                  value={consigneeOptions.find(
-                    (option) => option.id === formData.consigneeObjId
+                  id="shipper"
+                  value={shipperOptions.find(
+                    (option) => option.id === formData.shipperObjId
                   )}
-                  onChange={(e) => handleConsigneeSelection(e)}
+                  onChange={(e) => {
+                    handleShipperSelection(e);
+                  }}
                   isClearable={true}
                   placeholder="Search and select..."
-                  defaultOptions={consigneeOptions}
+                  defaultOptions={shipperOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
               </div>
+              <div className="company-form__section">
+                <Input
+                  type="textarea"
+                  inputName="shipperinfo"
+                  placeholder="Shipper Location..."
+                  value={formData.shipperInfo}
+                  readonly={true}
+                />
+              </div>
             </div>
 
-            <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="consigneeInfo"
-                placeholder="Consignee Info..."
-                value={formData.consigneeInfo}
-                readonly={true}
-                label=""
-              />
+            <div>
+              <div className="company-form__section">
+                <label htmlFor="consignee" className="form-label">
+                  Consignee:
+                </label>
+                <div className="custom-select">
+                  <AsyncSelect
+                    id="consignee"
+                    value={consigneeOptions.find(
+                      (option) => option.id === formData.consigneeObjId
+                    )}
+                    onChange={(e) => handleConsigneeSelection(e)}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+              </div>
+
+              <div className="company-form__section">
+                <Input
+                  type="textarea"
+                  inputName="consigneeInfo"
+                  placeholder="Consignee Info..."
+                  value={formData.consigneeInfo}
+                  readonly={true}
+                  label=""
+                />
+              </div>
             </div>
+
           </div>
-          {/* ----------------------------END TWO---------------------------------- */}
+
+          <div className="company-form__section">
+            <label htmlFor="clientToBill" className="form-label">
+              Client to Bill:
+            </label>
+            <select
+              name="clientToBill"
+              id="clientToBill"
+              onChange={(e) => handleClientToBillSelection(e)}
+            >
+              <option value="">Select an option</option>
+              <option value="consignee">Consignee</option>
+              <option value="shipper">Shipper</option>
+            </select>
+          </div>
+
         </div>
+      </div>
+
+
+      <div className="form-label_name"><h3>Supplier</h3><span></span></div>
+      <div className="container-box">
         <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
-              <label htmlFor="clientToBill" className="form-label">
-                Client to Bill:
-              </label>
-              <select
-                name="clientToBill"
-                id="clientToBill"
-                onChange={(e) => handleClientToBillSelection(e)}
-              >
-                <option value="">Select an option</option>
-                <option value="consignee">Consignee</option>
-                <option value="shipper">Shipper</option>
-              </select>
-            </div>
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section"></div>
-          </div>
-        </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "supplier" ? "show active" : ""
-        } company-form__general-form`}
-        id="supplier"
-        style={{ display: activeTab === "supplier" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
+
+          <div className="containerr__name">
             <div className="company-form__section">
               <label htmlFor="shipper" className="form-label">
                 Name:
@@ -1166,18 +1015,7 @@ const ReceiptCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
-            <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="shipperinfo"
-                placeholder="Shipper Location..."
-                value={formData.shipperInfo}
-                readonly={true}
-              />
-            </div>
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -1190,6 +1028,19 @@ const ReceiptCreationForm = ({
                 label="Invoice Number"
               />
             </div>
+          </div>
+
+          <div className="containerr__information">
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="shipperinfo"
+                placeholder="Shipper Location..."
+                value={formData.shipperInfo}
+                readonly={true}
+              />
+            </div>
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -1206,18 +1057,16 @@ const ReceiptCreationForm = ({
               />
             </div>
           </div>
-          {/* ----------------------------END TWO---------------------------------- */}
+
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "carrier" ? "show active" : ""
-        } company-form__general-form`}
-        id="carrier"
-        style={{ display: activeTab === "carrier" ? "block" : "none" }}
-      >
+      </div>
+
+
+      <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
+      <div className="container-box">
         <div className="containerr">
-          <div className="cont-one">
+
+          <div className="containerr__Carrier">
             <div className="company-form__section">
               <label htmlFor="mainCarrier" className="form-label">
                 Carrier:
@@ -1237,21 +1086,7 @@ const ReceiptCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="proNumber"
-                placeholder="PRO Number..."
-                value={formData.proNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, proNumber: e.target.value })
-                }
-                label="PRO Number"
-              />
-            </div>
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -1265,16 +1100,109 @@ const ReceiptCreationForm = ({
               />
             </div>
           </div>
-          {/* ----------------------------END TWO---------------------------------- */}
+
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="proNumber"
+              placeholder="PRO Number..."
+              value={formData.proNumber}
+              changeHandler={(e) =>
+                setFormData({ ...formData, proNumber: e.target.value })
+              }
+              label="PRO Number"
+            />
+          </div>
+
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "charges" ? "show active" : ""
-        } company-form__general-form`}
-        id="charges"
-        style={{ display: activeTab === "charges" ? "block" : "none" }}
+      </div>
+
+      <div className="form-label_name"><h3>Commodities</h3><span></span></div>
+      <div className="company-form__section">
+        <CommodityCreationForm
+          onCancel={setshowCommodityCreationForm}
+          commodities={commodities}
+          setCommodities={setcommodities}
+          setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+        ></CommodityCreationForm>
+      </div>
+
+      {showCommodityCreationForm && (
+        <><Table
+          data={commodities}
+          columns={[
+            "Description",
+            " Length",
+            " Height",
+            " Width",
+            " Weight",
+            "Location",
+            " Volumetric Weight",
+            " Chargeable Weight",
+            "Options",
+          ]}
+          onSelect={handleSelectCommodity} // Make sure this line is correct
+          selectedRow={selectedCommodity}
+          onDelete={handleCommodityDelete}
+          onEdit={() => {
+            setshowCommodityEditForm(!showCommodityEditForm);
+          }}
+          onInspect={() => {
+            setshowCommodityInspect(!showCommodityInspect);
+          }}
+          onAdd={() => { }}
+          showOptions={false}
+        />
+          <button type="button" onClick={() => {
+            setshowRepackingForm(!showRepackingForm);
+          }}>Repack</button></>
+      )}
+
+      {showRepackingForm && (
+        <RepackingForm
+          commodities={commodities}
+          setCommodities={setcommodities}
+        ></RepackingForm>
+      )}
+
+      <Table
+        data={commodities}
+        columns={[
+          "Description",
+          " Length",
+          " Height",
+          " Width",
+          " Weight",
+          "Location",
+          " Volumetric Weight",
+          " Chargeable Weight",
+          "Options",
+        ]}
+        onSelect={handleSelectCommodity}
+        selectedRow={selectedCommodity}
+        onDelete={handleCommodityDelete}
+        onEdit={() => {
+          setshowCommodityEditForm(!showCommodityEditForm);
+        }}
+        onInspect={() => {
+          setshowCommodityInspect(!showCommodityInspect);
+        }}
+        onAdd={() => { }}
+        showOptions={false}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          setshowRepackingForm(!showRepackingForm);
+        }}
+        className="button-save"
       >
+        Repacking
+      </button>
+
+
+      <div className="form-label_name"><h3>Charges</h3><span></span></div>
+      <div className="container-box__form">
         <div className="company-form__section">
           <button
             type="button"
@@ -1297,6 +1225,17 @@ const ReceiptCreationForm = ({
             </svg>
             Add Income Charge
           </button>
+          <IncomeChargeForm
+            onCancel={setshowIncomeForm}
+            charges={charges}
+            setcharges={setcharges}
+            commodities={commodities}
+            agent={agent}
+            consignee={consignee}
+            shipper={shipper}
+          ></IncomeChargeForm>
+
+
           <button
             type="button"
             className="btn btn-primary btn-lg charge-buttons"
@@ -1318,179 +1257,75 @@ const ReceiptCreationForm = ({
             </svg>
             Add Expense Charge
           </button>
-          {showIncomeForm && (
-            <IncomeChargeForm
-              onCancel={setshowIncomeForm}
-              charges={charges}
-              setcharges={setcharges}
-              commodities={commodities}
-              agent={agent}
-              consignee={consignee}
-              shipper={shipper}
-            ></IncomeChargeForm>
-          )}
-          {showExpenseForm && (
-            <ExpenseChargeForm
-              onCancel={setshowIncomeForm}
-              charges={charges}
-              setcharges={setcharges}
-              commodities={commodities}
-              agent={agent}
-              consignee={consignee}
-              shipper={shipper}
-            ></ExpenseChargeForm>
-          )}
+          <ExpenseChargeForm
+            onCancel={setshowIncomeForm}
+            charges={charges}
+            setcharges={setcharges}
+            commodities={commodities}
+            agent={agent}
+            consignee={consignee}
+            shipper={shipper}
+          ></ExpenseChargeForm>
         </div>
-        <Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => {}} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          onAdd={() => {}}
-          showOptions={false}
-        />
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "commodities" ? "show active" : ""
-        } company-form__general-form`}
-        id="commodities"
-        style={{ display: activeTab === "commodities" ? "block" : "none" }}
-      >
-        <div className="company-form__section">
-          <button
-            type="button"
-            className="button-addpiece"
-            onClick={() =>
-              setshowCommodityCreationForm(!showCommodityCreationForm)
-            }
-          >
-            Add Piece
-          </button>
-          {showRepackingForm && (
-            <RepackingForm
-              commodities={commodities}
-              setCommodities={setcommodities}
-            ></RepackingForm>
-          )}
-          {showCommodityCreationForm && (
-            <CommodityCreationForm
-              onCancel={setshowCommodityCreationForm}
-              commodities={commodities}
-              setCommodities={setcommodities}
-            ></CommodityCreationForm>
-          )}
+      </div>
+
+      <Table
+        data={charges}
+        columns={[
+          "Status",
+          "Type",
+          "Description",
+          "Quantity",
+          "Price",
+          "Currency",
+        ]}
+        onSelect={() => { }} // Make sure this line is correct
+        selectedRow={{}}
+        onDelete={() => { }}
+        onEdit={() => { }}
+        onAdd={() => { }}
+        showOptions={false}
+      />
+
+
+      <div className="form-label_name"><h3>Events</h3><span></span></div>
+      <div className="container-box event-section">
+        <div className="box__event--form">
+          <EventCreationForm
+            onCancel={setshowEventForm}
+            events={events}
+            setevents={setEvents}
+          ></EventCreationForm>
         </div>
-        <Table
-          data={commodities}
-          columns={[
-            "Description",
-            " Length",
-            " Height",
-            " Width",
-            " Weight",
-            "Location",
-            " Volumetric Weight",
-            " Chargeable Weight",
-            "Options",
-          ]}
-          onSelect={handleSelectCommodity} // Make sure this line is correct
-          selectedRow={selectedCommodity}
-          onDelete={handleCommodityDelete}
-          onEdit={() => {
-            setshowCommodityEditForm(!showCommodityEditForm);
-          }}
-          onInspect={() => {
-            setshowCommodityInspect(!showCommodityInspect);
-          }}
-          onAdd={() => {}}
-          showOptions={false}
-        />
-        <button
-          type="button"
-          onClick={() => {
-            setshowRepackingForm(!showRepackingForm);
-          }}
-          className="button-save"
-        >
-          Repacking
-        </button>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "events" ? "show active" : ""
-        } company-form__general-form`}
-        id="events"
-        style={{ display: activeTab === "events" ? "block" : "none" }}
-      >
-        <div className="company-form__section">
-          <button
-            type="button"
-            className="btn btn-primary btn-lg charge-buttons"
-            onClick={() => {
-              setshowEventForm(!showEventForm);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-            >
-              <path
-                d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
-                fill="white"
-              />
-            </svg>
-            Add Event
-          </button>
-          {showEventForm && (
-            <EventCreationForm
-              onCancel={setshowEventForm}
-              events={events}
-              setevents={setEvents}
-            ></EventCreationForm>
-          )}
-        </div>
-        <Table
-          data={events}
-          columns={[
-            "Date",
-            "Name",
-            "Location",
-            "Details",
-            "Include In Tracking",
-            "Created In",
-            "Created By",
-            "Created On",
-            "Last Modified By",
-            "Last Modified On",
-          ]}
-          onSelect={() => {}} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => {}}
-          onEdit={() => {}}
-          onAdd={() => {}}
-          showOptions={false}
-        />
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "attachments" ? "show active" : ""
-        } company-form__general-form`}
-        id="attachments"
-        style={{ display: activeTab === "attachments" ? "block" : "none" }}
-      >
+        {events && Array.isArray(events) && events.length > 0 && (
+          <Table
+            data={events}
+            columns={[
+              "Date",
+              "Name",
+              "Location",
+              "Details",
+              "Include In Tracking",
+              "Created In",
+              "Created By",
+              "Created On",
+              "Last Modified By",
+              "Last Modified On",
+            ]}
+            onSelect={() => { }}
+            selectedRow={{}}
+            onDelete={() => { }}
+            onEdit={() => { }}
+            onAdd={() => { }}
+            showOptions={false}
+          />
+        )}
+      </div>
+      {/* </form> */}
+
+
+      <div className="form-label_name"><h3>Attachments</h3><span></span></div>
+      <div className="container-box">
         <div className="company-form__section">
           <input type="file" multiple onChange={handleFileUpload} />
           <ul>
@@ -1499,32 +1334,28 @@ const ReceiptCreationForm = ({
             ))}
           </ul>
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "notes" ? "show active" : ""
-        } company-form__general-form`}
-        id="notes"
-        style={{ display: activeTab === "notes" ? "block" : "none" }}
-      >
-        <input
-          name="notes"
-          type="text"
-          className="form-input"
-          placeholder="Notes..."
-          onChange={(e) => setNote(e.target.value)}
-          style={{ width: "100%" }}
-        />
+      </div>
+
+
+      <div className="form-label_name"><h3>Notes</h3><span></span></div>
+      <div className="container-box">
+        <div style={{width:"50%"}}>
+          <label htmlFor="notes" className="form-label">Notes</label>
+          <input
+            name="notes"
+            type="text"
+            className="form-input"
+            placeholder="Notes..."
+            onChange={(e) => setNote(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </div>
         <button type="button" onClick={addNotes}>
           Add
         </button>
-        <Input
-          value={formData.notes}
-          readonly
-          type="text"
-          inputName="notes"
-        ></Input>
-      </form>
+      </div>
+
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

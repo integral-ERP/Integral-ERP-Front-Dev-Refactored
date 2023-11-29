@@ -7,8 +7,8 @@ import { useModal } from "../../../hooks/useModal";
 import { Link } from "react-router-dom";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
-
-import logo from "../../../img/logo.png"
+import logo from "../../../img/logo.png";
+import logoBlanco from "../../../img/logoBlanco.png";
 
 const Sidebar = () => {
   const [close, setClose] = useState(false);
@@ -33,11 +33,18 @@ const Sidebar = () => {
   return (
     <>
       <div className={`sidebar ${close ? "close" : ""}`}>
+
         <div className="logo-details">
+          <div>
           {/* <i className="bx bxl-c-plus-plus"></i> */}
           <img className="logo" src={logo} alt="Logo_texto" />
           <span className="logo_name">pressex</span>
+          </div>
+          <div className="logo-blanco">
+            <img className="logoB" src={logoBlanco} alt="logo-blanco" />
+          </div>
         </div>
+
         <ul className="nav-links">
           <li>
             <Link to={"/dashboard"}>

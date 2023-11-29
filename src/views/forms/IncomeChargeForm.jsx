@@ -85,6 +85,7 @@ const IncomeChargeForm = ({
   }, [commodities]);
 
   const createCharge = () => {
+    onCancel(true)
     const charge = {
       ...formData,
       quantity: 1

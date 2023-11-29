@@ -6,9 +6,9 @@ import AlertTitle from "@mui/material/AlertTitle";
 import CommoditiesService from "../../services/CommoditiesService";
 import LocationService from "../../services/LocationService";
 const CommodityCreationForm = ({
-  onCancel,
+ onCancel,
   commodities,
-  setCommodities,
+  setCommodities, setShowCommoditiesCreationForm,
   editing,
   commodity,
 }) => {
@@ -53,7 +53,8 @@ const CommodityCreationForm = ({
       copy[indexToEdit] = body;
       setCommodities(copy);
     } else {
-      setCommodities([...commodities, body]);
+      setShowCommoditiesCreationForm(true)
+    setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
     console.log(commodities);
@@ -105,23 +106,9 @@ const CommodityCreationForm = ({
 
   return (
     <div className="income-charge-form">
-      <h3>Commodity Creation Form</h3>
+      {/* <h3>Commodity Creation Form</h3> */}
       <div className="form-row">
-        <div className="form-column-create">
-          <label className="text-comm">Weigth:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.weight}
-              onChange={(e) =>
-                setformData({ ...formData, weight: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">lb</span>
-          </div>
-        </div>
+
         <div className="form-column-create">
           <label className="text-comm">Length:</label>
           <div className="input-group ">
@@ -137,21 +124,7 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">in</span>
           </div>
         </div>
-        <div className="form-column-create">
-          <label className="text-comm">Width:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.width}
-              onChange={(e) =>
-                setformData({ ...formData, width: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">in</span>
-          </div>
-        </div>
+
         <div className="form-column-create">
           <label className="text-comm">Height:</label>
           <div className="input-group ">
@@ -167,6 +140,39 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">in</span>
           </div>
         </div>
+
+        <div className="form-column-create">
+          <label className="text-comm">Width:</label>
+          <div className="input-group ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.width}
+              onChange={(e) =>
+                setformData({ ...formData, width: e.target.value })
+              }
+            />
+            <span className="input-group-text num-com">in</span>
+          </div>
+        </div>
+
+        <div className="form-column-create">
+          <label className="text-comm">Weigth:</label>
+          <div className="input-group ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.weight}
+              onChange={(e) =>
+                setformData({ ...formData, weight: e.target.value })
+              }
+            />
+            <span className="input-group-text num-com">lb</span>
+          </div>
+        </div>
+
         <div className="form-column-create">
           <label className="text-comm">Volume:</label>
           <div className="input-group ">
@@ -180,6 +186,7 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">in3</span>
           </div>
         </div>
+
         <div className="form-column-create">
           <label className="text-comm__space">Chargeable Weight:</label>
           <div className="input-group ">
@@ -195,7 +202,8 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
-        <label htmlFor="description" className="text-comm">
+
+        <label htmlFor="description" className="text-comm description-form">
           Description:
         </label>
         <input
@@ -209,6 +217,7 @@ const CommodityCreationForm = ({
           }
           style={{ width: "100%" }}
         />
+
         <label htmlFor="location" className="text-comm" style={{marginTop: "10px"}}>Location:</label>
         <select name="location" id="location" onChange={(e) => {setformData({...formData, locationId: e.target.value, locationCode: e.target.options[e.target.selectedIndex].getAttribute("data-key")})}}>
           <option value="">Select an option</option>
