@@ -509,15 +509,15 @@ const PickupOrderCreationForm = ({
       const inputSelected = document.querySelector(inputs.selectedId)
       const inputAsociated = document.querySelector(inputs.asociatedId)
       const isValid = inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-      console.log(formData);
+      //console.log(formData);
       if (inputSelected && formData[inputSelected.id]) {
         inputSelected.style.border = "1px solid green"
-        // console.log("green", inputSelected.id)
+         console.log("green", inputSelected.id)
         continue
       }
       else {
         if (inputSelected) inputSelected.style.border = "1px solid red"
-        // console.log("red", inputSelected.id)
+        console.log("red", inputSelected.id)
         if (!isValid && inputSelected?.style) {
           inputSelected.style.border = "1px solid red"
 

@@ -1,10 +1,10 @@
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+//import pdfFonts from "pdfmake/build/vfs_fonts";
+
+import pdfFonts from "./vfs_fonts";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
-import { BarcodeGenerator } from "barcode-generator";
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts;
 
 const GeneratePickUpPDF = (data) => {
   const canvas = document.createElement("canvas");

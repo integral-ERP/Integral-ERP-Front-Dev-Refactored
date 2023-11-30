@@ -7,7 +7,7 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
-import logoBlanco from "../../../img/logoBlanco.png";
+import logoBlanco from "../../../img/logoblanco.png";
 import usuario from "../../../img/usuario.png";
 import logoIntegral from "../../../img/integral.png"
 
