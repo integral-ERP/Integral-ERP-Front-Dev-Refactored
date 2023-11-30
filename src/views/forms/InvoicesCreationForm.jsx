@@ -35,17 +35,17 @@ const InvoicesCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
-  const [apply, setapplys] = useState([]);
+  // const [apply, setapplys] = useState([]);
 
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [paymentByOptions, setPaymentByOptions] = useState([]);
   const [accountByOptions, setAccountByOptions] = useState([]);
   const [typeByOptions, setptypeByOptions] = useState([]);
   
-  const [paymentTem, setPaymentTems] = useState([]);
-  const [account, setAccountTems] = useState([]);
-  const [typeService, setTypeServiceTems] =useState([])
-  const [filtroChart, setFiltroChart]= useState([])
+  // const [paymentTem, setPaymentTems] = useState([]);
+  // const [account, setAccountTems] = useState([]);
+  // const [typeService, setTypeServiceTems] =useState([])
+  // const [filtroChart, setFiltroChart]= useState([])
 
   const [type, settypes] = useState([]);
   const [types, settype] = useState([]);
@@ -85,7 +85,7 @@ const formFormat = {
   paidAd: "",
   amount: "",
   totalAmount: "",
-  amountDue: "",
+  // amountDue: "",
   status: "Open",
   prepaid: "Yes",
   // typeName: "",
@@ -195,7 +195,7 @@ const [resultado, setResultado] = useState(0);
 
         amount: invoice.amount || "",
         totalAmount: invoice.totalAmount || "",
-        amountDue: invoice.amountDue || "",
+        // amountDue: invoice.amountDue || "",
 
         resultado: invoice.resultado || "",
 
@@ -473,7 +473,9 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
                 }
               />
             </LocalizationProvider>
-          </div><div className="company-form__section">
+          </div>
+          {/* ----------------------------------------------------------- */}
+          <div className="company-form__section">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 label="Transation Date"
@@ -488,7 +490,6 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
               />
             </LocalizationProvider>
           </div>
-        
          
         </div>{/* -------------------------END ONE---------------------------------- */}
         <div className="cont-two">

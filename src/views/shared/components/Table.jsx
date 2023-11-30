@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
@@ -7,8 +7,11 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
-import GenerateReceiptPDF from "../../others/GenerateReceiptPDF";
-import GenerateReleasePDF from "../../others/GenerateReleasePDF";
+import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
+import { GlobalContext } from "../../../context/global";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 const Table = ({
   data,
@@ -33,8 +36,8 @@ const Table = ({
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [dateFilter, setDateFilter] = useState("all");
-  const [startDate, setstartDate] = useState("");
-  const [finishDate, setfinishDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const navigate = useNavigate();
   const currentDate = new Date();
@@ -124,31 +127,110 @@ const Table = ({
     " Chargeable Weight": "chargedWeight",
     Note: "note",
     "Account Number": "accountNumber",
-    Code: "code",
+    "Code": "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    "Location": "locationCode",
-     //---------------------Cristian
-     "Account": "accountNumber",
-     "Due Days" : "dueDays",
-     "Discount Percentage" : "discountPercentage",
-     "Discount Days" : "discountDays",
-     "Inactive" : "inactive",
- 
-     "Transaction Date" : "trasaDate",
-     "Due Date" : "due",
-     "Type Name" : "typeName",
-     "Apply" : "issuedByName",
-     "Payment Temse": "paymentByDesc",
-     "Account Name" : "accountByName",
-     "Type Code" : "typeByCode",
-     "Biling Address" : "bilingAddres",
-     
-     "Type Items & Service": "typeByCode",
-     "type Chart": "typeByCode",
-     "Type Chart":"typeChart",
-     "Account Type" : "accountByType",
+    Location: "locationCode",
   };
+
+  const getStatus = (statusCode) => {
+    console.log("STATUS", statusCode);
+    switch (statusCode.toString()) {
+      case "1":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Loaded
+          </span>
+        );
+      case "2":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#D0D3D1' }}></i>Pending
+          </span>
+        );
+      case "3":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#A8A96C' }}></i>Ordered
+          </span>
+        );
+      case "4":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#69D8D0' }}></i>On Hand
+          </span>
+        );
+      case "5":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#4C9548' }}></i>Arriving
+          </span>
+        );
+      case "6":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#78C95E' }}></i>In Transit
+          </span>
+        );
+      case "7":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#E4DE6E' }}></i>In Process
+          </span>
+        );
+      case "8":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#DD4848' }}></i>At Destination
+          </span>
+        );
+      case "9":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#4893FA' }}></i>Delivered
+          </span>
+        );
+      case "10":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#ff2525' }}></i>Deleted
+          </span>
+        );
+      case "11":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#73d800' }}></i>Release
+          </span>
+        );
+      case "12":
+        return (
+          <span>
+            <i className="fas fa-box"style={{ color: '#ffee00' }}></i>On Hold
+          </span>
+        );
+      case "13":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
+          </span>
+        );
+        case "14":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
+          </span>
+        );
+    }
+  };
+
+  const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
+
+  const handleOpenCloseSlider = () => {
+    onAdd();
+    setcontrolSlider(true)
+    setHideShowSlider(true)
+  }
+
 
   const handleSearch = (row) => {
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
@@ -483,52 +565,11 @@ const Table = ({
           <div className="title-container">
             <h1 className="title">{title}</h1>
           </div>
-          <div className="export-dropdown">
-            <label className="laver-export">
-              <span className="text-export">Export Format:</span>
-              <select value={selectedFormat} onChange={handleFormatChange}>
-                <option value="">Select Format</option>
-                <option value="json">JSON</option>
-                <option value="csv">CSV</option>
-                <option value="pdf">PDF</option>
-                <option value="xml">XML</option>
-              </select>
-            </label>
-            <button className="generic-button" onClick={handleExport}>
-              <i className="fas fa-file-export menu-icon fa-3x"></i>
-            </button>
-          </div>
         </div>
       )}
 
       {showOptions && (
         <div className="button-container">
-          <div className="action-buttons">
-            <button className="generic-button" onClick={onAdd}>
-              <i className="fas fa-plus menu-icon fa-3x"></i>
-            </button>
-
-            <button className="generic-button ne" onClick={onEdit}>
-              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-            </button>
-            <button className="generic-button ne" onClick={onDelete}>
-              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-            </button>
-
-            <input
-              type="file"
-              accept=".json, .csv, .xml"
-              onChange={handleImport}
-              className="hidden-input"
-              id="import-input"
-            />
-            <button className="generic-button ne" onClick={onDelete}>
-              <i
-                className="fas fa-upload menu-icon fa-3x"
-                onClick={() => document.getElementById("import-input").click()}
-              ></i>
-            </button>
-          </div>
           <div className="position-search">
             <div className="search">
               <div className="search-container">
@@ -540,9 +581,35 @@ const Table = ({
                   className="search-input"
                 />
               </div>
+              <div className="action-buttons">
+                <button className="generic-button" onClick={handleOpenCloseSlider}>
+                  <i className="fas fa-plus menu-icon fa-3x"></i>
+                </button>
+
+                <button className="generic-button ne" onClick={onEdit}>
+                  <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+                </button>
+                <button className="generic-button ne" onClick={onDelete}>
+                  <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+                </button>
+
+                <input
+                  type="file"
+                  accept=".json, .csv, .xml"
+                  onChange={handleImport}
+                  className="hidden-input"
+                  id="import-input"
+                />
+                <button className="generic-button ne" onClick={onDelete}>
+                  <i
+                    className="fas fa-upload menu-icon fa-3x"
+                    onClick={() => document.getElementById("import-input").click()}
+                  ></i>
+                </button>
+              </div>
               {showFilterMenu && (
                 <div
-                  className="modal"
+                  className="modal-filter"
                   style={{ display: showFilterMenu ? "block" : "none" }}
                 >
                   <div className="modal-dialog" role="document">
@@ -561,22 +628,23 @@ const Table = ({
                       </div>
                       <div className="modal-body">
                         <div className="date-filter">
-                          <label>Date Filter:</label>
                           <div className="date-range">
-                            <label>Start Date:</label>
-                            <input
-                              type="date"
-                              value={startDate}
-                              onChange={(e) => setstartDate(e.target.value)}
-                            />
-                          </div>
-                          <div className="date-range">
-                            <label>End Date:</label>
-                            <input
-                              type="date"
-                              value={finishDate}
-                              onChange={(e) => setfinishDate(e.target.value)}
-                            />
+                            <div className="date-box">
+                              <span className="date-label">Start Date:</span>
+                              <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                inline
+                              />
+                            </div>
+                            <div className="date-box">
+                              <span className="date-label">End Date:</span>
+                              <DatePicker
+                                selected={finishDate}
+                                onChange={(date) => setFinishDate(date)}
+                                inline
+                              />
+                            </div>
                           </div>
                           <select
                             value={dateFilter}
@@ -644,17 +712,9 @@ const Table = ({
                 <i className="fas fa-eye menu-icon fa-3x ne"></i>
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setShowFilterMenu(!showFilterMenu)}
-              className="generic-button"
-            >
-              <i className="fas fa-filter menu-icon fa-3x ne"></i>
-            </button>
             {showColumnMenu && (
               <div
-                className="modal"
+                className="modal-view"
                 style={{ display: showColumnMenu ? "block" : "none" }}
               >
                 <div className="modal-dialog" role="document">
@@ -707,6 +767,37 @@ const Table = ({
               </div>
             )}
           </div>
+          <div className="export-box">
+            <div className="export-dropdown">
+              <label className="laver-export">
+                <span className="text-export">Export Format:</span>
+                <select value={selectedFormat} onChange={handleFormatChange}>
+                  <option value="">Select</option>
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="pdf">PDF</option>
+                  <option value="xml">XML</option>
+                </select>
+              </label>
+              <button className="generic-button" onClick={handleExport}>
+                <i className="fas fa-file-export menu-icon fa-3x"></i>
+              </button>
+            </div>
+            <button
+              className="generic-button"
+              onClick={() => setShowColumnMenu(!showColumnMenu)}
+            >
+              <i className="fas fa-eye menu-icon fa-3x ne"></i>
+
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="generic-button"
+            >
+              <i className="fas fa-filter menu-icon fa-3x ne"></i>
+            </button>
+          </div>
         </div>
       )}
       <div className="generic-table">
@@ -734,11 +825,10 @@ const Table = ({
             {filteredData.map((row) => (
               <tr
                 key={row.id}
-                className={`table-row  tr-margen${
-                  selectedRow && selectedRow.id === row.id
-                    ? "table-primary"
-                    : ""
-                }`}
+                className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                  ? "table-primary"
+                  : ""
+                  }`}
                 onClick={() => onSelect(row)}
                 onContextMenu={(e) => handleContextMenu(e, row)}
               >
@@ -791,8 +881,8 @@ const Table = ({
                       ) : columnNameToProperty[columnName]?.includes(".") ? (
                         getPropertyValue(row, columnNameToProperty[columnName])
                       ) : Array.isArray(
-                          row[columnNameToProperty[columnName]]
-                        ) ? (
+                        row[columnNameToProperty[columnName]]
+                      ) ? (
                         row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                       ) : (
                         row[columnNameToProperty[columnName]]

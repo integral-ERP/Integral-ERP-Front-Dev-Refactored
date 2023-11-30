@@ -1,8 +1,13 @@
+import { useContext } from "react"
 import NavigationButtons from "./NavigationButtons"
 import BUTTONS_LIST from "../../../constants/dashboard"
 import "../../../styles/components/HeaderDashboard.scss"
+import { GlobalContext } from "../../../context/global"
+
 const HeaderDashboard = () => {
-    return (<div className= "header-dashboard__container">
+    const { hideShowSlider } = useContext(GlobalContext)
+
+    return (<div className="header-dashboard__container" style={!hideShowSlider ? { marginLeft: "32rem" } : { marginInline: "auto" }}>
         <header>
             <div>
                 <h1>HOME</h1>

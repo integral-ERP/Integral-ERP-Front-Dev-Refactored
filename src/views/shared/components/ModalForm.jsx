@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import "../../../styles/components/ModalForms.scss"
 
 const ModalForm = ({ children, isOpen, closeModal }) => {
   const [modalDimensions, setModalDimensions] = useState({ width: 'auto', height: 'auto' });
+
 
   const handleModalContainerClick = (e) => e.stopPropagation();
 
@@ -17,11 +18,18 @@ const ModalForm = ({ children, isOpen, closeModal }) => {
       //   });
       // }
     };
+    const sidebar = document.querySelector(".sidebar.close")
 
     if (isOpen) {
       updateModalDimensions();
       window.addEventListener('resize', updateModalDimensions);
+      sidebar.classList.add("modal-open")
+    } 
+    else {
+      if (sidebar !==null) sidebar.className="sidebar close"
     }
+
+    
 
     return () => {
       window.removeEventListener('resize', updateModalDimensions);
