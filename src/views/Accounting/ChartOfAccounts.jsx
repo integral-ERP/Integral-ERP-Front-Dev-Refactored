@@ -135,7 +135,6 @@ const ChartOfAccounts  = () => {
   
   return (
     <>
-      <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
           <div className="content-page">
@@ -194,7 +193,7 @@ const ChartOfAccounts  = () => {
             )}
           </div>
         </div>
-      </div>
+   
     </>
   );
 };
