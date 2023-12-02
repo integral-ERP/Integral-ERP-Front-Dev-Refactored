@@ -41,7 +41,7 @@ const Release = () => {
           return !releaseOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
         
-        setReleaseOrders([...releaseOrders, ...newreleises]);
+        setReleaseOrders([...releaseOrders, ...newreleises].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

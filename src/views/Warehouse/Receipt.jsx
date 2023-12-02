@@ -41,7 +41,7 @@ const Receipt = () => {
         });
         
         setreceipts([...receipts, ...newreceipts]);
-        console.log("NEW ORDERS", [...receipts, ...newreceipts]);
+        console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }

@@ -57,11 +57,11 @@ const CommodityCreationForm = ({
     setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
-    console.log(commodities);
+    
   };
 
   useEffect(() => {
-    console.log(formData);
+    
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /

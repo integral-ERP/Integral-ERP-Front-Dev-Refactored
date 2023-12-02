@@ -95,7 +95,7 @@ const Pickup = () => {
           );
         });
 
-        setpickupOrders([...pickupOrders, ...newPickupOrders]);
+        setpickupOrders([...pickupOrders, ...newPickupOrders].reverse());
         console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
         if (response.data.next) {
           setNextPageURL(response.data.next);

@@ -136,7 +136,8 @@ const CustomerCreationForm = ({
         closeModal();
         onCustomerDataChange();
         setShowSuccessAlert(false);
-      }, 5000);
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);

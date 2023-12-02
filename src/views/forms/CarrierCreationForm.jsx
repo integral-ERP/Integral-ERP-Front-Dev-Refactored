@@ -196,8 +196,9 @@ const CarrierCreationForm = ({
         closeModal();
         onCarrierDataChange();
         setShowSuccessAlert(false);
-        setFormData(formFormat)
-      }, 5000);
+        setFormData(formFormat);
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
