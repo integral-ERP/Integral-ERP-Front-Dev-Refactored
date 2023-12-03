@@ -444,6 +444,161 @@ const PickupOrderCreationForm = ({
     setReleasedToOptions(clientToBillOptions);
   };
 
+  const addTypeToObjects = (arr, type) =>
+      arr.map((obj) => ({ ...obj, type }));
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;    
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+    
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);  
+    return options;
+  };
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDestinationAgentsSelectOptions = async (inputValue) => {
+
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadShipperSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadConsigneeSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadPickUpLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDeliveryLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadClientToBillSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
   const loadShipperOption = async (id, type) => {
     let option = null;
     if (type === "customer") {
@@ -488,9 +643,6 @@ const PickupOrderCreationForm = ({
     }
   }, [pickupNumber]);
 
-  useEffect(() => {
-   
-  }, [formData]);
   const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div"}, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
 
   useEffect(() => {
@@ -838,6 +990,7 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={employeeOptions}
+                    loadOptions={loadEmployeeSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -857,6 +1010,7 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
+                    loadOptions={loadIssuedBySelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -923,6 +1077,7 @@ const PickupOrderCreationForm = ({
                         }}
                         isClearable={true}
                         defaultOptions={destinationAgentOptions}
+                        loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
                         value={destinationAgentOptions.find(
@@ -938,6 +1093,7 @@ const PickupOrderCreationForm = ({
                       }}
                       isClearable={true}
                       defaultOptions={destinationAgentOptions}
+                      loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
@@ -971,6 +1127,7 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
+                    loadOptions={loadShipperSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1020,6 +1177,7 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={pickupLocationOptions}
+                    loadOptions={loadPickUpLocationSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1075,6 +1233,7 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1128,6 +1287,7 @@ const PickupOrderCreationForm = ({
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={deliveryLocationOptions}
+                  loadOptions={loadDeliveryLocationSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -1192,6 +1352,7 @@ const PickupOrderCreationForm = ({
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={carrierOptions}
+                  loadOptions={loadCarrierSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />

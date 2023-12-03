@@ -254,6 +254,63 @@ const ReleaseOrderCreationForm = ({
     setCarrierOptions(carrierOptions);
   };
 
+  const addTypeToObjects = (arr, type) =>
+      arr.map((obj) => ({ ...obj, type }));
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    
+    const options = [ ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+  
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;    
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+    
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);  
+    return options;
+  };
+  
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+  
+  const loadReleasedToOptionsSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
   const fetchReceipts = async () => {
     ReceiptService.getReceipts()
       .then((response) => {
@@ -518,6 +575,7 @@ const ReleaseOrderCreationForm = ({
                       }}
                       isClearable={true}
                       defaultOptions={employeeOptions}
+                      loadOptions={loadEmployeeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
@@ -541,6 +599,7 @@ const ReleaseOrderCreationForm = ({
                       isClearable={true}
                       placeholder="Search and select..."
                       defaultOptions={issuedByOptions}
+                      loadOptions={loadIssuedBySelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
@@ -564,6 +623,7 @@ const ReleaseOrderCreationForm = ({
                           )}
                           isClearable={true}
                           defaultOptions={releasedToOptions}
+                          loadOptions={loadReleasedToOptionsSelectOptions}
                           getOptionLabel={(option) => option.name}
                           getOptionValue={(option) => option.id}
                         />
@@ -579,6 +639,7 @@ const ReleaseOrderCreationForm = ({
                         )}
                         isClearable={true}
                         defaultOptions={releasedToOptions}
+                        loadOptions={loadReleasedToOptionsSelectOptions}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
                       />
@@ -619,6 +680,7 @@ const ReleaseOrderCreationForm = ({
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}
+                  loadOptions={loadReleasedToOptionsSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -649,6 +711,7 @@ const ReleaseOrderCreationForm = ({
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={carrierOptions}
+                loadOptions={loadCarrierSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
