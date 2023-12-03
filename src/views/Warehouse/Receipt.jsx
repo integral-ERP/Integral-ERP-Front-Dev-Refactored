@@ -169,6 +169,7 @@ const Receipt = () => {
               onAdd={handleAddPickupOrder}
               title="Warehouse Receipts"
               setData={setreceipts}
+              contextService={ReceiptService}
             />
 
             {showSuccessAlert && (

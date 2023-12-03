@@ -151,6 +151,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onDelete={handleDeletePackageType}
           onEdit={handleEditPackageType}
           onAdd={handleAddPackageType}
+          contextService={PackageTypeService}
           title="Package Types"
         />
 

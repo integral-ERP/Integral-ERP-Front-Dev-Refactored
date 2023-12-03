@@ -50,6 +50,11 @@ class PickupService{
     const response = await axios.post(`${this.BASE_URL}shipper/`, data);
     return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}pickUpOrder/?search=${query}`);
+    return response;
+  }
 }
 
 export default new PickupService();

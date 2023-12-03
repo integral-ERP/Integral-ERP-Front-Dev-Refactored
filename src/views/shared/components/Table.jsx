@@ -13,6 +13,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
+import _ from "lodash";
 const Table = ({
   data,
   columns,
@@ -29,6 +30,7 @@ const Table = ({
   setShowContextMenu,
   handleOptionClick,
   onInspect,
+  contextService
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -39,6 +41,8 @@ const Table = ({
   const [startDate, setStartDate] = useState(new Date());
   const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
+  console.log("RECEIVED DATA", data);
   const navigate = useNavigate();
   const currentDate = new Date();
   const startOfWeek = new Date(
@@ -232,7 +236,7 @@ const Table = ({
   }
 
 
-  const handleSearch = (row) => {
+  /*const handleSearch = (row) => {
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
     const searchMatch = Object.values(row).some((value) =>
       value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
@@ -284,7 +288,30 @@ const Table = ({
 
     return searchMatch && dateMatch;
   };
-  const filteredData = data.filter((row) => handleSearch(row));
+  
+  */
+
+  const fetchAndFilterData = async () => {
+    if (searchQuery !== "") {
+      const newData = (await contextService.search(searchQuery)).data;
+      console.log("DATA SEARCH:", newData.results);
+      setFilteredData(newData.results);
+    } else {
+      return data; // Return the original data if searchQuery is empty
+    }
+  };
+
+  useEffect(() => {
+    fetchAndFilterData();
+  }, [searchQuery])
+
+  useEffect(() => {
+    console.log("Current data to be displayed on table:", filteredData, "search query", searchQuery);
+  }, [filteredData])
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data])
 
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)

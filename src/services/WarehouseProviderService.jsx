@@ -30,6 +30,11 @@ class WarehouseProviderService{
       const response = await axios.delete(`${this.BASE_URL}wareHouseProviders/${id}/`);
       return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}wareHouseProviders/?search=${query}`);
+    return response;
+  }
 }
 
 export default new WarehouseProviderService();

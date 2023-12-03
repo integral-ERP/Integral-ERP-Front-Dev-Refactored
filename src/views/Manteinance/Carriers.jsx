@@ -170,6 +170,7 @@ const Carrier = () => {
           onEdit={handleEditCarrier}
           onAdd={handleAddCarrier}
           title="Carriers"
+          contextService={CarrierService}
         />
 
         {showSuccessAlert && (

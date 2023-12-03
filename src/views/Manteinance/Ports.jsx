@@ -7,6 +7,7 @@ import PortsCreationForm from "../forms/PortCreationForms";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PortService from "../../services/PortServices";
 import Sidebar from "../shared/components/SideBar";
+import PortServices from "../../services/PortServices";
 
 const Ports = () => {
   const [ports, setports] = useState([]);
@@ -151,6 +152,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         onDelete={handleDeletePort}
         onEdit={handleEditPort}
         onAdd={handleAddPort}
+        contextService={PortServices}
         title="Ports"
       />
 

@@ -173,6 +173,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         onEdit={handleEditEmployee}
         onAdd={handleAddEmployee}
         title="Employees"
+        contextService={EmployeeService}
       />
 
       {showSuccessAlert && (

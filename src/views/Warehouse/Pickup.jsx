@@ -287,6 +287,7 @@ const Pickup = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+              contextService={PickupService}
             />
 
             {showSuccessAlert && (

@@ -163,6 +163,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onDelete={handleDeleteForwardingAgent}
           onEdit={handleEditForwardingAgent}
           onAdd={handleAddForwardingAgent}
+          contextService={ForwardingAgentService}
           title="Forwarding Agents"
         />
 

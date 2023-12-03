@@ -30,6 +30,11 @@ class CustomerService{
         const response = await axios.delete(`${this.BASE_URL}customer/${id}/`);
       return response;
     }
+
+    async search(query) {
+        const response = await axios.get(`${this.BASE_URL}customer/?search=${query}`);
+        return response;
+      }
 }
 
 export default new CustomerService();

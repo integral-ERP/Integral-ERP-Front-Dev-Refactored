@@ -197,7 +197,7 @@ const WarehouseProviderCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="mphone"
               placeholder="Mobile Phone"
               value={formData.mobilePhone}
@@ -247,7 +247,7 @@ const WarehouseProviderCreationForm = ({
         <div className="cont-two">
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="phone"
               placeholder="Phone"
               value={formData.phone}
@@ -259,7 +259,7 @@ const WarehouseProviderCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="fax"
               placeholder="fax"
               value={formData.fax}

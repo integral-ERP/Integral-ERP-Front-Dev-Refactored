@@ -196,7 +196,7 @@ const VendorsCreationForm = ({
             </div>
             <div className="company-form__section">
               <Input
-                type="number"
+                type="text"
                 inputName="fax"
                 placeholder="fax"
                 value={formData.fax}
@@ -234,7 +234,7 @@ const VendorsCreationForm = ({
           <div className="cont-two">
             <div className="company-form__section">
               <Input
-                  type="number"
+                  type="text"
                   inputName="phone"
                   placeholder="Phone"
                   value={formData.phone}

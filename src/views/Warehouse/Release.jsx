@@ -225,6 +225,7 @@ const Release = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+              contextService={ReleaseService}
             />
 
             {showSuccessAlert && (
