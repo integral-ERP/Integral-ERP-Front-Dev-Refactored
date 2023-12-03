@@ -63,7 +63,7 @@ const Receipt = () => {
       console.log("recibo:", receipts[0]);
       const number = receipts[receipts.length - 1]?.number || 0;
       console.log("NUMERO", number);
-      setcurrentPickupNumber(number + 1);
+      setcurrentPickupNumber(number);
     }
   }, [receipts]);
 

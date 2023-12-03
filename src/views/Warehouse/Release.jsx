@@ -61,7 +61,7 @@ const Release = () => {
   useEffect(() => {
     if (initialDataFetched) {
       const number = releaseOrders[releaseOrders.length - 1]?.number || 0;
-      setcurrentReleaseNumber(number + 1);
+      setcurrentReleaseNumber(number);
     }
   }, [releaseOrders]);
 
