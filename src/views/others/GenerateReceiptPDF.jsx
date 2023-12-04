@@ -1,9 +1,9 @@
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfFonts from "./vfs_fonts.js";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts;
 
 const GenerateReceiptPDF = (data) => {
   const canvas = document.createElement("canvas");
