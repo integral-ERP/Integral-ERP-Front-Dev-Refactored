@@ -28,8 +28,6 @@ const Release = () => {
     "Release Date",
     "Released to",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Release PDF",
   ];
 

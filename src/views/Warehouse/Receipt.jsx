@@ -27,8 +27,6 @@ const Receipt = () => {
     "Consignee",
     "Carrier",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Receipt PDF",
   ];
 

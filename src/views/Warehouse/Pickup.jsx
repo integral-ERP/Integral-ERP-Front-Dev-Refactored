@@ -47,8 +47,6 @@ const Pickup = () => {
     "Delivery Name",
     "Delivery Address",
     "Pieces",
-    "Weight",
-    "Volume",
     "Carrier Name",
     "Carrier Address",
     "PRO Number",
