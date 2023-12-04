@@ -612,6 +612,7 @@ const ReceiptCreationForm = ({
       setConsigneeOptions([pickupOrder.consigneeObj?.data?.obj]);
       setCarrierOptions([pickupOrder.main_carrierObj]);
       setSupplierOptions([pickupOrder.supplierObj]);
+      setcommodities(pickupOrder.commodities);
 
       let updatedFormData = {
         // GENERAL TAB
