@@ -4,6 +4,7 @@ import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
+pdfMake.vfs = pdfFonts;
 
 const GenerateReleasePDF = (data) => {
   const canvas = document.createElement("canvas");
