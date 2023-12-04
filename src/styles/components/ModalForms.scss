@@ -21,9 +21,9 @@
 
 .modal__container {
   position: relative;
-  height: 525px;
+  height: 90vh;
   width: 90%;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding: 1rem;
   overflow-x: hidden;
   color: black;

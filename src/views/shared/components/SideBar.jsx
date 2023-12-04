@@ -9,7 +9,7 @@ import ModalForm from "../components/ModalForm";
 import logo from "../../../img/logotext.png";
 import logoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
-import logoIntegral from "../../../img/integral.png"
+import logoIntegral from "../../../img/INTEGRALBLANCO1.png";
 
 
 const Sidebar = () => {
