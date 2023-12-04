@@ -10,6 +10,7 @@ import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
 import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
+import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
 
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
@@ -28,6 +29,7 @@ const Table = ({
   showContextMenu,
   contextMenuPosition,
   setShowContextMenu,
+  contextMenuOptions,
   handleOptionClick,
   onInspect,
   contextService
@@ -224,6 +226,12 @@ const Table = ({
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
           </span>
         );
+        case "15":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Open
+          </span>
+        );
     }
   };
 
@@ -234,62 +242,6 @@ const Table = ({
     setcontrolSlider(true)
     setHideShowSlider(true)
   }
-
-
-  /*const handleSearch = (row) => {
-    const lowerCaseSearchQuery = searchQuery.toLowerCase();
-    const searchMatch = Object.values(row).some((value) =>
-      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
-    );
-    let dateMatch = false;
-    const dateColumn = selectedDateFilter;
-    if (dateColumn && dateColumn in columnNameToProperty) {
-      const propertyName = columnNameToProperty[dateColumn];
-      const rowDate = new Date(row[propertyName]);
-      switch (dateFilter) {
-        case "all":
-          dateMatch = true;
-          break;
-        case "today":
-          dateMatch = rowDate.toDateString() === currentDate.toDateString();
-          break;
-        case "this-week":
-          dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
-          break;
-        case "this-month":
-          dateMatch =
-            rowDate.getMonth() === currentDate.getMonth() &&
-            rowDate.getFullYear() === currentDate.getFullYear();
-          break;
-        case "this-year":
-          dateMatch = rowDate.getFullYear() === currentDate.getFullYear();
-          break;
-        case "between":
-          console.log(
-            "start Date",
-            startDate,
-            "finish date",
-            finishDate,
-            "applies?",
-            rowDate >= startDate && rowDate <= finishDate,
-            rowDate
-          );
-          dateMatch =
-            rowDate >= new Date(startDate) && rowDate <= new Date(finishDate);
-          break;
-        default:
-          dateMatch = true; // "all" or unknown filter, include all rows
-          break;
-      }
-      return searchMatch && dateMatch;
-    } else {
-      dateMatch = true;
-    }
-
-    return searchMatch && dateMatch;
-  };
-  
-  */
 
   const fetchAndFilterData = async () => {
     if (searchQuery !== "") {
@@ -325,7 +277,7 @@ const Table = ({
   };
 
   const generatePDFReceipt = () => {
-    GenerateReceiptPDF(selectedRow)
+    GenerateReceiptPdf(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -336,7 +288,7 @@ const Table = ({
   };
 
   const generatePDFRelease = () => {
-    GenerateReleasePDF(selectedRow)
+    generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -886,6 +838,8 @@ const Table = ({
                         <button type="button" onClick={generatePDFInvoice}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
+                      ) : columnName === "Status" ? (
+                        getStatus(row[columnNameToProperty[columnName]])
                       ) : columnName === "Options" ? (
                         <>
                           <button type="button" onClick={onDelete}>
@@ -923,27 +877,14 @@ const Table = ({
         </table>
       </div>
       {showContextMenu && (
-        <div
-          className="context-menu"
-          style={{
-            position: "absolute",
-            top: contextMenuPosition.y,
-            left: contextMenuPosition.x,
-          }}
-        >
-          <ul>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-            <li onClick={() => handleOptionClick("Option 1")}>
-              Create Warehouse Receipt
-            </li>
-          </ul>
-          {/* ... */}
-        </div>
+        <ContextMenu
+        x={contextMenuPosition.x}
+        y={contextMenuPosition.y}
+        options={contextMenuOptions}
+        onClose={() => {
+          setShowContextMenu(false);
+        }}
+      />
       )}
     </>
   );

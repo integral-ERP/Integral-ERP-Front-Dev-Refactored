@@ -155,6 +155,15 @@ const ReceiptCreationForm = ({
     });
   };
 
+  const handleSupplierSelection = async (event) => {
+    const id = event.id;
+    const result = await CarrierService.getCarrierById(id);
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
+    setFormData({...formData, supplierId: id, supplierInfo: info})
+  }
+
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
     const type = event.type;
@@ -800,6 +809,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
+          supplier: formData.supplierId,
           shipper: shipperRequest,
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
@@ -1110,7 +1120,7 @@ const ReceiptCreationForm = ({
                   (option) => option.id === formData.supplierId
                 )}
                 onChange={(e) => {
-                  console.log(e);
+                  handleSupplierSelection(e)
                 }}
                 isClearable={true}
                 placeholder="Search and select..."
@@ -1141,7 +1151,7 @@ const ReceiptCreationForm = ({
                 type="textarea"
                 inputName="shipperinfo"
                 placeholder="Shipper Location..."
-                value={formData.shipperInfo}
+                value={formData.supplierInfo}
                 readonly={true}
               />
             </div>

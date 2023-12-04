@@ -1307,7 +1307,7 @@ const PickupOrderCreationForm = ({
                 />
               </div>
 
-              {/* <div className="company-form__section">
+              <div className="company-form__section">
               <AsyncSelect
                 id="releasedToOther"
                 isDisabled={formData.client_to_bill_type !== "other"}
@@ -1322,7 +1322,7 @@ const PickupOrderCreationForm = ({
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
-            </div> */}
+            </div>
             </div>
 
             <div>

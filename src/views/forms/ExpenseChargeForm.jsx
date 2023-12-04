@@ -36,7 +36,7 @@ const ExpenseChargeForm = ({
     totalAmount: 0,
     show: false,
     description: "",
-    status: "",
+    status: 15,
   };
   
   const [formData, setformData] = useState(formFormat);
@@ -197,7 +197,7 @@ const ExpenseChargeForm = ({
             className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value })
             }
           >
             {/* Add options for paidAs */}

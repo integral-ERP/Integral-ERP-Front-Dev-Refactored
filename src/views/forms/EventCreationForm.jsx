@@ -39,7 +39,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
 
   return (
     <div className="income-charge-form">
-      <h3>Expense Charge Form</h3>
+      <h3>Event Form</h3>
 
       <div>
         <div className="form-row">
