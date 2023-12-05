@@ -373,7 +373,7 @@ const ReleaseOrderCreationForm = ({
     }
     let clientToBillName = "";
 
-    if (formData.releasedToType === "releasedTo") {
+    if (formData.clientToBillType === "releasedTo") {
       switch (formData.releasedToType) {
         case "customer":
           clientToBillName = "customerid";
@@ -423,7 +423,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    if (clientToBill !== null) {
+    if (releasedTo !== null && clientToBill !== null) {
       setAllStateUpdatesComplete(true);
     }
   };

@@ -8,6 +8,7 @@ import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
 import logoBlanco from "../../../img/logoblanco.png";
+import logoNuevoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
 import logoIntegral from "../../../img/integral.png"
 
@@ -454,7 +455,7 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={() => { handleHideSidebar() }} 
           ></i>
-          <img className="logo_integral" src={logoIntegral} alt="logo"/>
+          <img className="logo_integral" src={logoNuevoBlanco} alt="logo"/>
    {/*        <span className="text">Integral</span> */}
 
           <div className="rith">
