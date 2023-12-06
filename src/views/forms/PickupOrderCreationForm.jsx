@@ -1138,7 +1138,7 @@ const PickupOrderCreationForm = ({
         <div className="row align-items-center">
           <div className="col-6 text-start">
             <label htmlFor="language"
-            style={{ fontWeight: 'bold', fontSize: '15px', color: '#153A61', marginRight: '10px' }}>
+            style={{ fontWeight: 'bold', fontSize: '15px', color: '#153A61', marginRight: '10px'}}>
               Client to Bill:
             </label>
             <select
@@ -1376,6 +1376,7 @@ const PickupOrderCreationForm = ({
         />
         )}
       </div>
+      
       <div className="creation creation-container w-100">
         {true && (
           <ExpenseChargeForm
