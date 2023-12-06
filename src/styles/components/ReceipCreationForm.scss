@@ -1,0 +1,23 @@
+.container-box.event-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+
+    .box__event--form {
+        width: 100%;
+
+        &>.income-charge-form {
+            width: 100% !important;
+            & > div {
+                display: flex;
+                flex-direction: row !important;
+                gap: 10px;
+                & .form-row:nth-child(3) {
+                    display: block !important;
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,475 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import url("../styles/components/SideBar.scss");
+
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
+
+.title {
+  margin: -12px;
+  font-size: 22px;
+}
+
+.header-container {
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px;
+  /* background-color: #f0f0f0; */
+  width: 100%;
+  margin: 0;
+}
+
+.back-button {
+  height: 3rem;
+  background: #153a6100;
+  border: solid 1px;
+  color: #153a61;
+  border-radius: 50%;
+  width: 3rem;
+  margin: 0 3% 0 1%;
+  font-size: smaller;
+  padding: 0 0 0.1% 0.1%;
+}
+
+.title-container {
+  flex: 1;
+  text-align: left;
+  color: #153a61;
+}
+
+.button-container {
+  margin: 1% 2% 1% 0%;
+  // background: white;
+  padding: 0%;
+  // border-radius: 20px;
+  align-items: center;
+  width: 97%;
+  justify-content: space-evenly;
+  background: #F1F1F1;
+  // border: solid;
+}
+
+.menu-icon {
+  background: none;
+  border: none;
+  color: #153a61;
+  margin: 0.5rem;
+  font-size: x-large;
+}
+
+.generic-button {
+  background: none;
+  border: solid rgb(224, 224, 224);
+  margin: 0 0 0 0%;
+}
+
+.export-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.export-dropdown {
+
+  select,
+  label {
+    width: 150%;
+
+    max-width: 36rem;
+    height: 3rem;
+    font-size: medium;
+    display: flex;
+    align-items: center;
+  }
+
+  margin: 0% 5% 0% 0px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  height: 4rem;
+  padding: 0 1% 0 1%;
+
+  select {
+    margin-left: 5px;
+    padding: 0;
+    border: solid 1px #dfdfdf
+  }
+}
+
+.search-input {
+  width: 200px !important;
+  height: 3.2rem;
+  font-size: 14px;
+}
+
+.generic-table {
+  width: 85%;
+  overflow-x: scroll;
+  border-collapse: collapse;
+  box-shadow: 1px 2px 17px -1px rgba(0, 0, 0, 0.42);
+  border-radius: 10px;
+  background: white;
+  margin-inline: auto;
+  margin-bottom: 30px;
+  margin-top: 30px;
+
+}
+
+.action-buttons {
+  display: flex;
+  margin-right: 4px;
+  border: 1px solid #CECECE;
+}
+
+.table {
+  * {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  th {
+    padding: 10px;
+  }
+}
+
+.table-hover {
+  border-collapse: separate;
+  width: 100%;
+  height: 16vh;
+  text-align: center;
+  margin: 8px;
+}
+
+.alert-notification {
+  position: absolute;
+  top: 5%;
+}
+
+.file-input-container {
+
+  display: inline-block;
+  width: 40px;
+
+}
+
+.hidden-input {
+  display: none;
+}
+
+.file-input-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.file-input-icon:hover {
+  background-color: #d0d0d0;
+}
+
+.charge-buttons {
+  margin: 10px;
+}
+
+.laver-export´ {
+  margin: 0% 2% 0% 0px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  height: 49px;
+  padding: 0 1% 0 1%;
+}
+
+.text-export {
+  font-weight: bolder;
+  width: 30rem;
+}
+
+.search {
+  // background-color: red;
+  display: flex;
+  align-items: center;
+}
+
+.method {
+  margin: 0 5px 0 30%;
+  text-align: right;
+  width: 70%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.check-port {
+  width: 115%;
+  border-top: solid 1px rgba(128, 128, 128, 0.404);
+  margin: 1rem 0 0 0;
+}
+
+.css-1nmdiq5-menu {
+  background: white !important;
+  font-size: medium !important;
+  z-index: 1000 !important;
+}
+
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  color: #153a61 !important;
+  margin: 0rem 0 0 -1.4rem !important;
+  margin: 0 0 0 0 !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  margin: 2rem 0 1rem 0rem !important;
+  font-size: 1.5rem !important;
+}
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border: 1px solid rgba(240, 8, 8, 0) !important;
+  font-size: small !important;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  height: 2.5rem !important;
+}
+
+.css-13cymwt-control {
+  min-height: 4rem !important;
+  width: 81% !important;
+  background: white;
+  color: rgb(252, 6, 6) !important;
+  height: 0rem !important;
+  font-size: small !important;
+}
+
+.company-form__input {
+  font-size: initial;
+  padding: 0 !important;
+}
+
+.font-right {
+  text-align: right !important;
+  // height: 7rem !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 1rem !important;
+  text-align: center;
+  margin: 10px !important;
+}
+
+.css-art2ul-ValueContainer2 {
+  // background: rgb(21, 255, 0) !important;
+  height: 3rem !important;
+}
+
+.css-1xc3v61-indicatorContainer {
+  // background-color: #153a61;
+  height: 3rem;
+}
+
+.margin-zero {
+  margin: 0 !important;
+}
+
+.with-si {
+  margin: 0 0 2rem 25% !important;
+  width: 50% !important;
+}
+
+.with-fo {
+  margin: 0 0 1rem 4% !important;
+  width: 100% !important;
+}
+
+.css-t3ipsp-control {
+  margin: 0 0 0 0rem !important;
+  min-height: 3rem !important;
+  width: 80% !important;
+  background: whitesmoke !important;
+  // color: rgb(252, 6, 6) !important;
+  height: 0rem !important;
+  padding: 0 0 0 0rem !important;
+  font-size: small !important;
+}
+
+.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root {
+  color: rgb(0, 0, 0) !important;
+  text-align: left !important;
+
+}
+
+#issuedby,
+#destinationAgent,
+#employee,
+#shipper,
+#consignee {
+  min-width: 10px;
+  width: 90%;
+  height: 4rem;
+  font-size: initial;
+  text-align: left;
+  margin: 0 0 0 15%;
+}
+
+#pickup,
+#delivery,
+#mainCarrier {
+  width: 90%;
+  margin: 0 0 0 15%;
+}
+
+.css-1jqq78o-placeholder {
+  width: 100% !important;
+  color: rgb(146, 146, 146) !important;
+}
+
+.with-ni {
+  width: 90%;
+}
+
+.input-group-text {
+  font-weight: bold !important;
+}
+
+
+
+.text-comm {
+  width: 70%;
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0rem;
+
+  &__space {
+    width: 800%;
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0rem;
+  }
+
+  &.description-form {
+    margin-top: 20px
+  }
+  &.description-form + input {
+    margin-bottom: 20px
+  }
+}
+
+.num-com {
+  text-align: left;
+  font-size: 1.2rem !important;
+  margin-left: calc(var(--bs-border-width) * -1);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+}
+
+.with-space {
+  display: block;
+  width: 52%;
+  padding: 0rem 0 0 0.75rem;
+  font-size: medium;
+}
+
+.input-space {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 110%;
+  justify-content: center;
+}
+
+/* Context Menu Styles */
+.context-menu {
+  position: absolute;
+  background-color: #fff;
+  /* Background color */
+  border: 1px solid #ccc;
+  /* Border */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  /* Box shadow */
+  z-index: 1000;
+  /* Ensure it appears above other content */
+  padding: 8px;
+  /* Padding */
+  min-width: 150px;
+  /* Minimum width */
+  height: max-content;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  font-size: 14px;
+}
+
+.context-menu li {
+  margin: 5px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  /* Smooth background color transition on hover */
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0;
+  /* Background color on hover */
+}
+
+.context-menu li:last-child {
+  margin-bottom: 0;
+}
+
+#delivery,
+#carrier {
+  &>div:first-child {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+
+    &>div:first-child,
+    &>div:last-child {
+      width: 100%;
+      border-radius: 2px;
+      box-shadow: 0px 1px 10px;
+      padding: 10px;
+      margin: 10px;
+    }
+  }
+}
+
+/* #carrier{
+  & > div:first-child{
+    & > div:last-child{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 83px;
+      
+    }
+  }
+} */
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  //margin-top: 10px;
+  input {
+    margin: 0 !important;
+  }
+}
