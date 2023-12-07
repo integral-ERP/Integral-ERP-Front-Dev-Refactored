@@ -455,7 +455,7 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={() => { handleHideSidebar() }} 
           ></i>
-          <img className="logo_integral" src={logoNuevoBlanco} alt="logo"/>
+          <img className="logo_integral" src={logoIntegral} alt="logo"/>
    {/*        <span className="text">Integral</span> */}
 
           <div className="rith">
