@@ -155,6 +155,15 @@ const ReceiptCreationForm = ({
     });
   };
 
+  const handleSupplierSelection = async (event) => {
+    const id = event.id;
+    const result = await CarrierService.getCarrierById(id);
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
+    setFormData({ ...formData, supplierId: id, supplierInfo: info })
+  }
+
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
     const type = event.type;
@@ -476,6 +485,103 @@ const ReceiptCreationForm = ({
     setSupplierOptions(carrierOptions);
   };
 
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDestinationAgentsSelectOptions = async (inputValue) => {
+
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadShipperSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadConsigneeSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    return options;
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
   useEffect(() => {
     if (!fromPickUp) {
       fetchFormData();
@@ -506,6 +612,7 @@ const ReceiptCreationForm = ({
       setConsigneeOptions([pickupOrder.consigneeObj?.data?.obj]);
       setCarrierOptions([pickupOrder.main_carrierObj]);
       setSupplierOptions([pickupOrder.supplierObj]);
+      setcommodities(pickupOrder.commodities);
 
       let updatedFormData = {
         // GENERAL TAB
@@ -703,6 +810,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
+          supplier: formData.supplierId,
           shipper: shipperRequest,
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
@@ -743,7 +851,8 @@ const ReceiptCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-          }, 5000);
+            window.location.reload();
+          }, 2000);
         } else {
           console.log("Something went wrong:", response);
           setShowErrorAlert(true);
@@ -801,6 +910,7 @@ const ReceiptCreationForm = ({
               }}
               isClearable={true}
               defaultOptions={employeeOptions}
+              loadOptions={loadEmployeeSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -822,6 +932,7 @@ const ReceiptCreationForm = ({
                   )}
                   isClearable={true}
                   defaultOptions={destinationAgentOptions}
+                  loadOptions={loadDestinationAgentsSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -837,12 +948,12 @@ const ReceiptCreationForm = ({
                 )}
                 isClearable={true}
                 defaultOptions={destinationAgentOptions}
+                loadOptions={loadDestinationAgentsSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
             )}
           </div>
-
         </div>
 
         <div className="row align-items-center">
@@ -877,6 +988,7 @@ const ReceiptCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={issuedByOptions}
+              loadOptions={loadIssuedBySelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -894,6 +1006,7 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="form-label_name"><h3>Shipper/Consignee</h3><span></span></div>
+
       <div className="creation creation-container w-100">
         <div className="row align-items-center mb-3">
           <div className="col-6 text-start">
@@ -911,6 +1024,7 @@ const ReceiptCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={shipperOptions}
+              loadOptions={loadShipperSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -929,6 +1043,7 @@ const ReceiptCreationForm = ({
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={consigneeOptions}
+                loadOptions={loadConsigneeSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
@@ -992,11 +1107,12 @@ const ReceiptCreationForm = ({
                 (option) => option.id === formData.supplierId
               )}
               onChange={(e) => {
-                console.log(e);
+                handleSupplierSelection(e)
               }}
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={supplierOptions}
+              loadOptions={loadCarrierSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1023,7 +1139,7 @@ const ReceiptCreationForm = ({
               type="textarea"
               inputName="shipperinfo"
               placeholder="Shipper Location..."
-              value={formData.shipperInfo}
+              value={formData.supplierInfo}
               readonly={true}
             />
           </div>
@@ -1065,6 +1181,7 @@ const ReceiptCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={carrierOptions}
+              loadOptions={loadCarrierSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1145,31 +1262,6 @@ const ReceiptCreationForm = ({
           ></RepackingForm>
         )}
 
-        {/* <Table
-          data={commodities}
-          columns={[
-            "Description",
-            " Length",
-            " Height",
-            " Width",
-            " Weight",
-            "Location",
-            " Volumetric Weight",
-            " Chargeable Weight",
-            "Options",
-          ]}
-          onSelect={handleSelectCommodity}
-          selectedRow={selectedCommodity}
-          onDelete={handleCommodityDelete}
-          onEdit={() => {
-            setshowCommodityEditForm(!showCommodityEditForm);
-          }}
-          onInspect={() => {
-            setshowCommodityInspect(!showCommodityInspect);
-          }}
-          onAdd={() => { }}
-          showOptions={false}
-        /> */}
         <button
           type="button"
           onClick={() => {
@@ -1252,7 +1344,7 @@ const ReceiptCreationForm = ({
       <div className="creation creation-container w-100">
         <div className="row align-items-center">
           <div className="col-12 text-start">
-   
+
             <div className="container-box event-section">
               <div className="box__event--form">
                 <EventCreationForm
@@ -1285,8 +1377,8 @@ const ReceiptCreationForm = ({
                 />
               )}
             </div>
-            </div>
-         
+          </div>
+
         </div>
       </div>
 

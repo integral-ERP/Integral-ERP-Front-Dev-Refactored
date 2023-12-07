@@ -16,7 +16,7 @@ const ExpenseChargeForm = ({
 }) => {
   // Define state variables for form inputs
 
-  console.log("Consignee:", consignee, "Agent:", agent, "Shipper:", shipper);
+  
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
   const formFormat = {
@@ -36,9 +36,9 @@ const ExpenseChargeForm = ({
     totalAmount: 0,
     show: false,
     description: "",
-    status: "",
+    status: 15,
   };
-  console.log(commodities);
+  
   const [formData, setformData] = useState(formFormat);
   useEffect(() => {
     CurrenciesService.getCurrencies()
@@ -95,7 +95,7 @@ const ExpenseChargeForm = ({
       quantity: 1
     };
     setcharges([...charges, charge]);
-    console.log(charge);
+    
   };
 
   const handleChargeRateChange = (e) => {
@@ -197,7 +197,7 @@ const ExpenseChargeForm = ({
             className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value })
             }
           >
             {/* Add options for paidAs */}

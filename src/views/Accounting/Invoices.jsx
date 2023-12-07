@@ -18,20 +18,19 @@ const Invoices = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Number",
-    "Account Name",
+    "Account Type",
+    "type Chart",
     "Transaction Date",
     "Due Date",
     "Apply",
     "Payment Temse",
-    "Division",
-    "Biling Address",
-    "View PDF",
+    "Invoice PDF",
   ];
   const updateInvoices = (url = null) => {
     InvoicesService.getInvoices(url)
       .then((response) => {
         setInvoices(
-          [...invoices, ...response.data.results].reverse()
+          [...response.data.results].reverse()
         );
 
         if (response.data.next) {

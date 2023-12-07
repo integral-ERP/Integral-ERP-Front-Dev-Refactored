@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";
-import PaymentTermsCreationForms from "../forms/PaymentTermsCreationForm";
-import { useModal } from "../../hooks/useModal"; // Import the useModal hook
-import PaymentTermsService from "../../services/PaymentTermsService";
-import Sidebar from "../shared/components/SideBar";
-import ReceiptCreationForm from "../forms/ReceiptCreationForm";
+import ModalForm from "../shared/components/ModalForm";import Sidebar
+ from "../shared/components/SideBar";import { useModal } 
+ from "../../hooks/useModal"; // Import the useModal hook
+ //----------------------------------------------------
+// import PaymentTermsCreationForms from "../forms/PaymentTermsCreationForm";
+
+// import PaymentTermsService from "../../services/PaymentTermsService";
+
+// import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 
 
-const PaymentTerms  = () => {
+const Payments  = () => {
   const [paymentOfTerms, setpaymentOfTerms] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
@@ -22,18 +25,14 @@ const PaymentTerms  = () => {
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
 
-  const [contextMenuPosition, setContextMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
+  // const [contextMenuPosition, setContextMenuPosition] = useState({
+  //   x: 0,
+  //   y: 0,
+  // });
   const [showContextMenu, setShowContextMenu] = useState(false);
 
   const columns = [
-    "Description",
-    "Due Days",
-    "Discount Percentage",
-    "Discount Days",
-    "Inactive",
+    "Prueba",
   ];
 
   const handleContextMenu = (e) => {
@@ -63,35 +62,35 @@ const PaymentTerms  = () => {
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
-  const updatePaymentTerms = (url = null) => {
-    PaymentTermsService.getPaymentTerms(url)
-      .then((response) => {
-        const newPickupOrders = response.data.results.filter((paymentTerms) => {
-          const paymentTermId = paymentTerms.id;
-          return !paymentOfTerms.some(
-            (existingPickupOrder) => existingPickupOrder.id === paymentTermId
-          );
-        });
+  // const updatePaymentTerms = (url = null) => {
+  //   PaymentTermsService.getPaymentTerms(url)
+  //     .then((response) => {
+  //       const newPickupOrders = response.data.results.filter((paymentTerms) => {
+  //         const paymentTermId = paymentTerms.id;
+  //         return !paymentOfTerms.some(
+  //           (existingPickupOrder) => existingPickupOrder.id === paymentTermId
+  //         );
+  //       });
 
-        setpaymentOfTerms([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...paymentOfTerms, ...newPickupOrders]);
-        // setpaymentOfTerms([...paymentOfTerms, ...response.data.results].reverse());
+  //       setpaymentOfTerms([...response.data.results].reverse());
+  //       console.log("NEW ORDERS", [...paymentOfTerms, ...newPickupOrders]);
+  //       // setpaymentOfTerms([...paymentOfTerms, ...response.data.results].reverse());
 
-        if (response.data.next) {
-          setNextPageURL(response.data.next);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  //       if (response.data.next) {
+  //         setNextPageURL(response.data.next);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
-  useEffect(() => {
-    if (!initialDataFetched) {
-      updatePaymentTerms();
-      setInitialDataFetched(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!initialDataFetched) {
+  //     updatePaymentTerms();
+  //     setInitialDataFetched(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (initialDataFetched) {
@@ -130,7 +129,7 @@ const PaymentTerms  = () => {
     if (selectedPaymentOfTerm) {
       openModal();
     } else {
-      alert("Please select a PaymentTerms  Order to edit.");
+      alert("Please select a Payments  Order to edit.");
     }
   };
 
@@ -163,7 +162,7 @@ const PaymentTerms  = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a PaymentTerms  Order to delete.");
+      alert("Please select a Payments  Order to delete.");
     }
   };
 
@@ -228,11 +227,11 @@ const PaymentTerms  = () => {
               onDelete={handleDeletePaymentOfTerm}
               onEdit={handleEditPaymentOfTerms}
               onAdd={handleAddPaymentOfTerm}
-              title="Payments Terms"
+              title="Payments"
               setData={setpaymentOfTerms}
               handleContextMenu={handleContextMenu}
               showContextMenu={showContextMenu}
-              contextMenuPosition={contextMenuPosition}
+              // contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
             />
@@ -258,7 +257,7 @@ const PaymentTerms  = () => {
               </Alert>
             )}
 
-            {selectedPaymentOfTerm !== null && (
+            {/* {selectedPaymentOfTerm !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PaymentTermsCreationForms
                   paymentTerms={selectedPaymentOfTerm}
@@ -267,9 +266,9 @@ const PaymentTerms  = () => {
                   onpaymentTermDataChange={handlePickupOrdersDataChange}
                 />
               </ModalForm>
-            )}
+            )} */}
 
-            {selectedPaymentOfTerm === null && (
+            {/* {selectedPaymentOfTerm === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PaymentTermsCreationForms
                   paymentTerms={null}
@@ -278,7 +277,7 @@ const PaymentTerms  = () => {
                   onpaymentTermDataChange={handlePickupOrdersDataChange}
                 />
               </ModalForm>
-            )}
+            )} */}
 
             {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
               <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
@@ -300,4 +299,4 @@ const PaymentTerms  = () => {
   );
 };
 
-export default PaymentTerms ;
+export default Payments ;

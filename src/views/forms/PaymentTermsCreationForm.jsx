@@ -6,11 +6,11 @@ import Input from "../shared/components/Input";
 import PaymentTermsService from "../../services/PaymentTermsService";
 import CurrencyService from "../../services/CurrencyService";
 
-const PaymentTermsCreationForm = ({
-  paymentTerm,
+const PaymentTermsCreationForms = ({
+  paymentTerms,
   closeModal,
   creating,
-  onpaymentTermsDataChange,
+  onpaymentTermDataChange,
 }) => {
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -23,67 +23,70 @@ const PaymentTermsCreationForm = ({
     dueDays: "",
     discountPercentage: "",
     discountDays: "",
-    inactive: "",
+    inactive: false,
   };
 
   const [formData, setFormData] = useState({ formFormat });
-  // -------------------------------------------------------------
+
   useEffect(() => {
     console.log("Creating=", creating);
-    console.log("Payment Terms=", paymentTerm);
-    if (!creating && paymentTerm) {
-      console.log("Editing Payment Terms...", paymentTerm);
+    console.log("Payment Terms=", paymentTerms);
+    if (!creating && paymentTerms) {
+      console.log("Editing Payment Terms...", paymentTerms);
       setFormData({
-        description: paymentTerm.description || "",
-        dueDays: paymentTerm.dueDays || "",
-        discountPercentage: paymentTerm.discountPercentage || "",
-        discountDays: paymentTerm.discountDays || "",
-        inactive: paymentTerm.inactive || "",
+        description: paymentTerms.description || "",
+        dueDays: paymentTerms.dueDays || "",
+        discountPercentage: paymentTerms.discountPercentage || "",
+        discountDays: paymentTerms.discountDays || "",
+        inactive: paymentTerms.inactive || false,
       });
     }
-  }, [creating, paymentTerm]);
+  }, [creating, paymentTerms]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const currenciesData = await CurrencyService.getCurrencies();
-      setcurrencies(currenciesData.data);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const currenciesData = await CurrencyService.getCurrencies();
+  //     setcurrencies(currenciesData.data);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   // -------------------------------------------------------------
 
   const sendData = async () => {
     let rawData = {
-      description: formData.description,
-      dueDays: formData.dueDays,
-      discountPercentage: formData.discountPercentage,
-      discountDays: formData.discountDays,
-      inactive: formData.inactive,
+      description: formData.description || "",
+      dueDays: formData.dueDays || "",
+      discountPercentage: formData.discountPercentage || "",
+      discountDays: formData.discountDays || "",
+      inactive: formData.inactive || false,
     };
-    console.log("DATA:", formData);
+
+    console.log("DATA = ", formData);
+    //-------------------------------------
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
-          paymentTerm.id,
+          paymentTerms.id,
           rawData
         ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Prueba successfully created/updated:", response.data);
+      console.log(
+        "Prueba successfully created/updated:",
+         response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onpaymentTermsDataChange();
+        onpaymentTermDataChange();
         setShowSuccessAlert(false);
         // setFormData(formFormat)
-      }, 5000);
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
     }
   };
-
   //---------------------------------------------------------------------------------------------------------------------------------------------------
   const updatePaymentTerm = (url = null) => {
     PaymentTermsService.getPaymentTerms(url)
@@ -108,32 +111,11 @@ const PaymentTermsCreationForm = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log(PaymentTerms);
+    console.log("Imprimir = ",PaymentTerms);
   };
-
   useEffect(() => {
     updatePaymentTerm();
   }, []);
-
-  const [accountype, setAccountype] = useState("");
-
-  const handleSearch = (row) => {
-    let searchMatch = false;
-    console.log("filtrando", row);
-    if (row.type === accountype) {
-      console.log("Hay informacion");
-      searchMatch = true;
-    } else {
-      console.log("No Hay informacion");
-    }
-    return searchMatch;
-  };
-  const filteredData = PaymentTerms.filter((row) => handleSearch(row));
-
-  const handleType = (type) => {
-    setAccountype(type);
-    setFormData({ ...formData, type: type });
-  };
   //--------------------------------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -214,48 +196,19 @@ const PaymentTermsCreationForm = ({
           
           <div className="">
             <div className="company-form__section">
-              {/* <label htmlFor="currency" className="form-label">
-                Inactive:
-              </label>
-              <select
-                id="currency"
-                className="form-input"
-                value={formData.currency}
-                onChange={(e) =>
-                  setFormData({ ...formData, currency: e.target.value })
+              <Input
+                type="checkbox"
+                inputName="inactive"
+                value={formData.inactive}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, inactive: e.target.value })
                 }
-              >
-                <option value="">Select a Inactivity</option>
-                <option value="No">Yes</option>
-                <option value="Yes">No</option>
-              </select> */}
-               <Input
-              type="checkbox"
-              inputName="inactive"
-              value={formData.inactive}
-              changeHandler={(e) =>
-                setFormData({ ...formData, inactive: e.target.value })
-              }
-              label="Inactive"
-            />
-              
+                label="Inactive"
+              />
             </div>
           </div>
         </div>
-        {/* <div className="form-group">
-          <Input
-            type="textarea"
-            inputName="note"
-            placeholder="Nota here..."
-            label="Note"
-            value={formData.note}
-            changeHandler={(e) =>
-              setFormData({ ...formData, note: e.target.value })
-            }
-          />
-        </div> */}
       </form>
-
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
@@ -294,18 +247,21 @@ const PaymentTermsCreationForm = ({
   );
 };
 
-PaymentTermsCreationForm.propTypes = {
-  PaymentTerms: propTypes.object,
+PaymentTermsCreationForms.propTypes = {
+  paymentTerms: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  onpaymentTermsDataChange: propTypes.func,
+  onpaymentTermDataChange: propTypes.func,
 };
 
-PaymentTermsCreationForm.defaultProps = {
-  PaymentTerms: {},
+PaymentTermsCreationForms.defaultProps = {
+  paymentTerms: {},
   closeModal: null,
   creating: false,
-  onpaymentTermsDataChange: null,
+  onpaymentTermDataChange: null,
 };
 
-export default PaymentTermsCreationForm;
+export default PaymentTermsCreationForms;
+
+
+

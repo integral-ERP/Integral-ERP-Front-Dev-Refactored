@@ -30,6 +30,11 @@ class VendorService{
       const response = await axios.delete(`${this.BASE_URL}vendor/${id}/`);
       return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}vendor/?search=${query}`);
+    return response;
+  }
 }
 
 export default new VendorService();

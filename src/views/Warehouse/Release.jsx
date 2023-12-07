@@ -28,8 +28,6 @@ const Release = () => {
     "Release Date",
     "Released to",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Release PDF",
   ];
 
@@ -41,7 +39,7 @@ const Release = () => {
           return !releaseOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
         
-        setReleaseOrders([...releaseOrders, ...newreleises]);
+        setReleaseOrders([...releaseOrders, ...newreleises].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,7 +59,7 @@ const Release = () => {
   useEffect(() => {
     if (initialDataFetched) {
       const number = releaseOrders[releaseOrders.length - 1]?.number || 0;
-      setcurrentReleaseNumber(number + 1);
+      setcurrentReleaseNumber(number);
     }
   }, [releaseOrders]);
 
@@ -225,6 +223,7 @@ const Release = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+              contextService={ReleaseService}
             />
 
             {showSuccessAlert && (

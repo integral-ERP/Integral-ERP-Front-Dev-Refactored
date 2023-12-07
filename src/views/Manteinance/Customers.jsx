@@ -156,6 +156,7 @@ const Customers = () => {
           onDelete={handleDeleteCustomer}
           onEdit={handleEditCustomer}
           onAdd={handleAddCustomer}
+          contextService={CustomerService}
           title="Customers"
         />
 

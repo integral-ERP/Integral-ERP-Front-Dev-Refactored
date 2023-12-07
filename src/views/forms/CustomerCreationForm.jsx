@@ -136,7 +136,8 @@ const CustomerCreationForm = ({
         closeModal();
         onCustomerDataChange();
         setShowSuccessAlert(false);
-      }, 5000);
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -234,7 +235,7 @@ const CustomerCreationForm = ({
         <div className="cont-two">
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="phone"
               placeholder="Phone"
               value={formData.phone}

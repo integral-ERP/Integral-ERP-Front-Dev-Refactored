@@ -4,71 +4,65 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
-import CurrencyService from "../../services/CurrencyService";
+// import CurrencyService from "../../services/CurrencyService";
 
 const ChartOfAccountsCreationForm = ({
-  chartOfAccount,
+  ChartAccounts,
   closeModal,
   creating,
-  onchartOfAccountsDataChange,
+  onDataChange,
 }) => {
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [ChartOfAccounts, setChartOfAccounts] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [currencies, setcurrencies] = useState([]);
+  // const [currencies, setcurrencies] = useState([]);
 
   const formFormat = {
     name: "",
-    type: "",
+    // type: "",
     accountNumber: "",
     parentAccount: "",
     currency: "",
     note: "",
+    typeChart: "",
   };
 
   const [formData, setFormData] = useState({ formFormat });
   // -------------------------------------------------------------
   useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Chart Of Accounts=", chartOfAccount);
-    if (!creating && chartOfAccount) {
-      console.log("Editing Chart Of Accounts...", chartOfAccount);
+    if (!creating && ChartAccounts) {
+      console.log("Editing Chart Of Accounts...", ChartAccounts);
       setFormData({
-        name: chartOfAccount.name || "",
-        type: chartOfAccount.type || "",
-        accountNumber: chartOfAccount.accountNumber || "",
-        parentAccount: chartOfAccount.parentAccount || "",
-        currency: chartOfAccount.currency || "",
-        note: chartOfAccount.note || "",
+        name: ChartAccounts.name || "",
+        // type: ChartAccounts.type || "",
+        accountNumber: ChartAccounts.accountNumber || "",
+        parentAccount: ChartAccounts.parentAccount || "",
+        currency: ChartAccounts.currency || "",
+        note: ChartAccounts.note || "",
+        typeChart: ChartAccounts.typeChart || "",
       });
     }
-  }, [creating, chartOfAccount]);
+  }, [creating, ChartAccounts]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const currenciesData = await CurrencyService.getCurrencies();
-      setcurrencies(currenciesData.data);
-    };
-
-    fetchData();
-  }, []);
   // -------------------------------------------------------------
 
   const sendData = async () => {
     let rawData = {
-      name: formData.name,
-      type: formData.type,
-      accountNumber: formData.accountNumber,
-      parentAccount: formData.parentAccount,
-      currency: formData.currency,
-      note: formData.note,
+      name: formData.name || "",
+      // type: formData.type || "",
+      accountNumber: formData.accountNumber || "",
+      parentAccount: formData.parentAccount || "",
+      currency: formData.currency || "",
+      note: formData.note || "",
+      typeChart: formData.typeChart || "",
     };
     console.log("DATA:", formData);
+    //-------------------------------------
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
       : ChartOfAccountsService.updateChartOfAccounts(
-          chartOfAccount.id,
+          ChartAccounts.id,
           rawData
         ));
 
@@ -77,7 +71,7 @@ const ChartOfAccountsCreationForm = ({
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onchartOfAccountsDataChange();
+        onDataChange();
         setShowSuccessAlert(false);
         // setFormData(formFormat)
       }, 5000);
@@ -111,19 +105,15 @@ const ChartOfAccountsCreationForm = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log(ChartOfAccounts);
+    console.log("Imprimir = ", ChartOfAccounts);
   };
-
-  useEffect(() => {
-    updateChartOfAccounts();
-  }, []);
 
   const [accountype, setAccountype] = useState("");
 
   const handleSearch = (row) => {
     let searchMatch = false;
     console.log("filtrando", row);
-    if (row.type === accountype) {
+    if (row.typeChart === accountype) {
       console.log("Hay informacion");
       searchMatch = true;
     } else {
@@ -133,11 +123,19 @@ const ChartOfAccountsCreationForm = ({
   };
   const filteredData = ChartOfAccounts.filter((row) => handleSearch(row));
 
-  const handleType = (type) => {
-    setAccountype(type);
-    setFormData({ ...formData, type: type });
+  const handleType = (typeChart) => {
+    setAccountype(typeChart);
+    setFormData({ ...formData, typeChart: typeChart });
+  };
+  const handleTypechart = (typeChart) => {
+    setAccountype(typeChart);
+    setFormData({ ...formData, typeChart: typeChart });
   };
   //--------------------------------------------------------------------------------------------------------------------------------------------------
+
+  useEffect(() => {
+    updateChartOfAccounts();
+  }, []);
 
   return (
     <div className="company-form">
@@ -164,7 +162,7 @@ const ChartOfAccountsCreationForm = ({
         style={{ display: activeTab === "definition" ? "block" : "none" }}
       >
         <div className="">
-          <div className="company-form__section">
+          {/* <div className="company-form__section">
             <label htmlFor="type" className="form-label">
               Type:
             </label>
@@ -194,7 +192,41 @@ const ChartOfAccountsCreationForm = ({
               <option value="Equity">Equity</option>
               <option value="Credit Card">Credit Card</option>
             </select>
+          </div> */}
+          {/* ----------------------------------------------- */}
+          <div className="company-form__section">
+            <label htmlFor="typeChart" className="form-label">
+            typeChart:
+            </label>
+            <select
+              id="typeChart"
+              className="form-input"
+              value={formData.typeChart}
+              onChange={(e) => handleTypechart(e.target.value)}
+            >
+              <option value="">Select a Type</option>
+              <option value="Accounts Receivable">Accounts Receivable</option>
+              <option value="Accouns Payable">Accouns Payable</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+              <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
+              <option value="Bank Account">Bank Account</option>
+              <option value="Undeposited Funds">Undeposited Funds</option>
+              <option value="Fixed Assets">Fixed Assets</option>
+              <option value="Fixed Assets">Other Assets</option>
+              <option value="Other Current Assets">Other Current Assets</option>
+              <option value="Long Term Liabilities">
+                Long Term Liabilities
+              </option>
+              <option value="Other Current Liabilities">
+                Other Current Liabilities
+              </option>
+              <option value="Equity">Equity</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
           </div>
+          {/* ------
+          {/* ----------------------------------------------- */}
           <div className="company-form__section">
             <Input
               type="text"
@@ -207,6 +239,7 @@ const ChartOfAccountsCreationForm = ({
               label="Name"
             />
           </div>
+          {/* ----------------------------------------------- */}
           <div className="company-form__section">
             <Input
               type="num"
@@ -318,17 +351,17 @@ const ChartOfAccountsCreationForm = ({
 };
 
 ChartOfAccountsCreationForm.propTypes = {
-  ChartOfAccounts: propTypes.object,
+  ChartAccounts: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  onchartOfAccountsDataChange: propTypes.func,
+  onDataChange: propTypes.func,
 };
 
 ChartOfAccountsCreationForm.defaultProps = {
-  ChartOfAccounts: {},
+  ChartAccounts: {},
   closeModal: null,
   creating: false,
-  onchartOfAccountsDataChange: null,
+  onDataChange: null,
 };
 
 export default ChartOfAccountsCreationForm;

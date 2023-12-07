@@ -20,8 +20,8 @@ import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
-import "../../styles/components/PickupOrderCreationForm.scss";
-import "../../styles/components/CreationForm.scss";
+import "../../styles/components/CreationForm.scss"
+// import "../../styles/components/PickupOrderCreationForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -42,6 +42,7 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
@@ -107,7 +108,7 @@ const PickupOrderCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    console.log(formFormat, "formdata");
+
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -253,7 +254,7 @@ const PickupOrderCreationForm = ({
   };
 
   const handleCommodityDelete = () => {
-    console.log("commodity id", selectedCommodity.id, "commodity list", commodities);
+
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
     );
@@ -275,6 +276,7 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
+    console.log("selecting client to bill", event);
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -286,28 +288,28 @@ const PickupOrderCreationForm = ({
             : "";
       setFormData({
         ...formData,
-        client_to_bill: id,
         client_to_bill_type: type,
       });
     } else {
       const id = event.id;
       const type = event.type;
-      console.log("id", id, "type", type);
+
       setFormData({
         ...formData,
         client_to_bill_type: type,
         client_to_bill: id,
       });
     }
+
   };
 
   useEffect(() => {
-    console.log("checking for edit", "join:", !creating && pickupOrder != null);
+
     if (!creating && pickupOrder != null) {
-      console.log("Selected Pickup:", pickupOrder);
+
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
-      console.log("CALLING LOAD SHIPPER OPTION");
+
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -367,7 +369,7 @@ const PickupOrderCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -429,7 +431,7 @@ const PickupOrderCreationForm = ({
       ...customersWithType,
       forwardingAgentsWithType,
     ];
-    console.log("Setting Released to options:", clientToBillOptions);
+
 
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
@@ -441,6 +443,161 @@ const PickupOrderCreationForm = ({
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
     setReleasedToOptions(clientToBillOptions);
+  };
+
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    return options;
+  };
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDestinationAgentsSelectOptions = async (inputValue) => {
+
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadShipperSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadConsigneeSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadPickUpLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDeliveryLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadClientToBillSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
   };
 
   const loadShipperOption = async (id, type) => {
@@ -461,7 +618,7 @@ const PickupOrderCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
+
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -472,7 +629,7 @@ const PickupOrderCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    console.log("SHIPPER FOUND:", option.data);
+
     setdefaultValueShipper(option.data);
   };
 
@@ -482,26 +639,18 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (creating) {
-      console.log(
-        "Setting new pickup number:",
-        pickupNumber,
-        "old pickup number:",
-        currentPickUpNumber
-      );
+
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
 
-  // useEffect(() => {
-  //   console.log("Updated form data:", formData);
-  // }, [formData]);
-  // const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div"}, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
+  const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div" }, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
 
-  // useEffect(() => {
-  //   if(commodities && commodities.length >= 1){
-  //     setFormData({...formData, status: 5});
-  //   }
-  // }, [commodities])
+  useEffect(() => {
+    if (commodities && commodities.length >= 1) {
+      setFormData({ ...formData, status: 5 });
+    }
+  }, [commodities])
 
 
   const [inputStyle, setinputStyle] = useState({});
@@ -509,16 +658,16 @@ const PickupOrderCreationForm = ({
     for (const inputs of listId) {
       const inputSelected = document.querySelector(inputs.selectedId)
       const inputAsociated = document.querySelector(inputs.asociatedId)
-      const isValid = inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-      console.log(formData);
+      const isValid = true;//inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
+
       if (inputSelected && formData[inputSelected.id]) {
         inputSelected.style.border = "1px solid green"
-        // console.log("green", inputSelected.id)
+
         continue
       }
       else {
         if (inputSelected) inputSelected.style.border = "1px solid red"
-        // console.log("red", inputSelected.id)
+
         if (!isValid && inputSelected?.style) {
           inputSelected.style.border = "1px solid red"
 
@@ -526,8 +675,9 @@ const PickupOrderCreationForm = ({
         else { if (inputSelected) inputSelected.style.border = "1px solid green" }
       }
     }
-    return;
+    //return;
 
+    let auxVar;
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -548,14 +698,14 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createConsignee(consignee);
       if (response.status === 201) {
-        console.log("CONSIGNEE ID", response.data.id);
         setconsigneeRequest(response.data.id);
+        formData.client_to_bill_type === "consignee" ? auxVar = response.data.id : "";
       }
     }
 
     let deliveryLocationName = "";
     if (formData.deliveryLocationType === "customer") {
-      console.log("its a customer");
+
       deliveryLocationName = "customerid";
     }
     if (formData.deliveryLocationType === "vendor") {
@@ -574,7 +724,7 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createDeliveryLocation(consignee);
       if (response.status === 201) {
-        console.log("DELIVERY LOCATION ID", response.data.id);
+
         setdeliverylocation(response.data.id);
       }
     }
@@ -599,7 +749,7 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createPickUpLocation(consignee);
       if (response.status === 201) {
-        console.log("PICKUP LOCATION ID", response.data.id);
+
         setpickuplocation(response.data.id);
       }
     }
@@ -624,31 +774,13 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createShipper(consignee);
       if (response.status === 201) {
-        console.log("SHIPPER ID", response.data.id);
+        formData.client_to_bill_type === "shipper" ? auxVar = response.data.id : "";
         setshipperRequest(response.data.id);
       }
     }
 
     let clientToBillName = "";
 
-    if (formData.releasedToType === "releasedTo") {
-      switch (formData.releasedToType) {
-        case "customer":
-          clientToBillName = "customerid";
-          break;
-        case "vendor":
-          clientToBillName = "vendorid";
-          break;
-        case "agent":
-          clientToBillName = "agentid";
-          break;
-        case "carrier":
-          clientToBillName = "carrierid";
-          break;
-        default:
-          break;
-      }
-    }
     if (formData.client_to_bill_type === "customer") {
       clientToBillName = "customerid";
     }
@@ -663,32 +795,35 @@ const PickupOrderCreationForm = ({
     }
     if (formData.client_to_bill_type === "shipper") {
       clientToBillName = "shipperid";
+      console.log("The client to bill is a shipper", auxVar);
     }
     if (formData.client_to_bill_type === "consignee") {
+      console.log("The client to bill is a consignee", auxVar);
       clientToBillName = "consigneeid";
     }
-    console.log("CREATING CLIENT TO BILL", clientToBillName, formData.client_to_bill_type);
+
     if (clientToBillName !== "") {
       const clientToBill = {
-        [clientToBillName]: formData.client_to_bill,
+        [clientToBillName]: (formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee") ? auxVar : formData.client_to_bill,
       };
 
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("CLIENT TO BILL ID", response.data.id);
+        console.log("RESPONSE CLIENT TO BILL", response.data.id);
+        setclientToBillRequest(response.data.id);
         setFormData({ ...formData, client_to_bill: response.data.id });
       }
     }
   };
 
   const checkUpdatesComplete = () => {
-    console.log("Checking for updates");
+
     if (
       shipperRequest !== null &&
       deliverylocation !== null &&
       pickuplocation !== null &&
       consigneeRequest !== null &&
-      formData.client_to_bill !== null
+      clientToBillRequest !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -715,13 +850,12 @@ const PickupOrderCreationForm = ({
       // Check if the click is inside your modal content
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".pickup")
-      console.log("CLOSEST", isForm);
-      console.log("HANDLE MODAL CLICK EVENT");
+
       if (!isForm) {
         // Click is outside the modal content, close the modal
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
-        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+
       }
     };
 
@@ -734,9 +868,9 @@ const PickupOrderCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log("TRYING TO CHANGE STATUS");
+
     if (commodities.length > 0) {
-      console.log("CHANGING STATUS");
+
       setFormData({ ...formData, status: 5 });
     }
   }, [commodities]);
@@ -745,6 +879,7 @@ const PickupOrderCreationForm = ({
     // Check if updates are complete initially
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
+
       const createPickUp = async () => {
         let rawData = {
           // GENERAL TAB
@@ -795,7 +930,8 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-          }, 5000);
+            window.location.reload();
+          }, 2000);
         } else {
           console.log("Something went wrong:", response);
           setShowErrorAlert(true);
@@ -809,6 +945,7 @@ const PickupOrderCreationForm = ({
     pickuplocation,
     consigneeRequest,
     allStateUpdatesComplete,
+    clientToBillRequest
   ]);
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -866,6 +1003,7 @@ const PickupOrderCreationForm = ({
                   }}
                   isClearable={true}
                   defaultOptions={destinationAgentOptions}
+                  loadOptions={loadDestinationAgentsSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                   value={destinationAgentOptions.find(
@@ -881,9 +1019,9 @@ const PickupOrderCreationForm = ({
                 }}
                 isClearable={true}
                 defaultOptions={destinationAgentOptions}
+                loadOptions={loadDestinationAgentsSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
-                className="m-0"
               />
             )}
           </div>
@@ -902,6 +1040,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={employeeOptions}
+              loadOptions={loadEmployeeSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -938,6 +1077,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={issuedByOptions}
+              loadOptions={loadIssuedBySelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -979,6 +1119,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={shipperOptions}
+              loadOptions={loadShipperSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1011,6 +1152,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={pickupLocationOptions}
+              loadOptions={loadPickUpLocationSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1047,7 +1189,6 @@ const PickupOrderCreationForm = ({
 
 
           <div className="col-6 text-start">
-
             <Input
               id="TextPickupLocation"
               type="textarea"
@@ -1077,6 +1218,7 @@ const PickupOrderCreationForm = ({
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={consigneeOptions}
+                loadOptions={loadConsigneeSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
@@ -1098,6 +1240,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={deliveryLocationOptions}
+              loadOptions={loadDeliveryLocationSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1137,7 +1280,7 @@ const PickupOrderCreationForm = ({
 
         <div className="row align-items-center">
           <div className="col-6 text-start">
-            <label htmlFor="language"
+          <label htmlFor="language"
             style={{ fontWeight: 'bold', fontSize: '15px', color: '#153A61', marginRight: '10px'}}>
               Client to Bill:
             </label>
@@ -1154,6 +1297,22 @@ const PickupOrderCreationForm = ({
               <option value="consignee">Ultimate Consignee</option>
               <option value="other">Other</option>
             </select>
+          </div>
+          <div className="col-6 text-start">
+            <AsyncSelect
+              id="releasedToOther"
+              isDisabled={formData.client_to_bill_type !== "other"}
+              onChange={(e) => {
+                handleClientToBillSelection(e);
+              }}
+              value={releasedToOptions.find(
+                (option) => option.id === formData.client_to_bill
+              )}
+              isClearable={true}
+              defaultOptions={releasedToOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
           </div>
         </div>
 
@@ -1177,6 +1336,7 @@ const PickupOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={carrierOptions}
+              loadOptions={loadCarrierSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1225,188 +1385,191 @@ const PickupOrderCreationForm = ({
       <div className="form-label_name"><h3>Commodities</h3><span></span></div>
       <div className="creation-creation-container w-100">
 
-        <CommodityCreationForm
-          onCancel={setshowCommodityCreationForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-          setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-        ></CommodityCreationForm>
 
-        {showCommodityCreationForm && (
-          <><Table
-            data={commodities}
-            columns={[
-              "Description",
-              " Length",
-              " Height",
-              " Width",
-              " Weight",
-              "Location",
-              " Volumetric Weight",
-              " Chargeable Weight",
-              "Options",
-            ]}
-            onSelect={handleSelectCommodity} // Make sure this line is correct
-            selectedRow={selectedCommodity}
-            onDelete={handleCommodityDelete}
-            onEdit={() => {
-              setshowCommodityEditForm(!showCommodityEditForm);
-            }}
-            onInspect={() => {
-              setshowCommodityInspect(!showCommodityInspect);
-            }}
-            onAdd={() => { }}
-            showOptions={false}
-          />
-            <button type="button" onClick={() => {
-              setshowRepackingForm(!showRepackingForm);
-            }}>Repack</button></>
-        )}
-
-        {showRepackingForm && (
-          <RepackingForm
-            commodities={commodities}
-            setCommodities={setcommodities}
-          ></RepackingForm>
-        )}
-        {showCommodityEditForm && (
           <CommodityCreationForm
-            onCancel={setshowCommodityEditForm}
+            onCancel={setshowCommodityCreationForm}
             commodities={commodities}
             setCommodities={setcommodities}
-            commodity={selectedCommodity}
-            editing={true}
+            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
           ></CommodityCreationForm>
-        )}
-        {showCommodityEditForm &&
-          selectedCommodity?.containsCommodities &&
-          selectedCommodity.internalCommodities.map(
-            (internalCommodity, index) => (
-              <CommodityCreationForm
-                key={index}
-                onCancel={() => { }}
-                commodities={selectedCommodity.internalCommodities}
-                setCommodities={updateSelectedCommodity}
-                commodity={internalCommodity}
-                editing={true}
-              ></CommodityCreationForm>
-            )
+
+
+          {showCommodityCreationForm && (
+            <><Table
+              data={commodities}
+              columns={[
+                "Description",
+                " Length",
+                " Height",
+                " Width",
+                " Weight",
+                "Location",
+                " Volumetric Weight",
+                " Chargeable Weight",
+                "Options",
+              ]}
+              onSelect={handleSelectCommodity} // Make sure this line is correct
+              selectedRow={selectedCommodity}
+              onDelete={handleCommodityDelete}
+              onEdit={() => {
+                setshowCommodityEditForm(!showCommodityEditForm);
+              }}
+              onInspect={() => {
+                setshowCommodityInspect(!showCommodityInspect);
+              }}
+              onAdd={() => { }}
+              showOptions={false}
+            />
+              <button type="button" onClick={() => {
+                setshowRepackingForm(!showRepackingForm);
+              }}>Repack</button></>
           )}
 
-        {showCommodityInspect && (
-          <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
-            <p>
-              {selectedCommodity?.description
-                ? selectedCommodity.description
-                : ""}
-            </p>
-            <p>
-              Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
-            </p>
-            <p>
-              Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
-            </p>
-            <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
-            <p>
-              Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
-            </p>
-            <p>
-              Volumetric Weight:{" "}
-              {selectedCommodity?.volumetricWeigth
-                ? selectedCommodity.volumetricWeigth
-                : 0}
-            </p>
-            <p>
-              Chargeable Weight:{" "}
-              {selectedCommodity?.chargeableWeight
-                ? selectedCommodity.chargeableWeight
-                : 0}
-            </p>
-            <p>
-              Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
-            </p>
-            {selectedCommodity?.internalCommodities.map((com) => {
-              return (
-                <div key={com.id} className="card">
-                  <p>{com.description}</p>
-                  <p>Weight: {com.weight}</p>
-                  <p>Height: {com.height}</p>
-                  <p>Width: {com.width}</p>
-                  <p>Length: {com.length}</p>
-                  <p>Volumetric Weight: {com.volumetricWeight}</p>
-                  <p>Chargeable Weight: {com.chargedWeight}</p>
-                  <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+          {showRepackingForm && (
+            <RepackingForm
+              commodities={commodities}
+              setCommodities={setcommodities}
+            ></RepackingForm>
+          )}
+          {showCommodityEditForm && (
+            <CommodityCreationForm
+              onCancel={setshowCommodityEditForm}
+              commodities={commodities}
+              setCommodities={setcommodities}
+              commodity={selectedCommodity}
+              editing={true}
+            ></CommodityCreationForm>
+          )}
+          {showCommodityEditForm &&
+            selectedCommodity?.containsCommodities &&
+            selectedCommodity.internalCommodities.map(
+              (internalCommodity, index) => (
+                <CommodityCreationForm
+                  key={index}
+                  onCancel={() => { }}
+                  commodities={selectedCommodity.internalCommodities}
+                  setCommodities={updateSelectedCommodity}
+                  commodity={internalCommodity}
+                  editing={true}
+                ></CommodityCreationForm>
+              )
+            )}
+
+          {showCommodityInspect && (
+            <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
+              <p>
+                {selectedCommodity?.description
+                  ? selectedCommodity.description
+                  : ""}
+              </p>
+              <p>
+                Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+              </p>
+              <p>
+                Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+              </p>
+              <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+              <p>
+                Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+              </p>
+              <p>
+                Volumetric Weight:{" "}
+                {selectedCommodity?.volumetricWeigth
+                  ? selectedCommodity.volumetricWeigth
+                  : 0}
+              </p>
+              <p>
+                Chargeable Weight:{" "}
+                {selectedCommodity?.chargeableWeight
+                  ? selectedCommodity.chargeableWeight
+                  : 0}
+              </p>
+              <p>
+                Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+              </p>
+              {selectedCommodity?.internalCommodities.map((com) => {
+                return (
+                  <div key={com.id} className="card">
+                    <p>{com.description}</p>
+                    <p>Weight: {com.weight}</p>
+                    <p>Height: {com.height}</p>
+                    <p>Width: {com.width}</p>
+                    <p>Length: {com.length}</p>
+                    <p>Volumetric Weight: {com.volumetricWeight}</p>
+                    <p>Chargeable Weight: {com.chargedWeight}</p>
+                    <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+       
       </div>
 
       <div className="form-label_name"><h3>Charges</h3><span></span></div>
       <div className="creation creation-container w-100">
-        {true && (
-          <IncomeChargeForm
-            onCancel={setshowIncomeForm}
-            charges={charges}
-            setcharges={setcharges}
-            commodities={commodities}
-            agent={agent}
-            consignee={consignee}
-            shipper={shipper}
-          ></IncomeChargeForm>
-        )}
+            {true && (
+              <IncomeChargeForm
+                onCancel={setshowIncomeForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+              ></IncomeChargeForm>
+            )}
+         
+          {showIncomeForm && (<Table
+            data={charges}
+            columns={[
+              "Status",
+              "Type",
+              "Description",
+              "Quantity",
+              "Price",
+              "Currency",
+            ]}
+            onSelect={() => { }} // Make sure this line is correct
+            selectedRow={{}}
+            onDelete={() => { }}
+            onEdit={() => { }}
+            onAdd={() => { }}
+            showOptions={false}
+          />
+          )}
+          </div>
+          <div className="creation creation-container w-100">
+          {true && (
+            <ExpenseChargeForm
+              onCancel={setshowExpenseForm}
+              charges={charges}
+              setcharges={setcharges}
+              commodities={commodities}
+              agent={agent}
+              consignee={consignee}
+              shipper={shipper}
+            ></ExpenseChargeForm>
+          )}
+          {showExpenseForm && (<Table
+            data={charges}
+            columns={[
+              "Status",
+              "Type",
+              "Description",
+              "Quantity",
+              "Price",
+              "Currency",
+            ]}
+            onSelect={() => { }} // Make sure this line is correct
+            selectedRow={{}}
+            onDelete={() => { }}
+            onEdit={() => { }}
+            onAdd={() => { }}
+            showOptions={false}
+          />)}
 
-        {showIncomeForm && (<Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
-          showOptions={false}
-        />
-        )}
-      </div>
-      
-      <div className="creation creation-container w-100">
-        {true && (
-          <ExpenseChargeForm
-            onCancel={setshowExpenseForm}
-            charges={charges}
-            setcharges={setcharges}
-            commodities={commodities}
-            agent={agent}
-            consignee={consignee}
-            shipper={shipper}
-          ></ExpenseChargeForm>
-        )}
-        {showExpenseForm && (<Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
-          showOptions={false}
-        />)}
-
+       
       </div>
 
       <div className="company-form__options-container">

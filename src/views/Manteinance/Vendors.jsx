@@ -155,6 +155,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onDelete={handleDeleteVendor}
           onEdit={handleEditVendor}
           onAdd={handleAddVendor}
+          contextService={VendorService}
           title="Vendors"
         />
 

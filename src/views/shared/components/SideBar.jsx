@@ -7,7 +7,8 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
-import logoBlanco from "../../../img/logoBlanco.png";
+import logoBlanco from "../../../img/logoblanco.png";
+import logoNuevoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
 import logoIntegral from "../../../img/INTEGRALBLANCO1.png";
 
@@ -251,7 +252,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/payments"}>Payments</Link>
-                <a href="#">Payments</a>
+                {/* <a href="#">Payments</a> */}
               </li>
             </ul>
           </li>
@@ -454,7 +455,7 @@ const Sidebar = () => {
             className="bx bx-menu menu__icon"
             onClick={() => { handleHideSidebar() }} 
           ></i>
-          <img className="logo_integral" src={logoIntegral} alt="logo"/>
+          <img className="logo_integral" src={logoNuevoBlanco} alt="logo"/>
    {/*        <span className="text">Integral</span> */}
 
           <div className="rith">

@@ -27,8 +27,6 @@ const Receipt = () => {
     "Consignee",
     "Carrier",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Receipt PDF",
   ];
 
@@ -41,7 +39,7 @@ const Receipt = () => {
         });
         
         setreceipts([...receipts, ...newreceipts]);
-        console.log("NEW ORDERS", [...receipts, ...newreceipts]);
+        console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -63,7 +61,7 @@ const Receipt = () => {
       console.log("recibo:", receipts[0]);
       const number = receipts[receipts.length - 1]?.number || 0;
       console.log("NUMERO", number);
-      setcurrentPickupNumber(number + 1);
+      setcurrentPickupNumber(number);
     }
   }, [receipts]);
 
@@ -169,6 +167,7 @@ const Receipt = () => {
               onAdd={handleAddPickupOrder}
               title="Warehouse Receipts"
               setData={setreceipts}
+              contextService={ReceiptService}
             />
 
             {showSuccessAlert && (

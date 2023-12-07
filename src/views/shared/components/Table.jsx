@@ -10,9 +10,11 @@ import generatePickUpPDF from "../../others/GeneratePickUpPDF";
 import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
 import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
+import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
 
-import ContextMenu from "../../others/ContextMenu";
+import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
+import _ from "lodash";
 const Table = ({
   data,
   columns,
@@ -30,6 +32,7 @@ const Table = ({
   contextMenuOptions,
   handleOptionClick,
   onInspect,
+  contextService
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -40,6 +43,8 @@ const Table = ({
   const [startDate, setStartDate] = useState(new Date());
   const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
+  console.log("RECEIVED DATA", data);
   const navigate = useNavigate();
   const currentDate = new Date();
   const startOfWeek = new Date(
@@ -221,6 +226,12 @@ const Table = ({
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
           </span>
         );
+        case "15":
+        return (
+          <span>
+            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Open
+          </span>
+        );
     }
   };
 
@@ -232,60 +243,27 @@ const Table = ({
     setHideShowSlider(true)
   }
 
-
-  const handleSearch = (row) => {
-    const lowerCaseSearchQuery = searchQuery.toLowerCase();
-    const searchMatch = Object.values(row).some((value) =>
-      value?.toString().toLowerCase().includes(lowerCaseSearchQuery)
-    );
-    let dateMatch = false;
-    const dateColumn = selectedDateFilter;
-    if (dateColumn && dateColumn in columnNameToProperty) {
-      const propertyName = columnNameToProperty[dateColumn];
-      const rowDate = new Date(row[propertyName]);
-      switch (dateFilter) {
-        case "all":
-          dateMatch = true;
-          break;
-        case "today":
-          dateMatch = rowDate.toDateString() === currentDate.toDateString();
-          break;
-        case "this-week":
-          dateMatch = rowDate >= startOfWeek && rowDate <= endOfWeek;
-          break;
-        case "this-month":
-          dateMatch =
-            rowDate.getMonth() === currentDate.getMonth() &&
-            rowDate.getFullYear() === currentDate.getFullYear();
-          break;
-        case "this-year":
-          dateMatch = rowDate.getFullYear() === currentDate.getFullYear();
-          break;
-        case "between":
-          console.log(
-            "start Date",
-            startDate,
-            "finish date",
-            finishDate,
-            "applies?",
-            rowDate >= startDate && rowDate <= finishDate,
-            rowDate
-          );
-          dateMatch =
-            rowDate >= new Date(startDate) && rowDate <= new Date(finishDate);
-          break;
-        default:
-          dateMatch = true; // "all" or unknown filter, include all rows
-          break;
-      }
-      return searchMatch && dateMatch;
+  const fetchAndFilterData = async () => {
+    if (searchQuery !== "") {
+      const newData = (await contextService.search(searchQuery)).data;
+      console.log("DATA SEARCH:", newData.results);
+      setFilteredData(newData.results);
     } else {
-      dateMatch = true;
+      return data; // Return the original data if searchQuery is empty
     }
-
-    return searchMatch && dateMatch;
   };
-  const filteredData = data.filter((row) => handleSearch(row));
+
+  useEffect(() => {
+    fetchAndFilterData();
+  }, [searchQuery])
+
+  useEffect(() => {
+    console.log("Current data to be displayed on table:", filteredData, "search query", searchQuery);
+  }, [filteredData])
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data])
 
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
@@ -299,7 +277,7 @@ const Table = ({
   };
 
   const generatePDFReceipt = () => {
-    GenerateReceiptPDF(selectedRow)
+    GenerateReceiptPdf(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -310,7 +288,18 @@ const Table = ({
   };
 
   const generatePDFRelease = () => {
-    GenerateReleasePDF(selectedRow)
+    generatePickUpPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
+
+  const generatePDFInvoice = () => {
+    GenerateInvoicePDF(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -845,20 +834,24 @@ const Table = ({
                         <button type="button" onClick={generatePDFRelease}>
                           <i className="fas fa-file-pdf"></i>
                         </button>
+                      ) : columnName === "Invoice PDF" ? (
+                        <button type="button" onClick={generatePDFInvoice}>
+                          <i className="fas fa-file-pdf"></i>
+                        </button>
+                      ) : columnName === "Status" ? (
+                        getStatus(row[columnNameToProperty[columnName]])
                       ) : columnName === "Options" ? (
                         <>
                           <button type="button" onClick={onDelete}>
-                            <i className="fas fa-trash"></i>
+                          <i className="fas fa-trash"></i>
                           </button>
                           <button type="button" onClick={onEdit}>
-                            <i className="fas fa-pencil-alt"></i>
+                          <i className="fas fa-pencil-alt"></i>
                           </button>
                           <button type="button" onClick={onInspect}>
-                            <i className="fas fa-eye"></i>
+                          <i className="fas fa-eye"></i>
                           </button>
                         </>
-                      ) : columnName === "Status" ? (
-                        getStatus(row[columnNameToProperty[columnName]])
                       ) : typeof columnNameToProperty[columnName] ===
                         "boolean" ? (
                         row[columnNameToProperty[columnName]] ? (
@@ -885,13 +878,13 @@ const Table = ({
       </div>
       {showContextMenu && (
         <ContextMenu
-          x={contextMenuPosition.x}
-          y={contextMenuPosition.y}
-          options={contextMenuOptions}
-          onClose={() => {
-            setShowContextMenu(false);
-          }}
-        />
+        x={contextMenuPosition.x}
+        y={contextMenuPosition.y}
+        options={contextMenuOptions}
+        onClose={() => {
+          setShowContextMenu(false);
+        }}
+      />
       )}
     </>
   );

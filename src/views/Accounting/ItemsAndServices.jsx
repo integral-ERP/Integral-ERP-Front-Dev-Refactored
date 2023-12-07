@@ -24,10 +24,11 @@ const ItemsAndServices = () => {
     "Currency",
     "IATA Code"
   ];
+
   const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {
-        setItemsAndServices([...itemsAndServices, ...response.data.results].reverse())
+        setItemsAndServices([...response.data.results].reverse())
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -37,7 +38,6 @@ const ItemsAndServices = () => {
         console.error(error);
       });
   };
-
   useEffect(() => {
     if(!initialDataFetched){
       updateItemsAndServices();

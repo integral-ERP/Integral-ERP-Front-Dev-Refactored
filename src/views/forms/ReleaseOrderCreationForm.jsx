@@ -254,6 +254,63 @@ const ReleaseOrderCreationForm = ({
     setCarrierOptions(carrierOptions);
   };
 
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    return options;
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadReleasedToOptionsSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
   const fetchReceipts = async () => {
     ReceiptService.getReceipts()
       .then((response) => {
@@ -316,7 +373,7 @@ const ReleaseOrderCreationForm = ({
     }
     let clientToBillName = "";
 
-    if (formData.releasedToType === "releasedTo") {
+    if (formData.clientToBillType === "releasedTo") {
       switch (formData.releasedToType) {
         case "customer":
           clientToBillName = "customerid";
@@ -366,7 +423,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    if (clientToBill !== null) {
+    if (releasedTo !== null && clientToBill !== null) {
       setAllStateUpdatesComplete(true);
     }
   };
@@ -424,7 +481,8 @@ const ReleaseOrderCreationForm = ({
             onReleaseOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-          }, 5000);
+            window.location.reload();
+          }, 2000);
         } else {
           console.log("Something went wrong:", response);
           setShowErrorAlert(true);
@@ -478,14 +536,14 @@ const ReleaseOrderCreationForm = ({
               }}
               isClearable={true}
               defaultOptions={employeeOptions}
+              loadOptions={loadEmployeeSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
           </div>
 
           <div className="col-4 text-start">
-            <label htmlFor="clientToBill" className="form-label"
-              style={{ marginTop: '10px' }}>
+            <label htmlFor="clientToBill" className="form-label">
               Client to Bill:
             </label>
             <select
@@ -511,6 +569,7 @@ const ReleaseOrderCreationForm = ({
               )}
               isClearable={true}
               defaultOptions={releasedToOptions}
+              loadOptions={loadReleasedToOptionsSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -550,6 +609,7 @@ const ReleaseOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={issuedByOptions}
+              loadOptions={loadIssuedBySelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -588,6 +648,7 @@ const ReleaseOrderCreationForm = ({
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}
+                  loadOptions={loadReleasedToOptionsSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -603,6 +664,7 @@ const ReleaseOrderCreationForm = ({
                 )}
                 isClearable={true}
                 defaultOptions={releasedToOptions}
+                loadOptions={loadReleasedToOptionsSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
@@ -629,6 +691,7 @@ const ReleaseOrderCreationForm = ({
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={carrierOptions}
+              loadOptions={loadCarrierSelectOptions}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -717,10 +780,10 @@ const ReleaseOrderCreationForm = ({
                   )}
               </div>
             ))}
+
           </div>
         </div>
       </div>
-
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>

@@ -149,6 +149,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onDelete={handleDeleteLocation}
           onEdit={handleEditLocation}
           onAdd={handleAddLocation}
+          contextService={LocationService}
           title="Locations"
         />
 

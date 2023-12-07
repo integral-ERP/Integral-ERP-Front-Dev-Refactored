@@ -150,7 +150,8 @@ const ForwardingAgentsCreationForm = ({
           closeModal();
           onForwardingAgentDataChange();
           setShowSuccessAlert(false);
-        }, 5000);
+          window.location.reload();
+        }, 2000);
       } else {
         console.log("Something went wrong:", response);
         setShowErrorAlert(true);
@@ -209,7 +210,7 @@ const ForwardingAgentsCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="mphone"
               placeholder="Mobile Phone"
               value={formData.mobilePhone}
@@ -259,7 +260,7 @@ const ForwardingAgentsCreationForm = ({
         <div className="cont-two">
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="phone"
               placeholder="Phone"
               value={formData.phone}
@@ -271,7 +272,7 @@ const ForwardingAgentsCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="fax"
               placeholder="fax"
               value={formData.fax}

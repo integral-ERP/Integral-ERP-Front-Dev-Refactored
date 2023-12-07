@@ -30,6 +30,11 @@ class LocationService{
       const response = await axios.delete(`${this.BASE_URL}location/${id}/`);
       return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}location/?search=${query}`);
+    return response;
+  }
 }
 
 export default new LocationService();

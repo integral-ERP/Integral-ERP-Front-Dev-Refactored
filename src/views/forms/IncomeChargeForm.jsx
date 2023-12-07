@@ -34,9 +34,10 @@ const IncomeChargeForm = ({
     chargeableWeight: 0,
     totalAmount: 0,
     show: false,
-    status: "",
+    status: 15,
+    description: ""
   };
-  console.log(commodities);
+  
   const [formData, setformData] = useState(formFormat);
   useEffect(() => {
     CurrenciesService.getCurrencies()
@@ -91,7 +92,7 @@ const IncomeChargeForm = ({
       quantity: 1
     };
     setcharges([...charges, charge]);
-    console.log(charge);
+    
   };
 
   const handleChargeRateChange = (e) => {
@@ -211,7 +212,7 @@ const IncomeChargeForm = ({
             className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value })
             }
           >
             {/* Add options for paidAs */}
