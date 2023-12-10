@@ -15,6 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ReceiptService from "../../services/ReceiptService";
 import AsyncSelect from "react-select/async";
 import ReleaseService from "../../services/ReleaseService";
+import Table from "../shared/components/Table";
 
 const ReleaseOrderCreationForm = ({
   releaseOrder,
@@ -129,6 +130,11 @@ const ReleaseOrderCreationForm = ({
     });
   };
 
+  useEffect(() => {
+    console.log("UPDATEDD FORM DATA", formData);
+  }, [formData])
+  
+
   const handleReleasedToSelection = async (event) => {
     const id = event.id;
     const type = event.type;
@@ -195,15 +201,18 @@ const ReleaseOrderCreationForm = ({
         number: releaseOrder.number,
         creation_date: releaseOrder.creation_date,
         release_date: releaseOrder.release_date,
-        employeeId: releaseOrder.employeeId,
-        issuedById: releaseOrder.issuedById,
-        issuedByType: releaseOrder.issuedByType,
-        releasedToId: releaseOrder.releasedToId,
-        releasedToType: releaseOrder.releasedToType,
-        releasedToInfo: releaseOrder.releasedToInfo,
+        employeeId: releaseOrder.employee,
+        issuedById: releaseOrder.issued_by,
+        issuedByType: releaseOrder.issued_byObj?.type_person,
+        releasedToId: releaseOrder.released_to,
+        releasedToType: releaseOrder.releasedToObj?.type_person,
+        releasedToInfo: `${releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
+      } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${releaseOrder.releasedToObj?.data?.obj?.state || ""
+      } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
+      }`,
         clientToBillId: releaseOrder.clientToBillId,
         clientToBillType: releaseOrder.clientToBillType,
-        carrierId: releaseOrder.carrierId,
+        carrierId: releaseOrder.carrier,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
@@ -323,9 +332,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   useEffect(() => {
-    if (creating) {
       fetchFormData();
-    }
     fetchReceipts();
   }, []);
 
@@ -529,7 +536,7 @@ const ReleaseOrderCreationForm = ({
             <AsyncSelect
               id="employee"
               value={employeeOptions.find(
-                (option) => option.id === formData.employeeId
+                (option) => option.id == formData.employeeId
               )}
               onChange={(e) => {
                 handleEmployeeSelection(e);
@@ -742,6 +749,23 @@ const ReleaseOrderCreationForm = ({
       </div>
 
       <div className="form-label_name"><h3>Cargo</h3><span></span></div>
+      <div className="creation creation-container w-100">
+      <Table
+            data={commodities}
+            columns={[
+              "Description",
+              " Length",
+              " Height",
+              " Width",
+              " Weight",
+              "Location",
+              " Volumetric Weight",
+              " Chargeable Weight",
+            ]}
+            onAdd={() => { }}
+            showOptions={false}
+          />
+          </div>
       <div className="creation creation-container w-100">
         <div className="row align-items-center">
           <div className="col-6 text-start" style={{ fontSize: '14px', fontWeight: 'bold' }}>

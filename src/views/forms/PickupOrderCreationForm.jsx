@@ -340,7 +340,6 @@ const PickupOrderCreationForm = ({
       setshowCommodityCreationForm(true);
       setshowExpenseForm(true);
       setshowIncomeForm(true);
-      setagent(pickupOrder.destination_agent);
       setpickuplocation(pickupOrder.pick_up_location);
       setdeliverylocation(pickupOrder.delivery_location);
       setconsignee(pickupOrder.consigneeObj?.data?.obj);
@@ -1630,7 +1629,19 @@ const PickupOrderCreationForm = ({
           onAdd={() => { }}
           showOptions={false}
         />)}
-
+        {showExpenseEditForm && (
+          <ExpenseChargeForm
+          onCancel={setshowIncomeChargeEditForm}
+          charges={charges}
+          setcharges={setcharges}
+          commodities={commodities}
+          agent={agent}
+          consignee={consignee}
+          shipper={shipper}
+          editing={true}
+          charge={selectedIncomeCharge}
+        ></ExpenseChargeForm>
+        )}
 
       </div>
       <div className="company-form__options-container">

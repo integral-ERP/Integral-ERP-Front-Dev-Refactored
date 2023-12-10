@@ -74,6 +74,11 @@ const ReceiptCreationForm = ({
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
 
+  const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
+  const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
+  const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] = useState(false);
+  const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
+
   const formFormat = {
     // GENERAL TAB
     status: "",
@@ -144,6 +149,30 @@ const ReceiptCreationForm = ({
     });
     const result = await ForwardingAgentService.getForwardingAgentById(id);
     setagent(result.data);
+  };
+
+  const handleSelectIncomeCharge = (commodity) => {
+    setSelectedIncomeCarge(commodity);
+  };
+
+  const handleSelectExpenseCharge = (commodity) => {
+    setSelectedExpenseCarge(commodity);
+  };
+
+  const handleIncomeChargeDelete = () => {
+
+    const newCharges = charges.filter(
+      (com) => com.id != selectedIncomeCharge.id
+    );
+    setcharges(newCharges);
+  };
+
+  const handleExpenseChargeDelete = () => {
+
+    const newCharges = charges.filter(
+      (com) => com.id != selectedExpenseCharge.id
+    );
+    setcharges(newCharges);
   };
 
   const handleEmployeeSelection = async (event) => {
@@ -373,9 +402,20 @@ const ReceiptCreationForm = ({
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
+      setEvents(pickupOrder.events);
+      setattachments(pickupOrder.attachments);
+      
       console.log("Selected Pickup:", pickupOrder);
       loadShipperOption(pickupOrder.shipperObj?.data?.obj?.id, pickupOrder.shipperObj?.data?.obj?.type_person);
       loadConsigneeOption(pickupOrder.consigneeObj?.data?.obj?.id, pickupOrder.consigneeObj?.data?.obj?.type_person);
+      setshowExpenseForm(true);
+      setshowIncomeForm(true);
+      setconsignee(pickupOrder.consigneeObj?.data?.obj);
+      setconsigneeRequest(pickupOrder.consignee);
+      setshipper(pickupOrder.shipperObj?.data?.obj);
+      setshipperRequest(pickupOrder.shipper);
+      setagent(pickupOrder.destination_agentObj)
+      setshowCommodityCreationForm(true);
       let updatedFormData = {
         // GENERAL TAB
         status: pickupOrder.status,
@@ -421,12 +461,18 @@ const ReceiptCreationForm = ({
           } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
           }`,
         // SUPPLIER TAB
+        supplierId: pickupOrder.supplier,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""
+      } - ${pickupOrder.supplierObj?.city || ""} - ${pickupOrder.supplierObj?.state || ""
+      } - ${pickupOrder.supplierObj?.country || ""} - ${pickupOrder.supplierObj?.zip_code || ""
+      }`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
         // CHARGES TAB
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
-        charges: pickupOrder.charges
+        charges: pickupOrder.charges,
+        notes: pickupOrder.notes
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -1015,9 +1061,6 @@ const ReceiptCreationForm = ({
             </label>
             <AsyncSelect
               id="shipper"
-              value={shipperOptions.find(
-                (option) => option.id === formData.shipperObjId
-              )}
               onChange={(e) => {
                 handleShipperSelection(e);
               }}
@@ -1025,6 +1068,9 @@ const ReceiptCreationForm = ({
               placeholder="Search and select..."
               defaultOptions={shipperOptions}
               loadOptions={loadShipperSelectOptions}
+              value={shipperOptions.find(
+                (option) => option.id === formData.shipperId
+              )}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1037,7 +1083,7 @@ const ReceiptCreationForm = ({
               <AsyncSelect
                 id="consignee"
                 value={consigneeOptions.find(
-                  (option) => option.id === formData.consigneeObjId
+                  (option) => option.id === formData.consigneeId
                 )}
                 onChange={(e) => handleConsigneeSelection(e)}
                 isClearable={true}
@@ -1305,6 +1351,19 @@ const ReceiptCreationForm = ({
           showOptions={false}
         />
         )}
+        {showIncomeChargeEditForm && (
+          <IncomeChargeForm
+          onCancel={setshowIncomeChargeEditForm}
+          charges={charges}
+          setcharges={setcharges}
+          commodities={commodities}
+          agent={agent}
+          consignee={consignee}
+          shipper={shipper}
+          editing={true}
+          charge={selectedIncomeCharge}
+        ></IncomeChargeForm>
+        )}
       </div>
 
       <div className="creation creation-container w-100">
@@ -1337,6 +1396,19 @@ const ReceiptCreationForm = ({
           onAdd={() => { }}
           showOptions={false}
         />)}
+        {showExpenseEditForm && (
+          <ExpenseChargeForm
+          onCancel={setshowIncomeChargeEditForm}
+          charges={charges}
+          setcharges={setcharges}
+          commodities={commodities}
+          agent={agent}
+          consignee={consignee}
+          shipper={shipper}
+          editing={true}
+          charge={selectedIncomeCharge}
+        ></ExpenseChargeForm>
+        )}
       </div>
 
 
@@ -1353,7 +1425,7 @@ const ReceiptCreationForm = ({
                   setevents={setEvents}
                 ></EventCreationForm>
               </div>
-              {events && Array.isArray(events) && events.length > 0 && (
+              {events && events.length > 0 && (
                 <Table
                   data={events}
                   columns={[
@@ -1424,6 +1496,23 @@ const ReceiptCreationForm = ({
             >
               Add
             </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="creation creation-container w-100">
+        <div className="row align-items-center">
+          <div className="col-10 text-start">
+            <label htmlFor="notes" className="form-label">Notes</label>
+            <input
+              name="notes"
+              type="text"
+              className="form-input"
+              placeholder="Notes..."
+              value={formData.notes?.toString()}
+              style={{ width: "100%" }}
+              readOnly
+            />
           </div>
         </div>
       </div>

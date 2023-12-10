@@ -38,7 +38,7 @@ const Receipt = () => {
           return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
         
-        setreceipts([...receipts, ...newreceipts]);
+        setreceipts([...receipts, ...newreceipts].reverse());
         console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
