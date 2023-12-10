@@ -65,6 +65,10 @@ const PickupOrderCreationForm = ({
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
+  const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
+  const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
+  const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] = useState(false);
+  const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
 
   const formFormat = {
     // GENERAL TAB
@@ -150,6 +154,14 @@ const PickupOrderCreationForm = ({
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
+  };
+
+  const handleSelectIncomeCharge = (commodity) => {
+    setSelectedIncomeCarge(commodity);
+  };
+
+  const handleSelectExpenseCharge = (commodity) => {
+    setSelectedExpenseCarge(commodity);
   };
 
   const handleDeliveryLocationSelection = async (event) => {
@@ -261,6 +273,22 @@ const PickupOrderCreationForm = ({
     setcommodities(newCommodities);
   };
 
+  const handleIncomeChargeDelete = () => {
+
+    const newCharges = charges.filter(
+      (com) => com.id != selectedIncomeCharge.id
+    );
+    setcharges(newCharges);
+  };
+
+  const handleExpenseChargeDelete = () => {
+
+    const newCharges = charges.filter(
+      (com) => com.id != selectedExpenseCharge.id
+    );
+    setcharges(newCharges);
+  };
+
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
@@ -306,10 +334,20 @@ const PickupOrderCreationForm = ({
   useEffect(() => {
 
     if (!creating && pickupOrder != null) {
-
+      console.log("PICKUP RECEIVED:", pickupOrder);
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
-
+      setshowCommodityCreationForm(true);
+      setshowExpenseForm(true);
+      setshowIncomeForm(true);
+      setagent(pickupOrder.destination_agent);
+      setpickuplocation(pickupOrder.pick_up_location);
+      setdeliverylocation(pickupOrder.delivery_location);
+      setconsignee(pickupOrder.consigneeObj?.data?.obj);
+      setconsigneeRequest(pickupOrder.consignee);
+      setshipper(pickupOrder.shipperObj?.data?.obj);
+      setshipperRequest(pickupOrder.shipper);
+      setagent(pickupOrder.destination_agentObj)
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -318,6 +356,7 @@ const PickupOrderCreationForm = ({
         pickupOrder.consigneeObj?.data?.obj?.id,
         pickupOrder.consigneeObj?.data?.obj?.type_person
       );
+    
       let updatedFormData = {
         status: pickupOrder.status,
         number: pickupOrder.number,
@@ -1041,6 +1080,9 @@ const PickupOrderCreationForm = ({
               placeholder="Search and select..."
               defaultOptions={employeeOptions}
               loadOptions={loadEmployeeSelectOptions}
+              value={employeeOptions.find(
+                (option) => option.id === formData.employeeId
+              )}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
@@ -1195,7 +1237,7 @@ const PickupOrderCreationForm = ({
               inputName="pickupinfo"
               placeholder="Pick-up Location..."
               readonly={true}
-              value={formData.pickupInfo}
+              value={formData.pickupLocationInfo}
             />
           </div>
         </div>
@@ -1521,7 +1563,7 @@ const PickupOrderCreationForm = ({
         )}
 
         {showIncomeForm && (<Table
-          data={charges}
+          data={charges.filter(charge => charge.type === "income")}
           columns={[
             "Status",
             "Type",
@@ -1529,14 +1571,31 @@ const PickupOrderCreationForm = ({
             "Quantity",
             "Price",
             "Currency",
+            "Options"
           ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
+          onSelect={handleSelectIncomeCharge} // Make sure this line is correct
+          selectedRow={selectedIncomeCharge}
+          onDelete={handleIncomeChargeDelete}
+          onEdit={() => {
+            setshowIncomeChargeEditForm(!showIncomeChargeEditForm);
+          }}
+          onInspect={() => {}}
           onAdd={() => { }}
           showOptions={false}
         />
+        )}
+        {showIncomeChargeEditForm && (
+          <IncomeChargeForm
+          onCancel={setshowIncomeChargeEditForm}
+          charges={charges}
+          setcharges={setcharges}
+          commodities={commodities}
+          agent={agent}
+          consignee={consignee}
+          shipper={shipper}
+          editing={true}
+          charge={selectedIncomeCharge}
+        ></IncomeChargeForm>
         )}
       </div>
       <div className="creation creation-container w-100">
@@ -1552,7 +1611,7 @@ const PickupOrderCreationForm = ({
           ></ExpenseChargeForm>
         )}
         {showExpenseForm && (<Table
-          data={charges}
+          data={charges.filter(charge => charge.type === "expense")}
           columns={[
             "Status",
             "Type",
@@ -1561,10 +1620,13 @@ const PickupOrderCreationForm = ({
             "Price",
             "Currency",
           ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
+          onSelect={handleSelectExpenseCharge} // Make sure this line is correct
+          selectedRow={selectedExpenseCharge}
+          onDelete={handleExpenseChargeDelete}
+          onEdit={() => {
+            setshowExpenseEditForm(!showExpenseEditForm);
+          }}
+          onInspect={() => {}}
           onAdd={() => { }}
           showOptions={false}
         />)}

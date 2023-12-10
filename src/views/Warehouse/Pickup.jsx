@@ -113,8 +113,8 @@ const Pickup = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      const number = pickupOrders[pickupOrders.length - 1]?.number || 0;
-      setcurrentPickupNumber(number);
+      const number = pickupOrders[0]?.number || 0;
+     setcurrentPickupNumber(number);
     }
   }, [pickupOrders]);
 
