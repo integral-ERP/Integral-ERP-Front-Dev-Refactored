@@ -47,8 +47,6 @@ const Pickup = () => {
     "Delivery Name",
     "Delivery Address",
     "Pieces",
-    "Weight",
-    "Volume",
     "Carrier Name",
     "Carrier Address",
     "PRO Number",
@@ -95,7 +93,7 @@ const Pickup = () => {
           );
         });
 
-        setpickupOrders([...pickupOrders, ...newPickupOrders]);
+        setpickupOrders([...pickupOrders, ...newPickupOrders].reverse());
         console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -115,8 +113,8 @@ const Pickup = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      const number = pickupOrders[pickupOrders.length - 1]?.number || 0;
-      setcurrentPickupNumber(number + 1);
+      const number = pickupOrders[0]?.number || 0;
+     setcurrentPickupNumber(number);
     }
   }, [pickupOrders]);
 
@@ -287,6 +285,7 @@ const Pickup = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+              contextService={PickupService}
             />
 
             {showSuccessAlert && (

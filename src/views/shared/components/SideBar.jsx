@@ -7,9 +7,10 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
-import logoBlanco from "../../../img/logoBlanco.png";
+import logoBlanco from "../../../img/logoblanco.png";
+import logoNuevoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
-import logoIntegral from "../../../img/integral.png"
+import logoIntegral from "../../../img/INTEGRALBLANCO1.png";
 
 
 const Sidebar = () => {
@@ -104,12 +105,6 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/commodities"}>Commodities</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
             </ul>
           </li>
@@ -271,9 +266,6 @@ const Sidebar = () => {
             <ul className="sub-menu">
               <li>
                 <Link className="link_name">Online Customer</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>

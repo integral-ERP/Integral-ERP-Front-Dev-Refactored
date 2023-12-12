@@ -30,6 +30,11 @@ class InvoicesService{
       const response = await axios.delete(`${this.BASE_URL}Invoice/${id}/`);
       return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}Invoice/?search=${query}`);
+    return response;
+  }
 }
 
 export default new InvoicesService();

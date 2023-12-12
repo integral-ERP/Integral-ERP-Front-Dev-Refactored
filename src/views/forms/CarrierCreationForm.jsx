@@ -157,7 +157,7 @@ const CarrierCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      phone: parseInt(formData.phone),
+      phone: parseInt(formData.mobilePhone),
       movelPhone: parseInt(formData.mobilePhone),
       email: formData.email,
       fax: parseInt(formData.fax),
@@ -196,8 +196,9 @@ const CarrierCreationForm = ({
         closeModal();
         onCarrierDataChange();
         setShowSuccessAlert(false);
-        setFormData(formFormat)
-      }, 5000);
+        setFormData(formFormat);
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -332,7 +333,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="phone"
               placeholder="Phone"
               value={formData.phone}
@@ -344,7 +345,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="mphone"
               placeholder="Mobile Phone"
               value={formData.mobilePhone}
@@ -356,7 +357,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="fax"
               placeholder="fax"
               value={formData.fax}

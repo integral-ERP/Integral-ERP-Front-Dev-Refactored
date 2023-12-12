@@ -13,11 +13,14 @@ const IncomeChargeForm = ({
   consignee,
   agent,
   shipper,
+  editing,
+  charge,
 }) => {
   // Define state variables for form inputs
 
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
+  const [internalID, setinternalID] = useState(0);
   const formFormat = {
     type: "income",
     charge: "",
@@ -34,9 +37,10 @@ const IncomeChargeForm = ({
     chargeableWeight: 0,
     totalAmount: 0,
     show: false,
-    status: "",
+    status: 15,
+    description: "",
   };
-  console.log(commodities);
+
   const [formData, setformData] = useState(formFormat);
   useEffect(() => {
     CurrenciesService.getCurrencies()
@@ -85,14 +89,49 @@ const IncomeChargeForm = ({
   }, [commodities]);
 
   const createCharge = () => {
-    onCancel(true)
-    const charge = {
+    onCancel(true);
+    const body = {
+      id: internalID,
       ...formData,
-      quantity: 1
+      quantity: 1,
     };
-    setcharges([...charges, charge]);
-    console.log(charge);
+
+    if (editing) {
+      const indexToEdit = charges.findIndex((comm) => comm.id == charge.id);
+      const copy = [...charges];
+      copy[indexToEdit] = body;
+      setcharges(copy);
+    } else {
+      setcharges([...charges, body]);
+      setinternalID(internalID + 1);
+    }
   };
+
+  useEffect(() => {
+    if (editing) {
+      const formFormat = {
+        type: charge.type,
+        charge: charge.charge,
+        currency: charge.currency,
+        applyTo: charge.applyTo,
+        applyBy: charge.applyBy,
+        paidAs: charge.paidAs,
+        numberOfPieces: charge.numberOfPieces,
+        grossWeight: charge.grossWeight,
+        weightUnit: charge.weightUnit,
+        rateCharge: charge.rateCharge,
+        grossVolume: charge.grossVolume,
+        volumeUnit: charge.volumeUnit,
+        chargeableWeight: charge.chargeableWeight,
+        totalAmount: charge.totalAmount,
+        show: charge.show,
+        status: charge.status,
+        description: charge.description,
+      };
+      setformData(formFormat);
+    }
+    console.log();
+  }, []);
 
   const handleChargeRateChange = (e) => {
     let unit = 0;
@@ -122,7 +161,7 @@ const IncomeChargeForm = ({
             Charge
           </label>
           <select
-          className="form-input"
+            className="form-input"
             id="charge"
             value={formData.charge}
             onChange={(e) =>
@@ -211,7 +250,7 @@ const IncomeChargeForm = ({
             className="form-input"
             value={formData.paidAs}
             onChange={(e) =>
-              setformData({ ...formData, paidAs: e.target.value, status: e.target.value })
+              setformData({ ...formData, paidAs: e.target.value })
             }
           >
             {/* Add options for paidAs */}

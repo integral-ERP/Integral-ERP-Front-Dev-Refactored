@@ -156,6 +156,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onDelete={handleDeleteWarehouseProvider}
           onEdit={handleEditWarehouseProvider}
           onAdd={handleAddWarehouseProvider}
+          contextService={WarehouseProviderService}
           title="Warehouse Providers"
         />
 

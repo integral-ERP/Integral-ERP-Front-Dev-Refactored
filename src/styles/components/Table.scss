@@ -913,11 +913,23 @@ td {
 .css-b62m3t-container {
   position: relative;
   box-sizing: border-box;
-  margin-left: 43px;
+  margin-left: 0 !important;
+ 
 }
 
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
-  color: rgba(0, 0, 0, 0.6);
+  display: block !important;
+  position: relative !important;
+  transform-origin: unset !important;
+  transform: unset !important;
+  -webkit-transform: unset !important;
+  -moz-transform: unset !important;
+  -ms-transform: unset !important;
+  transform: unset !important;
+  font-size: 1rem !important;
+  white-space: unset !important;
+  text-align: left !important;
+  /* color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 400;
   font-size: 1rem;
@@ -945,7 +957,7 @@ td {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none; */
 }
 
 select,
