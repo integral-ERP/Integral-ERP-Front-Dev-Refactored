@@ -521,7 +521,31 @@ const ReceiptCreationForm = ({
     ];
 
     const carrierOptions = [...carriersWithType];
-    // Set the state with the updated arrays
+    
+    issuedByOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    destinationAgentOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    employeeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    shipperOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    consigneeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    carrierOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
     setEmployeeOptions(employeeOptions);
@@ -1069,7 +1093,7 @@ const ReceiptCreationForm = ({
               defaultOptions={shipperOptions}
               loadOptions={loadShipperSelectOptions}
               value={shipperOptions.find(
-                (option) => option.id === formData.shipperId
+                (option) => (option.id === formData.shipperId && option.type === formData.shipperType)
               )}
               getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
@@ -1083,7 +1107,7 @@ const ReceiptCreationForm = ({
               <AsyncSelect
                 id="consignee"
                 value={consigneeOptions.find(
-                  (option) => option.id === formData.consigneeId
+                  (option) => (option.id === formData.consigneeId && option.type === formData.consigneeType)
                 )}
                 onChange={(e) => handleConsigneeSelection(e)}
                 isClearable={true}

@@ -61,23 +61,20 @@ const CommodityCreationForm = ({
   };
 
   useEffect(() => {
-    
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
       ).toFixed(0);
-      const ratedWeight =
-        formData.volumetricWeight >= formData.weight
-          ? formData.volumetricWeight
-          : formData.weight;
-      setformData({
-        ...formData,
+  
+      setformData(prevFormData => ({
+        ...prevFormData,
         volumetricWeight: volWeight,
-        chargedWeight: ratedWeight,
-      });
+        chargedWeight: Math.max(volWeight, prevFormData.weight),
+      }));
     }
-  }, [formData.height, formData.length, formData.width]);
+  }, [formData.height, formData.length, formData.width, formData.weight]);
+  
 
   useEffect(() => {
     if (editing) {
@@ -103,6 +100,10 @@ const CommodityCreationForm = ({
       setlocations(response.data.results);
     })
   }, []);
+
+  useEffect(() => {
+    console.log(formData.weight);
+  }, [formData.weight]);
 
   return (
     <div className="income-charge-form">
@@ -174,7 +175,7 @@ const CommodityCreationForm = ({
         </div>
 
         <div className="form-column-create">
-          <label className="text-comm">Volume:</label>
+          <label className="text-comm">V. Weight:</label>
           <div className="input-group ">
             <input
               type="number"
@@ -196,7 +197,7 @@ const CommodityCreationForm = ({
               aria-label=""
               value={formData.chargedWeight}
               onChange={(e) =>
-                setformData({ ...formData, ratedWeight: e.target.value })
+                setformData({ ...formData, chargedWeight: e.target.value })
               }
             />
             <span className="input-group-text num-com">lb</span>

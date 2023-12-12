@@ -257,6 +257,19 @@ const ReleaseOrderCreationForm = ({
     ];
 
     const carrierOptions = [...carriersWithType];
+
+    issuedByOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    employeeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    carrierOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
     setReleasedToOptions(releasedToOptions);
     setIssuedByOptions(issuedByOptions);
     setEmployeeOptions(employeeOptions);
@@ -572,7 +585,7 @@ const ReleaseOrderCreationForm = ({
                 handleClientToBillSelection(e);
               }}
               value={releasedToOptions.find(
-                (option) => option.id === formData.releasedToId
+                (option) => (option.id === formData.releasedToId && option.type === formData.releasedToType)
               )}
               isClearable={true}
               defaultOptions={releasedToOptions}

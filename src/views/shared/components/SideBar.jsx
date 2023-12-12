@@ -106,12 +106,6 @@ const Sidebar = () => {
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
               </li>
-              <li>
-                <Link to={"/warehouse/commodities"}>Commodities</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
-              </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "shipments" ? "showMenu" : ""}`}>
@@ -272,9 +266,6 @@ const Sidebar = () => {
             <ul className="sub-menu">
               <li>
                 <Link className="link_name">Online Customer</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>

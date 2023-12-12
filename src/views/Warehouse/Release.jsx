@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,8 +7,10 @@ import ReleaseOrderCreationForm from "../forms/ReleaseOrderCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReleaseService from "../../services/ReleaseService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global"
 
 const Release = () => {
+  const { hideShowSlider } = useContext(GlobalContext)
   const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedReleaseOrder, setSelectedReleaseOrder] = useState(null);
@@ -58,7 +60,7 @@ const Release = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      const number = releaseOrders[releaseOrders.length - 1]?.number || 0;
+      const number = releaseOrders[0]?.number || 0;
       setcurrentReleaseNumber(number);
     }
   }, [releaseOrders]);
@@ -207,7 +209,7 @@ const Release = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={releaseOrders}
               columns={columns}

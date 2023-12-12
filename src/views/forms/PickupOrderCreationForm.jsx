@@ -21,6 +21,7 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss"
+import { valid } from "semver";
 // import "../../styles/components/PickupOrderForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -147,7 +148,7 @@ const PickupOrderCreationForm = ({
     setFormData({
       ...formData,
       pickupLocationId: id,
-      pickupInfo: info,
+      pickupLocationInfo: info,
       pickupLocationType: type,
     });
   };
@@ -242,7 +243,7 @@ const PickupOrderCreationForm = ({
   const handleShipperSelection = async (event) => {
     const id = event.id;
     const type = event.type;
-
+    console.log("SHIPPER:", event);
     let result;
     if (type === "forwarding-agent") {
       result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -467,10 +468,45 @@ const PickupOrderCreationForm = ({
 
     const clientToBillOptions = [
       ...customersWithType,
-      forwardingAgentsWithType,
+      ...forwardingAgentsWithType,
     ];
 
+    issuedByOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
 
+    destinationAgentOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    employeeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    shipperOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    pickupLocationOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    consigneeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    deliveryLocationOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    carrierOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    clientToBillOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+    
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
@@ -1155,7 +1191,7 @@ const PickupOrderCreationForm = ({
                 handleShipperSelection(e);
               }}
               value={shipperOptions.find(
-                (option) => option.id === formData.shipperId
+                (option) => (option.id === formData.shipperId && option.type === formData.shipperType)
               )}
               isClearable={true}
               placeholder="Search and select..."
@@ -1188,7 +1224,7 @@ const PickupOrderCreationForm = ({
                 handlePickUpSelection(e);
               }}
               value={pickupLocationOptions.find(
-                (option) => option.id === formData.pickupLocationId
+                (option) => (option.id === formData.pickupLocationId && option.type === formData.pickupLocationType)
               )}
               isClearable={true}
               placeholder="Search and select..."
@@ -1254,7 +1290,7 @@ const PickupOrderCreationForm = ({
                 id="consignee"
                 onChange={(e) => handleConsigneeSelection(e)}
                 value={consigneeOptions.find(
-                  (option) => option.id === formData.consigneeId
+                  (option) => (option.id === formData.consigneeId && option.type === formData.consigneeType)
                 )}
                 isClearable={true}
                 placeholder="Search and select..."
@@ -1276,7 +1312,7 @@ const PickupOrderCreationForm = ({
                 handleDeliveryLocationSelection(e);
               }}
               value={deliveryLocationOptions.find(
-                (option) => option.id === formData.deliveryLocationId
+                (option) => (option.id === formData.deliveryLocationId && option.type === formData.deliveryLocationType)
               )}
               isClearable={true}
               placeholder="Search and select..."
@@ -1347,7 +1383,7 @@ const PickupOrderCreationForm = ({
                 handleClientToBillSelection(e);
               }}
               value={releasedToOptions.find(
-                (option) => option.id === formData.client_to_bill
+                (option) => (option.id === formData.client_to_bill && option.type === formData.client_to_bill_type)
               )}
               isClearable={true}
               defaultOptions={releasedToOptions}
