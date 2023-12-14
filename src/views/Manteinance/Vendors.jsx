@@ -146,7 +146,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     <div className="dashboard__layout">
       <div className="dashboard__sidebar">
         <Sidebar />
-      <div className="content-page">
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
         <Table
           data={vendors}
           columns={columns}

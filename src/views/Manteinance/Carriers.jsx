@@ -160,7 +160,7 @@ const Carrier = () => {
     <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
         <Sidebar />
-      <div className="content-page">
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
         <Table
           data={carriers}
           columns={columns}
