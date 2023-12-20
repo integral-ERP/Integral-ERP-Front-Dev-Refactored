@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import "../../styles/components/IncomeChargeForm.css";
 import CurrenciesService from "../../services/CurrencyService";
@@ -39,6 +39,29 @@ const IncomeChargeForm = ({
     show: false,
     status: 15,
     description: "",
+  };
+
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
+  const input8Ref = useRef(null);
+  const input9Ref = useRef(null);
+  const input10Ref = useRef(null);
+  const input11Ref = useRef(null);
+  const input12Ref = useRef(null);
+  const input13Ref = useRef(null);
+  const input14Ref = useRef(null);
+  const input15Ref = useRef(null);
+
+  const handleKeyDown = (event, nextInputRef) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      nextInputRef.current.focus();
+    }
   };
 
   const [formData, setformData] = useState(formFormat);
@@ -105,6 +128,7 @@ const IncomeChargeForm = ({
       setcharges([...charges, body]);
       setinternalID(internalID + 1);
     }
+    setformData(formFormat);
   };
 
   useEffect(() => {
@@ -167,6 +191,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, charge: e.target.value })
             }
+            ref={input1Ref}
+            onKeyDown={(e) => handleKeyDown(e, input2Ref)}
           >
             {/* Add options for charge */}
             <option value="">Select an option</option>
@@ -186,6 +212,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, applyTo: e.target.value })
             }
+            ref={input2Ref}
+            onKeyDown={(e) => handleKeyDown(e, input3Ref)}
           >
             {/* Add options for applyTo */}
             <option value="">Select an option</option>
@@ -215,6 +243,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, applyBy: e.target.value })
             }
+            ref={input3Ref}
+            onKeyDown={(e) => handleKeyDown(e, input4Ref)}
           >
             {/* Add options for applyBy */}
             <option value="weight">Weight</option>
@@ -234,6 +264,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, currency: e.target.value })
             }
+            ref={input4Ref}
+            onKeyDown={(e) => handleKeyDown(e, input5Ref)}
           >
             <option value="">Select a currency</option>
             {Object.entries(currencies).map(([currencyCode, currencyName]) => (
@@ -252,6 +284,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, paidAs: e.target.value })
             }
+            ref={input5Ref}
+            onKeyDown={(e) => handleKeyDown(e, input6Ref)}
           >
             {/* Add options for paidAs */}
             <option value="prepaid">Prepaid</option>
@@ -269,6 +303,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, description: e.target.value })
             }
+            ref={input6Ref}
+            onKeyDown={(e) => handleKeyDown(e, input7Ref)}
           />
         </div>
       </div>
@@ -296,6 +332,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, numberOfPieces: e.target.value })
             }
+            ref={input7Ref}
+            onKeyDown={(e) => handleKeyDown(e, input8Ref)}
           />
         </div>
         <div className="form-column">
@@ -318,6 +356,8 @@ const IncomeChargeForm = ({
               onChange={(e) =>
                 setformData({ ...formData, grossWeight: e.target.value })
               }
+              ref={input8Ref}
+              onKeyDown={(e) => handleKeyDown(e, input9Ref)}
             />
             <select
               className="add-select"
@@ -326,6 +366,8 @@ const IncomeChargeForm = ({
               onChange={(e) =>
                 setformData({ ...formData, weightUnit: e.target.value })
               }
+              ref={input9Ref}
+              onKeyDown={(e) => handleKeyDown(e, input10Ref)}
             >
               <option value="kgs">kgs</option>
               <option value="lbs">lbs</option>
@@ -352,6 +394,8 @@ const IncomeChargeForm = ({
               onChange={(e) =>
                 setformData({ ...formData, grossVolume: e.target.value })
               }
+              ref={input10Ref}
+              onKeyDown={(e) => handleKeyDown(e, input11Ref)}
             />
             <select
               className="add-select"
@@ -360,6 +404,8 @@ const IncomeChargeForm = ({
               onChange={(e) =>
                 setformData({ ...formData, volumeUnit: e.target.value })
               }
+              ref={input11Ref}
+              onKeyDown={(e) => handleKeyDown(e, input12Ref)}
             >
               <option value="ft3">ft3</option>
               <option value="m3">m3</option>
@@ -382,6 +428,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, chargeableWeight: e.target.value })
             }
+            ref={input12Ref}
+            onKeyDown={(e) => handleKeyDown(e, input13Ref)}
           />
         </div>
         <div className="form-column">
@@ -394,6 +442,8 @@ const IncomeChargeForm = ({
             id="rateCharge"
             value={formData.rateCharge}
             onChange={(e) => handleChargeRateChange(e)}
+            ref={input13Ref}
+            onKeyDown={(e) => handleKeyDown(e, input14Ref)}
           />
         </div>
         <div className="form-column">
@@ -409,6 +459,8 @@ const IncomeChargeForm = ({
             onChange={(e) =>
               setformData({ ...formData, totalAmount: e.target.value })
             }
+            ref={input14Ref}
+            onKeyDown={(e) => handleKeyDown(e, input15Ref)}
           />
         </div>
       </div>
@@ -422,6 +474,7 @@ const IncomeChargeForm = ({
               setformData({ ...formData, show: e.target.checked })
             }
             label="Show in document"
+            ref={input15Ref}
           />
         </div>
       </div>
