@@ -193,13 +193,14 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isPickupOrdersButton && !isTableRow) {
         setSelectedPickupOrder(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -216,34 +217,34 @@ const Pickup = () => {
 
   const setInTransit = async () => {
     console.log("Changing");
-    if(selectedPickupOrder){
-      const updatedPickuporder = {...selectedPickupOrder, status: 6};
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: 6 };
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200){
+      if (response.status === 200) {
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
     console.log("Changing");
-    if(selectedPickupOrder){
-      const updatedPickuporder = {...selectedPickupOrder, status: 9};
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: 9 };
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200){
+      if (response.status === 200) {
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }
@@ -267,7 +268,7 @@ const Pickup = () => {
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
-          <div  style={{ pointerEvents: isOpen ? "none" : undefined }}>
+          <div style={{ pointerEvents: isOpen ? "none" : undefined }}>
             <Sidebar />
           </div>
 

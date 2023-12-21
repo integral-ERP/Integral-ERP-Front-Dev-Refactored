@@ -1296,7 +1296,7 @@ const PickupOrderCreationForm = ({
             onAdd={() => {}}
             showOptions={false}
           />
-              <button type="button"  onClick={() => {
+              <button type="button" className="button-save" onClick={() => {
             setshowRepackingForm(!showRepackingForm);
           }}>Repack</button></>
           )}

@@ -7,7 +7,7 @@ import InvoicesCreationForm from "../forms/InvoicesCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import InvoicesService from "../../services/InvoicesService";
 import Sidebar from "../shared/components/SideBar";
- 
+
 const Invoices = () => {
   const [invoices, setInvoices] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
@@ -118,13 +118,14 @@ const Invoices = () => {
       const clickedElement = event.target;
       const isInvoicesButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isInvoicesButton && !isTableRow) {
         setSelectedInvoices(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts

@@ -15,7 +15,7 @@ const Ports = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Code",
     "Name",
@@ -47,7 +47,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       fetchportsData();
       setInitialDataFetched(true);
     }
@@ -123,13 +123,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedPort(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -139,56 +140,56 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   return (
     <>
-    <div className="dashboard__layout">
-      <div className="dashboard__sidebar">
+      <div className="dashboard__layout">
+        <div className="dashboard__sidebar">
           <Sidebar />
-      <div className="content-page">
-      <Table
-        data={ports}
-        columns={columns}
-        onSelect={handleSelectPort} // Make sure this line is correct
-        selectedRow={selectedPort}
-        onDelete={handleDeletePort}
-        onEdit={handleEditPort}
-        onAdd={handleAddPort}
-        title="Ports"
-      />
+          <div className="content-page">
+            <Table
+              data={ports}
+              columns={columns}
+              onSelect={handleSelectPort} // Make sure this line is correct
+              selectedRow={selectedPort}
+              onDelete={handleDeletePort}
+              onEdit={handleEditPort}
+              onAdd={handleAddPort}
+              title="Ports"
+            />
 
-      {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-          <AlertTitle>Success</AlertTitle>
-          <strong>Port deleted successfully!</strong>
-        </Alert>
-      )}
-      {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
-          <AlertTitle>Error</AlertTitle>
-          <strong>Error deleting Port. Please try again</strong>
-        </Alert>
-      )}
-      {selectedPort !== null && (
-        <ModalForm isOpen={isOpen} closeModal={closeModal}>
-          <PortsCreationForm
-            port={selectedPort}
-            closeModal={closeModal}
-            creating={false}
-            onPortDataChange={handleportsDataChange}
-          />
-        </ModalForm>
-      )}
-      {selectedPort === null && (
-        <ModalForm isOpen={isOpen} closeModal={closeModal}>
-          <PortsCreationForm
-            port={null}
-            closeModal={closeModal}
-            creating={true}
-            onPortDataChange={handleportsDataChange}
-          />
-        </ModalForm>
-      )}
+            {showSuccessAlert && (
+              <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
+                <AlertTitle>Success</AlertTitle>
+                <strong>Port deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Port. Please try again</strong>
+              </Alert>
+            )}
+            {selectedPort !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <PortsCreationForm
+                  port={selectedPort}
+                  closeModal={closeModal}
+                  creating={false}
+                  onPortDataChange={handleportsDataChange}
+                />
+              </ModalForm>
+            )}
+            {selectedPort === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <PortsCreationForm
+                  port={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onPortDataChange={handleportsDataChange}
+                />
+              </ModalForm>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
     </>
   );
 };

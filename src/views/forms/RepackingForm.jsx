@@ -188,7 +188,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </select>
       </div>
       <div>
-        <button type="button" onClick={handleRepack}>Repack</button>
+        <button type="button" className="button-save" onClick={handleRepack}>Repack</button>
       </div>
     </div>
   );

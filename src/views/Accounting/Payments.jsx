@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";import Sidebar
- from "../shared/components/SideBar";import { useModal } 
- from "../../hooks/useModal"; // Import the useModal hook
- //----------------------------------------------------
+import ModalForm from "../shared/components/ModalForm"; import Sidebar
+  from "../shared/components/SideBar"; import { useModal }
+  from "../../hooks/useModal"; // Import the useModal hook
+//----------------------------------------------------
 import PaymentsCreationForm from "../forms/PaymentsCreationForm";
 import PaymentsService from "../../services/PaymentsService";
 
@@ -123,13 +123,14 @@ const Payments = () => {
       const clickedElement = event.target;
       const isPaymentsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isPaymentsButton && !isTableRow) {
         setSelectedPayments(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts

@@ -40,7 +40,7 @@ const Release = () => {
           const pickupOrderId = release.id;
           return !releaseOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-        
+
         setReleaseOrders([...releaseOrders, ...newreleises]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -137,13 +137,14 @@ const Release = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isreceiptsButton && !isTableRow) {
         setSelectedReleaseOrder(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -153,34 +154,34 @@ const Release = () => {
 
   const setInTransit = async () => {
     console.log("Changing");
-    if(selectedReleaseOrder){
-      const updatedPickuporder = {...selectedReleaseOrder, status: 6};
+    if (selectedReleaseOrder) {
+      const updatedPickuporder = { ...selectedReleaseOrder, status: 6 };
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200){
+      if (response.status === 200) {
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
     console.log("Changing");
-    if(selectedReleaseOrder){
-      const updatedPickuporder = {...selectedReleaseOrder, status: 9};
+    if (selectedReleaseOrder) {
+      const updatedPickuporder = { ...selectedReleaseOrder, status: 9 };
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200){
+      if (response.status === 200) {
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }

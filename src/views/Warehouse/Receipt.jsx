@@ -10,7 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 
 const Receipt = () => {
-  const {hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext)
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -39,7 +39,7 @@ const Receipt = () => {
           const pickupOrderId = pickupOrder.id;
           return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-        
+
         setreceipts([...receipts, ...newreceipts]);
         console.log("NEW ORDERS", [...receipts, ...newreceipts]);
         if (response.data.next) {
@@ -139,13 +139,14 @@ const Receipt = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isreceiptsButton && !isTableRow) {
         setSelectedPickupOrder(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts

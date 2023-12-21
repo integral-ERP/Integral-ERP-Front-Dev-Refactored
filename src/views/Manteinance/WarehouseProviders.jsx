@@ -8,7 +8,7 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import WarehouseProviderService from "../../services/WarehouseProviderService";
 import Sidebar from "../shared/components/SideBar";
 
-const WarehouseProviders = () => { 
+const WarehouseProviders = () => {
   const [warehouseProviders, setwarehouseProviders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedWarehouseProvider, setselectedWarehouseProvider] =
@@ -16,7 +16,7 @@ const WarehouseProviders = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -51,7 +51,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       fetchWarehouseProvidersData();
       setInitialDataFetched(true);
     }
@@ -128,13 +128,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedWarehouseProvider(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -144,64 +145,64 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   return (
     <>
-    <div className="dashboard__layout">
-      <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page">
-        <Table
-          data={warehouseProviders}
-          columns={columns}
-          onSelect={handleSelectWarehouseProvider} // Make sure this line is correct
-          selectedRow={selectedWarehouseProvider}
-          onDelete={handleDeleteWarehouseProvider}
-          onEdit={handleEditWarehouseProvider}
-          onAdd={handleAddWarehouseProvider}
-          title="Warehouse Providers"
-        />
+      <div className="dashboard__layout">
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page">
+            <Table
+              data={warehouseProviders}
+              columns={columns}
+              onSelect={handleSelectWarehouseProvider} // Make sure this line is correct
+              selectedRow={selectedWarehouseProvider}
+              onDelete={handleDeleteWarehouseProvider}
+              onEdit={handleEditWarehouseProvider}
+              onAdd={handleAddWarehouseProvider}
+              title="Warehouse Providers"
+            />
 
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Warehouse Provider deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Warehouse Provider. Please try again</strong>
-          </Alert>
-        )}
-        {selectedWarehouseProvider !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <WarehouseProviderCreationForm
-              warehouseProvider={selectedWarehouseProvider}
-              closeModal={closeModal}
-              creating={false}
-              onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedWarehouseProvider === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <WarehouseProviderCreationForm
-              warehouseProvider={null}
-              closeModal={closeModal}
-              creating={true}
-              onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Warehouse Provider deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Warehouse Provider. Please try again</strong>
+              </Alert>
+            )}
+            {selectedWarehouseProvider !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <WarehouseProviderCreationForm
+                  warehouseProvider={selectedWarehouseProvider}
+                  closeModal={closeModal}
+                  creating={false}
+                  onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
+                />
+              </ModalForm>
+            )}
+            {selectedWarehouseProvider === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <WarehouseProviderCreationForm
+                  warehouseProvider={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
+                />
+              </ModalForm>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

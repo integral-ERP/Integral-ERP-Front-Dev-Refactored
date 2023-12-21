@@ -52,7 +52,7 @@ const Carrier = () => {
         const newCarriers = response.data.results.filter((newCarrier) => {
           return !carriers.some((existingCarrier) => existingCarrier.id === newCarrier.id);
         });
-  
+
         setCarriers([...carriers, ...newCarriers].reverse());
 
         if (response.data.next) {
@@ -65,7 +65,7 @@ const Carrier = () => {
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       updateCarriers();
       setInitialDataFetched(true);
     }
@@ -141,13 +141,14 @@ const Carrier = () => {
       const clickedElement = event.target;
       const isCarrierButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      openModal();
 
       if (!isCarrierButton && !isTableRow) {
         setSelectedCarrier(null);
       }
     };
 
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("dblclick", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -157,66 +158,66 @@ const Carrier = () => {
 
   return (
     <>
-    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page">
-        <Table
-          data={carriers}
-          columns={columns}
-          onSelect={handleSelectCarrier} // Make sure this line is correct
-          selectedRow={selectedCarrier}
-          onDelete={handleDeleteCarrier}
-          onEdit={handleEditCarrier}
-          onAdd={handleAddCarrier}
-          title="Carriers"
-        />
-
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Carrier deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Carrier. Please try again</strong>
-          </Alert>
-        )}
-
-        {selectedCarrier !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={selectedCarrier}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page">
+            <Table
+              data={carriers}
+              columns={columns}
+              onSelect={handleSelectCarrier} // Make sure this line is correct
+              selectedRow={selectedCarrier}
+              onDelete={handleDeleteCarrier}
+              onEdit={handleEditCarrier}
+              onAdd={handleAddCarrier}
+              title="Carriers"
             />
-          </ModalForm>
-        )}
 
-        {selectedCarrier === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={null}
-              closeModal={closeModal}
-              creating={true}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Carrier deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Carrier. Please try again</strong>
+              </Alert>
+            )}
+
+            {selectedCarrier !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <CarrierCreationForm
+                  carrier={selectedCarrier}
+                  closeModal={closeModal}
+                  creating={false}
+                  onCarrierDataChange={handleCarrierDataChange}
+                />
+              </ModalForm>
+            )}
+
+            {selectedCarrier === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <CarrierCreationForm
+                  carrier={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onCarrierDataChange={handleCarrierDataChange}
+                />
+              </ModalForm>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };
