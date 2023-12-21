@@ -15,6 +15,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import _ from "lodash";
+import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
+import { useModal } from "../../../hooks/useModal";
+
 const Table = ({
   data,
   columns,
@@ -44,6 +47,9 @@ const Table = ({
   const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [filteredData, setFilteredData] = useState(data);
+  const [showPage, setShowPage] = useState('initial');
+  const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
+  const [isOpen, openModal, closeModal] = useModal(false);
   console.log("RECEIVED DATA", data);
   const navigate = useNavigate();
   const currentDate = new Date();
@@ -211,7 +217,7 @@ const Table = ({
       case "12":
         return (
           <span>
-            <i className="fas fa-box"style={{ color: '#ffee00' }}></i>On Hold
+            <i className="fas fa-box" style={{ color: '#ffee00' }}></i>On Hold
           </span>
         );
       case "13":
@@ -220,13 +226,13 @@ const Table = ({
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
           </span>
         );
-        case "14":
+      case "14":
         return (
           <span>
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
           </span>
         );
-        case "15":
+      case "15":
         return (
           <span>
             <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Open
@@ -238,7 +244,8 @@ const Table = ({
   const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const handleOpenCloseSlider = () => {
-    onAdd();
+    // onAdd();
+    setShowPage('add');
     setcontrolSlider(true)
     setHideShowSlider(true)
   }
@@ -499,6 +506,118 @@ const Table = ({
     const textMetrics = context.measureText(text);
     return textMetrics.width;
   };
+
+  const handleViews = () => {
+    switch (showPage) {
+      case 'initial': return (
+        <div className="generic-table">
+          <table className="table-hover ">
+            <thead className="text-head">
+              <tr>
+                {columnOrder.map(
+                  (columnName, columnIndex) =>
+                    visibleColumns[columnName] && (
+                      <th
+                        className="th-separate"
+                        key={columnName}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, columnIndex)}
+                        onDragOver={(e) => handleDragOver(e, columnIndex)}
+                        onDrop={(e) => handleDrop(e, columnIndex)}
+                      >
+                        {columnName}
+                      </th>
+                    )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((row) => (
+                <tr
+                  key={row.id}
+                  className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                    ? "table-primary"
+                    : ""
+                    }`}
+                  onClick={() => onSelect(row)}
+                  onContextMenu={(e) => handleContextMenu(e, row)}
+                >
+                  {columnOrder.map((columnName) =>
+                    visibleColumns[columnName] ? (
+                      <td
+                        key={columnName}
+                        data-key={row.id}
+                        className="generic-table__td"
+                        style={{
+                          minWidth: columnWidthsCalculated[columnName],
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {columnName === "View PDF" ? (
+                          <button type="button" onClick={generatePDF}>
+                            <i className="fas fa-file-pdf"></i>
+                          </button>
+                        ) : columnName === "View Receipt PDF" ? (
+                          <button type="button" onClick={generatePDFReceipt}>
+                            <i className="fas fa-file-pdf"></i>
+                          </button>
+                        ) : columnName === "View Release PDF" ? (
+                          <button type="button" onClick={generatePDFRelease}>
+                            <i className="fas fa-file-pdf"></i>
+                          </button>
+                        ) : columnName === "Invoice PDF" ? (
+                          <button type="button" onClick={generatePDFInvoice}>
+                            <i className="fas fa-file-pdf"></i>
+                          </button>
+                        ) : columnName === "Status" ? (
+                          getStatus(row[columnNameToProperty[columnName]])
+                        ) : columnName === "Options" ? (
+                          <>
+                            <button type="button" onClick={onDelete}>
+                              <i className="fas fa-trash"></i>
+                            </button>
+                            <button type="button" onClick={onEdit}>
+                              <i className="fas fa-pencil-alt"></i>
+                            </button>
+                            <button type="button" onClick={onInspect}>
+                              <i className="fas fa-eye"></i>
+                            </button>
+                          </>
+                        ) : typeof columnNameToProperty[columnName] ===
+                          "boolean" ? (
+                          row[columnNameToProperty[columnName]] ? (
+                            <i className="fas fa-check"></i>
+                          ) : (
+                            <i className="fas fa-times"></i>
+                          )
+                        ) : columnNameToProperty[columnName]?.includes(".") ? (
+                          getPropertyValue(row, columnNameToProperty[columnName])
+                        ) : Array.isArray(
+                          row[columnNameToProperty[columnName]]
+                        ) ? (
+                          row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                        ) : (
+                          row[columnNameToProperty[columnName]]
+                        )}
+                      </td>
+                    ) : null
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+      case 'add': return (
+        <div className="cambiar-nombre">
+          <PickupOrderCreationForm
+            pickupOrder={selectedPickupOrder}
+            closeModal={closeModal}
+            creating={false} />
+        </div>
+      )
+    }
+  }
 
   // Calculate the maximum width needed for each column
   const columnWidthsCalculated = columns.reduce((widths, columnName) => {
@@ -779,112 +898,17 @@ const Table = ({
           </div>
         </div>
       )}
-      <div className="generic-table">
-        <table className="table-hover ">
-          <thead className="text-head">
-            <tr>
-              {columnOrder.map(
-                (columnName, columnIndex) =>
-                  visibleColumns[columnName] && (
-                    <th
-                      className="th-separate"
-                      key={columnName}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, columnIndex)}
-                      onDragOver={(e) => handleDragOver(e, columnIndex)}
-                      onDrop={(e) => handleDrop(e, columnIndex)}
-                    >
-                      {columnName}
-                    </th>
-                  )
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((row) => (
-              <tr
-                key={row.id}
-                className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                  ? "table-primary"
-                  : ""
-                  }`}
-                onClick={() => onSelect(row)}
-                onContextMenu={(e) => handleContextMenu(e, row)}
-              >
-                {columnOrder.map((columnName) =>
-                  visibleColumns[columnName] ? (
-                    <td
-                      key={columnName}
-                      data-key={row.id}
-                      className="generic-table__td"
-                      style={{
-                        minWidth: columnWidthsCalculated[columnName],
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {columnName === "View PDF" ? (
-                        <button type="button" onClick={generatePDF}>
-                          <i className="fas fa-file-pdf"></i>
-                        </button>
-                      ) : columnName === "View Receipt PDF" ? (
-                        <button type="button" onClick={generatePDFReceipt}>
-                          <i className="fas fa-file-pdf"></i>
-                        </button>
-                      ) : columnName === "View Release PDF" ? (
-                        <button type="button" onClick={generatePDFRelease}>
-                          <i className="fas fa-file-pdf"></i>
-                        </button>
-                      ) : columnName === "Invoice PDF" ? (
-                        <button type="button" onClick={generatePDFInvoice}>
-                          <i className="fas fa-file-pdf"></i>
-                        </button>
-                      ) : columnName === "Status" ? (
-                        getStatus(row[columnNameToProperty[columnName]])
-                      ) : columnName === "Options" ? (
-                        <>
-                          <button type="button" onClick={onDelete}>
-                          <i className="fas fa-trash"></i>
-                          </button>
-                          <button type="button" onClick={onEdit}>
-                          <i className="fas fa-pencil-alt"></i>
-                          </button>
-                          <button type="button" onClick={onInspect}>
-                          <i className="fas fa-eye"></i>
-                          </button>
-                        </>
-                      ) : typeof columnNameToProperty[columnName] ===
-                        "boolean" ? (
-                        row[columnNameToProperty[columnName]] ? (
-                          <i className="fas fa-check"></i>
-                        ) : (
-                          <i className="fas fa-times"></i>
-                        )
-                      ) : columnNameToProperty[columnName]?.includes(".") ? (
-                        getPropertyValue(row, columnNameToProperty[columnName])
-                      ) : Array.isArray(
-                        row[columnNameToProperty[columnName]]
-                      ) ? (
-                        row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                      ) : (
-                        row[columnNameToProperty[columnName]]
-                      )}
-                    </td>
-                  ) : null
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {handleViews()}
+
       {showContextMenu && (
         <ContextMenu
-        x={contextMenuPosition.x}
-        y={contextMenuPosition.y}
-        options={contextMenuOptions}
-        onClose={() => {
-          setShowContextMenu(false);
-        }}
-      />
+          x={contextMenuPosition.x}
+          y={contextMenuPosition.y}
+          options={contextMenuOptions}
+          onClose={() => {
+            setShowContextMenu(false);
+          }}
+        />
       )}
     </>
   );

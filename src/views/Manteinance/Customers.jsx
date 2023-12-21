@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ModalForm from "../shared/components/ModalForm";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import CustomersCreationForm from "../forms/CustomerCreationForm";
 import CustomerService from "../../services/CustomerService";
 import Table from "../shared/components/Table";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Customers = () => {
   const [customers, setcustomers] = useState([]);
@@ -35,7 +36,7 @@ const Customers = () => {
     "Country",
     "Zip-Code",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchCustomersData = (url = null) => {
     CustomerService.getCustomers(url)
       .then((response) => {

@@ -167,7 +167,12 @@
   background-color: transparent;
 }
 
-
+.cambiar-nombre {
+  overflow-y: auto;
+  width: 92%;
+  margin-bottom: 5rem;
+  overflow-x: hidden;
+}
 
 //-------------------------------------------------------------//
 .modal-body {

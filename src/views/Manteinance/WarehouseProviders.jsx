@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import WarehouseProviderCreationForm from "../forms/WarehouseProviderCreationFor
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import WarehouseProviderService from "../../services/WarehouseProviderService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const WarehouseProviders = () => { 
   const [warehouseProviders, setwarehouseProviders] = useState([]);
@@ -36,7 +37,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Country",
     "Zip-Code",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchWarehouseProvidersData = (url = null) => {
     WarehouseProviderService.getWarehouseProviders(url)
       .then((response) => {
