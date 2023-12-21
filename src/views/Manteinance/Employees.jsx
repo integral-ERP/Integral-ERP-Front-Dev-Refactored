@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import EmployeeCreationForm from "../forms/EmployeeCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import EmployeeService from "../../services/EmployeeService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Employees = () => {
   const [employees, setemployees] = useState([]);
@@ -46,7 +47,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       "Airway Bill Numbers",
       "Passenger Only Airline",
     ];
-
+    const {hideShowSlider} = useContext(GlobalContext);
     const fetchEmployeesData = (url = null) => {
       console.log("url", url);
       EmployeeService.getEmployees(url)

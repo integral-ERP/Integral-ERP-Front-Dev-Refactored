@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import VendorsCreationForm from "../forms/VendorCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import VendorService from "../../services/VendorService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Vendors = () => {
   const [vendors, setvendors] = useState([]);
@@ -36,7 +37,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
     "System ID",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchvendorsData = (url = null) => {
     VendorService.getVendors(url)
       .then((response) => {

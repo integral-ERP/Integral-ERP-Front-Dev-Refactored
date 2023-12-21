@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -8,6 +8,7 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PortService from "../../services/PortServices";
 import Sidebar from "../shared/components/SideBar";
 import PortServices from "../../services/PortServices";
+import { GlobalContext } from "../../context/global";
 
 const Ports = () => {
   const [ports, setports] = useState([]);
@@ -33,7 +34,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Border Crossing Point",
     "US Customs Code",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchportsData = (url = null) => {
     PortService.getPorts(url)
       .then((response) => {

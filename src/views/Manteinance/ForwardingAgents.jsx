@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ForwardingAgentService from "../../services/ForwardingAgentService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const ForwardingAgents = () => {
   const [forwardingAgents, setforwardingAgents] = useState([]);
@@ -45,6 +46,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Passenger Only Airline",
   ];
   const [selectedForwardingAgent, setselectedForwardingAgent] = useState(null);
+  const {hideShowSlider} = useContext(GlobalContext);
 
   const fetchForwardingAgentsData = (url = null) => {
     ForwardingAgentService.getForwardingAgents(url)

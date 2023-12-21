@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import PackageTypesCreationForm from "../forms/PackageTypeCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PackageTypeService from "../../services/PackageTypeService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const PackageType = () => {
   const [packageTypes, setpackageTypes] = useState([]);
@@ -32,7 +33,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Air",
     "Ocean",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchpackageTypesData = (url = null) => {
     PackageTypeService.getPackageTypes(url)
       .then((response) => {

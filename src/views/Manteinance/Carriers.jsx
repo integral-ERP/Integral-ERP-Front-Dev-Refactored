@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import CarrierCreationForm from "../forms/CarrierCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import CarrierService from "../../services/CarrierService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Carrier = () => {
   const [carriers, setCarriers] = useState([]);
@@ -45,6 +46,8 @@ const Carrier = () => {
     "Airway Bill Numbers",
     "Passenger Only Airline",
   ];
+
+  const { hideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const updateCarriers = (url = null) => {
     CarrierService.getCarriers(url)

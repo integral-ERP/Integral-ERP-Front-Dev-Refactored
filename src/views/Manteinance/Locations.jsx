@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import LocationsCreationForm from "../forms/LocationCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import LocationService from "../../services/LocationService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Locations = () => {
   const [locations, setlocations] = useState([]);
@@ -31,6 +32,8 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Max. Weight",
     "Disable",
   ];
+
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchlocationsData = (url = null) => {
     LocationService.getLocations(url)
       .then((response) => {

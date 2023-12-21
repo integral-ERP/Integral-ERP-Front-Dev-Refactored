@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table"
 import CountriesService from "../../services/CountriesService"
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
+
 
 const Countries = () => {
   const [countries, setcountries] = useState([]);
+  const {hideShowSlider} = useContext(GlobalContext);
   
   const fetchcountriesData = () => {
     CountriesService.fetchCountries()
