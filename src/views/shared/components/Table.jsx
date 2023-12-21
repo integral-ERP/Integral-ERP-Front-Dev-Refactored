@@ -35,7 +35,8 @@ const Table = ({
   contextMenuOptions,
   handleOptionClick,
   onInspect,
-  contextService
+  contextService,
+  children
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -244,8 +245,12 @@ const Table = ({
   const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const handleOpenCloseSlider = () => {
-    // onAdd();
-    setShowPage('add');
+    if(!children) {
+      onAdd();
+    } else {
+      setShowPage('add');
+    }
+    
     setcontrolSlider(true)
     setHideShowSlider(true)
   }
@@ -610,10 +615,11 @@ const Table = ({
       )
       case 'add': return (
         <div className="cambiar-nombre">
-          <PickupOrderCreationForm
+          {children}
+          {/* <PickupOrderCreationForm
             pickupOrder={selectedPickupOrder}
             closeModal={closeModal}
-            creating={false} />
+            creating={false} /> */}
         </div>
       )
     }

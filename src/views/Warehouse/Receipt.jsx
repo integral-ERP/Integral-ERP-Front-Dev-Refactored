@@ -168,7 +168,16 @@ const Receipt = () => {
               title="Warehouse Receipts"
               setData={setreceipts}
               contextService={ReceiptService}
-            />
+            >
+              <ReceiptCreationForm
+                  pickupOrder={selectedPickupOrder}
+                  closeModal={closeModal}
+                  creating={false}
+                  onpickupOrderDataChange={handlereceiptsDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </Table>
 
             {showSuccessAlert && (
               <Alert

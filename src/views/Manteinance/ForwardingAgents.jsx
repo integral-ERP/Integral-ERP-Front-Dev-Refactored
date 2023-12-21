@@ -167,7 +167,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onAdd={handleAddForwardingAgent}
           contextService={ForwardingAgentService}
           title="Forwarding Agents"
-        />
+        >
+          <ForwardingAgentsCreationForm
+              forwardingAgent={selectedForwardingAgent}
+              closeModal={closeModal}
+              creating={false}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert

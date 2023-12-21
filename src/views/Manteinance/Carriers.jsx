@@ -47,7 +47,7 @@ const Carrier = () => {
     "Passenger Only Airline",
   ];
 
-  const { hideShowSlider, setcontrolSlider } = useContext(GlobalContext);
+  const {hideShowSlider} = useContext(GlobalContext);
 
   const updateCarriers = (url = null) => {
     CarrierService.getCarriers(url)
@@ -174,7 +174,14 @@ const Carrier = () => {
           onAdd={handleAddCarrier}
           title="Carriers"
           contextService={CarrierService}
-        />
+        >
+           <CarrierCreationForm
+              carrier={selectedCarrier}
+              closeModal={closeModal}
+              creating={false}
+              onCarrierDataChange={handleCarrierDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert

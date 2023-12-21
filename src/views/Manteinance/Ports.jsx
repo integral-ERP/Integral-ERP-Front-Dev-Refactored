@@ -155,7 +155,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         onAdd={handleAddPort}
         contextService={PortServices}
         title="Ports"
-      />
+      >
+        <PortsCreationForm
+            port={selectedPort}
+            closeModal={closeModal}
+            creating={false}
+            onPortDataChange={handleportsDataChange}
+          />
+          </Table>
 
       {showSuccessAlert && (
         <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">

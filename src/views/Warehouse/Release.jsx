@@ -226,7 +226,17 @@ const Release = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={ReleaseService}
-            />
+
+            >
+              <ReleaseOrderCreationForm
+                  releaseOrder={selectedReleaseOrder}
+                  closeModal={closeModal}
+                  creating={false}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
+                />
+                  </Table>
 
             {showSuccessAlert && (
               <Alert

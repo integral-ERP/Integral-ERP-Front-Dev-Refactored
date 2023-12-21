@@ -154,7 +154,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onAdd={handleAddLocation}
           contextService={LocationService}
           title="Locations"
-        />
+        >
+          <LocationsCreationForm
+              location={selectedLocation}
+              closeModal={closeModal}
+              creating={false}
+              onlocationDataChange={handlelocationsDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert

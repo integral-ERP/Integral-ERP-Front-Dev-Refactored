@@ -159,7 +159,14 @@ const Customers = () => {
           onAdd={handleAddCustomer}
           contextService={CustomerService}
           title="Customers"
-        />
+        >
+          <CustomersCreationForm
+              customer={selectedCustomer}
+              closeModal={closeModal}
+              creating={false}
+              onCustomerDataChange={handleWarehouseProviderDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert

@@ -158,7 +158,15 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onAdd={handleAddVendor}
           contextService={VendorService}
           title="Vendors"
-        />
+        >
+           <VendorsCreationForm
+              vendor={selectedVendor}
+              closeModal={closeModal}
+              creating={false}
+              onvendorDataChange={handleVendorsDataChange}
+            />
+            </Table>
+
 
         {showSuccessAlert && (
           <Alert
