@@ -154,7 +154,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onAdd={handleAddPackageType}
           contextService={PackageTypeService}
           title="Package Types"
-        />
+        >
+           <PackageTypesCreationForm
+              packageType={selectedPackageType}
+              closeModal={closeModal}
+              creating={false}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert

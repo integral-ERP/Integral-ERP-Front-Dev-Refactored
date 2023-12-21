@@ -286,7 +286,16 @@ const Pickup = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
-            />
+            >
+               <PickupOrderCreationForm
+                  pickupOrder={selectedPickupOrder}
+                  closeModal={closeModal}
+                  creating={false}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </Table>
 
             {showSuccessAlert && (
               <Alert

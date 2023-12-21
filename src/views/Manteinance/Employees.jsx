@@ -175,7 +175,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         onAdd={handleAddEmployee}
         title="Employees"
         contextService={EmployeeService}
-      />
+      >
+         <EmployeeCreationForm
+          employee={selectedEmployee}
+          closeModal={closeModal}
+          creating={false}
+          onEmployeeDataChange={handleEmployeesDataChange}
+        />
+        </Table>
 
       {showSuccessAlert && (
         <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">

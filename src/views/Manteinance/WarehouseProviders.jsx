@@ -159,7 +159,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           onAdd={handleAddWarehouseProvider}
           contextService={WarehouseProviderService}
           title="Warehouse Providers"
-        />
+        >
+          <WarehouseProviderCreationForm
+              warehouseProvider={selectedWarehouseProvider}
+              closeModal={closeModal}
+              creating={false}
+              onWarehouseProviderDataChange={handleWarehouseProviderDataChange}
+            />
+            </Table>
 
         {showSuccessAlert && (
           <Alert
