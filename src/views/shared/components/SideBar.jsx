@@ -7,10 +7,9 @@ import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
 
 import logo from "../../../img/logotext.png";
-import logoBlanco from "../../../img/logoblanco.png";
-import logoNuevoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
-import logoIntegral from "../../../img/INTEGRALBLANCO1.png";
+import logoblanco from "../../../img/logoblanco2.png";
+import logoIntegral from "../../../img/logoblanco.png";
 
 
 const Sidebar = () => {
@@ -64,7 +63,7 @@ const Sidebar = () => {
       <div className={`sidebar ${hideShowSlider ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
-          <img className="logo_icon" src={logoBlanco} alt="logo-blanco"/>
+          <img className="logo_icon" src={logoblanco} alt="logo-blanco-integral"/>
           <img className="logo_name" src={logo} alt="Logo" />
           {/* <span className="logo_name">Logo</span> */}
         </div>
