@@ -1,14 +1,5 @@
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  // overflow-y: hidden;
-  min-height: 5%;
-}
-
 .search-container {
-  width: 300px;
   margin: 0 1rem 0 0;
-
 }
 
 .modal-view {
@@ -168,10 +159,11 @@
 }
 
 .cambiar-nombre {
-  overflow-y: auto;
-  width: 92%;
-  margin-bottom: 5rem;
+  width: 100%;
+  margin-bottom: 10rem;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 //-------------------------------------------------------------//
