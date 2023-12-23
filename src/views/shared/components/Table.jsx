@@ -614,7 +614,7 @@ const Table = ({
         </div>
       )
       case 'add': return (
-        <div className="cambiar-nombre">
+        <div className="layout-fluid">
           {children}
           {/* <PickupOrderCreationForm
             pickupOrder={selectedPickupOrder}
@@ -661,265 +661,270 @@ const Table = ({
 
   return (
     <>
-      <div className="container-menu">
+      <div className="container-fluid">
         {showOptions && (
-          <div className="d-flex justify-content-start align-items-center">
-            <button className="back-button" onClick={() => navigate(-1)}>
-              <i className="fa-solid fa-arrow-left fa-3x"></i>
-            </button>
-            <div className="title-container">
-              <h1 className="title">{title}</h1>
+          <div className="layout-fluid">
+            <div className="d-flex justify-content-start align-items-center">
+              <button className="back-button" onClick={() => navigate(-1)}>
+                <i className="fa-solid fa-arrow-left fa-3x"></i>
+              </button>
+              <div className="title-container">
+                <h1 className="title">{title}</h1>
+              </div>
             </div>
-          </div>
-        )}
-        {showOptions && (
-          <div className="row w-100 align-items-center">
-            {/* Search menu */}
-            <div className="col-6">
-              <div className="position-search mt-3">
-                <div className="search">
-                  <div className="search-container">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      placeholder="Search..."
-                      className="search-input"
-                    />
-                  </div>
-                  <div className="action-buttons">
-                    <button className="generic-button" onClick={handleOpenCloseSlider}>
-                      <i className="fas fa-plus menu-icon fa-3x"></i>
-                    </button>
+            <div>
+              {showOptions && (
+                <div className="row w-100 align-items-center">
+                  {/* Search menu */}
+                  <div className="col-6">
+                    <div className="position-search mt-3">
+                      <div className="search">
+                        <div className="search-container">
+                          <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            placeholder="Search..."
+                            className="search-input"
+                          />
+                        </div>
+                        <div className="action-buttons">
+                          <button className="generic-button" onClick={handleOpenCloseSlider}>
+                            <i className="fas fa-plus menu-icon fa-3x"></i>
+                          </button>
 
-                    <button className="generic-button ne" onClick={onEdit}>
-                      <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-                    </button>
-                    <button className="generic-button ne" onClick={onDelete}>
-                      <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-                    </button>
+                          <button className="generic-button ne" onClick={onEdit}>
+                            <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+                          </button>
+                          <button className="generic-button ne" onClick={onDelete}>
+                            <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+                          </button>
 
-                    <input
-                      type="file"
-                      accept=".json, .csv, .xml"
-                      onChange={handleImport}
-                      className="hidden-input"
-                      id="import-input"
-                    />
-                    <button className="generic-button ne" onClick={onDelete}>
-                      <i
-                        className="fas fa-upload menu-icon fa-3x"
-                        onClick={() => document.getElementById("import-input").click()}
-                      ></i>
-                    </button>
-                  </div>
-                  {showFilterMenu && (
-                    <div
-                      className="modal-filter"
-                      style={{ display: showFilterMenu ? "block" : "none" }}
-                    >
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title">Filter Dates</h5>
-                            <button
-                              type="button"
-                              className="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                              onClick={() => setShowFilterMenu(!showFilterMenu)}
-                            >
-                              <span aria-hidden="true"></span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            <div className="date-filter">
-                              <div className="date-range">
-                                <div className="date-box">
-                                  <span className="date-label">Start Date:</span>
-                                  <DatePicker
-                                    selected={startDate}
-                                    onChange={(date) => setStartDate(date)}
-                                    inline
-                                  />
+                          <input
+                            type="file"
+                            accept=".json, .csv, .xml"
+                            onChange={handleImport}
+                            className="hidden-input"
+                            id="import-input"
+                          />
+                          <button className="generic-button ne" onClick={onDelete}>
+                            <i
+                              className="fas fa-upload menu-icon fa-3x"
+                              onClick={() => document.getElementById("import-input").click()}
+                            ></i>
+                          </button>
+                        </div>
+                        {showFilterMenu && (
+                          <div
+                            className="modal-filter"
+                            style={{ display: showFilterMenu ? "block" : "none" }}
+                          >
+                            <div className="modal-dialog" role="document">
+                              <div className="modal-content">
+                                <div className="modal-header">
+                                  <h5 className="modal-title">Filter Dates</h5>
+                                  <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                    onClick={() => setShowFilterMenu(!showFilterMenu)}
+                                  >
+                                    <span aria-hidden="true"></span>
+                                  </button>
                                 </div>
-                                <div className="date-box">
-                                  <span className="date-label">End Date:</span>
-                                  <DatePicker
-                                    selected={finishDate}
-                                    onChange={(date) => setFinishDate(date)}
-                                    inline
-                                  />
-                                </div>
-                              </div>
-                              <select
-                                value={dateFilter}
-                                onChange={(e) => handleDateFilter(e.target.value)}
-                                style={{ margin: "5px" }}
-                              >
-                                <option value="all">All</option>
-                                <option value="today">Today</option>
-                                <option value="this-week">This Week</option>
-                                <option value="this-month">This Month</option>
-                                <option value="this-year">This Year</option>
-                              </select>
-                              <div
-                                className="radio-container"
-                                style={{ display: "flex", width: "250px" }}
-                              >
-                                {columns.map(
-                                  (columnName) =>
-                                    columnName.toLowerCase().includes("date") && (
-                                      <label key={columnName}>
-                                        <input
-                                          type="radio"
-                                          value={columnName}
-                                          checked={
-                                            selectedDateFilter === columnName
-                                          }
-                                          onChange={(e) =>
-                                            handleDateFilterChange(e.target.value)
-                                          }
+                                <div className="modal-body">
+                                  <div className="date-filter">
+                                    <div className="date-range">
+                                      <div className="date-box">
+                                        <span className="date-label">Start Date:</span>
+                                        <DatePicker
+                                          selected={startDate}
+                                          onChange={(date) => setStartDate(date)}
+                                          inline
                                         />
-                                        {columnName}
-                                      </label>
-                                    )
-                                )}
+                                      </div>
+                                      <div className="date-box">
+                                        <span className="date-label">End Date:</span>
+                                        <DatePicker
+                                          selected={finishDate}
+                                          onChange={(date) => setFinishDate(date)}
+                                          inline
+                                        />
+                                      </div>
+                                    </div>
+                                    <select
+                                      value={dateFilter}
+                                      onChange={(e) => handleDateFilter(e.target.value)}
+                                      style={{ margin: "5px" }}
+                                    >
+                                      <option value="all">All</option>
+                                      <option value="today">Today</option>
+                                      <option value="this-week">This Week</option>
+                                      <option value="this-month">This Month</option>
+                                      <option value="this-year">This Year</option>
+                                    </select>
+                                    <div
+                                      className="radio-container"
+                                      style={{ display: "flex", width: "250px" }}
+                                    >
+                                      {columns.map(
+                                        (columnName) =>
+                                          columnName.toLowerCase().includes("date") && (
+                                            <label key={columnName}>
+                                              <input
+                                                type="radio"
+                                                value={columnName}
+                                                checked={
+                                                  selectedDateFilter === columnName
+                                                }
+                                                onChange={(e) =>
+                                                  handleDateFilterChange(e.target.value)
+                                                }
+                                              />
+                                              {columnName}
+                                            </label>
+                                          )
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="modal-footer">
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                      setShowFilterMenu(!showFilterMenu);
+                                    }}
+                                  >
+                                    Save Changes
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                    onClick={() => setShowFilterMenu(!showFilterMenu)}
+                                  >
+                                    Close
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <div className="modal-footer">
+                        )}
+                        <button
+                          className="generic-button"
+                          onClick={() => setShowColumnMenu(!showColumnMenu)}
+                        >
+                          <i className="fas fa-eye menu-icon fa-3x ne"></i>
+                        </button>
+                      </div>
+                      {showColumnMenu && (
+                        <div
+                          className="modal-view"
+                          style={{ display: showColumnMenu ? "block" : "none" }}
+                        >
+                          <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h5 className="modal-title">Show Columns</h5>
+                                <button
+                                  type="button"
+                                  className="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                >
+                                  <span aria-hidden="true"></span>
+                                </button>
+                              </div>
+                              <div className="modal-body">
+                                {columns.map((columnName) => (
+                                  <label key={columnName}>
+                                    <input
+                                      type="checkbox"
+                                      checked={visibleColumns[columnName]}
+                                      onChange={() =>
+                                        handleColumnVisibilityChange(columnName)
+                                      }
+                                    />
+                                    {columnName}
+                                  </label>
+                                ))}
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                >
+                                  Save changes
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                >
+                                  Close
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-6 d-flex justify-content-end">
+                    <div className="button-container">
+                      <div className="export-box">
+                        <div className="row mx-0">
+                          <div className="col-10">
+                            <div className="export-dropdown">
+                              <label className="laver-export">
+                                <span className="text-export">Export Format:</span>
+                                <select value={selectedFormat} onChange={handleFormatChange}>
+                                  <option value="">Select</option>
+                                  <option value="json">JSON</option>
+                                  <option value="csv">CSV</option>
+                                  <option value="pdf">PDF</option>
+                                  <option value="xml">XML</option>
+                                </select>
+                              </label>
+                              <button className="generic-button" onClick={handleExport}>
+                                <i className="fas fa-file-export menu-icon fa-3x"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="col-2 d-flex">
                             <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => {
-                                setShowFilterMenu(!showFilterMenu);
-                              }}
+                              className="generic-button"
+                              onClick={() => setShowColumnMenu(!showColumnMenu)}
                             >
-                              Save Changes
+                              <i className="fas fa-eye menu-icon fa-3x ne"></i>
+
                             </button>
                             <button
                               type="button"
-                              className="btn btn-secondary"
-                              data-bs-dismiss="modal"
                               onClick={() => setShowFilterMenu(!showFilterMenu)}
+                              className="generic-button"
                             >
-                              Close
+                              <i className="fas fa-filter menu-icon fa-3x ne"></i>
                             </button>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  )}
-                  <button
-                    className="generic-button"
-                    onClick={() => setShowColumnMenu(!showColumnMenu)}
-                  >
-                    <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                  </button>
-                </div>
-                {showColumnMenu && (
-                  <div
-                    className="modal-view"
-                    style={{ display: showColumnMenu ? "block" : "none" }}
-                  >
-                    <div className="modal-dialog" role="document">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h5 className="modal-title">Show Columns</h5>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={() => setShowColumnMenu(!showColumnMenu)}
-                          >
-                            <span aria-hidden="true"></span>
-                          </button>
-                        </div>
-                        <div className="modal-body">
-                          {columns.map((columnName) => (
-                            <label key={columnName}>
-                              <input
-                                type="checkbox"
-                                checked={visibleColumns[columnName]}
-                                onChange={() =>
-                                  handleColumnVisibilityChange(columnName)
-                                }
-                              />
-                              {columnName}
-                            </label>
-                          ))}
-                        </div>
-                        <div className="modal-footer">
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => setShowColumnMenu(!showColumnMenu)}
-                          >
-                            Save changes
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                            onClick={() => setShowColumnMenu(!showColumnMenu)}
-                          >
-                            Close
-                          </button>
-                        </div>
+
+
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-            <div className="col-6 d-flex justify-content-end">
-              <div className="button-container">
-                <div className="export-box">
-                  <div className="row mx-0">
-                    <div className="col-10">
-                      <div className="export-dropdown">
-                        <label className="laver-export">
-                          <span className="text-export">Export Format:</span>
-                          <select value={selectedFormat} onChange={handleFormatChange}>
-                            <option value="">Select</option>
-                            <option value="json">JSON</option>
-                            <option value="csv">CSV</option>
-                            <option value="pdf">PDF</option>
-                            <option value="xml">XML</option>
-                          </select>
-                        </label>
-                        <button className="generic-button" onClick={handleExport}>
-                          <i className="fas fa-file-export menu-icon fa-3x"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="col-2 d-flex">
-                      <button
-                        className="generic-button"
-                        onClick={() => setShowColumnMenu(!showColumnMenu)}
-                      >
-                        <i className="fas fa-eye menu-icon fa-3x ne"></i>
-
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowFilterMenu(!showFilterMenu)}
-                        className="generic-button"
-                      >
-                        <i className="fas fa-filter menu-icon fa-3x ne"></i>
-                      </button>
-                    </div>
-                  </div>
-
-
                 </div>
-              </div>
+
+              )}
             </div>
           </div>
-
         )}
+
         {handleViews()}
 
         {showContextMenu && (
@@ -932,6 +937,7 @@ const Table = ({
             }}
           />
         )}
+
       </div>
 
 

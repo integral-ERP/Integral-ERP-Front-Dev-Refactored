@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { GlobalContext } from "../../../context/global";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
-
 import logo from "../../../img/logotext.png";
 import usuario from "../../../img/usuario.png";
 import logoblanco from "../../../img/logoblanco2.png";

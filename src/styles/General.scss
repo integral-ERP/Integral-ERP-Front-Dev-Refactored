@@ -460,3 +460,13 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.layout-fluid{
+  width: 95%;
+  display: inline-block;
+}
+
+.main-container{
+  overflow-y: auto;
+  min-height: 100vh;
+}

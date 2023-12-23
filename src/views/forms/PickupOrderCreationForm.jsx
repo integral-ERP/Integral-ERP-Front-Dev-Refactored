@@ -960,7 +960,7 @@ const PickupOrderCreationForm = ({
   return (
 
     <form className="company-form pickup">
-      <div className="row">
+      <div className="row w-100">
         {/* General Form */}
         <div className="col-6">
           <div className="creation creation-container w-100">
