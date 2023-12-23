@@ -2,11 +2,10 @@
   /* display: inline-block;
   width: 100%; */
   color: #153A61;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 95%;
+  width: 100%;
 
   .form-textarea{
     width: 90% !important;
@@ -70,7 +69,7 @@
     display: flex;
     width: 40%;
     justify-content: space-evenly;
-    height: 3rem;
+    height: 20rem;
 
     &__option {
       margin: 15px;
