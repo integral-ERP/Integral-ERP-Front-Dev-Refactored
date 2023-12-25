@@ -104,6 +104,9 @@ const Sidebar = () => {
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
               </li>
+              <li>
+                <Link to={"/warehouse/repacking"}>Repacking</Link>
+              </li>
             </ul>
           </li>
           <li className={`arrow  ${more === "shipments" ? "showMenu" : ""}`}>

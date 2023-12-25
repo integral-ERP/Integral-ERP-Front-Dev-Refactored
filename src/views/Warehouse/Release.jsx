@@ -231,7 +231,7 @@ const Release = () => {
               <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
                   closeModal={closeModal}
-                  creating={false}
+                  creating={true}
                   onReleaseOrderDataChange={handlereceiptsDataChange}
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
