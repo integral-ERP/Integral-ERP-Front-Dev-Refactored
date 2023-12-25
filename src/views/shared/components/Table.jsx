@@ -36,7 +36,7 @@ const Table = ({
   handleOptionClick,
   onInspect,
   contextService,
-  children
+  children,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -48,7 +48,7 @@ const Table = ({
   const [finishDate, setFinishDate] = useState(new Date());
   const [selectedDateFilter, setSelectedDateFilter] = useState("");
   const [filteredData, setFilteredData] = useState(data);
-  const [showPage, setShowPage] = useState('initial');
+  const [showPage, setShowPage] = useState("initial");
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [isOpen, openModal, closeModal] = useModal(false);
   console.log("RECEIVED DATA", data);
@@ -140,10 +140,12 @@ const Table = ({
     " Chargeable Weight": "chargedWeight",
     Note: "note",
     "Account Number": "accountNumber",
-    "Code": "code",
+    Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
     Location: "locationCode",
+    "Parent Order": "parent",
+    "Piece Quantity": "commodityAmount",
   };
 
   const getStatus = (statusCode) => {
@@ -152,91 +154,94 @@ const Table = ({
       case "1":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Loaded
+            <i className="fas fa-box" style={{ color: "#C986BD" }}></i>Loaded
           </span>
         );
       case "2":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#D0D3D1' }}></i>Pending
+            <i className="fas fa-box" style={{ color: "#D0D3D1" }}></i>Pending
           </span>
         );
       case "3":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#A8A96C' }}></i>Ordered
+            <i className="fas fa-box" style={{ color: "#A8A96C" }}></i>Ordered
           </span>
         );
       case "4":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#69D8D0' }}></i>On Hand
+            <i className="fas fa-box" style={{ color: "#69D8D0" }}></i>On Hand
           </span>
         );
       case "5":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#4C9548' }}></i>Arriving
+            <i className="fas fa-box" style={{ color: "#4C9548" }}></i>Arriving
           </span>
         );
       case "6":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#78C95E' }}></i>In Transit
+            <i className="fas fa-box" style={{ color: "#78C95E" }}></i>In
+            Transit
           </span>
         );
       case "7":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#E4DE6E' }}></i>In Process
+            <i className="fas fa-box" style={{ color: "#E4DE6E" }}></i>In
+            Process
           </span>
         );
       case "8":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#DD4848' }}></i>At Destination
+            <i className="fas fa-box" style={{ color: "#DD4848" }}></i>At
+            Destination
           </span>
         );
       case "9":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#4893FA' }}></i>Delivered
+            <i className="fas fa-box" style={{ color: "#4893FA" }}></i>Delivered
           </span>
         );
       case "10":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#ff2525' }}></i>Deleted
+            <i className="fas fa-box" style={{ color: "#ff2525" }}></i>Deleted
           </span>
         );
       case "11":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#73d800' }}></i>Release
+            <i className="fas fa-box" style={{ color: "#73d800" }}></i>Release
           </span>
         );
       case "12":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#ffee00' }}></i>On Hold
+            <i className="fas fa-box" style={{ color: "#ffee00" }}></i>On Hold
           </span>
         );
       case "13":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Repacking
+            <i className="fas fa-box" style={{ color: "#C986BD" }}></i>Repacking
           </span>
         );
       case "14":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Empty
+            <i className="fas fa-box" style={{ color: "#C986BD" }}></i>Empty
           </span>
         );
       case "15":
         return (
           <span>
-            <i className="fas fa-box" style={{ color: '#C986BD' }}></i>Open
+            <i className="fas fa-box" style={{ color: "#C986BD" }}></i>Open
           </span>
         );
     }
@@ -248,12 +253,12 @@ const Table = ({
     if (!children) {
       onAdd();
     } else {
-      setShowPage('add');
+      setShowPage("add");
     }
 
-    setcontrolSlider(true)
-    setHideShowSlider(true)
-  }
+    setcontrolSlider(true);
+    setHideShowSlider(true);
+  };
 
   const fetchAndFilterData = async () => {
     if (searchQuery !== "") {
@@ -267,15 +272,20 @@ const Table = ({
 
   useEffect(() => {
     fetchAndFilterData();
-  }, [searchQuery])
+  }, [searchQuery]);
 
   useEffect(() => {
-    console.log("Current data to be displayed on table:", filteredData, "search query", searchQuery);
-  }, [filteredData])
+    console.log(
+      "Current data to be displayed on table:",
+      filteredData,
+      "search query",
+      searchQuery
+    );
+  }, [filteredData]);
 
   useEffect(() => {
     setFilteredData(data);
-  }, [data])
+  }, [data]);
 
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
@@ -514,116 +524,133 @@ const Table = ({
 
   const handleViews = () => {
     switch (showPage) {
-      case 'initial': return (
-        <div className="generic-table">
-          <table className="table-hover ">
-            <thead className="text-head">
-              <tr>
-                {columnOrder.map(
-                  (columnName, columnIndex) =>
-                    visibleColumns[columnName] && (
-                      <th
-                        className="th-separate"
-                        key={columnName}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, columnIndex)}
-                        onDragOver={(e) => handleDragOver(e, columnIndex)}
-                        onDrop={(e) => handleDrop(e, columnIndex)}
-                      >
-                        {columnName}
-                      </th>
-                    )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((row) => (
-                <tr
-                  key={row.id}
-                  className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                    ? "table-primary"
-                    : ""
-                    }`}
-                  onClick={() => onSelect(row)}
-                  onContextMenu={(e) => handleContextMenu(e, row)}
-                >
-                  {columnOrder.map((columnName) =>
-                    visibleColumns[columnName] ? (
-                      <td
-                        key={columnName}
-                        data-key={row.id}
-                        className="generic-table__td"
-                        style={{
-                          minWidth: columnWidthsCalculated[columnName],
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {columnName === "View PDF" ? (
-                          <button type="button" onClick={generatePDF}>
-                            <i className="fas fa-file-pdf"></i>
-                          </button>
-                        ) : columnName === "View Receipt PDF" ? (
-                          <button type="button" onClick={generatePDFReceipt}>
-                            <i className="fas fa-file-pdf"></i>
-                          </button>
-                        ) : columnName === "View Release PDF" ? (
-                          <button type="button" onClick={generatePDFRelease}>
-                            <i className="fas fa-file-pdf"></i>
-                          </button>
-                        ) : columnName === "Invoice PDF" ? (
-                          <button type="button" onClick={generatePDFInvoice}>
-                            <i className="fas fa-file-pdf"></i>
-                          </button>
-                        ) : columnName === "Status" ? (
-                          getStatus(row[columnNameToProperty[columnName]])
-                        ) : columnName === "Options" ? (
-                          <>
-                            <button type="button" onClick={onDelete}>
-                              <i className="fas fa-trash"></i>
-                            </button>
-                            <button type="button" onClick={onEdit}>
-                              <i className="fas fa-pencil-alt"></i>
-                            </button>
-                            <button type="button" onClick={onInspect}>
-                              <i className="fas fa-eye"></i>
-                            </button>
-                          </>
-                        ) : typeof columnNameToProperty[columnName] ===
-                          "boolean" ? (
-                          row[columnNameToProperty[columnName]] ? (
-                            <i className="fas fa-check"></i>
-                          ) : (
-                            <i className="fas fa-times"></i>
-                          )
-                        ) : columnNameToProperty[columnName]?.includes(".") ? (
-                          getPropertyValue(row, columnNameToProperty[columnName])
-                        ) : Array.isArray(
-                          row[columnNameToProperty[columnName]]
-                        ) ? (
-                          row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                        ) : (
-                          row[columnNameToProperty[columnName]]
-                        )}
-                      </td>
-                    ) : null
+      case "initial":
+        return (
+          <div className="generic-table">
+            <table className="table-hover ">
+              <thead className="text-head">
+                <tr>
+                  {columnOrder.map(
+                    (columnName, columnIndex) =>
+                      visibleColumns[columnName] && (
+                        <th
+                          className="th-separate"
+                          key={columnName}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, columnIndex)}
+                          onDragOver={(e) => handleDragOver(e, columnIndex)}
+                          onDrop={(e) => handleDrop(e, columnIndex)}
+                        >
+                          {columnName}
+                        </th>
+                      )
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )
-      case 'add': return (
-        <div className="layout-fluid">
-          {children}
-          {/* <PickupOrderCreationForm
+              </thead>
+              <tbody>
+                {filteredData.map((row) => (
+                  <tr
+                    key={row.id}
+                    className={`table-row  tr-margen${
+                      selectedRow && selectedRow.id === row.id
+                        ? "table-primary"
+                        : ""
+                    }`}
+                    onClick={() => onSelect(row)}
+                    onContextMenu={(e) => handleContextMenu(e, row)}
+                  >
+                    {columnOrder.map((columnName) =>
+                      visibleColumns[columnName] ? (
+                        <td
+                          key={columnName}
+                          data-key={row.id}
+                          className="generic-table__td"
+                          style={{
+                            minWidth: columnWidthsCalculated[columnName],
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {columnName === "View PDF" ? (
+                            <button type="button" onClick={generatePDF}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "View Receipt PDF" ? (
+                            <button type="button" onClick={generatePDFReceipt}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "View Release PDF" ? (
+                            <button type="button" onClick={generatePDFRelease}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "Invoice PDF" ? (
+                            <button type="button" onClick={generatePDFInvoice}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "Status" ? (
+                            getStatus(row[columnNameToProperty[columnName]])
+                          ) : columnName === "Options" ? (
+                            <>
+                              <button type="button" onClick={onDelete}>
+                                <i className="fas fa-trash"></i>
+                              </button>
+                              <button type="button" onClick={onEdit}>
+                                <i className="fas fa-pencil-alt"></i>
+                              </button>
+                              <button type="button" onClick={onInspect}>
+                                <i className="fas fa-eye"></i>
+                              </button>
+                            </>
+                          ) : columnName === "Repack Options" ? (
+                            <>
+                              <button type="button" onClick={onInspect}>
+                                <i className="fas fa-eye"></i>
+                              </button>
+                              <button type="button" onClick={onEdit}>
+                                <i className="fas fa-box-open"></i>
+                              </button>
+                            </>
+                          ) : typeof columnNameToProperty[columnName] ===
+                            "boolean" ? (
+                            row[columnNameToProperty[columnName]] ? (
+                              <i className="fas fa-check"></i>
+                            ) : (
+                              <i className="fas fa-times"></i>
+                            )
+                          ) : columnNameToProperty[columnName]?.includes(
+                              "."
+                            ) ? (
+                            getPropertyValue(
+                              row,
+                              columnNameToProperty[columnName]
+                            )
+                          ) : Array.isArray(
+                              row[columnNameToProperty[columnName]]
+                            ) ? (
+                            row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                          ) : (
+                            row[columnNameToProperty[columnName]]
+                          )}
+                        </td>
+                      ) : null
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      case "add":
+        return (
+          <div className="layout-fluid">
+            {children}
+            {/* <PickupOrderCreationForm
             pickupOrder={selectedPickupOrder}
             closeModal={closeModal}
             creating={false} /> */}
-        </div>
-      )
+          </div>
+        );
     }
-  }
+  };
 
   // Calculate the maximum width needed for each column
   const columnWidthsCalculated = columns.reduce((widths, columnName) => {
@@ -689,14 +716,23 @@ const Table = ({
                           />
                         </div>
                         <div className="action-buttons">
-                          <button className="generic-button" onClick={handleOpenCloseSlider}>
+                          <button
+                            className="generic-button"
+                            onClick={handleOpenCloseSlider}
+                          >
                             <i className="fas fa-plus menu-icon fa-3x"></i>
                           </button>
 
-                          <button className="generic-button ne" onClick={onEdit}>
+                          <button
+                            className="generic-button ne"
+                            onClick={onEdit}
+                          >
                             <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
                           </button>
-                          <button className="generic-button ne" onClick={onDelete}>
+                          <button
+                            className="generic-button ne"
+                            onClick={onDelete}
+                          >
                             <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
                           </button>
 
@@ -707,17 +743,24 @@ const Table = ({
                             className="hidden-input"
                             id="import-input"
                           />
-                          <button className="generic-button ne" onClick={onDelete}>
+                          <button
+                            className="generic-button ne"
+                            onClick={onDelete}
+                          >
                             <i
                               className="fas fa-upload menu-icon fa-3x"
-                              onClick={() => document.getElementById("import-input").click()}
+                              onClick={() =>
+                                document.getElementById("import-input").click()
+                              }
                             ></i>
                           </button>
                         </div>
                         {showFilterMenu && (
                           <div
                             className="modal-filter"
-                            style={{ display: showFilterMenu ? "block" : "none" }}
+                            style={{
+                              display: showFilterMenu ? "block" : "none",
+                            }}
                           >
                             <div className="modal-dialog" role="document">
                               <div className="modal-content">
@@ -728,7 +771,9 @@ const Table = ({
                                     className="btn-close"
                                     data-bs-dismiss="modal"
                                     aria-label="Close"
-                                    onClick={() => setShowFilterMenu(!showFilterMenu)}
+                                    onClick={() =>
+                                      setShowFilterMenu(!showFilterMenu)
+                                    }
                                   >
                                     <span aria-hidden="true"></span>
                                   </button>
@@ -737,49 +782,73 @@ const Table = ({
                                   <div className="date-filter">
                                     <div className="date-range">
                                       <div className="date-box">
-                                        <span className="date-label">Start Date:</span>
+                                        <span className="date-label">
+                                          Start Date:
+                                        </span>
                                         <DatePicker
                                           selected={startDate}
-                                          onChange={(date) => setStartDate(date)}
+                                          onChange={(date) =>
+                                            setStartDate(date)
+                                          }
                                           inline
                                         />
                                       </div>
                                       <div className="date-box">
-                                        <span className="date-label">End Date:</span>
+                                        <span className="date-label">
+                                          End Date:
+                                        </span>
                                         <DatePicker
                                           selected={finishDate}
-                                          onChange={(date) => setFinishDate(date)}
+                                          onChange={(date) =>
+                                            setFinishDate(date)
+                                          }
                                           inline
                                         />
                                       </div>
                                     </div>
                                     <select
                                       value={dateFilter}
-                                      onChange={(e) => handleDateFilter(e.target.value)}
+                                      onChange={(e) =>
+                                        handleDateFilter(e.target.value)
+                                      }
                                       style={{ margin: "5px" }}
                                     >
                                       <option value="all">All</option>
                                       <option value="today">Today</option>
-                                      <option value="this-week">This Week</option>
-                                      <option value="this-month">This Month</option>
-                                      <option value="this-year">This Year</option>
+                                      <option value="this-week">
+                                        This Week
+                                      </option>
+                                      <option value="this-month">
+                                        This Month
+                                      </option>
+                                      <option value="this-year">
+                                        This Year
+                                      </option>
                                     </select>
                                     <div
                                       className="radio-container"
-                                      style={{ display: "flex", width: "250px" }}
+                                      style={{
+                                        display: "flex",
+                                        width: "250px",
+                                      }}
                                     >
                                       {columns.map(
                                         (columnName) =>
-                                          columnName.toLowerCase().includes("date") && (
+                                          columnName
+                                            .toLowerCase()
+                                            .includes("date") && (
                                             <label key={columnName}>
                                               <input
                                                 type="radio"
                                                 value={columnName}
                                                 checked={
-                                                  selectedDateFilter === columnName
+                                                  selectedDateFilter ===
+                                                  columnName
                                                 }
                                                 onChange={(e) =>
-                                                  handleDateFilterChange(e.target.value)
+                                                  handleDateFilterChange(
+                                                    e.target.value
+                                                  )
                                                 }
                                               />
                                               {columnName}
@@ -803,7 +872,9 @@ const Table = ({
                                     type="button"
                                     className="btn btn-secondary"
                                     data-bs-dismiss="modal"
-                                    onClick={() => setShowFilterMenu(!showFilterMenu)}
+                                    onClick={() =>
+                                      setShowFilterMenu(!showFilterMenu)
+                                    }
                                   >
                                     Close
                                   </button>
@@ -833,7 +904,9 @@ const Table = ({
                                   className="btn-close"
                                   data-bs-dismiss="modal"
                                   aria-label="Close"
-                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                  onClick={() =>
+                                    setShowColumnMenu(!showColumnMenu)
+                                  }
                                 >
                                   <span aria-hidden="true"></span>
                                 </button>
@@ -856,7 +929,9 @@ const Table = ({
                                 <button
                                   type="button"
                                   className="btn btn-primary"
-                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                  onClick={() =>
+                                    setShowColumnMenu(!showColumnMenu)
+                                  }
                                 >
                                   Save changes
                                 </button>
@@ -864,7 +939,9 @@ const Table = ({
                                   type="button"
                                   className="btn btn-secondary"
                                   data-bs-dismiss="modal"
-                                  onClick={() => setShowColumnMenu(!showColumnMenu)}
+                                  onClick={() =>
+                                    setShowColumnMenu(!showColumnMenu)
+                                  }
                                 >
                                   Close
                                 </button>
@@ -882,8 +959,13 @@ const Table = ({
                           <div className="col-10">
                             <div className="export-dropdown">
                               <label className="laver-export">
-                                <span className="text-export">Export Format:</span>
-                                <select value={selectedFormat} onChange={handleFormatChange}>
+                                <span className="text-export">
+                                  Export Format:
+                                </span>
+                                <select
+                                  value={selectedFormat}
+                                  onChange={handleFormatChange}
+                                >
                                   <option value="">Select</option>
                                   <option value="json">JSON</option>
                                   <option value="csv">CSV</option>
@@ -891,7 +973,10 @@ const Table = ({
                                   <option value="xml">XML</option>
                                 </select>
                               </label>
-                              <button className="generic-button" onClick={handleExport}>
+                              <button
+                                className="generic-button"
+                                onClick={handleExport}
+                              >
                                 <i className="fas fa-file-export menu-icon fa-3x"></i>
                               </button>
                             </div>
@@ -902,7 +987,6 @@ const Table = ({
                               onClick={() => setShowColumnMenu(!showColumnMenu)}
                             >
                               <i className="fas fa-eye menu-icon fa-3x ne"></i>
-
                             </button>
                             <button
                               type="button"
@@ -913,13 +997,10 @@ const Table = ({
                             </button>
                           </div>
                         </div>
-
-
                       </div>
                     </div>
                   </div>
                 </div>
-
               )}
             </div>
           </div>
@@ -937,11 +1018,7 @@ const Table = ({
             }}
           />
         )}
-
       </div>
-
-
-
     </>
   );
 };
