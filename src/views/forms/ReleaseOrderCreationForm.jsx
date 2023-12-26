@@ -786,6 +786,7 @@ const ReleaseOrderCreationForm = ({
             showOptions={false}
           />
           </div>
+          
       <div className="creation creation-container w-100">
         <div className="row align-items-center">
           <div className="col-6 text-start" style={{ fontSize: '14px', fontWeight: 'bold' }}>
