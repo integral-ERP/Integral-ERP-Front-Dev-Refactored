@@ -83,7 +83,11 @@ const CommodityCreationForm = ({
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
+<<<<<<< HEAD
       ).toFixed(0);
+=======
+      );
+>>>>>>> main
   
       setformData(prevFormData => ({
         ...prevFormData,
@@ -199,6 +203,7 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
+<<<<<<< HEAD
 
         <div className="form-column-create">
           <label className="text-comm__space">Volumetric Weight:</label>
@@ -234,6 +239,8 @@ const CommodityCreationForm = ({
           </div> */}
         </div>
 
+=======
+>>>>>>> main
         <label htmlFor="description" className="text-comm description-form">
           Cargo Description:
         </label>

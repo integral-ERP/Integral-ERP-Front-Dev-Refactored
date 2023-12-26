@@ -12,7 +12,7 @@ import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
 import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
-
+import * as XLSX from 'xlsx';
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
@@ -37,6 +37,10 @@ const Table = ({
   onInspect,
   contextService,
   children,
+<<<<<<< HEAD
+=======
+  importEnabled
+>>>>>>> main
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -450,6 +454,16 @@ const Table = ({
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
+      } else if (fileType === "xlsx") {
+        try {
+          const workbook = XLSX.read(content, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const importedData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+          // Send the imported data to your API
+          // Example: axios.post(`${BASE_URL}import/`, importedData)
+        } catch (error) {
+          console.error("Error parsing XLSX file:", error);
+        }
       } else {
         console.log("Unsupported file format");
       }
@@ -528,12 +542,15 @@ const Table = ({
     return textMetrics.width;
   };
 
+<<<<<<< HEAD
   const isBotonVisible = () => {
     // Lógica para determinar si el botón debe estar visible en función de la ruta actual
       return  (location.pathname !=='/warehouse/pickup' && location.pathname !=='/warehouse/receipt' && location.pathname !=='/warehouse/release' && location.pathname !=='/warehouse/repacking')
     
   };
 
+=======
+>>>>>>> main
   const handleViews = () => {
     switch (showPage) {
       case "initial":
@@ -749,6 +766,7 @@ const Table = ({
                             <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
                           </button>
 
+<<<<<<< HEAD
                           <div>
                             {isBotonVisible() && (
                               <button className="generic-button ne" id="miBoton" onClick={onDelete}>
@@ -761,13 +779,21 @@ const Table = ({
                           </div>
 
                           {/* <input
+=======
+                          <input
+>>>>>>> main
                             type="file"
                             accept=".json, .csv, .xml"
                             onChange={handleImport}
                             className="hidden-input"
                             id="import-input"
+<<<<<<< HEAD
                           /> */}
                           {/* <button
+=======
+                          />
+                          {importEnabled && (<button
+>>>>>>> main
                             className="generic-button ne"
                             onClick={onDelete}
                           >
@@ -777,7 +803,11 @@ const Table = ({
                                 document.getElementById("import-input").click()
                               }
                             ></i>
+<<<<<<< HEAD
                           </button> */}
+=======
+                          </button>)}
+>>>>>>> main
                         </div>
                         {showFilterMenu && (
                           <div
@@ -907,12 +937,15 @@ const Table = ({
                             </div>
                           </div>
                         )}
+<<<<<<< HEAD
                         {/* <button
                           className="generic-button"
                           onClick={() => setShowColumnMenu(!showColumnMenu)}
                         >
                           <i className="fas fa-eye menu-icon fa-3x ne"></i>
                         </button> */}
+=======
+>>>>>>> main
                       </div>
                       {showColumnMenu && (
                         <div
@@ -1069,6 +1102,7 @@ Table.defaultProps = {
   onAdd: null,
   title: "Table",
   showOptions: true,
+  importEnabled: true
 };
 
 export default Table;

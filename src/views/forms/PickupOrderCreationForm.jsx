@@ -313,6 +313,7 @@ const PickupOrderCreationForm = ({
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
       );
+      console.log("EXECUTING LOAD CONSIGNEE");
       loadConsigneeOption(
         pickupOrder.consigneeObj?.data?.obj?.id,
         pickupOrder.consigneeObj?.data?.obj?.type_person
@@ -617,7 +618,11 @@ const PickupOrderCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
+<<<<<<< HEAD
 
+=======
+    console.log("LOADING CONSIGNEE:", id, type);
+>>>>>>> main
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -1434,7 +1439,11 @@ const PickupOrderCreationForm = ({
               onAdd={() => { }}
               showOptions={false}
             />
+<<<<<<< HEAD
               <button type="button" className="button-save" onClick={() => {
+=======
+              <button type="button" onClick={() => {
+>>>>>>> main
                 setshowRepackingForm(!showRepackingForm);
               }}>Repack</button></>
           )}

@@ -1332,7 +1332,11 @@ const ReceiptCreationForm = ({
             onAdd={() => { }}
             showOptions={false}
           />
+<<<<<<< HEAD
             <button type="button" className="button-save" onClick={() => {
+=======
+            <button type="button" onClick={() => {
+>>>>>>> main
               setshowRepackingForm(!showRepackingForm);
             }}>Repack</button></>
         )}

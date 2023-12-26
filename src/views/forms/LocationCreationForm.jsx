@@ -11,7 +11,7 @@ const LocationsCreationForm = ({
   creating,
   onlocationDataChange,
 }) => {
-  
+
   const [activeTab, setActiveTab] = useState("identification");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -46,14 +46,14 @@ const LocationsCreationForm = ({
       });
     }
   }, [creating, location]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
-        const addresData = await CompanyServirce.getAddress();
-        setcompanyAddress(addresData.data);
-      };
-  
-      fetchData();
+      const addresData = await CompanyServirce.getAddress();
+      setcompanyAddress(addresData.data);
+    };
+
+    fetchData();
   }, []);
   const sendData = async () => {
     let rawData = {
@@ -70,6 +70,7 @@ const LocationsCreationForm = ({
     };
 
     const response = await (creating
+<<<<<<< HEAD
         ? LocationService.createLocation(rawData)
         : LocationService.updateLocation(location.id, rawData));
   
@@ -86,148 +87,160 @@ const LocationsCreationForm = ({
         console.log("Something went wrong:", response);
         setShowErrorAlert(true);
       }
+=======
+      ? LocationService.createLocation(rawData)
+      : LocationService.updateLocation(location.id, rawData));
+
+    if (response.status >= 200 && response.status <= 300) {
+      console.log("Carrier successfully created/updated:", response.data);
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        closeModal();
+        onlocationDataChange();
+        setShowSuccessAlert(false);
+        window.location.reload();
+      }, 2000);
+    } else {
+      console.log("Something went wrong:", response);
+      setShowErrorAlert(true);
+    }
+>>>>>>> main
   };
 
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#identification"
-            aria-selected={activeTab === "identification"}
-            onClick={() => setActiveTab("identification")}
-            role="tab"
-          >
-            Identification
-          </a>
-        </li>
-      </ul>
-      <form
-        className={`company-form__general-form ${
-          activeTab === "identification" ? "active" : "hidden"
-        }`}
-      >
-      <div className="containerr">
-        <div className="cont-one">
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="code"
-              placeholder="Code"
-              value={formData.code}
-              changeHandler={(e) =>
-                setFormData({ ...formData, code: e.target.value })
-              }
-              label="Code"
-            />
+
+
+      {/* <div className="col-12"> */}
+        <div className="creation creation-container w-100">
+        <div className="form-label_name"><h3>General</h3><span></span></div>
+        <div className="row w-100">
+
+          <div className="col-6 text-start">
+
+          
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="code"
+                placeholder="Code"
+                value={formData.code}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, code: e.target.value })
+                }
+                label="Code"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="description"
+                placeholder="Description"
+                value={formData.description}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                label="Description"
+              />
+            </div>
+
+
+            <div className="company-form__section">
+              <label htmlFor="wp-fax" className="form-label">
+                Type
+              </label>
+              <select name="wp-fax"
+                id="wp-fax"
+                className="form-input"
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                value={formData.type}>
+                <option value="">Select a type</option>
+                <option value="Receiving">Receiving</option>
+                <option value="Storage">Storage</option>
+                <option value="Replenishment">Replenishment</option>
+                <option value="Picking">Picking</option>
+                <option value="Quality Control">Quality Control</option>
+                <option value="Shipping">Shipping</option>
+                <option value="Mobile">Mobile</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div className="company-form__section">
+              <label htmlFor="wp-fax" className="form-label">
+                Zone
+              </label>
+              <select name="wp-fax"
+                id="wp-fax"
+                className="form-input"
+                onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
+                value={formData.zone}>
+                <option value="">Select a zone</option>
+                <option value="Default Zone">Default Zone</option>
+                {companyAddress && <option value={companyAddress}>{companyAddress}</option>}
+              </select>
+            </div>
           </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="description"
-              placeholder="Description"
-              value={formData.description}
-              changeHandler={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              label="Description"
-            />
+
+          <div className="col-6 text-start">
+            <div className="company-form__section margin-zero">
+              <Input
+                type="number"
+                inputName="length"
+                placeholder="Length"
+                value={formData.length}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, length: e.target.value })
+                }
+                label="Lengtht"
+              />
+              <label htmlFor="" className="form-label font-right">in</label>
+            </div>
+            <div className="company-form__section margin-zero">
+              <Input
+                type="number"
+                inputName="width"
+                placeholder="width"
+                value={formData.width}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, width: e.target.value })
+                }
+                label="Width"
+              />
+              <label htmlFor="" className="form-label font-right">in</label>
+
+            </div>
+            <div className="company-form__section ">
+              <Input
+                type="number"
+                inputName="height"
+                placeholder="height"
+                value={formData.height}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, height: e.target.value })
+                }
+                label="Height"
+              />
+              <label htmlFor="" className="form-label font-right">in</label>
+
+            </div>
+            <div className="company-form__section with-si">
+              <Input
+                type="checkbox"
+                inputName="isempty"
+                value={formData.empty}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, empty: e.target.checked })
+                }
+                label="Is checked"
+              />
+            </div>
           </div>
-        </div>{/* ----------------------------END ONE---------------------------------- */}
-        <div className="cont-two">
-          <div className="company-form__section">
-            <label htmlFor="wp-fax" className="form-label">
-              Type
-            </label>
-            <select name="wp-fax"
-              id="wp-fax"
-              className="form-input"
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              value={formData.type}>
-              <option value="">Select a type</option>
-              <option value="Receiving">Receiving</option>
-              <option value="Storage">Storage</option>
-              <option value="Replenishment">Replenishment</option>
-              <option value="Picking">Picking</option>
-              <option value="Quality Control">Quality Control</option>
-              <option value="Shipping">Shipping</option>
-              <option value="Mobile">Mobile</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div className="company-form__section">
-            <label htmlFor="wp-fax" className="form-label">
-              Zone
-            </label>
-            <select name="wp-fax"
-              id="wp-fax"
-              className="form-input"
-              onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
-              value={formData.zone}>
-              <option value="">Select a zone</option>
-              <option value="Default Zone">Default Zone</option>
-              {companyAddress && <option value={companyAddress}>{companyAddress}</option>}
-            </select>
-          </div>
-        </div>{/* ----------------------------END TWO---------------------------------- */}
+        </div>
+
+      {/* </div> */}
       </div>
-        
-        
-        <div className="company-form__section margin-zero">
-        <Input
-            type="number"
-            inputName="length"
-            placeholder="Length"
-            value={formData.length}
-            changeHandler={(e) =>
-              setFormData({ ...formData, length: e.target.value })
-            }
-            label="Lengtht"
-          />
-          <label htmlFor="" className="form-label font-right">in</label>
-        </div>
-        <div className="company-form__section margin-zero">
-        <Input
-            type="number"
-            inputName="width"
-            placeholder="width"
-            value={formData.width}
-            changeHandler={(e) =>
-              setFormData({ ...formData, width: e.target.value })
-            }
-            label="Width"
-          />
-          <label htmlFor="" className="form-label font-right">in</label>
-          
-        </div>
-        <div className="company-form__section ">
-        <Input
-            type="number"
-            inputName="height"
-            placeholder="height"
-            value={formData.height}
-            changeHandler={(e) =>
-              setFormData({ ...formData, height: e.target.value })
-            }
-            label="Height"
-          />
-          <label htmlFor="" className="form-label font-right">in</label>
-          
-        </div>
-        <div className="company-form__section with-si">
-        <Input
-            type="checkbox"
-            inputName="isempty"
-            value={formData.empty}
-            changeHandler={(e) =>
-              setFormData({ ...formData, empty: e.target.checked })
-            }
-            label="Is checked"
-          />
-        </div>
-      </form>
+
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

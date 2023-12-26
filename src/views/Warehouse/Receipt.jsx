@@ -168,6 +168,10 @@ const Receipt = () => {
               title="Warehouse Receipts"
               setData={setreceipts}
               contextService={ReceiptService}
+<<<<<<< HEAD
+=======
+              importEnabled={false}
+>>>>>>> main
             >
               <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}

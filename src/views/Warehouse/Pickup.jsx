@@ -9,6 +9,7 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PickupService from "../../services/PickupService";
 import Sidebar from "../shared/components/SideBar";
 import ReceiptCreationForm from "../forms/ReceiptCreationForm";
+import ReleaseService from "../../services/ReleaseService";
 import { GlobalContext } from "../../context/global"
 
 
@@ -16,6 +17,7 @@ import { GlobalContext } from "../../context/global"
 const Pickup = () => {
   const { hideShowSlider } = useContext(GlobalContext)
   const [pickupOrders, setpickupOrders] = useState([]);
+  const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [
     isOpenReceiptCreation,
@@ -102,6 +104,14 @@ const Pickup = () => {
       .catch((error) => {
         console.error(error);
       });
+
+      ReleaseService.getReleases(url)
+      .then((response) => {
+        setReleaseOrders((response.data.results).reverse());
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
@@ -167,6 +177,11 @@ const Pickup = () => {
             );
             setpickupOrders(newPickupOrders);
             setShowSuccessAlert(true);
+            releaseOrders.forEach((release) => {
+              if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)){
+                ReleaseService.deleteRelease(release.id);
+              }
+            })
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
@@ -287,6 +302,10 @@ const Pickup = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
+<<<<<<< HEAD
+=======
+              importEnabled={false}
+>>>>>>> main
             >
                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}

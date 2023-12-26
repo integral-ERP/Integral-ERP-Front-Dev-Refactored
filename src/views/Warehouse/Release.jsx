@@ -226,7 +226,11 @@ const Release = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={ReleaseService}
+<<<<<<< HEAD
 
+=======
+              importEnabled={false}
+>>>>>>> main
             >
               <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
