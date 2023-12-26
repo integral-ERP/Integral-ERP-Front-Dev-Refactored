@@ -172,7 +172,7 @@ const Receipt = () => {
               <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={false}
+                  creating={true}
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}

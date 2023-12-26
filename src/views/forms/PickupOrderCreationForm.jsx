@@ -308,7 +308,7 @@ const PickupOrderCreationForm = ({
 
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
-
+      setshowCommodityCreationForm(true);
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person

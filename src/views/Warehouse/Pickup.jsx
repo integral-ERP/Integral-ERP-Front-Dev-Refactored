@@ -291,7 +291,7 @@ const Pickup = () => {
                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={false}
+                  creating={true}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
@@ -324,7 +324,7 @@ const Pickup = () => {
                 <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={false}
+                  creating={true}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
