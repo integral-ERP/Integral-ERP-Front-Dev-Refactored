@@ -83,7 +83,7 @@ const CommodityCreationForm = ({
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
-      ).toFixed(0);
+      );
   
       setformData(prevFormData => ({
         ...prevFormData,
@@ -199,41 +199,6 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
-
-        <div className="form-column-create">
-          <label className="text-comm__space">Volumetric Weight:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              ref={input5Ref}
-              onKeyDown={(e) => handleKeyDown(e, input6Ref)}
-              value={formData.volumetricWeight}
-              readOnly
-            />
-            <span className="input-group-text num-com">in3</span>
-          </div>
-        </div>
-
-        <div className="form-column-create">
-          <label className="text-comm__space">Chargeable Weight:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              ref={input6Ref}
-              onKeyDown={(e) => handleKeyDown(e, input7Ref)}
-              value={formData.chargedWeight}
-              onChange={(e) =>
-                setformData({ ...formData, chargedWeight: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">lb</span>
-          </div>
-        </div>
-
         <label htmlFor="description" className="text-comm description-form">
           Cargo Description:
         </label>

@@ -12,7 +12,7 @@ import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
 import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
-
+import * as XLSX from 'xlsx';
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
@@ -449,6 +449,16 @@ const Table = ({
           // Example: axios.post(`${BASE_URL}import/`, importedData)
         } catch (error) {
           console.error("Error parsing XML file:", error);
+        }
+      } else if (fileType === "xlsx") {
+        try {
+          const workbook = XLSX.read(content, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const importedData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+          // Send the imported data to your API
+          // Example: axios.post(`${BASE_URL}import/`, importedData)
+        } catch (error) {
+          console.error("Error parsing XLSX file:", error);
         }
       } else {
         console.log("Unsupported file format");
