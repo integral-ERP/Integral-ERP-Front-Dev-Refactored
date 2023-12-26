@@ -158,6 +158,7 @@ const Pickup = () => {
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
+      console.log('Si selecciono');
       PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {

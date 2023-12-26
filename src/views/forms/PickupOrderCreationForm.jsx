@@ -966,7 +966,7 @@ const PickupOrderCreationForm = ({
           <div className="creation creation-container w-100">
             <div className="form-label_name"><h3>General</h3><span></span></div>
             <div className="row align-items-center mb-3">
-              <div className="col-3 text-start text-start">
+              <div className="col-4 text-start text-start">
                 <Input id="pickupnumber"
                   type="number"
                   inputName="pickupnumber"
@@ -976,7 +976,7 @@ const PickupOrderCreationForm = ({
                   label="Number"
                 />
               </div>
-              <div className="col-3 text-start">
+              <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
                     label="Creation Date and Time"
@@ -991,7 +991,7 @@ const PickupOrderCreationForm = ({
                   />
                 </LocalizationProvider>
               </div>
-              <div className="col-6 text-start">
+              <div className="col-4 text-start">
                 <label htmlFor="destinationAgent" className="form-label">
                   Destination Agent:
                 </label>
@@ -1028,7 +1028,7 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
             <div className="row align-items-center mb-3">
-              <div className="col-3 text-start">
+              <div className="col-4 text-start">
                 <label htmlFor="employee" className="form-label">
                   Employee:
                 </label>
@@ -1046,7 +1046,7 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
-              <div className="col-3 text-start">
+              <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
                     label="Pick-up Date and Time"
@@ -1063,7 +1063,7 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-3 text-start">
+              <div className="col-4 text-start">
                 <label htmlFor="issuedby" className="form-label issuedBy">
                   Issued By:
                 </label>
@@ -1084,7 +1084,7 @@ const PickupOrderCreationForm = ({
                 />
               </div>
 
-              <div className="col-3 text-start">
+              <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
                     label="Delivery Date and Time"
