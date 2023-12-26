@@ -27,7 +27,7 @@
   height: 3rem;
   background: #153a6100;
   border: solid 1px;
-  color: #153a61;
+  color: #006BAD;
   border-radius: 50%;
   width: 3rem;
   margin-right: 3rem;
@@ -37,13 +37,13 @@
 .title-container {
   flex: 1;
   text-align: left;
-  color: #153a61;
+  color: #006BAD;
 }
 
 .menu-icon {
   background: none;
   border: none;
-  color: #153a61;
+  color: #006BAD;
   margin: 0.5rem;
   font-size: x-large;
 }
@@ -83,7 +83,6 @@
 }
 
 .search-input {
-  width: 200px !important;
   height: 3.2rem;
   font-size: 14px;
 }
@@ -208,7 +207,7 @@
   font-family: "Poppins", sans-serif !important;
   font-size: 1.5rem !important;
   font-weight: bold !important;
-  color: #153a61 !important;
+  color: #565656 !important;
   margin: 0rem 0 0 -1.4rem !important;
   margin: 0 0 0 0 !important;
 }
@@ -253,12 +252,10 @@
 }
 
 .css-art2ul-ValueContainer2 {
-  // background: rgb(21, 255, 0) !important;
   height: 3rem !important;
 }
 
 .css-1xc3v61-indicatorContainer {
-  // background-color: #153a61;
   height: 3rem;
 }
 
