@@ -11,10 +11,10 @@ const VendorsCreationForm = ({
   creating,
   onvendorDataChange,
 }) => {
-  
+
   const [activeTab, setActiveTab] = useState("general");
-  
-  
+
+
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [states, setStates] = useState([]);
@@ -81,31 +81,31 @@ const VendorsCreationForm = ({
 
   useEffect(() => {
     const fetchData = async () => {
-        const countriesData = await CountriesService.fetchCountries();
-        setCountries(countriesData.data);
-      };
-  
-      fetchData();
+      const countriesData = await CountriesService.fetchCountries();
+      setCountries(countriesData.data);
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
     if (selectedCountry) {
-        const fetchData = async () => {
-          const statesData = await CountriesService.fetchStates(selectedCountry);
-          setStates(statesData.data);
-        };
-        fetchData();
-      }
+      const fetchData = async () => {
+        const statesData = await CountriesService.fetchStates(selectedCountry);
+        setStates(statesData.data);
+      };
+      fetchData();
+    }
   }, [selectedCountry]);
 
   useEffect(() => {
     if (selectedCountry && selectedState) {
-        const fetchData = async () => {
-          const citiesData = await CountriesService.fetchCities(selectedCountry, selectedState);
-          setCities(citiesData.data);
-        };
-        fetchData();
-      }
+      const fetchData = async () => {
+        const citiesData = await CountriesService.fetchCities(selectedCountry, selectedState);
+        setCities(citiesData.data);
+      };
+      fetchData();
+    }
   }, [selectedCountry, selectedState]);
 
   const sendData = async () => {
@@ -126,114 +126,86 @@ const VendorsCreationForm = ({
     };
     console.log("DATA:", formData);
     const response = await (creating
-        ? VendorService.createVendor(rawData)
-        : VendorService.updateVendor(vendor.id, rawData));
-  
-      if (response.status >= 200 && response.status <= 300) {
-        console.log("Vendor successfully created/updated:", response.data);
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-          closeModal();
-          onvendorDataChange();
-          setShowSuccessAlert(false);
-          window.location.reload();
-        }, 2000);
-      } else {
-        console.log("Something went wrong:", response);
-        setShowErrorAlert(true);
-      }
+      ? VendorService.createVendor(rawData)
+      : VendorService.updateVendor(vendor.id, rawData));
+
+    if (response.status >= 200 && response.status <= 300) {
+      console.log("Vendor successfully created/updated:", response.data);
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        closeModal();
+        onvendorDataChange();
+        setShowSuccessAlert(false);
+        window.location.reload();
+      }, 2000);
+    } else {
+      console.log("Something went wrong:", response);
+      setShowErrorAlert(true);
+    }
   };
 
   return (
-    <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#general"
-            aria-selected={activeTab === "general"}
-            onClick={() => setActiveTab("general")}
-            role="tab"
-          >
-            General
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#address"
-            aria-selected={activeTab === "address"}
-            onClick={() => setActiveTab("address")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Address
-          </a>
-        </li>
-      </ul>
-      <form
-       className={`tab-pane fade ${
-        activeTab === "general" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "general" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
+    <div className="company-form vendor">
+
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>General</h3><span></span></div>
+            <div className="row w-100">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    label="Name"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="fax"
+                    placeholder="fax"
+                    value={formData.fax}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, fax: e.target.value })
+                    }
+                    label="Fax"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="website"
+                    placeholder="website"
+                    value={formData.webSide}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, webSide: e.target.value })
+                    }
+                    label="Website"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="contactFN"
+                    placeholder="contactFN"
+                    value={formData.firstNameContac}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, firstNameContac: e.target.value })
+                    }
+                    label="Contact First Name"
+                  />
+                </div>
+              </div>
+           
+            <div className="col-6 text-start">
               <div className="company-form__section">
                 <Input
-                  type="text"
-                  inputName="name"
-                  placeholder="Name"
-                  value={formData.name}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  label="Name"
-                />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="fax"
-                placeholder="fax"
-                value={formData.fax}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, fax: e.target.value })
-                }
-                label="Fax"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                  type="text"
-                  inputName="website"
-                  placeholder="website"
-                  value={formData.webSide}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, webSide: e.target.value })
-                  }
-                  label="Website"
-                />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="contactFN"
-                placeholder="contactFN"
-                value={formData.firstNameContac}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, firstNameContac: e.target.value })
-                }
-                label="Contact First Name"
-              />
-            </div>
-          </div>{/* ----------------------------END ONE---------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section">
-              <Input
                   type="text"
                   inputName="phone"
                   placeholder="Phone"
@@ -243,9 +215,9 @@ const VendorsCreationForm = ({
                   }
                   label="Phone"
                 />
-            </div>
-            <div className="company-form__section">
-              <Input
+              </div>
+              <div className="company-form__section">
+                <Input
                   type="email"
                   inputName="email"
                   placeholder="email"
@@ -254,179 +226,174 @@ const VendorsCreationForm = ({
                     setFormData({ ...formData, email: e.target.value })
                   }
                   label="Email"
-              />
+                />
+              </div>
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="rnumber"
+                  placeholder="rnumber"
+                  value={formData.referentNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, referentNumber: e.target.value })
+                  }
+                  label="Reference Number"
+                />
+              </div>
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="contactLN"
+                  placeholder="contactLN"
+                  value={formData.lasNameContac}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, lasNameContac: e.target.value })
+                  }
+                  label="Contact Last Name"
+                />
+              </div>
+              </div>
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="rnumber"
-                placeholder="rnumber"
-                value={formData.referentNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, referentNumber: e.target.value })
-                }
-                label="Reference Number"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="contactLN"
-                placeholder="contactLN"
-                value={formData.lasNameContac}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, lasNameContac: e.target.value })
-                }
-                label="Contact Last Name"
-              />
-            </div>
-            </div>{/* ----------------------------END TWO---------------------------------- */}
           </div>
-        
-        
-        
-        
-        
-        
-        
-        
-      </form>
-      <form
-        className={`tab-pane fade ${
-            activeTab === "address" ? "show active" : ""
-          } company-form__general-form`}
-          id="address"
-          style={{ display: activeTab === "address" ? "block" : "none" }}
-      >
-        <div className="company-form__section">
-        <Input
-            type="textarea"
-            inputName="street"
-            placeholder="Street & Address..."
-            value={formData.streetNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, streetNumber: e.target.value })
-            }
-            label="Street & Address"
-          />
         </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-country" className="form-label">
-            Country
-          </label>
-          <select
-            name="wp-country"
-            id="wp-country"
-            className="form-input"
-            value={formData.country}
-            onChange={(e) => handleCountryChange(e)}
-          >
-            <option value="">Select a country</option>
-            {formData.country &&
-              countries
-                .filter((country) => country.name === formData.country)
-                .map((country) => (
-                  <option
-                    key={country.iso2}
-                    value={country.name}
-                    data-key={country.iso2}
-                  >
-                    {country.name}
-                  </option>
-                ))}
-            {!formData.city &&
-              countries.map((country) => (
-                <option
-                  key={country.iso2}
-                  value={country.name}
-                  data-key={country.iso2}
+
+        <div className="col-6 text-start">
+          <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>Address</h3><span></span></div>
+            <div>
+              <div className="company-form__section">
+                <Input
+                  type="textarea"
+                  inputName="street"
+                  placeholder="Street & Address..."
+                  value={formData.streetNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, streetNumber: e.target.value })
+                  }
+                  label="Street & Address"
+                />
+              </div>
+              <div className="company-form__section">
+                <label htmlFor="wp-country" className="form-label">
+                  Country
+                </label>
+                <select
+                  name="wp-country"
+                  id="wp-country"
+                  className="form-input"
+                  value={formData.country}
+                  onChange={(e) => handleCountryChange(e)}
                 >
-                  {country.name}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-state" className="form-label">
-            State:
-          </label>
-          <select
-            name="wp-state"
-            id="wp-state"
-            className="form-input"
-            value={formData.state}
-            onChange={(e) => handleStateChange(e)}
-          >
-            <option value="">Select a state</option>
-            {formData.state &&
-              states
-                .filter((state) => state.name === formData.state)
-                .map((state) => (
-                  <option
-                    key={state.iso2}
-                    value={state.name}
-                    data-key={state.iso2}
-                  >
-                    {state.name}
-                  </option>
-                ))}
-            {!formData.state &&
-              states.map((state) => (
-                <option
-                  key={state.iso2}
-                  value={state.name}
-                  data-key={state.iso2}
+                  <option value="">Select a country</option>
+                  {formData.country &&
+                    countries
+                      .filter((country) => country.name === formData.country)
+                      .map((country) => (
+                        <option
+                          key={country.iso2}
+                          value={country.name}
+                          data-key={country.iso2}
+                        >
+                          {country.name}
+                        </option>
+                      ))}
+                  {!formData.city &&
+                    countries.map((country) => (
+                      <option
+                        key={country.iso2}
+                        value={country.name}
+                        data-key={country.iso2}
+                      >
+                        {country.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="company-form__section">
+                <label htmlFor="wp-state" className="form-label">
+                  State:
+                </label>
+                <select
+                  name="wp-state"
+                  id="wp-state"
+                  className="form-input"
+                  value={formData.state}
+                  onChange={(e) => handleStateChange(e)}
                 >
-                  {state.name}
-                </option>
-              ))}
-          </select>
+                  <option value="">Select a state</option>
+                  {formData.state &&
+                    states
+                      .filter((state) => state.name === formData.state)
+                      .map((state) => (
+                        <option
+                          key={state.iso2}
+                          value={state.name}
+                          data-key={state.iso2}
+                        >
+                          {state.name}
+                        </option>
+                      ))}
+                  {!formData.state &&
+                    states.map((state) => (
+                      <option
+                        key={state.iso2}
+                        value={state.name}
+                        data-key={state.iso2}
+                      >
+                        {state.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="company-form__section">
+                <label htmlFor="wp-city" className="form-label">
+                  City:
+                </label>
+                <select
+                  name="wp-city"
+                  id="wp-city"
+                  className="form-input"
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                >
+                  <option value="">Select a city</option>
+                  {formData.city &&
+                    cities
+                      .filter((city) => city.name === formData.city)
+                      .map((city) => (
+                        <option
+                          key={city.iso2}
+                          value={city.name}
+                          data-key={city.iso2}
+                        >
+                          {city.name}
+                        </option>
+                      ))}
+                  {!formData.city &&
+                    cities.map((city) => (
+                      <option key={city.iso2} value={city.name} data-key={city.iso2}>
+                        {city.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="zipcode"
+                  placeholder="Zip Code..."
+                  value={formData.zipCode}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, zipCode: e.target.value })
+                  }
+                  label="Zip Code"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-city" className="form-label">
-            City:
-          </label>
-          <select
-            name="wp-city"
-            id="wp-city"
-            className="form-input"
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          >
-            <option value="">Select a city</option>
-            {formData.city &&
-              cities
-                .filter((city) => city.name === formData.city)
-                .map((city) => (
-                  <option
-                    key={city.iso2}
-                    value={city.name}
-                    data-key={city.iso2}
-                  >
-                    {city.name}
-                  </option>
-                ))}
-            {!formData.city &&
-              cities.map((city) => (
-                <option key={city.iso2} value={city.name} data-key={city.iso2}>
-                  {city.name}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-        <Input
-            type="text"
-            inputName="zipcode"
-            placeholder="Zip Code..."
-            value={formData.zipCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, zipCode: e.target.value })
-            }
-            label="Zip Code"
-          />
-        </div>
-      </form>
+      </div>
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
