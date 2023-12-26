@@ -302,6 +302,7 @@ const Pickup = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
+              importEnabled={false}
             >
                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}

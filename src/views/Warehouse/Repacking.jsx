@@ -191,6 +191,7 @@ const Repacking = () => {
               onInspect={handleInspectCommodity}
               title="Repacked Commodities"
               setData={setRepackedCommodities}
+              importEnabled={false}
             />
 
             {selectedCommodity !== null && (

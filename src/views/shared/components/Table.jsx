@@ -37,6 +37,7 @@ const Table = ({
   onInspect,
   contextService,
   children,
+  importEnabled
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -760,7 +761,7 @@ const Table = ({
                             className="hidden-input"
                             id="import-input"
                           />
-                          <button
+                          {importEnabled && (<button
                             className="generic-button ne"
                             onClick={onDelete}
                           >
@@ -770,7 +771,7 @@ const Table = ({
                                 document.getElementById("import-input").click()
                               }
                             ></i>
-                          </button>
+                          </button>)}
                         </div>
                         {showFilterMenu && (
                           <div
@@ -900,12 +901,7 @@ const Table = ({
                             </div>
                           </div>
                         )}
-                        <button
-                          className="generic-button"
-                          onClick={() => setShowColumnMenu(!showColumnMenu)}
-                        >
-                          <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                        </button>
+                        
                       </div>
                       {showColumnMenu && (
                         <div
@@ -1062,6 +1058,7 @@ Table.defaultProps = {
   onAdd: null,
   title: "Table",
   showOptions: true,
+  importEnabled: true
 };
 
 export default Table;
