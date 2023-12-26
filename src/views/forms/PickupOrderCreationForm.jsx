@@ -63,9 +63,8 @@ const PickupOrderCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
-  const [canRender, setcanRender] = useState(false);
+  const [canRender, setcanRender] = useState(true);
   const [selectedCommodity, setselectedCommodity] = useState(null);
-
   const formFormat = {
     // GENERAL TAB
     status: 14,
@@ -961,6 +960,7 @@ const PickupOrderCreationForm = ({
 
     <form className="company-form pickup">
       <div className="row w-100">
+
         {/* General Form */}
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -1207,378 +1207,398 @@ const PickupOrderCreationForm = ({
       </div>
 
 
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Delivery Information</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="consignee" className="form-label">
+                  Consignee:
+                </label>
+                <div className="custom-select">
+                  <AsyncSelect
+                    id="consignee"
+                    onChange={(e) => handleConsigneeSelection(e)}
+                    value={consigneeOptions.find(
+                      (option) => option.id === formData.consigneeId
+                    )}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+              </div>
 
+              <div className="col-6 text-start">
+                <label htmlFor="delivery" className="form-label">
+                  Delivery Location:
+                </label>
+                <AsyncSelect
+                  id="deliveryLocation"
+                  onChange={(e) => {
+                    handleDeliveryLocationSelection(e);
+                  }}
+                  value={deliveryLocationOptions.find(
+                    (option) => option.id === formData.deliveryLocationId
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={deliveryLocationOptions}
+                  loadOptions={loadDeliveryLocationSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
 
-      <div className="form-label_name"><h3>Delivery Information</h3><span></span></div>
-      <div className="creation creation-container w-100">
-        <div className="row align-items-center mb-3">
-          <div className="col-6 text-start">
-            <label htmlFor="consignee" className="form-label">
-              Consignee:
-            </label>
-            <div className="custom-select">
-              <AsyncSelect
-                id="consignee"
-                onChange={(e) => handleConsigneeSelection(e)}
-                value={consigneeOptions.find(
-                  (option) => option.id === formData.consigneeId
-                )}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={consigneeOptions}
-                loadOptions={loadConsigneeSelectOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
             </div>
-          </div>
 
-          <div className="col-6 text-start">
-            <label htmlFor="delivery" className="form-label">
-              Delivery Location:
-            </label>
-            <AsyncSelect
-              id="deliveryLocation"
-              onChange={(e) => {
-                handleDeliveryLocationSelection(e);
-              }}
-              value={deliveryLocationOptions.find(
-                (option) => option.id === formData.deliveryLocationId
-              )}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={deliveryLocationOptions}
-              loadOptions={loadDeliveryLocationSelectOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    id="TextConsignee"
+                    type="textarea"
+                    inputName="consigneeInfo"
+                    placeholder="Consignee Info..."
+                    value={formData.consigneeInfo}
+                    readonly={true}
+                    label="Address"
+                  />
+                </div>
+              </div>
 
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    id="TextDeliveryLocation"
+                    type="textarea"
+                    inputName="deliveryInfo"
+                    placeholder="Delivery Info..."
+                    value={formData.deliveryLocationInfo}
+                    readonly={true}
+                    label="Address"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <label htmlFor="language"
+                  style={{ fontWeight: 'bold', fontSize: '15px', color: '#565656', marginRight: '10px' }}>
+                  Client to Bill:
+                </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
+                  className="form-input"
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an option</option>
+                  <option value="shipper">Shipper</option>
+                  <option value="consignee">Ultimate Consignee</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="col-6 text-start">
+                <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.client_to_bill_type !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                  value={releasedToOptions.find(
+                    (option) => option.id === formData.client_to_bill
+                  )}
+                  isClearable={true}
+                  defaultOptions={releasedToOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <div className="row align-items-center">
-          <div className="col-6 text-start">
-            <div className="company-form__section">
-              <Input
-                id="TextConsignee"
-                type="textarea"
-                inputName="consigneeInfo"
-                placeholder="Consignee Info..."
-                value={formData.consigneeInfo}
-                readonly={true}
-                label="Address"
-              />
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="mainCarrier" className="form-label">
+                  Carrier:
+                </label>
+                <AsyncSelect
+                  id="mainCarrier"
+                  onChange={(e) => {
+                    handleMainCarrierSelection(e);
+                  }}
+                  value={carrierOptions.find(
+                    (option) => option.id === formData.mainCarrierdId
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={carrierOptions}
+                  loadOptions={loadCarrierSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-6 text-start">
+                <Input
+                  id="trackingNumber"
+                  type="text"
+                  inputName="trackingNumber"
+                  value={formData.trackingNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, trackingNumber: e.target.value })
+                  }
+                  label="Tracking Number"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="col-6 text-start">
-            <div className="company-form__section">
-              <Input
-                id="TextDeliveryLocation"
-                type="textarea"
-                inputName="deliveryInfo"
-                placeholder="Delivery Info..."
-                value={formData.deliveryLocationInfo}
-                readonly={true}
-                label="Address"
-              />
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <Input
+                  id="TextMainCarrier"
+                  type="textarea"
+                  inputName="issuedbydata"
+                  value={formData.mainCarrierInfo}
+                  readonly={true}
+                  label="Address"
+                />
+              </div>
+              <div className="col-6 text-start">
+                <Input
+                  id="proNumber"
+                  type="text"
+                  inputName="proNumber"
+                  value={formData.proNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, proNumber: e.target.value })
+                  }
+                  label="PRO Number"
+                />
+              </div>
+
             </div>
           </div>
         </div>
-
-        <div className="row align-items-center">
-          <div className="col-6 text-start">
-            <label htmlFor="language"
-              style={{ fontWeight: 'bold', fontSize: '15px', color: '#153A61', marginRight: '10px' }}>
-              Client to Bill:
-            </label>
-            <select
-              name="clientToBill"
-              id="clientToBill"
-              className="form-input"
-              onChange={(e) => {
-                handleClientToBillSelection(e);
-              }}
-            >
-              <option value="">Select an option</option>
-              <option value="shipper">Shipper</option>
-              <option value="consignee">Ultimate Consignee</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div className="col-6 text-start">
-            <AsyncSelect
-              id="releasedToOther"
-              isDisabled={formData.client_to_bill_type !== "other"}
-              onChange={(e) => {
-                handleClientToBillSelection(e);
-              }}
-              value={releasedToOptions.find(
-                (option) => option.id === formData.client_to_bill
-              )}
-              isClearable={true}
-              defaultOptions={releasedToOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-        </div>
-
       </div>
 
-      <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
-      <div className="creation creation-container w-100">
-        <div className="row align-items-center mb-3">
-          <div className="col-6 text-start">
-            <label htmlFor="mainCarrier" className="form-label">
-              Carrier:
-            </label>
-            <AsyncSelect
-              id="mainCarrier"
-              onChange={(e) => {
-                handleMainCarrierSelection(e);
-              }}
-              value={carrierOptions.find(
-                (option) => option.id === formData.mainCarrierdId
-              )}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={carrierOptions}
-              loadOptions={loadCarrierSelectOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-          <div className="col-6 text-start">
-            <Input
-              id="trackingNumber"
-              type="text"
-              inputName="trackingNumber"
-              value={formData.trackingNumber}
-              changeHandler={(e) =>
-                setFormData({ ...formData, trackingNumber: e.target.value })
-              }
-              label="Tracking Number"
-            />
-          </div>
-        </div>
-
-        <div className="row align-items-center">
-          <div className="col-6 text-start">
-            <Input
-              id="TextMainCarrier"
-              type="textarea"
-              inputName="issuedbydata"
-              value={formData.mainCarrierInfo}
-              readonly={true}
-              label="Address"
-            />
-          </div>
-          <div className="col-6 text-start">
-            <Input
-              id="proNumber"
-              type="text"
-              inputName="proNumber"
-              value={formData.proNumber}
-              changeHandler={(e) =>
-                setFormData({ ...formData, proNumber: e.target.value })
-              }
-              label="PRO Number"
-            />
-          </div>
-
-        </div>
-      </div>
-
-      <div className="form-label_name"><h3>Commodities</h3><span></span></div>
-      <div className="creation-creation-container w-100">
 
 
-        <CommodityCreationForm
-          onCancel={setshowCommodityCreationForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-          setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-        ></CommodityCreationForm>
+      <div className="col-12">
+        <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>Commodities</h3><span></span></div>
 
-
-        {showCommodityCreationForm && (
-          <><Table
-            data={commodities}
-            columns={[
-              "Description",
-              " Length",
-              " Height",
-              " Width",
-              " Weight",
-              "Location",
-              " Volumetric Weight",
-              " Chargeable Weight",
-              "Options",
-            ]}
-            onSelect={handleSelectCommodity} // Make sure this line is correct
-            selectedRow={selectedCommodity}
-            onDelete={handleCommodityDelete}
-            onEdit={() => {
-              setshowCommodityEditForm(!showCommodityEditForm);
-            }}
-            onInspect={() => {
-              setshowCommodityInspect(!showCommodityInspect);
-            }}
-            onAdd={() => { }}
-            showOptions={false}
-          />
-            <button type="button" onClick={() => {
-              setshowRepackingForm(!showRepackingForm);
-            }}>Repack</button></>
-        )}
-
-        {showRepackingForm && (
-          <RepackingForm
-            commodities={commodities}
-            setCommodities={setcommodities}
-          ></RepackingForm>
-        )}
-        {showCommodityEditForm && (
           <CommodityCreationForm
-            onCancel={setshowCommodityEditForm}
+            onCancel={setshowCommodityCreationForm}
             commodities={commodities}
             setCommodities={setcommodities}
-            commodity={selectedCommodity}
-            editing={true}
+            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
           ></CommodityCreationForm>
-        )}
-        {showCommodityEditForm &&
-          selectedCommodity?.containsCommodities &&
-          selectedCommodity.internalCommodities.map(
-            (internalCommodity, index) => (
-              <CommodityCreationForm
-                key={index}
-                onCancel={() => { }}
-                commodities={selectedCommodity.internalCommodities}
-                setCommodities={updateSelectedCommodity}
-                commodity={internalCommodity}
-                editing={true}
-              ></CommodityCreationForm>
-            )
+
+
+          {showCommodityCreationForm && (
+            <><Table
+              data={commodities}
+              columns={[
+                "Description",
+                " Length",
+                " Height",
+                " Width",
+                " Weight",
+                "Location",
+                " Volumetric Weight",
+                " Chargeable Weight",
+                "Options",
+              ]}
+              onSelect={handleSelectCommodity} // Make sure this line is correct
+              selectedRow={selectedCommodity}
+              onDelete={handleCommodityDelete}
+              onEdit={() => {
+                setshowCommodityEditForm(!showCommodityEditForm);
+              }}
+              onInspect={() => {
+                setshowCommodityInspect(!showCommodityInspect);
+              }}
+              onAdd={() => { }}
+              showOptions={false}
+            />
+              <button type="button" onClick={() => {
+                setshowRepackingForm(!showRepackingForm);
+              }}>Repack</button></>
           )}
 
-        {showCommodityInspect && (
-          <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
-            <p>
-              {selectedCommodity?.description
-                ? selectedCommodity.description
-                : ""}
-            </p>
-            <p>
-              Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
-            </p>
-            <p>
-              Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
-            </p>
-            <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
-            <p>
-              Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
-            </p>
-            <p>
-              Volumetric Weight:{" "}
-              {selectedCommodity?.volumetricWeigth
-                ? selectedCommodity.volumetricWeigth
-                : 0}
-            </p>
-            <p>
-              Chargeable Weight:{" "}
-              {selectedCommodity?.chargeableWeight
-                ? selectedCommodity.chargeableWeight
-                : 0}
-            </p>
-            <p>
-              Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
-            </p>
-            {selectedCommodity?.internalCommodities.map((com) => {
-              return (
-                <div key={com.id} className="card">
-                  <p>{com.description}</p>
-                  <p>Weight: {com.weight}</p>
-                  <p>Height: {com.height}</p>
-                  <p>Width: {com.width}</p>
-                  <p>Length: {com.length}</p>
-                  <p>Volumetric Weight: {com.volumetricWeight}</p>
-                  <p>Chargeable Weight: {com.chargedWeight}</p>
-                  <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
-                </div>
-              );
-            })}
+          {showRepackingForm && (
+            <RepackingForm
+              commodities={commodities}
+              setCommodities={setcommodities}
+            ></RepackingForm>
+          )}
+          {showCommodityEditForm && (
+            <CommodityCreationForm
+              onCancel={setshowCommodityEditForm}
+              commodities={commodities}
+              setCommodities={setcommodities}
+              commodity={selectedCommodity}
+              editing={true}
+            ></CommodityCreationForm>
+          )}
+          {showCommodityEditForm &&
+            selectedCommodity?.containsCommodities &&
+            selectedCommodity.internalCommodities.map(
+              (internalCommodity, index) => (
+                <CommodityCreationForm
+                  key={index}
+                  onCancel={() => { }}
+                  commodities={selectedCommodity.internalCommodities}
+                  setCommodities={updateSelectedCommodity}
+                  commodity={internalCommodity}
+                  editing={true}
+                ></CommodityCreationForm>
+              )
+            )}
+
+          {showCommodityInspect && (
+            <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
+              <p>
+                {selectedCommodity?.description
+                  ? selectedCommodity.description
+                  : ""}
+              </p>
+              <p>
+                Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+              </p>
+              <p>
+                Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+              </p>
+              <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+              <p>
+                Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+              </p>
+              <p>
+                Volumetric Weight:{" "}
+                {selectedCommodity?.volumetricWeigth
+                  ? selectedCommodity.volumetricWeigth
+                  : 0}
+              </p>
+              <p>
+                Chargeable Weight:{" "}
+                {selectedCommodity?.chargeableWeight
+                  ? selectedCommodity.chargeableWeight
+                  : 0}
+              </p>
+              <p>
+                Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+              </p>
+              {selectedCommodity?.internalCommodities.map((com) => {
+                return (
+                  <div key={com.id} className="card">
+                    <p>{com.description}</p>
+                    <p>Weight: {com.weight}</p>
+                    <p>Height: {com.height}</p>
+                    <p>Width: {com.width}</p>
+                    <p>Length: {com.length}</p>
+                    <p>Volumetric Weight: {com.volumetricWeight}</p>
+                    <p>Chargeable Weight: {com.chargedWeight}</p>
+                    <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Charges</h3><span></span></div>
+            {true && (
+              <IncomeChargeForm
+                onCancel={setshowIncomeForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+              ></IncomeChargeForm>
+            )}
+
+            {showIncomeForm && (<Table
+              data={charges}
+              columns={[
+                "Status",
+                "Type",
+                "Description",
+                "Quantity",
+                "Price",
+                "Currency",
+              ]}
+              onSelect={() => { }} // Make sure this line is correct
+              selectedRow={{}}
+              onDelete={() => { }}
+              onEdit={() => { }}
+              onAdd={() => { }}
+              showOptions={false}
+            />
+            )}
           </div>
-        )}
+        </div>
+     
 
+    
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Charges</h3><span></span></div>
+            {true && (
+              <ExpenseChargeForm
+                onCancel={setshowExpenseForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+              ></ExpenseChargeForm>
+            )}
+            {showExpenseForm && (<Table
+              data={charges}
+              columns={[
+                "Status",
+                "Type",
+                "Description",
+                "Quantity",
+                "Price",
+                "Currency",
+              ]}
+              onSelect={() => { }} // Make sure this line is correct
+              selectedRow={{}}
+              onDelete={() => { }}
+              onEdit={() => { }}
+              onAdd={() => { }}
+              showOptions={false}
+            />)}
+
+
+          </div>
+        </div>
       </div>
 
-      <div className="form-label_name"><h3>Charges</h3><span></span></div>
-      <div className="creation creation-container w-100">
-        {true && (
-          <IncomeChargeForm
-            onCancel={setshowIncomeForm}
-            charges={charges}
-            setcharges={setcharges}
-            commodities={commodities}
-            agent={agent}
-            consignee={consignee}
-            shipper={shipper}
-          ></IncomeChargeForm>
-        )}
 
-        {showIncomeForm && (<Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
-          showOptions={false}
-        />
-        )}
-      </div>
-      <div className="creation creation-container w-100">
-        {true && (
-          <ExpenseChargeForm
-            onCancel={setshowExpenseForm}
-            charges={charges}
-            setcharges={setcharges}
-            commodities={commodities}
-            agent={agent}
-            consignee={consignee}
-            shipper={shipper}
-          ></ExpenseChargeForm>
-        )}
-        {showExpenseForm && (<Table
-          data={charges}
-          columns={[
-            "Status",
-            "Type",
-            "Description",
-            "Quantity",
-            "Price",
-            "Currency",
-          ]}
-          onSelect={() => { }} // Make sure this line is correct
-          selectedRow={{}}
-          onDelete={() => { }}
-          onEdit={() => { }}
-          onAdd={() => { }}
-          showOptions={false}
-        />)}
-
-
-      </div>
       <div className="company-form__options-container">
         <button className="button-save" onClick={(e) => { e.preventDefault(); sendData() }}
           type="submit"

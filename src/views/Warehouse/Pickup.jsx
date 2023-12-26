@@ -318,7 +318,7 @@ const Pickup = () => {
               </Alert>
             )}
 
-            {selectedPickupOrder !== null && (
+            {/* {selectedPickupOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
@@ -342,7 +342,7 @@ const Pickup = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
               <ModalForm
