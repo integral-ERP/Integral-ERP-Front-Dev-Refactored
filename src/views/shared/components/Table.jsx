@@ -901,7 +901,6 @@ const Table = ({
                             </div>
                           </div>
                         )}
-                        
                       </div>
                       {showColumnMenu && (
                         <div
