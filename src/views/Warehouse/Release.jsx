@@ -259,7 +259,7 @@ const Release = () => {
               </Alert>
             )}
 
-            {selectedReleaseOrder !== null && (
+            {/* {selectedReleaseOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
@@ -283,7 +283,7 @@ const Release = () => {
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
           </div>
         </div>
       </div>

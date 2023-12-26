@@ -526,9 +526,11 @@ const ReleaseOrderCreationForm = ({
 
 
     <div className="company-form release-order">
-      <div className="name">Release creation form </div>
-      <div className="form-label_name"><h3>General</h3><span></span></div>
+   
+   <div className="row w-100">
+   <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>General</h3><span></span></div>
         <div className="row align-items-center">
 
           <div className="col-4 text-start">
@@ -692,9 +694,11 @@ const ReleaseOrderCreationForm = ({
           </div>
         </div>
       </div>
+      </div>
 
-      <div className="form-label_name"><h3>Carrier</h3><span></span></div>
+      <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Carrier</h3><span></span></div>
         <div className="row align-items-center mb-3">
           <div className="col-6 text-start">
             <label htmlFor="mainCarrier" className="form-label">
@@ -760,9 +764,12 @@ const ReleaseOrderCreationForm = ({
           </div>
         </div>
       </div>
+      </div>
+      </div>
 
-      <div className="form-label_name"><h3>Cargo</h3><span></span></div>
+     
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Cargo</h3><span></span></div>
       <Table
             data={commodities}
             columns={[

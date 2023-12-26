@@ -14,7 +14,7 @@ import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
 
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
-import _ from "lodash";
+import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
@@ -71,6 +71,12 @@ const Table = ({
     });
     return initialVisibility;
   });
+
+  const handleEdit = (e) => {
+    setShowPage('edit');
+    onEdit(e);
+
+  }
   const columnNameToProperty = {
     Name: "name",
     Phone: "phone",
@@ -643,10 +649,11 @@ const Table = ({
         return (
           <div className="layout-fluid">
             {children}
-            {/* <PickupOrderCreationForm
-            pickupOrder={selectedPickupOrder}
-            closeModal={closeModal}
-            creating={false} /> */}
+          </div>
+      )
+      case 'edit': return (
+        <div className="layout-fluid">
+          {children}
           </div>
         );
     }
@@ -725,7 +732,7 @@ const Table = ({
 
                           <button
                             className="generic-button ne"
-                            onClick={onEdit}
+                            onClick={handleEdit}
                           >
                             <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
                           </button>

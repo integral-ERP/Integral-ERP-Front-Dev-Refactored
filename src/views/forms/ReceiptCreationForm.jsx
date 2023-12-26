@@ -404,7 +404,7 @@ const ReceiptCreationForm = ({
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
       setattachments(pickupOrder.attachments);
-      
+
       console.log("Selected Pickup:", pickupOrder);
       loadShipperOption(pickupOrder.shipperObj?.data?.obj?.id, pickupOrder.shipperObj?.data?.obj?.type_person);
       loadConsigneeOption(pickupOrder.consigneeObj?.data?.obj?.id, pickupOrder.consigneeObj?.data?.obj?.type_person);
@@ -463,9 +463,9 @@ const ReceiptCreationForm = ({
         // SUPPLIER TAB
         supplierId: pickupOrder.supplier,
         supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""
-      } - ${pickupOrder.supplierObj?.city || ""} - ${pickupOrder.supplierObj?.state || ""
-      } - ${pickupOrder.supplierObj?.country || ""} - ${pickupOrder.supplierObj?.zip_code || ""
-      }`,
+          } - ${pickupOrder.supplierObj?.city || ""} - ${pickupOrder.supplierObj?.state || ""
+          } - ${pickupOrder.supplierObj?.country || ""} - ${pickupOrder.supplierObj?.zip_code || ""
+          }`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
         // CHARGES TAB
@@ -521,7 +521,7 @@ const ReceiptCreationForm = ({
     ];
 
     const carrierOptions = [...carriersWithType];
-    
+
     issuedByOptions.sort((a, b) => {
       return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
@@ -950,48 +950,65 @@ const ReceiptCreationForm = ({
 
   return (
     <div className="company-form receipt">
-      <div className="name">Receipt creation form </div>
 
-      <div className="form-label_name"><h3>General</h3><span></span></div>
-      <div className="creation creation-container w-100">
-        <div className="row align-items-center mb-3">
-          <div className="col-4 text-start">
-            <Input
-              type="number"
-              inputName="number"
-              placeholder="Number..."
-              value={formData.number}
-              readonly={true}
-              label="Number"
-            />
-          </div>
+      <div className="row w-100">
+      <div className="col-6">
+        <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>General</h3><span></span></div>
+          <div className="row align-items-center mb-3">
+            <div className="col-4 text-start">
+              <Input
+                type="number"
+                inputName="number"
+                placeholder="Number..."
+                value={formData.number}
+                readonly={true}
+                label="Number"
+              />
+            </div>
 
-          <div className="col-4 text-start">
-            <label htmlFor="employee" className="form-label">
-              Employee:
-            </label>
-            <AsyncSelect
-              id="employee"
-              value={employeeOptions.find(
-                (option) => option.id === formData.employeeId
-              )}
-              onChange={(e) => {
-                handleEmployeeSelection(e);
-              }}
-              isClearable={true}
-              defaultOptions={employeeOptions}
-              loadOptions={loadEmployeeSelectOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
+            <div className="col-4 text-start">
+              <label htmlFor="employee" className="form-label">
+                Employee:
+              </label>
+              <AsyncSelect
+                id="employee"
+                value={employeeOptions.find(
+                  (option) => option.id === formData.employeeId
+                )}
+                onChange={(e) => {
+                  handleEmployeeSelection(e);
+                }}
+                isClearable={true}
+                defaultOptions={employeeOptions}
+                loadOptions={loadEmployeeSelectOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
 
-          <div className="col-4 text-start">
-            <label htmlFor="destinationAgent" className="form-label">
-              Destination Agent:
-            </label>
-            {!creating ? (
-              canRender && (
+            <div className="col-4 text-start">
+              <label htmlFor="destinationAgent" className="form-label">
+                Destination Agent:
+              </label>
+              {!creating ? (
+                canRender && (
+                  <AsyncSelect
+                    id="destinationAgent"
+                    onChange={(e) => {
+                      handleDestinationAgentSelection(e);
+                    }}
+                    value={destinationAgentOptions.find(
+                      (option) => option.id === formData.destinationAgentId
+                    )}
+                    isClearable={true}
+                    defaultOptions={destinationAgentOptions}
+                    loadOptions={loadDestinationAgentsSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                )
+              ) : (
                 <AsyncSelect
                   id="destinationAgent"
                   onChange={(e) => {
@@ -1006,165 +1023,154 @@ const ReceiptCreationForm = ({
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-              )
-            ) : (
+              )}
+            </div>
+          </div>
+
+          <div className="row align-items-center">
+            <div className="col-4 text-start">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Entry Date and Time"
+                  className="font-right"
+                  value={dayjs(formData.createdDateAndTime)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+
+            <div className="col-4 text-start">
+              <label htmlFor="issuedBy" className="form-label">
+                Issued By:
+              </label>
               <AsyncSelect
-                id="destinationAgent"
+                id="issuedBy"
+                value={issuedByOptions.find(
+                  (option) => option.id === formData.issuedById
+                )}
                 onChange={(e) => {
-                  handleDestinationAgentSelection(e);
+                  handleIssuedBySelection(e);
                 }}
-                value={destinationAgentOptions.find(
-                  (option) => option.id === formData.destinationAgentId
-                )}
-                isClearable={true}
-                defaultOptions={destinationAgentOptions}
-                loadOptions={loadDestinationAgentsSelectOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="row align-items-center">
-          <div className="col-4 text-start">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Entry Date and Time"
-                className="font-right"
-                value={dayjs(formData.createdDateAndTime)}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                  })
-                }
-              />
-            </LocalizationProvider>
-          </div>
-
-          <div className="col-4 text-start">
-            <label htmlFor="issuedBy" className="form-label">
-              Issued By:
-            </label>
-            <AsyncSelect
-              id="issuedBy"
-              value={issuedByOptions.find(
-                (option) => option.id === formData.issuedById
-              )}
-              onChange={(e) => {
-                handleIssuedBySelection(e);
-              }}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={issuedByOptions}
-              loadOptions={loadIssuedBySelectOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-          <div className="col-4 text-start">
-            <Input
-              type="number"
-              inputName="entryNumber"
-              placeholder="Entry Number..."
-              value={formData.entryNumber}
-              label="Entry Number"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="form-label_name"><h3>Shipper/Consignee</h3><span></span></div>
-
-      <div className="creation creation-container w-100">
-        <div className="row align-items-center mb-3">
-          <div className="col-6 text-start">
-            <label htmlFor="shipper" className="form-label">
-              Shipper:
-            </label>
-            <AsyncSelect
-              id="shipper"
-              onChange={(e) => {
-                handleShipperSelection(e);
-              }}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={shipperOptions}
-              loadOptions={loadShipperSelectOptions}
-              value={shipperOptions.find(
-                (option) => (option.id === formData.shipperId && option.type === formData.shipperType)
-              )}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-          <div className="col-6 text-start">
-            <label htmlFor="consignee" className="form-label">
-              Consignee:
-            </label>
-            <div className="custom-select">
-              <AsyncSelect
-                id="consignee"
-                value={consigneeOptions.find(
-                  (option) => (option.id === formData.consigneeId && option.type === formData.consigneeType)
-                )}
-                onChange={(e) => handleConsigneeSelection(e)}
                 isClearable={true}
                 placeholder="Search and select..."
-                defaultOptions={consigneeOptions}
-                loadOptions={loadConsigneeSelectOptions}
+                defaultOptions={issuedByOptions}
+                loadOptions={loadIssuedBySelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
             </div>
-
+            <div className="col-4 text-start">
+              <Input
+                type="number"
+                inputName="entryNumber"
+                placeholder="Entry Number..."
+                value={formData.entryNumber}
+                label="Entry Number"
+              />
+            </div>
           </div>
         </div>
-
-        <div className="row align-items-center mb-3">
-          <div className="col-6 text-start">
-            <Input
-              type="textarea"
-              inputName="shipperinfo"
-              placeholder="Shipper Location..."
-              value={formData.shipperInfo}
-              readonly={true}
-            />
-          </div>
-
-          <div className="col-6 text-start">
-            <Input
-              type="textarea"
-              inputName="consigneeInfo"
-              placeholder="Consignee Info..."
-              value={formData.consigneeInfo}
-              readonly={true}
-              label=""
-            />
-          </div>
         </div>
 
-        <div className="row align-items-center">
-          <div className="col-6 text-start">
-            <label htmlFor="clientToBill" className="form-label">
-              Client to Bill:
-            </label>
-            <select
-              name="clientToBill"
-              id="clientToBill"
-              onChange={(e) => handleClientToBillSelection(e)}
-            >
-              <option value="">Select an option</option>
-              <option value="consignee">Consignee</option>
-              <option value="shipper">Shipper</option>
-            </select>
+        <div className="col-6">
+        <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>Shipper/Consignee</h3><span></span></div>
+          <div className="row align-items-center mb-3">
+            <div className="col-6 text-start">
+              <label htmlFor="shipper" className="form-label">
+                Shipper:
+              </label>
+              <AsyncSelect
+                id="shipper"
+                onChange={(e) => {
+                  handleShipperSelection(e);
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={shipperOptions}
+                loadOptions={loadShipperSelectOptions}
+                value={shipperOptions.find(
+                  (option) => (option.id === formData.shipperId && option.type === formData.shipperType)
+                )}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            <div className="col-6 text-start">
+              <label htmlFor="consignee" className="form-label">
+                Consignee:
+              </label>
+              <div className="custom-select">
+                <AsyncSelect
+                  id="consignee"
+                  value={consigneeOptions.find(
+                    (option) => (option.id === formData.consigneeId && option.type === formData.consigneeType)
+                  )}
+                  onChange={(e) => handleConsigneeSelection(e)}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={consigneeOptions}
+                  loadOptions={loadConsigneeSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+
+            </div>
           </div>
+
+          <div className="row align-items-center mb-3">
+            <div className="col-6 text-start">
+              <Input
+                type="textarea"
+                inputName="shipperinfo"
+                placeholder="Shipper Location..."
+                value={formData.shipperInfo}
+                readonly={true}
+              />
+            </div>
+
+            <div className="col-6 text-start">
+              <Input
+                type="textarea"
+                inputName="consigneeInfo"
+                placeholder="Consignee Info..."
+                value={formData.consigneeInfo}
+                readonly={true}
+                label=""
+              />
+            </div>
+          </div>
+
+          <div className="row align-items-center">
+            <div className="col-6 text-start">
+              <label htmlFor="clientToBill" className="form-label">
+                Client to Bill:
+              </label>
+              <select
+                name="clientToBill"
+                id="clientToBill"
+                onChange={(e) => handleClientToBillSelection(e)}
+              >
+                <option value="">Select an option</option>
+                <option value="consignee">Consignee</option>
+                <option value="shipper">Shipper</option>
+              </select>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
 
-      <div className="form-label_name"><h3>Supplier</h3><span></span></div>
+      <div className="row w-100">
+      <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Supplier</h3><span></span></div>
         <div className="row align-items-center mb-3">
 
           <div className="col-6 text-start">
@@ -1232,9 +1238,11 @@ const ReceiptCreationForm = ({
 
         </div>
       </div>
+      </div>
 
-      <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
+      <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
         <div className="row align-items-center">
           <div className="col-4 text-start">
             <label htmlFor="mainCarrier" className="form-label">
@@ -1283,9 +1291,13 @@ const ReceiptCreationForm = ({
         </div>
 
       </div>
+      </div>
+      </div>
 
-      <div className="form-label_name"><h3>Commodities</h3><span></span></div>
+
+    
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Commodities</h3><span></span></div>
         <CommodityCreationForm
           onCancel={setshowCommodityCreationForm}
           commodities={commodities}
@@ -1343,8 +1355,10 @@ const ReceiptCreationForm = ({
         </button>
       </div>
 
-      <div className="form-label_name"><h3>Charges</h3><span></span></div>
+      <div className="row w-100">
+      <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Charges</h3><span></span></div>
         {true && (
           <IncomeChargeForm
             onCancel={setshowIncomeForm}
@@ -1377,20 +1391,23 @@ const ReceiptCreationForm = ({
         )}
         {showIncomeChargeEditForm && (
           <IncomeChargeForm
-          onCancel={setshowIncomeChargeEditForm}
-          charges={charges}
-          setcharges={setcharges}
-          commodities={commodities}
-          agent={agent}
-          consignee={consignee}
-          shipper={shipper}
-          editing={true}
-          charge={selectedIncomeCharge}
-        ></IncomeChargeForm>
+            onCancel={setshowIncomeChargeEditForm}
+            charges={charges}
+            setcharges={setcharges}
+            commodities={commodities}
+            agent={agent}
+            consignee={consignee}
+            shipper={shipper}
+            editing={true}
+            charge={selectedIncomeCharge}
+          ></IncomeChargeForm>
         )}
       </div>
-
+      </div>
+     
+      <div className="col-6">
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Charges</h3><span></span></div>
         {true && (
           <ExpenseChargeForm
             onCancel={setshowIncomeForm}
@@ -1422,22 +1439,24 @@ const ReceiptCreationForm = ({
         />)}
         {showExpenseEditForm && (
           <ExpenseChargeForm
-          onCancel={setshowIncomeChargeEditForm}
-          charges={charges}
-          setcharges={setcharges}
-          commodities={commodities}
-          agent={agent}
-          consignee={consignee}
-          shipper={shipper}
-          editing={true}
-          charge={selectedIncomeCharge}
-        ></ExpenseChargeForm>
+            onCancel={setshowIncomeChargeEditForm}
+            charges={charges}
+            setcharges={setcharges}
+            commodities={commodities}
+            agent={agent}
+            consignee={consignee}
+            shipper={shipper}
+            editing={true}
+            charge={selectedIncomeCharge}
+          ></ExpenseChargeForm>
         )}
+      </div>
+      </div>
       </div>
 
 
-      <div className="form-label_name"><h3>Events</h3><span></span></div>
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Events</h3><span></span></div>
         <div className="row align-items-center">
           <div className="col-12 text-start">
 
@@ -1478,11 +1497,8 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
-
-
-
-      <div className="form-label_name"><h3>Attachments</h3><span></span></div>
       <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Attachments</h3><span></span></div>
         <div className="row align-items-center">
           <div className="col-12">
             <input type="file" multiple onChange={handleFileUpload} />

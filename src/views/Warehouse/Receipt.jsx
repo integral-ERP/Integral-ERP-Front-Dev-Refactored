@@ -200,7 +200,7 @@ const Receipt = () => {
               </Alert>
             )}
 
-            {selectedPickupOrder !== null && (
+            {/* {selectedPickupOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
@@ -224,7 +224,7 @@ const Receipt = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
           </div>
         </div>
       </div>
