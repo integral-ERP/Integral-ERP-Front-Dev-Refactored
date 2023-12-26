@@ -29,30 +29,48 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   }, []);
 
   useEffect(() => {
-    console.log(formData);
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
-      ).toFixed(0);
-      const ratedWeight =
-        formData.volumetricWeight >= formData.weight
-          ? formData.volumetricWeight
-          : formData.weight;
-      setformData({
-        ...formData,
+      );
+  
+      setformData(prevFormData => ({
+        ...prevFormData,
         volumetricWeight: volWeight,
-        chargedWeight: ratedWeight,
-      });
+        chargedWeight: Math.max(volWeight, prevFormData.weight),
+      }));
     }
-  }, [formData.height, formData.length, formData.width]);
+  }, [formData.height, formData.length, formData.width, formData.weight]);
 
 
-  const handleCommoditySelection = (e) => {
-    const selectedCommodityIds = Array.from(e.target.selectedOptions, (option) => option.value);
-    const selectedCommodities = commodities.filter((item) => selectedCommodityIds.includes(item.id + ''));
-    setinternalCommodities(selectedCommodities);
-  };
+  const handleCommoditySelection = (e, commodityId) => {
+    const isChecked = e.target.checked;
+
+    // Update the selectedCommodities based on the checkbox change
+    setinternalCommodities((prevCommodities) => {
+        if (isChecked) {
+            // If the checkbox is checked, add the commodity to the list
+            console.log("ADDING COMMODITY: "  , [...prevCommodities, getCommodityById(commodityId)]);
+            return [...prevCommodities, getCommodityById(commodityId)];
+        } else {
+            // If the checkbox is unchecked, remove the commodity from the list
+            return prevCommodities.filter((item) => item.id !== commodityId);
+        }
+    });
+};
+
+// Helper function to get a commodity by its ID
+const getCommodityById = (commodityId) => {
+    return commodities.find((item) => item.id === commodityId);
+};
+
+const isAdded = (e) => {
+  const id = e;
+  const ids = internalCommodities.map((com) => String(com.id))
+  console.log("IS CONTAINED: ", ids.includes(id));
+  return ids.includes(id);
+}
 
   const handleRepack = () => {
     let internalWeight = 0;
@@ -153,16 +171,6 @@ const RepackingForm = ({ commodities, setCommodities }) => {
             <span className="input-group-text num-com">in3</span>
           </div>
         </div>
-        <div className="form-column-create">
-          <label className="text-comm__space">Chargeable Weight:</label>
-          <div className="input-group ">
-            <input type="number" className="form-comm" aria-label="" value={formData.chargedWeight}
-              onChange={(e) =>
-                setformData({ ...formData, ratedWeight: e.target.value })
-              }/>
-            <span className="input-group-text num-com">lb</span>
-          </div>          
-        </div>
         <label htmlFor="description" className="text-comm">
             Description:
           </label>
@@ -181,11 +189,18 @@ const RepackingForm = ({ commodities, setCommodities }) => {
           <input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/>
       </div>
       <div>
-        <select name="commodities" id="commodities" multiple onChange={(e) => handleCommoditySelection(e)}>
-            {commodities.map((item) => {
-                return <option value={item.id} key={item.id}>{item.description}</option>
-            })}
-        </select>
+      {commodities.map((item) => (
+    <div key={item.id}>
+        <input
+            type="checkbox"
+            id={`commodity-${item.id}`}
+            value={item.id}
+            checked={internalCommodities.map((com) => com.id).includes(item.id)}
+            onChange={(e) => handleCommoditySelection(e, item.id)}
+        />
+        <label htmlFor={`commodity-${item.id}`}>{item.description}</label>
+    </div>
+))}
       </div>
       <div>
         <button type="button" onClick={handleRepack}>Repack</button>

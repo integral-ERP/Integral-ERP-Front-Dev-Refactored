@@ -313,6 +313,7 @@ const PickupOrderCreationForm = ({
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
       );
+      console.log("EXECUTING LOAD CONSIGNEE");
       loadConsigneeOption(
         pickupOrder.consigneeObj?.data?.obj?.id,
         pickupOrder.consigneeObj?.data?.obj?.type_person
@@ -617,7 +618,7 @@ const PickupOrderCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-
+    console.log("LOADING CONSIGNEE:", id, type);
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
