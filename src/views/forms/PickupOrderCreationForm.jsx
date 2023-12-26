@@ -337,22 +337,26 @@ const PickupOrderCreationForm = ({
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
           }`,
+        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
         pickupLocationId: pickupOrder.pick_up_location,
         pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
           } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
           }`,
+        pickupLocationType: pickupOrder.pickUpLocationObj?.data?.obj?.type_person,
         // DELIVERY TAB
         consigneeId: pickupOrder.consignee,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
           }`,
+        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
         deliveryLocationId: pickupOrder.delivery_location,
         deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
           }`,
+          deliveryLocationType: pickupOrder.deliveryLocationObj?.data?.obj?.type_person,
         // CARRIER TAB
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
@@ -368,6 +372,7 @@ const PickupOrderCreationForm = ({
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
+        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj.type_person,
       };
 
       setFormData(updatedFormData);
@@ -830,6 +835,7 @@ const PickupOrderCreationForm = ({
   };
 
   const updateSelectedCommodity = (updatedInternalCommodities) => {
+    console.log("prop de pick up", pickupOrder);
     const updatedCommodity = { ...selectedCommodity };
     updatedCommodity.internalCommodities = updatedInternalCommodities;
     setselectedCommodity(updatedCommodity);

@@ -31,7 +31,7 @@ const Pickup = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
-
+  const [createPickUpOrder, setCreatePickUpOrder] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
@@ -156,13 +156,16 @@ const Pickup = () => {
 
   const handleEditPickupOrders = () => {
     if (selectedPickupOrder) {
+      setCreatePickUpOrder(false);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
+      
     }
   };
 
   const handleAddPickupOrder = () => {
+    setCreatePickUpOrder(true);
     openModal();
   };
 
@@ -307,7 +310,7 @@ const Pickup = () => {
                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={true}
+                  creating={createPickUpOrder}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
