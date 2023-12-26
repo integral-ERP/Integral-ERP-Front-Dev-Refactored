@@ -31,8 +31,8 @@ class InvoicesService{
       return response;
   }
 
-  async getInvoicesAccountID(id){
-    const response = await axios.get(`${this.BASE_URL}Invoice/filtered-by-account/${id}`);
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}Invoice/?search=${query}`);
     return response;
   }
 }

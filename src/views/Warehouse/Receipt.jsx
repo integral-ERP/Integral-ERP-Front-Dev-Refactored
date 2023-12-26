@@ -10,7 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 
 const Receipt = () => {
-  const { hideShowSlider } = useContext(GlobalContext)
+  const {hideShowSlider } = useContext(GlobalContext)
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -27,8 +27,6 @@ const Receipt = () => {
     "Consignee",
     "Carrier",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Receipt PDF",
   ];
 
@@ -39,9 +37,9 @@ const Receipt = () => {
           const pickupOrderId = pickupOrder.id;
           return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-
-        setreceipts([...receipts, ...newreceipts]);
-        console.log("NEW ORDERS", [...receipts, ...newreceipts]);
+        
+        setreceipts([...receipts, ...newreceipts].reverse());
+        console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,9 +59,9 @@ const Receipt = () => {
   useEffect(() => {
     if (initialDataFetched) {
       console.log("recibo:", receipts[0]);
-      const number = receipts[receipts.length - 1]?.number || 0;
+      const number = receipts[0]?.number || 0;
       console.log("NUMERO", number);
-      setcurrentPickupNumber(number + 1);
+      setcurrentPickupNumber(number);
     }
   }, [receipts]);
 
@@ -139,14 +137,13 @@ const Receipt = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isreceiptsButton && !isTableRow) {
         setSelectedPickupOrder(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -170,7 +167,17 @@ const Receipt = () => {
               onAdd={handleAddPickupOrder}
               title="Warehouse Receipts"
               setData={setreceipts}
-            />
+              contextService={ReceiptService}
+            >
+              <ReceiptCreationForm
+                  pickupOrder={selectedPickupOrder}
+                  closeModal={closeModal}
+                  creating={true}
+                  onpickupOrderDataChange={handlereceiptsDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+              </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -193,7 +200,7 @@ const Receipt = () => {
               </Alert>
             )}
 
-            {selectedPickupOrder !== null && (
+            {/* {selectedPickupOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
@@ -217,7 +224,7 @@ const Receipt = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
           </div>
         </div>
       </div>

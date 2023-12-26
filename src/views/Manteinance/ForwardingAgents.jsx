@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ForwardingAgentService from "../../services/ForwardingAgentService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const ForwardingAgents = () => {
   const [forwardingAgents, setforwardingAgents] = useState([]);
@@ -14,7 +15,7 @@ const ForwardingAgents = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-  const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -45,6 +46,7 @@ const ForwardingAgents = () => {
     "Passenger Only Airline",
   ];
   const [selectedForwardingAgent, setselectedForwardingAgent] = useState(null);
+  const {hideShowSlider} = useContext(GlobalContext);
 
   const fetchForwardingAgentsData = (url = null) => {
     ForwardingAgentService.getForwardingAgents(url)
@@ -60,7 +62,7 @@ const ForwardingAgents = () => {
   };
 
   useEffect(() => {
-    if (!initialDataFetched) {
+    if(!initialDataFetched){
       fetchForwardingAgentsData();
       setInitialDataFetched(true);
     }
@@ -135,14 +137,13 @@ const ForwardingAgents = () => {
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedForwardingAgent(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -152,62 +153,70 @@ const ForwardingAgents = () => {
 
   return (
     <>
-      <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div className="content-page">
-            <Table
-              data={forwardingAgents}
-              columns={columns}
-              onSelect={handleSelectForwardingAgent} // Make sure this line is correct
-              selectedRow={selectedForwardingAgent}
-              onDelete={handleDeleteForwardingAgent}
-              onEdit={handleEditForwardingAgent}
-              onAdd={handleAddForwardingAgent}
-              title="Forwarding Agents"
+    <div className="dashboard__layout">
+      <div className="dashboard__sidebar">
+        <Sidebar />
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+        <Table
+          data={forwardingAgents}
+          columns={columns}
+          onSelect={handleSelectForwardingAgent} // Make sure this line is correct
+          selectedRow={selectedForwardingAgent}
+          onDelete={handleDeleteForwardingAgent}
+          onEdit={handleEditForwardingAgent}
+          onAdd={handleAddForwardingAgent}
+          contextService={ForwardingAgentService}
+          title="Forwarding Agents"
+        >
+          <ForwardingAgentsCreationForm
+              forwardingAgent={selectedForwardingAgent}
+              closeModal={closeModal}
+              creating={false}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
             />
+            </Table>
 
-            {showSuccessAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowSuccessAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Success</AlertTitle>
-                <strong>Forwarding Agent deleted successfully!</strong>
-              </Alert>
-            )}
-            {showErrorAlert && (
-              <Alert
-                severity="error"
-                onClose={() => setShowErrorAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Forwarding Agent. Please try again</strong>
-              </Alert>
-            )}
-            {selectedForwardingAgent !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ForwardingAgentsCreationForm
-                  forwardingAgent={selectedForwardingAgent}
-                  closeModal={closeModal}
-                  creating={false}
-                  onForwardingAgentDataChange={handleWarehouseProviderDataChange}
-                />
-              </ModalForm>
-            )}
-            {selectedForwardingAgent === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ForwardingAgentsCreationForm
-                  forwardingAgent={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onForwardingAgentDataChange={handleWarehouseProviderDataChange}
-                />
-              </ModalForm>
-            )}
-          </div>
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Forwarding Agent deleted successfully!</strong>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error deleting Forwarding Agent. Please try again</strong>
+          </Alert>
+        )}
+        {selectedForwardingAgent !== null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <ForwardingAgentsCreationForm
+              forwardingAgent={selectedForwardingAgent}
+              closeModal={closeModal}
+              creating={false}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
+            />
+          </ModalForm>
+        )}
+        {selectedForwardingAgent === null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <ForwardingAgentsCreationForm
+              forwardingAgent={null}
+              closeModal={closeModal}
+              creating={true}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
+            />
+          </ModalForm>
+        )}
+        </div>
         </div>
       </div>
     </>

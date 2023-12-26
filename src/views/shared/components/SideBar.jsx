@@ -5,11 +5,10 @@ import { Link } from "react-router-dom";
 import { GlobalContext } from "../../../context/global";
 import MyCompanyForm from "../../forms/MyCompanyForm";
 import ModalForm from "../components/ModalForm";
-
 import logo from "../../../img/logotext.png";
-import logoBlanco from "../../../img/logoBlanco.png";
 import usuario from "../../../img/usuario.png";
-import logoIntegral from "../../../img/integral.png"
+import logoblanco from "../../../img/logoblanco2.png";
+import logoIntegral from "../../../img/logoblanco.png";
 
 
 const Sidebar = () => {
@@ -63,7 +62,7 @@ const Sidebar = () => {
       <div className={`sidebar ${hideShowSlider ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}
-          <img className="logo_icon" src={logoBlanco} alt="logo-blanco"/>
+          <img className="logo_icon" src={logoblanco} alt="logo-blanco-integral"/>
           <img className="logo_name" src={logo} alt="Logo" />
           {/* <span className="logo_name">Logo</span> */}
         </div>
@@ -106,10 +105,7 @@ const Sidebar = () => {
                 <Link to={"/warehouse/release"}>Release</Link>
               </li>
               <li>
-                <Link to={"/warehouse/commodities"}>Commodities</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
+                <Link to={"/warehouse/repacking"}>Repacking</Link>
               </li>
             </ul>
           </li>
@@ -241,9 +237,6 @@ const Sidebar = () => {
                 <Link to={"/accounting/invoices"}>Invoices</Link>
               </li>
               <li>
-                <Link to={"/accounting/payments"}>Payments</Link>
-              </li>
-              <li>
                 <Link to={"/accounting/bills"}>Bills</Link>
               </li>
               <li>
@@ -251,6 +244,10 @@ const Sidebar = () => {
               </li>
               <li>
                 <Link to={"/accounting/deposits"}>Deposits</Link>
+              </li>
+              <li>
+                <Link to={"/accounting/payments"}>Payments</Link>
+                {/* <a href="#">Payments</a> */}
               </li>
             </ul>
           </li>
@@ -270,9 +267,6 @@ const Sidebar = () => {
             <ul className="sub-menu">
               <li>
                 <Link className="link_name">Online Customer</Link>
-              </li>
-              <li>
-                <Link to={"/warehouse/prealerts"}>Pre Alerts</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>

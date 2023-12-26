@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import VendorsCreationForm from "../forms/VendorCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import VendorService from "../../services/VendorService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Vendors = () => {
   const [vendors, setvendors] = useState([]);
@@ -15,7 +16,7 @@ const Vendors = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-  const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Name",
     "Phone",
@@ -36,7 +37,7 @@ const Vendors = () => {
 
     "System ID",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchvendorsData = (url = null) => {
     VendorService.getVendors(url)
       .then((response) => {
@@ -51,7 +52,7 @@ const Vendors = () => {
   };
 
   useEffect(() => {
-    if (!initialDataFetched) {
+    if(!initialDataFetched){
       fetchvendorsData();
       setInitialDataFetched(true);
     }
@@ -127,14 +128,13 @@ const Vendors = () => {
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedVendor(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -144,64 +144,73 @@ const Vendors = () => {
 
   return (
     <>
-      <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div className="content-page">
-            <Table
-              data={vendors}
-              columns={columns}
-              onSelect={handleSelectVendor} // Make sure this line is correct
-              selectedRow={selectedVendor}
-              onDelete={handleDeleteVendor}
-              onEdit={handleEditVendor}
-              onAdd={handleAddVendor}
-              title="Vendors"
+    <div className="dashboard__layout">
+      <div className="dashboard__sidebar">
+        <Sidebar />
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+        <Table
+          data={vendors}
+          columns={columns}
+          onSelect={handleSelectVendor} // Make sure this line is correct
+          selectedRow={selectedVendor}
+          onDelete={handleDeleteVendor}
+          onEdit={handleEditVendor}
+          onAdd={handleAddVendor}
+          contextService={VendorService}
+          title="Vendors"
+        >
+           <VendorsCreationForm
+              vendor={selectedVendor}
+              closeModal={closeModal}
+              creating={false}
+              onvendorDataChange={handleVendorsDataChange}
             />
+            </Table>
 
-            {showSuccessAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowSuccessAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Success</AlertTitle>
-                <strong>Vendor deleted successfully!</strong>
-              </Alert>
-            )}
-            {showErrorAlert && (
-              <Alert
-                severity="error"
-                onClose={() => setShowErrorAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Vendor. Please try again</strong>
-              </Alert>
-            )}
-            {selectedVendor !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <VendorsCreationForm
-                  vendor={selectedVendor}
-                  closeModal={closeModal}
-                  creating={false}
-                  onvendorDataChange={handleVendorsDataChange}
-                />
-              </ModalForm>
-            )}
-            {selectedVendor === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <VendorsCreationForm
-                  vendor={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onvendorDataChange={handleVendorsDataChange}
-                />
-              </ModalForm>
-            )}
-          </div>
+
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Vendor deleted successfully!</strong>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error deleting Vendor. Please try again</strong>
+          </Alert>
+        )}
+        {selectedVendor !== null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <VendorsCreationForm
+              vendor={selectedVendor}
+              closeModal={closeModal}
+              creating={false}
+              onvendorDataChange={handleVendorsDataChange}
+            />
+          </ModalForm>
+        )}
+        {selectedVendor === null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <VendorsCreationForm
+              vendor={null}
+              closeModal={closeModal}
+              creating={true}
+              onvendorDataChange={handleVendorsDataChange}
+            />
+          </ModalForm>
+        )}
         </div>
       </div>
+    </div>
     </>
   );
 };

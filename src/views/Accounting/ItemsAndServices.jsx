@@ -39,7 +39,7 @@ const ItemsAndServices = () => {
       });
   };
   useEffect(() => {
-    if (!initialDataFetched) {
+    if(!initialDataFetched){
       updateItemsAndServices();
       setInitialDataFetched(true);
     }
@@ -114,14 +114,13 @@ const ItemsAndServices = () => {
       const clickedElement = event.target;
       const isItemAndServiceButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isItemAndServiceButton && !isTableRow) {
         setSelectedItemAndService(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -131,66 +130,66 @@ const ItemsAndServices = () => {
 
   return (
     <>
+    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div className="content-page">
-            <Table
-              data={itemsAndServices}
-              columns={columns}
-              onSelect={handleSelectItemAndService} // Make sure this line is correct
-              selectedRow={selectedeItemAndService}
-              onDelete={handleDeleteItemAndService}
-              onEdit={handleEditItemAndService}
-              onAdd={handleAddItemAndService}
-              title="Items & Services"
+        <Sidebar />
+      <div className="content-page">
+        <Table
+          data={itemsAndServices}
+          columns={columns}
+          onSelect={handleSelectItemAndService} // Make sure this line is correct
+          selectedRow={selectedeItemAndService}
+          onDelete={handleDeleteItemAndService}
+          onEdit={handleEditItemAndService}
+          onAdd={handleAddItemAndService}
+          title="Items & Services"
+        />
+
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Item and Service deleted successfully!</strong>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error deleting Item and Service. Please try again</strong>
+          </Alert>
+        )}
+
+        {selectedeItemAndService !== null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <ItemAndServiceCreationForm
+              itemAndService={selectedeItemAndService}
+              closeModal={closeModal}
+              creating={false}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
             />
+          </ModalForm>
+        )}
 
-            {showSuccessAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowSuccessAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Success</AlertTitle>
-                <strong>Item and Service deleted successfully!</strong>
-              </Alert>
-            )}
-            {showErrorAlert && (
-              <Alert
-                severity="error"
-                onClose={() => setShowErrorAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Item and Service. Please try again</strong>
-              </Alert>
-            )}
-
-            {selectedeItemAndService !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={selectedeItemAndService}
-                  closeModal={closeModal}
-                  creating={false}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedeItemAndService === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
-                />
-              </ModalForm>
-            )}
-          </div>
+        {selectedeItemAndService === null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <ItemAndServiceCreationForm
+              itemAndService={null}
+              closeModal={closeModal}
+              creating={true}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
+            />
+          </ModalForm>
+        )}
         </div>
       </div>
+    </div>
     </>
   );
 }

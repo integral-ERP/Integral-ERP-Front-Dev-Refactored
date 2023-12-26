@@ -1,11 +1,13 @@
 .company-form {
+  /* display: inline-block;
+  width: 100%; */
+  color: #565656;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  color: #153A61;
-  padding: 35px;
-  //background: white;
+  gap: 3rem;
+  margin: 2rem 0;
 
   .form-textarea{
     width: 90% !important;
@@ -34,7 +36,7 @@
   }
 
   &__label {
-    color: black;
+    color: #565656;
     width: 200px;
     display: inline-block;
     white-space: nowrap;
@@ -69,7 +71,7 @@
     display: flex;
     width: 40%;
     justify-content: space-evenly;
-    height: 3rem;
+    height: 20rem;
 
     &__option {
       margin: 15px;
@@ -204,7 +206,7 @@
 .nav-tabs .nav-item.open .nav-link, .nav-tabs .nav-item.open .nav-link:focus,
 .nav-tabs .nav-item.open .nav-link:hover, .nav-tabs .nav-link.active, 
 .nav-tabs .nav-link.active:focus, .nav-tabs .nav-link.active:hover {
-  background-color: #153A61 !important;
+  background-color: #006BAD !important;
   border-radius: 5px;
   color: #ffffff !important;
 }

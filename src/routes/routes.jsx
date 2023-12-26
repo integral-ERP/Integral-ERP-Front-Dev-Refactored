@@ -22,12 +22,12 @@ import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
 import Invoices from "../views/Accounting/Invoices";
 import PaymentTerms from "../views/Configuration/PaymentTerms";
 import Payments from "../views/Accounting/Payments";
-
+import Repacking from "../views/Warehouse/Repacking";
 export const RoutesConfiguration = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/maintenance" element={<Maintenance />} />
@@ -50,6 +50,7 @@ export const RoutesConfiguration = () => {
         <Route path="/warehouse/pickup" element={<Pickup />} />
         <Route path="/warehouse/receipt" element={<Receipt />} />
         <Route path="/warehouse/release" element={<Release />} />
+        <Route path="/warehouse/repacking" element={<Repacking />} />
         <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
         <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
         <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />

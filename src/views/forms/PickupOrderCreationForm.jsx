@@ -20,7 +20,8 @@ import AsyncSelect from "react-select/async";
 import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
-import "../../styles/components/PickupOrderCreationForm.scss";
+import "../../styles/components/CreationForm.scss"
+// import "../../styles/components/PickupOrderForm.scss";
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -41,6 +42,7 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
@@ -61,9 +63,8 @@ const PickupOrderCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
-  const [canRender, setcanRender] = useState(false);
+  const [canRender, setcanRender] = useState(true);
   const [selectedCommodity, setselectedCommodity] = useState(null);
-
   const formFormat = {
     // GENERAL TAB
     status: 14,
@@ -106,7 +107,7 @@ const PickupOrderCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    console.log(formFormat, "formdata");
+
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -252,7 +253,7 @@ const PickupOrderCreationForm = ({
   };
 
   const handleCommodityDelete = () => {
-    console.log("commodity id", selectedCommodity.id, "commodity list", commodities);
+
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
     );
@@ -274,6 +275,7 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
+    console.log("selecting client to bill", event);
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -281,32 +283,32 @@ const PickupOrderCreationForm = ({
         type === "shipper"
           ? formData.shipperId
           : type === "consignee"
-          ? formData.consigneeId
-          : "";
+            ? formData.consigneeId
+            : "";
       setFormData({
         ...formData,
-        client_to_bill: id,
         client_to_bill_type: type,
       });
     } else {
       const id = event.id;
       const type = event.type;
-      console.log("id", id, "type", type);
+
       setFormData({
         ...formData,
         client_to_bill_type: type,
         client_to_bill: id,
       });
     }
+
   };
 
   useEffect(() => {
-    console.log("checking for edit", "join:", !creating && pickupOrder != null);
+
     if (!creating && pickupOrder != null) {
-      console.log("Selected Pickup:", pickupOrder);
+
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
-      console.log("CALLING LOAD SHIPPER OPTION");
+      setshowCommodityCreationForm(true);
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -366,7 +368,7 @@ const PickupOrderCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -428,7 +430,7 @@ const PickupOrderCreationForm = ({
       ...customersWithType,
       forwardingAgentsWithType,
     ];
-    console.log("Setting Released to options:", clientToBillOptions);
+
 
     // Set the state with the updated arrays
     setIssuedByOptions(issuedByOptions);
@@ -440,6 +442,161 @@ const PickupOrderCreationForm = ({
     setDeliveryLocationOptions(deliveryLocationOptions);
     setCarrierOptions(carrierOptions);
     setReleasedToOptions(clientToBillOptions);
+  };
+
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    return options;
+  };
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDestinationAgentsSelectOptions = async (inputValue) => {
+
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadShipperSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadConsigneeSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadPickUpLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadDeliveryLocationSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadClientToBillSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
   };
 
   const loadShipperOption = async (id, type) => {
@@ -460,7 +617,7 @@ const PickupOrderCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
+
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -471,7 +628,7 @@ const PickupOrderCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    console.log("SHIPPER FOUND:", option.data);
+
     setdefaultValueShipper(option.data);
   };
 
@@ -481,43 +638,35 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (creating) {
-      console.log(
-        "Setting new pickup number:",
-        pickupNumber,
-        "old pickup number:",
-        currentPickUpNumber
-      );
+
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
 
-  useEffect(() => {
-    console.log("Updated form data:", formData);
-  }, [formData]);
-  const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div"}, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
+  const listId = [{ "selectedId": "#pickupnumber", "asociatedId": "#pickupnumber" }, { "selectedId": "#issuedById > div", "asociatedId": "#issuedById > div" }, { "selectedId": "#employeeId  > div", "asociatedId": "#employeeId > div" }, { "selectedId": "#creationdateandtime", "asociatedId": "#creationdateandtime" }, { "selectedId": "#pickupdateandtime", "asociatedId": "#pickupdateandtime" }, { "selectedId": "#deliverydateandtime", "asociatedId": "#deliverydateandtime" }, { "selectedId": "#shipper > div", "asociatedId": "#shipperinfo" }, { "selectedId": "#pickupLocation > div", "asociatedId": "#pickupinfo" }, { "selectedId": "#consignee > div", "asociatedId": "#consigneeInfo" }, { "selectedId": "#deliveryLocation > div", "asociatedId": "#deliveryInfo" }, { "selectedId": "#destinationAgentId > div", "asociatedId": "#destinationAgentId > div" }, { "selectedId": "#mainCarrier > div", "asociatedId": "#issuedbydata" }, { "selectedId": "#invoiceNumber", "asociatedId": "#invoiceNumber" }, { "selectedId": "#trackingNumber", "asociatedId": "#trackingNumber" }, { "selectedId": "#proNumber", "asociatedId": "#proNumber" }, { "selectedId": "#purchaseOrderNumber", "asociatedId": "#purchaseOrderNumber" }]
 
   useEffect(() => {
-    if(commodities && commodities.length >= 1){
-      setFormData({...formData, status: 5});
+    if (commodities && commodities.length >= 1) {
+      setFormData({ ...formData, status: 5 });
     }
   }, [commodities])
-  
+
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
     for (const inputs of listId) {
       const inputSelected = document.querySelector(inputs.selectedId)
       const inputAsociated = document.querySelector(inputs.asociatedId)
-      const isValid = inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-      console.log(formData);
+      const isValid = true;//inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
+
       if (inputSelected && formData[inputSelected.id]) {
         inputSelected.style.border = "1px solid green"
-        // console.log("green", inputSelected.id)
+
         continue
       }
       else {
         if (inputSelected) inputSelected.style.border = "1px solid red"
-        // console.log("red", inputSelected.id)
+
         if (!isValid && inputSelected?.style) {
           inputSelected.style.border = "1px solid red"
 
@@ -525,8 +674,9 @@ const PickupOrderCreationForm = ({
         else { if (inputSelected) inputSelected.style.border = "1px solid green" }
       }
     }
-    return;
+    //return;
 
+    let auxVar;
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -547,14 +697,14 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createConsignee(consignee);
       if (response.status === 201) {
-        console.log("CONSIGNEE ID", response.data.id);
         setconsigneeRequest(response.data.id);
+        formData.client_to_bill_type === "consignee" ? auxVar = response.data.id : "";
       }
     }
 
     let deliveryLocationName = "";
     if (formData.deliveryLocationType === "customer") {
-      console.log("its a customer");
+
       deliveryLocationName = "customerid";
     }
     if (formData.deliveryLocationType === "vendor") {
@@ -573,7 +723,7 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createDeliveryLocation(consignee);
       if (response.status === 201) {
-        console.log("DELIVERY LOCATION ID", response.data.id);
+
         setdeliverylocation(response.data.id);
       }
     }
@@ -598,7 +748,7 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createPickUpLocation(consignee);
       if (response.status === 201) {
-        console.log("PICKUP LOCATION ID", response.data.id);
+
         setpickuplocation(response.data.id);
       }
     }
@@ -623,31 +773,13 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createShipper(consignee);
       if (response.status === 201) {
-        console.log("SHIPPER ID", response.data.id);
+        formData.client_to_bill_type === "shipper" ? auxVar = response.data.id : "";
         setshipperRequest(response.data.id);
       }
     }
 
     let clientToBillName = "";
 
-    if (formData.releasedToType === "releasedTo") {
-      switch (formData.releasedToType) {
-        case "customer":
-          clientToBillName = "customerid";
-          break;
-        case "vendor":
-          clientToBillName = "vendorid";
-          break;
-        case "agent":
-          clientToBillName = "agentid";
-          break;
-        case "carrier":
-          clientToBillName = "carrierid";
-          break;
-        default:
-          break;
-      }
-    }
     if (formData.client_to_bill_type === "customer") {
       clientToBillName = "customerid";
     }
@@ -662,32 +794,35 @@ const PickupOrderCreationForm = ({
     }
     if (formData.client_to_bill_type === "shipper") {
       clientToBillName = "shipperid";
+      console.log("The client to bill is a shipper", auxVar);
     }
     if (formData.client_to_bill_type === "consignee") {
+      console.log("The client to bill is a consignee", auxVar);
       clientToBillName = "consigneeid";
     }
-    console.log("CREATING CLIENT TO BILL", clientToBillName, formData.client_to_bill_type);
+
     if (clientToBillName !== "") {
       const clientToBill = {
-        [clientToBillName]: formData.client_to_bill,
+        [clientToBillName]: (formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee") ? auxVar : formData.client_to_bill,
       };
 
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("CLIENT TO BILL ID", response.data.id);
+        console.log("RESPONSE CLIENT TO BILL", response.data.id);
+        setclientToBillRequest(response.data.id);
         setFormData({ ...formData, client_to_bill: response.data.id });
       }
     }
   };
 
   const checkUpdatesComplete = () => {
-    console.log("Checking for updates");
+
     if (
       shipperRequest !== null &&
       deliverylocation !== null &&
       pickuplocation !== null &&
       consigneeRequest !== null &&
-      formData.client_to_bill !== null
+      clientToBillRequest !== null
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -714,13 +849,12 @@ const PickupOrderCreationForm = ({
       // Check if the click is inside your modal content
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".pickup")
-      console.log("CLOSEST", isForm);
-      console.log("HANDLE MODAL CLICK EVENT");
+
       if (!isForm) {
         // Click is outside the modal content, close the modal
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
-        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+
       }
     };
 
@@ -733,9 +867,9 @@ const PickupOrderCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log("TRYING TO CHANGE STATUS");
+
     if (commodities.length > 0) {
-      console.log("CHANGING STATUS");
+
       setFormData({ ...formData, status: 5 });
     }
   }, [commodities]);
@@ -744,6 +878,7 @@ const PickupOrderCreationForm = ({
     // Check if updates are complete initially
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
+
       const createPickUp = async () => {
         let rawData = {
           // GENERAL TAB
@@ -794,7 +929,8 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-          }, 5000);
+            window.location.reload();
+          }, 2000);
         } else {
           console.log("Something went wrong:", response);
           setShowErrorAlert(true);
@@ -808,6 +944,7 @@ const PickupOrderCreationForm = ({
     pickuplocation,
     consigneeRequest,
     allStateUpdatesComplete,
+    clientToBillRequest
   ]);
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -822,189 +959,227 @@ const PickupOrderCreationForm = ({
   return (
 
     <form className="company-form pickup">
-      <div className="name">Pick-Up creation form </div>
+      <div className="row w-100">
 
-      <div className="form-label_name"><h3>General</h3><span></span></div>
-      <div className="container-box">
-        <div className="containerr">
-          <div className="containerr__general">
-            <div >
-              <div className="cont-two__space">
-                <div className="company-form__section">
-                  <Input id="pickupnumber"
-                    type="number"
-                    inputName="pickupnumber"
-                    placeholder="Pickup Order Number..."
-                    value={formData.number}
-                    readonly={true}
-                    label="Number"
-                  />
-
-                  <div className="company-form__section"></div>
-                  <label htmlFor="employee" className="form-label">
-                    Employee:
-                  </label>
-                  <AsyncSelect
-                    id="employeeId"
-                    defaultValue={formData.employeeId}
-                    onChange={(e) => {
-                      handleEmployeeSelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={employeeOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
-                <div className="company-form__section">
-                  <label htmlFor="issuedby" className="form-label issuedBy">
-                    Issued By:
-                  </label>
-                  <AsyncSelect
-                    id="issuedById"
-                    value={issuedByOptions.find(
-                      (option) => option.id === formData.issuedById
-                    )}
-                    onChange={(e) => {
-                      handleIssuedBySelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={issuedByOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
+        {/* General Form */}
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>General</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+              <div className="col-4 text-start text-start">
+                <Input id="pickupnumber"
+                  type="number"
+                  inputName="pickupnumber"
+                  placeholder="Pickup Order Number..."
+                  value={formData.number}
+                  readonly={true}
+                  label="Number"
+                />
               </div>
-
-              <div className="cont-three__space">
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Creation Date and Time"
-                      className="font-right"
-                      value={dayjs(formData.createdDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Pick-up Date and Time"
-                      value={dayjs(formData.pickupDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Delivery Date and Time"
-                      value={dayjs(formData.deliveryDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Creation Date and Time"
+                    className="font-right"
+                    value={dayjs(formData.createdDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
               </div>
-
-              <div className="cont-one__space">
-                <div className="company-form__section">
-                  <label htmlFor="destinationAgent" className="form-label">
-                    Destination Agent:
-                  </label>
-                  {!creating ? (
-                    canRender && (
-                      <AsyncSelect
-                        id="destinationAgent"
-                        onChange={(e) => {
-                          handleDestinationAgentSelection(e);
-                        }}
-                        isClearable={true}
-                        defaultOptions={destinationAgentOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                        value={destinationAgentOptions.find(
-                          (option) => option.id === formData.destinationAgentId
-                        )}
-                      />
-                    )
-                  ) : (
+              <div className="col-4 text-start">
+                <label htmlFor="destinationAgent" className="form-label">
+                  Destination Agent:
+                </label>
+                {!creating ? (
+                  canRender && (
                     <AsyncSelect
-                      id="destinationAgentId"
+                      id="destinationAgent"
                       onChange={(e) => {
                         handleDestinationAgentSelection(e);
                       }}
                       isClearable={true}
                       defaultOptions={destinationAgentOptions}
+                      loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
+                      value={destinationAgentOptions.find(
+                        (option) => option.id === formData.destinationAgentId
+                      )}
                     />
-                  )}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="form-label_name"><h3>Pickup Information</h3><span></span></div>
-      <div className="container-box">
-        <div className="containerr">
-          <div className="containerr__pickup">
-            <div className="cont-one_general">
-              <div>
-                <div className="company-form__section">
-                  <label htmlFor="shipper" className="form-label">
-                    Shipper:
-                  </label>
+                  )
+                ) : (
                   <AsyncSelect
-                    id="shipper"
+                    id="destinationAgentId"
                     onChange={(e) => {
-                      handleShipperSelection(e);
+                      handleDestinationAgentSelection(e);
                     }}
-                    value={shipperOptions.find(
-                      (option) => option.id === formData.shipperId
-                    )}
                     isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={shipperOptions}
+                    defaultOptions={destinationAgentOptions}
+                    loadOptions={loadDestinationAgentsSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
-                </div>
-                <div className="company-form__section">
-                  <Input
-                    type="text"
-                    inputName="invoiceNumber"
-                    value={formData.invoiceNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, invoiceNumber: e.target.value })
+                )}
+              </div>
+            </div>
+            <div className="row align-items-center mb-3">
+              <div className="col-4 text-start">
+                <label htmlFor="employee" className="form-label">
+                  Employee:
+                </label>
+                <AsyncSelect
+                  id="employeeId"
+                  defaultValue={formData.employeeId}
+                  onChange={(e) => {
+                    handleEmployeeSelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={employeeOptions}
+                  loadOptions={loadEmployeeSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Pick-up Date and Time"
+                    value={dayjs(formData.pickupDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
                     }
-                    label="Purchase Order"
+                    className="creation creation-label"
                   />
-                </div>
+                </LocalizationProvider>
+              </div>
+            </div>
+            <div className="row align-items-center">
+              <div className="col-4 text-start">
+                <label htmlFor="issuedby" className="form-label issuedBy">
+                  Issued By:
+                </label>
+                <AsyncSelect
+                  id="issuedById"
+                  value={issuedByOptions.find(
+                    (option) => option.id === formData.issuedById
+                  )}
+                  onChange={(e) => {
+                    handleIssuedBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={issuedByOptions}
+                  loadOptions={loadIssuedBySelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Delivery Date and Time"
+                    value={dayjs(formData.deliveryDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Pickup Form */}
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Pickup Information</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+
+              <div className="col-3 text-start">
+                <label htmlFor="shipper" className="form-label">
+                  Shipper:
+                </label>
+                <AsyncSelect
+                  id="shipper"
+                  onChange={(e) => {
+                    handleShipperSelection(e);
+                  }}
+                  value={shipperOptions.find(
+                    (option) => option.id === formData.shipperId
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={shipperOptions}
+                  loadOptions={loadShipperSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+
+              <div className="col-3 text-start">
+                <Input
+                  type="text"
+                  inputName="invoiceNumber"
+                  value={formData.invoiceNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, invoiceNumber: e.target.value })
+                  }
+                  label="Purchase Order"
+                />
+              </div>
+
+              <div className="col-3 text-start">
+                <label htmlFor="pickup" className="form-label">
+                  Pick-up Location:
+                </label>
+                <AsyncSelect
+                  id="pickupLocation"
+                  onChange={(e) => {
+                    handlePickUpSelection(e);
+                  }}
+                  value={pickupLocationOptions.find(
+                    (option) => option.id === formData.pickupLocationId
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={pickupLocationOptions}
+                  loadOptions={loadPickUpLocationSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
               </div>
 
 
-              <div className="company-form__section">
+              <div className="col-3 text-start">
+
+                <Input
+                  type="text"
+                  inputName="purchaseOrderNumber"
+                  value={formData.purchaseOrderNumber}
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      purchaseOrderNumber: e.target.value,
+                    })
+                  }
+                  label="Invoice Number"
+                />
+              </div>
+            </div>
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
                 <Input
                   id="TextShipperLocation"
                   type="textarea"
@@ -1014,49 +1189,9 @@ const PickupOrderCreationForm = ({
                   readonly={true}
                 />
               </div>
-            </div>
 
 
-            <div className="cont-two_pickup">
-
-              <div>
-                <div className="company-form__section">
-                  <label htmlFor="pickup" className="form-label">
-                    Pick-up Location:
-                  </label>
-                  <AsyncSelect
-                    id="pickupLocation"
-                    onChange={(e) => {
-                      handlePickUpSelection(e);
-                    }}
-                    value={pickupLocationOptions.find(
-                      (option) => option.id === formData.pickupLocationId
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={pickupLocationOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
-
-                <div className="company-form__section">
-                  <Input
-                    type="text"
-                    inputName="purchaseOrderNumber"
-                    value={formData.purchaseOrderNumber}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        purchaseOrderNumber: e.target.value,
-                      })
-                    }
-                    label="Invoice Number"
-                  />
-                </div>
-              </div>
-
-              <div className="company-form__section">
+              <div className="col-6 text-start">
                 <Input
                   id="TextPickupLocation"
                   type="textarea"
@@ -1071,12 +1206,13 @@ const PickupOrderCreationForm = ({
         </div>
       </div>
 
-      <div className="form-label_name"><h3>Delivery Information</h3><span></span></div>
-      <div className="container-box">
-        <div className="containerr">
-          <div className="containerr__delivery">
-            <div>
-              <div className="company-form__section">
+
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Delivery Information</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
                 <label htmlFor="consignee" className="form-label">
                   Consignee:
                 </label>
@@ -1090,45 +1226,14 @@ const PickupOrderCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
                 </div>
               </div>
 
-              <div className="company-form__section">
-                <Input
-                  id="TextConsignee"
-                  type="textarea"
-                  inputName="consigneeInfo"
-                  placeholder="Consignee Info..."
-                  value={formData.consigneeInfo}
-                  readonly={true}
-                  label="Address"
-                />
-              </div>
-
-              <div className="company-form__section">
-              <label htmlFor="language">Client to Bill:</label>
-              <select
-                name="clientToBill"
-                id="clientToBill"
-                className="form-input"
-                onChange={(e) => {
-                  handleClientToBillSelection(e);
-                }}
-              >
-                <option value="">Select an option</option>
-                <option value="shipper">Shipper</option>
-                <option value="consignee">Ultimate Consignee</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            </div>
-
-            <div>
-              <div className="company-form__section">
+              <div className="col-6 text-start">
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
                 </label>
@@ -1143,56 +1248,90 @@ const PickupOrderCreationForm = ({
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={deliveryLocationOptions}
+                  loadOptions={loadDeliveryLocationSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-
-
               </div>
 
-              <div className="company-form__section">
-                <Input
-                  id="TextDeliveryLocation"
-                  type="textarea"
-                  inputName="deliveryInfo"
-                  placeholder="Delivery Info..."
-                  value={formData.deliveryLocationInfo}
-                  readonly={true}
-                  label="Address"
+            </div>
+
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    id="TextConsignee"
+                    type="textarea"
+                    inputName="consigneeInfo"
+                    placeholder="Consignee Info..."
+                    value={formData.consigneeInfo}
+                    readonly={true}
+                    label="Address"
+                  />
+                </div>
+              </div>
+
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    id="TextDeliveryLocation"
+                    type="textarea"
+                    inputName="deliveryInfo"
+                    placeholder="Delivery Info..."
+                    value={formData.deliveryLocationInfo}
+                    readonly={true}
+                    label="Address"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <label htmlFor="language"
+                  style={{ fontWeight: 'bold', fontSize: '15px', color: '#565656', marginRight: '10px' }}>
+                  Client to Bill:
+                </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
+                  className="form-input"
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an option</option>
+                  <option value="shipper">Shipper</option>
+                  <option value="consignee">Ultimate Consignee</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="col-6 text-start">
+                <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.client_to_bill_type !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                  value={releasedToOptions.find(
+                    (option) => option.id === formData.client_to_bill
+                  )}
+                  isClearable={true}
+                  defaultOptions={releasedToOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
                 />
               </div>
-
-              {/* <div className="company-form__section">
-              <AsyncSelect
-                id="releasedToOther"
-                isDisabled={formData.client_to_bill_type !== "other"}
-                onChange={(e) => {
-                  handleClientToBillSelection(e);
-                }}
-                value={releasedToOptions.find(
-                  (option) => option.id === formData.client_to_bill
-                )}
-                isClearable={true}
-                defaultOptions={releasedToOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div> */}
             </div>
 
-            <div>
-            </div>
           </div>
         </div>
-      </div>
 
-      <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
-      <div className="container-box">
-        <div className="containerr">
-          <div className="containerr__carrier">
-
-            <div>
-              <div className="company-form__section">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Carrier Information</h3><span></span></div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
                 <label htmlFor="mainCarrier" className="form-label">
                   Carrier:
                 </label>
@@ -1207,24 +1346,12 @@ const PickupOrderCreationForm = ({
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={carrierOptions}
+                  loadOptions={loadCarrierSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
               </div>
-              <div className="company-form__section">
-                <Input
-                  id="TextMainCarrier"
-                  type="textarea"
-                  inputName="issuedbydata"
-                  value={formData.mainCarrierInfo}
-                  readonly={true}
-                  label="Address"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="company-form__section">
+              <div className="col-6 text-start">
                 <Input
                   id="trackingNumber"
                   type="text"
@@ -1236,71 +1363,82 @@ const PickupOrderCreationForm = ({
                   label="Tracking Number"
                 />
               </div>
+            </div>
 
-              <div>
-                <div className="company-form__section">
-                  <Input
-                    id="proNumber"
-                    type="text"
-                    inputName="proNumber"
-                    value={formData.proNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, proNumber: e.target.value })
-                    }
-                    label="PRO Number"
-                  />
-                </div>
-
-
+            <div className="row align-items-center">
+              <div className="col-6 text-start">
+                <Input
+                  id="TextMainCarrier"
+                  type="textarea"
+                  inputName="issuedbydata"
+                  value={formData.mainCarrierInfo}
+                  readonly={true}
+                  label="Address"
+                />
               </div>
+              <div className="col-6 text-start">
+                <Input
+                  id="proNumber"
+                  type="text"
+                  inputName="proNumber"
+                  value={formData.proNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, proNumber: e.target.value })
+                  }
+                  label="PRO Number"
+                />
+              </div>
+
             </div>
           </div>
         </div>
       </div>
 
 
-      <div className="form-label_name"><h3>Commodities</h3><span></span></div>
-      <div className="container-box__form">
-        <div className="containerr__commodities">
-          <div className="company-form__section">
-              <CommodityCreationForm
-                onCancel={setshowCommodityCreationForm}
-                commodities={commodities}
-                setCommodities={setcommodities}
-                setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-              ></CommodityCreationForm>
-          </div>
+
+      <div className="col-12">
+        <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>Commodities</h3><span></span></div>
+
+          <CommodityCreationForm
+            onCancel={setshowCommodityCreationForm}
+            commodities={commodities}
+            setCommodities={setcommodities}
+            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+          ></CommodityCreationForm>
+
+
           {showCommodityCreationForm && (
             <><Table
-            data={commodities}
-            columns={[
-              "Description",
-              " Length",
-              " Height",
-              " Width",
-              " Weight",
-              "Location",
-              " Volumetric Weight",
-              " Chargeable Weight",
-              "Options",
-            ]}
-            onSelect={handleSelectCommodity} // Make sure this line is correct
-            selectedRow={selectedCommodity}
-            onDelete={handleCommodityDelete}
-            onEdit={() => {
-              setshowCommodityEditForm(!showCommodityEditForm);
-            }}
-            onInspect={() => {
-              setshowCommodityInspect(!showCommodityInspect);
-            }}
-            onAdd={() => {}}
-            showOptions={false}
-          />
+              data={commodities}
+              columns={[
+                "Description",
+                " Length",
+                " Height",
+                " Width",
+                " Weight",
+                "Location",
+                " Volumetric Weight",
+                " Chargeable Weight",
+                "Options",
+              ]}
+              onSelect={handleSelectCommodity} // Make sure this line is correct
+              selectedRow={selectedCommodity}
+              onDelete={handleCommodityDelete}
+              onEdit={() => {
+                setshowCommodityEditForm(!showCommodityEditForm);
+              }}
+              onInspect={() => {
+                setshowCommodityInspect(!showCommodityInspect);
+              }}
+              onAdd={() => { }}
+              showOptions={false}
+            />
               <button type="button" className="button-save" onClick={() => {
-            setshowRepackingForm(!showRepackingForm);
-          }}>Repack</button></>
+                setshowRepackingForm(!showRepackingForm);
+              }}>Repack</button></>
           )}
-          
+
           {showRepackingForm && (
             <RepackingForm
               commodities={commodities}
@@ -1322,7 +1460,7 @@ const PickupOrderCreationForm = ({
               (internalCommodity, index) => (
                 <CommodityCreationForm
                   key={index}
-                  onCancel={() => {}}
+                  onCancel={() => { }}
                   commodities={selectedCommodity.internalCommodities}
                   setCommodities={updateSelectedCommodity}
                   commodity={internalCommodity}
@@ -1330,85 +1468,64 @@ const PickupOrderCreationForm = ({
                 ></CommodityCreationForm>
               )
             )}
-            
-            {showCommodityInspect && (
-        <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
-          <p>
-            {selectedCommodity?.description
-              ? selectedCommodity.description
-              : ""}
-          </p>
-          <p>
-            Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
-          </p>
-          <p>
-            Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
-          </p>
-          <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
-          <p>
-            Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
-          </p>
-          <p>
-            Volumetric Weight:{" "}
-            {selectedCommodity?.volumetricWeigth
-              ? selectedCommodity.volumetricWeigth
-              : 0}
-          </p>
-          <p>
-            Chargeable Weight:{" "}
-            {selectedCommodity?.chargeableWeight
-              ? selectedCommodity.chargeableWeight
-              : 0}
-          </p>
-          <p>
-            Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
-          </p>
-          {selectedCommodity?.internalCommodities.map((com) => {
-            return (
-              <div key={com.id} className="card">
-                <p>{com.description}</p>
-                <p>Weight: {com.weight}</p>
-                <p>Height: {com.height}</p>
-                <p>Width: {com.width}</p>
-                <p>Length: {com.length}</p>
-                <p>Volumetric Weight: {com.volumetricWeight}</p>
-                <p>Chargeable Weight: {com.chargedWeight}</p>
-                <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
+
+          {showCommodityInspect && (
+            <div className="repacking-container" onClick={(event) => event.stopPropagation()}>
+              <p>
+                {selectedCommodity?.description
+                  ? selectedCommodity.description
+                  : ""}
+              </p>
+              <p>
+                Weight: {selectedCommodity?.weight ? selectedCommodity.weight : 0}
+              </p>
+              <p>
+                Height: {selectedCommodity?.height ? selectedCommodity.height : 0}
+              </p>
+              <p>Width: {selectedCommodity?.width ? selectedCommodity.width : 0}</p>
+              <p>
+                Length: {selectedCommodity?.length ? selectedCommodity.length : 0}
+              </p>
+              <p>
+                Volumetric Weight:{" "}
+                {selectedCommodity?.volumetricWeigth
+                  ? selectedCommodity.volumetricWeigth
+                  : 0}
+              </p>
+              <p>
+                Chargeable Weight:{" "}
+                {selectedCommodity?.chargeableWeight
+                  ? selectedCommodity.chargeableWeight
+                  : 0}
+              </p>
+              <p>
+                Repacked?: {selectedCommodity?.containsCommodities ? "Yes" : "No"}
+              </p>
+              {selectedCommodity?.internalCommodities.map((com) => {
+                return (
+                  <div key={com.id} className="card">
+                    <p>{com.description}</p>
+                    <p>Weight: {com.weight}</p>
+                    <p>Height: {com.height}</p>
+                    <p>Width: {com.width}</p>
+                    <p>Length: {com.length}</p>
+                    <p>Volumetric Weight: {com.volumetricWeight}</p>
+                    <p>Chargeable Weight: {com.chargedWeight}</p>
+                    <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
         </div>
       </div>
 
-      <div className="form-label_name"><h3>Charges</h3><span></span></div>
-      <div className="container-box__form">
-        <div className="containerr__charges">
-          <div className="company-form__section">
-            {/* 
-          <button
-            type="button"
-            className="btn btn-primary btn-lg charge-buttons"
-            onClick={() => {
-              setshowIncomeForm(!showIncomeForm);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-            >
-              <path
-                d="M19.1426 23.6543C17.8477 24.123 16.4531 24.375 15 24.375C13.5469 24.375 12.1465 24.1172 10.8574 23.6543C10.8398 23.6484 10.8281 23.6426 10.8105 23.6367C9.05273 22.9922 7.48242 21.9551 6.20508 20.625C4.10156 18.4336 2.8125 15.4629 2.8125 12.1875C2.8125 5.45508 8.26758 0 15 0C21.7324 0 27.1875 5.45508 27.1875 12.1875C27.1875 15.4629 25.8984 18.4336 23.7949 20.625C23.7363 20.6836 23.6777 20.748 23.6191 20.8066C22.3652 22.0605 20.8418 23.0391 19.1484 23.6543H19.1426ZM15 5.38477C14.3496 5.38477 13.8223 5.91211 13.8223 6.5625V6.91406C13.4941 6.98438 13.1836 7.08398 12.8906 7.21289C12.0117 7.61133 11.2559 8.34961 11.0684 9.42188C10.9629 10.0195 11.0215 10.5938 11.2676 11.1211C11.5137 11.6367 11.8945 12 12.2812 12.2637C12.9609 12.7266 13.8574 12.9961 14.543 13.2012L14.6719 13.2422C15.4863 13.4883 16.043 13.6758 16.3887 13.9277C16.5352 14.0332 16.5879 14.1152 16.6055 14.1621C16.623 14.209 16.6582 14.3145 16.6172 14.5547C16.582 14.7598 16.4707 14.9297 16.1484 15.0703C15.791 15.2227 15.2109 15.2988 14.4609 15.1816C14.1094 15.123 13.4824 14.9121 12.9258 14.7188C12.7969 14.6777 12.6738 14.6309 12.5508 14.5957C11.9355 14.3906 11.2734 14.7246 11.0684 15.3398C10.8633 15.9551 11.1973 16.6172 11.8125 16.8223C11.8828 16.8457 11.9707 16.875 12.0703 16.9102C12.5332 17.0684 13.2598 17.3145 13.8164 17.4434V17.8125C13.8164 18.4629 14.3438 18.9902 14.9941 18.9902C15.6445 18.9902 16.1719 18.4629 16.1719 17.8125V17.4902C16.4824 17.4316 16.7871 17.3438 17.0742 17.2207C17.9941 16.8281 18.7383 16.0664 18.9258 14.9531C19.0312 14.3438 18.9844 13.7637 18.75 13.2305C18.5215 12.7031 18.1523 12.3164 17.7598 12.0293C17.0449 11.5137 16.1016 11.2266 15.3926 11.0098L15.3457 10.998C14.5137 10.7461 13.9512 10.5703 13.5938 10.3301C13.4414 10.2246 13.3945 10.1543 13.3828 10.125C13.3711 10.1074 13.3418 10.0312 13.377 9.83203C13.3945 9.7207 13.4883 9.52734 13.8574 9.35742C14.2324 9.1875 14.8184 9.09375 15.5332 9.20508C15.7852 9.24609 16.582 9.39844 16.8047 9.45703C17.4316 9.62109 18.0703 9.25195 18.2402 8.625C18.4102 7.99805 18.0352 7.35938 17.4082 7.18945C17.1504 7.11914 16.5645 7.00195 16.1777 6.93164V6.5625C16.1777 5.91211 15.6504 5.38477 15 5.38477ZM2.8125 20.625H3.75C4.89258 22.1426 6.32812 23.4199 7.98047 24.375H3.75V26.25H15H26.25V24.375H22.0195C23.6719 23.4199 25.1133 22.1426 26.25 20.625H27.1875C28.7402 20.625 30 21.8848 30 23.4375V27.1875C30 28.7402 28.7402 30 27.1875 30H2.8125C1.25977 30 0 28.7402 0 27.1875V23.4375C0 21.8848 1.25977 20.625 2.8125 20.625Z"
-                fill="#24AF0D"
-              />
-            </svg>
-            Add Income Charge
-          </button> */}
 
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Charges</h3><span></span></div>
             {true && (
               <IncomeChargeForm
                 onCancel={setshowIncomeForm}
@@ -1420,79 +1537,67 @@ const PickupOrderCreationForm = ({
                 shipper={shipper}
               ></IncomeChargeForm>
             )}
-          </div>
-          {showIncomeForm && (<Table
-            data={charges}
-            columns={[
-              "Status",
-              "Type",
-              "Description",
-              "Quantity",
-              "Price",
-              "Currency",
-            ]}
-            onSelect={() => { }} // Make sure this line is correct
-            selectedRow={{}}
-            onDelete={() => { }}
-            onEdit={() => { }}
-            onAdd={() => { }}
-            showOptions={false}
-          />
-)}
 
-          {/* <button
-          type="button"
-          className="btn btn-primary btn-lg charge-buttons"
-          onClick={() => {
-            setshowExpenseForm(!showExpenseForm);
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-          >
-            <path
-              d="M19.1426 23.6543C17.8477 24.123 16.4531 24.375 15 24.375C13.5469 24.375 12.1465 24.1172 10.8574 23.6543C10.8398 23.6484 10.8281 23.6426 10.8105 23.6367C9.05273 22.9922 7.48242 21.9551 6.20508 20.625C4.10156 18.4336 2.8125 15.4629 2.8125 12.1875C2.8125 5.45508 8.26758 0 15 0C21.7324 0 27.1875 5.45508 27.1875 12.1875C27.1875 15.4629 25.8984 18.4336 23.7949 20.625C23.7363 20.6836 23.6777 20.748 23.6191 20.8066C22.3652 22.0605 20.8418 23.0391 19.1484 23.6543H19.1426ZM15 5.38477C14.3496 5.38477 13.8223 5.91211 13.8223 6.5625V6.91406C13.4941 6.98438 13.1836 7.08398 12.8906 7.21289C12.0117 7.61133 11.2559 8.34961 11.0684 9.42188C10.9629 10.0195 11.0215 10.5938 11.2676 11.1211C11.5137 11.6367 11.8945 12 12.2812 12.2637C12.9609 12.7266 13.8574 12.9961 14.543 13.2012L14.6719 13.2422C15.4863 13.4883 16.043 13.6758 16.3887 13.9277C16.5352 14.0332 16.5879 14.1152 16.6055 14.1621C16.623 14.209 16.6582 14.3145 16.6172 14.5547C16.582 14.7598 16.4707 14.9297 16.1484 15.0703C15.791 15.2227 15.2109 15.2988 14.4609 15.1816C14.1094 15.123 13.4824 14.9121 12.9258 14.7188C12.7969 14.6777 12.6738 14.6309 12.5508 14.5957C11.9355 14.3906 11.2734 14.7246 11.0684 15.3398C10.8633 15.9551 11.1973 16.6172 11.8125 16.8223C11.8828 16.8457 11.9707 16.875 12.0703 16.9102C12.5332 17.0684 13.2598 17.3145 13.8164 17.4434V17.8125C13.8164 18.4629 14.3438 18.9902 14.9941 18.9902C15.6445 18.9902 16.1719 18.4629 16.1719 17.8125V17.4902C16.4824 17.4316 16.7871 17.3438 17.0742 17.2207C17.9941 16.8281 18.7383 16.0664 18.9258 14.9531C19.0312 14.3438 18.9844 13.7637 18.75 13.2305C18.5215 12.7031 18.1523 12.3164 17.7598 12.0293C17.0449 11.5137 16.1016 11.2266 15.3926 11.0098L15.3457 10.998C14.5137 10.7461 13.9512 10.5703 13.5938 10.3301C13.4414 10.2246 13.3945 10.1543 13.3828 10.125C13.3711 10.1074 13.3418 10.0312 13.377 9.83203C13.3945 9.7207 13.4883 9.52734 13.8574 9.35742C14.2324 9.1875 14.8184 9.09375 15.5332 9.20508C15.7852 9.24609 16.582 9.39844 16.8047 9.45703C17.4316 9.62109 18.0703 9.25195 18.2402 8.625C18.4102 7.99805 18.0352 7.35938 17.4082 7.18945C17.1504 7.11914 16.5645 7.00195 16.1777 6.93164V6.5625C16.1777 5.91211 15.6504 5.38477 15 5.38477ZM2.8125 20.625H3.75C4.89258 22.1426 6.32812 23.4199 7.98047 24.375H3.75V26.25H15H26.25V24.375H22.0195C23.6719 23.4199 25.1133 22.1426 26.25 20.625H27.1875C28.7402 20.625 30 21.8848 30 23.4375V27.1875C30 28.7402 28.7402 30 27.1875 30H2.8125C1.25977 30 0 28.7402 0 27.1875V23.4375C0 21.8848 1.25977 20.625 2.8125 20.625Z"
-              fill="red"
+            {showIncomeForm && (<Table
+              data={charges}
+              columns={[
+                "Status",
+                "Type",
+                "Description",
+                "Quantity",
+                "Price",
+                "Currency",
+              ]}
+              onSelect={() => { }} // Make sure this line is correct
+              selectedRow={{}}
+              onDelete={() => { }}
+              onEdit={() => { }}
+              onAdd={() => { }}
+              showOptions={false}
             />
-          </svg>
-          Add Expense Charge
-        </button> */}
+            )}
+          </div>
+        </div>
+     
 
-          {true && (
-            <ExpenseChargeForm
-              onCancel={setshowExpenseForm}
-              charges={charges}
-              setcharges={setcharges}
-              commodities={commodities}
-              agent={agent}
-              consignee={consignee}
-              shipper={shipper}
-            ></ExpenseChargeForm>
-          )} 
-       {showExpenseForm && (<Table
-            data={charges}
-            columns={[
-              "Status",
-              "Type",
-              "Description",
-              "Quantity",
-              "Price",
-              "Currency",
-            ]}
-            onSelect={() => { }} // Make sure this line is correct
-            selectedRow={{}}
-            onDelete={() => { }}
-            onEdit={() => { }}
-            onAdd={() => { }}
-            showOptions={false}
-          />)}
+    
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name"><h3>Charges</h3><span></span></div>
+            {true && (
+              <ExpenseChargeForm
+                onCancel={setshowExpenseForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+              ></ExpenseChargeForm>
+            )}
+            {showExpenseForm && (<Table
+              data={charges}
+              columns={[
+                "Status",
+                "Type",
+                "Description",
+                "Quantity",
+                "Price",
+                "Currency",
+              ]}
+              onSelect={() => { }} // Make sure this line is correct
+              selectedRow={{}}
+              onDelete={() => { }}
+              onEdit={() => { }}
+              onAdd={() => { }}
+              showOptions={false}
+            />)}
 
+
+          </div>
         </div>
       </div>
+
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={(e) => { e.preventDefault(); sendData() }}

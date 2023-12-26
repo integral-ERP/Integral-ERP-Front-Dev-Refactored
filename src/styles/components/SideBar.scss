@@ -15,7 +15,7 @@
   left: 0;
   height: 100%;
   width: 25rem;
-  background: #153A61;
+  background: #006BAD;
   z-index: 1;
   transition: all 0.5s ease;
 }
@@ -53,6 +53,8 @@
   transition: all 0.5s ease;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar .logo-details {
@@ -307,9 +309,10 @@
 }
 
 .logo_integral{
-  width: 90px;
+  width: 20vh;
   position: fixed;
-  margin-left: 40px;
+  margin-left: 50px;
+  height: auto;
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////// 
@@ -346,7 +349,7 @@
 }
 
 .profile-user {
-  color: #153A61;
+  color: white;
   font-size: medium;
   font-weight: 500;
 }
@@ -366,7 +369,7 @@
 
 .home-section {
   position: relative;
-  background:#153A61;
+  background:#006BAD;
   height: 8vh;
   left: 25rem;
   width: calc(100% - 25rem);

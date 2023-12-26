@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import PackageTypesCreationForm from "../forms/PackageTypeCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import PackageTypeService from "../../services/PackageTypeService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const PackageType = () => {
   const [packageTypes, setpackageTypes] = useState([]);
@@ -15,7 +16,7 @@ const PackageType = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-  const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Description",
     "Length",
@@ -32,7 +33,7 @@ const PackageType = () => {
     "Air",
     "Ocean",
   ];
-
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchpackageTypesData = (url = null) => {
     PackageTypeService.getPackageTypes(url)
       .then((response) => {
@@ -47,7 +48,7 @@ const PackageType = () => {
   };
 
   useEffect(() => {
-    if (!initialDataFetched) {
+    if(!initialDataFetched){
       fetchpackageTypesData();
       setInitialDataFetched(true);
     }
@@ -123,14 +124,13 @@ const PackageType = () => {
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedPackageType(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -140,64 +140,72 @@ const PackageType = () => {
 
   return (
     <>
-      <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div className="content-page">
-            <Table
-              data={packageTypes}
-              columns={columns}
-              onSelect={handleSelectPackageType} // Make sure this line is correct
-              selectedRow={selectedPackageType}
-              onDelete={handleDeletePackageType}
-              onEdit={handleEditPackageType}
-              onAdd={handleAddPackageType}
-              title="Package Types"
+    <div className="dashboard__layout">
+      <div className="dashboard__sidebar">
+        <Sidebar />
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+        <Table
+          data={packageTypes}
+          columns={columns}
+          onSelect={handleSelectPackageType} // Make sure this line is correct
+          selectedRow={selectedPackageType}
+          onDelete={handleDeletePackageType}
+          onEdit={handleEditPackageType}
+          onAdd={handleAddPackageType}
+          contextService={PackageTypeService}
+          title="Package Types"
+        >
+           <PackageTypesCreationForm
+              packageType={selectedPackageType}
+              closeModal={closeModal}
+              creating={false}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
             />
+            </Table>
 
-            {showSuccessAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowSuccessAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Success</AlertTitle>
-                <strong>Package Type deleted successfully!</strong>
-              </Alert>
-            )}
-            {showErrorAlert && (
-              <Alert
-                severity="error"
-                onClose={() => setShowErrorAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Package Type. Please try again</strong>
-              </Alert>
-            )}
-            {selectedPackageType !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PackageTypesCreationForm
-                  packageType={selectedPackageType}
-                  closeModal={closeModal}
-                  creating={false}
-                  onpackageTypeDataChange={handlepackageTypesDataChange}
-                />
-              </ModalForm>
-            )}
-            {selectedPackageType === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PackageTypesCreationForm
-                  packageType={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onpackageTypeDataChange={handlepackageTypesDataChange}
-                />
-              </ModalForm>
-            )}
-          </div>
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Package Type deleted successfully!</strong>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error deleting Package Type. Please try again</strong>
+          </Alert>
+        )}
+        {selectedPackageType !== null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <PackageTypesCreationForm
+              packageType={selectedPackageType}
+              closeModal={closeModal}
+              creating={false}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
+            />
+          </ModalForm>
+        )}
+        {selectedPackageType === null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <PackageTypesCreationForm
+              packageType={null}
+              closeModal={closeModal}
+              creating={true}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
+            />
+          </ModalForm>
+        )}
         </div>
       </div>
+    </div>
     </>
   );
 };

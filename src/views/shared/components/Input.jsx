@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 const Input = (props) => {
-  console.log(props)
   let inputElement;
   let labelElement;
 

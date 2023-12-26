@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,8 +7,10 @@ import ReleaseOrderCreationForm from "../forms/ReleaseOrderCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReleaseService from "../../services/ReleaseService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global"
 
 const Release = () => {
+  const { hideShowSlider } = useContext(GlobalContext)
   const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedReleaseOrder, setSelectedReleaseOrder] = useState(null);
@@ -28,8 +30,6 @@ const Release = () => {
     "Release Date",
     "Released to",
     "Pieces",
-    "Weight",
-    "Volume",
     "View Release PDF",
   ];
 
@@ -40,8 +40,8 @@ const Release = () => {
           const pickupOrderId = release.id;
           return !releaseOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-
-        setReleaseOrders([...releaseOrders, ...newreleises]);
+        
+        setReleaseOrders([...releaseOrders, ...newreleises].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -60,8 +60,8 @@ const Release = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      const number = releaseOrders[releaseOrders.length - 1]?.number || 0;
-      setcurrentReleaseNumber(number + 1);
+      const number = releaseOrders[0]?.number || 0;
+      setcurrentReleaseNumber(number);
     }
   }, [releaseOrders]);
 
@@ -137,14 +137,13 @@ const Release = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isreceiptsButton && !isTableRow) {
         setSelectedReleaseOrder(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -154,34 +153,34 @@ const Release = () => {
 
   const setInTransit = async () => {
     console.log("Changing");
-    if (selectedReleaseOrder) {
-      const updatedPickuporder = { ...selectedReleaseOrder, status: 6 };
+    if(selectedReleaseOrder){
+      const updatedPickuporder = {...selectedReleaseOrder, status: 6};
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200) {
+      if (response.status === 200){
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    } else {
+    }else{
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
     console.log("Changing");
-    if (selectedReleaseOrder) {
-      const updatedPickuporder = { ...selectedReleaseOrder, status: 9 };
+    if(selectedReleaseOrder){
+      const updatedPickuporder = {...selectedReleaseOrder, status: 9};
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
       console.log("RESPUESTA DE CAMBIO DE STATUS", response);
-      if (response.status === 200) {
+      if (response.status === 200){
         console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
       console.log(response);
-    } else {
+    }else{
       alert("Please select a pickup order to continue.");
     }
   }
@@ -210,7 +209,7 @@ const Release = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={releaseOrders}
               columns={columns}
@@ -226,7 +225,18 @@ const Release = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-            />
+              contextService={ReleaseService}
+
+            >
+              <ReleaseOrderCreationForm
+                  releaseOrder={selectedReleaseOrder}
+                  closeModal={closeModal}
+                  creating={true}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
+                />
+                  </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -249,7 +259,7 @@ const Release = () => {
               </Alert>
             )}
 
-            {selectedReleaseOrder !== null && (
+            {/* {selectedReleaseOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
@@ -273,7 +283,7 @@ const Release = () => {
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
           </div>
         </div>
       </div>

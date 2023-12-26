@@ -15,6 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ReceiptService from "../../services/ReceiptService";
 import AsyncSelect from "react-select/async";
 import ReleaseService from "../../services/ReleaseService";
+import Table from "../shared/components/Table";
 
 const ReleaseOrderCreationForm = ({
   releaseOrder,
@@ -129,6 +130,11 @@ const ReleaseOrderCreationForm = ({
     });
   };
 
+  useEffect(() => {
+    console.log("UPDATEDD FORM DATA", formData);
+  }, [formData])
+  
+
   const handleReleasedToSelection = async (event) => {
     const id = event.id;
     const type = event.type;
@@ -195,15 +201,18 @@ const ReleaseOrderCreationForm = ({
         number: releaseOrder.number,
         creation_date: releaseOrder.creation_date,
         release_date: releaseOrder.release_date,
-        employeeId: releaseOrder.employeeId,
-        issuedById: releaseOrder.issuedById,
-        issuedByType: releaseOrder.issuedByType,
-        releasedToId: releaseOrder.releasedToId,
-        releasedToType: releaseOrder.releasedToType,
-        releasedToInfo: releaseOrder.releasedToInfo,
+        employeeId: releaseOrder.employee,
+        issuedById: releaseOrder.issued_by,
+        issuedByType: releaseOrder.issued_byObj?.type_person,
+        releasedToId: releaseOrder.released_to,
+        releasedToType: releaseOrder.releasedToObj?.type_person,
+        releasedToInfo: `${releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
+      } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${releaseOrder.releasedToObj?.data?.obj?.state || ""
+      } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
+      }`,
         clientToBillId: releaseOrder.clientToBillId,
         clientToBillType: releaseOrder.clientToBillType,
-        carrierId: releaseOrder.carrierId,
+        carrierId: releaseOrder.carrier,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
@@ -248,10 +257,80 @@ const ReleaseOrderCreationForm = ({
     ];
 
     const carrierOptions = [...carriersWithType];
+
+    issuedByOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    employeeOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    carrierOptions.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
     setReleasedToOptions(releasedToOptions);
     setIssuedByOptions(issuedByOptions);
     setEmployeeOptions(employeeOptions);
     setCarrierOptions(carrierOptions);
+  };
+
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
+
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
+  const loadEmployeeSelectOptions = async (inputValue) => {
+
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(
+      data,
+      "employee"
+    );
+
+    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    return options;
+  };
+
+  const loadCarrierSelectOptions = async (inputValue) => {
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
+  };
+
+  const loadReleasedToOptionsSelectOptions = async (inputValue) => {
+
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    )), ...(addTypeToObjects(responseCarriers, "carrier"))];
+
+    return options;
   };
 
   const fetchReceipts = async () => {
@@ -266,9 +345,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   useEffect(() => {
-    if (creating) {
       fetchFormData();
-    }
     fetchReceipts();
   }, []);
 
@@ -316,7 +393,7 @@ const ReleaseOrderCreationForm = ({
     }
     let clientToBillName = "";
 
-    if (formData.releasedToType === "releasedTo") {
+    if (formData.clientToBillType === "releasedTo") {
       switch (formData.releasedToType) {
         case "customer":
           clientToBillName = "customerid";
@@ -366,7 +443,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    if (clientToBill !== null) {
+    if (releasedTo !== null && clientToBill !== null) {
       setAllStateUpdatesComplete(true);
     }
   };
@@ -424,7 +501,8 @@ const ReleaseOrderCreationForm = ({
             onReleaseOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-          }, 5000);
+            window.location.reload();
+          }, 2000);
         } else {
           console.log("Something went wrong:", response);
           setShowErrorAlert(true);
@@ -448,228 +526,201 @@ const ReleaseOrderCreationForm = ({
 
 
     <div className="company-form release-order">
-      <div className="name">Release creation form </div>
+   
+   <div className="row w-100">
+   <div className="col-6">
+      <div className="creation creation-container w-100">
       <div className="form-label_name"><h3>General</h3><span></span></div>
-      <div className="container-box">
-        <div className="containerr">
-          <div className="cont-one">
-            <div>
-              <div>
-                <div className="company-form__section">
-                  <Input
-                    type="number"
-                    inputName="number"
-                    placeholder="Number..."
-                    value={formData.number}
-                    readonly={true}
-                    label="Release Number"
-                  />
-                </div>
+        <div className="row align-items-center">
 
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Creation Date and Time"
-                      className="font-right"
-                      value={dayjs(formData.createdDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
+          <div className="col-4 text-start">
+            <Input
+              type="number"
+              inputName="number"
+              placeholder="Number..."
+              value={formData.number}
+              readonly={true}
+              label="Release Number"
+            />
+          </div>
 
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Release Date and Time"
-                      className="font-right"
-                      value={dayjs(formData.createdDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-              </div>
-            </div>
+          <div className="col-4 text-start">
+            <label htmlFor="employee" className="form-label">
+              Employee:
+            </label>
+            <AsyncSelect
+              id="employee"
+              value={employeeOptions.find(
+                (option) => option.id == formData.employeeId
+              )}
+              onChange={(e) => {
+                handleEmployeeSelection(e);
+              }}
+              isClearable={true}
+              defaultOptions={employeeOptions}
+              loadOptions={loadEmployeeSelectOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
 
-            <div>
-              <div>
-                <div className="form-group">
-                  <div className="company-form__section">
-                    <label htmlFor="employee" className="form-label">
-                      Employee:
-                    </label>
-                    <AsyncSelect
-                      id="employee"
-                      value={employeeOptions.find(
-                        (option) => option.id === formData.employeeId
-                      )}
-                      onChange={(e) => {
-                        handleEmployeeSelection(e);
-                      }}
-                      isClearable={true}
-                      defaultOptions={employeeOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
-                </div>
+          <div className="col-4 text-start">
+            <label htmlFor="clientToBill" className="form-label">
+              Client to Bill:
+            </label>
+            <select
+              name="clientToBill"
+              id="clientToBill"
+              onChange={(e) => {
+                handleClientToBillSelection(e);
+              }}
+            >
+              <option value="">Select an Option</option>
+              <option value="releasedTo">Released To</option>
+              <option value="other">Other</option>
+            </select>
 
+            <AsyncSelect
+              id="releasedToOther"
+              isDisabled={formData.clientToBillType !== "other"}
+              onChange={(e) => {
+                handleClientToBillSelection(e);
+              }}
+              value={releasedToOptions.find(
+                (option) => (option.id === formData.releasedToId && option.type === formData.releasedToType)
+              )}
+              isClearable={true}
+              defaultOptions={releasedToOptions}
+              loadOptions={loadReleasedToOptionsSelectOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
 
-                <div className="company-form__section">
-                  <div className="form-group">
-                    <label htmlFor="issuedBy" className="form-label">
-                      Issued By:
-                    </label>
-                    <AsyncSelect
-                      id="issuedBy"
-                      value={issuedByOptions.find(
-                        (option) => option.id === formData.issuedById
-                      )}
-                      onChange={(e) => {
-                        handleIssuedBySelection(e);
-                      }}
-                      isClearable={true}
-                      placeholder="Search and select..."
-                      defaultOptions={issuedByOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
+        </div>
 
-                </div>
-                <div className="company-form__section">
-                  <div className="form-group">
-                    <label htmlFor="releasedTo" className="form-label">
-                      Released To:
-                    </label>
-                    {!creating ? (
-                      canRender && (
-                        <AsyncSelect
-                          id="releasedTo"
-                          onChange={(e) => {
-                            handleReleasedToSelection(e);
-                          }}
-                          value={releasedToOptions.find(
-                            (option) => option.id === formData.releasedToId
-                          )}
-                          isClearable={true}
-                          defaultOptions={releasedToOptions}
-                          getOptionLabel={(option) => option.name}
-                          getOptionValue={(option) => option.id}
-                        />
-                      )
-                    ) : (
-                      <AsyncSelect
-                        id="releasedTo"
-                        onChange={(e) => {
-                          handleReleasedToSelection(e);
-                        }}
-                        value={releasedToOptions.find(
-                          (option) => option.id === formData.destinationAgentId
-                        )}
-                        isClearable={true}
-                        defaultOptions={releasedToOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                      />
-                    )}
-                  </div>
+        <div className="row align-items-center mb-3">
+          <div className="col-4 text-start">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Creation Date and Time"
+                className="font-right"
+                value={dayjs(formData.createdDateAndTime)}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </LocalizationProvider>
+          </div>
 
-                </div>
-              </div>
-            </div>
+          <div className="col-4 text-start">
+            <label htmlFor="issuedBy" className="form-label">
+              Issued By:
+            </label>
+            <AsyncSelect
+              id="issuedBy"
+              value={issuedByOptions.find(
+                (option) => option.id === formData.issuedById
+              )}
+              onChange={(e) => {
+                handleIssuedBySelection(e);
+              }}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={issuedByOptions}
+              loadOptions={loadIssuedBySelectOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
+        </div>
 
-            <div>
-              <div className="company-form__section">
-                <label htmlFor="clientToBill" className="form-label">
-                  Client to Bill:
-                </label>
-                <select
-                  name="clientToBill"
-                  id="clientToBill"
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an Option</option>
-                  <option value="releasedTo">Released To</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div className="company-form__section">
+        <div className="row align-items-center mb-3">
+          <div className="col-4 text-start">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Release Date and Time"
+                className="font-right"
+                value={dayjs(formData.createdDateAndTime)}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </LocalizationProvider>
+          </div>
+          <div className="col-4 text-start">
+            <label htmlFor="releasedTo" className="form-label">
+              Released To:
+            </label>
+            {!creating ? (
+              canRender && (
                 <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.clientToBillType !== "other"}
+                  id="releasedTo"
                   onChange={(e) => {
-                    handleClientToBillSelection(e);
+                    handleReleasedToSelection(e);
                   }}
                   value={releasedToOptions.find(
                     (option) => option.id === formData.releasedToId
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}
+                  loadOptions={loadReleasedToOptionsSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div className="form-label_name"><h3>Carrier</h3><span></span></div>
-      <div className="containerr">
-        <div className="cont-two">
-
-          <div className="company-form__section">
-            <div className="form-group">
-              <label htmlFor="mainCarrier" className="form-label">
-                Carrier:
-              </label>
+              )
+            ) : (
               <AsyncSelect
-                id="mainCarrier"
-                value={carrierOptions.find(
-                  (option) => option.id === formData.carrierId
-                )}
+                id="releasedTo"
                 onChange={(e) => {
-                  handleMainCarrierSelection(e);
+                  handleReleasedToSelection(e);
                 }}
+                value={releasedToOptions.find(
+                  (option) => option.id === formData.destinationAgentId
+                )}
                 isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={carrierOptions}
+                defaultOptions={releasedToOptions}
+                loadOptions={loadReleasedToOptionsSelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
-            </div>
-          </div>
-
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="proNumber"
-              placeholder="PRO Number..."
-              value={formData.pro_number}
-              changeHandler={(e) =>
-                setFormData({ ...formData, pro_number: e.target.value })
-              }
-              label="PRO Number"
-            />
+            )}
           </div>
         </div>
+      </div>
+      </div>
 
-        <div className="cont-one">
-          <div className="company-form__section">
+      <div className="col-6">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Carrier</h3><span></span></div>
+        <div className="row align-items-center mb-3">
+          <div className="col-6 text-start">
+            <label htmlFor="mainCarrier" className="form-label">
+              Carrier:
+            </label>
+            <AsyncSelect
+              id="mainCarrier"
+              value={carrierOptions.find(
+                (option) => option.id === formData.carrierId
+              )}
+              onChange={(e) => {
+                handleMainCarrierSelection(e);
+              }}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={carrierOptions}
+              loadOptions={loadCarrierSelectOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
+          <div className="col-6 text-start">
             <Input
               type="text"
               inputName="trackingNumber"
@@ -681,7 +732,22 @@ const ReleaseOrderCreationForm = ({
               label="Tracking Number"
             />
           </div>
-          <div className="company-form__section">
+        </div>
+        <div className="row align-items-center">
+          <div className="col-6 text-start">
+            <Input
+              type="text"
+              inputName="proNumber"
+              placeholder="PRO Number..."
+              value={formData.pro_number}
+              changeHandler={(e) =>
+                setFormData({ ...formData, pro_number: e.target.value })
+              }
+              label="PRO Number"
+            />
+          </div>
+
+          <div className="col-6 text-start">
             <Input
               type="text"
               inputName="purchaseOrderNumber"
@@ -698,45 +764,70 @@ const ReleaseOrderCreationForm = ({
           </div>
         </div>
       </div>
+      </div>
+      </div>
 
-
+     
+      <div className="creation creation-container w-100">
       <div className="form-label_name"><h3>Cargo</h3><span></span></div>
-      {warehouseReceipts.map((receipt) => (
-        <div key={receipt.number}>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedReceipts.includes(receipt.number)}
-              onChange={() => handleReceiptSelection(receipt.number)}
-            />
-            {receipt.number} - {receipt.issued_byObj.name}
-          </label>
-          {selectedReceipts.includes(receipt.number) &&
-            receipt.commodities.length > 0 && (
-              <select
-                multiple
-                value={selectedCommodities
-                  .filter((item) => item.receiptNumber === receipt.number)
-                  .map((item) => item.commodities)}
-                onChange={(e) =>
-                  handleCommoditySelection(
-                    receipt.number,
-                    e.target.value,
-                    receipt.id
-                  )
-                }
-              >
-                {receipt.commodities.map((commodity) => (
-                  <option key={commodity.id} value={commodity.id}>
-                    {commodity.height}x{commodity.width}x{commodity.length} -{" "}
-                    {commodity.description}
-                  </option>
-                ))}
-              </select>
-            )}
-        </div>
-      ))}
+      <Table
+            data={commodities}
+            columns={[
+              "Description",
+              " Length",
+              " Height",
+              " Width",
+              " Weight",
+              "Location",
+              " Volumetric Weight",
+              " Chargeable Weight",
+            ]}
+            onAdd={() => { }}
+            showOptions={false}
+          />
+          </div>
+      <div className="creation creation-container w-100">
+        <div className="row align-items-center">
+          <div className="col-6 text-start" style={{ fontSize: '14px', fontWeight: 'bold' }}>
+            {warehouseReceipts.map((receipt) => (
+              <div key={receipt.number}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedReceipts.includes(receipt.number)}
+                    onChange={() => handleReceiptSelection(receipt.number)}
+                  />
+                  {receipt.number} - {receipt.issued_byObj.name}
+                </label>
+                {selectedReceipts.includes(receipt.number) &&
+                  receipt.commodities.length > 0 && (
+                    <select
+                      multiple
+                      value={selectedCommodities
+                        .filter((item) => item.receiptNumber === receipt.number)
+                        .map((item) => item.commodities)}
+                      onChange={(e) =>
+                        handleCommoditySelection(
+                          receipt.number,
+                          e.target.value,
+                          receipt.id
+                        )
+                      }
+                    >
+                      {receipt.commodities.map((commodity) => (
+                        <option key={commodity.id} value={commodity.id}>
+                          {commodity.height}x{commodity.width}x{commodity.length} -{" "}
+                          {commodity.description}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+              </div>
+            ))}
 
+          </div>
+        </div>
+      </div>
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
@@ -13,13 +13,16 @@ const CommodityCreationForm = ({
   commodity,
 }) => {
   const formFormat = {
-    weight: 0,
-    length: 0,
-    width: 0,
-    height: 0,
-    volumetricWeight: 0,
-    chargedWeight: 0,
+    id: "",
+    length: "",
+    height: "",
+    width: "",
+    weight: "",
+    volumetricWeight: "",
+    chargedWeight: "",
     description: "",
+    internalCommodities: [],
+    containsCommodities: false,
     locationId: "",
     locationCode: ""
   };
@@ -29,6 +32,14 @@ const CommodityCreationForm = ({
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [locations, setlocations] = useState([]);
   const [internalID, setinternalID] = useState(0);
+
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
+  const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
+  const input7Ref = useRef(null);
 
   const addCommodity = () => {
     const body = {
@@ -57,27 +68,31 @@ const CommodityCreationForm = ({
     setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
-    console.log(commodities);
+    setformData(formFormat);
+  };
+
+  const handleKeyDown = (event, nextInputRef) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      nextInputRef.current.focus();
+    }
   };
 
   useEffect(() => {
-    console.log(formData);
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
       ).toFixed(0);
-      const ratedWeight =
-        formData.volumetricWeight >= formData.weight
-          ? formData.volumetricWeight
-          : formData.weight;
-      setformData({
-        ...formData,
+  
+      setformData(prevFormData => ({
+        ...prevFormData,
         volumetricWeight: volWeight,
-        chargedWeight: ratedWeight,
-      });
+        chargedWeight: Math.max(volWeight, prevFormData.weight),
+      }));
     }
-  }, [formData.height, formData.length, formData.width]);
+  }, [formData.height, formData.length, formData.width, formData.weight]);
+  
 
   useEffect(() => {
     if (editing) {
@@ -104,6 +119,10 @@ const CommodityCreationForm = ({
     })
   }, []);
 
+  useEffect(() => {
+    console.log(formData.weight);
+  }, [formData.weight]);
+
   return (
     <div className="income-charge-form">
       {/* <h3>Commodity Creation Form</h3> */}
@@ -116,7 +135,9 @@ const CommodityCreationForm = ({
               type="number"
               className="form-comm"
               aria-label=""
+              ref={input1Ref}
               value={formData.length}
+              onKeyDown={(e) => handleKeyDown(e, input2Ref)}
               onChange={(e) =>
                 setformData({ ...formData, length: e.target.value })
               }
@@ -132,6 +153,8 @@ const CommodityCreationForm = ({
               type="number"
               className="form-comm"
               aria-label=""
+              ref={input2Ref}
+              onKeyDown={(e) => handleKeyDown(e, input3Ref)}
               value={formData.height}
               onChange={(e) =>
                 setformData({ ...formData, height: e.target.value })
@@ -147,8 +170,10 @@ const CommodityCreationForm = ({
             <input
               type="number"
               className="form-comm"
+              ref={input3Ref}
               aria-label=""
               value={formData.width}
+              onKeyDown={(e) => handleKeyDown(e, input4Ref)}
               onChange={(e) =>
                 setformData({ ...formData, width: e.target.value })
               }
@@ -165,6 +190,8 @@ const CommodityCreationForm = ({
               className="form-comm"
               aria-label=""
               value={formData.weight}
+              ref={input4Ref}
+              onKeyDown={(e) => handleKeyDown(e, input5Ref)}
               onChange={(e) =>
                 setformData({ ...formData, weight: e.target.value })
               }
@@ -174,12 +201,14 @@ const CommodityCreationForm = ({
         </div>
 
         <div className="form-column-create">
-          <label className="text-comm">Volume:</label>
+          <label className="text-comm__space">Volumetric Weight:</label>
           <div className="input-group ">
             <input
               type="number"
               className="form-comm"
               aria-label=""
+              ref={input5Ref}
+              onKeyDown={(e) => handleKeyDown(e, input6Ref)}
               value={formData.volumetricWeight}
               readOnly
             />
@@ -188,28 +217,31 @@ const CommodityCreationForm = ({
         </div>
 
         <div className="form-column-create">
-          <label className="text-comm__space">Chargeable Weight:</label>
+          {/* <label className="text-comm__space">Chargeable Weight:</label>
           <div className="input-group ">
             <input
               type="number"
               className="form-comm"
               aria-label=""
+              ref={input6Ref}
+              onKeyDown={(e) => handleKeyDown(e, input7Ref)}
               value={formData.chargedWeight}
               onChange={(e) =>
-                setformData({ ...formData, ratedWeight: e.target.value })
+                setformData({ ...formData, chargedWeight: e.target.value })
               }
             />
             <span className="input-group-text num-com">lb</span>
-          </div>
+          </div> */}
         </div>
 
         <label htmlFor="description" className="text-comm description-form">
-          Description:
+          Cargo Description:
         </label>
         <input
           name="description"
           type="text"
           className="form-input"
+          ref={input7Ref}
           placeholder="Description..."
           value={formData.description}
           onChange={(e) =>

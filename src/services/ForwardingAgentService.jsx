@@ -30,6 +30,11 @@ class ForwardingAgentService{
           const response = await axios.delete(`${this.BASE_URL}agent/${id}/`);
           return response;
       }
+
+      async search(query) {
+        const response = await axios.get(`${this.BASE_URL}agent/?search=${query}`);
+        return response;
+      }
 }
 
 export default new ForwardingAgentService();

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import LocationsCreationForm from "../forms/LocationCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import LocationService from "../../services/LocationService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const Locations = () => {
   const [locations, setlocations] = useState([]);
@@ -15,7 +16,7 @@ const Locations = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-  const [initialDataFetched, setInitialDataFetched] = useState(false);
+const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Status",
     "Code",
@@ -31,6 +32,8 @@ const Locations = () => {
     "Max. Weight",
     "Disable",
   ];
+
+  const {hideShowSlider} = useContext(GlobalContext);
   const fetchlocationsData = (url = null) => {
     LocationService.getLocations(url)
       .then((response) => {
@@ -45,7 +48,7 @@ const Locations = () => {
   };
 
   useEffect(() => {
-    if (!initialDataFetched) {
+    if(!initialDataFetched){
       fetchlocationsData();
       setInitialDataFetched(true);
     }
@@ -121,14 +124,13 @@ const Locations = () => {
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".locations-table__row");
-      openModal();
 
       if (!isWPButton && !isTableRow) {
         setselectedLocation(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -138,63 +140,71 @@ const Locations = () => {
 
   return (
     <>
-      <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div className="content-page">
-            <Table
-              data={locations}
-              columns={columns}
-              onSelect={handleSelectLocation} // Make sure this line is correct
-              selectedRow={selectedLocation}
-              onDelete={handleDeleteLocation}
-              onEdit={handleEditLocation}
-              onAdd={handleAddLocation}
-              title="Locations"
+    <div className="dashboard__layout">
+      <div className="dashboard__sidebar">
+        <Sidebar />
+      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+        <Table
+          data={locations}
+          columns={columns}
+          onSelect={handleSelectLocation} // Make sure this line is correct
+          selectedRow={selectedLocation}
+          onDelete={handleDeleteLocation}
+          onEdit={handleEditLocation}
+          onAdd={handleAddLocation}
+          contextService={LocationService}
+          title="Locations"
+        >
+          <LocationsCreationForm
+              location={selectedLocation}
+              closeModal={closeModal}
+              creating={false}
+              onlocationDataChange={handlelocationsDataChange}
             />
+            </Table>
 
-            {showSuccessAlert && (
-              <Alert
-                severity="success"
-                onClose={() => setShowSuccessAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Success</AlertTitle>
-                <strong>Location deleted successfully!</strong>
-              </Alert>
-            )}
-            {showErrorAlert && (
-              <Alert
-                severity="error"
-                onClose={() => setShowErrorAlert(false)}
-                className="alert-notification"
-              >
-                <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Location. Please try again</strong>
-              </Alert>
-            )}
-            {selectedLocation !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <LocationsCreationForm
-                  location={selectedLocation}
-                  closeModal={closeModal}
-                  creating={false}
-                  onlocationDataChange={handlelocationsDataChange}
-                />
-              </ModalForm>
-            )}
-            {selectedLocation === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <LocationsCreationForm
-                  location={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onlocationDataChange={handlelocationsDataChange}
-                />
-              </ModalForm>
-            )}
-          </div>
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Location deleted successfully!</strong>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error deleting Location. Please try again</strong>
+          </Alert>
+        )}
+        {selectedLocation !== null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <LocationsCreationForm
+              location={selectedLocation}
+              closeModal={closeModal}
+              creating={false}
+              onlocationDataChange={handlelocationsDataChange}
+            />
+          </ModalForm>
+        )}
+        {selectedLocation === null && (
+          <ModalForm isOpen={isOpen} closeModal={closeModal}>
+            <LocationsCreationForm
+              location={null}
+              closeModal={closeModal}
+              creating={true}
+              onlocationDataChange={handlelocationsDataChange}
+            />
+          </ModalForm>
+        )}
         </div>
+      </div>
       </div>
     </>
   );

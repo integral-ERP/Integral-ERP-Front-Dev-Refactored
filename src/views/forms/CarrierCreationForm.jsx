@@ -22,7 +22,7 @@ const CarrierCreationForm = ({
   const [cities, setCities] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const formFormat ={
+  const formFormat = {
     name: "",
     phone: "",
     mobilePhone: "",
@@ -157,7 +157,7 @@ const CarrierCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      phone: parseInt(formData.phone),
+      phone: parseInt(formData.mobilePhone),
       movelPhone: parseInt(formData.mobilePhone),
       email: formData.email,
       fax: parseInt(formData.fax),
@@ -196,8 +196,9 @@ const CarrierCreationForm = ({
         closeModal();
         onCarrierDataChange();
         setShowSuccessAlert(false);
-        setFormData(formFormat)
-      }, 5000);
+        setFormData(formFormat);
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -215,82 +216,13 @@ const CarrierCreationForm = ({
   };
 
   return (
-    <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#general"
-            aria-selected={activeTab === "general"}
-            onClick={() => setActiveTab("general")}
-            role="tab"
-          >
-            General
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#address"
-            aria-selected={activeTab === "address"}
-            onClick={() => setActiveTab("address")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Address
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#land"
-            aria-selected={activeTab === "land"}
-            onClick={() => setActiveTab("land")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Land
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#airline"
-            aria-selected={activeTab === "airline"}
-            onClick={() => setActiveTab("airline")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Airline
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#ocean"
-            aria-selected={activeTab === "ocean"}
-            onClick={() => setActiveTab("ocean")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Ocean
-          </a>
-        </li>
-      </ul>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "general" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "general" ? "block" : "none" }}
-      >
-      <div className="containerr">
-        <div className="cont-one">
+    <div className="company-form carrier">
+       <div className="row w-100">
+        <div className="col-6">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>General</h3><span></span></div>
+      <div className="row w-100">
+      <div className="col-6">
           <div className="company-form__section">
             <label htmlFor="carrierType" className="form-label">
               Carrier Type:
@@ -306,6 +238,7 @@ const CarrierCreationForm = ({
               <option value="Ocean">Ocean</option>
             </select>
           </div>
+
           <div className="company-form__section">
             <Input
               type="text"
@@ -332,7 +265,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="phone"
               placeholder="Phone"
               value={formData.phone}
@@ -344,7 +277,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="mphone"
               placeholder="Mobile Phone"
               value={formData.mobilePhone}
@@ -356,7 +289,7 @@ const CarrierCreationForm = ({
           </div>
           <div className="company-form__section">
             <Input
-              type="number"
+              type="text"
               inputName="fax"
               placeholder="fax"
               value={formData.fax}
@@ -366,104 +299,104 @@ const CarrierCreationForm = ({
               label="Fax"
             />
           </div>
-        </div>{/* -------------------------END ONE---------------------------------- */}
-        <div className="cont-two">
-          <div className="company-form__section">
-            <Input
-              type="email"
-              inputName="email"
-              placeholder="email"
-              value={formData.email}
-              changeHandler={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              label="Email"
-            />
           </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="website"
-              placeholder="website"
-              value={formData.website}
-              changeHandler={(e) =>
-                setFormData({ ...formData, website: e.target.value })
-              }
-              label="Website"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="rnumber"
-              placeholder="rnumber"
-              value={formData.referentNumber}
-              changeHandler={(e) =>
-                setFormData({ ...formData, referentNumber: e.target.value })
-              }
-              label="Reference Number"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="contactFN"
-              placeholder="contactFN"
-              value={formData.contactFirstName}
-              changeHandler={(e) =>
-                setFormData({ ...formData, contactFirstName: e.target.value })
-              }
-              label="Contact First Name"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="contactLN"
-              placeholder="contactLN"
-              value={formData.contactLastName}
-              changeHandler={(e) =>
-                setFormData({ ...formData, contactLastName: e.target.value })
-              }
-              label="Contact Last Name"
-            />
-          </div>
-          <div className="company-form__section">
-            
-            <Input
-              type="text"
-              inputName="idNumber"
-              placeholder="idNumber"
-              value={formData.idNumber}
-              changeHandler={(e) =>
-                setFormData({ ...formData, idNumber: e.target.value })
-              }
-              label="Identification Number"
-            />
-            
-          </div>
-          <p className="textId">Tipo de documento</p>
-          <select
-            name="identificacionNumber"
-            id="identificacionNumber"
-            className="form-input"
+
+          <div className="col-6">
+            <div className="company-form__section">
+              <Input
+                type="email"
+                inputName="email"
+                placeholder="email"
+                value={formData.email}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                label="Email"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="website"
+                placeholder="website"
+                value={formData.website}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, website: e.target.value })
+                }
+                label="Website"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="rnumber"
+                placeholder="rnumber"
+                value={formData.referentNumber}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, referentNumber: e.target.value })
+                }
+                label="Reference Number"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="contactFN"
+                placeholder="contactFN"
+                value={formData.contactFirstName}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, contactFirstName: e.target.value })
+                }
+                label="Contact First Name"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="contactLN"
+                placeholder="contactLN"
+                value={formData.contactLastName}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, contactLastName: e.target.value })
+                }
+                label="Contact Last Name"
+              />
+            </div>
+            <div className="company-form__section">
+
+              <Input
+                type="text"
+                inputName="idNumber"
+                placeholder="idNumber"
+                value={formData.idNumber}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, idNumber: e.target.value })
+                }
+                label="Identification Number"
+              />
+
+            </div>
+            <p className="textId">Tipo de documento</p>
+            <select
+              name="identificacionNumber"
+              id="identificacionNumber"
+              className="form-input"
             >
-            <option value="CC">CC</option>
-            <option value="CE">CE</option>
-            <option value="NIT">NIT</option>
-          </select>
-        </div>{/* ----------------------------END TWO---------------------------------- */}
+              <option value="CC">CC</option>
+              <option value="CE">CE</option>
+              <option value="NIT">NIT</option>
+            </select>
+          </div>{/* ----------------------------END TWO---------------------------------- */}
+        
       </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "address" ? "show active" : ""
-        } company-form__general-form`}
-        id="address"
-        style={{ display: activeTab === "address" ? "block" : "none" }}
-      >
+      </div>
+      </div>
+
+      <div className="col-6">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Address</h3><span></span></div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="textarea"
             inputName="street"
             placeholder="Street & Address..."
@@ -474,7 +407,7 @@ const CarrierCreationForm = ({
             label="Street & Address"
           />
         </div>
-        
+
         <div className="company-form__section">
           <label htmlFor="country" className="form-label">
             Country:
@@ -524,7 +457,7 @@ const CarrierCreationForm = ({
           <select
             name="city"
             id="carrier-info-city"
-            className="form-input"  
+            className="form-input"
             value={formData.city}
             onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           >
@@ -537,7 +470,7 @@ const CarrierCreationForm = ({
           </select>
         </div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="text"
             inputName="zipcode"
             placeholder="Zip Code..."
@@ -548,14 +481,14 @@ const CarrierCreationForm = ({
             label="Zip Code"
           />
         </div>
-      </form>
-      <form
-       className={`tab-pane fade ${
-        activeTab === "airline" ? "show active" : ""
-      } company-form__general-form`}
-      id="airline"
-      style={{ display: activeTab === "airline" ? "block" : "none" }}
-      >
+      </div>
+      </div>
+      </div>
+
+      <div className="row w-100">
+        <div className="col-4">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Land</h3><span></span></div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -569,7 +502,7 @@ const CarrierCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="text"
             inputName="airlinecode"
             placeholder="Airline code..."
@@ -581,7 +514,7 @@ const CarrierCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="text"
             inputName="airlineprefix"
             placeholder="Airline Prefix..."
@@ -593,7 +526,7 @@ const CarrierCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="textarea"
             inputName="airlinebillnumbers"
             placeholder="Airline Bill Numbers..."
@@ -606,7 +539,7 @@ const CarrierCreationForm = ({
         </div>
         <hr />
         <div className="company-form__section">
-        <Input
+          <Input
             type="checkbox"
             inputName="passengerOnly"
             value={formData.passengersOnlyAirline}
@@ -616,12 +549,12 @@ const CarrierCreationForm = ({
             label="This is a passengers only airline"
           />
         </div>
-      </form>
-      <form className={`tab-pane fade ${
-          activeTab === "land" ? "show active" : ""
-        } company-form__general-form`}
-        id="land"
-        style={{ display: activeTab === "land" ? "block" : "none" }}>
+      </div>
+      </div>
+
+      <div className="col-4">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Airline</h3><span></span></div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -633,14 +566,14 @@ const CarrierCreationForm = ({
             label="SCAC Number"
           />
         </div>
-      </form>
-      <form className={`tab-pane fade ${
-          activeTab === "ocean" ? "show active" : ""
-        } company-form__general-form`}
-        id="ocean"
-        style={{ display: activeTab === "ocean" ? "block" : "none" }}>
+      </div>
+      </div>
+
+      <div className="col-4">
+      <div className="creation creation-container w-100">
+      <div className="form-label_name"><h3>Ocean</h3><span></span></div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="text"
             inputName="fmcnumber"
             placeholder="FMC Number..."
@@ -652,7 +585,7 @@ const CarrierCreationForm = ({
           />
         </div>
         <div className="company-form__section">
-        <Input
+          <Input
             type="text"
             inputName="scacnumber"
             placeholder="SCAC Number..."
@@ -663,7 +596,12 @@ const CarrierCreationForm = ({
             label="SCAC number"
           />
         </div>
-      </form>
+      </div>
+      </div>
+      </div>
+
+    
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

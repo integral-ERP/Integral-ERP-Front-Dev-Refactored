@@ -1,14 +1,6 @@
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  // overflow-y: hidden;
-  min-height: 5%;
-}
-
 .search-container {
-  width: 300px;
   margin: 0 1rem 0 0;
-
+  width: 40rem;
 }
 
 .modal-view {
@@ -167,7 +159,13 @@
   background-color: transparent;
 }
 
-
+.cambiar-nombre {
+  width: 100%;
+  margin-bottom: 10rem;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+}
 
 //-------------------------------------------------------------//
 .modal-body {
@@ -277,7 +275,7 @@
 
 .th-separate {
   white-space: pre-line;
-  color: #153A61;
+  color: #006BAD;
   padding: 10px;
 }
 
@@ -298,7 +296,7 @@
   font-size: initial;
   font-weight: bolder;
   flex-direction: column;
-  background-color: #f7f7f7;
+  background-color: #fff;
   width: 100%;
 
   &>div {
@@ -533,7 +531,7 @@
     .form-label_name {
       width: 100%;
       height: 30px;
-      background: #153A61;
+      background: #006BAD;
       color: white;
       font-size: 15px;
       font-weight: bold;
@@ -554,6 +552,13 @@
   }
 }
 
+.container-fluid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // width: 95% !important;
+}
+
 .containerr__shipper {
   width: 100%;
 
@@ -569,8 +574,9 @@
     }
   }
 
-  & > div:last-child {
+  &>div:last-child {
     width: 50%;
+
     label {
       width: 25%;
     }
@@ -712,16 +718,16 @@
 .form-label_name {
   font-size: 15px;
   font-weight: bold;
-  color: #878787;
+  color: #006BAD;
   text-align: left;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: start;
+  margin-bottom: 2rem;
 
   & span {
-    width: 79%;
+    width: 100%;
     height: 2px;
     background-color: #878787;
     opacity: 0.5;
@@ -744,8 +750,8 @@
   font-size: 1.6rem;
   margin: 0;
   padding: 0;
-  border-color: #153A61;
-  background-color: #153A61;
+  border-color: #006BAD;
+  background-color: #006BAD;
   color: white;
   cursor: pointer;
   transition: background-color 0.7s ease;
@@ -760,8 +766,8 @@
     font-size: 1.6rem;
     margin: 0;
     padding: 0;
-    border-color: #153A61;
-    background-color: #153A61;
+    border-color: #006BAD;
+    background-color: #006BAD;
     color: white;
     cursor: pointer;
     transition: background-color 0.7s ease;
@@ -801,15 +807,15 @@
   font-size: 1.6rem;
   margin: 0;
   padding: 0;
-  border-color: #153A61;
-  background-color: #153A61;
+  border-color: #006BAD;
+  background-color: #006BAD;
   color: white;
   cursor: pointer;
   transition: background-color 0.7s ease;
 }
 
 .button-save:hover {
-  background-color: #153A61;
+  background-color: #006BAD;
   width: 10.2rem;
   height: 3.2rem;
   color: white;
@@ -825,7 +831,7 @@
     font-size: 1.6rem;
     margin: 0;
     padding: 0;
-    border-color: #153A61;
+    border-color: #006BAD;
     cursor: pointer;
     transition: background-color 0.7s ease;
   }
@@ -838,7 +844,7 @@
 }
 
 .button-cancel:hover {
-  background-color: #153A61;
+  background-color: #006BAD;
   width: 10.2rem;
   height: 3.2rem;
   color: white;
@@ -913,39 +919,22 @@ td {
 .css-b62m3t-container {
   position: relative;
   box-sizing: border-box;
-  margin-left: 43px;
+  margin-left: 0 !important;
+
 }
 
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
-  color: rgba(0, 0, 0, 0.6);
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.4375em;
-  letter-spacing: 0.00938em;
-  padding: 0;
-  position: relative;
-  display: block;
-  transform-origin: top left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
-  position: absolute;
-  left: 25px;
-  top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
-  -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  z-index: 1;
-  pointer-events: auto;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  display: block !important;
+  position: relative !important;
+  transform-origin: unset !important;
+  transform: unset !important;
+  -webkit-transform: unset !important;
+  -moz-transform: unset !important;
+  -ms-transform: unset !important;
+  transform: unset !important;
+  font-size: 1rem !important;
+  white-space: unset !important;
+  text-align: left !important;
 }
 
 select,
@@ -957,7 +946,7 @@ input[type="text"] {
   background: white;
 }
 
-.name{
+.name {
   font-size: 20px;
   font-weight: bold;
 }

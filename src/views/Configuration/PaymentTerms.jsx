@@ -10,7 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 
 
-const PaymentTerms = () => {
+const PaymentTerms  = () => {
   const [paymentOfTerms, setpaymentOfTerms] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
@@ -173,14 +173,13 @@ const PaymentTerms = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      openModal();
 
       if (!isPickupOrdersButton && !isTableRow) {
         setSelectedPaymentOfTerm(null);
       }
     };
 
-    window.addEventListener("dblclick", handleWindowClick);
+    window.addEventListener("click", handleWindowClick);
 
     return () => {
       // Clean up the event listener when the component unmounts
@@ -189,12 +188,12 @@ const PaymentTerms = () => {
   }, []);
 
   useEffect(() => {
-    if (createWarehouseReceipt) {
+    if(createWarehouseReceipt){
       console.log("OPENING UP NEW MODAL FOR RECEIPTS");
       openModalReceiptCreation();
     }
   }, [createWarehouseReceipt])
-
+  
 
   const contextMenuOptions = [
     {
@@ -301,4 +300,4 @@ const PaymentTerms = () => {
   );
 };
 
-export default PaymentTerms;
+export default PaymentTerms ;

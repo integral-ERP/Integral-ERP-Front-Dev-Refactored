@@ -81,7 +81,7 @@ const PaymentTermsCreationForms = ({
         onpaymentTermDataChange();
         setShowSuccessAlert(false);
         // setFormData(formFormat)
-      }, 5000);
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);

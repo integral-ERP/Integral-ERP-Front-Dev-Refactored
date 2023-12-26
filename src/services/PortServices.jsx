@@ -30,6 +30,11 @@ class PortService{
       const response = await axios.delete(`${this.BASE_URL}port/${id}/`);
       return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}port/?search=${query}`);
+    return response;
+  }
 }
 
 export default new PortService();

@@ -55,6 +55,11 @@ class ReceiptService{
     const response = await axios.post(`${this.BASE_URL}clientToBill/`, data);
     return response;
   }
+
+  async search(query) {
+    const response = await axios.get(`${this.BASE_URL}receptionOrder/?search=${query}`);
+    return response;
+  }
 }
 
 export default new ReceiptService();

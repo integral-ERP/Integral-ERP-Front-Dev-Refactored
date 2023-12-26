@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table"
 import CountriesService from "../../services/CountriesService"
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
+
 
 const Countries = () => {
   const [countries, setcountries] = useState([]);
+  const {hideShowSlider} = useContext(GlobalContext);
   
   const fetchcountriesData = () => {
     CountriesService.fetchCountries()
@@ -25,7 +28,7 @@ const Countries = () => {
     <div className="dashboard__layout">
       <div className="dashboard__sidebar">
         <Sidebar />
-    <div className="content-page">
+    <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
       <Table
         data={countries}
         columns={["Name", "Code"]}
