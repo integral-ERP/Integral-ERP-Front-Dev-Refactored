@@ -835,7 +835,6 @@ const PickupOrderCreationForm = ({
   };
 
   const updateSelectedCommodity = (updatedInternalCommodities) => {
-    console.log("prop de pick up", pickupOrder);
     const updatedCommodity = { ...selectedCommodity };
     updatedCommodity.internalCommodities = updatedInternalCommodities;
     setselectedCommodity(updatedCommodity);

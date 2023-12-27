@@ -210,8 +210,8 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isPickupOrdersButton && !isTableRow) {
+      const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
+      if (!isPickupOrdersButton && !isTableRow && !isInsideCompanyFormPickup) {
         setSelectedPickupOrder(null);
       }
     };
