@@ -351,12 +351,12 @@ const PickupOrderCreationForm = ({
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
           }`,
         consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
-        deliveryLocationId: pickupOrder.delivery_location,
+        deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
+        deliveryLocationType: pickupOrder.deliveryLocationObj?.data?.obj?.type_person,
         deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
           }`,
-          deliveryLocationType: pickupOrder.deliveryLocationObj?.data?.obj?.type_person,
         // CARRIER TAB
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
@@ -657,6 +657,14 @@ const PickupOrderCreationForm = ({
     }
   }, [commodities])
 
+useEffect(() => {
+  const found = deliveryLocationOptions.find(
+    (option) => {
+      return (option.value == formData.deliveryLocationId) && (option.type_person === formData.deliveryLocationType);
+    }
+  );
+    console.log("DELIVERY LOCATION INFO: ", formData.deliveryLocationId, formData.deliveryLocationType, "FOUND: ", found, "tipo found:");
+  }, [formData.deliveryLocationId, formData.deliveryLocationType])
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
@@ -1249,7 +1257,7 @@ const PickupOrderCreationForm = ({
                     handleDeliveryLocationSelection(e);
                   }}
                   value={deliveryLocationOptions.find(
-                    (option) => option.id === formData.deliveryLocationId
+                    (option) => (option.id === formData.deliveryLocationId && option.type === formData.deliveryLocationType)
                   )}
                   isClearable={true}
                   placeholder="Search and select..."
