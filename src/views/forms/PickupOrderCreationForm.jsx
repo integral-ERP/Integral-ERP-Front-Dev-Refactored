@@ -657,15 +657,6 @@ const PickupOrderCreationForm = ({
     }
   }, [commodities])
 
-useEffect(() => {
-  const found = deliveryLocationOptions.find(
-    (option) => {
-      return (option.value == formData.deliveryLocationId) && (option.type_person === formData.deliveryLocationType);
-    }
-  );
-    console.log("DELIVERY LOCATION INFO: ", formData.deliveryLocationId, formData.deliveryLocationType, "FOUND: ", found, "tipo found:");
-  }, [formData.deliveryLocationId, formData.deliveryLocationType])
-
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
     for (const inputs of listId) {
