@@ -31,7 +31,7 @@ const Pickup = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
-  const [createPickUpOrder, setCreatePickUpOrder] = useState(false);
+  const [createPickUpOrder, setCreatePickUpOrder] = useState(true);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
