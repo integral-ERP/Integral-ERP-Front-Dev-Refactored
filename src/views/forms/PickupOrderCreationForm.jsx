@@ -643,6 +643,10 @@ const PickupOrderCreationForm = ({
   }, []);
 
   useEffect(() => {
+    console.log("NEW ID", formData.pickupLocationId, pickupLocationOptions.find(item => item.id == formData.pickupLocationId));
+  }, [formData.pickupLocationId]);
+
+  useEffect(() => {
     if (creating) {
 
       setFormData({ ...formData, number: pickupNumber });
@@ -748,7 +752,7 @@ const PickupOrderCreationForm = ({
     }
     if (pickUpLocationName !== "") {
       const consignee = {
-        [pickUpLocationName]: formData.deliveryLocationId,
+        [pickUpLocationName]: formData.pickupLocationId,
       };
 
       const response = await PickupService.createPickUpLocation(consignee);
@@ -934,7 +938,7 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            window.location.reload();
+            //window.location.reload();
           }, 2000);
         } else {
           console.log("Something went wrong:", response);
