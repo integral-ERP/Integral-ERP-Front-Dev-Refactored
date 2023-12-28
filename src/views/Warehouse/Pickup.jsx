@@ -211,8 +211,12 @@ const Pickup = () => {
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
-      if (!isPickupOrdersButton && !isTableRow && !isInsideCompanyFormPickup) {
+      const isSelectMenu = event.target.id.includes("react-select");
+      //console.log("EL CLICK SE HIZO DENTRO DEL FORMULARIO?", isInsideCompanyFormPickup, "es un select menu?", isSelectMenu, "elemento: ", clickedElement);
+      console.log();
+      if ((!isPickupOrdersButton && !isTableRow && !isInsideCompanyFormPickup && !isSelectMenu) && !isSelectMenu) {
         setSelectedPickupOrder(null);
+        console.log("PONIENDO COMO NULL EL SELECTED");
       }
     };
 
@@ -337,33 +341,6 @@ const Pickup = () => {
                 <strong>Error deleting Pick-up Order. Please try again</strong>
               </Alert>
             )}
-
-            {/* {selectedPickupOrder !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
-                  pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
-                  creating={false}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )}
-
-            {selectedPickupOrder === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
-                  pickupOrder={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )} */}
-
             {selectedPickupOrder !== null && createWarehouseReceipt && (
               <ModalForm
                 isOpen={isOpenReceiptCreation}

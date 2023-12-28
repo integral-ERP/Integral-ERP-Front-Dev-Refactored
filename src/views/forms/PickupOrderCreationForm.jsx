@@ -1007,6 +1007,7 @@ const PickupOrderCreationForm = ({
                       onChange={(e) => {
                         handleDestinationAgentSelection(e);
                       }}
+                      className="async-option"
                       isClearable={true}
                       defaultOptions={destinationAgentOptions}
                       loadOptions={loadDestinationAgentsSelectOptions}
@@ -1023,6 +1024,7 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleDestinationAgentSelection(e);
                     }}
+                    className="async-option"
                     isClearable={true}
                     defaultOptions={destinationAgentOptions}
                     loadOptions={loadDestinationAgentsSelectOptions}
