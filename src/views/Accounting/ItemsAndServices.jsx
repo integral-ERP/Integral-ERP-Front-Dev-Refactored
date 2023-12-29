@@ -143,7 +143,27 @@ const ItemsAndServices = () => {
           onEdit={handleEditItemAndService}
           onAdd={handleAddItemAndService}
           title="Items & Services"
-        />
+        >
+           {selectedeItemAndService !== null && (
+            <ItemAndServiceCreationForm
+              itemAndService={selectedeItemAndService}
+              closeModal={closeModal}
+              creating={false}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
+            />
+        
+        )}
+
+        {selectedeItemAndService === null && (
+            <ItemAndServiceCreationForm
+              itemAndService={null}
+              closeModal={closeModal}
+              creating={true}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
+            />
+        
+        )}
+         </Table>
 
         {showSuccessAlert && (
           <Alert
@@ -166,27 +186,7 @@ const ItemsAndServices = () => {
           </Alert>
         )}
 
-        {selectedeItemAndService !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ItemAndServiceCreationForm
-              itemAndService={selectedeItemAndService}
-              closeModal={closeModal}
-              creating={false}
-              onitemAndServiceDataChange={handleItemAndServiceDataChange}
-            />
-          </ModalForm>
-        )}
-
-        {selectedeItemAndService === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ItemAndServiceCreationForm
-              itemAndService={null}
-              closeModal={closeModal}
-              creating={true}
-              onitemAndServiceDataChange={handleItemAndServiceDataChange}
-            />
-          </ModalForm>
-        )}
+        
         </div>
       </div>
     </div>

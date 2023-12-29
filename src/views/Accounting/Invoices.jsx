@@ -147,7 +147,29 @@ const Invoices = () => {
               onEdit={handleEditInvoices}
               onAdd={handleAddInvoices}
               title="Invoices"
-            />
+            >
+               {selectedInvoices !== null && (
+    
+                <InvoicesCreationForm
+                  invoice={selectedInvoices}
+                  closeModal={closeModal}
+                  creating={false}
+                  onInvoicesDataChange={handleInvoicesDataChange}
+                />
+            
+            )}
+
+            {selectedInvoices === null && (
+        
+                <InvoicesCreationForm
+                  invoice={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onInvoicesDataChange={handleInvoicesDataChange}
+                />
+            
+            )}
+              </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -172,27 +194,7 @@ const Invoices = () => {
               </Alert>
             )}
 
-            {selectedInvoices !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={selectedInvoices}
-                  closeModal={closeModal}
-                  creating={false}
-                  onInvoicesDataChange={handleInvoicesDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedInvoices === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onInvoicesDataChange={handleInvoicesDataChange}
-                />
-              </ModalForm>
-            )}
+           
           </div>
         </div>
       </div>

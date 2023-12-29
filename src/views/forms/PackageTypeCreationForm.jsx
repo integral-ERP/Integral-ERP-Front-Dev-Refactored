@@ -354,7 +354,7 @@ const PackageTypesCreationForm = ({
           </div>
         </div>
       </div>
-
+ 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

@@ -234,7 +234,19 @@ const Payments  = () => {
               // contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-            />
+            >
+               {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
+                <ReceiptCreationForm
+                  paymentTerms={selectedPaymentOfTerm}
+                  closeModal={closeModalReceiptCreation}
+                  creating={true}
+                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromPickUp={true}
+                />
+            )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -279,19 +291,7 @@ const Payments  = () => {
               </ModalForm>
             )} */}
 
-            {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
-              <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
-                <ReceiptCreationForm
-                  paymentTerms={selectedPaymentOfTerm}
-                  closeModal={closeModalReceiptCreation}
-                  creating={true}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                  fromPickUp={true}
-                />
-              </ModalForm>
-            )}
+           
           </div>
         </div>
       </div>
