@@ -331,6 +331,8 @@ const PickupOrderCreationForm = ({
           } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
+        employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
+
         // PICKUP TAB
         shipperId: pickupOrder.shipper,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
@@ -372,6 +374,7 @@ const PickupOrderCreationForm = ({
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
+        client_to_billById : pickupOrder.client_to_billObj?.id,
         client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj.type_person,
       };
 
@@ -809,6 +812,7 @@ const PickupOrderCreationForm = ({
       console.log("The client to bill is a consignee", auxVar);
       clientToBillName = "consigneeid";
     }
+    console.log("Tipo de client to bill", formData.client_to_bill_type, "nombre",formData.client_to_bill )
 
     if (clientToBillName !== "") {
       const clientToBill = {
@@ -938,7 +942,7 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            //window.location.reload();
+            window.location.reload();
           }, 2000);
         } else {
           console.log("Something went wrong:", response);
@@ -1052,6 +1056,7 @@ const PickupOrderCreationForm = ({
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={employeeOptions}
+                  value={employeeOptions.find(employee => employee.id === formData.employeeId)}
                   loadOptions={loadEmployeeSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
@@ -1160,6 +1165,8 @@ const PickupOrderCreationForm = ({
                   onChange={(e) => {
                     handlePickUpSelection(e);
                   }}
+                  
+
                   value={pickupLocationOptions.find(
                     (option) => option.id === formData.pickupLocationId
                   )}
@@ -1169,6 +1176,8 @@ const PickupOrderCreationForm = ({
                   loadOptions={loadPickUpLocationSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
+                  getOptionInfo={(option) => option[street_and_number, city, state, country, zip_code]}               
+
                 />
               </div>
 
@@ -1307,6 +1316,7 @@ const PickupOrderCreationForm = ({
                   name="clientToBill"
                   id="clientToBill"
                   className="form-input"
+                  value={formData.client_to_bill_type}
                   onChange={(e) => {
                     handleClientToBillSelection(e);
                   }}
