@@ -84,6 +84,7 @@ const ItemAndServiceCreationForm = ({
         closeModal();
         onitemAndServiceDataChange();
         setShowSuccessAlert(false);
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);

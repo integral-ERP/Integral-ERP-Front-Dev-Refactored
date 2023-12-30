@@ -223,10 +223,7 @@ const Sidebar = () => {
                 <Link className="link_name">Accounting</Link>
               </li>
               <li>
-                <Link to={"/accounting/chartofaccounts"}>
-                  Chart of Accounts
-                  Chart of Accounts
-                </Link>
+                <Link to={"/accounting/chartofaccounts"}> Chart of Accounts </Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>

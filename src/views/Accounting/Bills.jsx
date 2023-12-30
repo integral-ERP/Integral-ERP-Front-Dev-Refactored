@@ -2,35 +2,43 @@ import { useState, useEffect } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";
-import InvoicesCreationForm from "../forms/InvoicesCreationForm";
-import { useModal } from "../../hooks/useModal"; // Import the useModal hook
-import InvoicesService from "../../services/InvoicesService";
-import Sidebar from "../shared/components/SideBar";
- 
-const Invoices = () => {
-  const [invoices, setInvoices] = useState([]);
+import ModalForm from "../shared/components/ModalForm";import Sidebar
+ from "../shared/components/SideBar";import { useModal } 
+ from "../../hooks/useModal"; // Import the useModal hook
+ //----------------------------------------------------
+import BillsCreationForm from "../forms/BillsCreationForm";
+import BillsService from "../../services/BillsService";
+
+
+const Bills = () => {
+  const [bill, setBills] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedInvoices, setSelectedInvoices] = useState(null);
+  const [selectedBills, setSelectedBills] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Number",
-    "Account Type",
-    // "type Chart",
+    "Payment Temse",
+    "Type",
+    "Applyed to",
     "Transaction Date",
     "Due Date",
-    "Apply",
-    "Payment Temse",
-    "Amt Due",
-    "Invoice PDF",
+    "Employee",
+    "Account Type",
+    // "Status",
+    "Exported",
+    "Amt. Paid(USD)",
+    "Amt. Due(USD)",
+    "Currency",
+    "Bill PDF",
+    
   ];
-  const updateInvoices = (url = null) => {
-    InvoicesService.getInvoices(url)
+  const updateBill = (url = null) => {
+    BillsService.getBills(url)
       .then((response) => {
-        setInvoices(
+        setBills(
           [...response.data.results].reverse()
         );
 
@@ -45,7 +53,7 @@ const Invoices = () => {
 
   useEffect(() => {
     if (!initialDataFetched) {
-      updateInvoices();
+      updateBill();
       setInitialDataFetched(true);
     }
   }, []);
@@ -53,7 +61,7 @@ const Invoices = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        updateInvoices(nextPageURL);
+        updateBill(nextPageURL);
       }
     });
 
@@ -68,36 +76,36 @@ const Invoices = () => {
     };
   }, [nextPageURL]);
 
-  const handleInvoicesDataChange = () => {
-    updateInvoices();
+  const handleBillsDataChange = () => {
+    updateBill();
   };
 
-  const handleSelectInvoices = (invoice) => {
-    setSelectedInvoices(invoice);
+  const handleSelectBills = (bill) => {
+    setSelectedBills(bill);
   };
 
-  const handleEditInvoices = () => {
-    if (selectedInvoices) {
+  const handleEditBills = () => {
+    if (selectedBills) {
       openModal();
     } else {
-      alert("Please select a Invoice to edit.");
+      alert("Please select a Bills to edit.");
     }
   };
 
-  const handleAddInvoices = () => {
+  const handleAddBills = () => {
     openModal();
   };
 
-  const handleDeleteInvoices = () => {
-    if (selectedInvoices) {
-      InvoicesService.deleteInvoice(selectedInvoices.id)
+  const handleDeleteBills = () => {
+    if (selectedBills) {
+      BillsService.deleteBill(selectedBills.id)
         .then((response) => {
           if (response.status == 200) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateInvoices();
+            updateBill();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -109,7 +117,7 @@ const Invoices = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a Invoice to delete.");
+      alert("Please select a Bills to delete.");
     }
   };
 
@@ -117,11 +125,11 @@ const Invoices = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isInvoicesButton = clickedElement.classList.contains("ne");
+      const isBillsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isInvoicesButton && !isTableRow) {
-        setSelectedInvoices(null);
+      if (!isBillsButton && !isTableRow) {
+        setSelectedBills(null);
       }
     };
 
@@ -140,14 +148,14 @@ const Invoices = () => {
           <Sidebar />
           <div className="content-page">
             <Table
-              data={invoices}
+              data={bill}
               columns={columns}
-              onSelect={handleSelectInvoices} // Make sure this line is correct
-              selectedRow={selectedInvoices}
-              onDelete={handleDeleteInvoices}
-              onEdit={handleEditInvoices}
-              onAdd={handleAddInvoices}
-              title="Invoices"
+              onSelect={handleSelectBills} // Make sure this line is correct
+              selectedRow={selectedBills}
+              onDelete={handleDeleteBills}
+              onEdit={handleEditBills}
+              onAdd={handleAddBills}
+              title="Bills"
             />
 
             {showSuccessAlert && (
@@ -157,7 +165,7 @@ const Invoices = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Success</AlertTitle>
-                <strong>Invoices deleted successfully!</strong>
+                <strong>Bills deleted successfully!</strong>
               </Alert>
             )}
             {showErrorAlert && (
@@ -168,29 +176,29 @@ const Invoices = () => {
               >
                 <AlertTitle>Error</AlertTitle>
                 <strong>
-                  Error deleting Invoices. Please try again
+                  Error deleting Bills. Please try again
                 </strong>
               </Alert>
             )}
 
-            {selectedInvoices !== null && (
+            {selectedBills !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={selectedInvoices}
+                <BillsCreationForm
+                  bill={selectedBills}
                   closeModal={closeModal}
                   creating={false}
-                  onInvoicesDataChange={handleInvoicesDataChange}
+                  onbillDataChange={handleBillsDataChange}
                 />
               </ModalForm>
             )}
 
-            {selectedInvoices === null && (
+            {selectedBills === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={null}
+                <BillsCreationForm
+                  bill={null}
                   closeModal={closeModal}
                   creating={true}
-                  onInvoicesDataChange={handleInvoicesDataChange}
+                  onbillDataChange={handleBillsDataChange}
                 />
               </ModalForm>
             )}
@@ -201,4 +209,4 @@ const Invoices = () => {
   );
 };
 
-export default Invoices;
+export default Bills;

@@ -180,6 +180,7 @@ const PaymentsCreationForm = ({
         closeModal();
         onpaymentDataChange();
         setShowSuccessAlert(false);
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -191,8 +192,7 @@ const PaymentsCreationForm = ({
   const fetchFormData = async () => {  
     const customer= (await CustomerService.getCustomers()).data.results;
     const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    // const accounbank          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    
+
    // Function to add 'type' property to an array of objects
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));

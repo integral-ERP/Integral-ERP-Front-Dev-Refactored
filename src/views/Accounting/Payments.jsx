@@ -6,103 +6,58 @@ import ModalForm from "../shared/components/ModalForm";import Sidebar
  from "../shared/components/SideBar";import { useModal } 
  from "../../hooks/useModal"; // Import the useModal hook
  //----------------------------------------------------
-// import PaymentTermsCreationForms from "../forms/PaymentTermsCreationForm";
-
-// import PaymentTermsService from "../../services/PaymentTermsService";
-
-// import ReceiptCreationForm from "../forms/ReceiptCreationForm";
+import PaymentsCreationForm from "../forms/PaymentsCreationForm";
+import PaymentsService from "../../services/PaymentsService";
 
 
-const Payments  = () => {
-  const [paymentOfTerms, setpaymentOfTerms] = useState([]);
+const Payments = () => {
+  const [payments, setPayments] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
-  const [selectedPaymentOfTerm, setSelectedPaymentOfTerm] = useState(null);
+  const [selectedPayments, setSelectedPayments] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
-  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
-
-  // const [contextMenuPosition, setContextMenuPosition] = useState({
-  //   x: 0,
-  //   y: 0,
-  // });
-  const [showContextMenu, setShowContextMenu] = useState(false);
-
   const columns = [
-    "Prueba",
+    "Number",
+    "Entipy",
+    "Transaction Date",
+    "employee",
+    "AR Amount",
+    "Acount Name",
+    "Exported",
+    "Is Deposited",
+    "Memo",
+    "Back Acount",
+    "Reconciliation Date",
   ];
+  const updatePayment = (url = null) => {
+    PaymentsService.getPayments(url)
+      .then((response) => {
+        setPayments(
+          [...response.data.results].reverse()
+        );
 
-  const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent the browser's default context menu
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    setContextMenuPosition({ x: clickX, y: clickY });
-    setShowContextMenu(true);
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
-    const handleDocumentClick = (e) => {
-      // Check if the click is inside the context menu or a table row
-      const contextMenu = document.querySelector(".context-menu");
-      if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
-        setShowContextMenu(false);
-      }
-    };
-
-    // Add the event listener when the component mounts
-    document.addEventListener("click", handleDocumentClick);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
-
-  // const updatePaymentTerms = (url = null) => {
-  //   PaymentTermsService.getPaymentTerms(url)
-  //     .then((response) => {
-  //       const newPickupOrders = response.data.results.filter((paymentTerms) => {
-  //         const paymentTermId = paymentTerms.id;
-  //         return !paymentOfTerms.some(
-  //           (existingPickupOrder) => existingPickupOrder.id === paymentTermId
-  //         );
-  //       });
-
-  //       setpaymentOfTerms([...response.data.results].reverse());
-  //       console.log("NEW ORDERS", [...paymentOfTerms, ...newPickupOrders]);
-  //       // setpaymentOfTerms([...paymentOfTerms, ...response.data.results].reverse());
-
-  //       if (response.data.next) {
-  //         setNextPageURL(response.data.next);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   if (!initialDataFetched) {
-  //     updatePaymentTerms();
-  //     setInitialDataFetched(true);
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    if (initialDataFetched) {
-      const number = paymentOfTerms[paymentOfTerms.length - 1]?.number || 0;
-      setcurrentPickupNumber(number + 1);
+    if (!initialDataFetched) {
+      updatePayment();
+      setInitialDataFetched(true);
     }
-  }, [paymentOfTerms]);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        updatePaymentTerms(nextPageURL);
+        updatePayment(nextPageURL);
       }
     });
 
@@ -117,40 +72,36 @@ const Payments  = () => {
     };
   }, [nextPageURL]);
 
-  const handlePickupOrdersDataChange = () => {
-    updatePaymentTerms();
+  const handlePaymentsDataChange = () => {
+    updatePayment();
   };
 
-  const handleSelectPaymentOfTerms = (PickupOrder) => {
-    setSelectedPaymentOfTerm(PickupOrder);
+  const handleSelectPayments = (payments) => {
+    setSelectedPayments(payments);
   };
 
-  const handleEditPaymentOfTerms = () => {
-    if (selectedPaymentOfTerm) {
+  const handleEditPayments = () => {
+    if (selectedPayments) {
       openModal();
     } else {
-      alert("Please select a Payments  Order to edit.");
+      alert("Please select a Payments to edit.");
     }
   };
 
-  const handleAddPaymentOfTerm = () => {
+  const handleAddPayments = () => {
     openModal();
   };
 
-  const handleDeletePaymentOfTerm = () => {
-    if (selectedPaymentOfTerm) {
-      PaymentTermsService.deletePaymentTerm(selectedPaymentOfTerm.id)
+  const handleDeletePayments = () => {
+    if (selectedPayments) {
+      PaymentsService.deletePayment(selectedPayments.id)
         .then((response) => {
-          if (response.status == 204) {
-            const newPickupOrders = paymentOfTerms.filter(
-              (order) => order.id !== selectedPaymentOfTerm.id
-            );
-            setpaymentOfTerms(newPickupOrders);
+          if (response.status == 200) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updatePaymentTerms();
+            updatePayment();
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -162,7 +113,7 @@ const Payments  = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a Payments  Order to delete.");
+      alert("Please select a Payments to delete.");
     }
   };
 
@@ -170,11 +121,11 @@ const Payments  = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isPickupOrdersButton = clickedElement.classList.contains("ne");
+      const isPaymentsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isPickupOrdersButton && !isTableRow) {
-        setSelectedPaymentOfTerm(null);
+      if (!isPaymentsButton && !isTableRow) {
+        setSelectedPayments(null);
       }
     };
 
@@ -186,67 +137,22 @@ const Payments  = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if(createWarehouseReceipt){
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
-      openModalReceiptCreation();
-    }
-  }, [createWarehouseReceipt])
-  
-
-  const contextMenuOptions = [
-    {
-      label: "Create Warehouse Receipt",
-      handler: () => setCreateWarehouseReceipt(true)
-    },
-    {
-      label: "Option 2",
-      handler: () => {
-        // Handle Option 2
-      },
-    },
-    {
-      label: "Option 3",
-      handler: () => {
-        // Handle Option 3
-      },
-    },
-  ];
-
   return (
     <>
-      <div className="dashboard__layout">
+      <div className="dashboard__sidebar">
         <div className="dashboard__sidebar">
           <Sidebar />
           <div className="content-page">
             <Table
-              data={paymentOfTerms}
+              data={payments}
               columns={columns}
-              onSelect={handleSelectPaymentOfTerms} // Make sure this line is correct
-              selectedRow={selectedPaymentOfTerm}
-              onDelete={handleDeletePaymentOfTerm}
-              onEdit={handleEditPaymentOfTerms}
-              onAdd={handleAddPaymentOfTerm}
+              onSelect={handleSelectPayments} // Make sure this line is correct
+              selectedRow={selectedPayments}
+              onDelete={handleDeletePayments}
+              onEdit={handleEditPayments}
+              onAdd={handleAddPayments}
               title="Payments"
-              setData={setpaymentOfTerms}
-              handleContextMenu={handleContextMenu}
-              showContextMenu={showContextMenu}
-              // contextMenuPosition={contextMenuPosition}
-              setShowContextMenu={setShowContextMenu}
-              contextMenuOptions={contextMenuOptions}
-            >
-               {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
-                <ReceiptCreationForm
-                  paymentTerms={selectedPaymentOfTerm}
-                  closeModal={closeModalReceiptCreation}
-                  creating={true}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                  fromPickUp={true}
-                />
-            )}
-            </Table>
+            />
 
             {showSuccessAlert && (
               <Alert
@@ -255,7 +161,7 @@ const Payments  = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Success</AlertTitle>
-                <strong>Payment Terms deleted successfully!</strong>
+                <strong>Payments deleted successfully!</strong>
               </Alert>
             )}
             {showErrorAlert && (
@@ -265,33 +171,33 @@ const Payments  = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Payment Terms. Please try again</strong>
+                <strong>
+                  Error deleting Payments. Please try again
+                </strong>
               </Alert>
             )}
 
-            {/* {selectedPaymentOfTerm !== null && (
+            {selectedPayments !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PaymentTermsCreationForms
-                  paymentTerms={selectedPaymentOfTerm}
+                <PaymentsCreationForm
+                  payments={selectedPayments}
                   closeModal={closeModal}
                   creating={false}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  onpaymentDataChange={handlePaymentsDataChange}
                 />
               </ModalForm>
-            )} */}
+            )}
 
-            {/* {selectedPaymentOfTerm === null && (
+            {selectedPayments === null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PaymentTermsCreationForms
-                  paymentTerms={null}
+                <PaymentsCreationForm
+                  payments={null}
                   closeModal={closeModal}
                   creating={true}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  onpaymentDataChange={handlePaymentsDataChange}
                 />
               </ModalForm>
-            )} */}
-
-           
+            )}
           </div>
         </div>
       </div>
@@ -299,4 +205,4 @@ const Payments  = () => {
   );
 };
 
-export default Payments ;
+export default Payments;

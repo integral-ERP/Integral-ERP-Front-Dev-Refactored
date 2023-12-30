@@ -49,13 +49,13 @@ const ChartOfAccountsCreationForm = ({
 
   const sendData = async () => {
     let rawData = {
-      name: formData.name || "",
+      name: formData.name,
       // type: formData.type || "",
-      accountNumber: formData.accountNumber || "",
-      parentAccount: formData.parentAccount || "",
-      currency: formData.currency || "",
-      note: formData.note || "",
-      typeChart: formData.typeChart || "",
+      accountNumber: formData.accountNumber,
+      parentAccount: formData.parentAccount,
+      currency: formData.currency,
+      note: formData.note,
+      typeChart: formData.typeChart,
     };
     console.log("DATA:", formData);
     //-------------------------------------
@@ -73,7 +73,7 @@ const ChartOfAccountsCreationForm = ({
         closeModal();
         onDataChange();
         setShowSuccessAlert(false);
-        // setFormData(formFormat)
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -162,41 +162,9 @@ const ChartOfAccountsCreationForm = ({
         style={{ display: activeTab === "definition" ? "block" : "none" }}
       >
         <div className="">
-          {/* <div className="company-form__section">
-            <label htmlFor="type" className="form-label">
-              Type:
-            </label>
-            <select
-              id="type"
-              className="form-input"
-              value={formData.type}
-              onChange={(e) => handleType(e.target.value)}
-            >
-              <option value="">Select a Type</option>
-              <option value="Accounts Receivable">Accounts Receivable</option>
-              <option value="Accouns Payable">Accouns Payable</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-              <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
-              <option value="Bank Account">Bank Account</option>
-              <option value="Undeposited Funds">Undeposited Funds</option>
-              <option value="Fixed Assets">Fixed Assets</option>
-              <option value="Fixed Assets">Other Assets</option>
-              <option value="Other Current Assets">Other Current Assets</option>
-              <option value="Long Term Liabilities">
-                Long Term Liabilities
-              </option>
-              <option value="Other Current Liabilities">
-                Other Current Liabilities
-              </option>
-              <option value="Equity">Equity</option>
-              <option value="Credit Card">Credit Card</option>
-            </select>
-          </div> */}
-          {/* ----------------------------------------------- */}
           <div className="company-form__section">
             <label htmlFor="typeChart" className="form-label">
-            typeChart:
+            Type Chart:
             </label>
             <select
               id="typeChart"
@@ -225,8 +193,7 @@ const ChartOfAccountsCreationForm = ({
               <option value="Credit Card">Credit Card</option>
             </select>
           </div>
-          {/* ------
-          {/* ----------------------------------------------- */}
+          {/* ----------------------------------------------------- */}
           <div className="company-form__section">
             <Input
               type="text"
@@ -271,7 +238,7 @@ const ChartOfAccountsCreationForm = ({
                   value={ChartOfAccounts.id}
                   data-key={ChartOfAccounts.type}
                 >
-                  {ChartOfAccounts.name + " || " + ChartOfAccounts.type}
+                  {ChartOfAccounts.name + " || " + ChartOfAccounts.typeChart}
                 </option>
               ))}
             </select>
