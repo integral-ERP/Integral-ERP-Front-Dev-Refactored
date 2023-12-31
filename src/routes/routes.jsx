@@ -23,41 +23,193 @@ import Invoices from "../views/Accounting/Invoices";
 import PaymentTerms from "../views/Configuration/PaymentTerms";
 import Payments from "../views/Accounting/Payments";
 import Repacking from "../views/Warehouse/Repacking";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { AuthProvider } from "../hooks/useAuth";
 export const RoutesConfiguration = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/maintenance" element={<Maintenance />} />
-        <Route path="/maintenance/carriers" element={<Carriers />} />
-        <Route
-          path="/maintenance/warehouseProviders"
-          element={<WarehouseProviders />}
-        />
-        <Route
-          path="/maintenance/forwardingAgents"
-          element={<ForwardingAgents />}
-        />
-        <Route path="/maintenance/customers" element={<Customers />} />
-        <Route path="/maintenance/vendors" element={<Vendors />} />
-        <Route path="/maintenance/employees" element={<Employees />} />
-        <Route path="/maintenance/packageTypes" element={<PackageType />} />
-        <Route path="/maintenance/ports" element={<Ports />} />
-        <Route path="/maintenance/countries" element={<Countries />} />
-        <Route path="/maintenance/locations" element={<Locations />} />
-        <Route path="/warehouse/pickup" element={<Pickup />} />
-        <Route path="/warehouse/receipt" element={<Receipt />} />
-        <Route path="/warehouse/release" element={<Release />} />
-        <Route path="/warehouse/repacking" element={<Repacking />} />
-        <Route path="/accounting/itemsandservices" element={<ItemsAndServices />} />
-        <Route path="/configuration/measurementunits" element={<MeasurementUnits />} />
-        <Route path="/accounting/chartofaccounts" element={<ChartOfAccounts />} />
-        <Route path="/accounting/Invoices" element={<Invoices />} />
-        <Route path="/Configuration/PaymentTerms" element={<PaymentTerms />} />
-        <Route path="/accounting/Payments" element={<Payments />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance"
+            element={
+              <ProtectedRoute>
+                <Maintenance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/carriers"
+            element={
+              <ProtectedRoute>
+                <Carriers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/warehouseProviders"
+            element={
+              <ProtectedRoute>
+                <WarehouseProviders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/forwardingAgents"
+            element={
+              <ProtectedRoute>
+                <ForwardingAgents />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/customers"
+            element={
+              <ProtectedRoute>
+                <Customers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/vendors"
+            element={
+              <ProtectedRoute>
+                <Vendors />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/employees"
+            element={
+              <ProtectedRoute>
+                <Employees />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/packageTypes"
+            element={
+              <ProtectedRoute>
+                <PackageType />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/ports"
+            element={
+              <ProtectedRoute>
+                <Ports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/countries"
+            element={
+              <ProtectedRoute>
+                <Countries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/maintenance/locations"
+            element={
+              <ProtectedRoute>
+                <Locations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/warehouse/pickup"
+            element={
+              <ProtectedRoute>
+                <Pickup />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/warehouse/receipt"
+            element={
+              <ProtectedRoute>
+                <Receipt />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/warehouse/release"
+            element={
+              <ProtectedRoute>
+                <Release />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/warehouse/repacking"
+            element={
+              <ProtectedRoute>
+                <Repacking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accounting/itemsandservices"
+            element={
+              <ProtectedRoute>
+                <ItemsAndServices />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/configuration/measurementunits"
+            element={
+              <ProtectedRoute>
+                <MeasurementUnits />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accounting/chartofaccounts"
+            element={
+              <ProtectedRoute>
+                <ChartOfAccounts />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/accounting/Invoices" element={<Invoices />} />
+          <Route
+            path="/Configuration/PaymentTerms"
+            element={
+              <ProtectedRoute>
+                <PaymentTerms />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accounting/Payments"
+            element={
+              <ProtectedRoute>
+                <Payments />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 };
