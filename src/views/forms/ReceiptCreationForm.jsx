@@ -436,22 +436,27 @@ const ReceiptCreationForm = ({
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
           }`,
+        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
         pickupLocationId: pickupOrder.pick_up_location,
         pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
           } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
           }`,
+        pickupLocationType: pickupOrder.pick_up_location?.data?.obj?.type_person,
         // DELIVERY TAB
         consigneeId: pickupOrder.consignee,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
           }`,
-        deliveryLocationId: pickupOrder.delivery_location,
+        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
+        deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
+        deliveryLocationType: pickupOrder.deliveryLocationObj?.data?.obj?.type_person,  
         deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
           }`,
+
         // CARRIER TAB
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
@@ -472,7 +477,8 @@ const ReceiptCreationForm = ({
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
-        notes: pickupOrder.notes
+        notes: pickupOrder.notes,
+        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.type_person,
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -657,6 +663,10 @@ const ReceiptCreationForm = ({
       fetchFormData();
     }
   }, []);
+
+  // useEffect(() => {
+  //   console.log("NEW ID", formData.pickupLocationId, pickupLocationOptions.find(item => item.id == formData.pickupLocationId));
+  // }, [formData.pickupLocationId]);
 
   useEffect(() => {
     console.log("PICKUP NUMBER", currentPickUpNumber, pickupNumber);
@@ -998,6 +1008,7 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleDestinationAgentSelection(e);
                     }}
+                    className="async-option"
                     value={destinationAgentOptions.find(
                       (option) => option.id === formData.destinationAgentId
                     )}
@@ -1010,10 +1021,11 @@ const ReceiptCreationForm = ({
                 )
               ) : (
                 <AsyncSelect
-                  id="destinationAgent"
+                  id="destinationAgentid"
                   onChange={(e) => {
                     handleDestinationAgentSelection(e);
                   }}
+                  className="async-option"
                   value={destinationAgentOptions.find(
                     (option) => option.id === formData.destinationAgentId
                   )}
