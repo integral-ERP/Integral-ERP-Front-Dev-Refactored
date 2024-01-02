@@ -856,9 +856,6 @@ const ReceiptCreationForm = ({
     if (formData.clientToBillType === "consignee") {
       clientToBillName = "consigneeid";
     }
-    if(formData.clientToBillType === "vendor") {
-      clientToBillName = "vendorid";
-    }
     console.log("CLIENT TO BILL", clientToBillName, formData.clientToBillType);
 
     if (clientToBillName !== "") {
