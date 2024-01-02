@@ -478,7 +478,8 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
-        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.type_person,
+        clientToBillId: pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id,
+        clientToBillType: pickupOrder.clientBillObj?.data?.obj?.data?.obj?.type_person,
       };
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
@@ -836,12 +837,30 @@ const ReceiptCreationForm = ({
     }
 
     let clientToBillName = "";
+
+    if (formData.clientToBillType === "customer") {
+      clientToBillName = "customerid";
+    }
+    if (formData.clientToBillType === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.clientToBillType === "agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.clientToBillType === "carrier") {
+      clientToBillName = "carrierid";
+    }
     if (formData.clientToBillType === "shipper") {
       clientToBillName = "shipperid";
     }
     if (formData.clientToBillType === "consignee") {
       clientToBillName = "consigneeid";
     }
+    if(formData.clientToBillType === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    console.log("CLIENT TO BILL", clientToBillName, formData.clientToBillType);
+
     if (clientToBillName !== "") {
       const clientToBill = {
         [clientToBillName]: formData.clientToBillId,
