@@ -335,11 +335,12 @@ const PickupOrderCreationForm = ({
 
         // PICKUP TAB
         shipperId: pickupOrder.shipper,
+        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
           }`,
-        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
+
         pickupLocationId: pickupOrder.pick_up_location,
         pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
@@ -374,8 +375,8 @@ const PickupOrderCreationForm = ({
         // COMMODITIES TAB
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
-        client_to_billById : pickupOrder.client_to_billObj?.id,
-        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj.type_person,
+        client_to_billById : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
+        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
       };
 
       setFormData(updatedFormData);
@@ -791,6 +792,7 @@ const PickupOrderCreationForm = ({
     }
 
     let clientToBillName = "";
+    
 
     if (formData.client_to_bill_type === "customer") {
       clientToBillName = "customerid";
@@ -942,7 +944,7 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            // window.location.reload();
+            window.location.reload();
           }, 2000);
         } else {
           console.log("Something went wrong:", response);
@@ -1133,7 +1135,7 @@ const PickupOrderCreationForm = ({
                     handleShipperSelection(e);
                   }}
                   value={shipperOptions.find(
-                    (option) => option.id === formData.shipperId
+                    (option) => option.id === formData.shipperId && option.type === formData.shipperType
                   )}
                   isClearable={true}
                   placeholder="Search and select..."

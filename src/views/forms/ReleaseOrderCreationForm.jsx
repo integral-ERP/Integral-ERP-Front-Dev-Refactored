@@ -503,7 +503,7 @@ const ReleaseOrderCreationForm = ({
             onReleaseOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            // window.location.reload();
+            window.location.reload();
           }, 2000);
         } else {
           console.log("Something went wrong:", response);
