@@ -1040,6 +1040,9 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadDestinationAgentsSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    value={destinationAgentOptions.find(
+                      (option) => option.id === formData.destinationAgentId
+                    )}
                   />
                 )}
               </div>
@@ -1170,7 +1173,7 @@ const PickupOrderCreationForm = ({
                   
 
                   value={pickupLocationOptions.find(
-                    (option) => option.id === formData.pickupLocationId
+                    (option) => option.id === formData.pickupLocationId && option.type === formData.pickupLocationType
                   )}
                   isClearable={true}
                   placeholder="Search and select..."
@@ -1243,7 +1246,7 @@ const PickupOrderCreationForm = ({
                     id="consignee"
                     onChange={(e) => handleConsigneeSelection(e)}
                     value={consigneeOptions.find(
-                      (option) => option.id === formData.consigneeId
+                      (option) => option.id === formData.consigneeId && option.type === formData.consigneeType
                     )}
                     isClearable={true}
                     placeholder="Search and select..."
@@ -1337,7 +1340,7 @@ const PickupOrderCreationForm = ({
                     handleClientToBillSelection(e);
                   }}
                   value={releasedToOptions.find(
-                    (option) => option.id === formData.client_to_bill
+                    (option) => option.id === formData.client_to_bill && option.type === formData.client_to_bill_type
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}

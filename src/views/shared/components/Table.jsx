@@ -153,6 +153,8 @@ const Table = ({
     Location: "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
+    "Consignee Name": "consigneeObj.data.obj.name",
+    "Shipper Name": "shipperObj.data.obj.name"
   };
 
   const getStatus = (statusCode) => {
