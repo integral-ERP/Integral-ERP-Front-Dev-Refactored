@@ -162,6 +162,32 @@ const Table = ({
     Location: "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
+      //---------------------Cristian
+      "Account": "accountNumber",
+      "Due Days" : "dueDays",
+      "Discount Percentage" : "discountPercentage",
+      "Discount Days" : "discountDays",
+      "Inactive" : "inactive",
+      //---------------
+      "Transaction Date" : "trasaDate",
+      "Due Date" : "due",
+      "Type Name" : "typeName",
+      "Apply" : "issuedByName",
+      "Payment Temse": "paymentByDesc",
+      "Account Name" : "accountByName",
+      "Type Code" : "typeByCode",
+      "Biling Address" : "bilingAddres",
+      //---------------
+      "Type Items & Service": "typeByCode",
+      "type Chart": "typeByCode",
+      "Type Chart":"typeChart",
+      "Account Type" : "issuedByName",
+      "Amt Due": "division",
+      //---------------
+      "Entipy":     "customerByName",
+      "AR Amount":  "amountReceived",
+      "Memo":       "memo",
+      "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {

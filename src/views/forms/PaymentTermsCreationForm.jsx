@@ -43,14 +43,6 @@ const PaymentTermsCreationForms = ({
     }
   }, [creating, paymentTerms]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const currenciesData = await CurrencyService.getCurrencies();
-  //     setcurrencies(currenciesData.data);
-  //   };
-
-  //   fetchData();
-  // }, []);
   // -------------------------------------------------------------
 
   const sendData = async () => {
@@ -81,7 +73,8 @@ const PaymentTermsCreationForms = ({
         onpaymentTermDataChange();
         setShowSuccessAlert(false);
         // setFormData(formFormat)
-      }, 2000);
+        window.location.reload();
+      }, 5000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -262,6 +255,3 @@ PaymentTermsCreationForms.defaultProps = {
 };
 
 export default PaymentTermsCreationForms;
-
-
-

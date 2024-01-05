@@ -25,6 +25,7 @@ const Release = () => {
     y: 0,
   });
   const [showContextMenu, setShowContextMenu] = useState(false);
+  const [createReleaseOrder, setCreateReleaseOrder] = useState(true);
   const columns = [
     "Status",
     "Number",
@@ -97,12 +98,14 @@ const Release = () => {
     if (selectedReleaseOrder) {
       setIsEdit(true);
       openModal();
+      setCreateReleaseOrder(false);
     } else {
       alert("Please select a Release Order to edit.");
     }
   };
 
   const handleAddReleaseOrder = () => {
+    setCreateReleaseOrder(true);
     openModal();
   };
 
@@ -139,8 +142,10 @@ const Release = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
+      const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow && !isEdit) {
+      if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu ) {
         setSelectedReleaseOrder(null);
       }
     };
@@ -252,7 +257,7 @@ const Release = () => {
                 <ReleaseOrderCreationForm
                   releaseOrder={null}
                   closeModal={handleCancel}
-                  creating={true}
+                  creating={createReleaseOrder}
                   onReleaseOrderDataChange={handlereceiptsDataChange}
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
