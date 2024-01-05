@@ -147,7 +147,26 @@ const ChartOfAccounts  = () => {
               onEdit={handleEditChartOfAccounts}
               onAdd={handleAddChartOfAccounts}
               title="Chart Of Accounts"
-            />
+            >
+              
+            {selectedChartOfAccounts !== null && (
+                <ChartOfAccountsCreationForm
+                  ChartAccounts={selectedChartOfAccounts}
+                  closeModal={closeModal}
+                  creating={false}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+            )}
+
+            {selectedChartOfAccounts === null && (
+                <ChartOfAccountsCreationForm
+                  ChartAccounts={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+            )}
+              </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -170,27 +189,6 @@ const ChartOfAccounts  = () => {
               </Alert>
             )}
 
-            {selectedChartOfAccounts !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ChartOfAccountsCreationForm
-                  ChartAccounts={selectedChartOfAccounts}
-                  closeModal={closeModal}
-                  creating={false}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedChartOfAccounts === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ChartOfAccountsCreationForm
-                  ChartAccounts={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-              </ModalForm>
-            )}
           </div>
         </div>
    
