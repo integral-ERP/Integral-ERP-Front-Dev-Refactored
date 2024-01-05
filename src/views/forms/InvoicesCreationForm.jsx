@@ -1,4 +1,3 @@
-/////InvoicesCreationForm
 import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import Alert from "@mui/material/Alert";
@@ -35,19 +34,16 @@ const InvoicesCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
-  const [apply, setapplys] = useState([]);
+  // const [apply, setapplys] = useState([]);
 
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [paymentByOptions, setPaymentByOptions] = useState([]);
   const [accountByOptions, setAccountByOptions] = useState([]);
   const [typeByOptions, setptypeByOptions] = useState([]);
-
-  const [paymentTem, setPaymentTems] = useState([]);
-  const [account, setAccountTems] = useState([]);
-  const [typeService, setTypeServiceTems] = useState([])
-  const [filtroChart, setFiltroChart] = useState([])
+  
 
   const [type, settypes] = useState([]);
+  const [total, settotal] = useState(0);
   const [types, settype] = useState([]);
   const [issuedby, setIssuedby] = useState(null);
   const [payment, setpayments] = useState([]);
@@ -55,71 +51,62 @@ const InvoicesCreationForm = ({
   const [itemsAndServicestype, setItemsAndServicestype] = useState("");
 
   // PRUEBA 
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false)
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false)
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
-  const [selectedCommodity, setselectedCommodity] = useState(null);
+  const [selectedCommodity, setselectedCommodity] = useState(null);  
   const [commodities, setcommodities] = useState([]);
-  const [prueba, setprueba] = useState([]);
 
-  var numprice = Number(numqueality);
-  var numqueality = Number(numprice);
+  var numprice=Number(numqueality);
+  var numqueality= Number(numprice);
 
-  let totalp;
-  let tota;
+const formFormat = {
+  number: "",
+  account: "",
+  typeService: "",
+  paymentTem: "",
+  division: "",
+  apply: "",
+  issuedById: "",
+  issuedByInfo: "",
+  paymentById: "",
+  accountById : "",
+  accountByName:"",
+  due: today,
+  trasaDate: today,
+  bilingAddres: 0.0,
+  paidAd: "",
+  amount: "",
+  totalAmount: "",
+  status: "Open",
+  prepaid: "Yes",
+  typeById: "",
+  typeByCode: "",
+  typeChart: "",
+  total:"",
 
-  const formFormat = {
-    number: "",
-    account: "",
-    typeService: "",
-    paymentTem: "",
-    division: "",
-    apply: "",
-    issuedById: "",
-    issuedByInfo: "",
-    paymentById: "",
-    accountById: "",
-    due: today,
-    trasaDate: today,
-    bilingAddres: 0.0,
-    paidAd: "",
-    amount: "",
-    totalAmount: "",
-    amountDue: "",
-    status: "Open",
-    prepaid: "Yes",
-    // typeName: "",
-    typeById: "",
-    typeByCode: "",
-    typeChart: "",
-    resultado: "",
+  commodities: [],
+};
 
-    commodities: [],
-    prueba: commodities[''],
-  };
+const [formData, setformData] = useState(formFormat);
+//------------------------------------------------------------------------------------
+const handleIssuedBySelection = async (event) => {
+  const id = event.id;
+  const name = event.name;
+  const result = await ForwardingAgentService.getForwardingAgentById(id);
+  const info = `${result.data.street_and_number || ""} - ${
+    result.data.city || ""
+  } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+    result.data.zip_code || ""
+  }`;
+  setIssuedby(result.data)
+  setformData({
+    ...formData,
+    issuedById: id,
+    issuedByName: name,
+    issuedByInfo: info,
+  });
 
-  const [formData, setformData] = useState(formFormat);
-  const total = createContext();
-  const [resultado, setResultado] = useState(0);
-  // console.log("PRUEBA COMODITIES= ",commodities);
-  // console.log("PRUEBA= ", prueba);
-  //------------------------------------------------------------------------------------
-  const handleIssuedBySelection = async (event) => {
-    const id = event.id;
-    const name = event.name;
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
-    setIssuedby(result.data)
-    setformData({
-      ...formData,
-      issuedById: id,
-      issuedByName: name,
-      issuedByInfo: info,
-    });
-
-  };
+};
   //------------------------------------------------------------------------------------
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
@@ -136,18 +123,20 @@ const InvoicesCreationForm = ({
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
+    const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
+    console.log("RESULTADO CHART",result.typeChart) 
     setaccounts(result.data)
     setformData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
-
+      accountByName : name,
+      
     });
     console.log("TYPE_CHART=", typeChart);
   };
-
+  
   //------------------------------------------------------------------------------------
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
@@ -161,18 +150,17 @@ const InvoicesCreationForm = ({
     });
   };
   //------------------------------------------------------------------------------------
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       const typeData = await ItemsAndServicesService.getItemsAndServices();
       settypes(typeData.data.results);
     };
-
     fetchData();
   }, []);
-
-
-
+  
+  
+  
   useEffect(() => {
     if (!creating && invoice) {
       setcommodities(invoice.invoiceCharges)
@@ -181,11 +169,12 @@ const InvoicesCreationForm = ({
         account: invoice.account || "",
         typeService: invoice.typeService || "",
         paymentTem: invoice.paymentTem || "",
-        division: invoice.division || "",
+        division: total,
         apply: invoice.apply || "",
         issuedById: invoice.issued_by,
         paymentById: invoice.paymentById,
         accountById: invoice.accountById,
+        accountByName: invoice. accountByName,
         due: invoice.due || "",
         trasaDate: invoice.trasaDate,
         bilingAddres: invoice.bilingAddres || "",
@@ -193,9 +182,6 @@ const InvoicesCreationForm = ({
 
         amount: invoice.amount || "",
         totalAmount: invoice.totalAmount || "",
-        amountDue: invoice.amountDue || "",
-
-        resultado: invoice.resultado || "",
 
         paymentByDesc: invoice.paymentByDesc,
         accountByType: invoice.accountByType || "",
@@ -203,7 +189,7 @@ const InvoicesCreationForm = ({
         status: invoice.status || "Open",
         typeChart: invoice.typeChart || "",
         invoiceCharges: invoice.invoiceCharges,
-
+        
 
         issuedByInfo: `${invoice.issuedByName}`,
       });
@@ -216,39 +202,38 @@ const InvoicesCreationForm = ({
       account: formData.account,
       typeService: formData.typeService,
       paymentTem: formData.paymentTem,
-      division: formData.division,
+      division: total,
       apply: formData.apply,
       due: formData.due,
       trasaDate: formData.trasaDate,
       bilingAddres: formData.bilingAddres,
       paidAd: formData.paidAd,
       type: formData.type,
-      suma: formData.suma,
+      total : formData.total,
       // typeName : formData.typeName,
       //----------
-      issued_by: formData.issuedById,
-      issuedByName: formData.issuedByName,
+      issued_by : formData.issuedById,
+      issuedByName : formData.issuedByName,
       //----------
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
       //----------
       accountById: formData.accountById,
       accountByType: formData.accountByType,
+      accountByName: formData.accountByName,
       //----------
-      typeById: formData.typeById,
+      typeById: formData.typeById, 
       typeByCode: formData.typeByCode,
 
-      resultado: formData.resultado,
-
-      invoiceCharges: commodities,
+      invoiceCharges:commodities,
     };
     console.log("DATA:", rawData);
     const response = await (creating
       ? InvoicesService.createInvoice(rawData)
       : InvoicesService.updateInvoices(
-        invoice.id,
-        rawData
-      ));
+          invoice.id,
+          rawData
+        )); 
 
     if (response.status >= 200 && response.status <= 300) {
       console.log("Invoice successfully created/updated:",
@@ -259,6 +244,7 @@ const InvoicesCreationForm = ({
         closeModal();
         onInvoicesDataChange();
         setShowSuccessAlert(false);
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -273,309 +259,315 @@ const InvoicesCreationForm = ({
       typeService: formData.typeService,
 
     };
-
+    
     console.log("DATA CURTOMER:", formData);
     const response = await (creating
       ? CustomerService.CustomerService(rawData)
       : CustomerService.updateCustomer(
+          invoice.id,
+          rawData
+      )
+      ? ItemsAndServicesService.createItemAndService(rawData)
+      : ItemsAndServicesService.updateItemsAndServicesService(
         invoice.id,
         rawData
       )
-        ? ItemsAndServicesService.createItemAndService(rawData)
-        : ItemsAndServicesService.updateItemsAndServicesService(
+      ? ChartOfAccountsService.createChartOfAccounts(rawData)
+      : ChartOfAccountsService.updateChartOfAccounts(
           invoice.id,
           rawData
-        )
-          ? ChartOfAccountsService.createChartOfAccounts(rawData)
-          : ChartOfAccountsService.updateChartOfAccounts(
-            invoice.id,
-            rawData
-          )
-    );
-
-
-    if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Item & Service successfully created/updated:",
-        response.data
+      )
       );
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-        closeModal();
-        onInvoicesDataChange();
-        setShowSuccessAlert(false);
-      }, 5000);
-    } else {
-      console.log("Something went wrong:", response);
-      setShowErrorAlert(true);
-    }
   };
 
   const handleApply = async (event) => {
     const id = event.id;
     const type = event.type;
-
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+  
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setformData({
       ...formData,
       applyToId: id,
       applyToType: type,
     });
   };
-  // ----------------------------------------------------------------------
-  const fetchFormData = async () => {
-    const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
-    const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
-    const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-    // Function to add 'type' property to an array of objects
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
-
-    // Add 'type' property to each array
-    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents, "forwarding-agent");
-    const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
-    const accountWithType = addTypeToObjects(accoun, "accounten-termn");
-    const typeWithType = addTypeToObjects(type, "type");
-
-    // Merge the arrays
-    const issuedByOptions = [...forwardingAgentsWithType];
-    const paymentByOptions = [...paymentsWithType];
-    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
-    const typeByOptions = [...typeWithType];
-
-    setIssuedByOptions(issuedByOptions);
-    setPaymentByOptions(paymentByOptions);
-    setAccountByOptions(accountByOptions);
-    setptypeByOptions(typeByOptions);
-
-  };
-
-  useEffect(() => {
-    fetchFormData();
-  }, []);
-
-  const createCharge = () => {
-    const suma = parseInt(formData.amount) + parseInt(resultado);
-    setResultado(suma);
-
-    const charge = {
-      ...formData,
-    };
+// ----------------------------------------------------------------------
+const fetchFormData = async () => {  
+  const forwardingAgents= (await ForwardingAgentService.getForwardingAgents()).data.results;
+  const paiment         = (await PaymentTermsService.getPaymentTerms()).data.results;
+  const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
+  const type          = (await ItemsAndServicesService.getItemsAndServices()).data.results;
+  // Function to add 'type' property to an array of objects
+  const addTypeToObjects = (arr, type) =>
+    arr.map((obj) => ({ ...obj, type }));
 
 
-  };
-  const handleType = (type) => {
-    setItemsAndServicestype(type);
-    setformData({ ...formData, type: type });
+  const customers = (await CustomerService.getCustomers()).data.results;
+  const customersWithType = addTypeToObjects(customers, "customer");
 
-  };
+  // Add 'type' property to each array
+  const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents,"forwarding-agent");
+  const paymentsWithType          = addTypeToObjects(paiment,"paiment-termn");
+  const accountWithType           = addTypeToObjects(accoun, "accounten-termn");
+  const typeWithType              = addTypeToObjects(type, "type");
 
-  const handleSelectCommodity = (commodity) => {
-    setselectedCommodity(commodity);
-  };
+  // Merge the arrays
+  const issuedByOptions = [...forwardingAgentsWithType, ...customersWithType];
+  const paymentByOptions = [...paymentsWithType];
+  const accountByOptions = [...accountWithType].filter(account=> account.typeChart=="Accounts Receivable");
+  const typeByOptions = [...typeWithType];
 
-  const handleCommodityDelete = () => {
-    const newCommodities = commodities.filter(
-      (com) => com.id != selectedCommodity.id
-    );
-    setcommodities(newCommodities);
-  };
-  const updateSelectedCommodity = (updatedInternalCommodities) => {
-    const updatedCommodity = { ...selectedCommodity };
-    updatedCommodity.internalCommodities = updatedInternalCommodities;
-    setselectedCommodity(updatedCommodity);
+  setIssuedByOptions(issuedByOptions);
+  setPaymentByOptions(paymentByOptions);
+  setAccountByOptions(accountByOptions);
+  setptypeByOptions(typeByOptions);
 
-    const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+};
 
-    if (index != -1) {
-      const commoditiesCopy = [...commodities];
-      commoditiesCopy[index] = updatedCommodity;
-      setcommodities(commoditiesCopy);
-    }
+useEffect(() => {
+  fetchFormData();
+}, []);
 
+const handleType = (type) => {
+  setItemsAndServicestype(type);
+  setformData({ ...formData, type: type });
 
-  };
-  //------------------------------------------------------------------------
+};
+
+const handleSelectCommodity = (commodity) => {
+  setselectedCommodity(commodity);
+};
+
+const handleCommodityDelete = () => {
+  const newCommodities = commodities.filter(
+    (com) => com.id != selectedCommodity.id
+  );
+  setcommodities(newCommodities);
+};
+
+const updateSelectedCommodity = (updatedInternalCommodities) => {
+  const updatedCommodity = { ...selectedCommodity };
+  updatedCommodity.internalCommodities = updatedInternalCommodities;
+  setselectedCommodity(updatedCommodity);
+
+  const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+
+  if(index != -1){
+    const commoditiesCopy = [...commodities];
+    commoditiesCopy[index] = updatedCommodity;
+    setcommodities(commoditiesCopy);
+  }
+};
+useEffect(() => {
+  let totall=0;
+for (const valor of commodities) {
+  let prueba=0;
+  // let totall = 0;
+  const totalP = 'amount';
+  prueba = valor[totalP];
+  totall = totall + prueba;
+}
+settotal(totall);
+}, [commodities]);
+
+//------------------------------------------------------------------------
   return (
     <div className="company-form">
+      <ul className="nav nav-tabs" role="tablist">
+        <li className="nav-item" role="presentation">
+          <a
+            className="nav-link"
+            data-bs-toggle="tab"
+            href="#definition"
+            aria-selected={activeTab === "definition"}
+            onClick={() => setActiveTab("definition")}
+            role="tab"
+          >
+            invoice
+          </a>
+        </li>
+      </ul>
 
-      <div className="creation creation-container w-100">
-        <div className="form-label_name"><h3>Invoice</h3><span></span></div>
-        <div className="row w-100">
-          <div className="col-6 text-start">
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="number"
-                placeholder="EXP123456"
-                value={formData.number}
-                changeHandler={(e) =>
-                  setformData({ ...formData, number: e.target.value })
+      <form
+        className={`tab-pane fade ${
+          activeTab === "definition" ? "show active" : ""
+        } company-form__general-form`}
+        id="general"
+        style={{ display: activeTab === "definition" ? "block" : "none" }}
+      >
+      <div className="containerr">
+        <div className="cont-one">
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="number"
+              placeholder="EXP123456"
+              value={formData.number}
+              changeHandler={(e) =>
+                setformData({ ...formData, number: e.target.value })
+              }
+              label="Number"
+            />
+          </div>
+      {/* --------------------------------------------------------------------------------------- */}
+          <div className="company-form__section">
+            <label htmlFor="account" className="form-label">
+            Chart Account:
+            </label>
+            <AsyncSelect
+              id="account"
+              value={accountByOptions.find(
+                (option) => option.id === formData.accountById)}
+              onChange={(e) => {handleAccountBySelection(e);}}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={accountByOptions}
+              getOptionLabel={(option) => option.name + " || " +  "Accounts Receivable"} 
+              getOptionValue={(option) => option.id}
+            />
+          </div>
+      {/* --------------------------------------------------------------------------------------- */}
+          <div className="company-form__section">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Due Date"
+                className="font-right"
+                value={dayjs(formData.due)}
+                onChange={(e) =>
+                  setformData({
+                    ...formData,
+                    due: dayjs(e).format("YYYY-MM-DD"),
+                  })
                 }
-                label="Number"
               />
-            </div>
-
-            <div className="company-form__section">
-              <label htmlFor="account" className="form-label">
-                Account:
-              </label>
-              <AsyncSelect
-                id="account"
-                value={accountByOptions.find(
-                  (option) => option.id === formData.accountById)}
-                onChange={(e) => { handleAccountBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={accountByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Due Date"
-                  className="font-right"
-                  value={dayjs(formData.due)}
-                  onChange={(e) =>
-                    setformData({
-                      ...formData,
-                      due: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
-
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Transation Date"
-                  className="font-right"
-                  value={dayjs(formData.trasaDate)}
-                  onChange={(e) =>
-                    setformData({
-                      ...formData,
-                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
+            </LocalizationProvider>
           </div>
-      
-
-        <div className="col-6 text-start">
-     
-            <div className="company-form__section">
-              <label htmlFor="paymentTem" className="form-label">
-                Payment Tems:
-              </label>
-              <AsyncSelect
-                id="paymentTem"
-                value={paymentByOptions.find(
-                  (option) => option.id === formData.paymentById)}
-                onChange={(e) => { handlePaymentBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={paymentByOptions}
-                getOptionLabel={(option) => option.description}
-                getOptionValue={(option) => option.id}
+          {/* ----------------------------------------------------------- */}
+          <div className="company-form__section">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Transation Date"
+                className="font-right"
+                value={dayjs(formData.trasaDate)}
+                onChange={(e) =>
+                  setformData({
+                    ...formData,
+                    trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
               />
-            </div>
-            {/* --------------------------------------------------------------------------------------- */}
-            <div className="company-form__section">
-              <label htmlFor="apply" className="form-label">
-                Apply To:
-              </label>
-              <AsyncSelect
-                id="apply"
-                value={issuedByOptions.find(
-                  (option) => option.id === formData.issuedById)}
-                onChange={(e) => { handleIssuedBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={issuedByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            {/* --------------------------------------------------------------------------------------- */}
-            <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="issuedbyinfo"
-                placeholder="Apply to..."
-                value={formData.issuedByInfo}
-                readonly={true}
-                label=""
-              />
-            </div>
+            </LocalizationProvider>
           </div>
-        </div>
-     
-    
-
-      <div className="company-form__section">
-        <button
-          type="button"
-          className="button-addpiece"
-          onClick={() =>
-            setshowCommodityCreationForm(!showCommodityCreationForm)
-          }
-        >
-          Add Piece
-        </button>
-        {showCommodityCreationForm && (
-          <InvoiceIncomeCreationForm
-            onCancel={setshowCommodityCreationForm}
-            commodities={commodities}
-            setCommodities={setcommodities}
-          ></InvoiceIncomeCreationForm>
-        )}
-        {showCommodityEditForm && (
-          <InvoiceIncomeCreationForm
-            onCancel={setshowCommodityEditForm}
-            commodities={commodities}
-            setCommodities={setcommodities}
-            commodity={selectedCommodity}
-            editing={true}
-          ></InvoiceIncomeCreationForm>
-        )}
-        {selectedCommodity?.containsCommodities &&
-          selectedCommodity.internalCommodities.map(
-            (internalCommodity, index) => (
-              <InvoiceIncomeCreationForm
-                key={index}
-                onCancel={() => { }}
-                commodities={selectedCommodity.internalCommodities}
-                setCommodities={updateSelectedCommodity}
-                commodity={internalCommodity}
-                editing={true}
-              ></InvoiceIncomeCreationForm>
-            )
-          )}
+        </div>{/* -------------------------END ONE---------------------------------- */}
+        <div className="cont-two">
+          <div className="company-form__section">
+            <label htmlFor="paymentTem" className="form-label">
+            Payment Tems:
+            </label>
+            <AsyncSelect
+              id="paymentTem"
+              value={paymentByOptions.find(
+                (option) => option.id === formData.paymentById)}
+              onChange={(e) => {handlePaymentBySelection(e);}}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={paymentByOptions}
+              getOptionLabel={(option) => option.description}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
+        {/* --------------------------------------------------------------------------------------- */}
+          <div className="company-form__section">
+            <label htmlFor="apply" className="form-label">
+              Apply To:
+            </label>
+            <AsyncSelect
+              id="apply"
+              onChange={(e) => handleIssuedBySelection(e)}
+              value={issuedByOptions.find(
+                (option) => option.id === formData.issuedById
+              )}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={issuedByOptions}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="textarea"
+              inputName="issuedbyinfo"
+              placeholder="Apply to..."
+              value={formData.issuedByInfo}
+              readonly={true}
+              label=""
+            />
+          </div>
+        </div>{/* -------------------------END TWO---------------------------------- */}      
       </div>
-      </div>
-
+    </form>
+    <div className="containerr">
+    {/* -------------------------Nueno diseño---------------------------------- */} 
+    <div className="company-form__section">
+      <button
+        type="button"
+        className="button-addpiece"
+        onClick={() =>
+          setshowCommodityCreationForm(!showCommodityCreationForm)
+        }
+      >
+        Add Charge
+      </button>
+      {showCommodityCreationForm && (
+        <InvoiceIncomeCreationForm
+          onCancel={setshowCommodityCreationForm}
+          commodities={commodities}
+          setCommodities={setcommodities}
+        ></InvoiceIncomeCreationForm>
+      )}
+      {showCommodityEditForm && (
+        <InvoiceIncomeCreationForm
+          onCancel={setshowCommodityEditForm}
+          commodities={commodities}
+          setCommodities={setcommodities}
+          commodity={selectedCommodity}
+          editing={true}
+        ></InvoiceIncomeCreationForm>
+      )}
+      {selectedCommodity?.containsCommodities &&
+        selectedCommodity.internalCommodities.map(
+          (internalCommodity, index) => (
+            <InvoiceIncomeCreationForm
+              key={index}
+              onCancel={() => {}}
+              commodities={selectedCommodity.internalCommodities}
+              setCommodities={updateSelectedCommodity}
+              commodity={internalCommodity}
+              editing={true}
+            ></InvoiceIncomeCreationForm>
+          )
+        )}
+    </div>
+    {/* -------------------------Nuevo diseño---------------------------------- */}         
+    </div>
       <Table
         data={commodities}
         columns={[
-          "Status",
-          "type Chart",
-          "Description",
-          // "Prepaid",
-          "Quantity",
-          "Price",
-          "Amount",
-          "Note",
-          // "Currency",
-          "Options",
+        "Status",
+        "type Chart",
+        "Description",
+        // "Prepaid",
+        "Quantity",
+        "Price",
+        "Amount",
+        "Note",
+        // "Currency",
+        "Options",
         ]}
         onSelect={handleSelectCommodity} // Make sure this line is correct
         onDelete={handleCommodityDelete}
@@ -584,33 +576,30 @@ const InvoicesCreationForm = ({
         }}
         onInspect={() => {
         }}
-        onAdd={() => { }}
+        onAdd={() => {}}
         showOptions={false}
       />
-
-      <div className="form-column">
-        <label htmlFor="tota" className="text-comm">
+{/* ******************************************************************************************************* */}
+        <div className="form-column">
+          <label htmlFor="tota" className="text-comm">
           Total Amount:
-        </label>
-        <input
-          className="form-input"
-          type="number"
-          readOnly
-          id="tota"
-          value={resultado}
-          onChange={(e) =>
-            setformData({ ...formData, tota: e.target.value })
-          }
-        />
-      </div>
-      <div className="company-form__options-container">
-        <button className="button-save" onClick={sendData}>
-          Save
-        </button>
-        <button className="button-cancel" onClick={closeModal}>
-          Cancel
-        </button>
-      </div>
+          </label>
+          <input
+            className="form-input"
+            type="number"
+            readOnly
+            id="tota"
+            value={total}
+          />
+        </div>
+    <div className="company-form__options-container">
+      <button className="button-save" onClick={sendData}>
+        Save
+      </button>
+      <button className="button-cancel" onClick={closeModal}>
+        Cancel
+      </button>
+    </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
         <Alert
@@ -638,8 +627,11 @@ const InvoicesCreationForm = ({
         </Alert>
       )}
     </div>
+    
   );
+  
 };
+
 
 InvoicesCreationForm.propTypes = {
   invoice: propTypes.object,
@@ -655,6 +647,4 @@ InvoicesCreationForm.defaultProps = {
   onInvoicesDataChange: null,
 };
 
-export default InvoicesCreationForm;
-
-
+export default InvoicesCreationForm;  

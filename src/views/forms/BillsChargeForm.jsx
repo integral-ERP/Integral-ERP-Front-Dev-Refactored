@@ -10,15 +10,15 @@ import AsyncSelect from "react-select/async";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import React, { createContext, useContext } from 'react';
 
-const InvoiceIncomeCreationForm = ({
+const BillsChargeForm = ({
   onCancel,
-  commodities,
-  setCommodities,
+  bills,
+  setBills,
   editing,
-  commodity,
+  bill,
 }) => {
   const formFormat = {
-    status: 14,
+    status: "Open",
     description: "",
     locationId: "",
     locationCode: "",
@@ -90,21 +90,20 @@ const InvoiceIncomeCreationForm = ({
       
     };
     if (editing) {
-      const indexToEdit = commodities.findIndex(
-        (comm) => comm.id == commodity.id
+      const indexToEdit = bills.findIndex(
+        (comm) => comm.id == bill.id
       );
-      const copy = [...commodities];
+      const copy = [...bills];
       copy[indexToEdit] = body;
-      setCommodities(copy);
+      setBills(copy);
     } else {
-      setCommodities([...commodities, body]);
+      setBills([...bills, body]);
       setinternalID(internalID + 1);
     }
-    console.log("COMODITIES= ",commodities);
+    console.log("BILLSS= ",bills);
 
   };
 
-  
   useEffect(() => {
     
     if(formData.totalAmount && formData.quantity){
@@ -114,23 +113,41 @@ const InvoiceIncomeCreationForm = ({
     }
   }, [formData.totalAmount, formData.quantity]);
 
-
+  useEffect(() => {
+    console.log("FORMDATA= ",formData);
+    if (formData.height && formData.width && formData.length) {
+      const volWeight = (
+        (formData.height * formData.width * formData.length) /
+        166
+      ).toFixed(0);
+      const ratedWeight =
+        formData.volumetricWeight >= formData.weight
+          ? formData.volumetricWeight
+          : formData.weight;
+      setformData({
+        ...formData,
+        volumetricWeight: volWeight,
+        chargedWeight: ratedWeight,
+      });
+    }
+  }, [formData.height, formData.length, formData.width]);
 
   useEffect(() => {
     if (editing) {
       const formFormat = {
-        id: commodity.id,
-        weight: commodity.weight,
-        description: commodity.description,
-        locationId: commodity.locationId,
-        locationCode: commodity.locationCode,
-        typeByCode: commodity.typeByCode,
-        totalAmount: commodity.totalAmount,
-        amount: commodity.amount,
-        quantity: commodity.quantity,
-        note: commodity.note,
-        status: commodity.status,
-        resultado: commodity.resultado,
+        id: bill.id,
+        weight: bill.weight,
+        description: bill.description,
+        locationId: bill.locationId,
+        locationCode: bill.locationCode,
+        typeByCode: bill.typeByCode,
+        totalAmount: bill.totalAmount,
+        amount: bill.amount,
+        quantity: bill.quantity,
+        note: bill.note,
+        status: bill.status || "Open",
+        resultado: bill.resultado,
+        // suma: bill.suma,
       };
       setformData(formFormat);
     }
@@ -157,7 +174,7 @@ const InvoiceIncomeCreationForm = ({
       
     if (response.status >= 200 && response.status <= 300) {
       console.log(
-        "Item & Service successfully created/updated:",
+        "Bills successfully created/updated:",
         response.data
       );
       setShowSuccessAlert(true);
@@ -165,7 +182,7 @@ const InvoiceIncomeCreationForm = ({
         closeModal();
         onInvoicesDataChange();
         setShowSuccessAlert(false);
-        window.location.reload();
+        // window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -213,7 +230,7 @@ const InvoiceIncomeCreationForm = ({
         {/* ------------------------- */}
         <div className="company-form__section">
           <label htmlFor="typeByCode" className="form-label">
-          Items Service Code:
+          Type:
           </label>
           <AsyncSelect
             id="typeByCode"
@@ -264,7 +281,7 @@ const InvoiceIncomeCreationForm = ({
             type="number"
             id="totalAmount"
             value={formData.totalAmount}
-            onChange={(e) => setformData({ ...formData, totalAmount: e.target.value })}
+            onChange={(e) => handleChargeRateChange(e)}
           />
         </div>
         {/* ------------------------- */}
@@ -279,8 +296,7 @@ const InvoiceIncomeCreationForm = ({
             readOnly
             value={formData.amount}
             onChange={(e) =>
-              {
-                setformData({ ...formData, amount: e.target.value })}
+              setformData({ ...formData, amount: e.target.value })
             }
           />
         </div>
@@ -344,14 +360,14 @@ const InvoiceIncomeCreationForm = ({
   );
 };
 
-InvoiceIncomeCreationForm.propTypes = {
+BillsChargeForm.propTypes = {
   onCancel: propTypes.func,
-  commodities: propTypes.array,
+  bills: propTypes.array,
 };
 
-InvoiceIncomeCreationForm.defaultProps = {
+BillsChargeForm.defaultProps = {
   onCancel: null,
-  commodities: [],
+  bills: [],
 };
 
-export default InvoiceIncomeCreationForm;
+export default BillsChargeForm;

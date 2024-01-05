@@ -3,33 +3,71 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import ChartOfAccountsCreationForm from "../forms/ChartOfAccountsCreationForm";
+import ChartOfAccountsCreationForm  from "../forms/ChartOfAccountsCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
+import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 
-const ChartOfAccounts  = () => {
+
+const ChartOfAccounts   = () => {
   const [chartofAccounts, setChartOfAccounts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedChartOfAccounts, setSelectedChartOfAccounts] = useState(null);
+  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
+  const [selectedChartOfAccounts , setSelectedChartOfAccounts] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
+
+
+  const [showContextMenu, setShowContextMenu] = useState(false);
+
   const columns = [
     "Name",
     "Type Chart",
     "Account Number",
     "Currency",
     "Note",
-    
+
   ];
+
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      // Check if the click is inside the context menu or a table row
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
+        // Click is outside the context menu, close it
+        setShowContextMenu(false);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.addEventListener("click", handleDocumentClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
+        const newChartOfAccounts  = response.data.results.filter((ChartAccounts) => {
+          const ChartAccountId  = ChartAccounts.id;
+          return !chartofAccounts.some(
+            (existingPickupOrder) => existingPickupOrder.id === ChartAccountId 
+          );
+        });
+
         setChartOfAccounts([...response.data.results].reverse());
-       
+        console.log("NEW ORDERS", [...chartofAccounts, ...newChartOfAccounts ]);
+        
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -45,6 +83,13 @@ const ChartOfAccounts  = () => {
       setInitialDataFetched(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (initialDataFetched) {
+      const number = chartofAccounts[chartofAccounts.length - 1]?.number || 0;
+      setcurrentPickupNumber(number + 1);
+    }
+  }, [chartofAccounts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -68,15 +113,15 @@ const ChartOfAccounts  = () => {
     updateChartOfAccounts();
   };
 
-  const handleSelectChartOfAccounts = (ChartOFAccounts) => {
-    setSelectedChartOfAccounts(ChartOFAccounts);
+  const handleSelectChartOfAccounts = (PickupOrder) => {
+    setSelectedChartOfAccounts(PickupOrder);
   };
 
   const handleEditChartOfAccounts = () => {
-    if (selectedChartOfAccounts) {
+    if (selectedChartOfAccounts ) {
       openModal();
     } else {
-      alert("Please select a Chart Of Accounts  Order to edit.");
+      alert("Please select a ChartOfAccounts   Order to edit.");
     }
   };
 
@@ -85,19 +130,16 @@ const ChartOfAccounts  = () => {
   };
 
   const handleDeleteChartOfAccounts = () => {
-    if (selectedChartOfAccounts) {
-      ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts.id)
+    if (selectedChartOfAccounts ) {
+      ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts .id)
         .then((response) => {
-          if (response.status == 204) {
-            const newChartOfAccounts = chartofAccounts.filter(
-              (order) => order.id !== selectedChartOfAccounts.id
-            );
-            setChartOfAccounts(newChartOfAccounts);
+          if (response.status == 200) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateChartOfAccounts();
+            const newChartOfAccounts = chartofAccounts.filter((order) => order.id !== selectedChartOfAccounts.id);
+            setChartOfAccounts(newChartOfAccounts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -109,7 +151,7 @@ const ChartOfAccounts  = () => {
           console.log(error);
         });
     } else {
-      alert("Please select a Chart Of Accounts  Order to delete.");
+      alert("Please select a ChartOfAccounts   Order to delete.");
     }
   };
 
@@ -117,10 +159,10 @@ const ChartOfAccounts  = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isChartOfAccountButton = clickedElement.classList.contains("ne");
+      const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isChartOfAccountButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow) {
         setSelectedChartOfAccounts(null);
       }
     };
@@ -132,9 +174,37 @@ const ChartOfAccounts  = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
+
+  useEffect(() => {
+    if(createWarehouseReceipt){
+      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+      openModalReceiptCreation();
+    }
+  }, [createWarehouseReceipt])
   
+
+  const contextMenuOptions = [
+    {
+      label: "Create Warehouse Receipt",
+      handler: () => setCreateWarehouseReceipt(true)
+    },
+    {
+      label: "Option 2",
+      handler: () => {
+        // Handle Option 2
+      },
+    },
+    {
+      label: "Option 3",
+      handler: () => {
+        // Handle Option 3
+      },
+    },
+  ];
+
   return (
     <>
+      <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
           <div className="content-page">
@@ -142,31 +212,16 @@ const ChartOfAccounts  = () => {
               data={chartofAccounts}
               columns={columns}
               onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
-              selectedRow={selectedChartOfAccounts}
+              selectedRow={selectedChartOfAccounts }
               onDelete={handleDeleteChartOfAccounts}
               onEdit={handleEditChartOfAccounts}
               onAdd={handleAddChartOfAccounts}
               title="Chart Of Accounts"
-            >
-              
-            {selectedChartOfAccounts !== null && (
-                <ChartOfAccountsCreationForm
-                  ChartAccounts={selectedChartOfAccounts}
-                  closeModal={closeModal}
-                  creating={false}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-            )}
-
-            {selectedChartOfAccounts === null && (
-                <ChartOfAccountsCreationForm
-                  ChartAccounts={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-            )}
-              </Table>
+              setData={setChartOfAccounts}
+              showContextMenu={showContextMenu}
+              setShowContextMenu={setShowContextMenu}
+              contextMenuOptions={contextMenuOptions}
+            />
 
             {showSuccessAlert && (
               <Alert
@@ -175,7 +230,7 @@ const ChartOfAccounts  = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Success</AlertTitle>
-                <strong>Chart Of Accounts deleted successfully!</strong>
+                <strong>Chart Of Account deleted successfully!</strong>
               </Alert>
             )}
             {showErrorAlert && (
@@ -185,15 +240,36 @@ const ChartOfAccounts  = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Chart Of Accounts. Please try again</strong>
+                <strong>Error deleting Chart Of Account. Please try again</strong>
               </Alert>
             )}
 
+            {selectedChartOfAccounts  !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ChartOfAccountsCreationForm 
+                  ChartAccounts={selectedChartOfAccounts }
+                  closeModal={closeModal}
+                  creating={false}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+              </ModalForm>
+            )}
+
+            {selectedChartOfAccounts  === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ChartOfAccountsCreationForm 
+                  ChartAccounts={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+              </ModalForm>
+            )}
           </div>
         </div>
-   
+      </div>
     </>
   );
 };
 
-export default ChartOfAccounts ;
+export default ChartOfAccounts  ;
