@@ -37,7 +37,8 @@ const Table = ({
   onInspect,
   contextService,
   children,
-  importEnabled
+  importEnabled,
+  createWarehouseReceipt
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -72,6 +73,14 @@ const Table = ({
     });
     return initialVisibility;
   });
+
+  useEffect(() => {
+    if(createWarehouseReceipt){
+      setShowPage('nothing');
+    } else {
+      setShowPage('initial');
+    }
+  }, [createWarehouseReceipt]);
 
   const handleEdit = (e) => {
     setShowPage('edit');
