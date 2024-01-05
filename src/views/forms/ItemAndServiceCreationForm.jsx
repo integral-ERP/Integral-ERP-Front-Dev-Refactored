@@ -70,9 +70,9 @@ const ItemAndServiceCreationForm = ({
     const response = await (creating
       ? ItemsAndServicesService.createItemAndService(rawData)
       : ItemsAndServicesService.updateItemsAndServices(
-          itemAndService.id,
-          rawData
-        ));
+        itemAndService.id,
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log(
@@ -108,8 +108,9 @@ const ItemAndServiceCreationForm = ({
   return (
     <div className="company-form">
       <div className="row w-100">
-        <div className="col-6">
+        <div className="col-12 text-start">
           <div className="creation creation-container w-100">
+          <div className="form-label_name"><h3>Definition</h3><span></span></div>
             <div className="company-form__section">
               <label htmlFor="" className="form-label">
                 Type:
@@ -208,25 +209,25 @@ const ItemAndServiceCreationForm = ({
                 label="Price"
               />
             </div>
-          </div>
-          <div className="form-group">
-            <Input
-              type="textarea"
-              inputName="iataCode"
-              placeholder="IATA Code here..."
-              label="IATA Code"
-              value={formData.iataCode}
-              changeHandler={(e) =>
-                setFormData({ ...formData, iataCode: e.target.value })
-              }
-            />
-          </div>
-          {/* ----------------------------END ONE---------------------------------- */}
-        </div>
-     
 
-      
-        <div className="col-6">
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="iataCode"
+                placeholder="IATA Code here..."
+                label="IATA Code"
+                value={formData.iataCode}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, iataCode: e.target.value })
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+
+
+        {/* <div className="col-6">
           <div className="creation creation-container w-100">
         <div className="company-form__section">
           <Input
@@ -268,9 +269,9 @@ const ItemAndServiceCreationForm = ({
           />
         </div>
       </div>
+      </div> */}
       </div>
-      </div>
-  
+
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
