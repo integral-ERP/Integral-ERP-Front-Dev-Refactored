@@ -31,7 +31,7 @@ const Pickup = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
-  const [createPickUpOrder, setCreatePickUpOrder] = useState(true);
+
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
@@ -157,16 +157,13 @@ const Pickup = () => {
 
   const handleEditPickupOrders = () => {
     if (selectedPickupOrder) {
-      setCreatePickUpOrder(false);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
-      
     }
   };
 
   const handleAddPickupOrder = () => {
-    setCreatePickUpOrder(true);
     openModal();
   };
 
@@ -211,13 +208,10 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
-      const isSelectMenu = event.target.id.includes("react-select");
-      //console.log("EL CLICK SE HIZO DENTRO DEL FORMULARIO?", isInsideCompanyFormPickup, "es un select menu?", isSelectMenu, "elemento: ", clickedElement);
-      console.log();
-      if ((!isPickupOrdersButton && !isTableRow && !isInsideCompanyFormPickup && !isSelectMenu) && !isSelectMenu) {
+
+      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt) {
+        
         setSelectedPickupOrder(null);
-        console.log("PONIENDO COMO NULL EL SELECTED");
       }
     };
 
@@ -325,7 +319,7 @@ const Pickup = () => {
                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={createPickUpOrder}
+                  creating={true}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
