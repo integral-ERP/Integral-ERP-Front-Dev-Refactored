@@ -53,11 +53,11 @@ const InvoicesCreationForm = ({
   // PRUEBA 
   const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false)
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
-  const [selectedCommodity, setselectedCommodity] = useState(null);  
+  const [selectedCommodity, setselectedCommodity] = useState(null);
   const [commodities, setcommodities] = useState([]);
 
-  var numprice=Number(numqueality);
-  var numqueality= Number(numprice);
+  var numprice = Number(numqueality);
+  var numqueality = Number(numprice);
 
 const formFormat = {
   number: "",
@@ -125,7 +125,7 @@ const handleIssuedBySelection = async (event) => {
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART",result.typeChart) 
+    console.log("RESULTADO CHART", result.typeChart)
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -136,7 +136,7 @@ const handleIssuedBySelection = async (event) => {
     });
     console.log("TYPE_CHART=", typeChart);
   };
-  
+
   //------------------------------------------------------------------------------------
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
@@ -150,7 +150,7 @@ const handleIssuedBySelection = async (event) => {
     });
   };
   //------------------------------------------------------------------------------------
- 
+
   useEffect(() => {
     const fetchData = async () => {
       const typeData = await ItemsAndServicesService.getItemsAndServices();
@@ -158,9 +158,9 @@ const handleIssuedBySelection = async (event) => {
     };
     fetchData();
   }, []);
-  
-  
-  
+
+
+
   useEffect(() => {
     if (!creating && invoice) {
       setcommodities(invoice.invoiceCharges)
@@ -189,7 +189,7 @@ const handleIssuedBySelection = async (event) => {
         status: invoice.status || "Open",
         typeChart: invoice.typeChart || "",
         invoiceCharges: invoice.invoiceCharges,
-        
+
 
         issuedByInfo: `${invoice.issuedByName}`,
       });
@@ -212,8 +212,8 @@ const handleIssuedBySelection = async (event) => {
       total : formData.total,
       // typeName : formData.typeName,
       //----------
-      issued_by : formData.issuedById,
-      issuedByName : formData.issuedByName,
+      issued_by: formData.issuedById,
+      issuedByName: formData.issuedByName,
       //----------
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
@@ -222,7 +222,7 @@ const handleIssuedBySelection = async (event) => {
       accountByType: formData.accountByType,
       accountByName: formData.accountByName,
       //----------
-      typeById: formData.typeById, 
+      typeById: formData.typeById,
       typeByCode: formData.typeByCode,
 
       invoiceCharges:commodities,
@@ -231,9 +231,9 @@ const handleIssuedBySelection = async (event) => {
     const response = await (creating
       ? InvoicesService.createInvoice(rawData)
       : InvoicesService.updateInvoices(
-          invoice.id,
-          rawData
-        )); 
+        invoice.id,
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log("Invoice successfully created/updated:",
@@ -259,21 +259,16 @@ const handleIssuedBySelection = async (event) => {
       typeService: formData.typeService,
 
     };
-    
+
     console.log("DATA CURTOMER:", formData);
     const response = await (creating
       ? CustomerService.CustomerService(rawData)
       : CustomerService.updateCustomer(
-          invoice.id,
-          rawData
-      )
-      ? ItemsAndServicesService.createItemAndService(rawData)
-      : ItemsAndServicesService.updateItemsAndServicesService(
         invoice.id,
         rawData
       )
-      ? ChartOfAccountsService.createChartOfAccounts(rawData)
-      : ChartOfAccountsService.updateChartOfAccounts(
+        ? ItemsAndServicesService.createItemAndService(rawData)
+        : ItemsAndServicesService.updateItemsAndServicesService(
           invoice.id,
           rawData
       )
@@ -283,27 +278,25 @@ const handleIssuedBySelection = async (event) => {
   const handleApply = async (event) => {
     const id = event.id;
     const type = event.type;
-  
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setformData({
       ...formData,
       applyToId: id,
       applyToType: type,
     });
   };
-// ----------------------------------------------------------------------
-const fetchFormData = async () => {  
-  const forwardingAgents= (await ForwardingAgentService.getForwardingAgents()).data.results;
-  const paiment         = (await PaymentTermsService.getPaymentTerms()).data.results;
-  const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-  const type          = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-  // Function to add 'type' property to an array of objects
-  const addTypeToObjects = (arr, type) =>
-    arr.map((obj) => ({ ...obj, type }));
+  // ----------------------------------------------------------------------
+  const fetchFormData = async () => {
+    const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
+    const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
+    const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
+    const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
+    // Function to add 'type' property to an array of objects
+    const addTypeToObjects = (arr, type) =>
+      arr.map((obj) => ({ ...obj, type }));
 
 
   const customers = (await CustomerService.getCustomers()).data.results;
@@ -321,10 +314,10 @@ const fetchFormData = async () => {
   const accountByOptions = [...accountWithType].filter(account=> account.typeChart=="Accounts Receivable");
   const typeByOptions = [...typeWithType];
 
-  setIssuedByOptions(issuedByOptions);
-  setPaymentByOptions(paymentByOptions);
-  setAccountByOptions(accountByOptions);
-  setptypeByOptions(typeByOptions);
+    setIssuedByOptions(issuedByOptions);
+    setPaymentByOptions(paymentByOptions);
+    setAccountByOptions(accountByOptions);
+    setptypeByOptions(typeByOptions);
 
 };
 
@@ -336,11 +329,10 @@ const handleType = (type) => {
   setItemsAndServicestype(type);
   setformData({ ...formData, type: type });
 
-};
+    const charge = {
+      ...formData,
+    };
 
-const handleSelectCommodity = (commodity) => {
-  setselectedCommodity(commodity);
-};
 
 const handleCommodityDelete = () => {
   const newCommodities = commodities.filter(
@@ -354,7 +346,7 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
   updatedCommodity.internalCommodities = updatedInternalCommodities;
   setselectedCommodity(updatedCommodity);
 
-  const index = commodities.findIndex((com) => com.id == selectedCommodity.id);
+  };
 
   if(index != -1){
     const commoditiesCopy = [...commodities];
@@ -377,197 +369,181 @@ settotal(totall);
 //------------------------------------------------------------------------
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#definition"
-            aria-selected={activeTab === "definition"}
-            onClick={() => setActiveTab("definition")}
-            role="tab"
-          >
-            invoice
-          </a>
-        </li>
-      </ul>
 
-      <form
-        className={`tab-pane fade ${
-          activeTab === "definition" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "definition" ? "block" : "none" }}
-      >
-      <div className="containerr">
-        <div className="cont-one">
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="number"
-              placeholder="EXP123456"
-              value={formData.number}
-              changeHandler={(e) =>
-                setformData({ ...formData, number: e.target.value })
-              }
-              label="Number"
-            />
-          </div>
-      {/* --------------------------------------------------------------------------------------- */}
-          <div className="company-form__section">
-            <label htmlFor="account" className="form-label">
-            Chart Account:
-            </label>
-            <AsyncSelect
-              id="account"
-              value={accountByOptions.find(
-                (option) => option.id === formData.accountById)}
-              onChange={(e) => {handleAccountBySelection(e);}}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={accountByOptions}
-              getOptionLabel={(option) => option.name + " || " +  "Accounts Receivable"} 
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-      {/* --------------------------------------------------------------------------------------- */}
-          <div className="company-form__section">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Due Date"
-                className="font-right"
-                value={dayjs(formData.due)}
-                onChange={(e) =>
-                  setformData({
-                    ...formData,
-                    due: dayjs(e).format("YYYY-MM-DD"),
-                  })
+      <div className="creation creation-container w-100">
+        <div className="form-label_name"><h3>Invoice</h3><span></span></div>
+        <div className="row w-100">
+          <div className="col-6 text-start">
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="number"
+                placeholder="EXP123456"
+                value={formData.number}
+                changeHandler={(e) =>
+                  setformData({ ...formData, number: e.target.value })
                 }
+                label="Number"
               />
-            </LocalizationProvider>
-          </div>
-          {/* ----------------------------------------------------------- */}
-          <div className="company-form__section">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Transation Date"
-                className="font-right"
-                value={dayjs(formData.trasaDate)}
-                onChange={(e) =>
-                  setformData({
-                    ...formData,
-                    trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                  })
-                }
+            </div>
+
+            <div className="company-form__section">
+              <label htmlFor="account" className="form-label">
+                Account:
+              </label>
+              <AsyncSelect
+                id="account"
+                value={accountByOptions.find(
+                  (option) => option.id === formData.accountById)}
+                onChange={(e) => { handleAccountBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={accountByOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
               />
-            </LocalizationProvider>
+            </div>
+
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Due Date"
+                  className="font-right"
+                  value={dayjs(formData.due)}
+                  onChange={(e) =>
+                    setformData({
+                      ...formData,
+                      due: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Transation Date"
+                  className="font-right"
+                  value={dayjs(formData.trasaDate)}
+                  onChange={(e) =>
+                    setformData({
+                      ...formData,
+                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
           </div>
-        </div>{/* -------------------------END ONE---------------------------------- */}
-        <div className="cont-two">
-          <div className="company-form__section">
-            <label htmlFor="paymentTem" className="form-label">
-            Payment Tems:
-            </label>
-            <AsyncSelect
-              id="paymentTem"
-              value={paymentByOptions.find(
-                (option) => option.id === formData.paymentById)}
-              onChange={(e) => {handlePaymentBySelection(e);}}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={paymentByOptions}
-              getOptionLabel={(option) => option.description}
-              getOptionValue={(option) => option.id}
-            />
+      
+
+        <div className="col-6 text-start">
+     
+            <div className="company-form__section">
+              <label htmlFor="paymentTem" className="form-label">
+                Payment Tems:
+              </label>
+              <AsyncSelect
+                id="paymentTem"
+                value={paymentByOptions.find(
+                  (option) => option.id === formData.paymentById)}
+                onChange={(e) => { handlePaymentBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={paymentByOptions}
+                getOptionLabel={(option) => option.description}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            {/* --------------------------------------------------------------------------------------- */}
+            <div className="company-form__section">
+              <label htmlFor="apply" className="form-label">
+                Apply To:
+              </label>
+              <AsyncSelect
+                id="apply"
+                value={issuedByOptions.find(
+                  (option) => option.id === formData.issuedById)}
+                onChange={(e) => { handleIssuedBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={issuedByOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            {/* --------------------------------------------------------------------------------------- */}
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="issuedbyinfo"
+                placeholder="Apply to..."
+                value={formData.issuedByInfo}
+                readonly={true}
+                label=""
+              />
+            </div>
           </div>
-        {/* --------------------------------------------------------------------------------------- */}
-          <div className="company-form__section">
-            <label htmlFor="apply" className="form-label">
-              Apply To:
-            </label>
-            <AsyncSelect
-              id="apply"
-              onChange={(e) => handleIssuedBySelection(e)}
-              value={issuedByOptions.find(
-                (option) => option.id === formData.issuedById
-              )}
-              isClearable={true}
-              placeholder="Search and select..."
-              defaultOptions={issuedByOptions}
-              getOptionLabel={(option) => option.name}
-              getOptionValue={(option) => option.id}
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="textarea"
-              inputName="issuedbyinfo"
-              placeholder="Apply to..."
-              value={formData.issuedByInfo}
-              readonly={true}
-              label=""
-            />
-          </div>
-        </div>{/* -------------------------END TWO---------------------------------- */}      
-      </div>
-    </form>
-    <div className="containerr">
-    {/* -------------------------Nueno diseño---------------------------------- */} 
-    <div className="company-form__section">
-      <button
-        type="button"
-        className="button-addpiece"
-        onClick={() =>
-          setshowCommodityCreationForm(!showCommodityCreationForm)
-        }
-      >
-        Add Charge
-      </button>
-      {showCommodityCreationForm && (
-        <InvoiceIncomeCreationForm
-          onCancel={setshowCommodityCreationForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-        ></InvoiceIncomeCreationForm>
-      )}
-      {showCommodityEditForm && (
-        <InvoiceIncomeCreationForm
-          onCancel={setshowCommodityEditForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-          commodity={selectedCommodity}
-          editing={true}
-        ></InvoiceIncomeCreationForm>
-      )}
-      {selectedCommodity?.containsCommodities &&
-        selectedCommodity.internalCommodities.map(
-          (internalCommodity, index) => (
-            <InvoiceIncomeCreationForm
-              key={index}
-              onCancel={() => {}}
-              commodities={selectedCommodity.internalCommodities}
-              setCommodities={updateSelectedCommodity}
-              commodity={internalCommodity}
-              editing={true}
-            ></InvoiceIncomeCreationForm>
-          )
+        </div>
+     
+    
+
+      <div className="company-form__section">
+        <button
+          type="button"
+          className="button-addpiece"
+          onClick={() =>
+            setshowCommodityCreationForm(!showCommodityCreationForm)
+          }
+        >
+          Add Piece
+        </button>
+        {showCommodityCreationForm && (
+          <InvoiceIncomeCreationForm
+            onCancel={setshowCommodityCreationForm}
+            commodities={commodities}
+            setCommodities={setcommodities}
+          ></InvoiceIncomeCreationForm>
         )}
-    </div>
-    {/* -------------------------Nuevo diseño---------------------------------- */}         
-    </div>
+        {showCommodityEditForm && (
+          <InvoiceIncomeCreationForm
+            onCancel={setshowCommodityEditForm}
+            commodities={commodities}
+            setCommodities={setcommodities}
+            commodity={selectedCommodity}
+            editing={true}
+          ></InvoiceIncomeCreationForm>
+        )}
+        {selectedCommodity?.containsCommodities &&
+          selectedCommodity.internalCommodities.map(
+            (internalCommodity, index) => (
+              <InvoiceIncomeCreationForm
+                key={index}
+                onCancel={() => { }}
+                commodities={selectedCommodity.internalCommodities}
+                setCommodities={updateSelectedCommodity}
+                commodity={internalCommodity}
+                editing={true}
+              ></InvoiceIncomeCreationForm>
+            )
+          )}
+      </div>
+      </div>
+
       <Table
         data={commodities}
         columns={[
-        "Status",
-        "type Chart",
-        "Description",
-        // "Prepaid",
-        "Quantity",
-        "Price",
-        "Amount",
-        "Note",
-        // "Currency",
-        "Options",
+          "Status",
+          "type Chart",
+          "Description",
+          // "Prepaid",
+          "Quantity",
+          "Price",
+          "Amount",
+          "Note",
+          // "Currency",
+          "Options",
         ]}
         onSelect={handleSelectCommodity} // Make sure this line is correct
         onDelete={handleCommodityDelete}
@@ -576,30 +552,33 @@ settotal(totall);
         }}
         onInspect={() => {
         }}
-        onAdd={() => {}}
+        onAdd={() => { }}
         showOptions={false}
       />
-{/* ******************************************************************************************************* */}
-        <div className="form-column">
-          <label htmlFor="tota" className="text-comm">
+
+      <div className="form-column">
+        <label htmlFor="tota" className="text-comm">
           Total Amount:
-          </label>
-          <input
-            className="form-input"
-            type="number"
-            readOnly
-            id="tota"
-            value={total}
-          />
-        </div>
-    <div className="company-form__options-container">
-      <button className="button-save" onClick={sendData}>
-        Save
-      </button>
-      <button className="button-cancel" onClick={closeModal}>
-        Cancel
-      </button>
-    </div>
+        </label>
+        <input
+          className="form-input"
+          type="number"
+          readOnly
+          id="tota"
+          value={resultado}
+          onChange={(e) =>
+            setformData({ ...formData, tota: e.target.value })
+          }
+        />
+      </div>
+      <div className="company-form__options-container">
+        <button className="button-save" onClick={sendData}>
+          Save
+        </button>
+        <button className="button-cancel" onClick={closeModal}>
+          Cancel
+        </button>
+      </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
         <Alert
@@ -647,4 +626,6 @@ InvoicesCreationForm.defaultProps = {
   onInvoicesDataChange: null,
 };
 
-export default InvoicesCreationForm;  
+export default InvoicesCreationForm;
+
+

@@ -14,7 +14,6 @@ import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from 'xlsx';
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
-import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
@@ -163,32 +162,32 @@ const Table = ({
     Location: "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
-    //---------------------Cristian
-    "Account": "accountNumber",
-    "Due Days" : "dueDays",
-    "Discount Percentage" : "discountPercentage",
-    "Discount Days" : "discountDays",
-    "Inactive" : "inactive",
-    //---------------
-    "Transaction Date" : "trasaDate",
-    "Due Date" : "due",
-    "Type Name" : "typeName",
-    "Apply" : "issuedByName",
-    "Payment Temse": "paymentByDesc",
-    "Account Name" : "accountByName",
-    "Type Code" : "typeByCode",
-    "Biling Address" : "bilingAddres",
-    //---------------
-    "Type Items & Service": "typeByCode",
-    "type Chart": "typeByCode",
-    "Type Chart":"typeChart",
-    "Account Type" : "issuedByName",
-    "Amt Due": "division",
-    //---------------
-    "Entipy":     "customerByName",
-    "AR Amount":  "amountReceived",
-    "Memo":       "memo",
-    "nombre":     "nombre",
+      //---------------------Cristian
+      "Account": "accountNumber",
+      "Due Days" : "dueDays",
+      "Discount Percentage" : "discountPercentage",
+      "Discount Days" : "discountDays",
+      "Inactive" : "inactive",
+      //---------------
+      "Transaction Date" : "trasaDate",
+      "Due Date" : "due",
+      "Type Name" : "typeName",
+      "Apply" : "issuedByName",
+      "Payment Temse": "paymentByDesc",
+      "Account Name" : "accountByName",
+      "Type Code" : "typeByCode",
+      "Biling Address" : "bilingAddres",
+      //---------------
+      "Type Items & Service": "typeByCode",
+      "type Chart": "typeByCode",
+      "Type Chart":"typeChart",
+      "Account Type" : "issuedByName",
+      "Amt Due": "division",
+      //---------------
+      "Entipy":     "customerByName",
+      "AR Amount":  "amountReceived",
+      "Memo":       "memo",
+      "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {
@@ -365,17 +364,6 @@ const Table = ({
 
   const generatePDFInvoice = () => {
     GenerateInvoicePDF(selectedRow)
-      .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
-        window.open(pdfUrl, "_blank");
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
-  };
-
-  const generatePDFBill = () => {
-    GenerateBillPDF(selectedRow)
       .then((pdfUrl) => {
         // Now you have the PDF URL, you can use it as needed
         window.open(pdfUrl, "_blank");
@@ -648,10 +636,6 @@ const Table = ({
                             </button>
                           ) : columnName === "Invoice PDF" ? (
                             <button type="button" onClick={generatePDFInvoice}>
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Bill PDF" ? (
-                            <button type="button" onClick={generatePDFBill}>
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (
