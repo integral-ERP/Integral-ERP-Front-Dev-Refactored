@@ -3,222 +3,113 @@ import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
-import AsyncSelect from "react-select/async";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import Table from "../shared/components/Table";
-//-----------------------------------------
-import PaymentsService from "../../services/PaymentsService";
-import CustomerService from "../../services/CustomerService";
-import InvoicesService from "../../services/InvoicesService";
-import ChartOfAccountsService from "../../services/ChartOfAccountsService";
+import PaymentTermsService from "../../services/PaymentTermsService";
+import CurrencyService from "../../services/CurrencyService";
 
-const PaymentsCreationForm = ({
-  payments,
+const PaymentTermsCreationForms = ({
+  paymentTerms,
   closeModal,
   creating,
-  onpaymentDataChange,
+  onpaymentTermDataChange,
 }) => {
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [Payments, setPayments] = useState([]);
+  const [PaymentTerms, setPaymentTerms] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [customerByOptions, setCustomerByOptions] = useState([]);
-  const [accountByReceivable, setaccountByReceivable] = useState([]);
-  const [accountBybank, setaccountBybank] = useState([]);
-  const [customer, setcustomers] = useState([]);
-  const [accounst, setaccounts] = useState([]);
-  const [total, settotal] = useState("");
-  const today = dayjs().format("YYYY-MM-DD");
+  const [currencies, setcurrencies] = useState([]);
 
-  const [seleccion, setSeleccion] = useState('');
-
-  // const [valorBuscado, setValorBuscado] = useState('');
   const formFormat = {
-    customerById: "",
-    customerByName: "",
-    amountReceived: 0.0,
-    trasaDate: today,
-    number: "",
-    memo:"",
-    prueba:"",
-    account: "",
-    accountbank:"",
-    accountById : "",
-    accountByType: "",
-    accountRecei: "",
-    typeChart: "",
-    typeChartBanck: "",
-    accountByBankId:"",
-    accountByBankType:"",
-    accountReceiBank:"",
+    description: "",
+    dueDays: "",
+    discountPercentage: "",
+    discountDays: "",
+    inactive: false,
   };
 
-  const [formData, setformData] = useState({ formFormat });
-//------------------------------------------------------------------------------------
-  const handleCustomerBySelection = async (event) => {
-    const id = event.id;
-    const name = event.name;
-    const result = await CustomerService.getCustomerById(id);
-    setcustomers(result.data)
-    setformData({
-      ...formData,
-      customerById: id,
-      customerByName: name,
-    });
-    setSeleccion(result);
-    const Payments = (await InvoicesService.getInvoicesAccountID(id)).data;
-    setPayments(Payments);
-    let totale = 0;
-    Payments.forEach(element => {
-      let subtotal=0;
-      element.invoiceCharges.forEach(element => {
-        subtotal += element.amount
-      });
-      totale+= subtotal
-    });
-    settotal(totale);
-    console.log("Payments TOTAL=", totale); 
-  };
-  //------------------------------------------------------------------------------------
-  const handleAccountBySelection = async (event) => {
-    const id = event.id;
-    const typeChart = event.typeChart;
-    const name = event.name;
-    const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART",result.typeChart) 
-    setaccounts(result.data)
-    setformData({
-      ...formData,
-      accountById: id,
-      accountByType: typeChart,
-      accountRecei : name,
-      
-    });
-    console.log("TYPE_CHART=", typeChart);
-  };
-    //------------------------------------------------------------------------------------
-    const handleAccountBanckBySelection = async (event) => {
-      const id = event.id;
-      const typeChartBanck = event.typeChart;
-      const name = event.name;
-      const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-      console.log("RESULTADO CHARTBANK",result.typeChartBanck) 
-      setaccounts(result.data)
-      setformData({
-        ...formData,
-        accountByBankId: id,
-        accountByBankType: typeChartBanck,
-        accountReceiBank : name,
-        
-      });
-      console.log("TYPE_CHARTBANK=", typeChartBanck);
-    };
-  //------------------------------------------------------------------------------------
+  const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    if (!creating && payments) {
-      setformData({
-        customerById:     payments.customerById,
-        customerByName:   payments.customerByName,
-        trasaDate:        payments.trasaDate,
-        number:           payments.number,
-        amountReceived:   payments.amountReceived,
-        memo:             payments.memo,
-        account:          payments.account,
-        accountbank:      payments.accountbank,
-        accountRecei:     payments.accountRecei,
-        accountById:      payments.accountById,
-        accountByType:    payments.accountByType,
-        typeChart:        payments.typeChart,
-        accountByBankId:  payments.accountByBankId,
-        accountByBankType:payments.accountByBankType,
-        accountReceiBank: payments.accountReceiBank,
+    console.log("Creating=", creating);
+    console.log("Payment Terms=", paymentTerms);
+    if (!creating && paymentTerms) {
+      console.log("Editing Payment Terms...", paymentTerms);
+      setFormData({
+        description: paymentTerms.description || "",
+        dueDays: paymentTerms.dueDays || "",
+        discountPercentage: paymentTerms.discountPercentage || "",
+        discountDays: paymentTerms.discountDays || "",
+        inactive: paymentTerms.inactive || false,
       });
     }
-  }, [creating, payments]);
-
+  }, [creating, paymentTerms]);
 
   // -------------------------------------------------------------
 
   const sendData = async () => {
     let rawData = {
-      customerById:   formData.customerById,
-      customerByName: formData.customerByName,
-      amountReceived: formData.amountReceived,
-      trasaDate:      formData.trasaDate,
-      number:         formData.number,
-      memo:           formData.memo,
-      //----------
-      accountById:    formData.accountById,
-      accountByType:    formData.accountByType,
-      account:        formData.account,
-      accountbank:    formData.accountbank,
-      accountRecei:   formData.accountRecei,
-      typeChartBanck: formData.typeChartBanck,
-      //----------
-      accountReceiBank: formData.accountReceiBank,
-      accountByBankId: formData.accountByBankId,
-      accountByBankType:formData.accountByBankType,
+      description: formData.description || "",
+      dueDays: formData.dueDays || "",
+      discountPercentage: formData.discountPercentage || "",
+      discountDays: formData.discountDays || "",
+      inactive: formData.inactive || false,
     };
+
     console.log("DATA = ", formData);
-    const response = await (creating
-      ? PaymentsService.createPayment(rawData)
-      : PaymentsService.updatePayment(
-          payments.id,
-          rawData
-        )); 
     //-------------------------------------
+    const response = await (creating
+      ? PaymentTermsService.createPaymentTerm(rawData)
+      : PaymentTermsService.updatePaymentTerm(
+          paymentTerms.id,
+          rawData
+        ));
+
     if (response.status >= 200 && response.status <= 300) {
       console.log(
-        "Payments Lists successfully created/updated:",
+        "Prueba successfully created/updated:",
          response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onpaymentDataChange();
+        onpaymentTermDataChange();
         setShowSuccessAlert(false);
+        // setFormData(formFormat)
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
     }
   };
-
   //---------------------------------------------------------------------------------------------------------------------------------------------------
-  const fetchFormData = async () => {  
-    const customer= (await CustomerService.getCustomers()).data.results;
-    const accoun          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    // const accounbank          = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    
-   // Function to add 'type' property to an array of objects
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
-  
-    // Add 'type' property to each array
-    const customerWithType  = addTypeToObjects(customer,"customer");
-    const accountWithType           = addTypeToObjects(accoun, "accounten-termn")
-    // const accounBanktWithType           = addTypeToObjects(accoun, "accounten-Bank")
+  const updatePaymentTerm = (url = null) => {
+    PaymentTermsService.getPaymentTerms(url)
+      .then((response) => {
+        const newPaymentTerms = response.data.results.filter(
+          (newPaymentTerm) => {
+            return !PaymentTerms.some(
+              (existingPaymentTerm) =>
+                existingPaymentTerm.id === newPaymentTerm.id
+            );
+          }
+        );
 
-    // Merge the arrays
-    const customerByOptions = [...customerWithType];
-    const accountByReceivable = [...accountWithType].filter(account=> account.typeChart=="Accounts Receivable");
-    console.log("accountByReceivable: ", accountByReceivable)
-    const accountBybank = [...accountWithType].filter(account=> account.typeChart=="Bank Account");
-    console.log("accountWithType: ", accountBybank)
- 
-    setCustomerByOptions(customerByOptions);
-    setaccountByReceivable(accountByReceivable);
-    setaccountBybank(accountBybank);
+        setPaymentTerms(
+          [...PaymentTerms, ...newPaymentTerms].reverse()
+        );
+
+        if (response.data.next) {
+          setNextPageURL(response.data.next);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log("Imprimir = ",PaymentTerms);
   };
-
   useEffect(() => {
-    fetchFormData();
+    updatePaymentTerm();
   }, []);
-
-
+  //--------------------------------------------------------------------------------------------------------------------------------------------------
 
   return (
     <div className="company-form">
@@ -232,10 +123,11 @@ const PaymentsCreationForm = ({
             onClick={() => setActiveTab("definition")}
             role="tab"
           >
-            Accounting Transaction
+            Payment Terms
           </a>
         </li>
       </ul>
+
       <form
         className={`tab-pane fade ${
           activeTab === "definition" ? "show active" : ""
@@ -243,155 +135,73 @@ const PaymentsCreationForm = ({
         id="general"
         style={{ display: activeTab === "definition" ? "block" : "none" }}
       >
-
-        -----------------------------------------------------------------------------
-        <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
-              <label htmlFor="customer" className="form-label">
-              Customer:
-              </label>
-              <AsyncSelect
-                id="customer"
-                value={customerByOptions.find(
-                  (option) => option.id === formData.customerById)}
-                onChange={(e) => {handleCustomerBySelection(e);}}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={customerByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <Input
-                type="number"
-                inputName="amountReceived"
-                value={formData.amountReceived}
-                changeHandler={(e) =>
-                  setformData({ ...formData, amountReceived: e.target.value })
-                }
-                label="Amount Received"
-              />
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Transaction Date"
-                  className="font-right"
-                  value={dayjs(formData.trasaDate)}
-                  onChange={(e) =>
-                    setformData({
-                      ...formData,
-                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
+        <div className="">
+         
+          <div className="company-form__section">
+            <Input
+              type="text"
+              inputName="description"
+              placeholder="Description"
+              value={formData.description}
+              changeHandler={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              label="Description"
+            />
           </div>
-          <div className="cont-two">
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="dueDays"
+              placeholder="Due Days"
+              value={formData.dueDays}
+              changeHandler={(e) =>
+                setFormData({ ...formData, dueDays: e.target.value })
+              }
+              label="Due Days"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="discountPercentage"
+              placeholder="Discount Pe"
+              value={formData.discountPercentage}
+              changeHandler={(e) =>
+                setFormData({ ...formData, discountPercentage: e.target.value })
+              }
+              label="Discount Percentage"
+            />
+          </div>
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="discountDays"
+              placeholder="Discount Da"
+              value={formData.discountDays}
+              changeHandler={(e) =>
+                setFormData({ ...formData, discountDays: e.target.value })
+              }
+              label="Discount Days"
+            />
+          </div>
+         
+          
+          <div className="">
             <div className="company-form__section">
               <Input
-                type="text"
-                inputName="number"
-                placeholder="Number"
-                value={formData.number}
+                type="checkbox"
+                inputName="inactive"
+                value={formData.inactive}
                 changeHandler={(e) =>
-                  setformData({ ...formData, number: e.target.value })
+                  setFormData({ ...formData, inactive: e.target.value })
                 }
-                label="Check Number"
+                label="Inactive"
               />
             </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="memo"
-                placeholder="Memo"
-                value={formData.memo}
-                changeHandler={(e) =>
-                  setformData({ ...formData, memo: e.target.value })
-                }
-                label="Memo"
-              />
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <label htmlFor="account" className="form-label">
-              A/R Account:
-              </label>
-              <AsyncSelect
-                id="account"
-                value={accountByReceivable.find(
-                  (option) => option.id === formData.accountById)}
-                onChange={(e) => {handleAccountBySelection(e);}}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={accountByReceivable}
-                getOptionLabel={(option) => option.name + " || " +  "Accounts Receivable"} 
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <label htmlFor="accountbank" className="form-label">
-              Bank Account:
-              </label>
-              <AsyncSelect
-                id="accountbank"
-                value={accountBybank.find(
-                  (option) => option.id === formData.accountByBankId)}
-                onChange={(e) => {handleAccountBanckBySelection(e);}}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={accountBybank}
-                getOptionLabel={(option) => option.name + " || " +  "Bank Account"} 
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            {/* ----------------------------------------------------------- */}
           </div>
         </div>
-        <Table
-          data={Payments}
-          columns={[
-              "Name",
-              "Number",
-              "Account Type",
-              "type Chart",
-              "Transaction Date",
-              "Due Date",
-              "Apply",
-              "Payment Temse",
-          ]}
-          // onSelect={handleSelectCommodity} // Make sure this line is correct
-          // selectedRow={selectedCommodity}
-          // onDelete={handleCommodityDelete}
-          // onEdit={() => {
-          //   setshowCommodityEditForm(!showCommodityEditForm);
-          // }}
-          // onInspect={() => {
-          //   setshowCommodityInspect(!showCommodityInspect);
-          // }}
-          onAdd={() => {}}
-          showOptions={false}
-        />
       </form>
-
-      
-      <div className="company-form__section">
-        <Input
-          type="text"
-          inputName="number"
-          placeholder="Number"
-          value={total}
-          label="Check Number"
-        />
-      </div>
-
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
@@ -409,7 +219,7 @@ const PaymentsCreationForm = ({
         >
           <AlertTitle>Success</AlertTitle>
           <strong>
-            Payment Lists {creating ? "created" : "updated"} successfully!
+            Payment Terms {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
       )}
@@ -421,7 +231,7 @@ const PaymentsCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Payment Lists. Please
+            Error {creating ? "creating" : "updating"} Payment Terms. Please
             try again
           </strong>
         </Alert>
@@ -430,21 +240,18 @@ const PaymentsCreationForm = ({
   );
 };
 
-PaymentsCreationForm.propTypes = {
-  payments: propTypes.object,
+PaymentTermsCreationForms.propTypes = {
+  paymentTerms: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  onpaymentDataChange: propTypes.func,
+  onpaymentTermDataChange: propTypes.func,
 };
 
-PaymentsCreationForm.defaultProps = {
-  payments: {},
+PaymentTermsCreationForms.defaultProps = {
+  paymentTerms: {},
   closeModal: null,
   creating: false,
-  onpaymentDataChange: null,
+  onpaymentTermDataChange: null,
 };
 
-export default PaymentsCreationForm;
-
-
-
+export default PaymentTermsCreationForms;
