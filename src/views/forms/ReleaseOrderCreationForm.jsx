@@ -96,29 +96,31 @@ const ReleaseOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    console.log(event.target);
-    const type = event.target?.value || "";
-    if (type === "other") {
-      setFormData({ ...formData, clientToBillType: type });
-    } else if (type === "releasedTo") {
-      setFormData({
-        ...formData,
-        clientToBillType: formData.releasedToType,
-        clientToBillId: formData.releasedToId,
-      });
-      console.log(
-        "CHANGING CLIENT TO BILL TYPE",
-        type,
-        "RELEASE ID",
-        formData.releasedToId,
-        "RELEASE TYPE",
-        formData.releasedToType
-      );
-    } else {
+    console.log("EVENTO CLIENT TO BILL",event);
+    const type = event.target.value;
+    if(type) {
+       if (type === "releasedTo") {
+        setFormData({
+          ...formData,
+          clientToBillType: formData.releasedToType,
+          clientToBillId: formData.releasedToId,
+        });
+        console.log(
+          "CHANGING CLIENT TO BILL TYPE",
+          type,
+          "RELEASE ID",
+          formData.releasedToId,
+          "RELEASE TYPE",
+          formData.releasedToType
+        );
+      }
+    }
+    else {
       const id = event.id;
       const type = event.type;
       console.log("id", id, "type", type);
       setFormData({ ...formData, clientToBillType: type, clientToBillId: id });
+
     }
   };
 
@@ -204,14 +206,14 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.released_to,
-        releasedToType: releaseOrder.releasedToObj?.type_person,
+        releasedToId: releaseOrder.releasedToObj?.data?.obj?.id,
+        releasedToType: releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo: `${releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
       } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${releaseOrder.releasedToObj?.data?.obj?.state || ""
       } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
       }`,
-        clientToBillId: releaseOrder.clientToBillId,
-        clientToBillType: releaseOrder.clientToBillType,
+        clientToBillId: releaseOrder.client_to_bill,
+        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
         carrierId: releaseOrder.carrier,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
@@ -579,7 +581,7 @@ const ReleaseOrderCreationForm = ({
               <option value="releasedTo">Released To</option>
               <option value="other">Other</option>
             </select>
-
+            <p style={{color: "red"}}>Note: Always select a client to bill when editing</p>s
             <AsyncSelect
               id="releasedToOther"
               isDisabled={formData.clientToBillType !== "other"}
@@ -666,9 +668,11 @@ const ReleaseOrderCreationForm = ({
                     handleReleasedToSelection(e);
                   }}
                   value={releasedToOptions.find(
-                    (option) => option.id === formData.releasedToId
+                    (option) => option.id === formData.releasedToId && option.type === formData.releasedToType
                   )}
+                  className="async-option"
                   isClearable={true}
+
                   defaultOptions={releasedToOptions}
                   loadOptions={loadReleasedToOptionsSelectOptions}
                   getOptionLabel={(option) => option.name}
@@ -677,13 +681,14 @@ const ReleaseOrderCreationForm = ({
               )
             ) : (
               <AsyncSelect
-                id="releasedTo"
+                id="releasedToId"
                 onChange={(e) => {
                   handleReleasedToSelection(e);
                 }}
                 value={releasedToOptions.find(
-                  (option) => option.id === formData.destinationAgentId
+                  (option) => option.id === formData.releasedToId && option.type === formData.releasedToType
                 )}
+                className="async-option"
                 isClearable={true}
                 defaultOptions={releasedToOptions}
                 loadOptions={loadReleasedToOptionsSelectOptions}

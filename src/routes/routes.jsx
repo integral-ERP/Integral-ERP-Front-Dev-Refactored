@@ -22,6 +22,8 @@ import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
 import Invoices from "../views/Accounting/Invoices";
 import PaymentTerms from "../views/Configuration/PaymentTerms";
 import Payments from "../views/Accounting/Payments";
+import Bills from "../views/Accounting/Bills";
+import Deposits from "../views/Accounting/Deposits";
 import Repacking from "../views/Warehouse/Repacking";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AuthProvider } from "../hooks/useAuth";
@@ -208,7 +210,31 @@ export const RoutesConfiguration = () => {
               </ProtectedRoute>
             }
           />
-        </Routes>
+          <Route
+            path="/accounting/Payments"
+            element={
+              <ProtectedRoute>
+                <Payments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accounting/Bills"
+            element={
+              <ProtectedRoute>
+                <Bills />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/accounting/Deposits"
+            element={
+              <ProtectedRoute>
+                <Deposits />
+              </ProtectedRoute>
+            }
+          />
+      </Routes>
       </AuthProvider>
     </Router>
   );

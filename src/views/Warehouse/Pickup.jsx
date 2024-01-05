@@ -31,6 +31,7 @@ const Pickup = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -68,6 +69,7 @@ const Pickup = () => {
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
+
       // Check if the click is inside the context menu or a table row
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
@@ -84,6 +86,8 @@ const Pickup = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
+ 
+
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
@@ -156,6 +160,7 @@ const Pickup = () => {
 
   const handleEditPickupOrders = () => {
     if (selectedPickupOrder) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
@@ -207,8 +212,8 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isPickupOrdersButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
+        
         setSelectedPickupOrder(null);
       }
     };
@@ -219,7 +224,7 @@ const Pickup = () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   useEffect(() => {
     if (createWarehouseReceipt) {
@@ -227,6 +232,15 @@ const Pickup = () => {
       openModalReceiptCreation();
     }
   }, [createWarehouseReceipt]);
+
+  const seteWarehouse = () => {
+    console.log('Entre en esta funcion')
+    if(selectedPickupOrder){
+      setCreateWarehouseReceipt(true)
+    } else {
+     alert("Please select a pickup order to continue.");
+    }
+  }
 
   const setInTransit = async () => {
     console.log("Changing");
@@ -262,10 +276,14 @@ const Pickup = () => {
     }
   }
 
+  const handleCancel = () => {
+    
+  }
+
   const contextMenuOptions = [
     {
       label: "Create Warehouse Receipt",
-      handler: () => setCreateWarehouseReceipt(true),
+      handler: seteWarehouse,
     },
     {
       label: "Set/Reset In Transit",
@@ -303,15 +321,33 @@ const Pickup = () => {
               contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
               importEnabled={false}
+              createWarehouseReceipt={createWarehouseReceipt}
             >
-               <PickupOrderCreationForm
+              {selectedPickupOrder !== null && (
+
+                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+             
+            )}
+
+            {selectedPickupOrder === null && (
+              
+                <PickupOrderCreationForm
+                  pickupOrder={null}
+                  closeModal={handleCancel}
                   creating={true}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
+             
+            )}
               </Table>
 
             {showSuccessAlert && (
@@ -362,10 +398,7 @@ const Pickup = () => {
             )} */}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
-              <ModalForm
-                isOpen={isOpenReceiptCreation}
-                closeModal={closeModalReceiptCreation}
-              >
+               <div className="layout-fluid">
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModalReceiptCreation}
@@ -375,7 +408,7 @@ const Pickup = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromPickUp={true}
                 />
-              </ModalForm>
+            </div>
             )}
           </div>
         </div>

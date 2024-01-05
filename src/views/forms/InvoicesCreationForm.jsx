@@ -1,4 +1,3 @@
-/////InvoicesCreationForm
 import { useState, useEffect } from "react";
 import propTypes from "prop-types"; // Import propTypes from 'prop-types'
 import Alert from "@mui/material/Alert";
@@ -35,19 +34,16 @@ const InvoicesCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
-  const [apply, setapplys] = useState([]);
+  // const [apply, setapplys] = useState([]);
 
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [paymentByOptions, setPaymentByOptions] = useState([]);
   const [accountByOptions, setAccountByOptions] = useState([]);
   const [typeByOptions, setptypeByOptions] = useState([]);
   
-  const [paymentTem, setPaymentTems] = useState([]);
-  const [account, setAccountTems] = useState([]);
-  const [typeService, setTypeServiceTems] =useState([])
-  const [filtroChart, setFiltroChart]= useState([])
 
   const [type, settypes] = useState([]);
+  const [total, settotal] = useState(0);
   const [types, settype] = useState([]);
   const [issuedby, setIssuedby] = useState(null);
   const [payment, setpayments] = useState([]);
@@ -55,18 +51,13 @@ const InvoicesCreationForm = ({
   const [itemsAndServicestype, setItemsAndServicestype] = useState("");
 
   // PRUEBA 
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false)
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false)
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);  
   const [commodities, setcommodities] = useState([]);
-  const [prueba, setprueba] = useState([]);
 
   var numprice=Number(numqueality);
   var numqueality= Number(numprice);
-
-  let totalp;
-  let tota;
 
 const formFormat = {
   number: "",
@@ -79,49 +70,43 @@ const formFormat = {
   issuedByInfo: "",
   paymentById: "",
   accountById : "",
+  accountByName:"",
   due: today,
   trasaDate: today,
   bilingAddres: 0.0,
   paidAd: "",
   amount: "",
   totalAmount: "",
-  amountDue: "",
   status: "Open",
   prepaid: "Yes",
-  // typeName: "",
   typeById: "",
   typeByCode: "",
   typeChart: "",
-  resultado:"",
+  total:"",
 
   commodities: [],
-  prueba: commodities[''],
 };
 
 const [formData, setformData] = useState(formFormat);
-const total = createContext();
-const [resultado, setResultado] = useState(0);
-// console.log("PRUEBA COMODITIES= ",commodities);
-// console.log("PRUEBA= ", prueba);
 //------------------------------------------------------------------------------------
-  const handleIssuedBySelection = async (event) => {
-    const id = event.id;
-    const name = event.name;
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setIssuedby(result.data)
-    setformData({
-      ...formData,
-      issuedById: id,
-      issuedByName: name,
-      issuedByInfo: info,
-    });
+const handleIssuedBySelection = async (event) => {
+  const id = event.id;
+  const name = event.name;
+  const result = await ForwardingAgentService.getForwardingAgentById(id);
+  const info = `${result.data.street_and_number || ""} - ${
+    result.data.city || ""
+  } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+    result.data.zip_code || ""
+  }`;
+  setIssuedby(result.data)
+  setformData({
+    ...formData,
+    issuedById: id,
+    issuedByName: name,
+    issuedByInfo: info,
+  });
 
-  };
+};
   //------------------------------------------------------------------------------------
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
@@ -138,6 +123,7 @@ const [resultado, setResultado] = useState(0);
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
+    const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
     console.log("RESULTADO CHART",result.typeChart) 
     setaccounts(result.data)
@@ -145,6 +131,7 @@ const [resultado, setResultado] = useState(0);
       ...formData,
       accountById: id,
       accountByType: typeChart,
+      accountByName : name,
       
     });
     console.log("TYPE_CHART=", typeChart);
@@ -169,7 +156,6 @@ const [resultado, setResultado] = useState(0);
       const typeData = await ItemsAndServicesService.getItemsAndServices();
       settypes(typeData.data.results);
     };
-
     fetchData();
   }, []);
   
@@ -183,11 +169,12 @@ const [resultado, setResultado] = useState(0);
         account: invoice.account || "",
         typeService: invoice.typeService || "",
         paymentTem: invoice.paymentTem || "",
-        division: invoice.division || "",
+        division: total,
         apply: invoice.apply || "",
         issuedById: invoice.issued_by,
         paymentById: invoice.paymentById,
         accountById: invoice.accountById,
+        accountByName: invoice. accountByName,
         due: invoice.due || "",
         trasaDate: invoice.trasaDate,
         bilingAddres: invoice.bilingAddres || "",
@@ -195,9 +182,6 @@ const [resultado, setResultado] = useState(0);
 
         amount: invoice.amount || "",
         totalAmount: invoice.totalAmount || "",
-        amountDue: invoice.amountDue || "",
-
-        resultado: invoice.resultado || "",
 
         paymentByDesc: invoice.paymentByDesc,
         accountByType: invoice.accountByType || "",
@@ -218,14 +202,14 @@ const [resultado, setResultado] = useState(0);
       account: formData.account,
       typeService: formData.typeService,
       paymentTem: formData.paymentTem,
-      division: formData.division,
+      division: total,
       apply: formData.apply,
       due: formData.due,
       trasaDate: formData.trasaDate,
       bilingAddres: formData.bilingAddres,
       paidAd: formData.paidAd,
       type: formData.type,
-      suma : formData.suma,
+      total : formData.total,
       // typeName : formData.typeName,
       //----------
       issued_by : formData.issuedById,
@@ -236,11 +220,10 @@ const [resultado, setResultado] = useState(0);
       //----------
       accountById: formData.accountById,
       accountByType: formData.accountByType,
+      accountByName: formData.accountByName,
       //----------
       typeById: formData.typeById, 
       typeByCode: formData.typeByCode,
-
-      resultado: formData.resultado,
 
       invoiceCharges:commodities,
     };
@@ -261,6 +244,7 @@ const [resultado, setResultado] = useState(0);
         closeModal();
         onInvoicesDataChange();
         setShowSuccessAlert(false);
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -294,23 +278,6 @@ const [resultado, setResultado] = useState(0);
           rawData
       )
       );
-      
-        
-    if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Item & Service successfully created/updated:",
-        response.data
-      );
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-        closeModal();
-        onInvoicesDataChange();
-        setShowSuccessAlert(false);
-      }, 5000);
-    } else {
-      console.log("Something went wrong:", response);
-      setShowErrorAlert(true);
-    }
   };
 
   const handleApply = async (event) => {
@@ -338,6 +305,10 @@ const fetchFormData = async () => {
   const addTypeToObjects = (arr, type) =>
     arr.map((obj) => ({ ...obj, type }));
 
+
+  const customers = (await CustomerService.getCustomers()).data.results;
+  const customersWithType = addTypeToObjects(customers, "customer");
+
   // Add 'type' property to each array
   const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents,"forwarding-agent");
   const paymentsWithType          = addTypeToObjects(paiment,"paiment-termn");
@@ -345,7 +316,7 @@ const fetchFormData = async () => {
   const typeWithType              = addTypeToObjects(type, "type");
 
   // Merge the arrays
-  const issuedByOptions = [...forwardingAgentsWithType];
+  const issuedByOptions = [...forwardingAgentsWithType, ...customersWithType];
   const paymentByOptions = [...paymentsWithType];
   const accountByOptions = [...accountWithType].filter(account=> account.typeChart=="Accounts Receivable");
   const typeByOptions = [...typeWithType];
@@ -361,16 +332,6 @@ useEffect(() => {
   fetchFormData();
 }, []);
 
-const createCharge = () => {
-  const suma =parseInt(formData.amount) + parseInt(resultado);
-    setResultado(suma);
-  
-  const charge = {
-    ...formData,
-  };
-
-
-};
 const handleType = (type) => {
   setItemsAndServicestype(type);
   setformData({ ...formData, type: type });
@@ -387,6 +348,7 @@ const handleCommodityDelete = () => {
   );
   setcommodities(newCommodities);
 };
+
 const updateSelectedCommodity = (updatedInternalCommodities) => {
   const updatedCommodity = { ...selectedCommodity };
   updatedCommodity.internalCommodities = updatedInternalCommodities;
@@ -399,9 +361,19 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
     commoditiesCopy[index] = updatedCommodity;
     setcommodities(commoditiesCopy);
   }
-
- 
 };
+useEffect(() => {
+  let totall=0;
+for (const valor of commodities) {
+  let prueba=0;
+  // let totall = 0;
+  const totalP = 'amount';
+  prueba = valor[totalP];
+  totall = totall + prueba;
+}
+settotal(totall);
+}, [commodities]);
+
 //------------------------------------------------------------------------
   return (
     <div className="company-form">
@@ -442,9 +414,9 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
             />
           </div>
       {/* --------------------------------------------------------------------------------------- */}
-        <div className="company-form__section">
+          <div className="company-form__section">
             <label htmlFor="account" className="form-label">
-            Account:
+            Chart Account:
             </label>
             <AsyncSelect
               id="account"
@@ -454,7 +426,7 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={accountByOptions}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option.name + " || " +  "Accounts Receivable"} 
               getOptionValue={(option) => option.id}
             />
           </div>
@@ -473,7 +445,9 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
                 }
               />
             </LocalizationProvider>
-          </div><div className="company-form__section">
+          </div>
+          {/* ----------------------------------------------------------- */}
+          <div className="company-form__section">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 label="Transation Date"
@@ -488,11 +462,9 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
               />
             </LocalizationProvider>
           </div>
-        
-         
         </div>{/* -------------------------END ONE---------------------------------- */}
         <div className="cont-two">
-        <div className="company-form__section">
+          <div className="company-form__section">
             <label htmlFor="paymentTem" className="form-label">
             Payment Tems:
             </label>
@@ -515,9 +487,10 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
             </label>
             <AsyncSelect
               id="apply"
+              onChange={(e) => handleIssuedBySelection(e)}
               value={issuedByOptions.find(
-                (option) => option.id === formData.issuedById)}
-              onChange={(e) => {handleIssuedBySelection(e);}}
+                (option) => option.id === formData.issuedById
+              )}
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={issuedByOptions}
@@ -525,7 +498,6 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
               getOptionValue={(option) => option.id}
             />
           </div>
-        {/* --------------------------------------------------------------------------------------- */}
           <div className="company-form__section">
             <Input
               type="textarea"
@@ -542,72 +514,72 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
     <div className="containerr">
     {/* -------------------------Nueno diseño---------------------------------- */} 
     <div className="company-form__section">
-          <button
-            type="button"
-            className="button-addpiece"
-            onClick={() =>
-              setshowCommodityCreationForm(!showCommodityCreationForm)
-            }
-          >
-            Add Piece
-          </button>
-          {showCommodityCreationForm && (
+      <button
+        type="button"
+        className="button-addpiece"
+        onClick={() =>
+          setshowCommodityCreationForm(!showCommodityCreationForm)
+        }
+      >
+        Add Charge
+      </button>
+      {showCommodityCreationForm && (
+        <InvoiceIncomeCreationForm
+          onCancel={setshowCommodityCreationForm}
+          commodities={commodities}
+          setCommodities={setcommodities}
+        ></InvoiceIncomeCreationForm>
+      )}
+      {showCommodityEditForm && (
+        <InvoiceIncomeCreationForm
+          onCancel={setshowCommodityEditForm}
+          commodities={commodities}
+          setCommodities={setcommodities}
+          commodity={selectedCommodity}
+          editing={true}
+        ></InvoiceIncomeCreationForm>
+      )}
+      {selectedCommodity?.containsCommodities &&
+        selectedCommodity.internalCommodities.map(
+          (internalCommodity, index) => (
             <InvoiceIncomeCreationForm
-              onCancel={setshowCommodityCreationForm}
-              commodities={commodities}
-              setCommodities={setcommodities}
-            ></InvoiceIncomeCreationForm>
-          )}
-          {showCommodityEditForm && (
-            <InvoiceIncomeCreationForm
-              onCancel={setshowCommodityEditForm}
-              commodities={commodities}
-              setCommodities={setcommodities}
-              commodity={selectedCommodity}
+              key={index}
+              onCancel={() => {}}
+              commodities={selectedCommodity.internalCommodities}
+              setCommodities={updateSelectedCommodity}
+              commodity={internalCommodity}
               editing={true}
             ></InvoiceIncomeCreationForm>
-          )}
-          {selectedCommodity?.containsCommodities &&
-            selectedCommodity.internalCommodities.map(
-              (internalCommodity, index) => (
-                <InvoiceIncomeCreationForm
-                  key={index}
-                  onCancel={() => {}}
-                  commodities={selectedCommodity.internalCommodities}
-                  setCommodities={updateSelectedCommodity}
-                  commodity={internalCommodity}
-                  editing={true}
-                ></InvoiceIncomeCreationForm>
-              )
-            )}
-        </div>
+          )
+        )}
+    </div>
     {/* -------------------------Nuevo diseño---------------------------------- */}         
     </div>
-    <Table
-          data={commodities}
-          columns={[
-          "Status",
-          "type Chart",
-          "Description",
-          // "Prepaid",
-          "Quantity",
-          "Price",
-          "Amount",
-          "Note",
-          // "Currency",
-          "Options",
-          ]}
-          onSelect={handleSelectCommodity} // Make sure this line is correct
-          onDelete={handleCommodityDelete}
-          onEdit={() => {
-            setshowCommodityEditForm(!showCommodityEditForm);
-          }}
-          onInspect={() => {
-          }}
-          onAdd={() => {}}
-          showOptions={false}
-        />
-
+      <Table
+        data={commodities}
+        columns={[
+        "Status",
+        "type Chart",
+        "Description",
+        // "Prepaid",
+        "Quantity",
+        "Price",
+        "Amount",
+        "Note",
+        // "Currency",
+        "Options",
+        ]}
+        onSelect={handleSelectCommodity} // Make sure this line is correct
+        onDelete={handleCommodityDelete}
+        onEdit={() => {
+          setshowCommodityEditForm(!showCommodityEditForm);
+        }}
+        onInspect={() => {
+        }}
+        onAdd={() => {}}
+        showOptions={false}
+      />
+{/* ******************************************************************************************************* */}
         <div className="form-column">
           <label htmlFor="tota" className="text-comm">
           Total Amount:
@@ -617,10 +589,7 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
             type="number"
             readOnly
             id="tota"
-            value={resultado}
-            onChange={(e) =>
-              setformData({ ...formData, tota: e.target.value })
-            }
+            value={total}
           />
         </div>
     <div className="company-form__options-container">
@@ -658,8 +627,11 @@ const updateSelectedCommodity = (updatedInternalCommodities) => {
         </Alert>
       )}
     </div>
+    
   );
+  
 };
+
 
 InvoicesCreationForm.propTypes = {
   invoice: propTypes.object,
@@ -676,5 +648,3 @@ InvoicesCreationForm.defaultProps = {
 };
 
 export default InvoicesCreationForm;  
-
-

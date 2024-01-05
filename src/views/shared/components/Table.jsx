@@ -37,7 +37,8 @@ const Table = ({
   onInspect,
   contextService,
   children,
-  importEnabled
+  importEnabled,
+  createWarehouseReceipt
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -72,6 +73,14 @@ const Table = ({
     });
     return initialVisibility;
   });
+
+  useEffect(() => {
+    if(createWarehouseReceipt){
+      setShowPage('nothing');
+    } else {
+      setShowPage('initial');
+    }
+  }, [createWarehouseReceipt]);
 
   const handleEdit = (e) => {
     setShowPage('edit');
@@ -153,6 +162,34 @@ const Table = ({
     Location: "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
+    "Consignee Name": "consigneeObj.data.obj.name",
+    "Shipper Name": "shipperObj.data.obj.name",
+      //---------------------Cristian
+      "Account": "accountNumber",
+      "Due Days" : "dueDays",
+      "Discount Percentage" : "discountPercentage",
+      "Discount Days" : "discountDays",
+      "Inactive" : "inactive",
+      //---------------
+      "Transaction Date" : "trasaDate",
+      "Due Date" : "due",
+      "Type Name" : "typeName",
+      "Apply" : "issuedByName",
+      "Payment Temse": "paymentByDesc",
+      "Account Name" : "accountByName",
+      "Type Code" : "typeByCode",
+      "Biling Address" : "bilingAddres",
+      //---------------
+      "Type Items & Service": "typeByCode",
+      "type Chart": "typeByCode",
+      "Type Chart":"typeChart",
+      "Account Type" : "issuedByName",
+      "Amt Due": "division",
+      //---------------
+      "Entipy":     "customerByName",
+      "AR Amount":  "amountReceived",
+      "Memo":       "memo",
+      "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {
