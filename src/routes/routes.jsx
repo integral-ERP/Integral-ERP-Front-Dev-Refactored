@@ -22,6 +22,8 @@ import ChartOfAccounts from "../views/Accounting/ChartOfAccounts";
 import Invoices from "../views/Accounting/Invoices";
 import PaymentTerms from "../views/Configuration/PaymentTerms";
 import Payments from "../views/Accounting/Payments";
+import Bills from "../views/Accounting/Bills";
+import Deposits from "../views/Accounting/Deposits";
 import Repacking from "../views/Warehouse/Repacking";
 export const RoutesConfiguration = () => {
   return (
@@ -57,6 +59,8 @@ export const RoutesConfiguration = () => {
         <Route path="/accounting/Invoices" element={<Invoices />} />
         <Route path="/Configuration/PaymentTerms" element={<PaymentTerms />} />
         <Route path="/accounting/Payments" element={<Payments />} />
+        <Route path="/accounting/Bills" element={<Bills />} />
+        <Route path="/accounting/Deposits" element={<Deposits />} />
       </Routes>
     </Router>
   );

@@ -19,6 +19,7 @@ const Receipt = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [createReceiptOrder, setCreateReceiptOrder] = useState(true);
   const columns = [
     "Status",
     "Number",
@@ -94,6 +95,7 @@ const Receipt = () => {
 
   const handleEditreceipts = () => {
     if (selectedPickupOrder) {
+      setCreateReceiptOrder(false);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
@@ -101,6 +103,7 @@ const Receipt = () => {
   };
 
   const handleAddPickupOrder = () => {
+    setCreateReceiptOrder(true);
     openModal();
   };
 
@@ -137,9 +140,12 @@ const Receipt = () => {
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
+      const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
+      const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow) {
+      if (!isreceiptsButton && !isTableRow && !isInsideCompanyFormPickup && !isSelectMenu) {
         setSelectedPickupOrder(null);
+        console.log("Selected order changed to null")
       }
     };
 
@@ -173,7 +179,7 @@ const Receipt = () => {
               <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModal}
-                  creating={true}
+                  creating={createReceiptOrder}
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}

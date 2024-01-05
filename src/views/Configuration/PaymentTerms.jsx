@@ -33,7 +33,7 @@ const PaymentTerms  = () => {
     "Due Days",
     "Discount Percentage",
     "Discount Days",
-    "Inactive",
+    // "Inactive",
   ];
 
   const handleContextMenu = (e) => {
