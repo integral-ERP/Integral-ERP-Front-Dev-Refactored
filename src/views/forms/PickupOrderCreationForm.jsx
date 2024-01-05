@@ -334,21 +334,21 @@ const PickupOrderCreationForm = ({
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
 
         // PICKUP TAB
-        shipperId: pickupOrder.shipper,
+        shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
           }`,
 
-        pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+        pickupLocationId: pickupOrder.pickUpLocationObj?.data?.obj?.id,
+        pickupLocationInfo: `${pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
           }`,
         pickupLocationType: pickupOrder.pickUpLocationObj?.data?.obj?.type_person,
         // DELIVERY TAB
-        consigneeId: pickupOrder.consignee,
+        consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
@@ -378,8 +378,9 @@ const PickupOrderCreationForm = ({
         client_to_billById : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
         client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
       };
-
+      handleClientToBillSelection({id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id, type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person})
       setFormData(updatedFormData);
+      console.log("CLIENT TO BILL DATA: ", pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person);
       setcanRender(true);
     }
   }, [creating, pickupOrder]);
@@ -1040,6 +1041,9 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadDestinationAgentsSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    value={destinationAgentOptions.find(
+                      (option) => option.id === formData.destinationAgentId
+                    )}
                   />
                 )}
               </div>
@@ -1170,7 +1174,7 @@ const PickupOrderCreationForm = ({
                   
 
                   value={pickupLocationOptions.find(
-                    (option) => option.id === formData.pickupLocationId
+                    (option) => option.id === formData.pickupLocationId && option.type === formData.pickupLocationType
                   )}
                   isClearable={true}
                   placeholder="Search and select..."
@@ -1220,7 +1224,7 @@ const PickupOrderCreationForm = ({
                   inputName="pickupinfo"
                   placeholder="Pick-up Location..."
                   readonly={true}
-                  value={formData.pickupInfo}
+                  value={formData.pickupLocationInfo}
                 />
               </div>
             </div>
@@ -1243,7 +1247,7 @@ const PickupOrderCreationForm = ({
                     id="consignee"
                     onChange={(e) => handleConsigneeSelection(e)}
                     value={consigneeOptions.find(
-                      (option) => option.id === formData.consigneeId
+                      (option) => option.id === formData.consigneeId && option.type === formData.consigneeType
                     )}
                     isClearable={true}
                     placeholder="Search and select..."
@@ -1328,6 +1332,7 @@ const PickupOrderCreationForm = ({
                   <option value="consignee">Ultimate Consignee</option>
                   <option value="other">Other</option>
                 </select>
+                <p>Note: Always select a client to bill when editing</p>
               </div>
               <div className="col-6 text-start">
                 <AsyncSelect
@@ -1337,7 +1342,7 @@ const PickupOrderCreationForm = ({
                     handleClientToBillSelection(e);
                   }}
                   value={releasedToOptions.find(
-                    (option) => option.id === formData.client_to_bill
+                    (option) => option.id === formData.client_to_bill && option.type === formData.client_to_bill_type
                   )}
                   isClearable={true}
                   defaultOptions={releasedToOptions}

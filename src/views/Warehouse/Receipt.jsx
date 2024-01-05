@@ -25,9 +25,9 @@ const Receipt = () => {
     "Status",
     "Number",
     "Date",
-    "Shipper",
-    "Consignee",
-    "Carrier",
+    "Shipper Name",
+    "Consignee Name",
+    "Carrier Name",
     "Pieces",
     "View Receipt PDF",
   ];

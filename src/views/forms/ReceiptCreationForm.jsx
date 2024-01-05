@@ -224,12 +224,13 @@ const ReceiptCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
+    console.log("CLIENT TO BILL SELECTION", event);
     const type = event.target.value;
     const id =
       type === "shipper"
         ? formData.shipperId
         : type === "consignee"
-          ? formData.consigneeId
+          ? formData.consigneeIds
           : "";
     setFormData({
       ...formData,
@@ -431,7 +432,7 @@ const ReceiptCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         // PICKUP TAB
-        shipperId: pickupOrder.shipper,
+        shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
@@ -444,7 +445,7 @@ const ReceiptCreationForm = ({
           }`,
         pickupLocationType: pickupOrder.pick_up_location?.data?.obj?.type_person,
         // DELIVERY TAB
-        consigneeId: pickupOrder.consignee,
+        consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
@@ -478,9 +479,10 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
-        clientToBillId: pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id,
-        clientToBillType: pickupOrder.clientBillObj?.data?.obj?.data?.obj?.type_person,
+        clientToBillId: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
+        clientToBillType: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
       };
+      handleClientToBillSelection({target: {value: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person}})
       console.log("Form Data to be updated:", updatedFormData);
       setFormData(updatedFormData);
       setcanRender(true);
@@ -503,7 +505,7 @@ const ReceiptCreationForm = ({
     // Add 'type' property to each array
     const forwardingAgentsWithType = addTypeToObjects(
       forwardingAgents,
-      "forwarding-agent"
+      "agent"
     );
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
@@ -1189,6 +1191,7 @@ const ReceiptCreationForm = ({
                 <option value="consignee">Consignee</option>
                 <option value="shipper">Shipper</option>
               </select>
+              <p>Note: Always select a client to bill when editing</p>s
             </div>
           </div>
         </div>

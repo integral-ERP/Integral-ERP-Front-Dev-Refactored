@@ -162,6 +162,8 @@ const Table = ({
     Location: "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
+    "Consignee Name": "consigneeObj.data.obj.name",
+    "Shipper Name": "shipperObj.data.obj.name",
       //---------------------Cristian
       "Account": "accountNumber",
       "Due Days" : "dueDays",

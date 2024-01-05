@@ -87,9 +87,7 @@ const Pickup = () => {
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
  
-  const handleCancel = () => {
-    console.log('entree a cancel');
-  }
+
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
@@ -276,6 +274,10 @@ const Pickup = () => {
     }else{
       alert("Please select a pickup order to continue.");
     }
+  }
+
+  const handleCancel = () => {
+    
   }
 
   const contextMenuOptions = [
