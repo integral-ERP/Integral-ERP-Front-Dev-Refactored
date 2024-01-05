@@ -9,12 +9,13 @@ import "./styles/components/Table.scss";
 import "./styles/pages/Login.scss";
 import "./styles/pages/Maintenance.scss";
 import 'boxicons';
+import { AuthProvider } from "./hooks/useAuth";
+import { BrowserRouter } from 'react-router-dom';
+
 
 function App() {
   return (
-    <>
       <RoutesConfiguration></RoutesConfiguration>
-    </>
   );
 }
 

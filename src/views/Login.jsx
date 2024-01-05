@@ -20,7 +20,11 @@ const LoginPage = () => {
       AuthService.login(username, password)
         .then((response) => {
           if (response.status === 200) {
-            navigateTo("/dashboard");
+            localStorage.setItem('access_token', response.data.access)
+            localStorage.setItem('refresh_token', response.data.refresh)
+            navigateTo("/dashboard", { replace: true });
+            
+            console.log("NOW REDIRECTING TO DASHBOARD");
           } else {
             console.log("Error logging in");
             setShowErrorAlert(true);

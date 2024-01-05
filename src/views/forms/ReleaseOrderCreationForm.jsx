@@ -581,7 +581,7 @@ const ReleaseOrderCreationForm = ({
               <option value="releasedTo">Released To</option>
               <option value="other">Other</option>
             </select>
-            <p>Note: Always select a client to bill when editing</p>s
+            <p style={{color: "red"}}>Note: Always select a client to bill when editing</p>s
             <AsyncSelect
               id="releasedToOther"
               isDisabled={formData.clientToBillType !== "other"}

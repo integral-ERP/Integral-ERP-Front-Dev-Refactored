@@ -1191,7 +1191,7 @@ const ReceiptCreationForm = ({
                 <option value="consignee">Consignee</option>
                 <option value="shipper">Shipper</option>
               </select>
-              <p>Note: Always select a client to bill when editing</p>s
+              <p style={{color: "red"}}>Note: Always select a client to bill when editing</p>s
             </div>
           </div>
         </div>
