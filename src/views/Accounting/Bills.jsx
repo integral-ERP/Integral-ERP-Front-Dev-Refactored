@@ -9,6 +9,8 @@ import ModalForm from "../shared/components/ModalForm";import Sidebar
 import BillsCreationForm from "../forms/BillsCreationForm";
 import BillsService from "../../services/BillsService";
 
+import BillsPayForm from "../forms/BillsPayForm";
+
 
 const Bills = () => {
   const [bill, setBills] = useState([]);
@@ -18,7 +20,21 @@ const Bills = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);/////////
+  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [
+    isOpenReceiptCreation,
+    openModalReceiptCreation,
+    closeModalReceiptCreation,
+  ] = useModal(false);
+
   const columns = [
+    "Status",
     "Number",
     "Payment Temse",
     "Type",
@@ -27,14 +43,21 @@ const Bills = () => {
     "Due Date",
     "Employee",
     "Account Type",
-    // "Status",
     "Exported",
     "Amt. Paid(USD)",
     "Amt. Due(USD)",
     "Currency",
     "Bill PDF",
-    
   ];
+
+  const handleContextMenu = (e) => {
+    e.preventDefault(); // Prevent the browser's default context menu
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    setContextMenuPosition({ x: clickX, y: clickY });
+    setShowContextMenu(true);
+  };
+
   const updateBill = (url = null) => {
     BillsService.getBills(url)
       .then((response) => {
@@ -122,6 +145,25 @@ const Bills = () => {
   };
 
   useEffect(() => {
+    const handleDocumentClick = (e) => {
+      // Check if the click is inside the context menu or a table row
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
+        // Click is outside the context menu, close it
+        setShowContextMenu(false);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.addEventListener("click", handleDocumentClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [showContextMenu]); 
+
+  useEffect(() => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
@@ -141,6 +183,46 @@ const Bills = () => {
     };
   }, []);
 
+  const handlePayBills = () => {
+    if (selectedBills) {
+      openModal();
+    } else {
+      alert("Please select a Bills to edit.");
+    }
+  };
+
+//-------------------------------------------------------------------------------------
+  useEffect(() => {
+    if (createWarehouseReceipt) {
+      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+      openModalReceiptCreation();
+    }
+  }, [createWarehouseReceipt]);
+
+  // const setInTransit = async () => {
+  //   console.log("PROBANDO");
+  //   // openModal();
+  // }
+  // const setprueba = async () => {
+  //   console.log("Pr0b4nd0");
+  //   handlePayBills();
+  // }
+
+  const contextMenuOptions = [
+    {
+      label: "Pay Bill",
+      handler: () => setCreateWarehouseReceipt(true),
+    },
+    // {
+    //   label: "Prueba-1",
+    //   handler: setInTransit,
+    // },
+    // {
+    //   label: "Prueba-2",
+    //   handler: setprueba,
+    // },
+  ];
+
   return (
     <>
       <div className="dashboard__sidebar">
@@ -155,8 +237,17 @@ const Bills = () => {
               onDelete={handleDeleteBills}
               onEdit={handleEditBills}
               onAdd={handleAddBills}
+              contextMenuPosition={contextMenuPosition}
+              contextMenuOptions={contextMenuOptions}
+              handleContextMenu={handleContextMenu}
+              showContextMenu={showContextMenu}
+              setShowContextMenu={setShowContextMenu}
               title="Bills"
-            />
+            >
+              <BillsCreationForm
+              currentPickUpNumber={currentPickupNumber}
+              />
+            </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -192,13 +283,30 @@ const Bills = () => {
               </ModalForm>
             )}
 
-            {selectedBills === null && (
+            {selectedBills === null && createWarehouseReceipt && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <BillsCreationForm
                   bill={null}
                   closeModal={closeModal}
                   creating={true}
                   onbillDataChange={handleBillsDataChange}
+                />
+              </ModalForm>
+            )}
+            {/* //---------------------------------------------------------- */}
+            {selectedBills !== null && createWarehouseReceipt && (
+              <ModalForm
+                isOpen={isOpenReceiptCreation}
+                closeModal={closeModalReceiptCreation}
+              >
+                <BillsPayForm
+                  pickupOrder={selectedBills}
+                  closeModal={closeModalReceiptCreation}
+                  creating={true}
+                  onpickupOrderDataChange={handleBillsDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromPickUp={true}
                 />
               </ModalForm>
             )}

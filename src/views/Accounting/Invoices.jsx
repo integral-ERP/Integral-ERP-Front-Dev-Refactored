@@ -17,6 +17,7 @@ const Invoices = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
+    'Status',
     "Number",
     "Account Type",
     // "type Chart",
@@ -27,6 +28,15 @@ const Invoices = () => {
     "Amt Due",
     "Invoice PDF",
   ];
+
+  const handleContextMenu = (e) => {
+    e.preventDefault(); // Prevent the browser's default context menu
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    setContextMenuPosition({ x: clickX, y: clickY });
+    setShowContextMenu(true);
+  };
+
   const updateInvoices = (url = null) => {
     InvoicesService.getInvoices(url)
       .then((response) => {

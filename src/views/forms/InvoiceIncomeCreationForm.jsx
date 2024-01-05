@@ -18,7 +18,7 @@ const InvoiceIncomeCreationForm = ({
   commodity,
 }) => {
   const formFormat = {
-    status: "Open",
+    status: 14,
     description: "",
     locationId: "",
     locationCode: "",
@@ -129,9 +129,8 @@ const InvoiceIncomeCreationForm = ({
         amount: commodity.amount,
         quantity: commodity.quantity,
         note: commodity.note,
-        status: commodity.status || "Open",
+        status: commodity.status,
         resultado: commodity.resultado,
-        // suma: commodity.suma,
       };
       setformData(formFormat);
     }

@@ -38,22 +38,22 @@ const BillsCreationForm = ({
 
   const [showBillsCreationForm, setshowBillsCreationForm] = useState(false)
   const [showBillEditForm, setshowBillEditForm] = useState(false);
-  const [selectedBill, setselectedBill] = useState(null);  
+  const [selectedBill, setselectedBill] = useState(null);
   const [bills, setbills] = useState([]);
-    
+
 
   const formFormat = {
+    status: 14,
     number: "",
     due: today,
     trasaDate: today,
     paymentById: "",
     paymentTermsByType: "",
     paymentTemr: "",
-    accountById : "",
-    accountByType : "",
+    accountById: "",
+    accountByType: "",
     carriVerndorByName: "",
     carriVerndorById: "",
-    status: "Open",
     bills: [],
   };
 
@@ -75,9 +75,9 @@ const BillsCreationForm = ({
         accountById: bill.accountById,
         accountByType: bill.accountByType,
         carriVerndorByName: bill.carriVerndorByName,
-        carriVerndorById : bill.carriVerndorById,
-        billCharges : bill.billCharges,
-        status: bill.status || "Open",
+        carriVerndorById: bill.carriVerndorById,
+        billCharges: bill.billCharges,
+        status: bill.status,
       });
     }
   }, [creating, bill]);
@@ -86,6 +86,7 @@ const BillsCreationForm = ({
 
   const sendData = async () => {
     let rawData = {
+      status: formData.status,
       number: formData.number || "",
       due: formData.due,
       trasaDate: formData.trasaDate,
@@ -95,8 +96,8 @@ const BillsCreationForm = ({
       paymentTemr: formData.paymentTemr,
       accountById: formData.accountById,
       accountByType: formData.accountByType,
-      carriVerndorByName : formData.carriVerndorByName,
-      carriVerndorById : formData.carriVerndorById,
+      carriVerndorByName: formData.carriVerndorByName,
+      carriVerndorById: formData.carriVerndorById,
       billCharges: bills,
     };
 
@@ -104,19 +105,19 @@ const BillsCreationForm = ({
     const response = await (creating
       ? BillsService.createBill(rawData)
       : BillsService.updateBill(
-          bill.id,
-          rawData
-        ));
+        bill.id,
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log("Bill successfully created/updated:",
-         response.data);
+        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
         onbillDataChange();
         setShowSuccessAlert(false);
-        // window.location.reload();
+        window.location.reload();
       }, 5000);
     } else {
       console.log("Something went wrong:", response);
@@ -124,20 +125,20 @@ const BillsCreationForm = ({
     }
   };
 
- const fetchFormData = async () => {  
-    const accoun        = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-    const carriVerndo   = (await VendorService.getVendors()).data.results;
-    const paiment         = (await PaymentTermsService.getPaymentTerms()).data.results
+  const fetchFormData = async () => {
+    const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
+    const carriVerndo = (await VendorService.getVendors()).data.results;
+    const paiment = (await PaymentTermsService.getPaymentTerms()).data.results
     // Function to add 'type' property to an array of objects
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
-  
+
     // Add 'type' property to each array
-    const accountWithType           = addTypeToObjects(accoun, "accounten-termn");
-    const carriVerndorWithType      = addTypeToObjects(carriVerndo, "carri-Verndor");
-    const paymentsWithType          = addTypeToObjects(paiment,"paiment-termn");
+    const accountWithType = addTypeToObjects(accoun, "accounten-termn");
+    const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
+    const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
     // Merge the arrays
-    const accountByOptions = [...accountWithType].filter(account=> account.typeChart=="Accouns Payable");
+    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 
@@ -145,7 +146,7 @@ const BillsCreationForm = ({
     setcarriVerndoByOptions(carriVerndorByOptions);
     setPaymentByOptions(paymentByOptions);
 
-  
+
   };
   useEffect(() => {
     fetchFormData();
@@ -155,18 +156,18 @@ const BillsCreationForm = ({
     const id = event.id;
     const typeChart = event.typeChart;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART",result.typeChart) 
+    console.log("RESULTADO CHART", result.typeChart)
     setaccounts(result.data)
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
-      
+
     });
     console.log("TYPE_CHART=", typeChart);
   };
 
-//------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
     const description = event.description;
@@ -178,16 +179,14 @@ const BillsCreationForm = ({
       paymentByDesc: description,
     });
   };
-//------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
   const handleVendorCarriBySelection = async (event) => {
     const id = event.id;
     const name = event.name;
     const result = await VendorService.getVendorByID(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setVendorCarriby(result.data)
     setFormData({
       ...formData,
@@ -196,7 +195,7 @@ const BillsCreationForm = ({
       carriVerndorByInfo: info,
     });
 
-    };
+  };
 
   // ---------------------------------------------
   const handleSelectBill = (bill) => {
@@ -216,13 +215,13 @@ const BillsCreationForm = ({
 
     const index = bills.findIndex((com) => com.id == selectedBill.id);
 
-    if(index != -1){
+    if (index != -1) {
       const billsCopy = [...bills];
       billsCopy[index] = updatedBill;
       setbills(billsCopy);
     }
 
-  
+
   };
   return (
     <div className="company-form">
@@ -238,12 +237,11 @@ const BillsCreationForm = ({
           >
             Bill
           </a>
-        </li>      
+        </li>
       </ul>
       <form
-        className={`tab-pane fade ${
-          activeTab === "bil" ? "show active" : ""
-        } company-form__general-form`}
+        className={`tab-pane fade ${activeTab === "bil" ? "show active" : ""
+          } company-form__general-form`}
         id="bill"
         style={{ display: activeTab === "bil" ? "block" : "none" }}
       >
@@ -296,13 +294,13 @@ const BillsCreationForm = ({
             {/* ----------------------------------------------------------- */}
             <div className="company-form__section">
               <label htmlFor="account" className="form-label">
-              Account:
+                Account:
               </label>
               <AsyncSelect
                 id="account"
                 value={accountByOptions.find(
                   (option) => option.id === formData.accountById)}
-                onChange={(e) => {handleAccountBySelection(e);}}
+                onChange={(e) => { handleAccountBySelection(e); }}
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={accountByOptions}
@@ -320,7 +318,7 @@ const BillsCreationForm = ({
                 id="apply"
                 value={carriVerndorByOptions.find(
                   (option) => option.id === formData.carriVerndorById)}
-                onChange={(e) => {handleVendorCarriBySelection(e);}}
+                onChange={(e) => { handleVendorCarriBySelection(e); }}
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={carriVerndorByOptions}
@@ -328,7 +326,7 @@ const BillsCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
-        {/* --------------------------------------------------------------------------------------- */}
+            {/* --------------------------------------------------------------------------------------- */}
             <div className="company-form__section">
               <Input
                 type="textarea"
@@ -341,101 +339,100 @@ const BillsCreationForm = ({
             </div>
             <div className="company-form__section">
               <label htmlFor="paymentTem" className="form-label">
-              Payment Tems:
-                </label>
-                <AsyncSelect
-                  id="paymentTem"
-                  value={paymentByOptions.find(
-                    (option) => option.id === formData.paymentById)}
-                  onChange={(e) => {handlePaymentBySelection(e);}}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={paymentByOptions}
-                  getOptionLabel={(option) => option.description}
-                  getOptionValue={(option) => option.id}
-                />
+                Payment Tems:
+              </label>
+              <AsyncSelect
+                id="paymentTem"
+                value={paymentByOptions.find(
+                  (option) => option.id === formData.paymentById)}
+                onChange={(e) => { handlePaymentBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={paymentByOptions}
+                getOptionLabel={(option) => option.description}
+                getOptionValue={(option) => option.id}
+              />
             </div>
           </div>
           <div className="company-form__section">
-      <button
-        type="button"
-        className="button-addpiece"
-        onClick={() =>
-          setshowBillsCreationForm(!showBillsCreationForm)
-        }
-      >
-        Add Piece
-      </button>
-      {showBillsCreationForm && (
-        <BillsChargeForm
-          onCancel={setshowBillsCreationForm}
-          bills={bills}
-          setBills={setbills}
-        ></BillsChargeForm>
-      )}
-      {showBillEditForm && (
-        <BillsChargeForm
-          onCancel={setshowBillEditForm}
-          bills={bills}
-          setBills={setbills}
-          bill={selectedBill}
-          editing={true}
-        ></BillsChargeForm>
-      )}
-      {selectedBill?.containsBills &&
-        selectedBill.internalBills.map(
-          (internalBill, index) => (
-            <BillsChargeForm
-              key={index}
-              onCancel={() => {}}
-              bills={selectedBill.internalBills}
-              setBills={updateSelectedBill}
-              bill={internalBill}
-              editing={true}
-            ></BillsChargeForm>
-          )
-        )}
-    </div>
-        </div> 
+            <button
+              type="button"
+              className="button-addpiece"
+              onClick={() =>
+                setshowBillsCreationForm(!showBillsCreationForm)
+              }
+            >
+              Add Piece
+            </button>
+            {showBillsCreationForm && (
+              <BillsChargeForm
+                onCancel={setshowBillsCreationForm}
+                bills={bills}
+                setBills={setbills}
+              ></BillsChargeForm>
+            )}
+            {showBillEditForm && (
+              <BillsChargeForm
+                onCancel={setshowBillEditForm}
+                bills={bills}
+                setBills={setbills}
+                bill={selectedBill}
+                editing={true}
+              ></BillsChargeForm>
+            )}
+            {selectedBill?.containsBills &&
+              selectedBill.internalBills.map(
+                (internalBill, index) => (
+                  <BillsChargeForm
+                    key={index}
+                    onCancel={() => { }}
+                    bills={selectedBill.internalBills}
+                    setBills={updateSelectedBill}
+                    bill={internalBill}
+                    editing={true}
+                  ></BillsChargeForm>
+                )
+              )}
+          </div>
+        </div>
         <Table
-        data={bills}
-        columns={[
-        "Status",
-        "Description",
-        "Prepaid",
-        "Quantity",
-        "Price",
-        "Amount",
-        "Tax Code",
-        "Tax Rate",
-        "Tax Amt",
-        "Amt + Tax",
-        // "Currency",
-        "Options",
-        ]}
-        onSelect={handleSelectBill} // Make sure this line is correct
-        onDelete={handleBillDelete}
-        onEdit={() => {
-          setshowBillEditForm(!showBillEditForm);
-        }}
-        onInspect={() => {
-        }}
-        onAdd={() => {}}
-        showOptions={false}
-      />
-      
+          data={bills}
+          columns={[
+            "Status",
+            "Description",
+            "Prepaid",
+            "Quantity",
+            "Price",
+            "Amount",
+            "Tax Code",
+            "Tax Rate",
+            "Tax Amt",
+            "Amt + Tax",
+            // "Currency",
+            "Options",
+          ]}
+          onSelect={handleSelectBill} // Make sure this line is correct
+          onDelete={handleBillDelete}
+          onEdit={() => {
+            setshowBillEditForm(!showBillEditForm);
+          }}
+          onInspect={() => {
+          }}
+          onAdd={() => { }}
+          showOptions={false}
+        />
+
       </form>
-    {/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
-      
+      {/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
+
       <form
-      
-        className={`tab-pane fade ${
-          activeTab === "event" ? "show active" : ""
-        } company-form__general-form`}
+
+        className={`tab-pane fade ${activeTab === "event" ? "show active" : ""
+          } company-form__general-form`}
         id="event"
         style={{ display: activeTab === "event" ? "block" : "none" }}
       >
-       event
+        event
       </form>
       {/* ---------------------------------------------------------------------------- */}
       {/* <form
