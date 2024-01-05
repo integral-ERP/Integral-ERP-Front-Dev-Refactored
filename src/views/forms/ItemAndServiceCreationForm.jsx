@@ -108,30 +108,9 @@ const ItemAndServiceCreationForm = ({
 
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#definition"
-            aria-selected={activeTab === "definition"}
-            onClick={() => setActiveTab("definition")}
-            role="tab"
-          >
-            Definition
-          </a>
-        </li>
-        
-      </ul>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "definition" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "definition" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
             <div className="company-form__section">
               <label htmlFor="" className="form-label">
                 Type:
@@ -245,14 +224,11 @@ const ItemAndServiceCreationForm = ({
           </div>
           {/* ----------------------------END ONE---------------------------------- */}
         </div>
-      </form>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "address" ? "show active" : ""
-        } company-form__general-form`}
-        id="address"
-        style={{ display: activeTab === "address" ? "block" : "none" }}
-      >
+     
+
+      
+        <div className="col-6">
+          <div className="creation creation-container w-100">
         <div className="company-form__section">
           <Input
             type="textarea"
@@ -292,7 +268,11 @@ const ItemAndServiceCreationForm = ({
             label="Zip Code"
           />
         </div>
-      </form>
+      </div>
+      </div>
+      </div>
+  
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
