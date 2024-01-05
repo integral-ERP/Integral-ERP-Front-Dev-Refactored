@@ -31,6 +31,7 @@ const Pickup = () => {
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -85,6 +86,10 @@ const Pickup = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
+ 
+  const handleCancel = () => {
+    console.log('entree a cancel');
+  }
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
@@ -157,6 +162,7 @@ const Pickup = () => {
 
   const handleEditPickupOrders = () => {
     if (selectedPickupOrder) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
@@ -208,8 +214,7 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt) {
+      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
         
         setSelectedPickupOrder(null);
       }
@@ -316,14 +321,31 @@ const Pickup = () => {
               importEnabled={false}
               createWarehouseReceipt={createWarehouseReceipt}
             >
-               <PickupOrderCreationForm
+              {selectedPickupOrder !== null && (
+
+                <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onpickupOrderDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+             
+            )}
+
+            {selectedPickupOrder === null && (
+              
+                <PickupOrderCreationForm
+                  pickupOrder={null}
+                  closeModal={handleCancel}
                   creating={true}
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
+             
+            )}
               </Table>
 
             {showSuccessAlert && (
@@ -347,7 +369,7 @@ const Pickup = () => {
               </Alert>
             )}
 
-            {selectedPickupOrder !== null && (
+            {/* {selectedPickupOrder !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
@@ -371,7 +393,7 @@ const Pickup = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
               </ModalForm>
-            )}
+            )} */}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
                <div className="layout-fluid">

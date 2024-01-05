@@ -18,6 +18,7 @@ const Release = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -94,6 +95,7 @@ const Release = () => {
 
   const handleEditreceipts = () => {
     if (selectedReleaseOrder) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Release Order to edit.");
@@ -138,7 +140,7 @@ const Release = () => {
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isreceiptsButton && !isTableRow) {
+      if (!isreceiptsButton && !isTableRow && !isEdit) {
         setSelectedReleaseOrder(null);
       }
     };
@@ -204,6 +206,10 @@ const Release = () => {
     setShowContextMenu(true);
   };
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
+  
   return (
     <>
       <div className="dashboard__layout">
@@ -228,14 +234,31 @@ const Release = () => {
               contextService={ReleaseService}
               importEnabled={false}
             >
-              <ReleaseOrderCreationForm
+               {selectedReleaseOrder !== null && (
+           
+                <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
-                  closeModal={closeModal}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
+                />
+           
+            )}
+
+            {selectedReleaseOrder === null && (
+           
+                <ReleaseOrderCreationForm
+                  releaseOrder={null}
+                  closeModal={handleCancel}
                   creating={true}
                   onReleaseOrderDataChange={handlereceiptsDataChange}
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
+         
+            )}
                   </Table>
 
             {showSuccessAlert && (

@@ -18,6 +18,7 @@ const Receipt = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Status",
@@ -94,6 +95,7 @@ const Receipt = () => {
 
   const handleEditreceipts = () => {
     if (selectedPickupOrder) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Pickup Order to edit.");
@@ -138,7 +140,7 @@ const Receipt = () => {
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isreceiptsButton && !isTableRow) {
+      if (!isreceiptsButton && !isTableRow && !isEdit) {
         setSelectedPickupOrder(null);
       }
     };
@@ -150,6 +152,10 @@ const Receipt = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
+
+  const handleCancel = () => {
+    window.location.reload();
+  }
 
   return (
     <>
@@ -170,14 +176,31 @@ const Receipt = () => {
               contextService={ReceiptService}
               importEnabled={false}
             >
-              <ReceiptCreationForm
+              {selectedPickupOrder !== null && (
+             
+                <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onpickupOrderDataChange={handlereceiptsDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                />
+           
+            )}
+
+            {selectedPickupOrder === null && (
+              
+                <ReceiptCreationForm
+                  pickupOrder={null}
+                  closeModal={handleCancel}
                   creating={true}
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
+             
+            )}
               </Table>
 
             {showSuccessAlert && (
