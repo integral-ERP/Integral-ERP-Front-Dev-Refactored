@@ -63,7 +63,7 @@ const PickupOrderCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
-  const [canRender, setcanRender] = useState(true);
+  const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
   const formFormat = {
     // GENERAL TAB

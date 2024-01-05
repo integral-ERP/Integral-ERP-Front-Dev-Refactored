@@ -18,6 +18,7 @@ const Release = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
@@ -95,6 +96,7 @@ const Release = () => {
 
   const handleEditreceipts = () => {
     if (selectedReleaseOrder) {
+      setIsEdit(true);
       openModal();
       setCreateReleaseOrder(false);
     } else {
@@ -143,7 +145,7 @@ const Release = () => {
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
       const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow && !isInsideCompanyFormPickup && !isSelectMenu ) {
+      if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu ) {
         setSelectedReleaseOrder(null);
       }
     };
@@ -209,6 +211,10 @@ const Release = () => {
     setShowContextMenu(true);
   };
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
+  
   return (
     <>
       <div className="dashboard__layout">
@@ -233,14 +239,31 @@ const Release = () => {
               contextService={ReleaseService}
               importEnabled={false}
             >
-              <ReleaseOrderCreationForm
+               {selectedReleaseOrder !== null && (
+           
+                <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
-                  closeModal={closeModal}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
+                />
+           
+            )}
+
+            {selectedReleaseOrder === null && (
+           
+                <ReleaseOrderCreationForm
+                  releaseOrder={null}
+                  closeModal={handleCancel}
                   creating={createReleaseOrder}
                   onReleaseOrderDataChange={handlereceiptsDataChange}
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
+         
+            )}
                   </Table>
 
             {showSuccessAlert && (
