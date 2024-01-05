@@ -276,6 +276,10 @@ const Pickup = () => {
     }
   }
 
+  const handleCancel = () => {
+    
+  }
+
   const contextMenuOptions = [
     {
       label: "Create Warehouse Receipt",
