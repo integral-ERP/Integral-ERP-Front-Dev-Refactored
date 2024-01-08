@@ -22,13 +22,13 @@ const ItemsAndServices = () => {
     "Type",
     "Amount",
     "Currency",
-    "IATA Code"
+    "IATA Code",
   ];
 
   const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {
-        setItemsAndServices([...response.data.results].reverse())
+        setItemsAndServices([...response.data.results].reverse());
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -39,7 +39,7 @@ const ItemsAndServices = () => {
       });
   };
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       updateItemsAndServices();
       setInitialDataFetched(true);
     }
@@ -130,74 +130,87 @@ const ItemsAndServices = () => {
 
   return (
     <>
-    <div className="dashboard__sidebar">
       <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page">
-        <Table
-          data={itemsAndServices}
-          columns={columns}
-          onSelect={handleSelectItemAndService} // Make sure this line is correct
-          selectedRow={selectedeItemAndService}
-          onDelete={handleDeleteItemAndService}
-          onEdit={handleEditItemAndService}
-          onAdd={handleAddItemAndService}
-          title="Items & Services"
-        >
-          <ItemAndServiceCreationForm
-              itemAndService={null}
-              closeModal={closeModal}
-              creating={true}
-              onitemAndServiceDataChange={handleItemAndServiceDataChange}
-            />
-          </Table>
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Item and Service deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Item and Service. Please try again</strong>
-          </Alert>
-        )}
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page">
+            <Table
+              data={itemsAndServices}
+              columns={columns}
+              onSelect={handleSelectItemAndService} // Make sure this line is correct
+              selectedRow={selectedeItemAndService}
+              onDelete={handleDeleteItemAndService}
+              onEdit={handleEditItemAndService}
+              onAdd={handleAddItemAndService}
+              title="Items & Services"
+            >
+              {selectedeItemAndService === null && (
+                <ItemAndServiceCreationForm
+                itemAndService={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                />
+              )}
 
-        {selectedeItemAndService !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ItemAndServiceCreationForm
-              itemAndService={selectedeItemAndService}
-              closeModal={closeModal}
-              creating={false}
-              onitemAndServiceDataChange={handleItemAndServiceDataChange}
-            />
-          </ModalForm>
-        )}
+              {selectedeItemAndService !== null && (
+                <ItemAndServiceCreationForm
+                itemAndService={selectedeItemAndService}
+                  closeModal={closeModal}
+                  creating={false}
+                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                />
+              )}
+            </Table>
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Item and Service deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>
+                  Error deleting Item and Service. Please try again
+                </strong>
+              </Alert>
+            )}
 
-        {selectedeItemAndService === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ItemAndServiceCreationForm
-              itemAndService={null}
-              closeModal={closeModal}
-              creating={true}
-              onitemAndServiceDataChange={handleItemAndServiceDataChange}
-            />
-          </ModalForm>
-        )}
+            {selectedeItemAndService !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ItemAndServiceCreationForm
+                  itemAndService={selectedeItemAndService}
+                  closeModal={closeModal}
+                  creating={false}
+                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                />
+              </ModalForm>
+            )}
+
+            {selectedeItemAndService === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <ItemAndServiceCreationForm
+                  itemAndService={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                />
+              </ModalForm>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
-}
+};
 
 export default ItemsAndServices;

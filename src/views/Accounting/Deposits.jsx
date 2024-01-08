@@ -162,7 +162,7 @@ const Deposits = () => {
             {selectedDeposits === null && (
              
                 <DepositsCreationForm
-                  deposit={null}
+                  deposit={selectedDeposits}
                   closeModal={closeModal}
                   creating={true}
                   ondepositDataChange={handleDepositsDataChange}

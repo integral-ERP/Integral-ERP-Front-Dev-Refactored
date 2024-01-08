@@ -244,9 +244,23 @@ const Bills = () => {
               setShowContextMenu={setShowContextMenu}
               title="Bills"
             >
-              <BillsCreationForm
-              currentPickUpNumber={currentPickupNumber}
-              />
+              {selectedBills === null && (
+                <BillsCreationForm
+                  bill={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onbillDataChange={handleBillsDataChange}
+                />
+              )}
+
+              {selectedBills !== null && (
+                <BillsCreationForm
+                  bill={selectedBills}
+                  closeModal={closeModal}
+                  creating={false}
+                  onbillDataChange={handleBillsDataChange}
+                />
+              )}
             </Table>
 
             {showSuccessAlert && (

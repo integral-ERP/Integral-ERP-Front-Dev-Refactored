@@ -206,12 +206,23 @@ const ChartOfAccounts   = () => {
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
             >
-              <ChartOfAccountsCreationForm
-              carrier={selectedChartOfAccounts}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleChartOfAccountDataChange}
-            />
+              {selectedChartOfAccounts === null && (
+                <ChartOfAccountsCreationForm
+                  payments={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+              )}
+
+              {selectedChartOfAccounts !== null && (
+                <ChartOfAccountsCreationForm
+                  ChartAccounts={selectedChartOfAccounts}
+                  closeModal={closeModal}
+                  creating={false}
+                  onDataChange={handleChartOfAccountDataChange}
+                />
+              )}
             </Table>
 
             {showSuccessAlert && (
