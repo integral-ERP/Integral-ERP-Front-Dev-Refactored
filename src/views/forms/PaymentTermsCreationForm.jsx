@@ -59,14 +59,14 @@ const PaymentTermsCreationForms = ({
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
-          paymentTerms.id,
-          rawData
-        ));
+        paymentTerms.id,
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log(
         "Prueba successfully created/updated:",
-         response.data);
+        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -80,7 +80,7 @@ const PaymentTermsCreationForms = ({
       setShowErrorAlert(true);
     }
   };
-  //---------------------------------------------------------------------------------------------------------------------------------------------------
+
   const updatePaymentTerm = (url = null) => {
     PaymentTermsService.getPaymentTerms(url)
       .then((response) => {
@@ -104,39 +104,20 @@ const PaymentTermsCreationForms = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ",PaymentTerms);
+    console.log("Imprimir = ", PaymentTerms);
   };
   useEffect(() => {
     updatePaymentTerm();
   }, []);
-  //--------------------------------------------------------------------------------------------------------------------------------------------------
 
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#definition"
-            aria-selected={activeTab === "definition"}
-            onClick={() => setActiveTab("definition")}
-            role="tab"
-          >
-            Payment Terms
-          </a>
-        </li>
-      </ul>
 
-      <form
-        className={`tab-pane fade ${
-          activeTab === "definition" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "definition" ? "block" : "none" }}
-      >
-        <div className="">
-         
+      <div className="creation creation-container w-100">
+        <div className="row w-100">
+          <div className="form-label_name"><h3>Payment Terms</h3><span></span></div>
+
+          <div className="col-6 text-start">
           <div className="company-form__section">
             <Input
               type="text"
@@ -173,6 +154,9 @@ const PaymentTermsCreationForms = ({
               label="Discount Percentage"
             />
           </div>
+          </div>
+
+          <div className="col-6 text-start">
           <div className="company-form__section">
             <Input
               type="number"
@@ -185,23 +169,22 @@ const PaymentTermsCreationForms = ({
               label="Discount Days"
             />
           </div>
-         
-          
-          <div className="">
-            <div className="company-form__section">
-              <Input
-                type="checkbox"
-                inputName="inactive"
-                value={formData.inactive}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, inactive: e.target.value })
-                }
-                label="Inactive"
-              />
-            </div>
+          <div className="company-form__section">
+            <Input
+              type="checkbox"
+              inputName="inactive"
+              value={formData.inactive}
+              changeHandler={(e) =>
+                setFormData({ ...formData, inactive: e.target.value })
+              }
+              label="Inactive"
+            />
+
           </div>
         </div>
-      </form>
+        </div>
+      </div>
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

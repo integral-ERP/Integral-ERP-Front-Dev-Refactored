@@ -147,7 +147,29 @@ const Deposits = () => {
               onEdit={handleEditDeposits}
               onAdd={handleAddDeposits}
               title="Deposits"
-            />
+            >
+               {selectedDeposits !== null && (
+             
+                <DepositsCreationForm
+                  deposit={selectedDeposits}
+                  closeModal={closeModal}
+                  creating={false}
+                  ondepositDataChange={handleDepositsDataChange}
+                />
+            
+            )}
+
+            {selectedDeposits === null && (
+             
+                <DepositsCreationForm
+                  deposit={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  ondepositDataChange={handleDepositsDataChange}
+                />
+            
+            )}
+              </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -172,7 +194,7 @@ const Deposits = () => {
               </Alert>
             )}
 
-            {selectedDeposits !== null && (
+            {/* {selectedDeposits !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <DepositsCreationForm
                   deposit={selectedDeposits}
@@ -192,7 +214,8 @@ const Deposits = () => {
                   ondepositDataChange={handleDepositsDataChange}
                 />
               </ModalForm>
-            )}
+            )} */}
+
           </div>
         </div>
       </div>

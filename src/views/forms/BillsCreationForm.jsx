@@ -178,11 +178,9 @@ const BillsCreationForm = ({
     const id = event.id;
     const name = event.name;
     const result = await VendorService.getVendorByID(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setVendorCarriby(result.data);
     setFormData({
       ...formData,
@@ -216,179 +214,174 @@ const BillsCreationForm = ({
   };
   return (
     <div className="company-form">
-      <div className="row w-100">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Bill</h3>
-              <span></span>
-            </div>
-            <div className="row w-100">
-              <div className="col-6">
-                <div className="company-form__section">
-                  <Input
-                    type="text"
-                    inputName="number"
-                    placeholder="PNF123456"
-                    value={formData.number}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, number: e.target.value })
-                    }
-                    label="Number"
-                  />
-                </div>
-
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Due Date"
-                      className="font-right"
-                      value={dayjs(formData.due)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          due: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div className="company-form__section">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Transation Date"
-                      className="font-right"
-                      value={dayjs(formData.trasaDate)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div className="company-form__section">
-                  <label htmlFor="account" className="form-label">
-                    Account:
-                  </label>
-                  <AsyncSelect
-                    id="account"
-                    value={accountByOptions.find(
-                      (option) => option.id === formData.accountById
-                    )}
-                    onChange={(e) => {
-                      handleAccountBySelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={accountByOptions}
-                    getOptionLabel={(option) =>
-                      option.name + " || " + " Accouns Payable "
-                    }
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
+      <div className="creation creation-container w-100">
+        <div className="row w-100">
+          <div className="form-label_name"><h3>Bill</h3><span></span>
+          </div>
+         
+            <div className="col-6 text-start">
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="number"
+                  placeholder="PNF123456"
+                  value={formData.number}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, number: e.target.value })
+                  }
+                  label="Number"
+                />
               </div>
 
-              <div className="col-6">
-                <div className="company-form__section">
-                  <label htmlFor="apply" className="form-label">
-                    Vendor:
-                  </label>
-                  <AsyncSelect
-                    id="apply"
-                    value={carriVerndorByOptions.find(
-                      (option) => option.id === formData.carriVerndorById
-                    )}
-                    onChange={(e) => {
-                      handleVendorCarriBySelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={carriVerndorByOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
+              <div className="company-form__section">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Due Date"
+                    className="font-right"
+                    value={dayjs(formData.due)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        due: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
                   />
-                </div>
-                <div className="company-form__section">
-                  <Input
-                    type="textarea"
-                    inputName="carriVerndorByInfo"
-                    placeholder="Apply to..."
-                    value={formData.carriVerndorByInfo}
-                    readonly={true}
-                    label=""
+                </LocalizationProvider>
+              </div>
+
+              <div className="company-form__section">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Transation Date"
+                    className="font-right"
+                    value={dayjs(formData.trasaDate)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
                   />
-                </div>
-                <div className="company-form__section">
-                  <label htmlFor="paymentTem" className="form-label">
-                    Payment Tems:
-                  </label>
-                  <AsyncSelect
-                    id="paymentTem"
-                    value={paymentByOptions.find(
-                      (option) => option.id === formData.paymentById
-                    )}
-                    onChange={(e) => {
-                      handlePaymentBySelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={paymentByOptions}
-                    getOptionLabel={(option) => option.description}
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
+                </LocalizationProvider>
+              </div>
+              <div className="company-form__section">
+                <label htmlFor="account" className="form-label">
+                  Account:
+                </label>
+                <AsyncSelect
+                  id="account"
+                  value={accountByOptions.find(
+                    (option) => option.id === formData.accountById
+                  )}
+                  onChange={(e) => {
+                    handleAccountBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={accountByOptions}
+                  getOptionLabel={(option) =>
+                    option.name + " || " + " Accouns Payable "
+                  }
+                  getOptionValue={(option) => option.id}
+                />
               </div>
             </div>
-          </div>
-        </div>
-        <div className="col-6">
-        <div className="form-label_name w-100">
-              <h3>Invoices</h3>
-              <span></span>
+
+            <div className="col-6 text-start">
+              <div className="company-form__section">
+                <label htmlFor="apply" className="form-label">
+                  Vendor:
+                </label>
+                <AsyncSelect
+                  id="apply"
+                  value={carriVerndorByOptions.find(
+                    (option) => option.id === formData.carriVerndorById
+                  )}
+                  onChange={(e) => {
+                    handleVendorCarriBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={carriVerndorByOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+
+              <div className="company-form__section">
+                <Input
+                  type="textarea"
+                  inputName="carriVerndorByInfo"
+                  placeholder="Apply to..."
+                  value={formData.carriVerndorByInfo}
+                  readonly={true}
+                  label=""
+                />
+              </div>
+
+              <div className="company-form__section">
+                <label htmlFor="paymentTem" className="form-label">
+                  Payment Tems:
+                </label>
+                <AsyncSelect
+                  id="paymentTem"
+                  value={paymentByOptions.find(
+                    (option) => option.id === formData.paymentById
+                  )}
+                  onChange={(e) => {
+                    handlePaymentBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={paymentByOptions}
+                  getOptionLabel={(option) => option.description}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
             </div>
-          <div className="col-6 w-100">
-            <div className="company-form__section">
-              <button
-                type="button"
-                className="button-addpiece"
-                onClick={() => setshowBillsCreationForm(!showBillsCreationForm)}
-              >
-                Add Piece
-              </button>
-              {showBillsCreationForm && (
-                <BillsChargeForm
-                  onCancel={setshowBillsCreationForm}
-                  bills={bills}
-                  setBills={setbills}
-                ></BillsChargeForm>
-              )}
-              {showBillEditForm && (
-                <BillsChargeForm
-                  onCancel={setshowBillEditForm}
-                  bills={bills}
-                  setBills={setbills}
-                  bill={selectedBill}
-                  editing={true}
-                ></BillsChargeForm>
-              )}
-              {selectedBill?.containsBills &&
-                selectedBill.internalBills.map((internalBill, index) => (
-                  <BillsChargeForm
-                    key={index}
-                    onCancel={() => {}}
-                    bills={selectedBill.internalBills}
-                    setBills={updateSelectedBill}
-                    bill={internalBill}
-                    editing={true}
-                  ></BillsChargeForm>
-                ))}
-            </div>
-          </div>
+          
         </div>
+
+
+        <div className="company-form__section">
+          <button
+            type="button"
+            className="button-addpiece"
+            onClick={() => setshowBillsCreationForm(!showBillsCreationForm)}
+          >
+            Add Piece
+          </button>
+          {showBillsCreationForm && (
+            <BillsChargeForm
+              onCancel={setshowBillsCreationForm}
+              bills={bills}
+              setBills={setbills}
+            ></BillsChargeForm>
+          )}
+          {showBillEditForm && (
+            <BillsChargeForm
+              onCancel={setshowBillEditForm}
+              bills={bills}
+              setBills={setbills}
+              bill={selectedBill}
+              editing={true}
+            ></BillsChargeForm>
+          )}
+          {selectedBill?.containsBills &&
+            selectedBill.internalBills.map((internalBill, index) => (
+              <BillsChargeForm
+                key={index}
+                onCancel={() => { }}
+                bills={selectedBill.internalBills}
+                setBills={updateSelectedBill}
+                bill={internalBill}
+                editing={true}
+              ></BillsChargeForm>
+            ))}
+        </div>
+
       </div>
+
       <Table
         data={bills}
         columns={[
@@ -410,8 +403,8 @@ const BillsCreationForm = ({
         onEdit={() => {
           setshowBillEditForm(!showBillEditForm);
         }}
-        onInspect={() => {}}
-        onAdd={() => {}}
+        onInspect={() => { }}
+        onAdd={() => { }}
         showOptions={false}
       />
       <div className="company-form__options-container">

@@ -28,7 +28,7 @@ const DepositsCreationForm = ({
 
   const [showDepositsCreationForm, setshowDepositsCreationForm] = useState(false)
   const [showDepositEditForm, setshowDepositEditForm] = useState(false);
-  const [selectedDeposit, setselectedDeposit] = useState(null);  
+  const [selectedDeposit, setselectedDeposit] = useState(null);
   const [deposits, setdeposits] = useState([]);
   const formFormat = {
     bankAccount: "",
@@ -66,14 +66,14 @@ const DepositsCreationForm = ({
     const response = await (creating
       ? DepositsService.createDeposit(rawData)
       : DepositsService.updateDeposit(
-          deposit.id,
-          rawData
-        ));
+        deposit.id,
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log(
         "Prueba successfully created/updated:",
-         response.data);
+        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -105,7 +105,7 @@ const DepositsCreationForm = ({
 
     const index = deposits.findIndex((com) => com.id == selectedDeposit.id);
 
-    if(index != -1){
+    if (index != -1) {
       const depositsCopy = [...deposits];
       depositsCopy[index] = updatedDeposit;
       setdeposits(depositsCopy);
@@ -118,45 +118,11 @@ const DepositsCreationForm = ({
   };
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#deposit"
-            aria-selected={activeTab === "deposit"}
-            onClick={() => setActiveTab("deposit")}
-            tabIndex="-1"
-            role="tab"
-          >
-            Deposit
-          </a>
-        </li>      
-      </ul>
-      <form
-        className={`tab-pane fade ${
-          activeTab === "deposit" ? "show active" : ""
-        } company-form__general-form`}
-        id="deposit"
-        style={{ display: activeTab === "deposit" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
-          <div className="company-form__section">
-            <label htmlFor="bankAccount" className="form-label">
-              Bank Account:
-            </label>
-            <select
-              id="bankAccount"
-              className="form-input"
-              value={formData.bankAccount}
-              onChange={(e) => handlebankAccount(e.target.value)}
-            >
-              <option value="">Select a Bank</option>
-              <option value="Bank Acc - Chase 685285053">Bank Acc - Chase 685285053</option>
-            </select>
-          </div>
-{/* -------------------------------------------------------------------------- */}
+      <div className="creation creation-container w-100">
+        <div className="row w-100">
+          <div className="col-12 text-start">
+            <div className="form-label_name"><h3>Deposit</h3><span></span> </div>
+
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
@@ -172,7 +138,22 @@ const DepositsCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
-{/* -------------------------------------------------------------------------- */}
+
+            <div className="company-form__section">
+              <label htmlFor="bankAccount" className="form-label">
+                Bank Account:
+              </label>
+              <select
+                id="bankAccount"
+                className="form-input"
+                value={formData.bankAccount}
+                onChange={(e) => handlebankAccount(e.target.value)}
+              >
+                <option value="">Select a Bank</option>
+                <option value="Bank Acc - Chase 685285053">Bank Acc - Chase 685285053</option>
+              </select>
+            </div>
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -185,65 +166,65 @@ const DepositsCreationForm = ({
                 label="Memo"
               />
             </div>
-            
-{/* -------------------------------------------------------------------------- */}
           </div>
-        <div className="company-form__section">
-     
-      {showDepositsCreationForm && (
-        <DepositsChargeForm
-          onCancel={setshowDepositsCreationForm}
-          deposits={deposits}
-          setdeposits={setdeposits}
-        ></DepositsChargeForm>
-      )}
-      {showDepositEditForm && (
-        <DepositsChargeForm
-          onCancel={setshowDepositEditForm}
-          deposits={deposits}
-          setdeposits={setdeposits}
-          deposit={selectedDeposit}
-          editing={true}
-        ></DepositsChargeForm>
-      )}
-      {selectedDeposit?.containsDeposits &&
-        selectedDeposit.internalDeposits.map(
-          (internalDeposit, index) => (
-            <DepositsChargeForm
-              key={index}
-              onCancel={() => {}}
-              deposits={selectedDeposit.internalDeposits}
-              setdeposits={updateSelectedDeposit}
-              deposit={internalDeposit}
-              editing={true}
-            ></DepositsChargeForm>
-          )
-        )}
-    </div>
-        </div> 
+          <div className="company-form__section">
+
+            {showDepositsCreationForm && (
+              <DepositsChargeForm
+                onCancel={setshowDepositsCreationForm}
+                deposits={deposits}
+                setdeposits={setdeposits}
+              ></DepositsChargeForm>
+            )}
+            {showDepositEditForm && (
+              <DepositsChargeForm
+                onCancel={setshowDepositEditForm}
+                deposits={deposits}
+                setdeposits={setdeposits}
+                deposit={selectedDeposit}
+                editing={true}
+              ></DepositsChargeForm>
+            )}
+            {selectedDeposit?.containsDeposits &&
+              selectedDeposit.internalDeposits.map(
+                (internalDeposit, index) => (
+                  <DepositsChargeForm
+                    key={index}
+                    onCancel={() => { }}
+                    deposits={selectedDeposit.internalDeposits}
+                    setdeposits={updateSelectedDeposit}
+                    deposit={internalDeposit}
+                    editing={true}
+                  ></DepositsChargeForm>
+                )
+              )}
+          </div>
+        </div>
+        </div>
+
         <Table
-        // data={deposits}
-        columns={[
-        "Deposited",
-        "Entity",
-        "Date",
-        "Amount",
-        "Number",
-        "Division",
-        ]}
-        onSelect={handleSelectDeposit} // Make sure this line is correct
-        onDelete={handleDepositDelete}
-        onEdit={() => {
-          setshowDepositEditForm(!showDepositEditForm);
-        }}
-        onInspect={() => {
-        }}
-        onAdd={() => {}}
-        showOptions={false}
-      />
-      
-      </form>
-    {/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
+          // data={deposits}
+          columns={[
+            "Deposited",
+            "Entity",
+            "Date",
+            "Amount",
+            "Number",
+            "Division",
+          ]}
+          onSelect={handleSelectDeposit} // Make sure this line is correct
+          onDelete={handleDepositDelete}
+          onEdit={() => {
+            setshowDepositEditForm(!showDepositEditForm);
+          }}
+          onInspect={() => {
+          }}
+          onAdd={() => { }}
+          showOptions={false}
+        />
+
+    
+
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
