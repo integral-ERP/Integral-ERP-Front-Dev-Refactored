@@ -18,6 +18,7 @@ const ChartOfAccounts   = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
 
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -110,6 +111,7 @@ const ChartOfAccounts   = () => {
 
   const handleEditChartOfAccounts = () => {
     if (selectedChartOfAccounts ) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a ChartOfAccounts   Order to edit.");
@@ -124,7 +126,7 @@ const ChartOfAccounts   = () => {
     if (selectedChartOfAccounts ) {
       ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts .id)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
@@ -152,8 +154,8 @@ const ChartOfAccounts   = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isPickupOrdersButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
+        
         setSelectedChartOfAccounts(null);
       }
     };
@@ -164,7 +166,7 @@ const ChartOfAccounts   = () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
   
 
   const contextMenuOptions = [
@@ -205,6 +207,7 @@ const ChartOfAccounts   = () => {
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+              importEnabled={false}
             >
               {selectedChartOfAccounts === null && (
                 <ChartOfAccountsCreationForm
@@ -244,28 +247,6 @@ const ChartOfAccounts   = () => {
                 <AlertTitle>Error</AlertTitle>
                 <strong>Error deleting Chart Of Account. Please try again</strong>
               </Alert>
-            )}
-
-            {selectedChartOfAccounts  !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ChartOfAccountsCreationForm 
-                  ChartAccounts={selectedChartOfAccounts }
-                  closeModal={closeModal}
-                  creating={false}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedChartOfAccounts  === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ChartOfAccountsCreationForm 
-                  ChartAccounts={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onDataChange={handleChartOfAccountDataChange}
-                />
-              </ModalForm>
             )}
           </div>
         </div>
