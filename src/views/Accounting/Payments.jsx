@@ -152,7 +152,29 @@ const Payments = () => {
               onEdit={handleEditPayments}
               onAdd={handleAddPayments}
               title="Payments"
-            />
+            >
+               {selectedPayments !== null && (
+           
+                <PaymentsCreationForm
+                  payments={selectedPayments}
+                  closeModal={closeModal}
+                  creating={false}
+                  onpaymentDataChange={handlePaymentsDataChange}
+                />
+            
+            )}
+
+            {selectedPayments === null && (
+            
+                <PaymentsCreationForm
+                  payments={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onpaymentDataChange={handlePaymentsDataChange}
+                />
+            
+            )}
+              </Table>
 
             {showSuccessAlert && (
               <Alert

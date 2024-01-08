@@ -235,7 +235,39 @@ const PaymentTerms  = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-            />
+            >
+               {selectedPaymentOfTerm !== null && (
+                <PaymentTermsCreationForms
+                  paymentTerms={selectedPaymentOfTerm}
+                  closeModal={closeModal}
+                  creating={false}
+                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                />
+            )}
+
+            {selectedPaymentOfTerm === null && (
+                <PaymentTermsCreationForms
+                  paymentTerms={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                />
+            )}
+
+            {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
+
+                <ReceiptCreationForm
+                  paymentTerms={selectedPaymentOfTerm}
+                  closeModal={closeModalReceiptCreation}
+                  creating={true}
+                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  currentPickUpNumber={currentPickupNumber}
+                  setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromPickUp={true}
+                />
+             
+            )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -258,7 +290,7 @@ const PaymentTerms  = () => {
               </Alert>
             )}
 
-            {selectedPaymentOfTerm !== null && (
+            {/* {selectedPaymentOfTerm !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PaymentTermsCreationForms
                   paymentTerms={selectedPaymentOfTerm}
@@ -292,7 +324,7 @@ const PaymentTerms  = () => {
                   fromPickUp={true}
                 />
               </ModalForm>
-            )}
+            )} */}
           </div>
         </div>
       </div>

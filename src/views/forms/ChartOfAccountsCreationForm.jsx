@@ -137,12 +137,11 @@ const ChartOfAccountsCreationForm = ({
 
   return (
     <div className="company-form">
+      <div className="creation creation-container w-100">
       <div className="row w-100">
-        <div className="col-12 text-start">
-          <div className="col-6 w-100">
-          <div className="creation creation-container w-100">
-          <div className="form-label_name"><h3>Definition</h3><span></span></div>
-            <div className="col-12">
+            <div className="form-label_name"><h3>Definition</h3><span></span></div>
+
+            <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="typeChart" className="form-label">
                   typeChart:
@@ -174,8 +173,7 @@ const ChartOfAccountsCreationForm = ({
                   <option value="Credit Card">Credit Card</option>
                 </select>
               </div>
-              {/* ------
-          {/* ----------------------------------------------- */}
+
               <div className="company-form__section">
                 <Input
                   type="text"
@@ -188,7 +186,7 @@ const ChartOfAccountsCreationForm = ({
                   label="Name"
                 />
               </div>
-              {/* ----------------------------------------------- */}
+
               <div className="company-form__section">
                 <Input
                   type="num"
@@ -201,6 +199,9 @@ const ChartOfAccountsCreationForm = ({
                   label="Account Number"
                 />
               </div>
+            </div>
+
+            <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="chartofaccountsType" className="form-label">
                   Parent Account:
@@ -224,6 +225,7 @@ const ChartOfAccountsCreationForm = ({
                   ))}
                 </select>
               </div>
+
               <div className="">
                 <div className="company-form__section">
                   <label htmlFor="currency" className="form-label">
@@ -245,23 +247,22 @@ const ChartOfAccountsCreationForm = ({
                   </select>
                 </div>
               </div>
-            </div>
-            <div className="form-group">
-              <Input
-                type="textarea"
-                inputName="note"
-                placeholder="Nota here..."
-                label="Note"
-                value={formData.note}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, note: e.target.value })
-                }
-              />
+
+              <div className="form-group">
+                <Input
+                  type="textarea"
+                  inputName="note"
+                  placeholder="Nota here..."
+                  label="Note"
+                  value={formData.note}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, note: e.target.value })
+                  }
+                />
+              </div>
+
             </div>
           </div>
-          </div>
-          
-        </div>
       </div>
 
       <div className="company-form__options-container">

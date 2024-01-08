@@ -107,10 +107,11 @@ const ItemAndServiceCreationForm = ({
 
   return (
     <div className="company-form">
-      <div className="row w-100">
-        <div className="col-12 text-start">
-          <div className="creation creation-container w-100">
+      <div className="creation creation-container w-100">
+        <div className="row w-100">
           <div className="form-label_name"><h3>Definition</h3><span></span></div>
+
+          <div className="col-6 text-start">
             <div className="company-form__section">
               <label htmlFor="" className="form-label">
                 Type:
@@ -130,6 +131,7 @@ const ItemAndServiceCreationForm = ({
                 <option value="inventory">Inventory</option>
               </select>
             </div>
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -142,6 +144,7 @@ const ItemAndServiceCreationForm = ({
                 label="Description"
               />
             </div>
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -154,6 +157,7 @@ const ItemAndServiceCreationForm = ({
                 label="Code"
               />
             </div>
+
             <div className="company-form__section">
               <label htmlFor="accountNameType" className="form-label">
                 Account:
@@ -178,6 +182,10 @@ const ItemAndServiceCreationForm = ({
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="col-6 text-start">
+           
             <div className="company-form__section">
               <label htmlFor="currency" className="text-comm">
                 Currency
@@ -198,6 +206,7 @@ const ItemAndServiceCreationForm = ({
                 ))}
               </select>
             </div>
+
             <div className="company-form__section">
               <Input
                 type="number"
@@ -224,6 +233,7 @@ const ItemAndServiceCreationForm = ({
             </div>
           </div>
         </div>
+
 
 
 
