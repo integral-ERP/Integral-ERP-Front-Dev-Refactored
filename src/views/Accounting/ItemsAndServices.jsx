@@ -143,8 +143,14 @@ const ItemsAndServices = () => {
           onEdit={handleEditItemAndService}
           onAdd={handleAddItemAndService}
           title="Items & Services"
-        />
-
+        >
+          <ItemAndServiceCreationForm
+              itemAndService={null}
+              closeModal={closeModal}
+              creating={true}
+              onitemAndServiceDataChange={handleItemAndServiceDataChange}
+            />
+          </Table>
         {showSuccessAlert && (
           <Alert
             severity="success"

@@ -16,7 +16,6 @@ import VendorService from "../../services/VendorService";
 import PaymentTermsService from "../../services/PaymentTermsService";
 import BillsChargeForm from "./BillsChargeForm";
 
-
 const BillsCreationForm = ({
   bill,
   closeModal,
@@ -36,11 +35,10 @@ const BillsCreationForm = ({
   const [paymentByOptions, setPaymentByOptions] = useState([]);
   const [issuedby, setVendorCarriby] = useState(null);
 
-  const [showBillsCreationForm, setshowBillsCreationForm] = useState(false)
+  const [showBillsCreationForm, setshowBillsCreationForm] = useState(false);
   const [showBillEditForm, setshowBillEditForm] = useState(false);
   const [selectedBill, setselectedBill] = useState(null);
   const [bills, setbills] = useState([]);
-
 
   const formFormat = {
     status: 14,
@@ -63,7 +61,7 @@ const BillsCreationForm = ({
     console.log("Creating=", creating);
     console.log("Bill Terms=", bill);
     if (!creating && bill) {
-      setbills(bill.billCharges)
+      setbills(bill.billCharges);
       console.log("Editing Bill Terms...", bill);
       setFormData({
         number: bill.number || "",
@@ -104,14 +102,10 @@ const BillsCreationForm = ({
     console.log("DATA = ", formData);
     const response = await (creating
       ? BillsService.createBill(rawData)
-      : BillsService.updateBill(
-        bill.id,
-        rawData
-      ));
+      : BillsService.updateBill(bill.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Bill successfully created/updated:",
-        response.data);
+      console.log("Bill successfully created/updated:", response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -126,9 +120,10 @@ const BillsCreationForm = ({
   };
 
   const fetchFormData = async () => {
-    const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
+    const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data
+      .results;
     const carriVerndo = (await VendorService.getVendors()).data.results;
-    const paiment = (await PaymentTermsService.getPaymentTerms()).data.results
+    const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
     // Function to add 'type' property to an array of objects
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
@@ -138,15 +133,15 @@ const BillsCreationForm = ({
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
     // Merge the arrays
-    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
+    const accountByOptions = [...accountWithType].filter(
+      (account) => account.typeChart == "Accouns Payable"
+    );
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 
     setAccountByOptions(accountByOptions);
     setcarriVerndoByOptions(carriVerndorByOptions);
     setPaymentByOptions(paymentByOptions);
-
-
   };
   useEffect(() => {
     fetchFormData();
@@ -156,13 +151,12 @@ const BillsCreationForm = ({
     const id = event.id;
     const typeChart = event.typeChart;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
-    setaccounts(result.data)
+    console.log("RESULTADO CHART", result.typeChart);
+    setaccounts(result.data);
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
-
     });
     console.log("TYPE_CHART=", typeChart);
   };
@@ -172,7 +166,7 @@ const BillsCreationForm = ({
     const id = event.id;
     const description = event.description;
     const result = await PaymentTermsService.getPaymentTermById(id);
-    setpayments(result.data)
+    setpayments(result.data);
     setFormData({
       ...formData,
       paymentById: id,
@@ -184,17 +178,18 @@ const BillsCreationForm = ({
     const id = event.id;
     const name = event.name;
     const result = await VendorService.getVendorByID(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
-    setVendorCarriby(result.data)
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
+    setVendorCarriby(result.data);
     setFormData({
       ...formData,
       carriVerndorById: id,
       carriVerndorByName: name,
       carriVerndorByInfo: info,
     });
-
   };
 
   // ---------------------------------------------
@@ -203,9 +198,7 @@ const BillsCreationForm = ({
   };
 
   const handleBillDelete = () => {
-    const newBills = bills.filter(
-      (com) => com.id != selectedBill.id
-    );
+    const newBills = bills.filter((com) => com.id != selectedBill.id);
     setbills(newBills);
   };
   const updateSelectedBill = (updatedInternalBills) => {
@@ -220,251 +213,207 @@ const BillsCreationForm = ({
       billsCopy[index] = updatedBill;
       setbills(billsCopy);
     }
-
-
   };
   return (
     <div className="company-form">
-      <ul className="nav nav-tabs" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            data-bs-toggle="tab"
-            href="#bil"
-            aria-selected={activeTab === "bil"}
-            onClick={() => setActiveTab("bil")}
-            role="tab"
-          >
-            Bill
-          </a>
-        </li>
-      </ul>
-      <form
-        className={`tab-pane fade ${activeTab === "bil" ? "show active" : ""
-          } company-form__general-form`}
-        id="bill"
-        style={{ display: activeTab === "bil" ? "block" : "none" }}
-      >
-        <div className="containerr">
-          <div className="cont-one">
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="number"
-                placeholder="PNF123456"
-                value={formData.number}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, number: e.target.value })
-                }
-                label="Number"
-              />
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h3>Bill</h3>
+              <span></span>
             </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Due Date"
-                  className="font-right"
-                  value={dayjs(formData.due)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      due: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  label="Transation Date"
-                  className="font-right"
-                  value={dayjs(formData.trasaDate)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </LocalizationProvider>
-            </div>
-            {/* ----------------------------------------------------------- */}
-            <div className="company-form__section">
-              <label htmlFor="account" className="form-label">
-                Account:
-              </label>
-              <AsyncSelect
-                id="account"
-                value={accountByOptions.find(
-                  (option) => option.id === formData.accountById)}
-                onChange={(e) => { handleAccountBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={accountByOptions}
-                getOptionLabel={(option) => option.name + " || " + " Accouns Payable "}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-          </div>{/* --------------------------------------------------------------------------------------- */}
-          <div className="cont-two">
-            <div className="company-form__section">
-              <label htmlFor="apply" className="form-label">
-                Vendor:
-              </label>
-              <AsyncSelect
-                id="apply"
-                value={carriVerndorByOptions.find(
-                  (option) => option.id === formData.carriVerndorById)}
-                onChange={(e) => { handleVendorCarriBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={carriVerndorByOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            {/* --------------------------------------------------------------------------------------- */}
-            <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="carriVerndorByInfo"
-                placeholder="Apply to..."
-                value={formData.carriVerndorByInfo}
-                readonly={true}
-                label=""
-              />
-            </div>
-            <div className="company-form__section">
-              <label htmlFor="paymentTem" className="form-label">
-                Payment Tems:
-              </label>
-              <AsyncSelect
-                id="paymentTem"
-                value={paymentByOptions.find(
-                  (option) => option.id === formData.paymentById)}
-                onChange={(e) => { handlePaymentBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={paymentByOptions}
-                getOptionLabel={(option) => option.description}
-                getOptionValue={(option) => option.id}
-              />
+            <div className="row w-100">
+              <div className="col-6">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="number"
+                    placeholder="PNF123456"
+                    value={formData.number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, number: e.target.value })
+                    }
+                    label="Number"
+                  />
+                </div>
+
+                <div className="company-form__section">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Due Date"
+                      className="font-right"
+                      value={dayjs(formData.due)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          due: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+                <div className="company-form__section">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Transation Date"
+                      className="font-right"
+                      value={dayjs(formData.trasaDate)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+                <div className="company-form__section">
+                  <label htmlFor="account" className="form-label">
+                    Account:
+                  </label>
+                  <AsyncSelect
+                    id="account"
+                    value={accountByOptions.find(
+                      (option) => option.id === formData.accountById
+                    )}
+                    onChange={(e) => {
+                      handleAccountBySelection(e);
+                    }}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={accountByOptions}
+                    getOptionLabel={(option) =>
+                      option.name + " || " + " Accouns Payable "
+                    }
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+              </div>
+
+              <div className="col-6">
+                <div className="company-form__section">
+                  <label htmlFor="apply" className="form-label">
+                    Vendor:
+                  </label>
+                  <AsyncSelect
+                    id="apply"
+                    value={carriVerndorByOptions.find(
+                      (option) => option.id === formData.carriVerndorById
+                    )}
+                    onChange={(e) => {
+                      handleVendorCarriBySelection(e);
+                    }}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={carriVerndorByOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="textarea"
+                    inputName="carriVerndorByInfo"
+                    placeholder="Apply to..."
+                    value={formData.carriVerndorByInfo}
+                    readonly={true}
+                    label=""
+                  />
+                </div>
+                <div className="company-form__section">
+                  <label htmlFor="paymentTem" className="form-label">
+                    Payment Tems:
+                  </label>
+                  <AsyncSelect
+                    id="paymentTem"
+                    value={paymentByOptions.find(
+                      (option) => option.id === formData.paymentById
+                    )}
+                    onChange={(e) => {
+                      handlePaymentBySelection(e);
+                    }}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={paymentByOptions}
+                    getOptionLabel={(option) => option.description}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <div className="company-form__section">
-            <button
-              type="button"
-              className="button-addpiece"
-              onClick={() =>
-                setshowBillsCreationForm(!showBillsCreationForm)
-              }
-            >
-              Add Piece
-            </button>
-            {showBillsCreationForm && (
-              <BillsChargeForm
-                onCancel={setshowBillsCreationForm}
-                bills={bills}
-                setBills={setbills}
-              ></BillsChargeForm>
-            )}
-            {showBillEditForm && (
-              <BillsChargeForm
-                onCancel={setshowBillEditForm}
-                bills={bills}
-                setBills={setbills}
-                bill={selectedBill}
-                editing={true}
-              ></BillsChargeForm>
-            )}
-            {selectedBill?.containsBills &&
-              selectedBill.internalBills.map(
-                (internalBill, index) => (
+        </div>
+        <div className="col-6">
+        <div className="form-label_name w-100">
+              <h3>Invoices</h3>
+              <span></span>
+            </div>
+          <div className="col-6 w-100">
+            <div className="company-form__section">
+              <button
+                type="button"
+                className="button-addpiece"
+                onClick={() => setshowBillsCreationForm(!showBillsCreationForm)}
+              >
+                Add Piece
+              </button>
+              {showBillsCreationForm && (
+                <BillsChargeForm
+                  onCancel={setshowBillsCreationForm}
+                  bills={bills}
+                  setBills={setbills}
+                ></BillsChargeForm>
+              )}
+              {showBillEditForm && (
+                <BillsChargeForm
+                  onCancel={setshowBillEditForm}
+                  bills={bills}
+                  setBills={setbills}
+                  bill={selectedBill}
+                  editing={true}
+                ></BillsChargeForm>
+              )}
+              {selectedBill?.containsBills &&
+                selectedBill.internalBills.map((internalBill, index) => (
                   <BillsChargeForm
                     key={index}
-                    onCancel={() => { }}
+                    onCancel={() => {}}
                     bills={selectedBill.internalBills}
                     setBills={updateSelectedBill}
                     bill={internalBill}
                     editing={true}
                   ></BillsChargeForm>
-                )
-              )}
+                ))}
+            </div>
           </div>
         </div>
-        <Table
-          data={bills}
-          columns={[
-            "Status",
-            "Description",
-            "Prepaid",
-            "Quantity",
-            "Price",
-            "Amount",
-            "Tax Code",
-            "Tax Rate",
-            "Tax Amt",
-            "Amt + Tax",
-            // "Currency",
-            "Options",
-          ]}
-          onSelect={handleSelectBill} // Make sure this line is correct
-          onDelete={handleBillDelete}
-          onEdit={() => {
-            setshowBillEditForm(!showBillEditForm);
-          }}
-          onInspect={() => {
-          }}
-          onAdd={() => { }}
-          showOptions={false}
-        />
-
-      </form>
-      {/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
-
-      <form
-
-        className={`tab-pane fade ${activeTab === "event" ? "show active" : ""
-          } company-form__general-form`}
-        id="event"
-        style={{ display: activeTab === "event" ? "block" : "none" }}
-      >
-        event
-      </form>
-      {/* ---------------------------------------------------------------------------- */}
-      {/* <form
-        className={`tab-pane fade ${
-          activeTab === "attachment" ? "show active" : ""
-        } company-form__general-form`}
-        id="attachment"
-        style={{ display: activeTab === "attachment" ? "block" : "none" }}
-      >
-       attachment
-      </form> */}
-      {/* ---------------------------------------------------------------------------- */}
-      {/* <form
-        className={`tab-pane fade ${
-          activeTab === "note" ? "show active" : ""
-        } company-form__general-form`}
-        id="note"
-        style={{ display: activeTab === "note" ? "block" : "none" }}
-      >
-       note
-      </form> */}
-      {/* ---------------------------------------------------------------------------- */}
-      {/* <form
-        className={`tab-pane fade ${
-          activeTab === "internaNote" ? "show active" : ""
-        } company-form__general-form`}
-        id="internaNote"
-        style={{ display: activeTab === "internaNote" ? "block" : "none" }}
-      >
-       internaNote
-      </form> */}
-      {/* ---------------------------------------------------------------------------- */}
+      </div>
+      <Table
+        data={bills}
+        columns={[
+          "Status",
+          "Description",
+          "Prepaid",
+          "Quantity",
+          "Price",
+          "Amount",
+          "Tax Code",
+          "Tax Rate",
+          "Tax Amt",
+          "Amt + Tax",
+          // "Currency",
+          "Options",
+        ]}
+        onSelect={handleSelectBill} // Make sure this line is correct
+        onDelete={handleBillDelete}
+        onEdit={() => {
+          setshowBillEditForm(!showBillEditForm);
+        }}
+        onInspect={() => {}}
+        onAdd={() => {}}
+        showOptions={false}
+      />
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
@@ -494,8 +443,8 @@ const BillsCreationForm = ({
         >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Bill Terms. Please
-            try again
+            Error {creating ? "creating" : "updating"} Bill Terms. Please try
+            again
           </strong>
         </Alert>
       )}

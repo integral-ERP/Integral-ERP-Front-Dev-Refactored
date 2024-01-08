@@ -158,8 +158,14 @@ const Invoices = () => {
               onEdit={handleEditInvoices}
               onAdd={handleAddInvoices}
               title="Invoices"
-            />
-
+            >
+              <InvoicesCreationForm
+                  invoice={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onInvoicesDataChange={handleInvoicesDataChange}
+                />
+            </Table>
             {showSuccessAlert && (
               <Alert
                 severity="success"

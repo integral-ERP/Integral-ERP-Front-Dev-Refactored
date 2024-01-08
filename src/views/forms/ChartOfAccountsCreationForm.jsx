@@ -12,11 +12,9 @@ const ChartOfAccountsCreationForm = ({
   creating,
   onDataChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [ChartOfAccounts, setChartOfAccounts] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  // const [currencies, setcurrencies] = useState([]);
 
   const formFormat = {
     name: "",
@@ -99,7 +97,7 @@ const ChartOfAccountsCreationForm = ({
         );
 
         if (response.data.next) {
-          setNextPageURL(response.data.next);
+          //setNextPageURL(response.data.next);
         }
       })
       .catch((error) => {
@@ -141,9 +139,10 @@ const ChartOfAccountsCreationForm = ({
     <div className="company-form">
       <div className="row w-100">
         <div className="col-12 text-start">
+          <div className="col-6 w-100">
           <div className="creation creation-container w-100">
           <div className="form-label_name"><h3>Definition</h3><span></span></div>
-            <div className="">
+            <div className="col-12">
               <div className="company-form__section">
                 <label htmlFor="typeChart" className="form-label">
                   typeChart:
@@ -209,7 +208,6 @@ const ChartOfAccountsCreationForm = ({
                 <select
                   id="parentAccount"
                   className="form-input"
-                  inputName="parentAccount"
                   onChange={(e) =>
                     setFormData({ ...formData, parentAccount: e.target.value })
                   }
@@ -261,6 +259,8 @@ const ChartOfAccountsCreationForm = ({
               />
             </div>
           </div>
+          </div>
+          
         </div>
       </div>
 

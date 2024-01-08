@@ -8,15 +8,9 @@ import LocationService from "../../services/LocationService";
 import Input from "../shared/components/Input";
 import AsyncSelect from "react-select/async";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext } from "react";
 
-const BillsChargeForm = ({
-  onCancel,
-  bills,
-  setBills,
-  editing,
-  bill,
-}) => {
+const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
   const formFormat = {
     status: "Open",
     description: "",
@@ -27,7 +21,7 @@ const BillsChargeForm = ({
     amount: "",
     quantity: "",
     note: "",
-    resultado:"",
+    resultado: "",
   };
 
   const [formData, setformData] = useState(formFormat);
@@ -37,7 +31,7 @@ const BillsChargeForm = ({
   const [internalID, setinternalID] = useState(0);
 
   // PRUEBA
-  const [typeByCode, setTypeServiceTems] =useState([])
+  const [typeByCode, setTypeServiceTems] = useState([]);
   const [typeByOptions, setptypeByOptions] = useState([]);
   const [types, settype] = useState([]);
 
@@ -49,50 +43,42 @@ const BillsChargeForm = ({
   let tota;
   // --------------------------------------------------------------------------------
   const handleChargeRateChange = (e) => {
-  let unit = 0;
-  const rate = e.target.value;
-  unit = formData.quantity;
-  const total = unit * rate;
+    let unit = 0;
+    const rate = e.target.value;
+    unit = formData.quantity;
+    const total = unit * rate;
 
-  tota = resultado+total;
-  console.log("TOTAL1 =", tota)
-  console.log("TOTAL2 =", resultado)
-  
-  setformData(
-    { ...formData, 
-      totalAmount: rate, 
-      amount: total, 
-      account: tota }
-    );
-  
-};//------------------------------------------------------------------------------------
+    tota = resultado + total;
+    console.log("TOTAL1 =", tota);
+    console.log("TOTAL2 =", resultado);
+
+    setformData({
+      ...formData,
+      totalAmount: rate,
+      amount: total,
+      account: tota,
+    });
+  }; //------------------------------------------------------------------------------------
 
   const addCommodity = () => {
-
-    const suma =parseInt(formData.amount) + parseInt(resultado);
-        setResultado(suma);
-        setformData(
-          { ...formData, suma: formData.suma, }
-          );
-    console.log("SUMA2", suma)
+    const suma = parseInt(formData.amount) + parseInt(resultado);
+    setResultado(suma);
+    setformData({ ...formData, suma: formData.suma });
+    console.log("SUMA2", suma);
 
     const body = {
       id: internalID,
       description: formData.description,
       typeByCode: formData.typeByCode,
-      totalAmount : formData.totalAmount,
+      totalAmount: formData.totalAmount,
       amount: formData.amount,
       quantity: formData.quantity,
       note: formData.note,
       status: formData.status,
       // suma: formData.suma,
-
-      
     };
     if (editing) {
-      const indexToEdit = bills.findIndex(
-        (comm) => comm.id == bill.id
-      );
+      const indexToEdit = bills.findIndex((comm) => comm.id == bill.id);
       const copy = [...bills];
       copy[indexToEdit] = body;
       setBills(copy);
@@ -100,21 +86,21 @@ const BillsChargeForm = ({
       setBills([...bills, body]);
       setinternalID(internalID + 1);
     }
-    console.log("BILLSS= ",bills);
-
+    console.log("BILLSS= ", bills);
   };
 
   useEffect(() => {
-    
-    if(formData.totalAmount && formData.quantity){
-      setformData({...formData,amount: formData.totalAmount*formData.quantity})
-      console.log("PReuba=",formData.totalAmount, formData.quantity)
-      
+    if (formData.totalAmount && formData.quantity) {
+      setformData({
+        ...formData,
+        amount: formData.totalAmount * formData.quantity,
+      });
+      console.log("PReuba=", formData.totalAmount, formData.quantity);
     }
   }, [formData.totalAmount, formData.quantity]);
 
   useEffect(() => {
-    console.log("FORMDATA= ",formData);
+    console.log("FORMDATA= ", formData);
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
@@ -154,10 +140,9 @@ const BillsChargeForm = ({
   }, []);
 
   useEffect(() => {
-    LocationService.getLocations()
-    .then(response => {
+    LocationService.getLocations().then((response) => {
       setlocations(response.data.results);
-    })
+    });
   }, []);
 
   const sendDataType = async () => {
@@ -166,17 +151,10 @@ const BillsChargeForm = ({
     };
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
-      : ChartOfAccountsService.updateChartOfAccounts(
-          invoice.id,
-          rawData
-      )
-      );
-      
+      : ChartOfAccountsService.updateChartOfAccounts(invoice.id, rawData));
+
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Bills successfully created/updated:",
-        response.data
-      );
+      console.log("Bills successfully created/updated:", response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -189,33 +167,33 @@ const BillsChargeForm = ({
       setShowErrorAlert(true);
     }
   };
-  
-  const fetchFormData = async () => {  
-   const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
+
+  const fetchFormData = async () => {
+    const type = (await ItemsAndServicesService.getItemsAndServices()).data
+      .results;
     // Function to add 'type' property to an array of objects
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
-  
+
     // Add 'type' property to each array
     const typeWithType = addTypeToObjects(type, "type");
-  
+
     // Merge the arrays
-   const typeByOptions = [...typeWithType];
-  
-   setptypeByOptions(typeByOptions);
-  
+    const typeByOptions = [...typeWithType];
+
+    setptypeByOptions(typeByOptions);
   };
-  
+
   useEffect(() => {
     fetchFormData();
   }, []);
 
-    //------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
     const code = event.code;
     const result = await ItemsAndServicesService.getItemAndServiceById(id);
-    settype(result.data)
+    settype(result.data);
     setformData({
       ...formData,
       typeById: id,
@@ -223,28 +201,30 @@ const BillsChargeForm = ({
     });
   };
   return (
-    <div className="income-charge-form">
-      <h3>Invoyces Creation Form</h3>
-      {/* ------------------------------------------------------------------ */}
-      <div className="form-row">
-        {/* ------------------------- */}
-        <div className="company-form__section">
-          <label htmlFor="typeByCode" className="form-label">
-          Type:
-          </label>
-          <AsyncSelect
-            id="typeByCode"
-            value={typeByCode.find((option) => option.id === formData.typeByCode)}
-            onChange={(e) => {handleTypeServiceBySelection(e);}}
-            isClearable={true}
-            placeholder="Search and select..."
-            defaultOptions={typeByOptions}
-            getOptionLabel={(option) => option.code}
-            getOptionValue={(option) => option.id}
+    <div className="company-form row income-charge-form">
+      <h3>Invoices Creation Form</h3>
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="company-form__section">
+            <label htmlFor="typeByCode" className="form-label">
+              Type:
+            </label>
+            <AsyncSelect
+              id="typeByCode"
+              value={typeByCode.find(
+                (option) => option.id === formData.typeByCode
+              )}
+              onChange={(e) => {
+                handleTypeServiceBySelection(e);
+              }}
+              isClearable={true}
+              placeholder="Search and select..."
+              defaultOptions={typeByOptions}
+              getOptionLabel={(option) => option.code}
+              getOptionValue={(option) => option.id}
             />
-        </div>
-         {/* --------------------------------------------- */}
-         <div>
+          </div>
+          <div>
             <label htmlFor="description" className="text-comm">
               Description:
             </label>
@@ -253,54 +233,12 @@ const BillsChargeForm = ({
               type="text"
               className="form-input"
               placeholder="Description..."
-              value={formData.description} onChange={(e) =>
+              value={formData.description}
+              onChange={(e) =>
                 setformData({ ...formData, description: e.target.value })
               }
             />
-         </div>
-         {/* ------------------------- */}
-         <div className="company-form__section">
-          <Input
-            type="number"
-            inputName="quantity"
-            placeholder="Quantity"
-            value={formData.quantity}
-            changeHandler={(e) =>
-              setformData({ ...formData, quantity: e.target.value })
-            }
-            label="Quantity"
-          />
-        </div>
-        {/* ------------------------- */}
-        <div className="form-column">
-          <label htmlFor="totalAmount" className="text-comm">
-            Price
-          </label>
-          <input
-            className="form-input"
-            type="number"
-            id="totalAmount"
-            value={formData.totalAmount}
-            onChange={(e) => handleChargeRateChange(e)}
-          />
-        </div>
-        {/* ------------------------- */}
-       <div className="form-column">
-          <label htmlFor="amount" className="text-comm">
-            Amount
-          </label>
-          <input
-            className="form-input"
-            type="number"
-            id="amount"
-            readOnly
-            value={formData.amount}
-            onChange={(e) =>
-              setformData({ ...formData, amount: e.target.value })
-            }
-          />
-        </div>
-        {/* ------------------------ */}
+          </div>
           <div className="company-form__section">
             <Input
               type="text"
@@ -313,7 +251,49 @@ const BillsChargeForm = ({
               label="Note"
             />
           </div>
-        {/* -------------------------------------------------------------- */}
+        </div>
+        <div className="col-6">
+          <div className="company-form__section">
+            <Input
+              type="number"
+              inputName="quantity"
+              placeholder="Quantity"
+              value={formData.quantity}
+              changeHandler={(e) =>
+                setformData({ ...formData, quantity: e.target.value })
+              }
+              label="Quantity"
+            />
+          </div>
+          <div className="form-column">
+            <label htmlFor="totalAmount" className="text-comm">
+              Price
+            </label>
+            <input
+              className="form-input"
+              type="number"
+              id="totalAmount"
+              value={formData.totalAmount}
+              onChange={(e) => handleChargeRateChange(e)}
+            />
+          </div>
+          <div className="form-column">
+            <label htmlFor="amount" className="text-comm">
+              Amount
+            </label>
+            <input
+              className="form-input"
+              type="number"
+              id="amount"
+              readOnly
+              value={formData.amount}
+              onChange={(e) =>
+                setformData({ ...formData, amount: e.target.value })
+              }
+            />
+          </div>
+        </div>
+
         <div className="table-hover charge-buttons">
           <button
             className="button-save pick "
@@ -332,7 +312,6 @@ const BillsChargeForm = ({
           </button>
         </div>
       </div>
-{/* -------------------------------------------------------------------------------------- */}
       {showSuccessAlert && (
         <Alert
           severity="success"
@@ -353,10 +332,7 @@ const BillsChargeForm = ({
           <strong>Error creating Commodity. Please try again</strong>
         </Alert>
       )}
-
-    
     </div>
-    
   );
 };
 

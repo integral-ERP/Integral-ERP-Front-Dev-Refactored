@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,19 +7,16 @@ import ChartOfAccountsCreationForm  from "../forms/ChartOfAccountsCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
-import ReceiptCreationForm from "../forms/ReceiptCreationForm";
-
+import { GlobalContext } from "../../context/global";
 
 const ChartOfAccounts   = () => {
   const [chartofAccounts, setChartOfAccounts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
   const [selectedChartOfAccounts , setSelectedChartOfAccounts] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
 
 
@@ -34,6 +31,7 @@ const ChartOfAccounts   = () => {
 
   ];
 
+  const {hideShowSlider} = useContext(GlobalContext);
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -83,13 +81,6 @@ const ChartOfAccounts   = () => {
       setInitialDataFetched(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (initialDataFetched) {
-      const number = chartofAccounts[chartofAccounts.length - 1]?.number || 0;
-      setcurrentPickupNumber(number + 1);
-    }
-  }, [chartofAccounts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -174,13 +165,6 @@ const ChartOfAccounts   = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
-
-  useEffect(() => {
-    if(createWarehouseReceipt){
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
-      openModalReceiptCreation();
-    }
-  }, [createWarehouseReceipt])
   
 
   const contextMenuOptions = [
@@ -207,7 +191,7 @@ const ChartOfAccounts   = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={chartofAccounts}
               columns={columns}
@@ -221,7 +205,14 @@ const ChartOfAccounts   = () => {
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
+            >
+              <ChartOfAccountsCreationForm
+              carrier={selectedChartOfAccounts}
+              closeModal={closeModal}
+              creating={false}
+              onCarrierDataChange={handleChartOfAccountDataChange}
             />
+            </Table>
 
             {showSuccessAlert && (
               <Alert
