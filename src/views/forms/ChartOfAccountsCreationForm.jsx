@@ -27,9 +27,7 @@ const ChartOfAccountsCreationForm = ({
     typeChart: "",
   };
 
-  const handleCloseForm = () => {
-    window.location.reload();
-  }
+  const handleCloseForm = () => {window.location.reload();}
 
   const [formData, setFormData] = useState({ formFormat });
 
@@ -85,7 +83,7 @@ const ChartOfAccountsCreationForm = ({
         onDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 5000);
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);

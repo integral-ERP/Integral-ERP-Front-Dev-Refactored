@@ -11,7 +11,7 @@ import DepositsService from "../../services/DepositsService";
 
 
 const Deposits = () => {
-  const [deposit, setDeposits] = useState([]);
+  const [deposits, setDeposits] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedDeposits, setSelectedDeposits] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -32,6 +32,8 @@ const Deposits = () => {
         setDeposits(
           [...response.data.results].reverse()
         );
+
+        setDeposits([...response.data.results].reverse());
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -96,7 +98,9 @@ const Deposits = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateDeposit();
+            // updateDeposit();
+            const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
+            setDeposits(newDeposits);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -139,7 +143,7 @@ const Deposits = () => {
           <Sidebar />
           <div className="content-page">
             <Table
-              data={deposit}
+              data={deposits}
               columns={columns}
               onSelect={handleSelectDeposits} // Make sure this line is correct
               selectedRow={selectedDeposits}
@@ -194,7 +198,7 @@ const Deposits = () => {
               </Alert>
             )}
 
-            {/* {selectedDeposits !== null && (
+            {selectedDeposits !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <DepositsCreationForm
                   deposit={selectedDeposits}
@@ -214,7 +218,7 @@ const Deposits = () => {
                   ondepositDataChange={handleDepositsDataChange}
                 />
               </ModalForm>
-            )} */}
+            )}
 
           </div>
         </div>

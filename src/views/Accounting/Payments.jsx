@@ -31,12 +31,20 @@ const Payments = () => {
     "Back Acount",
     "Reconciliation Date",
   ];
+
   const updatePayment = (url = null) => {
     PaymentsService.getPayments(url)
       .then((response) => {
-        setPayments(
-          [...response.data.results].reverse()
-        );
+        const newPaymentsTerms  = response.data.results.filter((PaymentsTerms) => {
+          const PaymentsTermsId  = PaymentsTerms.id;
+          return !payments.some(
+            (existingPaymentsTerms) => existingPaymentsTerms.id === PaymentsTermsId 
+          );
+        });
+
+        setChartOfAccounts([...response.data.results].reverse());
+        console.log("NEW ORDERS", [...payments, ...newPaymentsTerms ]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -46,6 +54,22 @@ const Payments = () => {
         console.error(error);
       });
   };
+  
+  // const updatePayment = (url = null) => {
+  //   PaymentsService.getPayments(url)
+  //     .then((response) => {
+  //       setPayments(
+  //         [...response.data.results].reverse()
+  //       );
+
+  //       if (response.data.next) {
+  //         setNextPageURL(response.data.next);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
   useEffect(() => {
     if (!initialDataFetched) {
@@ -96,12 +120,14 @@ const Payments = () => {
     if (selectedPayments) {
       PaymentsService.deletePayment(selectedPayments.id)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updatePayment();
+            // updatePayment();
+            const newPaymentsTerms = payments.filter((order) => order.id !== selectedPayments.id);
+            setChartOfAccounts(newPaymentsTerms);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {

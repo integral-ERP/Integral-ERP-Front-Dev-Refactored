@@ -12,7 +12,7 @@ import React, { createContext, useContext } from "react";
 
 const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
   const formFormat = {
-    status: "Open",
+    status: 14,
     description: "",
     locationId: "",
     locationCode: "",
@@ -74,7 +74,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
       amount: formData.amount,
       quantity: formData.quantity,
       note: formData.note,
-      status: formData.status,
+      status: formData.status || 14,
       // suma: formData.suma,
     };
     if (editing) {
@@ -131,7 +131,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
         amount: bill.amount,
         quantity: bill.quantity,
         note: bill.note,
-        status: bill.status || "Open",
+        status: bill.status || 14,
         resultado: bill.resultado,
         // suma: bill.suma,
       };

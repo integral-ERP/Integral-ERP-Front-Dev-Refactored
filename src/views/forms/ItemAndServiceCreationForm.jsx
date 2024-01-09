@@ -12,10 +12,10 @@ const ItemAndServiceCreationForm = ({
   itemAndService,
   closeModal,
   creating,
-  onitemAndServiceDataChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("definition");
+  // const [activeTab, setActiveTab] = useState("definition");
   const [currencies, setcurrencies] = useState([]);
+  const [itemsAndServices, setItemsAndServices] = useState([]);
   const [accounst, setaccounts] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -38,11 +38,12 @@ const ItemAndServiceCreationForm = ({
       setFormData({
         code: itemAndService.code || "",
         description: itemAndService.description || "",
-        accountName: itemAndService.accountName || "",
+        accountName: itemAndService.accountName,
         type: itemAndService.type || "",
         amount: itemAndService.amount || "",
         currency: itemAndService.currency || "",
         iataCode: itemAndService.iataCode || "",
+        price: itemAndService.amount,
       });
     }
   }, [creating, itemAndService]);
@@ -60,7 +61,7 @@ const ItemAndServiceCreationForm = ({
     let rawData = {
       code: formData.code,
       description: formData.description,
-      accountName: formData.accountName,
+      accountName: formData.accountName ,
       type: formData.type,
       amount: formData.price,
       currency: formData.currency,
@@ -77,15 +78,15 @@ const ItemAndServiceCreationForm = ({
     if (response.status >= 200 && response.status <= 300) {
       console.log(
         "Item & Service successfully created/updated:",
-        response.data
-      );
+        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onitemAndServiceDataChange();
+        // onitemAndServiceDataChange();
         setShowSuccessAlert(false);
-      }, 5000);
-      window.location.reload();
+        setFormData(formData)
+        window.location.reload();
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -105,6 +106,37 @@ const ItemAndServiceCreationForm = ({
     setItemsAndServicestype(type);
     setFormData({ ...formData, type: type });
   };
+
+  //
+
+  const updateItemsAndServices = (url = null) => {
+    ItemsAndServicesService.getItemsAndServices(url)
+      .then((response) => {
+        const newItemsAndServices= response.data.results.filter(
+          (newItemsAndService) => {
+            return !itemsAndServices.some(
+              (existingPaymentTerm) =>
+                existingPaymentTerm.id === newItemsAndService.id
+            );
+          }
+        );
+
+        setItemsAndServices(
+          [...itemsAndServices, ...newItemsAndServices].reverse()
+        );
+
+        if (response.data.next) {
+          // setNextPageURL(response.data.next);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log("Imprimir = ", itemsAndServices);
+  };
+  useEffect(() => {
+    updateItemsAndServices();
+  }, []);
 
   return (
     <div className="company-form">
@@ -169,6 +201,7 @@ const ItemAndServiceCreationForm = ({
                 onChange={(e) =>
                   setFormData({ ...formData, accountName: e.target.value })
                 }
+                value={formData.accountName}
               >
                 <option value="">Select an Account Name</option>
                 {accounst.map((accountNames) => (

@@ -22,6 +22,8 @@ const PaymentTerms  = () => {
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
 
+  const [isEdit, setIsEdit] = useState(false);
+
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
@@ -128,6 +130,7 @@ const PaymentTerms  = () => {
 
   const handleEditPaymentOfTerms = () => {
     if (selectedPaymentOfTerm) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a PaymentTerms  Order to edit.");
@@ -151,7 +154,9 @@ const PaymentTerms  = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updatePaymentTerms();
+            // updatePaymentTerms();
+            const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
+            setDeposits(newDeposits);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -174,7 +179,7 @@ const PaymentTerms  = () => {
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isPickupOrdersButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow && !isEdit) {
         setSelectedPaymentOfTerm(null);
       }
     };
@@ -187,12 +192,12 @@ const PaymentTerms  = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if(createWarehouseReceipt){
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
-      openModalReceiptCreation();
-    }
-  }, [createWarehouseReceipt])
+  // useEffect(() => {
+  //   if(createWarehouseReceipt){
+  //     console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+  //     openModalReceiptCreation();
+  //   }
+  // }, [createWarehouseReceipt])
   
 
   const contextMenuOptions = [
@@ -258,7 +263,7 @@ const PaymentTerms  = () => {
 
                 <ReceiptCreationForm
                   paymentTerms={selectedPaymentOfTerm}
-                  closeModal={closeModalReceiptCreation}
+                  // closeModal={closeModalReceiptCreation}
                   creating={true}
                   onpaymentTermDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
@@ -290,13 +295,13 @@ const PaymentTerms  = () => {
               </Alert>
             )}
 
-            {/* {selectedPaymentOfTerm !== null && (
+            {selectedPaymentOfTerm !== null && (
               <ModalForm isOpen={isOpen} closeModal={closeModal}>
                 <PaymentTermsCreationForms
                   paymentTerms={selectedPaymentOfTerm}
                   closeModal={closeModal}
                   creating={false}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
                 />
               </ModalForm>
             )}
@@ -307,11 +312,11 @@ const PaymentTerms  = () => {
                   paymentTerms={null}
                   closeModal={closeModal}
                   creating={true}
-                  onpaymentTermDataChange={handlePickupOrdersDataChange}
+                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
                 />
               </ModalForm>
             )}
-
+{/* 
             {selectedPaymentOfTerm !== null && createWarehouseReceipt && (
               <ModalForm isOpen={isOpenReceiptCreation} closeModal={closeModalReceiptCreation}>
                 <ReceiptCreationForm

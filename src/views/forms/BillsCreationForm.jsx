@@ -75,7 +75,7 @@ const BillsCreationForm = ({
         carriVerndorByName: bill.carriVerndorByName,
         carriVerndorById: bill.carriVerndorById,
         billCharges: bill.billCharges,
-        status: bill.status,
+        status: bill.status || 14,
       });
     }
   }, [creating, bill]);
@@ -199,6 +199,7 @@ const BillsCreationForm = ({
     const newBills = bills.filter((com) => com.id != selectedBill.id);
     setbills(newBills);
   };
+
   const updateSelectedBill = (updatedInternalBills) => {
     const updatedBill = { ...selectedBill };
     updatedBill.internalBills = updatedInternalBills;
@@ -391,10 +392,10 @@ const BillsCreationForm = ({
           "Quantity",
           "Price",
           "Amount",
-          "Tax Code",
-          "Tax Rate",
-          "Tax Amt",
-          "Amt + Tax",
+          // "Tax Code",
+          // "Tax Rate",
+          // "Tax Amt",
+          // "Amt + Tax",
           // "Currency",
           "Options",
         ]}
