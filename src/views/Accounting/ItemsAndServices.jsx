@@ -128,6 +128,10 @@ const ItemsAndServices = () => {
     };
   }, []);
 
+  const handleClose = () => {
+    window.location.reload();
+  }
+
   return (
     <>
       <div className="dashboard__sidebar">
@@ -147,7 +151,7 @@ const ItemsAndServices = () => {
               {selectedeItemAndService === null && (
                 <ItemAndServiceCreationForm
                 itemAndService={null}
-                  closeModal={closeModal}
+                  closeModal={handleClose}
                   creating={true}
                   onitemAndServiceDataChange={handleItemAndServiceDataChange}
                 />
@@ -156,7 +160,7 @@ const ItemsAndServices = () => {
               {selectedeItemAndService !== null && (
                 <ItemAndServiceCreationForm
                 itemAndService={selectedeItemAndService}
-                  closeModal={closeModal}
+                  closeModal={handleClose}
                   creating={false}
                   onitemAndServiceDataChange={handleItemAndServiceDataChange}
                 />
@@ -183,28 +187,6 @@ const ItemsAndServices = () => {
                   Error deleting Item and Service. Please try again
                 </strong>
               </Alert>
-            )}
-
-            {selectedeItemAndService !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={selectedeItemAndService}
-                  closeModal={closeModal}
-                  creating={false}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedeItemAndService === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
-                />
-              </ModalForm>
             )}
           </div>
         </div>

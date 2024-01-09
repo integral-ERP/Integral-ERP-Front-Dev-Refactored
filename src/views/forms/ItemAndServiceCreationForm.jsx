@@ -85,6 +85,7 @@ const ItemAndServiceCreationForm = ({
         onitemAndServiceDataChange();
         setShowSuccessAlert(false);
       }, 5000);
+      window.location.reload();
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -165,7 +166,6 @@ const ItemAndServiceCreationForm = ({
               <select
                 id="accountName"
                 className="form-input"
-                inputName="accountName"
                 onChange={(e) =>
                   setFormData({ ...formData, accountName: e.target.value })
                 }
@@ -175,9 +175,9 @@ const ItemAndServiceCreationForm = ({
                   <option
                     key={accountNames.id}
                     value={accountNames.id}
-                    data-key={accountNames.type}
+                    data-key={accountNames.typeChart}
                   >
-                    {accountNames.name + " || " + accountNames.type}
+                    {accountNames.name + " || " + accountNames.typeChart}
                   </option>
                 ))}
               </select>

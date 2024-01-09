@@ -321,7 +321,7 @@ const BillsCreationForm = ({
 
               <div className="company-form__section">
                 <label htmlFor="paymentTem" className="form-label">
-                  Payment Tems:
+                  Payment Terms:
                 </label>
                 <AsyncSelect
                   id="paymentTem"

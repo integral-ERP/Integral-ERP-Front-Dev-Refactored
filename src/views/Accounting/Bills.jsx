@@ -36,9 +36,9 @@ const Bills = () => {
   const columns = [
     "Status",
     "Number",
-    "Payment Temse",
+    "Payment Terms",
     "Type",
-    "Applyed to",
+    "Applied to",
     "Transaction Date",
     "Due Date",
     "Employee",
@@ -223,6 +223,10 @@ const Bills = () => {
     // },
   ];
 
+  const handleClose = () => {
+    window.location.reload();
+  }
+
   return (
     <>
       <div className="dashboard__sidebar">
@@ -247,7 +251,7 @@ const Bills = () => {
               {selectedBills === null && (
                 <BillsCreationForm
                   bill={null}
-                  closeModal={closeModal}
+                  closeModal={handleClose}
                   creating={true}
                   onbillDataChange={handleBillsDataChange}
                 />
@@ -256,7 +260,7 @@ const Bills = () => {
               {selectedBills !== null && (
                 <BillsCreationForm
                   bill={selectedBills}
-                  closeModal={closeModal}
+                  closeModal={handleClose}
                   creating={false}
                   onbillDataChange={handleBillsDataChange}
                 />

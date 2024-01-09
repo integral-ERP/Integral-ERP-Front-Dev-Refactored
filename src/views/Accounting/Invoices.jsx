@@ -17,7 +17,6 @@ const Invoices = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
-    'Status',
     "Number",
     "Account Type",
     // "type Chart",
@@ -198,28 +197,6 @@ const Invoices = () => {
                   Error deleting Invoices. Please try again
                 </strong>
               </Alert>
-            )}
-
-            {selectedInvoices !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={selectedInvoices}
-                  closeModal={closeModal}
-                  creating={false}
-                  onInvoicesDataChange={handleInvoicesDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedInvoices === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onInvoicesDataChange={handleInvoicesDataChange}
-                />
-              </ModalForm>
             )}
           </div>
         </div>
