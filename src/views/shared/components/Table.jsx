@@ -14,6 +14,7 @@ import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from 'xlsx';
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
+import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
@@ -375,6 +376,17 @@ const Table = ({
       });
   };
 
+  const generateBillPDF = () => {
+    GenerateBillPDF(selectedRow)
+      .then((pdfUrl) => {
+        // Now you have the PDF URL, you can use it as needed
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
+
   const handleColumnVisibilityChange = (columnName) => {
     setVisibleColumns((prevVisibility) => ({
       ...prevVisibility,
@@ -638,6 +650,10 @@ const Table = ({
                             </button>
                           ) : columnName === "Invoice PDF" ? (
                             <button type="button" onClick={generatePDFInvoice}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "Bill PDF" ? (
+                            <button type="button" onClick={generateBillPDF}>
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (

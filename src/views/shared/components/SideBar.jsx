@@ -236,9 +236,9 @@ const Sidebar = () => {
               <li>
                 <Link to={"/accounting/bills"}>Bills</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to={"/accounting/collections"}>Collections</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to={"/accounting/deposits"}>Deposits</Link>
               </li>

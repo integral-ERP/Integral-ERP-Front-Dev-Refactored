@@ -240,7 +240,7 @@ const InvoicesCreationForm = ({
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onInvoicesDataChange();
+        // onInvoicesDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
       }, 5000);

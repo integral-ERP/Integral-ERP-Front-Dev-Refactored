@@ -4,19 +4,18 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import PaymentTermsService from "../../services/PaymentTermsService";
-import CurrencyService from "../../services/CurrencyService";
+// import CurrencyService from "../../services/CurrencyService";
 
 const PaymentTermsCreationForms = ({
   paymentTerms,
   closeModal,
   creating,
-  onpaymentTermDataChange,
+  // onpaymentTermDataChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [PaymentTerms, setPaymentTerms] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [currencies, setcurrencies] = useState([]);
+  // const [currencies, setcurrencies] = useState([]);
 
   const formFormat = {
     description: "",
@@ -28,9 +27,7 @@ const PaymentTermsCreationForms = ({
 
   const [formData, setFormData] = useState({ formFormat });
 
-  useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Payment Terms=", paymentTerms);
+  useEffect(() => {;
     if (!creating && paymentTerms) {
       console.log("Editing Payment Terms...", paymentTerms);
       setFormData({
@@ -42,6 +39,15 @@ const PaymentTermsCreationForms = ({
       });
     }
   }, [creating, paymentTerms]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const currenciesData = await CurrencyService.getCurrencies();
+  //     setcurrencies(currenciesData.data);
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   // -------------------------------------------------------------
 
@@ -70,11 +76,11 @@ const PaymentTermsCreationForms = ({
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onpaymentTermDataChange();
+        // onpaymentTermDataChange();
         setShowSuccessAlert(false);
-        // setFormData(formFormat)
+        setFormData(formFormat)
         window.location.reload();
-      }, 5000);
+      }, 2000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -98,7 +104,7 @@ const PaymentTermsCreationForms = ({
         );
 
         if (response.data.next) {
-          setNextPageURL(response.data.next);
+          // setNextPageURL(response.data.next);
         }
       })
       .catch((error) => {

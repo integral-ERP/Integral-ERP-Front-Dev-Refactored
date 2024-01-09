@@ -13,7 +13,7 @@ import BillsPayForm from "../forms/BillsPayForm";
 
 
 const Bills = () => {
-  const [bill, setBills] = useState([]);
+  const [bills, setBills] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedBills, setSelectedBills] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -34,7 +34,7 @@ const Bills = () => {
   ] = useModal(false);
 
   const columns = [
-    "Status",
+    // "Status",
     "Number",
     "Payment Terms",
     "Type",
@@ -61,9 +61,16 @@ const Bills = () => {
   const updateBill = (url = null) => {
     BillsService.getBills(url)
       .then((response) => {
-        setBills(
-          [...response.data.results].reverse()
-        );
+        const newBill = response.data.results.filter((bill) => {
+          const BillId  = bill.id;
+          return !bills.some(
+            (existingPickupOrder) => existingPickupOrder.id === BillId 
+          );
+        });
+
+        setBills([...response.data.results].reverse());
+        console.log("NEW ORDERS", [...bills, ...newBill ]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -73,7 +80,7 @@ const Bills = () => {
         console.error(error);
       });
   };
-
+  
   useEffect(() => {
     if (!initialDataFetched) {
       updateBill();
@@ -123,12 +130,14 @@ const Bills = () => {
     if (selectedBills) {
       BillsService.deleteBill(selectedBills.id)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateBill();
+            // updateBill();
+            const newBill = bills.filter((order) => order.id !== selectedBills.id);
+            setBills(newBill);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -234,7 +243,7 @@ const Bills = () => {
           <Sidebar />
           <div className="content-page">
             <Table
-              data={bill}
+              data={bills}
               columns={columns}
               onSelect={handleSelectBills} // Make sure this line is correct
               selectedRow={selectedBills}

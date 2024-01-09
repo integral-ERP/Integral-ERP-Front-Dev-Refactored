@@ -39,9 +39,16 @@ const Invoices = () => {
   const updateInvoices = (url = null) => {
     InvoicesService.getInvoices(url)
       .then((response) => {
-        setInvoices(
-          [...response.data.results].reverse()
-        );
+        const newInvoices  = response.data.results.filter((invoice) => {
+          const InvoiceId  = invoice.id;
+          return !invoices.some(
+            (existingPickupOrder) => existingPickupOrder.id === InvoiceId 
+          );
+        });
+
+        setInvoices([...response.data.results].reverse());
+        console.log("NEW ORDERS", [...invoices, ...newInvoices ]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -101,12 +108,14 @@ const Invoices = () => {
     if (selectedInvoices) {
       InvoicesService.deleteInvoice(selectedInvoices.id)
         .then((response) => {
-          if (response.status == 200) {
+          if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            updateInvoices();
+            // updateInvoices();
+            const newInvoices = invoices.filter((order) => order.id !== selectedInvoices.id);
+            setInvoices(newInvoices);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -197,6 +206,28 @@ const Invoices = () => {
                   Error deleting Invoices. Please try again
                 </strong>
               </Alert>
+            )}
+
+            {selectedInvoices !== null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <InvoicesCreationForm
+                  invoice={selectedInvoices}
+                  closeModal={closeModal}
+                  creating={false}
+                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
+                />
+              </ModalForm>
+            )}
+
+            {selectedInvoices === null && (
+              <ModalForm isOpen={isOpen} closeModal={closeModal}>
+                <InvoicesCreationForm
+                  invoice={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
+                />
+              </ModalForm>
             )}
           </div>
         </div>
