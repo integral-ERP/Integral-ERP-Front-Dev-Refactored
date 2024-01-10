@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -7,6 +7,7 @@ import ItemAndServiceCreationForm from "../forms/ItemAndServiceCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import Sidebar from "../shared/components/SideBar";
+import { GlobalContext } from "../../context/global";
 
 const ItemsAndServices = () => {
   const [itemsAndServices, setItemsAndServices] = useState([]);
@@ -132,12 +133,14 @@ const ItemsAndServices = () => {
     window.location.reload();
   }
 
+  const {hideShowSlider} = useContext(GlobalContext);
+
   return (
     <>
       <div className="dashboard__sidebar">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={itemsAndServices}
               columns={columns}

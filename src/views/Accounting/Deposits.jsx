@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -8,6 +8,7 @@ from "../../hooks/useModal"; // Import the useModal hook
  //----------------------------------------------------
 import DepositsCreationForm from "../forms/DepositsCreationForm";
 import DepositsService from "../../services/DepositsService";
+import { GlobalContext } from "../../context/global";
 
 
 const Deposits = () => {
@@ -18,6 +19,7 @@ const Deposits = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const {hideShowSlider} = useContext(GlobalContext);
   const columns = [
     "Date",
     "Employee",
@@ -141,7 +143,7 @@ const Deposits = () => {
       <div className="dashboard__sidebar">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
               data={deposits}
               columns={columns}

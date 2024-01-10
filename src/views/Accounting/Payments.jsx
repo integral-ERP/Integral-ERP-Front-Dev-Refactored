@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";import Sidebar
- from "../shared/components/SideBar";import { useModal } 
- from "../../hooks/useModal"; // Import the useModal hook
- //----------------------------------------------------
+import ModalForm from "../shared/components/ModalForm";
+import Sidebar from "../shared/components/SideBar";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import { GlobalContext } from "../../context/global";
 import PaymentsCreationForm from "../forms/PaymentsCreationForm";
 import PaymentsService from "../../services/PaymentsService";
-
 
 const Payments = () => {
   const [payments, setPayments] = useState([]);
@@ -18,6 +17,7 @@ const Payments = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const { hideShowSlider } = useContext(GlobalContext);
   const columns = [
     "Number",
     "Entipy",
@@ -35,16 +35,18 @@ const Payments = () => {
   const updatePayment = (url = null) => {
     PaymentsService.getPayments(url)
       .then((response) => {
-        const newPaymentsTerms  = response.data.results.filter((PaymentsTerms) => {
-          const PaymentsTermsId  = PaymentsTerms.id;
-          return !payments.some(
-            (existingPaymentsTerms) => existingPaymentsTerms.id === PaymentsTermsId 
-          );
-        });
+        const newPaymentsTerms = response.data.results.filter(
+          (PaymentsTerms) => {
+            const PaymentsTermsId = PaymentsTerms.id;
+            return !payments.some(
+              (existingPaymentsTerms) =>
+                existingPaymentsTerms.id === PaymentsTermsId
+            );
+          }
+        );
 
         setChartOfAccounts([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...payments, ...newPaymentsTerms ]);
-        
+        console.log("NEW ORDERS", [...payments, ...newPaymentsTerms]);
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -54,7 +56,7 @@ const Payments = () => {
         console.error(error);
       });
   };
-  
+
   // const updatePayment = (url = null) => {
   //   PaymentsService.getPayments(url)
   //     .then((response) => {
@@ -126,7 +128,9 @@ const Payments = () => {
               setShowSuccessAlert(false);
             }, 3000);
             // updatePayment();
-            const newPaymentsTerms = payments.filter((order) => order.id !== selectedPayments.id);
+            const newPaymentsTerms = payments.filter(
+              (order) => order.id !== selectedPayments.id
+            );
             setChartOfAccounts(newPaymentsTerms);
           } else {
             setShowErrorAlert(true);
@@ -168,7 +172,14 @@ const Payments = () => {
       <div className="dashboard__sidebar">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={payments}
               columns={columns}
@@ -179,28 +190,24 @@ const Payments = () => {
               onAdd={handleAddPayments}
               title="Payments"
             >
-               {selectedPayments !== null && (
-           
+              {selectedPayments !== null && (
                 <PaymentsCreationForm
                   payments={selectedPayments}
                   closeModal={closeModal}
                   creating={false}
                   onpaymentDataChange={handlePaymentsDataChange}
                 />
-            
-            )}
+              )}
 
-            {selectedPayments === null && (
-            
+              {selectedPayments === null && (
                 <PaymentsCreationForm
                   payments={null}
                   closeModal={closeModal}
                   creating={true}
                   onpaymentDataChange={handlePaymentsDataChange}
                 />
-            
-            )}
-              </Table>
+              )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -219,9 +226,7 @@ const Payments = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>
-                  Error deleting Payments. Please try again
-                </strong>
+                <strong>Error deleting Payments. Please try again</strong>
               </Alert>
             )}
 

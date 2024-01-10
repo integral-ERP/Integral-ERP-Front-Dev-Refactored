@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";import Sidebar
- from "../shared/components/SideBar";import { useModal } 
- from "../../hooks/useModal"; // Import the useModal hook
- //----------------------------------------------------
+import ModalForm from "../shared/components/ModalForm";
+import Sidebar from "../shared/components/SideBar";
+import { useModal } from "../../hooks/useModal";
+import { GlobalContext } from "../../context/global";
+
 import BillsCreationForm from "../forms/BillsCreationForm";
 import BillsService from "../../services/BillsService";
 
 import BillsPayForm from "../forms/BillsPayForm";
-
 
 const Bills = () => {
   const [bills, setBills] = useState([]);
@@ -24,8 +24,9 @@ const Bills = () => {
     x: 0,
     y: 0,
   });
+  const {hideShowSlider} = useContext(GlobalContext);
   const [showContextMenu, setShowContextMenu] = useState(false);
-  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);/////////
+  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false); /////////
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
   const [
     isOpenReceiptCreation,
@@ -62,15 +63,14 @@ const Bills = () => {
     BillsService.getBills(url)
       .then((response) => {
         const newBill = response.data.results.filter((bill) => {
-          const BillId  = bill.id;
+          const BillId = bill.id;
           return !bills.some(
-            (existingPickupOrder) => existingPickupOrder.id === BillId 
+            (existingPickupOrder) => existingPickupOrder.id === BillId
           );
         });
 
         setBills([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...bills, ...newBill ]);
-        
+        console.log("NEW ORDERS", [...bills, ...newBill]);
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -80,7 +80,7 @@ const Bills = () => {
         console.error(error);
       });
   };
-  
+
   useEffect(() => {
     if (!initialDataFetched) {
       updateBill();
@@ -136,7 +136,9 @@ const Bills = () => {
               setShowSuccessAlert(false);
             }, 3000);
             // updateBill();
-            const newBill = bills.filter((order) => order.id !== selectedBills.id);
+            const newBill = bills.filter(
+              (order) => order.id !== selectedBills.id
+            );
             setBills(newBill);
           } else {
             setShowErrorAlert(true);
@@ -170,7 +172,7 @@ const Bills = () => {
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
-  }, [showContextMenu]); 
+  }, [showContextMenu]);
 
   useEffect(() => {
     const handleWindowClick = (event) => {
@@ -200,7 +202,7 @@ const Bills = () => {
     }
   };
 
-//-------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------
   useEffect(() => {
     if (createWarehouseReceipt) {
       console.log("OPENING UP NEW MODAL FOR RECEIPTS");
@@ -234,14 +236,21 @@ const Bills = () => {
 
   const handleClose = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <>
       <div className="dashboard__sidebar">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page">
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={bills}
               columns={columns}
@@ -293,9 +302,7 @@ const Bills = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>
-                  Error deleting Bills. Please try again
-                </strong>
+                <strong>Error deleting Bills. Please try again</strong>
               </Alert>
             )}
 
