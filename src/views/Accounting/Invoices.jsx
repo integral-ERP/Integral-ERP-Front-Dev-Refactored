@@ -211,27 +211,6 @@ const Invoices = () => {
               </Alert>
             )}
 
-            {selectedInvoices !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={selectedInvoices}
-                  closeModal={closeModal}
-                  creating={false}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedInvoices === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <InvoicesCreationForm
-                  invoice={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
-                />
-              </ModalForm>
-            )}
           </div>
         </div>
       </div>

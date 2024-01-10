@@ -194,27 +194,7 @@ const ItemsAndServices = () => {
             )}
 
             
-            {selectedeItemAndService !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={selectedeItemAndService}
-                  closeModal={closeModal}
-                  creating={false}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedeItemAndService === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ItemAndServiceCreationForm
-                  itemAndService={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
-                />
-              </ModalForm>
-            )}
+            
           </div>
         </div>
       </div>

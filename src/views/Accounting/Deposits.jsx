@@ -201,27 +201,7 @@ const Deposits = () => {
               </Alert>
             )}
 
-            {selectedDeposits !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <DepositsCreationForm
-                  deposit={selectedDeposits}
-                  closeModal={closeModal}
-                  creating={false}
-                  ondepositDataChange={handleDepositsDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedDeposits === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <DepositsCreationForm
-                  deposit={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  ondepositDataChange={handleDepositsDataChange}
-                />
-              </ModalForm>
-            )}
+         
 
           </div>
         </div>

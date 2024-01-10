@@ -231,27 +231,6 @@ const Payments = () => {
               </Alert>
             )}
 
-            {selectedPayments !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PaymentsCreationForm
-                  payments={selectedPayments}
-                  closeModal={closeModal}
-                  creating={false}
-                  onpaymentDataChange={handlePaymentsDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedPayments === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PaymentsCreationForm
-                  payments={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onpaymentDataChange={handlePaymentsDataChange}
-                />
-              </ModalForm>
-            )}
           </div>
         </div>
       </div>
