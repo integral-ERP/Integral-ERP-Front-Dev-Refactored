@@ -307,44 +307,6 @@ const Bills = () => {
               </Alert>
             )}
 
-            {selectedBills !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <BillsCreationForm
-                  bill={selectedBills}
-                  closeModal={closeModal}
-                  creating={false}
-                  onbillDataChange={handleBillsDataChange}
-                />
-              </ModalForm>
-            )}
-
-            {selectedBills === null && createWarehouseReceipt && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <BillsCreationForm
-                  bill={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onbillDataChange={handleBillsDataChange}
-                />
-              </ModalForm>
-            )}
-            {/* //---------------------------------------------------------- */}
-            {selectedBills !== null && createWarehouseReceipt && (
-              <ModalForm
-                isOpen={isOpenReceiptCreation}
-                closeModal={closeModalReceiptCreation}
-              >
-                <BillsPayForm
-                  pickupOrder={selectedBills}
-                  closeModal={closeModalReceiptCreation}
-                  creating={true}
-                  onpickupOrderDataChange={handleBillsDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                  fromPickUp={true}
-                />
-              </ModalForm>
-            )}
           </div>
         </div>
       </div>
