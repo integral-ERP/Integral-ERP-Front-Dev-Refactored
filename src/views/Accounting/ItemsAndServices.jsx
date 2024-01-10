@@ -149,6 +149,7 @@ const ItemsAndServices = () => {
               onDelete={handleDeleteItemAndService}
               onEdit={handleEditItemAndService}
               onAdd={handleAddItemAndService}
+              importEnabled={false}
               title="Items & Services"
             >
               {selectedeItemAndService === null && (

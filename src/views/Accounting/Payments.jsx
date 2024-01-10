@@ -188,6 +188,7 @@ const Payments = () => {
               onDelete={handleDeletePayments}
               onEdit={handleEditPayments}
               onAdd={handleAddPayments}
+              importEnabled={false}
               title="Payments"
             >
               {selectedPayments !== null && (

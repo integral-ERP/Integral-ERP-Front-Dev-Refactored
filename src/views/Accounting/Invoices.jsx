@@ -167,6 +167,7 @@ const Invoices = () => {
               onDelete={handleDeleteInvoices}
               onEdit={handleEditInvoices}
               onAdd={handleAddInvoices}
+              importEnabled={false}
               title="Invoices"
             >
               {selectedInvoices === null && (

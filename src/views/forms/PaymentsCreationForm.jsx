@@ -355,19 +355,6 @@ const PaymentsCreationForm = ({
           onAdd={() => { }}
           showOptions={false}
         />
-     
-
-
-      <div className="company-form__section">
-        <Input
-          type="text"
-          inputName="number"
-          placeholder="Number"
-          value={total}
-          label="Check Number"
-        />
-      </div>
-
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

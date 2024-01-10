@@ -264,6 +264,7 @@ const Bills = () => {
               handleContextMenu={handleContextMenu}
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
+              importEnabled={false}
               title="Bills"
             >
               {selectedBills === null && (
