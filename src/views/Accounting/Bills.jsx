@@ -28,6 +28,7 @@ const Bills = () => {
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false); /////////
   const [currentPickupNumber, setcurrentPickupNumber] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [
     isOpenReceiptCreation,
     openModalReceiptCreation,
@@ -116,6 +117,7 @@ const Bills = () => {
 
   const handleEditBills = () => {
     if (selectedBills) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Bills to edit.");
@@ -178,10 +180,10 @@ const Bills = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isBillsButton = clickedElement.classList.contains("ne");
+      const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isBillsButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
+        
         setSelectedBills(null);
       }
     };
@@ -192,7 +194,7 @@ const Bills = () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   const handlePayBills = () => {
     if (selectedBills) {
