@@ -165,6 +165,11 @@ const Table = ({
     "Piece Quantity": "commodityAmount",
     "Consignee Name": "consigneeObj.data.obj.name",
     "Shipper Name": "shipperObj.data.obj.name",
+    " Date": "created_at",
+    "Client": "clientObj.name",
+    "Store": "store",
+    "Transport Company": "courier",
+    "Packages": "packages.length",
       //---------------------Cristian
       "Account": "accountNumber",
       "Due Days" : "dueDays",
@@ -679,6 +684,10 @@ const Table = ({
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>
+                          ) : columnName === "Delete" ? (
+                            <button type="button" onClick={onDelete}>
+                                <i className="fas fa-trash"></i>
+                              </button>
                           ) : typeof columnNameToProperty[columnName] ===
                             "boolean" ? (
                             row[columnNameToProperty[columnName]] ? (
