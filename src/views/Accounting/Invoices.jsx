@@ -18,6 +18,7 @@ const Invoices = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const {hideShowSlider} = useContext(GlobalContext);
+  const [isEdit, setIsEdit] = useState(false);
   const columns = [
     "Number",
     "Account Type",
@@ -96,11 +97,18 @@ const Invoices = () => {
 
   const handleEditInvoices = () => {
     if (selectedInvoices) {
+      console.log("EDITING INVOICES");
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Invoice to edit.");
     }
   };
+
+  useEffect(() => {
+    console.log("editing?", isEdit);
+  }, [isEdit])
+  
 
   const handleAddInvoices = () => {
     openModal();
@@ -137,10 +145,10 @@ const Invoices = () => {
     const handleWindowClick = (event) => {
       // Check if the click is inside the table or not
       const clickedElement = event.target;
-      const isInvoicesButton = clickedElement.classList.contains("ne");
+      const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isInvoicesButton && !isTableRow) {
+      if (!isPickupOrdersButton && !isTableRow && !isEdit) {
+        
         setSelectedInvoices(null);
       }
     };
@@ -151,7 +159,7 @@ const Invoices = () => {
       // Clean up the event listener when the component unmounts
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   return (
     <>

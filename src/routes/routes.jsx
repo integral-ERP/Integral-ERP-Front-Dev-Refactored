@@ -27,6 +27,7 @@ import Deposits from "../views/Accounting/Deposits";
 import Repacking from "../views/Warehouse/Repacking";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AuthProvider } from "../hooks/useAuth";
+import PreAlerts from "../views/Warehouse/PreAlerts";
 export const RoutesConfiguration = () => {
   return (
     <Router>
@@ -166,6 +167,14 @@ export const RoutesConfiguration = () => {
             element={
               <ProtectedRoute>
                 <Repacking />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/warehouse/prealerts"
+            element={
+              <ProtectedRoute>
+                <PreAlerts />
               </ProtectedRoute>
             }
           />
