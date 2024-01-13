@@ -84,7 +84,7 @@ const CommodityCreationForm = ({
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
-      );
+      ).toFixed(2);
   
       setformData(prevFormData => ({
         ...prevFormData,
