@@ -11,6 +11,7 @@ const CommodityCreationForm = ({
   setCommodities, setShowCommoditiesCreationForm,
   editing,
   commodity,
+  locationEnabled,
 }) => {
   const formFormat = {
     id: "",
@@ -214,13 +215,14 @@ const CommodityCreationForm = ({
           }
           style={{ width: "100%" }}
         />
-
+        {locationEnabled && (<>
         <label htmlFor="location" className="text-comm" style={{marginTop: "10px"}}>Location:</label>
         <select name="location" id="location" onChange={(e) => {setformData({...formData, locationId: e.target.value, locationCode: e.target.options[e.target.selectedIndex].getAttribute("data-key")})}}>
           <option value="">Select an option</option>
           {locations.map(location => {
             return (<option key={location.id} value={location.id} data-key={location.code}>{location.code}</option>)})}
         </select>
+        </>)}
         <div className="table-hover charge-buttons">
           <button
             className="button-save pick "

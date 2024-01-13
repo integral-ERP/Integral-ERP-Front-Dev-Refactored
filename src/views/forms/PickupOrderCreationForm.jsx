@@ -1434,6 +1434,7 @@ const PickupOrderCreationForm = ({
             commodities={commodities}
             setCommodities={setcommodities}
             setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+            locationEnabled={false}
           ></CommodityCreationForm>
 
 
@@ -1481,6 +1482,7 @@ const PickupOrderCreationForm = ({
               setCommodities={setcommodities}
               commodity={selectedCommodity}
               editing={true}
+              locationEnabled={false}
             ></CommodityCreationForm>
           )}
           {showCommodityEditForm &&
@@ -1494,6 +1496,7 @@ const PickupOrderCreationForm = ({
                   setCommodities={updateSelectedCommodity}
                   commodity={internalCommodity}
                   editing={true}
+                  locationEnabled={false}
                 ></CommodityCreationForm>
               )
             )}
