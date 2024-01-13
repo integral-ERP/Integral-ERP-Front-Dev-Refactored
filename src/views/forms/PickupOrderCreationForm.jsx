@@ -136,6 +136,7 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
+    console.log(result);
     const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
       } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
       }`;
@@ -1224,7 +1225,7 @@ const PickupOrderCreationForm = ({
                   inputName="pickupinfo"
                   placeholder="Pick-up Location..."
                   readonly={true}
-                  value={formData.pickupLocationInfo}
+                  value={formData.pickupInfo}
                 />
               </div>
             </div>
