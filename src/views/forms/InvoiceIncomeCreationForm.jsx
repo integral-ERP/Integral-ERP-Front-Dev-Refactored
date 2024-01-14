@@ -166,7 +166,7 @@ const InvoiceIncomeCreationForm = ({
         onInvoicesDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 5000);
+      }, 1000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
