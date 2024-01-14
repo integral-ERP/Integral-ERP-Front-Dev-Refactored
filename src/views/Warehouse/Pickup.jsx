@@ -50,6 +50,7 @@ const Pickup = () => {
     "Delivery Name",
     "Delivery Address",
     "Pieces",
+    "Weight",
     "Carrier Name",
     "Carrier Address",
     "PRO Number",
@@ -100,7 +101,6 @@ const Pickup = () => {
         });
 
         setpickupOrders([...pickupOrders, ...newPickupOrders].reverse());
-        console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -173,7 +173,6 @@ const Pickup = () => {
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-      console.log('Si selecciono');
       PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
@@ -228,13 +227,11 @@ const Pickup = () => {
 
   useEffect(() => {
     if (createWarehouseReceipt) {
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
       openModalReceiptCreation();
     }
   }, [createWarehouseReceipt]);
 
   const seteWarehouse = () => {
-    console.log('Entre en esta funcion')
     if(selectedPickupOrder){
       setCreateWarehouseReceipt(true)
     } else {
@@ -243,34 +240,26 @@ const Pickup = () => {
   }
 
   const setInTransit = async () => {
-    console.log("Changing");
     if(selectedPickupOrder){
       const updatedPickuporder = {...selectedPickupOrder, status: 6};
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
-      console.log(response);
     }else{
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
-    console.log("Changing");
     if(selectedPickupOrder){
       const updatedPickuporder = {...selectedPickupOrder, status: 9};
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
-      console.log(response);
     }else{
       alert("Please select a pickup order to continue.");
     }

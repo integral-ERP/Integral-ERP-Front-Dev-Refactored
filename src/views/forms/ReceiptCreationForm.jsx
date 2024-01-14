@@ -47,6 +47,7 @@ const ReceiptCreationForm = ({
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
+  const [weightUpdated, setWeightUpdated] = useState(0);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
   const [commodities, setcommodities] = useState([]);
@@ -775,6 +776,15 @@ const ReceiptCreationForm = ({
 
 
   const sendData = async () => {
+    if(commodities.length > 0){
+      let totalWeight = 0;
+      commodities.forEach((com) => {
+        totalWeight += parseFloat(com.weight);
+      })
+      console.log("new weight", totalWeight);
+      //setFormData({...formData, weight: totalWeight});
+      setWeightUpdated(totalWeight);
+    }
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -843,6 +853,14 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
+
+    if(commodities.length > 0){
+      let weight = 0;
+      commodities.forEach((com) => {
+            weight += com.weight;
+      })
+      setFormData({...formData, weight: weight});
+    }
   };
 
   const checkUpdatesComplete = () => {
@@ -850,7 +868,8 @@ const ReceiptCreationForm = ({
     if (
       shipperRequest !== null &&
       consigneeRequest !== null &&
-      clientToBillRequest !== null
+      clientToBillRequest !== null &&
+      weightUpdated
     ) {
       setAllStateUpdatesComplete(true);
     }

@@ -43,6 +43,7 @@ const ReleaseOrderCreationForm = ({
   const [selectedReceipts, setSelectedReceipts] = useState([]);
   const [selectedCommodities, setSelectedCommodities] = useState([]);
   const [warehouseReceipts, setWarehouseReceipts] = useState([]);
+  const [weightUpdated, setWeightUpdated] = useState(0);
   const formFormat = {
     status: 14,
     number: pickupNumber,
@@ -442,10 +443,20 @@ const ReleaseOrderCreationForm = ({
       "type",
       formData.clientToBillType
     );
+
+    if(commodities.length > 0){
+      let totalWeight = 0;
+      commodities.forEach((com) => {
+        totalWeight += parseFloat(com.weight);
+      })
+      console.log("new weight", totalWeight);
+      //setFormData({...formData, weight: totalWeight});
+      setWeightUpdated(totalWeight);
+    }
   };
 
   const checkUpdatesComplete = () => {
-    if (releasedTo !== null && clientToBill !== null) {
+    if (releasedTo !== null && clientToBill !== null && weightUpdated) {
       setAllStateUpdatesComplete(true);
     }
   };

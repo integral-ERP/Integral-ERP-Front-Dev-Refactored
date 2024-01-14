@@ -12,7 +12,7 @@ import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
 import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
@@ -39,7 +39,7 @@ const Table = ({
   contextService,
   children,
   importEnabled,
-  createWarehouseReceipt
+  createWarehouseReceipt,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -54,7 +54,6 @@ const Table = ({
   const [showPage, setShowPage] = useState("initial");
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [isOpen, openModal, closeModal] = useModal(false);
-  console.log("RECEIVED DATA", data);
   const navigate = useNavigate();
   const currentDate = new Date();
   const startOfWeek = new Date(
@@ -76,18 +75,17 @@ const Table = ({
   });
 
   useEffect(() => {
-    if(createWarehouseReceipt){
-      setShowPage('nothing');
+    if (createWarehouseReceipt) {
+      setShowPage("nothing");
     } else {
-      setShowPage('initial');
+      setShowPage("initial");
     }
   }, [createWarehouseReceipt]);
 
   const handleEdit = (e) => {
-    setShowPage('edit');
+    setShowPage("edit");
     onEdit(e);
-
-  }
+  };
   const columnNameToProperty = {
     Name: "name",
     Phone: "phone",
@@ -129,7 +127,7 @@ const Table = ({
     "Pickup Orders": "",
     "Carrier Name": "main_carrierObj.name",
     "Carrier Address": "main_carrierObj.street_and_number",
-    Weight: "",
+    Weight: "weight",
     Volume: "",
     Carrier: "",
     "Main Carrier Key": "",
@@ -166,40 +164,39 @@ const Table = ({
     "Consignee Name": "consigneeObj.data.obj.name",
     "Shipper Name": "shipperObj.data.obj.name",
     " Date": "created_at",
-    "Client": "clientObj.name",
-    "Store": "store",
+    Client: "clientObj.name",
+    Store: "store",
     "Transport Company": "courier",
-    "Packages": "packages.length",
-      //---------------------Cristian
-      "Account": "accountNumber",
-      "Due Days" : "dueDays",
-      "Discount Percentage" : "discountPercentage",
-      "Discount Days" : "discountDays",
-      "Inactive" : "inactive",
-      //---------------
-      "Transaction Date" : "trasaDate",
-      "Due Date" : "due",
-      "Type Name" : "typeName",
-      "Apply" : "issuedByName",
-      "Payment Temse": "paymentByDesc",
-      "Account Name" : "accountByName",
-      "Type Code" : "typeByCode",
-      "Biling Address" : "bilingAddres",
-      //---------------
-      "Type Items & Service": "typeByCode",
-      "type Chart": "typeByCode",
-      "Type Chart":"typeChart",
-      "Account Type" : "issuedByName",
-      "Amt Due": "division",
-      //---------------
-      "Entipy":     "customerByName",
-      "AR Amount":  "amountReceived",
-      "Memo":       "memo",
-      "nombre":     "nombre",
+    Packages: "packages.length",
+    //---------------------Cristian
+    Account: "accountNumber",
+    "Due Days": "dueDays",
+    "Discount Percentage": "discountPercentage",
+    "Discount Days": "discountDays",
+    Inactive: "inactive",
+    //---------------
+    "Transaction Date": "trasaDate",
+    "Due Date": "due",
+    "Type Name": "typeName",
+    Apply: "issuedByName",
+    "Payment Temse": "paymentByDesc",
+    "Account Name": "accountByName",
+    "Type Code": "typeByCode",
+    "Biling Address": "bilingAddres",
+    //---------------
+    "Type Items & Service": "typeByCode",
+    "type Chart": "typeByCode",
+    "Type Chart": "typeChart",
+    "Account Type": "issuedByName",
+    "Amt Due": "division",
+    //---------------
+    Entipy: "customerByName",
+    "AR Amount": "amountReceived",
+    Memo: "memo",
+    nombre: "nombre",
   };
 
   const getStatus = (statusCode) => {
-    console.log("STATUS", statusCode);
     switch (statusCode.toString()) {
       case "1":
         return (
@@ -313,7 +310,6 @@ const Table = ({
   const fetchAndFilterData = async () => {
     if (searchQuery !== "") {
       const newData = (await contextService.search(searchQuery)).data;
-      console.log("DATA SEARCH:", newData.results);
       setFilteredData(newData.results);
     } else {
       return data; // Return the original data if searchQuery is empty
@@ -323,15 +319,6 @@ const Table = ({
   useEffect(() => {
     fetchAndFilterData();
   }, [searchQuery]);
-
-  useEffect(() => {
-    console.log(
-      "Current data to be displayed on table:",
-      filteredData,
-      "search query",
-      searchQuery
-    );
-  }, [filteredData]);
 
   useEffect(() => {
     setFilteredData(data);
@@ -393,10 +380,18 @@ const Table = ({
   };
 
   const handleColumnVisibilityChange = (columnName) => {
-    setVisibleColumns((prevVisibility) => ({
-      ...prevVisibility,
-      [columnName]: !prevVisibility[columnName],
-    }));
+    if (columnName === "default") {
+      const initialVisibility = {};
+      columns.forEach((columnName) => {
+        initialVisibility[columnName] = true;
+      });
+      setVisibleColumns(initialVisibility);
+    } else {
+      setVisibleColumns((prevVisibility) => ({
+        ...prevVisibility,
+        [columnName]: !prevVisibility[columnName],
+      }));
+    }
   };
 
   const handleFormatChange = (event) => {
@@ -509,7 +504,10 @@ const Table = ({
         try {
           const workbook = XLSX.read(content, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
-          const importedData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+          const importedData = XLSX.utils.sheet_to_json(
+            workbook.Sheets[sheetName],
+            { header: 1 }
+          );
           // Send the imported data to your API
           // Example: axios.post(`${BASE_URL}import/`, importedData)
         } catch (error) {
@@ -686,8 +684,8 @@ const Table = ({
                             </>
                           ) : columnName === "Delete" ? (
                             <button type="button" onClick={onDelete}>
-                                <i className="fas fa-trash"></i>
-                              </button>
+                              <i className="fas fa-trash"></i>
+                            </button>
                           ) : typeof columnNameToProperty[columnName] ===
                             "boolean" ? (
                             row[columnNameToProperty[columnName]] ? (
@@ -719,16 +717,9 @@ const Table = ({
           </div>
         );
       case "add":
-        return (
-          <div className="layout-fluid">
-            {children}
-          </div>
-      )
-      case 'edit': return (
-        <div className="layout-fluid">
-          {children}
-          </div>
-        );
+        return <div className="layout-fluid">{children}</div>;
+      case "edit":
+        return <div className="layout-fluid">{children}</div>;
     }
   };
 
@@ -823,17 +814,21 @@ const Table = ({
                             className="hidden-input"
                             id="import-input"
                           />
-                          {importEnabled && (<button
-                            className="generic-button ne"
-                            onClick={onDelete}
-                          >
-                            <i
-                              className="fas fa-upload menu-icon fa-3x"
-                              onClick={() =>
-                                document.getElementById("import-input").click()
-                              }
-                            ></i>
-                          </button>)}
+                          {importEnabled && (
+                            <button
+                              className="generic-button ne"
+                              onClick={onDelete}
+                            >
+                              <i
+                                className="fas fa-upload menu-icon fa-3x"
+                                onClick={() =>
+                                  document
+                                    .getElementById("import-input")
+                                    .click()
+                                }
+                              ></i>
+                            </button>
+                          )}
                         </div>
                         {showFilterMenu && (
                           <div
@@ -1011,6 +1006,15 @@ const Table = ({
                                 </button>
                                 <button
                                   type="button"
+                                  className="btn btn-primary"
+                                  onClick={() =>
+                                    handleColumnVisibilityChange('default')
+                                  }
+                                >
+                                  Default
+                                </button>
+                                <button
+                                  type="button"
                                   className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                   onClick={() =>
@@ -1119,7 +1123,7 @@ Table.defaultProps = {
   onAdd: null,
   title: "Table",
   showOptions: true,
-  importEnabled: true
+  importEnabled: true,
 };
 
 export default Table;

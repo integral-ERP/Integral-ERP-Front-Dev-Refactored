@@ -10,8 +10,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
 const EventCreationForm = ({ onCancel, events, setevents }) => {
+  const today = dayjs().format("YYYY-MM-DD");
   const formFormat = {
-    dateTime: 0,
+    dateTime: today,
     type: 0,
     details: 0,
     location: 0,

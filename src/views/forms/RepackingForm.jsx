@@ -4,6 +4,7 @@ import PackageTypeService from "../../services/PackageTypeService";
 const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
   const [internalCommodities, setinternalCommodities] = useState([]);
+  const [id, setId] = useState(0);
   const formFormat = {
     package_type_id: "",
     package_type_description: "",
@@ -33,7 +34,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
-      );
+      ).toFixed(2);
   
       setformData(prevFormData => ({
         ...prevFormData,
@@ -65,13 +66,6 @@ const getCommodityById = (commodityId) => {
     return commodities.find((item) => item.id === commodityId);
 };
 
-const isAdded = (e) => {
-  const id = e;
-  const ids = internalCommodities.map((com) => String(com.id))
-  console.log("IS CONTAINED: ", ids.includes(id));
-  return ids.includes(id);
-}
-
   const handleRepack = () => {
     let internalWeight = 0;
     if(formData.useInternalWeight){
@@ -86,6 +80,7 @@ const isAdded = (e) => {
 
     const newCommodity = {
       ...formData,
+      id: `repacked-${id}`,
       weight: internalWeight, 
       containsCommodities: true,
       internalCommodities: internalCommodities,
@@ -93,6 +88,7 @@ const isAdded = (e) => {
 
     // Add the new commodity to the commodities array.
     setCommodities([...filteredCommodities, newCommodity]);
+    setId(id + 1);
 
     // Reset the form to its initial state.
     setformData(formFormat);

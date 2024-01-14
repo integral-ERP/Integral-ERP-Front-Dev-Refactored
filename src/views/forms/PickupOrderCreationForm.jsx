@@ -49,6 +49,7 @@ const PickupOrderCreationForm = ({
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
+  const [weightUpdated, setWeightUpdated] = useState(0);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -103,6 +104,7 @@ const PickupOrderCreationForm = ({
     // CHARGES TAB
     // COMMODITIES TAB
     commodities: [],
+    weight: 0
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -136,7 +138,6 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    console.log(result);
     const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
       } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
       }`;
@@ -276,7 +277,6 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
-    console.log("selecting client to bill", event);
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -314,7 +314,6 @@ const PickupOrderCreationForm = ({
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
       );
-      console.log("EXECUTING LOAD CONSIGNEE");
       loadConsigneeOption(
         pickupOrder.consigneeObj?.data?.obj?.id,
         pickupOrder.consigneeObj?.data?.obj?.type_person
@@ -333,7 +332,7 @@ const PickupOrderCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
-
+        weight: pickupOrder.weight,
         // PICKUP TAB
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
@@ -381,7 +380,6 @@ const PickupOrderCreationForm = ({
       };
       handleClientToBillSelection({id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id, type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person})
       setFormData(updatedFormData);
-      console.log("CLIENT TO BILL DATA: ", pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person);
       setcanRender(true);
     }
   }, [creating, pickupOrder]);
@@ -468,8 +466,6 @@ const PickupOrderCreationForm = ({
       data,
       "employee"
     );
-
-    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
     return options;
   };
 
@@ -629,7 +625,6 @@ const PickupOrderCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    console.log("LOADING CONSIGNEE:", id, type);
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -649,7 +644,6 @@ const PickupOrderCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log("NEW ID", formData.pickupLocationId, pickupLocationOptions.find(item => item.id == formData.pickupLocationId));
   }, [formData.pickupLocationId]);
 
   useEffect(() => {
@@ -666,6 +660,14 @@ const PickupOrderCreationForm = ({
       setFormData({ ...formData, status: 5 });
     }
   }, [commodities])
+
+  useEffect(() => {
+    console.log("NEW FORM DATA:", formData);
+  }, [formData])
+
+  useEffect(() => {
+    console.log("weight updated");
+  }, [weightUpdated])
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
@@ -690,6 +692,16 @@ const PickupOrderCreationForm = ({
       }
     }
     //return;
+
+    if(commodities.length > 0){
+      let totalWeight = 0;
+      commodities.forEach((com) => {
+        totalWeight += parseFloat(com.weight);
+      })
+      console.log("new weight", totalWeight);
+      //setFormData({...formData, weight: totalWeight});
+      setWeightUpdated(totalWeight);
+    }
 
     let auxVar;
     let consigneeName = "";
@@ -810,13 +822,10 @@ const PickupOrderCreationForm = ({
     }
     if (formData.client_to_bill_type === "shipper") {
       clientToBillName = "shipperid";
-      console.log("The client to bill is a shipper", auxVar);
     }
     if (formData.client_to_bill_type === "consignee") {
-      console.log("The client to bill is a consignee", auxVar);
       clientToBillName = "consigneeid";
     }
-    console.log("Tipo de client to bill", formData.client_to_bill_type, "nombre",formData.client_to_bill )
 
     if (clientToBillName !== "") {
       const clientToBill = {
@@ -825,7 +834,6 @@ const PickupOrderCreationForm = ({
 
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("RESPONSE CLIENT TO BILL", response.data.id);
         setclientToBillRequest(response.data.id);
         setFormData({ ...formData, client_to_bill: response.data.id });
       }
@@ -839,7 +847,8 @@ const PickupOrderCreationForm = ({
       deliverylocation !== null &&
       pickuplocation !== null &&
       consigneeRequest !== null &&
-      clientToBillRequest !== null
+      clientToBillRequest !== null &&
+      weightUpdated
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -929,7 +938,9 @@ const PickupOrderCreationForm = ({
           commodities: commodities,
           charges: charges,
           supplier: formData.shipperId,
+          weight: weightUpdated,
         };
+        console.log("Data sent to server: " + JSON.stringify(rawData));
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
@@ -946,7 +957,7 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            window.location.reload();
+            //window.location.reload();
           }, 2000);
         } else {
           console.log("Something went wrong:", response);
@@ -961,7 +972,8 @@ const PickupOrderCreationForm = ({
     pickuplocation,
     consigneeRequest,
     allStateUpdatesComplete,
-    clientToBillRequest
+    clientToBillRequest,
+    weightUpdated
   ]);
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
