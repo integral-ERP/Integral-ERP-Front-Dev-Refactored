@@ -29,7 +29,7 @@ const PaymentTermsCreationForms = ({
 
   useEffect(() => {;
     if (!creating && paymentTerms) {
-      console.log("Editing Payment Terms...", paymentTerms);
+      
       setFormData({
         description: paymentTerms.description || "",
         dueDays: paymentTerms.dueDays || "",
@@ -60,7 +60,7 @@ const PaymentTermsCreationForms = ({
       inactive: formData.inactive || false,
     };
 
-    console.log("DATA = ", formData);
+    
     //-------------------------------------
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
@@ -70,7 +70,7 @@ const PaymentTermsCreationForms = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
+      
         "Prueba successfully created/updated:",
         response.data);
       setShowSuccessAlert(true);
@@ -82,7 +82,7 @@ const PaymentTermsCreationForms = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -110,7 +110,7 @@ const PaymentTermsCreationForms = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ", PaymentTerms);
+    
   };
   useEffect(() => {
     updatePaymentTerm();

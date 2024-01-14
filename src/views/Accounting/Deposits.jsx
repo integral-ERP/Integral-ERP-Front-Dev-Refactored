@@ -111,7 +111,7 @@ const Deposits = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Deposits to delete.");

@@ -287,7 +287,7 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
-    console.log("SELECCIONANDO OTRO: ", event, type);
+    
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -302,7 +302,7 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
       });
     } else {
-      console.log("OTRO CLIENTE");
+      
       const id = event.id;
       const type = event.type;
 
@@ -692,11 +692,11 @@ const PickupOrderCreationForm = ({
   }, [commodities]);
 
   useEffect(() => {
-    console.log("NEW FORM DATA:", formData);
+    
   }, [formData]);
 
   useEffect(() => {
-    console.log("weight updated");
+    
   }, [weightUpdated]);
 
   const [inputStyle, setinputStyle] = useState({});
@@ -727,7 +727,7 @@ const PickupOrderCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      console.log("new weight", totalWeight);
+      
       //setFormData({...formData, weight: totalWeight});
       setWeightUpdated(totalWeight);
     }
@@ -971,13 +971,13 @@ const PickupOrderCreationForm = ({
           supplier: formData.shipperId,
           weight: weightUpdated,
         };
-        console.log("Data sent to server: " + JSON.stringify(rawData));
+        
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          console.log(
+          
             "Pickup Order successfully created/updated:",
             response.data
           );
@@ -991,7 +991,7 @@ const PickupOrderCreationForm = ({
             window.location.reload();
           }, 1000);
         } else {
-          console.log("Something went wrong:", response);
+          
           setShowErrorAlert(true);
         }
       };
@@ -1018,7 +1018,7 @@ const PickupOrderCreationForm = ({
   }, []);
 
   const getAsyncSelectValue = () => {
-    console.log("BUSCANDO OPCION", formData.client_to_bill_type, formData.client_to_bill);
+    
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
       selectedOption = releasedToOptions.find(
@@ -1026,7 +1026,7 @@ const PickupOrderCreationForm = ({
           option.id === formData.shipperId &&
           option.type === formData.shipperType
       );
-      console.log("encontrado shipper: ", selectedOption);
+      
     } else if (formData.client_to_bill_type === "consignee") {
       selectedOption = releasedToOptions.find(
         (option) =>

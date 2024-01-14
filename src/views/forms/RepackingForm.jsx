@@ -25,7 +25,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         setpackTypes(response.data.results);
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, []);
 
@@ -52,7 +52,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     setinternalCommodities((prevCommodities) => {
         if (isChecked) {
             // If the checkbox is checked, add the commodity to the list
-            console.log("ADDING COMMODITY: "  , [...prevCommodities, getCommodityById(commodityId)]);
+            
             return [...prevCommodities, getCommodityById(commodityId)];
         } else {
             // If the checkbox is unchecked, remove the commodity from the list

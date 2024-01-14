@@ -76,7 +76,7 @@ const PaymentTerms  = () => {
         });
 
         setpaymentOfTerms([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...paymentOfTerms, ...newPickupOrders]);
+        
         // setpaymentOfTerms([...paymentOfTerms, ...response.data.results].reverse());
 
         if (response.data.next) {
@@ -165,7 +165,7 @@ const PaymentTerms  = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a PaymentTerms  Order to delete.");
@@ -194,7 +194,7 @@ const PaymentTerms  = () => {
 
   // useEffect(() => {
   //   if(createWarehouseReceipt){
-  //     console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+  //     
   //     openModalReceiptCreation();
   //   }
   // }, [createWarehouseReceipt])

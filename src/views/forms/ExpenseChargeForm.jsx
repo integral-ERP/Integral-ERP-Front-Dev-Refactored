@@ -158,7 +158,7 @@ const ExpenseChargeForm = ({
       };
       setformData(formFormat);
     }
-    console.log();
+    
   }, []);
 
   const handleChargeRateChange = (e) => {

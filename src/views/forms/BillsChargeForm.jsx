@@ -49,8 +49,8 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
     const total = unit * rate;
 
     tota = resultado + total;
-    console.log("TOTAL1 =", tota);
-    console.log("TOTAL2 =", resultado);
+    
+    
 
     setformData({
       ...formData,
@@ -64,7 +64,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
     const suma = parseInt(formData.amount) + parseInt(resultado);
     setResultado(suma);
     setformData({ ...formData, suma: formData.suma });
-    console.log("SUMA2", suma);
+    
 
     const body = {
       id: internalID,
@@ -86,7 +86,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
       setBills([...bills, body]);
       setinternalID(internalID + 1);
     }
-    console.log("BILLSS= ", bills);
+    
   };
 
   useEffect(() => {
@@ -95,12 +95,12 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
         ...formData,
         amount: formData.totalAmount * formData.quantity,
       });
-      console.log("PReuba=", formData.totalAmount, formData.quantity);
+      
     }
   }, [formData.totalAmount, formData.quantity]);
 
   useEffect(() => {
-    console.log("FORMDATA= ", formData);
+    
     if (formData.height && formData.width && formData.length) {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
@@ -154,7 +154,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
       : ChartOfAccountsService.updateChartOfAccounts(invoice.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Bills successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -163,7 +163,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
         // window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

@@ -74,7 +74,7 @@ const LocationsCreationForm = ({
       : LocationService.updateLocation(location.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Carrier successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -83,7 +83,7 @@ const LocationsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

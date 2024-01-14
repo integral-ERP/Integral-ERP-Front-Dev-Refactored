@@ -46,7 +46,7 @@ const Payments = () => {
         );
 
         setChartOfAccounts([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...payments, ...newPaymentsTerms]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -140,7 +140,7 @@ const Payments = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Payments to delete.");

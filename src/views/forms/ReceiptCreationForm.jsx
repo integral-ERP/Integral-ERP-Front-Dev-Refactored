@@ -126,7 +126,7 @@ const ReceiptCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    console.log(event);
+    
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -177,7 +177,7 @@ const ReceiptCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event.id;
-    console.log(
+    
       "employee selected:",
       id,
       "employeeid in form",
@@ -218,7 +218,7 @@ const ReceiptCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    console.log("RESULTADO", result.data);
+    
     const info = `${result.data?.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
@@ -251,7 +251,7 @@ const ReceiptCreationForm = ({
   const handleShipperSelection = async (event) => {
     const id = event.id || formData.shipperId;
     const type = event.type || formData.shipperType;
-    console.log("CHANGING SHIPPER", id, type);
+    
     let result;
     if (type === "forwarding-agent") {
       result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -351,13 +351,13 @@ const ReceiptCreationForm = ({
       // Check if the click is inside your modal content
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".income-charge-form");
-      console.log("CLOSEST", isForm);
-      console.log("HANDLE MODAL CLICK EVENT");
+      
+      
       if (!isForm) {
         // Click is outside the modal content, close the modal
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
-        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+        
       }
     };
 
@@ -376,7 +376,7 @@ const ReceiptCreationForm = ({
 
   const addNotes = () => {
     const updatedNotes = [...formData.notes, note];
-    console.log("ADDING NOTES", updatedNotes);
+    
     setFormData({ ...formData, notes: updatedNotes });
   };
 
@@ -398,7 +398,7 @@ const ReceiptCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
+    
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -409,19 +409,19 @@ const ReceiptCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    console.log("SHIPPER FOUND:", option.data);
+    
     setdefaultValueShipper(option.data);
   };
 
   useEffect(() => {
-    console.log("checking for edit", "join:", !creating && pickupOrder != null);
+    
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
       setattachments(pickupOrder.attachments);
 
-      console.log("Selected Pickup:", pickupOrder);
+      
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -514,7 +514,7 @@ const ReceiptCreationForm = ({
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+      
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -666,7 +666,7 @@ const ReceiptCreationForm = ({
 
     const options = addTypeToObjects(data, "employee");
 
-    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    
     return options;
   };
 
@@ -686,9 +686,9 @@ const ReceiptCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log("PICKUP NUMBER", currentPickUpNumber, pickupNumber);
+    
     if (creating) {
-      console.log(
+      
         "Setting new pickup number:",
         pickupNumber,
         "old pickup number:",
@@ -700,7 +700,7 @@ const ReceiptCreationForm = ({
 
   useEffect(() => {
     if (fromPickUp) {
-      console.log(
+      
         "This receipt will be created from the order:",
         pickupOrder,
         "shipper is: ",
@@ -802,7 +802,7 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         notes: [],
       };
-      console.log(
+      
         "Form Data to be updated for the new receipt:",
         updatedFormData
       );
@@ -835,7 +835,7 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      console.log("new weight", totalWeight);
+      
       //setFormData({...formData, weight: totalWeight});
       setWeightUpdated(totalWeight);
     }
@@ -859,7 +859,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createConsignee(consignee);
       if (response.status === 201) {
-        console.log("CONSIGNEE ID", response.data.id);
+        
         setconsigneeRequest(response.data.id);
       }
     }
@@ -884,7 +884,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
-        console.log("SHIPPER ID", response.data.id);
+        
         setshipperRequest(response.data.id);
       }
     }
@@ -903,7 +903,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("CLIENT TO BILL ID", response.data.id);
+        
         setclientToBillRequest(response.data.id);
       }
     }
@@ -918,7 +918,7 @@ const ReceiptCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    console.log("Checking for updates");
+    
     if (
       shipperRequest !== null &&
       consigneeRequest !== null &&
@@ -934,18 +934,18 @@ const ReceiptCreationForm = ({
   };
 
   useEffect(() => {
-    console.log("SHIPPER:", shipperRequest);
-    console.log("CONSIGNEE REQUEST:", consigneeRequest);
-    console.log("CLIENT TO BILL REQUEST:", clientToBillRequest);
-    console.log("ATTACHMNETS", attachments);
+    
+    
+    
+    
     // Check if updates are complete initially
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
-        console.log("ATTACHMENTS:", attachments);
-        console.log("EVENTS", events);
-        console.log("PIECES:", commodities);
-        console.log("CARGOS:", charges);
+        
+        
+        
+        
         let rawData = {
           status: 2,
           number: formData.number,
@@ -984,7 +984,7 @@ const ReceiptCreationForm = ({
             const newPickup = { ...pickupOrder, status: 7 };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
-          console.log(
+          
             "Warehouse Receipt successfully created/updated:",
             response.data
           );
@@ -998,7 +998,7 @@ const ReceiptCreationForm = ({
             window.location.reload();
           }, 1000);
         } else {
-          console.log("Something went wrong:", response);
+          
           setShowErrorAlert(true);
         }
       };

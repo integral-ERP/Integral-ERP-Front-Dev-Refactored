@@ -62,7 +62,7 @@ const Customers = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        console.log("Fetching next page of data...", customers.length);
+        
         fetchCustomersData(nextPageURL);
       }
     });
@@ -112,7 +112,7 @@ const Customers = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
     } else {
       alert("Please select a Employee to delete.");

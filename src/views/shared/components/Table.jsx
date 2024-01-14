@@ -514,7 +514,7 @@ const Table = ({
           console.error("Error parsing XLSX file:", error);
         }
       } else {
-        console.log("Unsupported file format");
+        
       }
     };
     reader.readAsText(file);

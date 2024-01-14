@@ -131,7 +131,7 @@ const Carrier = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a carrier to delete.");

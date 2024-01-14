@@ -92,7 +92,7 @@ const PortsCreationForm = ({
       : PortServices.updatePort(port.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Port successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -101,7 +101,7 @@ const PortsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

@@ -123,7 +123,7 @@ const InvoicesCreationForm = ({
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
+    
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -132,7 +132,7 @@ const InvoicesCreationForm = ({
       accountByName: name,
 
     });
-    console.log("TYPE_CHART=", typeChart);
+    
   };
 
   //------------------------------------------------------------------------------------
@@ -225,7 +225,7 @@ const InvoicesCreationForm = ({
 
       invoiceCharges: commodities,
     };
-    console.log("DATA:", rawData);
+    
     const response = await (creating
       ? InvoicesService.createInvoice(rawData)
       : InvoicesService.updateInvoices(
@@ -234,7 +234,7 @@ const InvoicesCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Invoice successfully created/updated:",
+      
         response.data
       );
       setShowSuccessAlert(true);
@@ -245,7 +245,7 @@ const InvoicesCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -258,7 +258,7 @@ const InvoicesCreationForm = ({
 
     };
 
-    console.log("DATA CURTOMER:", formData);
+    
     const response = await (creating
       ? CustomerService.CustomerService(rawData)
       : CustomerService.updateCustomer(

@@ -154,7 +154,7 @@ const IncomeChargeForm = ({
       };
       setformData(formFormat);
     }
-    console.log();
+    
   }, []);
 
   const handleChargeRateChange = (e) => {

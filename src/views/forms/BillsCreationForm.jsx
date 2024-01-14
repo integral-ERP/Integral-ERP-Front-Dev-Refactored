@@ -58,11 +58,11 @@ const BillsCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Bill Terms=", bill);
+    
+    
     if (!creating && bill) {
       setbills(bill.billCharges);
-      console.log("Editing Bill Terms...", bill);
+      
       setFormData({
         number: bill.number || "",
         due: bill.due || "",
@@ -99,13 +99,13 @@ const BillsCreationForm = ({
       billCharges: bills,
     };
 
-    console.log("DATA = ", formData);
+    
     const response = await (creating
       ? BillsService.createBill(rawData)
       : BillsService.updateBill(bill.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Bill successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -114,7 +114,7 @@ const BillsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -151,14 +151,14 @@ const BillsCreationForm = ({
     const id = event.id;
     const typeChart = event.typeChart;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart);
+    
     setaccounts(result.data);
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
     });
-    console.log("TYPE_CHART=", typeChart);
+    
   };
 
   //------------------------------------------------------------------------------------

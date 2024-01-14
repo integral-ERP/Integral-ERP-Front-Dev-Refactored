@@ -50,7 +50,7 @@ const Invoices = () => {
         });
 
         setInvoices([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...invoices, ...newInvoices ]);
+        
         
 
         if (response.data.next) {
@@ -97,7 +97,7 @@ const Invoices = () => {
 
   const handleEditInvoices = () => {
     if (selectedInvoices) {
-      console.log("EDITING INVOICES");
+      
       setIsEdit(true);
       openModal();
     } else {
@@ -106,7 +106,7 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    console.log("editing?", isEdit);
+    
   }, [isEdit])
   
 
@@ -134,7 +134,7 @@ const Invoices = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Invoice to delete.");

@@ -192,17 +192,17 @@ class CompanyService {
         results.forEach((result, index) => {
           if (result.status === "fulfilled") {
             const response = result.value;
-            console.log(`Response ${index}:`, response.data);
+            
             succesfullRequests.push(response);
           } else {
-            console.log(`Error in request ${index}:`, result.reason);
+            
           }
         });
 
         if (succesfullRequests.length === requests.length) {
           return { status: 1 };
         } else {
-          console.log("Hubo un error al actualizar los datos...");
+          
           return { status: 0 };
         }
       })
@@ -236,17 +236,17 @@ class CompanyService {
         results.forEach((result, index) => {
           if (result.status === "fulfilled") {
             const response = result.value;
-            console.log(`Response ${index}:`, response.data);
+            
             succesfullRequests.push(response);
           } else {
-            console.log(`Error in request ${index}:`, result.reason);
+            
           }
         });
 
         if (succesfullRequests.length === requests.length) {
           return { status: 1 };
         } else {
-          console.log("Hubo un error al crear los datos...");
+          
           return { status: 0 };
         }
       })

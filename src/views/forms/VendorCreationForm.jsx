@@ -124,13 +124,13 @@ const VendorsCreationForm = ({
       country: formData.country,
       zipCode: parseInt(formData.zipCode),
     };
-    console.log("DATA:", formData);
+    
     const response = await (creating
       ? VendorService.createVendor(rawData)
       : VendorService.updateVendor(vendor.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Vendor successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -139,7 +139,7 @@ const VendorsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

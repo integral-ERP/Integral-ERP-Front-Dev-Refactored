@@ -42,7 +42,7 @@ const Receipt = () => {
         });
         
         setreceipts([...receipts, ...newreceipts].reverse());
-        console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
+        
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,9 +61,9 @@ const Receipt = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      console.log("recibo:", receipts[0]);
+      
       const number = receipts[0]?.number || 0;
-      console.log("NUMERO", number);
+      
       setcurrentPickupNumber(number);
     }
   }, [receipts]);
@@ -92,7 +92,7 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    console.log("Selected PickupOrder", selectedPickupOrder);
+    
   };
 
   const handleEditreceipts = () => {
@@ -130,7 +130,7 @@ const Receipt = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Pickup Order to delete.");
@@ -148,7 +148,7 @@ const Receipt = () => {
 
       if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu) {
         setSelectedPickupOrder(null);
-        console.log("Selected order changed to null")
+        
       }
     };
 

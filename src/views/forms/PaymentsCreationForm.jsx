@@ -80,7 +80,7 @@ const PaymentsCreationForm = ({
       totale += subtotal
     });
     settotal(totale);
-    console.log("Payments TOTAL=", totale);
+    
   };
   //------------------------------------------------------------------------------------
   const handleAccountBySelection = async (event) => {
@@ -88,7 +88,7 @@ const PaymentsCreationForm = ({
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
+    
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -97,7 +97,7 @@ const PaymentsCreationForm = ({
       accountRecei: name,
 
     });
-    console.log("TYPE_CHART=", typeChart);
+    
   };
   //------------------------------------------------------------------------------------
   const handleAccountBanckBySelection = async (event) => {
@@ -105,7 +105,7 @@ const PaymentsCreationForm = ({
     const typeChartBanck = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHARTBANK", result.typeChartBanck)
+    
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -114,7 +114,7 @@ const PaymentsCreationForm = ({
       accountReceiBank: name,
 
     });
-    console.log("TYPE_CHARTBANK=", typeChartBanck);
+    
   };
   //------------------------------------------------------------------------------------
 
@@ -163,7 +163,7 @@ const PaymentsCreationForm = ({
       accountByBankId: formData.accountByBankId,
       accountByBankType: formData.accountByBankType,
     };
-    console.log("DATA = ", formData);
+    
     const response = await (creating
       ? PaymentsService.createPayment(rawData)
       : PaymentsService.updatePayment(
@@ -172,7 +172,7 @@ const PaymentsCreationForm = ({
       ));
     //-------------------------------------
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
+      
         "Payments Lists successfully created/updated:",
         response.data);
       setShowSuccessAlert(true);
@@ -183,7 +183,7 @@ const PaymentsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -205,9 +205,9 @@ const PaymentsCreationForm = ({
     // Merge the arrays
     const customerByOptions = [...customerWithType];
     const accountByReceivable = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
-    console.log("accountByReceivable: ", accountByReceivable)
+    
     const accountBybank = [...accountWithType].filter(account => account.typeChart == "Bank Account");
-    console.log("accountWithType: ", accountBybank)
+    
 
     setCustomerByOptions(customerByOptions);
     setaccountByReceivable(accountByReceivable);

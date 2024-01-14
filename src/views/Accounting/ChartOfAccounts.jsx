@@ -64,7 +64,7 @@ const ChartOfAccounts   = () => {
         });
 
         setChartOfAccounts([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...chartofAccounts, ...newChartOfAccounts ]);
+        
         
 
         if (response.data.next) {
@@ -141,7 +141,7 @@ const ChartOfAccounts   = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a ChartOfAccounts   Order to delete.");

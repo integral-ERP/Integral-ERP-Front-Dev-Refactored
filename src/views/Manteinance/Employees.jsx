@@ -49,14 +49,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     ];
     const {hideShowSlider} = useContext(GlobalContext);
     const fetchEmployeesData = (url = null) => {
-      console.log("url", url);
+      
       EmployeeService.getEmployees(url)
         .then((response) => {
           const newEmployees = response.data.results.filter((pickupOrder) => {
             const pickupOrderId = pickupOrder.id;
             return !employees.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
           });
-          console.log("NEW EMPLOYEES", newEmployees);
+          
           setemployees([...employees, ...newEmployees].reverse());
           if (response.data.next) {
             setNextPageURL(response.data.next);
@@ -130,7 +130,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         }
       })
       .catch((error) => {
-        console.log(error);
+        
       });
     } else {
       alert("Please select a Employee to delete.");

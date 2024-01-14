@@ -9,7 +9,7 @@ pdfMake.vfs = pdfFonts;
 const GenerateReceiptPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  console.log(barcodeImage);
+  
 
   //ctx.drawImage(bwipjs.toCanvas(barcodeOptions),0 ,0);
 
@@ -98,7 +98,7 @@ const GenerateReceiptPDF = (data) => {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
           // Check if the charge should be shown based on the "show" property
-          console.log("CARGO", charge);
+          
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -113,12 +113,12 @@ const GenerateReceiptPDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          console.log("ROW", chargeRow);
+          
           // Add the charge row to the array
           chargeRows.push(chargeRow);
         }
       });
-      console.log(chargeRows);
+      
     }
 
     // Fetch the logo image dynamically

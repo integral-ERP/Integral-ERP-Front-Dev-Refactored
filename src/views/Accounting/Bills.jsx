@@ -71,7 +71,7 @@ const Bills = () => {
         });
 
         setBills([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...bills, ...newBill]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -150,7 +150,7 @@ const Bills = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Bills to delete.");
@@ -207,17 +207,17 @@ const Bills = () => {
   //-------------------------------------------------------------------------------------
   useEffect(() => {
     if (createWarehouseReceipt) {
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
+      
       openModalReceiptCreation();
     }
   }, [createWarehouseReceipt]);
 
   // const setInTransit = async () => {
-  //   console.log("PROBANDO");
+  //   
   //   // openModal();
   // }
   // const setprueba = async () => {
-  //   console.log("Pr0b4nd0");
+  //   
   //   handlePayBills();
   // }
 

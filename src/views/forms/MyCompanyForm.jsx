@@ -41,7 +41,7 @@ useEffect(() => {
       setCountries(response.data);
     })
     .catch((error) => {
-      console.log("error", error);
+      
     });
 }, [countriesUrl, apiKey]);
 
@@ -57,7 +57,7 @@ useEffect(() => {
         setStates(response.data);
       })
       .catch((error) => {
-        console.log("error", error);
+        
       });
   }
 }, [selectedCountry, countriesUrl, apiKey]);
@@ -77,7 +77,7 @@ useEffect(() => {
         setCities(response.data);
       })
       .catch((error) => {
-        console.log("error", error);
+        
       });
   }
 }, [selectedCountry, selectedState, countriesUrl, apiKey]);
@@ -96,9 +96,9 @@ useEffect(() => {
         response = await axios.get(`${BASE_URL}agent`);
         data = { ...data, agentData: response.data.pop() };
         setCompanyData(data);
-        console.log("Data:", data);
+        
       } catch (error) {
-        console.log(error);
+        
       }
     };
 
@@ -115,7 +115,7 @@ useEffect(() => {
       zipCode: parseInt(document.getElementById("zipCode").value),
       port: parseInt(document.getElementById("port").value),
     };
-    console.log(addressData);
+    
     try {
       const response = await axios.post(
         `${BASE_URL}address/`,
@@ -124,10 +124,10 @@ useEffect(() => {
           withCredentials: true,
         }
       );
-      console.log("Add Address Response:", response.data);
+      
       // Handle success or perform additional actions
     } catch (error) {
-      console.log("Add Address Error:", error);
+      
       // Handle error or show error message
     }
   };

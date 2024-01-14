@@ -59,7 +59,7 @@ const PackageTypesCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log(packageType);
+    
     if (!creating && packageType) {
       setFormData({
         type: packageType.type || "",
@@ -102,7 +102,7 @@ const PackageTypesCreationForm = ({
       : PackageTypeService.updatePackageType(packageType.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Package Type successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -111,7 +111,7 @@ const PackageTypesCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

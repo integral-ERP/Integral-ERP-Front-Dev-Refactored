@@ -10,8 +10,8 @@ pdfMake.vfs = pdfFonts;
 const GenerateBillPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  console.log(barcodeImage);
-  console.log("DATA PDF=", data)
+  
+  
 
   //ctx.drawImage(bwipjs.toCanvas(barcodeOptions),0 ,0);
 
@@ -91,7 +91,7 @@ const GenerateBillPDF = (data) => {
       data.billCharges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
           // Check if the charge should be shown based on the "show" property
-          console.log("CARGO", charge);
+          
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -106,12 +106,12 @@ const GenerateBillPDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          console.log("ROW", chargeRow);
+          
           // Add the charge row to the array
           // ChargeAmount.push(chargeRow);
         }
       });
-      // console.log("charge top=",ChargeAmount);
+      // 
     }
 
     // Fetch the logo image dynamically

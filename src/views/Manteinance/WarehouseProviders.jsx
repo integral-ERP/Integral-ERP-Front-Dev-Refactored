@@ -116,7 +116,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a warehouse provider to delete.");

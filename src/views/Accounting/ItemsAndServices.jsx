@@ -102,7 +102,7 @@ const ItemsAndServices = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select an Item and Service to delete.");

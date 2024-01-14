@@ -126,7 +126,7 @@ const PreAlerts = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Pre Alert to delete.");

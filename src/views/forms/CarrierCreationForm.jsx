@@ -78,7 +78,7 @@ const CarrierCreationForm = ({
 
   useEffect(() => {
     if (!creating && carrier) {
-      console.log("Editing carrier...", carrier);
+      
       let updatedFormData = {
         name: carrier.name || "",
         phone: carrier.phone || "",
@@ -122,7 +122,7 @@ const CarrierCreationForm = ({
       }
       setFormData(updatedFormData); // Update formData once with all the changes
     }
-    console.log("Form data:", formData);
+    
   }, [creating, carrier]);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ const CarrierCreationForm = ({
       : CarrierService.updateCarrier(carrier.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Carrier successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -200,7 +200,7 @@ const CarrierCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

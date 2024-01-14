@@ -33,7 +33,7 @@ const ChartOfAccountsCreationForm = ({
 
   useEffect(() => {
     if (!creating && ChartAccounts) {
-      console.log("Editing Chart Of Accounts...", ChartAccounts);
+      
       setFormData({
         name: ChartAccounts.name || "",
         // type: ChartAccounts.type || "",
@@ -66,7 +66,7 @@ const ChartOfAccountsCreationForm = ({
       note: formData.note || "",
       typeChart: formData.typeChart || "",
     };
-    console.log("DATA:", formData);
+    
     //-------------------------------------
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
@@ -76,7 +76,7 @@ const ChartOfAccountsCreationForm = ({
         ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Chart of accounts successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -85,7 +85,7 @@ const ChartOfAccountsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -114,19 +114,19 @@ const ChartOfAccountsCreationForm = ({
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ", ChartOfAccounts);
+    
   };
 
   const [accountype, setAccountype] = useState("");
 
   const handleSearch = (row) => {
     let searchMatch = false;
-    console.log("filtrando", row);
+    
     if (row.typeChart === accountype) {
-      console.log("Hay informacion");
+      
       searchMatch = true;
     } else {
-      console.log("No Hay informacion");
+      
     }
     return searchMatch;
   };

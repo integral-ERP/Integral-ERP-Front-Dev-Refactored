@@ -39,11 +39,11 @@ const DepositsCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Deposit Terms=", deposit);
+    
+    
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
-      console.log("Editing Deposit Terms...", deposit);
+      
       setFormData({
         bankAccount: deposit.bankAccount,
         trasaDate: deposit.trasaDate,
@@ -61,7 +61,7 @@ const DepositsCreationForm = ({
       memo: formData.memo,
     };
 
-    console.log("DATA = ", formData);
+    
     //-------------------------------------
     const response = await (creating
       ? DepositsService.createDeposit(rawData)
@@ -71,7 +71,7 @@ const DepositsCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
+      
         "Prueba successfully created/updated:",
         response.data);
       setShowSuccessAlert(true);
@@ -82,7 +82,7 @@ const DepositsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

@@ -92,7 +92,7 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
-    console.log("Selected Release Order", releaseOrder);
+    
   };
 
   const handleEditreceipts = () => {
@@ -130,7 +130,7 @@ const Release = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Release Order to delete.");
@@ -160,34 +160,34 @@ const Release = () => {
   }, []);
 
   const setInTransit = async () => {
-    console.log("Changing");
+    
     if(selectedReleaseOrder){
       const updatedPickuporder = {...selectedReleaseOrder, status: 6};
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
-      console.log(response);
+      
     }else{
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
-    console.log("Changing");
+    
     if(selectedReleaseOrder){
       const updatedPickuporder = {...selectedReleaseOrder, status: 9};
       const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
+      
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
+        
         window.location.reload(true);
         // TODO: REFRESH WINDOW 
       }
-      console.log(response);
+      
     }else{
       alert("Please select a pickup order to continue.");
     }
