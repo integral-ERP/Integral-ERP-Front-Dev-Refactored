@@ -130,7 +130,7 @@ const Receipt = () => {
           }
         })
         .catch((error) => {
-          
+          console.error(error);
         });
     } else {
       alert("Please select a Pickup Order to delete.");
