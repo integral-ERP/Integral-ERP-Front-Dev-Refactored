@@ -1560,23 +1560,19 @@ const ReceiptCreationForm = ({
               Add
             </button>
           </div>
-        </div>
-      </div>
-
-      <div className="creation creation-container w-100">
-        <div className="row align-items-center">
+          <div className="row align-items-center">
           <div className="col-10 text-start">
-            <label htmlFor="notes" className="form-label">Notes</label>
             <input
               name="notes"
-              type="text"
-              className="form-input"
-              placeholder="Notes..."
+              type="textarea"
+              className="form-input w-100"
+              placeholder=""
               value={formData.notes?.toString()}
-              style={{ width: "100%" }}
+              style={{ width: "100%" , marginTop: "10px", height: "100px" }}
               readOnly
             />
           </div>
+        </div>
         </div>
       </div>
 
