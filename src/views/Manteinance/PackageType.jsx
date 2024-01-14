@@ -67,7 +67,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -111,7 +111,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Package Type to delete.");
@@ -120,7 +120,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -133,7 +133,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

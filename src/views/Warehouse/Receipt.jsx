@@ -42,7 +42,7 @@ const Receipt = () => {
         });
         
         setreceipts([...receipts, ...newreceipts].reverse());
-        console.log("NEW ORDERS", [...receipts, ...newreceipts].reverse());
+        );
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,9 +61,9 @@ const Receipt = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      console.log("recibo:", receipts[0]);
+      
       const number = receipts[0]?.number || 0;
-      console.log("NUMERO", number);
+      
       setcurrentPickupNumber(number);
     }
   }, [receipts]);
@@ -81,7 +81,7 @@ const Receipt = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -92,7 +92,7 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    console.log("Selected PickupOrder", selectedPickupOrder);
+    
   };
 
   const handleEditreceipts = () => {
@@ -121,7 +121,7 @@ const Receipt = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            //updatereceipts();
+
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -130,7 +130,7 @@ const Receipt = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Pickup Order to delete.");
@@ -139,7 +139,7 @@ const Receipt = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -148,14 +148,14 @@ const Receipt = () => {
 
       if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu) {
         setSelectedPickupOrder(null);
-        console.log("Selected order changed to null")
+        
       }
     };
 
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

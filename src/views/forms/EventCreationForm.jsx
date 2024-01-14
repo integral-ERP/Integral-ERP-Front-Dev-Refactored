@@ -35,7 +35,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
-    console.log(events);
+    
   };
 
   return (

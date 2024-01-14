@@ -46,7 +46,7 @@ const Payments = () => {
         );
 
         setChartOfAccounts([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...payments, ...newPaymentsTerms]);
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -57,21 +57,21 @@ const Payments = () => {
       });
   };
 
-  // const updatePayment = (url = null) => {
-  //   PaymentsService.getPayments(url)
-  //     .then((response) => {
-  //       setPayments(
-  //         [...response.data.results].reverse()
-  //       );
 
-  //       if (response.data.next) {
-  //         setNextPageURL(response.data.next);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     if (!initialDataFetched) {
@@ -93,7 +93,7 @@ const Payments = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -127,7 +127,7 @@ const Payments = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            // updatePayment();
+
             const newPaymentsTerms = payments.filter(
               (order) => order.id !== selectedPayments.id
             );
@@ -140,7 +140,7 @@ const Payments = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Payments to delete.");
@@ -149,7 +149,7 @@ const Payments = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPaymentsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -162,7 +162,7 @@ const Payments = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

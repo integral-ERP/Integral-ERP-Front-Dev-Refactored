@@ -130,7 +130,7 @@ const WarehouseProviderCreationForm = ({
       : WarehouseProviderService.updateWarehouseProvider(warehouseProvider.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Warehouse Provider successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -140,7 +140,7 @@ const WarehouseProviderCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

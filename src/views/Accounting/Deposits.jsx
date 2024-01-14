@@ -5,7 +5,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";import Sidebar
 from "../shared/components/SideBar";import { useModal } 
 from "../../hooks/useModal"; // Import the useModal hook
- //----------------------------------------------------
+
 import DepositsCreationForm from "../forms/DepositsCreationForm";
 import DepositsService from "../../services/DepositsService";
 import { GlobalContext } from "../../context/global";
@@ -66,7 +66,7 @@ const Deposits = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -100,7 +100,7 @@ const Deposits = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            // updateDeposit();
+
             const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
           } else {
@@ -111,7 +111,7 @@ const Deposits = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Deposits to delete.");
@@ -120,7 +120,7 @@ const Deposits = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isDepositsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -133,7 +133,7 @@ const Deposits = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

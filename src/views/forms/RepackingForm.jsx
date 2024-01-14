@@ -25,7 +25,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         setpackTypes(response.data.results);
       })
       .catch((error) => {
-        console.log(error);
+        
       });
   }, []);
 
@@ -48,20 +48,20 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const handleCommoditySelection = (e, commodityId) => {
     const isChecked = e.target.checked;
 
-    // Update the selectedCommodities based on the checkbox change
+
     setinternalCommodities((prevCommodities) => {
         if (isChecked) {
-            // If the checkbox is checked, add the commodity to the list
-            console.log("ADDING COMMODITY: "  , [...prevCommodities, getCommodityById(commodityId)]);
+
+            ]);
             return [...prevCommodities, getCommodityById(commodityId)];
         } else {
-            // If the checkbox is unchecked, remove the commodity from the list
+
             return prevCommodities.filter((item) => item.id !== commodityId);
         }
     });
 };
 
-// Helper function to get a commodity by its ID
+
 const getCommodityById = (commodityId) => {
     return commodities.find((item) => item.id === commodityId);
 };
@@ -86,14 +86,14 @@ const getCommodityById = (commodityId) => {
       internalCommodities: internalCommodities,
     };
 
-    // Add the new commodity to the commodities array.
+
     setCommodities([...filteredCommodities, newCommodity]);
     setId(id + 1);
 
-    // Reset the form to its initial state.
+
     setformData(formFormat);
     setinternalCommodities([]);
-    // You can also perform any other actions or validations here if needed.
+
   };
   
 

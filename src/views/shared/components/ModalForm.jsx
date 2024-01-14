@@ -11,12 +11,12 @@ const ModalForm = ({ children, isOpen, closeModal }) => {
   useEffect(() => {
     const updateModalDimensions = () => {
       const container = document.querySelector('.modal__container');
-      // if (container) {
-      //   setModalDimensions({
-      //     width: `${container.scrollWidth}px`,
-      //     height: `${container.scrollHeight}px`,
-      //   });
-      // }
+
+
+
+
+
+
     };
     const sidebar = document.querySelector(".sidebar.close")
 
@@ -40,7 +40,7 @@ const ModalForm = ({ children, isOpen, closeModal }) => {
     <article className={`modal-form ${isOpen && 'is-open'}`} onClick={closeModal}>
       <div
         className="modal__container" 
-        // style={{ width: modalDimensions.width, height: modalDimensions.height }}
+
         onClick={handleModalContainerClick}
       >
         <button className="modal__close" onClick={closeModal}>

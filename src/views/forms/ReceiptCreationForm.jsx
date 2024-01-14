@@ -67,7 +67,7 @@ const ReceiptCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
 
-  //repacking
+
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -80,7 +80,7 @@ const ReceiptCreationForm = ({
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
 
   const formFormat = {
-    // GENERAL TAB
+
     status: "",
     number: pickupNumber,
     createdDateAndTime: today,
@@ -91,29 +91,29 @@ const ReceiptCreationForm = ({
     issuedByInfo: "",
     destinationAgentId: "",
     employeeId: "",
-    // PICKUP TAB
+
     shipperId: "",
     shipperType: "",
     shipperInfo: "",
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
-    // DELIVERY TAB
+
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
-    // CARRIER TAB
+
     proNumber: "",
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
     invoiceNumber: "",
     purchaseOrderNumber: "",
-    // CHARGES TAB
-    // COMMODITIES TAB
+
+
     commodities: [],
     notes: [],
     charges: [],
@@ -126,7 +126,7 @@ const ReceiptCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    console.log(event);
+    
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -177,13 +177,6 @@ const ReceiptCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event.id;
-    console.log(
-      "employee selected:",
-      id,
-      "employeeid in form",
-      formData.employeeId,
-      formData
-    );
     setFormData({
       ...formData,
       employeeId: id,
@@ -218,7 +211,7 @@ const ReceiptCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    console.log("RESULTADO", result.data);
+    
     const info = `${result.data?.street_and_number || ""} - ${
       result.data.city || ""
     } - ${result.data.state || ""} - ${result.data.country || ""} - ${
@@ -251,7 +244,7 @@ const ReceiptCreationForm = ({
   const handleShipperSelection = async (event) => {
     const id = event.id || formData.shipperId;
     const type = event.type || formData.shipperType;
-    console.log("CHANGING SHIPPER", id, type);
+    
     let result;
     if (type === "forwarding-agent") {
       result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -318,7 +311,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  //repacking
+
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
   };
@@ -348,25 +341,25 @@ const ReceiptCreationForm = ({
 
   useEffect(() => {
     const handleModalClick = (event) => {
-      // Check if the click is inside your modal content
+
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".income-charge-form");
-      console.log("CLOSEST", isForm);
-      console.log("HANDLE MODAL CLICK EVENT");
+      
+      
       if (!isForm) {
-        // Click is outside the modal content, close the modal
+
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
-        console.log("HANDLE MODAL CLICK EVENT INSIDE IF", selectedCommodity);
+        
       }
     };
 
-    // Add the event listener when the component mounts
+
     document
       .querySelector(".pickup")
       ?.addEventListener("click", handleModalClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document
         .querySelector(".pickup")
@@ -376,7 +369,7 @@ const ReceiptCreationForm = ({
 
   const addNotes = () => {
     const updatedNotes = [...formData.notes, note];
-    console.log("ADDING NOTES", updatedNotes);
+    
     setFormData({ ...formData, notes: updatedNotes });
   };
 
@@ -398,7 +391,7 @@ const ReceiptCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    console.log("CALLING LOAD SHIPPER OPTION FROM INTERNAL FUNCTION");
+    
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -409,19 +402,19 @@ const ReceiptCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    console.log("SHIPPER FOUND:", option.data);
+    
     setdefaultValueShipper(option.data);
   };
 
   useEffect(() => {
-    console.log("checking for edit", "join:", !creating && pickupOrder != null);
+    
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
       setattachments(pickupOrder.attachments);
 
-      console.log("Selected Pickup:", pickupOrder);
+      
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -439,7 +432,7 @@ const ReceiptCreationForm = ({
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
       let updatedFormData = {
-        // GENERAL TAB
+
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
@@ -454,7 +447,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
-        // PICKUP TAB
+
         shipperId: pickupOrder.shipper,
         shipperInfo: `${
           pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
@@ -471,7 +464,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
           pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
         }`,
-        // DELIVERY TAB
+
         consigneeId: pickupOrder.consignee,
         consigneeInfo: `${
           pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -488,7 +481,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
           pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
         }`,
-        // CARRIER TAB
+
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
@@ -499,7 +492,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
-        // SUPPLIER TAB
+
         supplierId: pickupOrder.supplier,
         supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
           pickupOrder.supplierObj?.city || ""
@@ -508,13 +501,13 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        // CHARGES TAB
-        // COMMODITIES TAB
+
+
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+      
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -529,11 +522,11 @@ const ReceiptCreationForm = ({
     const employees = (await EmployeeService.getEmployees()).data.results;
     const carriers = (await CarrierService.getCarriers()).data.results;
 
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const forwardingAgentsWithType = addTypeToObjects(
       forwardingAgents,
       "forwarding-agent"
@@ -543,7 +536,7 @@ const ReceiptCreationForm = ({
     const employeesWithType = addTypeToObjects(employees, "employee");
     const carriersWithType = addTypeToObjects(carriers, "carrier");
 
-    // Merge the arrays
+
     const issuedByOptions = [...forwardingAgentsWithType];
     const destinationAgentOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
@@ -666,7 +659,7 @@ const ReceiptCreationForm = ({
 
     const options = addTypeToObjects(data, "employee");
 
-    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    
     return options;
   };
 
@@ -686,28 +679,14 @@ const ReceiptCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log("PICKUP NUMBER", currentPickUpNumber, pickupNumber);
+    
     if (creating) {
-      console.log(
-        "Setting new pickup number:",
-        pickupNumber,
-        "old pickup number:",
-        currentPickUpNumber
-      );
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
 
   useEffect(() => {
     if (fromPickUp) {
-      console.log(
-        "This receipt will be created from the order:",
-        pickupOrder,
-        "shipper is: ",
-        pickupOrder.shipperObj?.data?.obj,
-        "consignee is: ",
-        pickupOrder.consigneeObj?.data?.obj
-      );
       setshowCommodityCreationForm(true);
       setEmployeeOptions([pickupOrder.employeeObj]);
       setIssuedByOptions([pickupOrder.issued_byObj]);
@@ -719,7 +698,7 @@ const ReceiptCreationForm = ({
       setcommodities(pickupOrder.commodities);
 
       let updatedFormData = {
-        // GENERAL TAB
+
         status: 4,
         weight: pickupOrder.weight,
         number: pickupOrder.number,
@@ -735,7 +714,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
-        // PICKUP TAB
+
         shipperId: pickupOrder.shipperObj.data?.obj?.id,
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
@@ -756,7 +735,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
           pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
         }`,
-        // DELIVERY TAB
+
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
@@ -776,7 +755,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
           pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
         }`,
-        // CARRIER TAB
+
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
@@ -787,25 +766,21 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
-        // SUPPLIER TAB
+
         supplierId: pickupOrder.supplier,
         supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
           pickupOrder.supplierObj?.city || ""
         } - ${pickupOrder.supplierObj?.state || ""} - ${
           pickupOrder.supplierObj?.country || ""
         } - ${pickupOrder.supplierObj?.zip_code || ""}`,
-        //
+
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        // CHARGES TAB
-        // COMMODITIES TAB
+
+
         commodities: pickupOrder.commodities,
         notes: [],
       };
-      console.log(
-        "Form Data to be updated for the new receipt:",
-        updatedFormData
-      );
       setFormData(updatedFormData);
       setFormDataUpdated(true);
       setconsigneeRequest(pickupOrder.consignee);
@@ -835,8 +810,8 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      console.log("new weight", totalWeight);
-      //setFormData({...formData, weight: totalWeight});
+      
+
       setWeightUpdated(totalWeight);
     }
     let consigneeName = "";
@@ -859,7 +834,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createConsignee(consignee);
       if (response.status === 201) {
-        console.log("CONSIGNEE ID", response.data.id);
+        
         setconsigneeRequest(response.data.id);
       }
     }
@@ -884,7 +859,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
-        console.log("SHIPPER ID", response.data.id);
+        
         setshipperRequest(response.data.id);
       }
     }
@@ -903,7 +878,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("CLIENT TO BILL ID", response.data.id);
+        
         setclientToBillRequest(response.data.id);
       }
     }
@@ -918,7 +893,7 @@ const ReceiptCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    console.log("Checking for updates");
+    
     if (
       shipperRequest !== null &&
       consigneeRequest !== null &&
@@ -934,18 +909,18 @@ const ReceiptCreationForm = ({
   };
 
   useEffect(() => {
-    console.log("SHIPPER:", shipperRequest);
-    console.log("CONSIGNEE REQUEST:", consigneeRequest);
-    console.log("CLIENT TO BILL REQUEST:", clientToBillRequest);
-    console.log("ATTACHMNETS", attachments);
-    // Check if updates are complete initially
+    
+    
+    
+    
+
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
-        console.log("ATTACHMENTS:", attachments);
-        console.log("EVENTS", events);
-        console.log("PIECES:", commodities);
-        console.log("CARGOS:", charges);
+        
+        
+        
+        
         let rawData = {
           status: 2,
           number: formData.number,
@@ -984,10 +959,6 @@ const ReceiptCreationForm = ({
             const newPickup = { ...pickupOrder, status: 7 };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
-          console.log(
-            "Warehouse Receipt successfully created/updated:",
-            response.data
-          );
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
@@ -998,7 +969,7 @@ const ReceiptCreationForm = ({
             window.location.reload();
           }, 1000);
         } else {
-          console.log("Something went wrong:", response);
+          
           setShowErrorAlert(true);
         }
       };

@@ -13,7 +13,7 @@ const ItemAndServiceCreationForm = ({
   closeModal,
   creating,
 }) => {
-  // const [activeTab, setActiveTab] = useState("definition");
+
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setItemsAndServices] = useState([]);
   const [accounst, setaccounts] = useState([]);
@@ -32,8 +32,8 @@ const ItemAndServiceCreationForm = ({
   });
 
   useEffect(() => {
-    console.log("creating =", creating)
-    console.log("itemAndService =", itemAndService)
+    
+    
     if (!creating && itemAndService) {
       setFormData({
         code: itemAndService.code || "",
@@ -67,7 +67,7 @@ const ItemAndServiceCreationForm = ({
       currency: formData.currency,
       iataCode: formData.iataCode,
     };
-    console.log("DATA:", formData);
+    
     const response = await (creating
       ? ItemsAndServicesService.createItemAndService(rawData)
       : ItemsAndServicesService.updateItemsAndServices(
@@ -76,19 +76,16 @@ const ItemAndServiceCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Item & Service successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onitemAndServiceDataChange();
+
         setShowSuccessAlert(false);
         setFormData(formData)
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -107,7 +104,7 @@ const ItemAndServiceCreationForm = ({
     setFormData({ ...formData, type: type });
   };
 
-  //
+
 
   const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
@@ -126,13 +123,13 @@ const ItemAndServiceCreationForm = ({
         );
 
         if (response.data.next) {
-          // setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ", itemsAndServices);
+    
   };
   useEffect(() => {
     updateItemsAndServices();

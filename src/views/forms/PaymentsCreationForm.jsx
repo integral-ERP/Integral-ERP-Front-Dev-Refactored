@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Table from "../shared/components/Table";
-//-----------------------------------------
+
 import PaymentsService from "../../services/PaymentsService";
 import CustomerService from "../../services/CustomerService";
 import InvoicesService from "../../services/InvoicesService";
@@ -35,7 +35,7 @@ const PaymentsCreationForm = ({
 
   const [seleccion, setSeleccion] = useState('');
 
-  // const [valorBuscado, setValorBuscado] = useState('');
+
   const formFormat = {
     customerById: "",
     customerByName: "",
@@ -57,7 +57,7 @@ const PaymentsCreationForm = ({
   };
 
   const [formData, setformData] = useState({ formFormat });
-  //------------------------------------------------------------------------------------
+
   const handleCustomerBySelection = async (event) => {
     const id = event.id;
     const name = event.name;
@@ -80,15 +80,15 @@ const PaymentsCreationForm = ({
       totale += subtotal
     });
     settotal(totale);
-    console.log("Payments TOTAL=", totale);
+    
   };
-  //------------------------------------------------------------------------------------
+
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
+    
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -97,15 +97,15 @@ const PaymentsCreationForm = ({
       accountRecei: name,
 
     });
-    console.log("TYPE_CHART=", typeChart);
+    
   };
-  //------------------------------------------------------------------------------------
+
   const handleAccountBanckBySelection = async (event) => {
     const id = event.id;
     const typeChartBanck = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHARTBANK", result.typeChartBanck)
+    
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -114,9 +114,9 @@ const PaymentsCreationForm = ({
       accountReceiBank: name,
 
     });
-    console.log("TYPE_CHARTBANK=", typeChartBanck);
+    
   };
-  //------------------------------------------------------------------------------------
+
 
   useEffect(() => {
     if (!creating && payments) {
@@ -141,7 +141,7 @@ const PaymentsCreationForm = ({
   }, [creating, payments]);
 
 
-  // -------------------------------------------------------------
+
 
   const sendData = async () => {
     let rawData = {
@@ -151,30 +151,27 @@ const PaymentsCreationForm = ({
       trasaDate: formData.trasaDate,
       number: formData.number,
       memo: formData.memo,
-      //----------
+
       accountById: formData.accountById,
       accountByType: formData.accountByType,
       account: formData.account,
       accountbank: formData.accountbank,
       accountRecei: formData.accountRecei,
       typeChartBanck: formData.typeChartBanck,
-      //----------
+
       accountReceiBank: formData.accountReceiBank,
       accountByBankId: formData.accountByBankId,
       accountByBankType: formData.accountByBankType,
     };
-    console.log("DATA = ", formData);
+    
     const response = await (creating
       ? PaymentsService.createPayment(rawData)
       : PaymentsService.updatePayment(
         payments.id,
         rawData
       ));
-    //-------------------------------------
+
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Payments Lists successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -183,31 +180,31 @@ const PaymentsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
 
-  //---------------------------------------------------------------------------------------------------------------------------------------------------
+
   const fetchFormData = async () => {
     const customer = (await CustomerService.getCustomers()).data.results;
     const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
 
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const customerWithType = addTypeToObjects(customer, "customer");
     const accountWithType = addTypeToObjects(accoun, "accounten-termn")
-    // const accounBanktWithType           = addTypeToObjects(accoun, "accounten-Bank")
 
-    // Merge the arrays
+
+
     const customerByOptions = [...customerWithType];
     const accountByReceivable = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
-    console.log("accountByReceivable: ", accountByReceivable)
+    
     const accountBybank = [...accountWithType].filter(account => account.typeChart == "Bank Account");
-    console.log("accountWithType: ", accountBybank)
+    
 
     setCustomerByOptions(customerByOptions);
     setaccountByReceivable(accountByReceivable);

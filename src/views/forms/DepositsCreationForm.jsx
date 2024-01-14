@@ -39,11 +39,11 @@ const DepositsCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Deposit Terms=", deposit);
+    
+    
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
-      console.log("Editing Deposit Terms...", deposit);
+      
       setFormData({
         bankAccount: deposit.bankAccount,
         trasaDate: deposit.trasaDate,
@@ -52,7 +52,7 @@ const DepositsCreationForm = ({
     }
   }, [creating, deposit]);
 
-  // -------------------------------------------------------------
+
 
   const sendData = async () => {
     let rawData = {
@@ -61,8 +61,8 @@ const DepositsCreationForm = ({
       memo: formData.memo,
     };
 
-    console.log("DATA = ", formData);
-    //-------------------------------------
+    
+
     const response = await (creating
       ? DepositsService.createDeposit(rawData)
       : DepositsService.updateDeposit(
@@ -71,9 +71,6 @@ const DepositsCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Prueba successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -82,12 +79,12 @@ const DepositsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
 
-  // ---------------------------------------------
+
   const handleSelectDeposit = (deposit) => {
     setselectedDeposit(deposit);
   };
@@ -203,7 +200,7 @@ const DepositsCreationForm = ({
         </div>
 
         <Table
-          // data={deposits}
+
           columns={[
             "Deposited",
             "Entity",

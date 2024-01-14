@@ -127,7 +127,7 @@ const EmployeeCreationForm = ({
       : EmployeeService.updateEmployee(employee.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Employee successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -136,7 +136,7 @@ const EmployeeCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

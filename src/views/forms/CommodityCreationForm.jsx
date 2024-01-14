@@ -121,7 +121,7 @@ const CommodityCreationForm = ({
   }, []);
 
   useEffect(() => {
-    console.log(formData.weight);
+    
   }, [formData.weight]);
 
   return (

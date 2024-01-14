@@ -168,13 +168,13 @@ const Table = ({
     Store: "store",
     "Transport Company": "courier",
     Packages: "packages.length",
-    //---------------------Cristian
+
     Account: "accountNumber",
     "Due Days": "dueDays",
     "Discount Percentage": "discountPercentage",
     "Discount Days": "discountDays",
     Inactive: "inactive",
-    //---------------
+
     "Transaction Date": "trasaDate",
     "Due Date": "due",
     "Type Name": "typeName",
@@ -183,13 +183,13 @@ const Table = ({
     "Account Name": "accountByName",
     "Type Code": "typeByCode",
     "Biling Address": "bilingAddres",
-    //---------------
+
     "Type Items & Service": "typeByCode",
     "type Chart": "typeByCode",
     "Type Chart": "typeChart",
     "Account Type": "issuedByName",
     "Amt Due": "division",
-    //---------------
+
     Entipy: "customerByName",
     "AR Amount": "amountReceived",
     Memo: "memo",
@@ -327,7 +327,7 @@ const Table = ({
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -338,7 +338,7 @@ const Table = ({
   const generatePDFReceipt = () => {
     GenerateReceiptPdf(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -349,7 +349,7 @@ const Table = ({
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -360,7 +360,7 @@ const Table = ({
   const generatePDFInvoice = () => {
     GenerateInvoicePDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -371,7 +371,7 @@ const Table = ({
   const generateBillPDF = () => {
     GenerateBillPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -431,7 +431,7 @@ const Table = ({
     const result = {};
 
     if (xml.nodeType === 1) {
-      // Element node
+
       if (xml.attributes.length > 0) {
         result["@attributes"] = {};
         for (let i = 0; i < xml.attributes.length; i++) {
@@ -440,7 +440,7 @@ const Table = ({
         }
       }
     } else if (xml.nodeType === 3) {
-      // Text node
+
       result["#text"] = xml.nodeValue;
     }
 
@@ -477,16 +477,16 @@ const Table = ({
       if (fileType === "json") {
         try {
           const importedData = JSON.parse(content);
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing JSON file:", error);
         }
       } else if (fileType === "csv") {
         try {
           const importedData = Papa.parse(content, { header: true }).data;
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing CSV file:", error);
         }
@@ -495,8 +495,8 @@ const Table = ({
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(content, "text/xml");
           const importedData = xmlToJs(xmlDoc);
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
@@ -508,45 +508,45 @@ const Table = ({
             workbook.Sheets[sheetName],
             { header: 1 }
           );
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing XLSX file:", error);
         }
       } else {
-        console.log("Unsupported file format");
+        
       }
     };
     reader.readAsText(file);
   };
 
   const handleDragStart = (e, columnIndex) => {
-    // Capture the dragged column's index
+
     e.dataTransfer.setData("text/plain", columnIndex);
   };
 
   const handleDragOver = (e) => {
-    // Prevent the default behavior to allow dropping
+
     e.preventDefault();
   };
 
   const handleDrop = (e, targetColumnIndex) => {
-    // Get the dragged column's index
+
     const sourceColumnIndex = parseInt(
       e.dataTransfer.getData("text/plain"),
       10
     );
 
-    // Create a new column order array with the columns rearranged
+
     const newColumnOrder = [...columnOrder];
 
-    // Remove the dragged column from its source position
+
     const [draggedColumn] = newColumnOrder.splice(sourceColumnIndex, 1);
 
-    // Insert the dragged column at the target position
+
     newColumnOrder.splice(targetColumnIndex, 0, draggedColumn);
 
-    // Update the state with the new column order
+
     setColumnOrder(newColumnOrder);
   };
 
@@ -564,7 +564,7 @@ const Table = ({
     return value;
   }
 
-  // Function to get the value from a row for a given column name
+
   const getCellValue = (row, columnName) => {
     if (columnName === "Delete") {
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
@@ -574,7 +574,7 @@ const Table = ({
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
-    // Check if columnNameToProperty contains a "." indicating a nested property
+
     if (columnNameToProperty[columnName]?.includes(".")) {
       return getPropertyValue(row, columnNameToProperty[columnName]);
     } else {
@@ -582,7 +582,7 @@ const Table = ({
     }
   };
 
-  // Function to calculate the width needed to display a text
+
   const getTextWidth = (text) => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
@@ -724,7 +724,7 @@ const Table = ({
     }
   };
 
-  // Calculate the maximum width needed for each column
+
   const columnWidthsCalculated = columns.reduce((widths, columnName) => {
     const maxColumnWidth = Math.max(
       ...filteredData.map((row) => {
@@ -733,14 +733,14 @@ const Table = ({
             ? "" // Handle special columns as needed
             : getCellValue(row, columnName);
 
-        // Calculate the width needed for the current cell
+
         const cellWidth = getTextWidth(value);
 
         return cellWidth;
       })
     );
 
-    // Use a minimum width (e.g., 100 pixels) to prevent columns from being too narrow
+
     widths[columnName] = Math.max(maxColumnWidth, 100);
 
     return widths;

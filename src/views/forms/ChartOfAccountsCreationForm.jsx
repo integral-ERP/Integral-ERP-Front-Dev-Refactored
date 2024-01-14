@@ -19,7 +19,7 @@ const ChartOfAccountsCreationForm = ({
 
   const formFormat = {
     name: "",
-    // type: "",
+
     accountNumber: "",
     parentAccount: "",
     currency: "",
@@ -33,10 +33,10 @@ const ChartOfAccountsCreationForm = ({
 
   useEffect(() => {
     if (!creating && ChartAccounts) {
-      console.log("Editing Chart Of Accounts...", ChartAccounts);
+      
       setFormData({
         name: ChartAccounts.name || "",
-        // type: ChartAccounts.type || "",
+
         accountNumber: ChartAccounts.accountNumber || "",
         parentAccount: parseInt(ChartAccounts.parentAccount) || "",
         currency: ChartAccounts.currency || "",
@@ -59,15 +59,15 @@ const ChartOfAccountsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name || "",
-      // type: formData.type || "",
+
       accountNumber: formData.accountNumber || "",
       parentAccount: formData.parentAccount || "",
       currency: formData.currency || "",
       note: formData.note || "",
       typeChart: formData.typeChart || "",
     };
-    console.log("DATA:", formData);
-    //-------------------------------------
+    
+
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
       : ChartOfAccountsService.updateChartOfAccounts(
@@ -76,7 +76,7 @@ const ChartOfAccountsCreationForm = ({
         ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Chart of accounts successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -85,12 +85,12 @@ const ChartOfAccountsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
 
-  //---------------------------------------------------------------------------------------------------------------------------------------------------
+
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
@@ -108,25 +108,25 @@ const ChartOfAccountsCreationForm = ({
         );
 
         if (response.data.next) {
-          //setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ", ChartOfAccounts);
+    
   };
 
   const [accountype, setAccountype] = useState("");
 
   const handleSearch = (row) => {
     let searchMatch = false;
-    console.log("filtrando", row);
+    
     if (row.typeChart === accountype) {
-      console.log("Hay informacion");
+      
       searchMatch = true;
     } else {
-      console.log("No Hay informacion");
+      
     }
     return searchMatch;
   };
@@ -140,7 +140,7 @@ const ChartOfAccountsCreationForm = ({
     setAccountype(typeChart);
     setFormData({ ...formData, typeChart: typeChart });
   };
-  //--------------------------------------------------------------------------------------------------------------------------------------------------
+
 
   useEffect(() => {
     updateChartOfAccounts();

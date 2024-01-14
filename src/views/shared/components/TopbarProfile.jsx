@@ -3,7 +3,7 @@ import TopbarMenuLink from './TopbarMenuLink';
 import { useNavigate } from 'react-router-dom';
 import { Collapse } from "reactstrap";
 import PropTypes from "prop-types";
-// const Ava = `${process.env.PUBLIC_URL}/static/img/sarguero.png`;
+
 
 const TopbarProfile = ({ changeTheme }) => {
   const conf = JSON.parse(localStorage.getItem('config'));
@@ -45,7 +45,7 @@ const TopbarProfile = ({ changeTheme }) => {
     setTheme(currentTheme);
     setNombre(user ? user.name : "Sign In");
     if (user == null) {
-      //history("/");
+
     }
   }, []);
 

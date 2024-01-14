@@ -100,7 +100,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   inputName: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  //value:PropTypes.object,
+
   label: PropTypes.string,
   changeHandler: PropTypes.func.isRequired,
 };
@@ -109,7 +109,7 @@ Input.defaultProps = {
   type: () => "",
   name: () => "",
   placeholder: "",
-  //value: false,
+
   label: "",
   changeHandler: () => "No change handler defined",
 };

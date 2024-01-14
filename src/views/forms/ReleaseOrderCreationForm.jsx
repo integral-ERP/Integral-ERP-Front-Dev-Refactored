@@ -85,13 +85,6 @@ const ReleaseOrderCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event.id;
-    console.log(
-      "employee selected:",
-      id,
-      "employeeid in form",
-      formData.employeeId,
-      formData
-    );
     setFormData({
       ...formData,
       employeeId: id,
@@ -99,7 +92,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    console.log("EVENTO CLIENT TO BILL", event);
+    
     const type = event.target?.value;
     if (type) {
       if (type === "releasedTo") {
@@ -108,21 +101,13 @@ const ReleaseOrderCreationForm = ({
           clientToBillType: formData.releasedToType,
           clientToBillId: formData.releasedToId,
         });
-        console.log(
-          "CHANGING CLIENT TO BILL TYPE",
-          type,
-          "RELEASE ID",
-          formData.releasedToId,
-          "RELEASE TYPE",
-          formData.releasedToType
-        );
       } else {
         setFormData({ ...formData, clientToBillType: "other" });
       }
     } else {
       const id = event.id;
       const type = event.type;
-      console.log("id", id, "type", type);
+      
       setFormData({ ...formData, clientToBillType: type, clientToBillId: id });
     }
   };
@@ -136,7 +121,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   useEffect(() => {
-    console.log("UPDATEDD FORM DATA", formData);
+    
   }, [formData]);
 
   const handleReleasedToSelection = async (event) => {
@@ -178,9 +163,9 @@ const ReleaseOrderCreationForm = ({
     }
   };
 
-  // Function to handle selecting/unselecting a commodity within a receipt
+
   const handleCommoditySelection = (receiptNumber, commodityID, id) => {
-    // TODO: FIX BUG MULTIPLE COMMODITIES WITH SAME ID
+
     const commodityList = [];
     const set = new Set(releaseIDs);
     set.add(id);
@@ -194,14 +179,9 @@ const ReleaseOrderCreationForm = ({
   };
 
   useEffect(() => {
-    console.log(
-      "checking for edit",
-      "join:",
-      !creating && releaseOrder != null
-    );
     if (!creating && releaseOrder != null) {
       setcommodities(releaseOrder.commodities);
-      console.log("Selected Release Order:", releaseOrder);
+      
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -229,7 +209,7 @@ const ReleaseOrderCreationForm = ({
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+      
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -302,7 +282,7 @@ const ReleaseOrderCreationForm = ({
 
     const options = addTypeToObjects(data, "employee");
 
-    console.log("SEARCH FOR EMPLOYEE:", data, response, "options", options);
+    
     return options;
   };
 
@@ -358,7 +338,7 @@ const ReleaseOrderCreationForm = ({
   }, [pickupNumber]);
 
   useEffect(() => {
-    // this might be with selected receipts instead of commodities
+
     if (commodities.length > 0) {
       setFormData({ ...formData, status: 1 });
     }
@@ -386,7 +366,7 @@ const ReleaseOrderCreationForm = ({
 
       const response = await ReleaseService.createReleasedTo(releasedToC);
       if (response.status === 201) {
-        console.log("RELEASED TO ID", response.data.id);
+        
         setReleasedTo(response.data.id);
       }
     }
@@ -429,24 +409,18 @@ const ReleaseOrderCreationForm = ({
 
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        console.log("CLIENT TO BILL ID", response.data.id);
+        
         setClientToBill(response.data.id);
       }
     }
-    console.log(
-      "SENDING DATA",
-      clientToBillName,
-      "type",
-      formData.clientToBillType
-    );
 
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      console.log("new weight", totalWeight);
-      //setFormData({...formData, weight: totalWeight});
+      
+
       setWeightUpdated(totalWeight);
     }
   };
@@ -455,11 +429,6 @@ const ReleaseOrderCreationForm = ({
     if (releasedTo !== null && clientToBill !== null && weightUpdated) {
       setAllStateUpdatesComplete(true);
     }
-  };
-
-  const addSingleCommodity = (commodity) => {
-    setcommodities([...commodities, commodity]);
-    console.log("COMMODITIES", commodities);
   };
 
   useEffect(() => {
@@ -472,7 +441,7 @@ const ReleaseOrderCreationForm = ({
         charges = [...charges, order.charges];
       });
 
-      console.log("CARGOS", charges);
+      
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
@@ -498,10 +467,6 @@ const ReleaseOrderCreationForm = ({
           : ReleaseService.updateRelease(releaseOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          console.log(
-            "Release Order successfully created/updated:",
-            response.data
-          );
           setcurrentReleaseNumber(currentReleaseNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
@@ -512,7 +477,7 @@ const ReleaseOrderCreationForm = ({
             window.location.reload();
           }, 1000);
         } else {
-          console.log("Something went wrong:", response);
+          
           setShowErrorAlert(true);
         }
       };
@@ -539,7 +504,7 @@ const ReleaseOrderCreationForm = ({
           option.id === formData.releasedToId &&
           option.type === formData.releasedToType
       );
-      console.log("encontrado shipper: ", selectedOption);
+      
     } else {
       selectedOption = releasedToOptions.find(
         (option) =>
@@ -548,12 +513,6 @@ const ReleaseOrderCreationForm = ({
       );
     }
 
-    console.log(
-      "BUSCANDO OPCION",
-      formData.clientToBillType,
-      formData.clientToBillId,
-      selectedOption
-    );
     return selectedOption;
   };
 
