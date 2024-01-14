@@ -159,6 +159,7 @@ const Pickup = () => {
   };
 
   const handleEditPickupOrders = () => {
+    console.log("editando", selectedPickupOrder);
     if (selectedPickupOrder) {
       setIsEdit(true);
       openModal();
@@ -166,6 +167,11 @@ const Pickup = () => {
       alert("Please select a Pickup Order to edit.");
     }
   };
+
+  useEffect(() => {
+    console.log("currentselected: " + selectedPickupOrder);
+  }, [selectedPickupOrder])
+  
 
   const handleAddPickupOrder = () => {
     openModal();

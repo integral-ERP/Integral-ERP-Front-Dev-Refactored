@@ -627,6 +627,7 @@ const Table = ({
                     }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
+                    onDoubleClick={handleEdit}
                   >
                     {columnOrder.map((columnName) =>
                       visibleColumns[columnName] ? (
