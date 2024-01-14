@@ -674,7 +674,7 @@ const ReceiptCreationForm = ({
 
   useEffect(() => {
     if (fromPickUp) {
-      console.log("This receipt will be created from the order:", pickupOrder);
+      console.log("This receipt will be created from the order:", pickupOrder, "shipper is: ", pickupOrder.shipperObj?.data?.obj, "consignee is: ", pickupOrder.consigneeObj?.data?.obj);
 
       setEmployeeOptions([pickupOrder.employeeObj]);
       setIssuedByOptions([pickupOrder.issued_byObj]);
@@ -688,6 +688,7 @@ const ReceiptCreationForm = ({
       let updatedFormData = {
         // GENERAL TAB
         status: 4,
+        weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -700,7 +701,8 @@ const ReceiptCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         // PICKUP TAB
-        shipperId: pickupOrder.shipper,
+        shipperId: pickupOrder.shipperObj.data?.obj?.id,
+        shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
@@ -714,8 +716,9 @@ const ReceiptCreationForm = ({
           } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
           }`,
         // DELIVERY TAB
-        consigneeId: pickupOrder.consignee,
+        consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
+        consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
@@ -919,6 +922,7 @@ const ReceiptCreationForm = ({
           tracking_number: formData.trackingNumber,
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
+          weight: weightUpdated
         };
         const response = await (creating
           ? ReceiptService.createReceipt(rawData)
@@ -1114,7 +1118,7 @@ const ReceiptCreationForm = ({
                 defaultOptions={shipperOptions}
                 loadOptions={loadShipperSelectOptions}
                 value={shipperOptions.find(
-                  (option) => (option.id === formData.shipperId && option.type === formData.shipperType)
+                  (option) => (option.id === formData.shipperId && option.type_person === formData.shipperType)
                 )}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
@@ -1128,7 +1132,7 @@ const ReceiptCreationForm = ({
                 <AsyncSelect
                   id="consignee"
                   value={consigneeOptions.find(
-                    (option) => (option.id === formData.consigneeId && option.type === formData.consigneeType)
+                    (option) => (option.id === formData.consigneeId && option.type_person === formData.consigneeType)
                   )}
                   onChange={(e) => handleConsigneeSelection(e)}
                   isClearable={true}
