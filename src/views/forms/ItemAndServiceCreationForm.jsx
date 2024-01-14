@@ -13,7 +13,7 @@ const ItemAndServiceCreationForm = ({
   closeModal,
   creating,
 }) => {
-  // const [activeTab, setActiveTab] = useState("definition");
+
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setItemsAndServices] = useState([]);
   const [accounst, setaccounts] = useState([]);
@@ -32,6 +32,8 @@ const ItemAndServiceCreationForm = ({
   });
 
   useEffect(() => {
+    
+    
     
     
     if (!creating && itemAndService) {
@@ -76,13 +78,10 @@ const ItemAndServiceCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      
-        "Item & Service successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onitemAndServiceDataChange();
+
         setShowSuccessAlert(false);
         setFormData(formData)
         window.location.reload();
@@ -107,7 +106,7 @@ const ItemAndServiceCreationForm = ({
     setFormData({ ...formData, type: type });
   };
 
-  //
+
 
   const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
@@ -126,7 +125,7 @@ const ItemAndServiceCreationForm = ({
         );
 
         if (response.data.next) {
-          // setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {

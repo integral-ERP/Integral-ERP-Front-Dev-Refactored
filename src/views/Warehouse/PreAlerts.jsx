@@ -76,7 +76,7 @@ const PreAlerts = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -117,7 +117,7 @@ const PreAlerts = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            //updatereceipts();
+
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -135,7 +135,7 @@ const PreAlerts = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -156,7 +156,7 @@ const PreAlerts = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

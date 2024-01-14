@@ -41,6 +41,8 @@ const DepositsCreationForm = ({
   useEffect(() => {
     
     
+    
+    
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
       
@@ -52,7 +54,7 @@ const DepositsCreationForm = ({
     }
   }, [creating, deposit]);
 
-  // -------------------------------------------------------------
+
 
   const sendData = async () => {
     let rawData = {
@@ -71,9 +73,6 @@ const DepositsCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      
-        "Prueba successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -87,7 +86,7 @@ const DepositsCreationForm = ({
     }
   };
 
-  // ---------------------------------------------
+
   const handleSelectDeposit = (deposit) => {
     setselectedDeposit(deposit);
   };
@@ -203,7 +202,7 @@ const DepositsCreationForm = ({
         </div>
 
         <Table
-          // data={deposits}
+
           columns={[
             "Deposited",
             "Entity",

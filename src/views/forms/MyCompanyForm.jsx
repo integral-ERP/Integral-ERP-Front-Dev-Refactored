@@ -42,6 +42,7 @@ useEffect(() => {
     })
     .catch((error) => {
       
+      
     });
 }, [countriesUrl, apiKey]);
 
@@ -125,10 +126,10 @@ useEffect(() => {
         }
       );
       
-      // Handle success or perform additional actions
+
     } catch (error) {
       
-      // Handle error or show error message
+
     }
   };
 

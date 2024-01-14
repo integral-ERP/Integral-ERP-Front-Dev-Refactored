@@ -4,18 +4,18 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import PaymentTermsService from "../../services/PaymentTermsService";
-// import CurrencyService from "../../services/CurrencyService";
+
 
 const PaymentTermsCreationForms = ({
   paymentTerms,
   closeModal,
   creating,
-  // onpaymentTermDataChange,
+
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [PaymentTerms, setPaymentTerms] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  // const [currencies, setcurrencies] = useState([]);
+
 
   const formFormat = {
     description: "",
@@ -27,8 +27,9 @@ const PaymentTermsCreationForms = ({
 
   const [formData, setFormData] = useState({ formFormat });
 
-  useEffect(() => {;
+  useEffect(() => {
     if (!creating && paymentTerms) {
+      
       
       setFormData({
         description: paymentTerms.description || "",
@@ -40,16 +41,16 @@ const PaymentTermsCreationForms = ({
     }
   }, [creating, paymentTerms]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const currenciesData = await CurrencyService.getCurrencies();
-  //     setcurrencies(currenciesData.data);
-  //   };
 
-  //   fetchData();
-  // }, []);
 
-  // -------------------------------------------------------------
+
+
+
+
+
+
+
+
 
   const sendData = async () => {
     let rawData = {
@@ -62,6 +63,8 @@ const PaymentTermsCreationForms = ({
 
     
     //-------------------------------------
+    
+
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
@@ -70,13 +73,10 @@ const PaymentTermsCreationForms = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      
-        "Prueba successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onpaymentTermDataChange();
+
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
@@ -104,7 +104,7 @@ const PaymentTermsCreationForms = ({
         );
 
         if (response.data.next) {
-          // setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {

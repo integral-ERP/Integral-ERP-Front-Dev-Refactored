@@ -85,13 +85,6 @@ const ReleaseOrderCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event.id;
-    
-      "employee selected:",
-      id,
-      "employeeid in form",
-      formData.employeeId,
-      formData
-    );
     setFormData({
       ...formData,
       employeeId: id,
@@ -108,14 +101,6 @@ const ReleaseOrderCreationForm = ({
           clientToBillType: formData.releasedToType,
           clientToBillId: formData.releasedToId,
         });
-        
-          "CHANGING CLIENT TO BILL TYPE",
-          type,
-          "RELEASE ID",
-          formData.releasedToId,
-          "RELEASE TYPE",
-          formData.releasedToType
-        );
       } else {
         setFormData({ ...formData, clientToBillType: "other" });
       }
@@ -178,9 +163,9 @@ const ReleaseOrderCreationForm = ({
     }
   };
 
-  // Function to handle selecting/unselecting a commodity within a receipt
+
   const handleCommoditySelection = (receiptNumber, commodityID, id) => {
-    // TODO: FIX BUG MULTIPLE COMMODITIES WITH SAME ID
+
     const commodityList = [];
     const set = new Set(releaseIDs);
     set.add(id);
@@ -194,11 +179,6 @@ const ReleaseOrderCreationForm = ({
   };
 
   useEffect(() => {
-    
-      "checking for edit",
-      "join:",
-      !creating && releaseOrder != null
-    );
     if (!creating && releaseOrder != null) {
       setcommodities(releaseOrder.commodities);
       
@@ -358,7 +338,7 @@ const ReleaseOrderCreationForm = ({
   }, [pickupNumber]);
 
   useEffect(() => {
-    // this might be with selected receipts instead of commodities
+
     if (commodities.length > 0) {
       setFormData({ ...formData, status: 1 });
     }
@@ -433,12 +413,6 @@ const ReleaseOrderCreationForm = ({
         setClientToBill(response.data.id);
       }
     }
-    
-      "SENDING DATA",
-      clientToBillName,
-      "type",
-      formData.clientToBillType
-    );
 
     if (commodities.length > 0) {
       let totalWeight = 0;
@@ -446,7 +420,7 @@ const ReleaseOrderCreationForm = ({
         totalWeight += parseFloat(com.weight);
       });
       
-      //setFormData({...formData, weight: totalWeight});
+
       setWeightUpdated(totalWeight);
     }
   };
@@ -455,11 +429,6 @@ const ReleaseOrderCreationForm = ({
     if (releasedTo !== null && clientToBill !== null && weightUpdated) {
       setAllStateUpdatesComplete(true);
     }
-  };
-
-  const addSingleCommodity = (commodity) => {
-    setcommodities([...commodities, commodity]);
-    
   };
 
   useEffect(() => {
@@ -498,10 +467,6 @@ const ReleaseOrderCreationForm = ({
           : ReleaseService.updateRelease(releaseOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          
-            "Release Order successfully created/updated:",
-            response.data
-          );
           setcurrentReleaseNumber(currentReleaseNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
@@ -548,12 +513,6 @@ const ReleaseOrderCreationForm = ({
       );
     }
 
-    
-      "BUSCANDO OPCION",
-      formData.clientToBillType,
-      formData.clientToBillId,
-      selectedOption
-    );
     return selectedOption;
   };
 

@@ -36,7 +36,7 @@ const Bills = () => {
   ] = useModal(false);
 
   const columns = [
-    // "Status",
+
     "Number",
     "Payment Terms",
     "Type",
@@ -72,6 +72,7 @@ const Bills = () => {
 
         setBills([...response.data.results].reverse());
         
+        
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -102,7 +103,7 @@ const Bills = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -137,7 +138,7 @@ const Bills = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            // updateBill();
+
             const newBill = bills.filter(
               (order) => order.id !== selectedBills.id
             );
@@ -159,18 +160,18 @@ const Bills = () => {
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
-      // Check if the click is inside the context menu or a table row
+
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
+
         setShowContextMenu(false);
       }
     };
 
-    // Add the event listener when the component mounts
+
     document.addEventListener("click", handleDocumentClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
@@ -178,7 +179,7 @@ const Bills = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -191,7 +192,7 @@ const Bills = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   },);
@@ -204,7 +205,7 @@ const Bills = () => {
     }
   };
 
-  //-------------------------------------------------------------------------------------
+
   useEffect(() => {
     if (createWarehouseReceipt) {
       
@@ -212,28 +213,28 @@ const Bills = () => {
     }
   }, [createWarehouseReceipt]);
 
-  // const setInTransit = async () => {
-  //   
-  //   // openModal();
-  // }
-  // const setprueba = async () => {
-  //   
-  //   handlePayBills();
-  // }
+
+
+
+
+
+
+
+
 
   const contextMenuOptions = [
     {
       label: "Pay Bill",
       handler: () => setCreateWarehouseReceipt(true),
     },
-    // {
-    //   label: "Prueba-1",
-    //   handler: setInTransit,
-    // },
-    // {
-    //   label: "Prueba-2",
-    //   handler: setprueba,
-    // },
+
+
+
+
+
+
+
+
   ];
 
   const handleClose = () => {

@@ -19,7 +19,7 @@ const ChartOfAccountsCreationForm = ({
 
   const formFormat = {
     name: "",
-    // type: "",
+
     accountNumber: "",
     parentAccount: "",
     currency: "",
@@ -34,9 +34,10 @@ const ChartOfAccountsCreationForm = ({
   useEffect(() => {
     if (!creating && ChartAccounts) {
       
+      
       setFormData({
         name: ChartAccounts.name || "",
-        // type: ChartAccounts.type || "",
+
         accountNumber: ChartAccounts.accountNumber || "",
         parentAccount: parseInt(ChartAccounts.parentAccount) || "",
         currency: ChartAccounts.currency || "",
@@ -59,7 +60,7 @@ const ChartOfAccountsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name || "",
-      // type: formData.type || "",
+
       accountNumber: formData.accountNumber || "",
       parentAccount: formData.parentAccount || "",
       currency: formData.currency || "",
@@ -90,7 +91,7 @@ const ChartOfAccountsCreationForm = ({
     }
   };
 
-  //---------------------------------------------------------------------------------------------------------------------------------------------------
+
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
@@ -108,7 +109,7 @@ const ChartOfAccountsCreationForm = ({
         );
 
         if (response.data.next) {
-          //setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {
@@ -140,7 +141,7 @@ const ChartOfAccountsCreationForm = ({
     setAccountype(typeChart);
     setFormData({ ...formData, typeChart: typeChart });
   };
-  //--------------------------------------------------------------------------------------------------------------------------------------------------
+
 
   useEffect(() => {
     updateChartOfAccounts();

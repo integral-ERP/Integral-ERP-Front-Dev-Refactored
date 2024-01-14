@@ -73,7 +73,7 @@ const Customers = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -125,7 +125,7 @@ const Customers = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isWPButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -138,7 +138,7 @@ const Customers = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);

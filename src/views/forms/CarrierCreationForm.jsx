@@ -42,15 +42,15 @@ const CarrierCreationForm = ({
     carrierCode: "",
     idNumber: "",
     typeIdentificacion: "",
-    // FIELDS FOR AIRLINE
+
     iataCode: "",
     airlineCode: "",
     airlinePrefix: "",
     airwayBillNumbers: "",
     passengersOnlyAirline: false,
-    // FIELDS FOR LAND
+
     scacNumber: "",
-    // FIELDS FOR OCEAN
+
     fmcNumber: "",
   };
   const [formData, setFormData] = useState(formFormat);

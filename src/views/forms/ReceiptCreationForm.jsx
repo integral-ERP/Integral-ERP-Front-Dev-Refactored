@@ -67,7 +67,7 @@ const ReceiptCreationForm = ({
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
 
-  //repacking
+
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -80,7 +80,7 @@ const ReceiptCreationForm = ({
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
 
   const formFormat = {
-    // GENERAL TAB
+
     status: "",
     number: pickupNumber,
     createdDateAndTime: today,
@@ -91,29 +91,29 @@ const ReceiptCreationForm = ({
     issuedByInfo: "",
     destinationAgentId: "",
     employeeId: "",
-    // PICKUP TAB
+
     shipperId: "",
     shipperType: "",
     shipperInfo: "",
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
-    // DELIVERY TAB
+
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
-    // CARRIER TAB
+
     proNumber: "",
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
     invoiceNumber: "",
     purchaseOrderNumber: "",
-    // CHARGES TAB
-    // COMMODITIES TAB
+
+
     commodities: [],
     notes: [],
     charges: [],
@@ -126,6 +126,7 @@ const ReceiptCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
+    
     
     const id = event.id;
     const type = event.type;
@@ -177,13 +178,6 @@ const ReceiptCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event.id;
-    
-      "employee selected:",
-      id,
-      "employeeid in form",
-      formData.employeeId,
-      formData
-    );
     setFormData({
       ...formData,
       employeeId: id,
@@ -318,7 +312,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  //repacking
+
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
   };
@@ -348,25 +342,25 @@ const ReceiptCreationForm = ({
 
   useEffect(() => {
     const handleModalClick = (event) => {
-      // Check if the click is inside your modal content
+
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".income-charge-form");
       
       
       if (!isForm) {
-        // Click is outside the modal content, close the modal
+
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
         
       }
     };
 
-    // Add the event listener when the component mounts
+
     document
       .querySelector(".pickup")
       ?.addEventListener("click", handleModalClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document
         .querySelector(".pickup")
@@ -439,7 +433,7 @@ const ReceiptCreationForm = ({
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
       let updatedFormData = {
-        // GENERAL TAB
+
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
@@ -454,7 +448,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
-        // PICKUP TAB
+
         shipperId: pickupOrder.shipper,
         shipperInfo: `${
           pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
@@ -471,7 +465,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
           pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
         }`,
-        // DELIVERY TAB
+
         consigneeId: pickupOrder.consignee,
         consigneeInfo: `${
           pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -488,7 +482,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
           pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
         }`,
-        // CARRIER TAB
+
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
@@ -499,7 +493,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
-        // SUPPLIER TAB
+
         supplierId: pickupOrder.supplier,
         supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
           pickupOrder.supplierObj?.city || ""
@@ -508,8 +502,8 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        // CHARGES TAB
-        // COMMODITIES TAB
+
+
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
@@ -529,11 +523,11 @@ const ReceiptCreationForm = ({
     const employees = (await EmployeeService.getEmployees()).data.results;
     const carriers = (await CarrierService.getCarriers()).data.results;
 
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const forwardingAgentsWithType = addTypeToObjects(
       forwardingAgents,
       "forwarding-agent"
@@ -543,7 +537,7 @@ const ReceiptCreationForm = ({
     const employeesWithType = addTypeToObjects(employees, "employee");
     const carriersWithType = addTypeToObjects(carriers, "carrier");
 
-    // Merge the arrays
+
     const issuedByOptions = [...forwardingAgentsWithType];
     const destinationAgentOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
@@ -688,26 +682,12 @@ const ReceiptCreationForm = ({
   useEffect(() => {
     
     if (creating) {
-      
-        "Setting new pickup number:",
-        pickupNumber,
-        "old pickup number:",
-        currentPickUpNumber
-      );
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
 
   useEffect(() => {
     if (fromPickUp) {
-      
-        "This receipt will be created from the order:",
-        pickupOrder,
-        "shipper is: ",
-        pickupOrder.shipperObj?.data?.obj,
-        "consignee is: ",
-        pickupOrder.consigneeObj?.data?.obj
-      );
       setshowCommodityCreationForm(true);
       setEmployeeOptions([pickupOrder.employeeObj]);
       setIssuedByOptions([pickupOrder.issued_byObj]);
@@ -719,7 +699,7 @@ const ReceiptCreationForm = ({
       setcommodities(pickupOrder.commodities);
 
       let updatedFormData = {
-        // GENERAL TAB
+
         status: 4,
         weight: pickupOrder.weight,
         number: pickupOrder.number,
@@ -735,7 +715,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
-        // PICKUP TAB
+
         shipperId: pickupOrder.shipperObj.data?.obj?.id,
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
@@ -756,7 +736,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
           pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
         }`,
-        // DELIVERY TAB
+
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
@@ -776,7 +756,7 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
           pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
         }`,
-        // CARRIER TAB
+
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
@@ -787,25 +767,21 @@ const ReceiptCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
-        // SUPPLIER TAB
+
         supplierId: pickupOrder.supplier,
         supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
           pickupOrder.supplierObj?.city || ""
         } - ${pickupOrder.supplierObj?.state || ""} - ${
           pickupOrder.supplierObj?.country || ""
         } - ${pickupOrder.supplierObj?.zip_code || ""}`,
-        //
+
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        // CHARGES TAB
-        // COMMODITIES TAB
+
+
         commodities: pickupOrder.commodities,
         notes: [],
       };
-      
-        "Form Data to be updated for the new receipt:",
-        updatedFormData
-      );
       setFormData(updatedFormData);
       setFormDataUpdated(true);
       setconsigneeRequest(pickupOrder.consignee);
@@ -836,7 +812,7 @@ const ReceiptCreationForm = ({
         totalWeight += parseFloat(com.weight);
       });
       
-      //setFormData({...formData, weight: totalWeight});
+
       setWeightUpdated(totalWeight);
     }
     let consigneeName = "";
@@ -938,7 +914,7 @@ const ReceiptCreationForm = ({
     
     
     
-    // Check if updates are complete initially
+
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
@@ -984,10 +960,6 @@ const ReceiptCreationForm = ({
             const newPickup = { ...pickupOrder, status: 7 };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
-          
-            "Warehouse Receipt successfully created/updated:",
-            response.data
-          );
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {

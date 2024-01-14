@@ -22,7 +22,7 @@ const Invoices = () => {
   const columns = [
     "Number",
     "Account Type",
-    // "type Chart",
+
     "Transaction Date",
     "Due Date",
     "Apply",
@@ -82,7 +82,7 @@ const Invoices = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -123,7 +123,7 @@ const Invoices = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            // updateInvoices();
+
             const newInvoices = invoices.filter((order) => order.id !== selectedInvoices.id);
             setInvoices(newInvoices);
           } else {
@@ -143,7 +143,7 @@ const Invoices = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -156,7 +156,7 @@ const Invoices = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   },);

@@ -80,7 +80,7 @@ const BillsCreationForm = ({
     }
   }, [creating, bill]);
 
-  // -------------------------------------------------------------
+
 
   const sendData = async () => {
     let rawData = {
@@ -88,7 +88,7 @@ const BillsCreationForm = ({
       number: formData.number || "",
       due: formData.due,
       trasaDate: formData.trasaDate,
-      //----------
+
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
       paymentTemr: formData.paymentTemr,
@@ -124,15 +124,15 @@ const BillsCreationForm = ({
       .results;
     const carriVerndo = (await VendorService.getVendors()).data.results;
     const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const accountWithType = addTypeToObjects(accoun, "accounten-termn");
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
-    // Merge the arrays
+
     const accountByOptions = [...accountWithType].filter(
       (account) => account.typeChart == "Accouns Payable"
     );
@@ -161,7 +161,7 @@ const BillsCreationForm = ({
     
   };
 
-  //------------------------------------------------------------------------------------
+
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
     const description = event.description;
@@ -173,7 +173,7 @@ const BillsCreationForm = ({
       paymentByDesc: description,
     });
   };
-  //------------------------------------------------------------------------------------
+
   const handleVendorCarriBySelection = async (event) => {
     const id = event.id;
     const name = event.name;
@@ -190,7 +190,7 @@ const BillsCreationForm = ({
     });
   };
 
-  // ---------------------------------------------
+
   const handleSelectBill = (bill) => {
     setselectedBill(bill);
   };
@@ -392,11 +392,11 @@ const BillsCreationForm = ({
           "Quantity",
           "Price",
           "Amount",
-          // "Tax Code",
-          // "Tax Rate",
-          // "Tax Amt",
-          // "Amt + Tax",
-          // "Currency",
+
+
+
+
+
           "Options",
         ]}
         onSelect={handleSelectBill} // Make sure this line is correct

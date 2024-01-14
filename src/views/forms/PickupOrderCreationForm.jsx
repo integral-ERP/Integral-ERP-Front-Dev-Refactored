@@ -21,7 +21,7 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
-// import "../../styles/components/PickupOrderForm.scss";
+
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -67,7 +67,7 @@ const PickupOrderCreationForm = ({
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
   const formFormat = {
-    // GENERAL TAB
+
     status: 14,
     number: pickupNumber,
     createdDateAndTime: today,
@@ -78,14 +78,14 @@ const PickupOrderCreationForm = ({
     issuedByInfo: "",
     destinationAgentId: "",
     employeeId: "",
-    // PICKUP TAB
+
     shipperId: "",
     shipperType: "",
     shipperInfo: "",
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
-    // DELIVERY TAB
+
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
@@ -94,15 +94,15 @@ const PickupOrderCreationForm = ({
     deliveryLocationInfo: "",
     client_to_bill: "",
     client_to_bill_type: "",
-    // CARRIER TAB
+
     proNumber: "",
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
     invoiceNumber: "",
     purchaseOrderNumber: "",
-    // CHARGES TAB
-    // COMMODITIES TAB
+
+
     commodities: [],
     weight: 0,
   };
@@ -288,6 +288,7 @@ const PickupOrderCreationForm = ({
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
     
+    
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -344,7 +345,7 @@ const PickupOrderCreationForm = ({
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
         weight: pickupOrder.weight,
-        // PICKUP TAB
+
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
         shipperInfo: `${
@@ -365,7 +366,7 @@ const PickupOrderCreationForm = ({
         }`,
         pickupLocationType:
           pickupOrder.pickUpLocationObj?.data?.obj?.type_person,
-        // DELIVERY TAB
+
         consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
         consigneeInfo: `${
           pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -385,7 +386,7 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
           pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
         }`,
-        // CARRIER TAB
+
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
@@ -396,11 +397,11 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.main_carrierObj?.country || ""} - ${
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
-        // SUPPLIER TAB
+
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        // CHARGES TAB
-        // COMMODITIES TAB
+
+
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         client_to_billById:
@@ -426,11 +427,11 @@ const PickupOrderCreationForm = ({
     const employees = (await EmployeeService.getEmployees()).data.results;
     const carriers = (await CarrierService.getCarriers()).data.results;
 
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const forwardingAgentsWithType = addTypeToObjects(
       forwardingAgents,
       "forwarding-agent"
@@ -440,7 +441,7 @@ const PickupOrderCreationForm = ({
     const employeesWithType = addTypeToObjects(employees, "employee");
     const carriersWithType = addTypeToObjects(carriers, "carrier");
 
-    // Merge the arrays
+
     const issuedByOptions = [...forwardingAgentsWithType];
     const destinationAgentOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
@@ -474,7 +475,7 @@ const PickupOrderCreationForm = ({
       forwardingAgentsWithType,
     ];
 
-    // Set the state with the updated arrays
+
     setIssuedByOptions(issuedByOptions);
     setDestinationAgentOptions(destinationAgentOptions);
     setEmployeeOptions(employeeOptions);
@@ -720,7 +721,7 @@ const PickupOrderCreationForm = ({
         }
       }
     }
-    //return;
+
 
     if (commodities.length > 0) {
       let totalWeight = 0;
@@ -728,7 +729,7 @@ const PickupOrderCreationForm = ({
         totalWeight += parseFloat(com.weight);
       });
       
-      //setFormData({...formData, weight: totalWeight});
+
       setWeightUpdated(totalWeight);
     }
 
@@ -903,22 +904,22 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     const handleModalClick = (event) => {
-      // Check if the click is inside your modal content
+
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".pickup");
 
       if (!isForm) {
-        // Click is outside the modal content, close the modal
+
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
       }
     };
 
-    // Add the event listener when the component mounts
+
     document
       .querySelector(".pickup")
       ?.addEventListener("click", handleModalClick);
-    // Remove the event listener when the component unmounts
+
     return () => {
       document
         .querySelector(".pickup")
@@ -933,12 +934,12 @@ const PickupOrderCreationForm = ({
   }, [commodities]);
 
   useEffect(() => {
-    // Check if updates are complete initially
+
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          // GENERAL TAB
+
           status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
@@ -947,25 +948,25 @@ const PickupOrderCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-          // PICKUP TAB
+
           shipper: shipperRequest,
           shipperType: "",
           pick_up_location: pickuplocation,
-          // DELIVERY TAB
+
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
           client_to_bill_type: formData.client_to_bill_type,
           client_to_bill: formData.client_to_bill,
-          // CARRIER TAB
+
           pro_number: formData.proNumber,
           tracking_number: formData.trackingNumber,
           inland_carrier: formData.mainCarrierdId,
           main_carrier: formData.mainCarrierdId,
-          // SUPPLIER TAB
+
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
-          // CHARGES TAB
-          // COMMODITIES TAB
+
+
           commodities: commodities,
           charges: charges,
           supplier: formData.shipperId,
@@ -977,10 +978,6 @@ const PickupOrderCreationForm = ({
           : PickupService.updatePickup(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          
-            "Pickup Order successfully created/updated:",
-            response.data
-          );
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {

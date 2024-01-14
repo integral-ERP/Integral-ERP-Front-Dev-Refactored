@@ -11,7 +11,7 @@ const GenerateReleasePDF = (data) => {
   const barcodeImage = canvas.toDataURL();
   
 
-  //ctx.drawImage(bwipjs.toCanvas(barcodeOptions),0 ,0);
+
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -25,7 +25,7 @@ const GenerateReleasePDF = (data) => {
       includeText: true,
     };
     try {
-      // Generate the barcode as a canvas
+
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
       barcodeImage = canvas.toDataURL();
     } catch (error) {
@@ -35,7 +35,7 @@ const GenerateReleasePDF = (data) => {
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
-    // Loop through the commodities array and create a table row for each item
+
     if (data.commodities) {
       totalPieces = data.commodities.length;
       let firstRowText = "";
@@ -62,7 +62,7 @@ const GenerateReleasePDF = (data) => {
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
-            // Add the information for each internal commodity
+
             thirdRowText += commodity.locationCode || "";
             fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
             fifthRowText += `${internalCommodity.package_type_description} \n`;
@@ -77,11 +77,11 @@ const GenerateReleasePDF = (data) => {
       });
       const commodityRow = [
         {
-          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
           text: firstRowText,
         },
         {
-          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
           text: secondRowText,
         },
         {
@@ -91,7 +91,7 @@ const GenerateReleasePDF = (data) => {
           text: fourthRowText,
         },
         {
-          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
           text: fifthRowText,
         },
         {
@@ -101,11 +101,11 @@ const GenerateReleasePDF = (data) => {
           text: seventhRowText,
         },
         {
-          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
           text: eigthRowText,
         },
         {
-          // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
           text: ninenthRowText,
         },
       ];
@@ -117,7 +117,7 @@ const GenerateReleasePDF = (data) => {
         
       data.warehouseReceiptObj?.charges?.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
-          // Check if the charge should be shown based on the "show" property
+
           
           const chargeRow = [
             {
@@ -134,22 +134,22 @@ const GenerateReleasePDF = (data) => {
             },
           ];
           
-          // Add the charge row to the array
+
           chargeRows.push(chargeRow);
         }
       });
       
     }
     */
-    // Fetch the logo image dynamically
+
     fetch(logo)
       .then((response) => response.blob())
       .then((imageBlob) => {
-        // Convert the image blob to a data URL
+
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-          // Create the PDF document with barcode
+
 
           const pdf = {
             content: [
@@ -361,7 +361,7 @@ const GenerateReleasePDF = (data) => {
             },
           };
 
-          // Generate the PDF
+
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {
             const pdfUrl = URL.createObjectURL(blob);

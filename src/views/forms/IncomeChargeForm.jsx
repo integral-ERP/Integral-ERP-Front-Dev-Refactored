@@ -16,7 +16,7 @@ const IncomeChargeForm = ({
   editing,
   charge,
 }) => {
-  // Define state variables for form inputs
+
 
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
@@ -84,7 +84,7 @@ const IncomeChargeForm = ({
   }, []);
 
   useEffect(() => {
-    // Calcula los valores iniciales utilizando la variable commodities
+
     let initialNumberOfPieces = 0;
     let initialGrossWeight = 0;
     let initialGrossVolume = 0;
@@ -99,7 +99,7 @@ const IncomeChargeForm = ({
       });
     }
 
-    // Setea los valores iniciales en el estado del formulario
+
     setformData({
       ...formData,
       numberOfPieces: initialNumberOfPieces,
@@ -108,7 +108,7 @@ const IncomeChargeForm = ({
       chargeableWeight: initialChargeableWeight,
     });
 
-    // Resto del código del useEffect (obtención de monedas y servicios)
+
   }, [commodities]);
 
   const createCharge = () => {

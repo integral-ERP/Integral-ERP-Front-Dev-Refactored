@@ -35,7 +35,7 @@ const PaymentTerms  = () => {
     "Due Days",
     "Discount Percentage",
     "Discount Days",
-    // "Inactive",
+
   ];
 
   const handleContextMenu = (e) => {
@@ -48,18 +48,18 @@ const PaymentTerms  = () => {
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
-      // Check if the click is inside the context menu or a table row
+
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
+
         setShowContextMenu(false);
       }
     };
 
-    // Add the event listener when the component mounts
+
     document.addEventListener("click", handleDocumentClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
@@ -77,7 +77,7 @@ const PaymentTerms  = () => {
 
         setpaymentOfTerms([...response.data.results].reverse());
         
-        // setpaymentOfTerms([...paymentOfTerms, ...response.data.results].reverse());
+
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -115,7 +115,7 @@ const PaymentTerms  = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -154,7 +154,7 @@ const PaymentTerms  = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            // updatePaymentTerms();
+
             const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
           } else {
@@ -174,7 +174,7 @@ const PaymentTerms  = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -187,17 +187,17 @@ const PaymentTerms  = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
 
-  // useEffect(() => {
-  //   if(createWarehouseReceipt){
-  //     
-  //     openModalReceiptCreation();
-  //   }
-  // }, [createWarehouseReceipt])
+
+
+
+
+
+
   
 
   const contextMenuOptions = [
@@ -208,13 +208,13 @@ const PaymentTerms  = () => {
     {
       label: "Option 2",
       handler: () => {
-        // Handle Option 2
+
       },
     },
     {
       label: "Option 3",
       handler: () => {
-        // Handle Option 3
+
       },
     },
   ];
@@ -263,7 +263,7 @@ const PaymentTerms  = () => {
 
                 <ReceiptCreationForm
                   paymentTerms={selectedPaymentOfTerm}
-                  // closeModal={closeModalReceiptCreation}
+
                   creating={true}
                   onpaymentTermDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
@@ -301,7 +301,7 @@ const PaymentTerms  = () => {
                   paymentTerms={selectedPaymentOfTerm}
                   closeModal={closeModal}
                   creating={false}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
+
                 />
               </ModalForm>
             )}
@@ -312,7 +312,7 @@ const PaymentTerms  = () => {
                   paymentTerms={null}
                   closeModal={closeModal}
                   creating={true}
-                  // onpaymentTermDataChange={handlePickupOrdersDataChange}
+
                 />
               </ModalForm>
             )}

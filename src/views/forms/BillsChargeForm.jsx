@@ -30,7 +30,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
   const [locations, setlocations] = useState([]);
   const [internalID, setinternalID] = useState(0);
 
-  // PRUEBA
+
   const [typeByCode, setTypeServiceTems] = useState([]);
   const [typeByOptions, setptypeByOptions] = useState([]);
   const [types, settype] = useState([]);
@@ -41,7 +41,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
 
   let totalp;
   let tota;
-  // --------------------------------------------------------------------------------
+
   const handleChargeRateChange = (e) => {
     let unit = 0;
     const rate = e.target.value;
@@ -75,7 +75,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
       quantity: formData.quantity,
       note: formData.note,
       status: formData.status || 14,
-      // suma: formData.suma,
+
     };
     if (editing) {
       const indexToEdit = bills.findIndex((comm) => comm.id == bill.id);
@@ -133,7 +133,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
         note: bill.note,
         status: bill.status || 14,
         resultado: bill.resultado,
-        // suma: bill.suma,
+
       };
       setformData(formFormat);
     }
@@ -160,7 +160,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
         closeModal();
         onInvoicesDataChange();
         setShowSuccessAlert(false);
-        // window.location.reload();
+
       }, 1000);
     } else {
       
@@ -171,14 +171,14 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
   const fetchFormData = async () => {
     const type = (await ItemsAndServicesService.getItemsAndServices()).data
       .results;
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const typeWithType = addTypeToObjects(type, "type");
 
-    // Merge the arrays
+
     const typeByOptions = [...typeWithType];
 
     setptypeByOptions(typeByOptions);
@@ -188,7 +188,7 @@ const BillsChargeForm = ({ onCancel, bills, setBills, editing, bill }) => {
     fetchFormData();
   }, []);
 
-  //------------------------------------------------------------------------------------
+
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
     const code = event.code;

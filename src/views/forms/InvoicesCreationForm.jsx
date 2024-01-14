@@ -34,7 +34,7 @@ const InvoicesCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
-  // const [apply, setapplys] = useState([]);
+
 
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [paymentByOptions, setPaymentByOptions] = useState([]);
@@ -50,7 +50,7 @@ const InvoicesCreationForm = ({
   const [accounst, setaccounts] = useState([]);
   const [itemsAndServicestype, setItemsAndServicestype] = useState("");
 
-  // PRUEBA 
+
   const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false)
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
@@ -88,7 +88,7 @@ const InvoicesCreationForm = ({
   };
 
   const [formData, setformData] = useState(formFormat);
-  //------------------------------------------------------------------------------------
+
   const handleIssuedBySelection = async (event) => {
     const id = event.id;
     const name = event.name;
@@ -105,7 +105,7 @@ const InvoicesCreationForm = ({
     });
 
   };
-  //------------------------------------------------------------------------------------
+
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
     const description = event.description;
@@ -117,12 +117,13 @@ const InvoicesCreationForm = ({
       paymentByDesc: description,
     });
   };
-  //------------------------------------------------------------------------------------
+
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
+    
     
     setaccounts(result.data)
     setformData({
@@ -135,7 +136,7 @@ const InvoicesCreationForm = ({
     
   };
 
-  //------------------------------------------------------------------------------------
+
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
     const code = event.code;
@@ -147,7 +148,7 @@ const InvoicesCreationForm = ({
       typeByCode: code,
     });
   };
-  //------------------------------------------------------------------------------------
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -208,18 +209,18 @@ const InvoicesCreationForm = ({
       paidAd: formData.paidAd,
       type: formData.type,
       total: formData.total,
-      // typeName : formData.typeName,
-      //----------
+
+
       issued_by: formData.issuedById,
       issuedByName: formData.issuedByName,
-      //----------
+
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
-      //----------
+
       accountById: formData.accountById,
       accountByType: formData.accountByType,
       accountByName: formData.accountByName,
-      //----------
+
       typeById: formData.typeById,
       typeByCode: formData.typeByCode,
 
@@ -234,13 +235,10 @@ const InvoicesCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      
-        response.data
-      );
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onInvoicesDataChange();
+
         setShowSuccessAlert(false);
         window.location.reload();
       }, 1000);
@@ -291,13 +289,13 @@ const InvoicesCreationForm = ({
       applyToType: type,
     });
   };
-  // ----------------------------------------------------------------------
+
   const fetchFormData = async () => {
     const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
     const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
     const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
     const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
@@ -305,13 +303,13 @@ const InvoicesCreationForm = ({
     const customers = (await CustomerService.getCustomers()).data.results;
     const customersWithType = addTypeToObjects(customers, "customer");
 
-    // Add 'type' property to each array
+
     const forwardingAgentsWithType = addTypeToObjects(forwardingAgents, "forwarding-agent");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
     const accountWithType = addTypeToObjects(accoun, "accounten-termn");
     const typeWithType = addTypeToObjects(type, "type");
 
-    // Merge the arrays
+
     const issuedByOptions = [...forwardingAgentsWithType, ...customersWithType];
     const paymentByOptions = [...paymentsWithType];
     const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
@@ -362,7 +360,7 @@ const InvoicesCreationForm = ({
     let totall = 0;
     for (const valor of commodities) {
       let prueba = 0;
-      // let totall = 0;
+
       const totalP = 'amount';
       prueba = valor[totalP];
       totall = totall + prueba;
@@ -538,12 +536,12 @@ const InvoicesCreationForm = ({
           "Status",
           "type Chart",
           "Description",
-          // "Prepaid",
+
           "Quantity",
           "Price",
           "Amount",
           "Note",
-          // "Currency",
+
           "Options",
         ]}
         onSelect={handleSelectCommodity} // Make sure this line is correct

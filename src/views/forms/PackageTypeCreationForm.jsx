@@ -33,26 +33,26 @@ const PackageTypesCreationForm = ({
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-  // Fetch container codes from the API
+
   const fetchContainerCodes = async () => {
     const containerCodes = await PackageTypeService.getContainerCodes();
     setContainerCodes(containerCodes.data);
   };
 
-  // Fetch container types from the API
+
   const fetchContainerTypes = async () => {
     const containerTypes = await PackageTypeService.getContainerTypes();
     setContainerTypes(containerTypes.data);
   };
 
-  // Fetch container equip types from the API
+
   const fetchContainerEquipTypes = async () => {
     const containerEquipTypes = await PackageTypeService.getContainerEquipTypes();
     setContainerEquipTypes(containerEquipTypes.data);
   };
 
   useEffect(() => {
-    // Fetch container codes, types, and equip types when the component mounts
+
     fetchContainerCodes();
     fetchContainerTypes();
     fetchContainerEquipTypes();
