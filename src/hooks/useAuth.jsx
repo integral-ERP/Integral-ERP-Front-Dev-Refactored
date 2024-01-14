@@ -4,10 +4,6 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const accessToken = localStorage.getItem('access_token');
-  useEffect(() => {
-    ", accessToken);
-  }, [accessToken]);
-
   const value = useMemo(
     () => ({
       accessToken,
