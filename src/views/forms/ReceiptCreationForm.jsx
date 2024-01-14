@@ -675,7 +675,7 @@ const ReceiptCreationForm = ({
   useEffect(() => {
     if (fromPickUp) {
       console.log("This receipt will be created from the order:", pickupOrder, "shipper is: ", pickupOrder.shipperObj?.data?.obj, "consignee is: ", pickupOrder.consigneeObj?.data?.obj);
-
+      setshowCommodityCreationForm(true);
       setEmployeeOptions([pickupOrder.employeeObj]);
       setIssuedByOptions([pickupOrder.issued_byObj]);
       setDestinationAgentOptions([pickupOrder.destination_agentObj]);
