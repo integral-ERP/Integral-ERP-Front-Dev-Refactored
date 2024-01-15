@@ -33,18 +33,18 @@ const ChartOfAccounts   = () => {
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
-      // Check if the click is inside the context menu or a table row
+
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
+
         setShowContextMenu(false);
       }
     };
 
-    // Add the event listener when the component mounts
+
     document.addEventListener("click", handleDocumentClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
@@ -61,7 +61,7 @@ const ChartOfAccounts   = () => {
         });
 
         setChartOfAccounts([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...chartofAccounts, ...newChartOfAccounts ]);
+        
         
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -92,7 +92,7 @@ const ChartOfAccounts   = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -135,7 +135,7 @@ const ChartOfAccounts   = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Chart Of Accounts   Order to delete.");
@@ -144,7 +144,7 @@ const ChartOfAccounts   = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -156,7 +156,7 @@ const ChartOfAccounts   = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   },);

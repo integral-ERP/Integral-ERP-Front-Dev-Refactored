@@ -4,6 +4,7 @@ import PackageTypeService from "../../services/PackageTypeService";
 const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
   const [internalCommodities, setinternalCommodities] = useState([]);
+  const [id, setId] = useState(0);
   const formFormat = {
     package_type_id: "",
     package_type_description: "",
@@ -24,7 +25,8 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         setpackTypes(response.data.results);
       })
       .catch((error) => {
-        console.log(error);
+        
+        
       });
   }, []);
 
@@ -33,7 +35,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       const volWeight = (
         (formData.height * formData.width * formData.length) /
         166
-      );
+      ).toFixed(2);
   
       setformData(prevFormData => ({
         ...prevFormData,
@@ -47,30 +49,21 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const handleCommoditySelection = (e, commodityId) => {
     const isChecked = e.target.checked;
 
-    // Update the selectedCommodities based on the checkbox change
+
     setinternalCommodities((prevCommodities) => {
         if (isChecked) {
-            // If the checkbox is checked, add the commodity to the list
-            console.log("ADDING COMMODITY: "  , [...prevCommodities, getCommodityById(commodityId)]);
             return [...prevCommodities, getCommodityById(commodityId)];
         } else {
-            // If the checkbox is unchecked, remove the commodity from the list
+
             return prevCommodities.filter((item) => item.id !== commodityId);
         }
     });
 };
 
-// Helper function to get a commodity by its ID
+
 const getCommodityById = (commodityId) => {
     return commodities.find((item) => item.id === commodityId);
 };
-
-const isAdded = (e) => {
-  const id = e;
-  const ids = internalCommodities.map((com) => String(com.id))
-  console.log("IS CONTAINED: ", ids.includes(id));
-  return ids.includes(id);
-}
 
   const handleRepack = () => {
     let internalWeight = 0;
@@ -86,18 +79,20 @@ const isAdded = (e) => {
 
     const newCommodity = {
       ...formData,
+      id: `repacked-${id}`,
       weight: internalWeight, 
       containsCommodities: true,
       internalCommodities: internalCommodities,
     };
 
-    // Add the new commodity to the commodities array.
-    setCommodities([...filteredCommodities, newCommodity]);
 
-    // Reset the form to its initial state.
+    setCommodities([...filteredCommodities, newCommodity]);
+    setId(id + 1);
+
+
     setformData(formFormat);
     setinternalCommodities([]);
-    // You can also perform any other actions or validations here if needed.
+
   };
   
 

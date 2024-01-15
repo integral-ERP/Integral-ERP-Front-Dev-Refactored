@@ -4,18 +4,18 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import PaymentTermsService from "../../services/PaymentTermsService";
-// import CurrencyService from "../../services/CurrencyService";
+
 
 const PaymentTermsCreationForms = ({
   paymentTerms,
   closeModal,
   creating,
-  // onpaymentTermDataChange,
+
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [PaymentTerms, setPaymentTerms] = useState([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  // const [currencies, setcurrencies] = useState([]);
+
 
   const formFormat = {
     description: "",
@@ -27,9 +27,10 @@ const PaymentTermsCreationForms = ({
 
   const [formData, setFormData] = useState({ formFormat });
 
-  useEffect(() => {;
+  useEffect(() => {
     if (!creating && paymentTerms) {
-      console.log("Editing Payment Terms...", paymentTerms);
+      
+      
       setFormData({
         description: paymentTerms.description || "",
         dueDays: paymentTerms.dueDays || "",
@@ -40,16 +41,16 @@ const PaymentTermsCreationForms = ({
     }
   }, [creating, paymentTerms]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const currenciesData = await CurrencyService.getCurrencies();
-  //     setcurrencies(currenciesData.data);
-  //   };
 
-  //   fetchData();
-  // }, []);
 
-  // -------------------------------------------------------------
+
+
+
+
+
+
+
+
 
   const sendData = async () => {
     let rawData = {
@@ -60,8 +61,10 @@ const PaymentTermsCreationForms = ({
       inactive: formData.inactive || false,
     };
 
-    console.log("DATA = ", formData);
+    
     //-------------------------------------
+    
+
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
@@ -70,19 +73,16 @@ const PaymentTermsCreationForms = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Prueba successfully created/updated:",
-        response.data);
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onpaymentTermDataChange();
+
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -104,13 +104,13 @@ const PaymentTermsCreationForms = ({
         );
 
         if (response.data.next) {
-          // setNextPageURL(response.data.next);
+
         }
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log("Imprimir = ", PaymentTerms);
+    
   };
   useEffect(() => {
     updatePaymentTerm();

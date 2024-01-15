@@ -58,11 +58,11 @@ const BillsCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    console.log("Creating=", creating);
-    console.log("Bill Terms=", bill);
+    
+    
     if (!creating && bill) {
       setbills(bill.billCharges);
-      console.log("Editing Bill Terms...", bill);
+      
       setFormData({
         number: bill.number || "",
         due: bill.due || "",
@@ -81,7 +81,7 @@ const BillsCreationForm = ({
     }
   }, [creating, bill]);
 
-  // -------------------------------------------------------------
+
 
   const sendData = async () => {
     let rawData = {
@@ -89,7 +89,7 @@ const BillsCreationForm = ({
       number: formData.number || "",
       due: formData.due,
       trasaDate: formData.trasaDate,
-      //----------
+
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
       paymentTemr: formData.paymentTemr,
@@ -100,22 +100,22 @@ const BillsCreationForm = ({
       billCharges: bills,
     };
 
-    console.log("DATA = ", formData);
+    
     const response = await (creating
       ? BillsService.createBill(rawData)
       : BillsService.updateBill(bill.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Bill successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
         onbillDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 5000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
@@ -125,15 +125,15 @@ const BillsCreationForm = ({
       .results;
     const carriVerndo = (await VendorService.getVendors()).data.results;
     const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    // Add 'type' property to each array
+
     const accountWithType = addTypeToObjects(accoun, "accounten-termn");
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
-    // Merge the arrays
+
     const accountByOptions = [...accountWithType].filter(
       (account) => account.typeChart == "Accouns Payable"
     );
@@ -152,17 +152,17 @@ const BillsCreationForm = ({
     const id = event.id;
     const typeChart = event.typeChart;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart);
+    
     setaccounts(result.data);
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
     });
-    console.log("TYPE_CHART=", typeChart);
+    
   };
 
-  //------------------------------------------------------------------------------------
+
   const handlePaymentBySelection = async (event) => {
     const id = event.id;
     const description = event.description;
@@ -174,7 +174,7 @@ const BillsCreationForm = ({
       paymentByDesc: description,
     });
   };
-  //------------------------------------------------------------------------------------
+
   const handleVendorCarriBySelection = async (event) => {
     const id = event.id;
     const name = event.name;
@@ -191,7 +191,7 @@ const BillsCreationForm = ({
     });
   };
 
-  // ---------------------------------------------
+
   const handleSelectBill = (bill) => {
     setselectedBill(bill);
   };
@@ -392,6 +392,11 @@ const BillsCreationForm = ({
           "Quantity",
           "Price",
           "Amount",
+
+
+
+
+
           "Options",
         ]}
         onSelect={handleSelectBill} // Make sure this line is correct

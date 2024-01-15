@@ -130,16 +130,16 @@ const CustomerCreationForm = ({
       : CustomerService.updateCustomer(customer.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Customer successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
         onCustomerDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
 

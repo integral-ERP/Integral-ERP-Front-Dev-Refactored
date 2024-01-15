@@ -1,24 +1,24 @@
-// Define global styles
+
 html {
     font-size: 10px;
   }
   
-  // Define the maintenance layout styles
+
   .maintenance__layout {
     width: 100%;
     height: auto;
     font-size: 1.5rem;
     background-color: var(--background-color);
   
-    // ... Add more styles here
+
   }
   
-  // Define heading styles
+
   h1, h2, h3, h4, h5, h6 {
     color: var(--title-color);
   }
   
-  // Define maintenance layout container styles
+
   .maintenance__layout {
     position: relative;
     min-width: 1290px;
@@ -29,56 +29,56 @@ html {
     grid-template-areas: "aside content";
     grid-template-columns: 20% 80%;
   
-    // Add shadow styles
+
     border-radius: 4rem;
     box-shadow: 0 0 100px -5px rgba(0, 0, 0, 0.25);
   
-    // ... Add more styles here
+
   }
   
-  // Define aside styles
+
   .maintenance__aside {
     grid-area: aside;
     border-radius: 4rem 0 0 4rem;
     overflow-x: hidden;
     border: 1px solid green;
   
-    // ... Add more styles here
+
   }
   
-  // Define logo styles
+
   .maintenance__logo {
     height: 20vh;
     border: 1px solid lightblue;
   
-    // ... Add more styles here
+
   }
   
-  // Define content styles
+
   .maintenance__content {
     display: grid;
     grid-template-rows: 10% 5% 40% 5% 40%;
   
-    // ... Add more styles here
+
   }
   
-  // Define title styles
+
   .maintenance__title {
     border: 1px solid blue;
     padding: 10px;
   
-    // ... Add more styles here
+
   }
   
-  // Define section styles
+
   .maintenance__section {
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
   
-    // ... Add more styles here
+
   }
   
-  // Define option styles
+
   .maintenance__option {
     width: 10rem;
     height: 10rem;
@@ -91,20 +91,20 @@ html {
     border-radius: 1.5rem;
     box-shadow: 0.4rem 0.5rem rgba(0, 0, 0, 0.25);
   
-    // ... Add more styles here
+
   }
   
-  // Define subtitle styles
+
   .maintenance__subtitle {
     color: var(--subtitle--color);
   
-    // ... Add more styles here
+
   }
   
-  // Define icon styles
+
   .maintenance__icon {
     font-size: 3.5rem;
   
-    // ... Add more styles here
+
   }
   

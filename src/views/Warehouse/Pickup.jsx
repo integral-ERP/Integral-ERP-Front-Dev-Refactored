@@ -50,6 +50,7 @@ const Pickup = () => {
     "Delivery Name",
     "Delivery Address",
     "Pieces",
+    "Weight",
     "Carrier Name",
     "Carrier Address",
     "PRO Number",
@@ -70,18 +71,18 @@ const Pickup = () => {
   useEffect(() => {
     const handleDocumentClick = (e) => {
 
-      // Check if the click is inside the context menu or a table row
+
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
-        // Click is outside the context menu, close it
+
         setShowContextMenu(false);
       }
     };
 
-    // Add the event listener when the component mounts
+
     document.addEventListener("click", handleDocumentClick);
 
-    // Remove the event listener when the component unmounts
+
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
@@ -100,7 +101,6 @@ const Pickup = () => {
         });
 
         setpickupOrders([...pickupOrders, ...newPickupOrders].reverse());
-        console.log("NEW ORDERS", [...pickupOrders, ...newPickupOrders]);
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -145,7 +145,7 @@ const Pickup = () => {
     }
 
     return () => {
-      // Clean up the observer when the component unmounts
+
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -159,6 +159,7 @@ const Pickup = () => {
   };
 
   const handleEditPickupOrders = () => {
+    
     if (selectedPickupOrder) {
       setIsEdit(true);
       openModal();
@@ -167,13 +168,17 @@ const Pickup = () => {
     }
   };
 
+  useEffect(() => {
+    
+  }, [selectedPickupOrder])
+  
+
   const handleAddPickupOrder = () => {
     openModal();
   };
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-      console.log('Si selecciono');
       PickupService.deletePickup(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
@@ -190,7 +195,7 @@ const Pickup = () => {
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-            //updatePickupOrders();
+
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -199,7 +204,7 @@ const Pickup = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
+          
         });
     } else {
       alert("Please select a Pickup Order to delete.");
@@ -208,7 +213,7 @@ const Pickup = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-      // Check if the click is inside the table or not
+
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
@@ -221,20 +226,18 @@ const Pickup = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-      // Clean up the event listener when the component unmounts
+
       window.removeEventListener("click", handleWindowClick);
     };
   },);
 
   useEffect(() => {
     if (createWarehouseReceipt) {
-      console.log("OPENING UP NEW MODAL FOR RECEIPTS");
       openModalReceiptCreation();
     }
   }, [createWarehouseReceipt]);
 
   const seteWarehouse = () => {
-    console.log('Entre en esta funcion')
     if(selectedPickupOrder){
       setCreateWarehouseReceipt(true)
     } else {
@@ -243,34 +246,26 @@ const Pickup = () => {
   }
 
   const setInTransit = async () => {
-    console.log("Changing");
     if(selectedPickupOrder){
       const updatedPickuporder = {...selectedPickupOrder, status: 6};
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
-        // TODO: REFRESH WINDOW 
+
       }
-      console.log(response);
     }else{
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
-    console.log("Changing");
     if(selectedPickupOrder){
       const updatedPickuporder = {...selectedPickupOrder, status: 9};
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      console.log("RESPUESTA DE CAMBIO DE STATUS", response);
       if (response.status === 200){
-        console.log("ACTUALIZANDO PAGINA POR CAMBIO DE STATUS");
         window.location.reload(true);
-        // TODO: REFRESH WINDOW 
+
       }
-      console.log(response);
     }else{
       alert("Please select a pickup order to continue.");
     }

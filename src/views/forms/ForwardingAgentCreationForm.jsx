@@ -119,7 +119,7 @@ const ForwardingAgentsCreationForm = ({
   }, [selectedCountry, selectedState]);
 
   const sendData = async () => {
-    console.log("DATA:", formData);
+    
     let rawData = {
       name: formData.name,
       phone: parseInt(formData.phone),
@@ -144,16 +144,16 @@ const ForwardingAgentsCreationForm = ({
       : ForwardingAgentService.updateForwardingAgent(forwardingAgent.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Forwarding Agent successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
         onForwardingAgentDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

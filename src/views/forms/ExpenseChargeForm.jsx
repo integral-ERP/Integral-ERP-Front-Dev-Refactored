@@ -16,7 +16,7 @@ const ExpenseChargeForm = ({
   editing,
   charge,
 }) => {
-  // Define state variables for form inputs
+
 
   
   const [currencies, setcurrencies] = useState([]);
@@ -86,7 +86,7 @@ const ExpenseChargeForm = ({
   }, []);
 
   useEffect(() => {
-    // Calcula los valores iniciales utilizando la variable commodities
+
     let initialNumberOfPieces = 0;
     let initialGrossWeight = 0;
     let initialGrossVolume = 0;
@@ -101,7 +101,7 @@ const ExpenseChargeForm = ({
       });
     }
 
-    // Setea los valores iniciales en el estado del formulario
+
     setformData({
       ...formData,
       numberOfPieces: initialNumberOfPieces,
@@ -110,7 +110,7 @@ const ExpenseChargeForm = ({
       chargeableWeight: initialChargeableWeight,
     });
 
-    // Resto del código del useEffect (obtención de monedas y servicios)
+
   }, [commodities]);
 
 
@@ -158,7 +158,7 @@ const ExpenseChargeForm = ({
       };
       setformData(formFormat);
     }
-    console.log();
+    
   }, []);
 
   const handleChargeRateChange = (e) => {

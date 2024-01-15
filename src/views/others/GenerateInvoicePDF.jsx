@@ -1,5 +1,5 @@
 import pdfMake from "pdfmake/build/pdfmake";
-//import pdfFonts from "pdfmake/build/vfs_fonts";
+
 import pdfFonts from "./vfs_fonts";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js"; 
@@ -9,10 +9,10 @@ pdfMake.vfs = pdfFonts;
 const GenerateInvoicePDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  console.log(barcodeImage);
-  console.log("DATA PDF=", data)
+  
+  
 
-  //ctx.drawImage(bwipjs.toCanvas(barcodeOptions),0 ,0);
+
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -27,20 +27,20 @@ const GenerateInvoicePDF = (data) => {
       textxalign: "center",
     };
     try {
-      // Generate the barcode as a canvas
+
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
       barcodeImage = canvas.toDataURL();
     } catch (error) {
       reject(error);
     }
 
-//--------------------------------------------------------------------------------
+
     const chargesAmount = [];
     const chargesQuantity = [];
     const chargesTotalAmount = [];
     const chargesDescription = [];
     let totalAmount = 0;
-    // Loop through the invoiceCharges array and create a table row for each item
+
     if (data.invoiceCharges) {
       totalAmount = data.invoiceCharges.leng;
       let chargeAmount = "";
@@ -55,24 +55,24 @@ const GenerateInvoicePDF = (data) => {
         chargeDescription += `${chargeses.typeByCode} \n`;
       });
       const chargesRow = [
-        // TODO: CHANGE INDEX FOR PIECES AND GET PACKTYPE
+
         {
           text: chargeAmount,
         },
       ];
-      //------------------------------
+
       const chargesAmoun = [
         {
           text: chargeQuantity,
         },
       ];
-      //------------------------------
+
       const chargesTotalAmoun = [
         {
           text: chargeTotalAmount,
         },
       ];
-      //------------------------------
+
       const chargeDescript = [
         {
           text: chargeDescription,
@@ -84,13 +84,13 @@ const GenerateInvoicePDF = (data) => {
       chargesTotalAmount.push(chargesTotalAmoun);
       chargesDescription.push(chargeDescript);
     }
-    // const ChargeAmount = [];
+
 
     if (data.invoiceCharges) {
       data.invoiceCharges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
-          // Check if the charge should be shown based on the "show" property
-          console.log("CARGO", charge);
+
+          
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -105,23 +105,23 @@ const GenerateInvoicePDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          console.log("ROW", chargeRow);
-          // Add the charge row to the array
-          // ChargeAmount.push(chargeRow);
+          
+
+
         }
       });
-      // console.log("charge top=",ChargeAmount);
+
     }
 
-    // Fetch the logo image dynamically
+
     fetch(logo)
       .then((response) => response.blob())
       .then((imageBlob) => {
-        // Convert the image blob to a data URL
+
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-          // Create the PDF document with barcode
+
 
           const pdf = {
             content: [
@@ -143,7 +143,7 @@ const GenerateInvoicePDF = (data) => {
                   },
                   {
                     text: [
-                      //  `Ver \n`,
+
                        `${data.issuedByName || ``} \n`,
                       ``,
                       ``,
@@ -310,7 +310,7 @@ const GenerateInvoicePDF = (data) => {
             },
           };
 
-          // Generate the PDF
+
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {
             const pdfUrl = URL.createObjectURL(blob);

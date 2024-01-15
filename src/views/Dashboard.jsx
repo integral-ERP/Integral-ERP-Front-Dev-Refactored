@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [TRM, setTRM] = useState(0);
   const getTRM = async () => {
     const response = await TRMService.getTRMToday();
-    console.log(response.data[0].valor);
+    
     setTRM(response.data[0].valor);
   }
   useEffect(() => {

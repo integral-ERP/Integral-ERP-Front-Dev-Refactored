@@ -42,15 +42,15 @@ const CarrierCreationForm = ({
     carrierCode: "",
     idNumber: "",
     typeIdentificacion: "",
-    // FIELDS FOR AIRLINE
+
     iataCode: "",
     airlineCode: "",
     airlinePrefix: "",
     airwayBillNumbers: "",
     passengersOnlyAirline: false,
-    // FIELDS FOR LAND
+
     scacNumber: "",
-    // FIELDS FOR OCEAN
+
     fmcNumber: "",
   };
   const [formData, setFormData] = useState(formFormat);
@@ -78,7 +78,7 @@ const CarrierCreationForm = ({
 
   useEffect(() => {
     if (!creating && carrier) {
-      console.log("Editing carrier...", carrier);
+      
       let updatedFormData = {
         name: carrier.name || "",
         phone: carrier.phone || "",
@@ -122,7 +122,7 @@ const CarrierCreationForm = ({
       }
       setFormData(updatedFormData); // Update formData once with all the changes
     }
-    console.log("Form data:", formData);
+    
   }, [creating, carrier]);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ const CarrierCreationForm = ({
       : CarrierService.updateCarrier(carrier.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      console.log("Carrier successfully created/updated:", response.data);
+      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -198,9 +198,9 @@ const CarrierCreationForm = ({
         setShowSuccessAlert(false);
         setFormData(formFormat);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };

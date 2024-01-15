@@ -4,10 +4,6 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const accessToken = localStorage.getItem('access_token');
-  useEffect(() => {
-    console.log("VALOR ENCONTRADO EN USEAUTH (useEffect)", accessToken);
-  }, [accessToken]);
-
   const value = useMemo(
     () => ({
       accessToken,

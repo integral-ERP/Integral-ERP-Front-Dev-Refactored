@@ -12,7 +12,7 @@ import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
 import ContextMenu from "../../others/ContextMenu";
 import "react-datepicker/dist/react-datepicker.css";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
@@ -39,7 +39,7 @@ const Table = ({
   contextService,
   children,
   importEnabled,
-  createWarehouseReceipt
+  createWarehouseReceipt,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -54,7 +54,6 @@ const Table = ({
   const [showPage, setShowPage] = useState("initial");
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [isOpen, openModal, closeModal] = useModal(false);
-  console.log("RECEIVED DATA", data);
   const navigate = useNavigate();
   const currentDate = new Date();
   const startOfWeek = new Date(
@@ -76,18 +75,17 @@ const Table = ({
   });
 
   useEffect(() => {
-    if(createWarehouseReceipt){
-      setShowPage('nothing');
+    if (createWarehouseReceipt) {
+      setShowPage("nothing");
     } else {
-      setShowPage('initial');
+      setShowPage("initial");
     }
   }, [createWarehouseReceipt]);
 
   const handleEdit = (e) => {
-    setShowPage('edit');
+    setShowPage("edit");
     onEdit(e);
-
-  }
+  };
   const columnNameToProperty = {
     Name: "name",
     Phone: "phone",
@@ -129,7 +127,7 @@ const Table = ({
     "Pickup Orders": "",
     "Carrier Name": "main_carrierObj.name",
     "Carrier Address": "main_carrierObj.street_and_number",
-    Weight: "",
+    Weight: "weight",
     Volume: "",
     Carrier: "",
     "Main Carrier Key": "",
@@ -166,8 +164,8 @@ const Table = ({
     "Consignee Name": "consigneeObj.data.obj.name",
     "Shipper Name": "shipperObj.data.obj.name",
     " Date": "created_at",
-    "Client": "clientObj.name",
-    "Store": "store",
+    Client: "clientObj.name",
+    Store: "store",
     "Transport Company": "courier",
     "Packages": "packages.length",
       //---------------------Cristian
@@ -201,7 +199,6 @@ const Table = ({
   };
 
   const getStatus = (statusCode) => {
-    console.log("STATUS", statusCode);
     switch (statusCode.toString()) {
       case "1":
         return (
@@ -315,7 +312,6 @@ const Table = ({
   const fetchAndFilterData = async () => {
     if (searchQuery !== "") {
       const newData = (await contextService.search(searchQuery)).data;
-      console.log("DATA SEARCH:", newData.results);
       setFilteredData(newData.results);
     } else {
       return data; // Return the original data if searchQuery is empty
@@ -327,22 +323,13 @@ const Table = ({
   }, [searchQuery]);
 
   useEffect(() => {
-    console.log(
-      "Current data to be displayed on table:",
-      filteredData,
-      "search query",
-      searchQuery
-    );
-  }, [filteredData]);
-
-  useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -353,7 +340,7 @@ const Table = ({
   const generatePDFReceipt = () => {
     GenerateReceiptPdf(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -364,7 +351,7 @@ const Table = ({
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -375,7 +362,7 @@ const Table = ({
   const generatePDFInvoice = () => {
     GenerateInvoicePDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -386,7 +373,7 @@ const Table = ({
   const generateBillPDF = () => {
     GenerateBillPDF(selectedRow)
       .then((pdfUrl) => {
-        // Now you have the PDF URL, you can use it as needed
+
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -395,10 +382,18 @@ const Table = ({
   };
 
   const handleColumnVisibilityChange = (columnName) => {
-    setVisibleColumns((prevVisibility) => ({
-      ...prevVisibility,
-      [columnName]: !prevVisibility[columnName],
-    }));
+    if (columnName === "default") {
+      const initialVisibility = {};
+      columns.forEach((columnName) => {
+        initialVisibility[columnName] = true;
+      });
+      setVisibleColumns(initialVisibility);
+    } else {
+      setVisibleColumns((prevVisibility) => ({
+        ...prevVisibility,
+        [columnName]: !prevVisibility[columnName],
+      }));
+    }
   };
 
   const handleFormatChange = (event) => {
@@ -438,7 +433,7 @@ const Table = ({
     const result = {};
 
     if (xml.nodeType === 1) {
-      // Element node
+
       if (xml.attributes.length > 0) {
         result["@attributes"] = {};
         for (let i = 0; i < xml.attributes.length; i++) {
@@ -447,7 +442,7 @@ const Table = ({
         }
       }
     } else if (xml.nodeType === 3) {
-      // Text node
+
       result["#text"] = xml.nodeValue;
     }
 
@@ -484,16 +479,16 @@ const Table = ({
       if (fileType === "json") {
         try {
           const importedData = JSON.parse(content);
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing JSON file:", error);
         }
       } else if (fileType === "csv") {
         try {
           const importedData = Papa.parse(content, { header: true }).data;
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing CSV file:", error);
         }
@@ -502,8 +497,8 @@ const Table = ({
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(content, "text/xml");
           const importedData = xmlToJs(xmlDoc);
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+
+
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
@@ -511,46 +506,49 @@ const Table = ({
         try {
           const workbook = XLSX.read(content, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
-          const importedData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-          // Send the imported data to your API
-          // Example: axios.post(`${BASE_URL}import/`, importedData)
+          const importedData = XLSX.utils.sheet_to_json(
+            workbook.Sheets[sheetName],
+            { header: 1 }
+          );
+
+
         } catch (error) {
           console.error("Error parsing XLSX file:", error);
         }
       } else {
-        console.log("Unsupported file format");
+        
       }
     };
     reader.readAsText(file);
   };
 
   const handleDragStart = (e, columnIndex) => {
-    // Capture the dragged column's index
+
     e.dataTransfer.setData("text/plain", columnIndex);
   };
 
   const handleDragOver = (e) => {
-    // Prevent the default behavior to allow dropping
+
     e.preventDefault();
   };
 
   const handleDrop = (e, targetColumnIndex) => {
-    // Get the dragged column's index
+
     const sourceColumnIndex = parseInt(
       e.dataTransfer.getData("text/plain"),
       10
     );
 
-    // Create a new column order array with the columns rearranged
+
     const newColumnOrder = [...columnOrder];
 
-    // Remove the dragged column from its source position
+
     const [draggedColumn] = newColumnOrder.splice(sourceColumnIndex, 1);
 
-    // Insert the dragged column at the target position
+
     newColumnOrder.splice(targetColumnIndex, 0, draggedColumn);
 
-    // Update the state with the new column order
+
     setColumnOrder(newColumnOrder);
   };
 
@@ -568,7 +566,7 @@ const Table = ({
     return value;
   }
 
-  // Function to get the value from a row for a given column name
+
   const getCellValue = (row, columnName) => {
     if (columnName === "Delete") {
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
@@ -578,7 +576,7 @@ const Table = ({
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
-    // Check if columnNameToProperty contains a "." indicating a nested property
+
     if (columnNameToProperty[columnName]?.includes(".")) {
       return getPropertyValue(row, columnNameToProperty[columnName]);
     } else {
@@ -586,7 +584,7 @@ const Table = ({
     }
   };
 
-  // Function to calculate the width needed to display a text
+
   const getTextWidth = (text) => {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
@@ -631,6 +629,7 @@ const Table = ({
                     }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
+                    onDoubleClick={handleEdit}
                   >
                     {columnOrder.map((columnName) =>
                       visibleColumns[columnName] ? (
@@ -688,8 +687,8 @@ const Table = ({
                             </>
                           ) : columnName === "Delete" ? (
                             <button type="button" onClick={onDelete}>
-                                <i className="fas fa-trash"></i>
-                              </button>
+                              <i className="fas fa-trash"></i>
+                            </button>
                           ) : typeof columnNameToProperty[columnName] ===
                             "boolean" ? (
                             row[columnNameToProperty[columnName]] ? (
@@ -721,20 +720,13 @@ const Table = ({
           </div>
         );
       case "add":
-        return (
-          <div className="layout-fluid">
-            {children}
-          </div>
-      )
-      case 'edit': return (
-        <div className="layout-fluid">
-          {children}
-          </div>
-        );
+        return <div className="layout-fluid">{children}</div>;
+      case "edit":
+        return <div className="layout-fluid">{children}</div>;
     }
   };
 
-  // Calculate the maximum width needed for each column
+
   const columnWidthsCalculated = columns.reduce((widths, columnName) => {
     const maxColumnWidth = Math.max(
       ...filteredData.map((row) => {
@@ -743,14 +735,14 @@ const Table = ({
             ? "" // Handle special columns as needed
             : getCellValue(row, columnName);
 
-        // Calculate the width needed for the current cell
+
         const cellWidth = getTextWidth(value);
 
         return cellWidth;
       })
     );
 
-    // Use a minimum width (e.g., 100 pixels) to prevent columns from being too narrow
+
     widths[columnName] = Math.max(maxColumnWidth, 100);
 
     return widths;
@@ -825,17 +817,21 @@ const Table = ({
                             className="hidden-input"
                             id="import-input"
                           />
-                          {importEnabled && (<button
-                            className="generic-button ne"
-                            onClick={onDelete}
-                          >
-                            <i
-                              className="fas fa-upload menu-icon fa-3x"
-                              onClick={() =>
-                                document.getElementById("import-input").click()
-                              }
-                            ></i>
-                          </button>)}
+                          {importEnabled && (
+                            <button
+                              className="generic-button ne"
+                              onClick={onDelete}
+                            >
+                              <i
+                                className="fas fa-upload menu-icon fa-3x"
+                                onClick={() =>
+                                  document
+                                    .getElementById("import-input")
+                                    .click()
+                                }
+                              ></i>
+                            </button>
+                          )}
                         </div>
                         {showFilterMenu && (
                           <div
@@ -1013,6 +1009,15 @@ const Table = ({
                                 </button>
                                 <button
                                   type="button"
+                                  className="btn btn-primary"
+                                  onClick={() =>
+                                    handleColumnVisibilityChange('default')
+                                  }
+                                >
+                                  Default
+                                </button>
+                                <button
+                                  type="button"
                                   className="btn btn-secondary"
                                   data-bs-dismiss="modal"
                                   onClick={() =>
@@ -1121,7 +1126,7 @@ Table.defaultProps = {
   onAdd: null,
   title: "Table",
   showOptions: true,
-  importEnabled: true
+  importEnabled: true,
 };
 
 export default Table;

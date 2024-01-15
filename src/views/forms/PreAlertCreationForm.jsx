@@ -49,7 +49,7 @@ const PreAlertCreationForm = ({
         courier: preAlert.courier,
         packages: preAlert.packages,
       };
-      console.log("Form Data to be updated:", updatedFormData);
+      
       setFormData(updatedFormData);
     }
   }, [creating, preAlert]);
@@ -70,7 +70,7 @@ const PreAlertCreationForm = ({
         : PreAlertService.updatePreAlert(preAlert.id, formData));
 
       if (response.status >= 200 && response.status <= 300) {
-        console.log("Pre Alert successfully created/updated:", response.data);
+        
         setShowSuccessAlert(true);
         setTimeout(() => {
           closeModal();
@@ -78,9 +78,9 @@ const PreAlertCreationForm = ({
           setShowSuccessAlert(false);
           setFormData(formFormat);
           window.location.reload();
-        }, 2000);
+        }, 1000);
       } else {
-        console.log("Something went wrong:", response);
+        
         setShowErrorAlert(true);
       }
     };
@@ -122,7 +122,7 @@ const PreAlertCreationForm = ({
   };
 
   useEffect(() => {
-    console.log("actual data: ", formData);
+    
   }, [formData]);
 
   const handleSelectPackage = (actualPackage) => {

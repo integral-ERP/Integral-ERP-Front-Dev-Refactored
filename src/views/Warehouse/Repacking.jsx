@@ -101,7 +101,7 @@ const Repacking = () => {
   }, []);
 
   const handleSelectCommodity = (commodity) => {
-    console.log("Comiditty seleccionada:", commodity);
+    
     setSelectedCommodity(commodity);
   };
 
@@ -142,7 +142,7 @@ const Repacking = () => {
   const handleInspectCommodity = () => {
     if(selectedCommodity !== null){
         openModal();
-        console.log("OPENING MODAL");
+        
     }else{
         alert("Please select a Commodity to inspect");
     }

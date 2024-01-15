@@ -58,7 +58,7 @@
   border-radius: 3px;
 }
 
-//------------------------------------------------------------//
+
 .modal-filter {
   overflow-y: hidden;
   position: absolute;
@@ -167,14 +167,14 @@
   justify-content: center;
 }
 
-//-------------------------------------------------------------//
+
 .modal-body {
-  // display: flex;
-  // flex-wrap: wrap; /* Allow items to wrap to the next row */
-  // justify-content: space-between; /* Distribute items evenly horizontally */
-  // align-content: flex-start; /* Align items at the start of each row */
-  // max-width: 400px; /* Adjust the maximum width as needed */
-  // margin: 0 auto; /* Center the content horizontally */
+
+
+
+
+
+
   display: flex;
   width: 100px;
   flex-direction: column;
@@ -241,11 +241,11 @@
   /* Light gray background on hover */
 }
 
-// ---------------------------------------------------------
+
 
 .tr-margen {
   border: 1px solid #ffffff;
-  // white-space: nowrap;
+
   font-size: small;
   border-inline: 1px solid rgb(0, 0, 0);
 }
@@ -289,7 +289,7 @@
 
 }
 
-// --------------------------------------------
+
 .containerr {
   display: flex;
   grid-template-areas: "cont-one cont-two cont-three";
@@ -495,7 +495,7 @@
 }
 
 .container-box-general {
-  // width: 85% !important;
+
   margin-top: 1%;
 
   & .company-form__section.data-details:nth-child(2) {
@@ -556,7 +556,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  // width: 95% !important;
+
 }
 
 .containerr__shipper {
@@ -739,7 +739,7 @@
   font-size: 20px;
 }
 
-// -----------------------------------------------------
+
 .button-save {
   width: 10rem;
   height: 3rem;
@@ -855,7 +855,7 @@
   margin: 0 0 0 15%;
   width: 100%;
   text-align: left;
-  // margin-bottom: 0.5rem;
+
 }
 
 td {

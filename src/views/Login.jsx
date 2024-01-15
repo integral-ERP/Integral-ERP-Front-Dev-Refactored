@@ -24,9 +24,9 @@ const LoginPage = () => {
             localStorage.setItem('refresh_token', response.data.refresh)
             navigateTo("/dashboard", { replace: true });
             
-            console.log("NOW REDIRECTING TO DASHBOARD");
+            
           } else {
-            console.log("Error logging in");
+            
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
@@ -34,7 +34,7 @@ const LoginPage = () => {
           }
         })
         .catch((error) => {
-          console.log("Error logging in");
+          
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);

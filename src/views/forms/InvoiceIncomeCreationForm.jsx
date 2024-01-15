@@ -36,7 +36,7 @@ const InvoiceIncomeCreationForm = ({
   const [locations, setlocations] = useState([]);
   const [internalID, setinternalID] = useState(0);
 
-  // PRUEBA
+
   const [typeByCode, setTypeServiceTems] =useState([])
   const [typeByOptions, setptypeByOptions] = useState([]);
   const [types, settype] = useState([]);
@@ -47,7 +47,7 @@ const InvoiceIncomeCreationForm = ({
 
   let totalp;
   let tota;
-  // --------------------------------------------------------------------------------
+
   const handleChargeRateChange = (e) => {
   let unit = 0;
   const rate = e.target.value;
@@ -55,8 +55,10 @@ const InvoiceIncomeCreationForm = ({
   const total = unit * rate;
 
   tota = resultado+total;
-  console.log("TOTAL1 =", tota)
-  console.log("TOTAL2 =", resultado)
+  
+  
+  
+  
   
   setformData(
     { ...formData, 
@@ -74,7 +76,7 @@ const InvoiceIncomeCreationForm = ({
         setformData(
           { ...formData, suma: formData.suma, }
           );
-    console.log("SUMA2", suma)
+    
 
     const body = {
       id: internalID,
@@ -85,7 +87,9 @@ const InvoiceIncomeCreationForm = ({
       quantity: formData.quantity,
       note: formData.note,
       status: formData.status,
-      // suma: formData.suma,  
+
+
+      
     };
     if (editing) {
       const indexToEdit = commodities.findIndex(
@@ -98,7 +102,7 @@ const InvoiceIncomeCreationForm = ({
       setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
-    console.log("COMODITIES= ",commodities);
+    
 
   };
 
@@ -107,7 +111,7 @@ const InvoiceIncomeCreationForm = ({
     
     if(formData.totalAmount && formData.quantity){
       setformData({...formData,amount: formData.totalAmount*formData.quantity})
-      console.log("PReuba=",formData.totalAmount, formData.quantity)
+      
       
     }
   }, [formData.totalAmount, formData.quantity]);
@@ -154,33 +158,29 @@ const InvoiceIncomeCreationForm = ({
       );
       
     if (response.status >= 200 && response.status <= 300) {
-      console.log(
-        "Item & Service successfully created/updated:",
-        response.data
-      );
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
         onInvoicesDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 5000);
+      }, 1000);
     } else {
-      console.log("Something went wrong:", response);
+      
       setShowErrorAlert(true);
     }
   };
   
   const fetchFormData = async () => {  
    const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-    // Function to add 'type' property to an array of objects
+
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
   
-    // Add 'type' property to each array
+
     const typeWithType = addTypeToObjects(type, "type");
   
-    // Merge the arrays
+
    const typeByOptions = [...typeWithType];
   
    setptypeByOptions(typeByOptions);
@@ -191,7 +191,7 @@ const InvoiceIncomeCreationForm = ({
     fetchFormData();
   }, []);
 
-    //------------------------------------------------------------------------------------
+
   const handleTypeServiceBySelection = async (event) => {
     const id = event.id;
     const code = event.code;
