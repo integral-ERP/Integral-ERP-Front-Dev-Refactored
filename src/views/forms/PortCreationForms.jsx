@@ -106,6 +106,10 @@ const PortsCreationForm = ({
     }
   };
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
+
   return (
     <div className="company-form">
       <div className="row w-100">
@@ -291,7 +295,7 @@ const PortsCreationForm = ({
         </button>
         <button
           className="button-cancel"
-          onClick={closeModal}
+          onClick={handleCancel}
         >
           Cancel
         </button>

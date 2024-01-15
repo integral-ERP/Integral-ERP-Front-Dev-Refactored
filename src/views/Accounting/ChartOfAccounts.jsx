@@ -3,7 +3,7 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import ChartOfAccountsCreationForm  from "../forms/ChartOfAccountsCreationForm";
+import ItemAndServiceCreationForm  from "../forms/ItemAndServiceCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
@@ -17,10 +17,7 @@ const ChartOfAccounts   = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [createWarehouseReceipt, setCreateWarehouseReceipt] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-
-
   const [showContextMenu, setShowContextMenu] = useState(false);
 
   const columns = [
@@ -66,7 +63,6 @@ const ChartOfAccounts   = () => {
         setChartOfAccounts([...response.data.results].reverse());
         
         
-
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -114,7 +110,7 @@ const ChartOfAccounts   = () => {
       setIsEdit(true);
       openModal();
     } else {
-      alert("Please select a ChartOfAccounts   Order to edit.");
+      alert("Please select a Chart Of Accounts to edit.");
     }
   };
 
@@ -124,27 +120,25 @@ const ChartOfAccounts   = () => {
 
   const handleDeleteChartOfAccounts = () => {
     if (selectedChartOfAccounts ) {
-      ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts .id)
+      ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts.id)
         .then((response) => {
           if (response.status == 204) {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
-            const newChartOfAccounts = chartofAccounts.filter((order) => order.id !== selectedChartOfAccounts.id);
-            setChartOfAccounts(newChartOfAccounts);
+            }, 1000);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {
           
         });
     } else {
-      alert("Please select a ChartOfAccounts   Order to delete.");
+      alert("Please select a Chart Of Accounts   Order to delete.");
     }
   };
 
@@ -154,8 +148,7 @@ const ChartOfAccounts   = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
-        
+      if (!isPickupOrdersButton && !isTableRow  && !isEdit) {
         setSelectedChartOfAccounts(null);
       }
     };
@@ -167,26 +160,6 @@ const ChartOfAccounts   = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   },);
-  
-
-  const contextMenuOptions = [
-    {
-      label: "Create Warehouse Receipt",
-      handler: () => setCreateWarehouseReceipt(true)
-    },
-    {
-      label: "Option 2",
-      handler: () => {
-
-      },
-    },
-    {
-      label: "Option 3",
-      handler: () => {
-
-      },
-    },
-  ];
 
   return (
     <>
@@ -206,12 +179,11 @@ const ChartOfAccounts   = () => {
               setData={setChartOfAccounts}
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
-              contextMenuOptions={contextMenuOptions}
               importEnabled={false}
             >
               {selectedChartOfAccounts === null && (
-                <ChartOfAccountsCreationForm
-                  payments={null}
+                <ItemAndServiceCreationForm
+                  ChartAccounts={null}
                   closeModal={closeModal}
                   creating={true}
                   onDataChange={handleChartOfAccountDataChange}
@@ -219,7 +191,7 @@ const ChartOfAccounts   = () => {
               )}
 
               {selectedChartOfAccounts !== null && (
-                <ChartOfAccountsCreationForm
+                <ItemAndServiceCreationForm
                   ChartAccounts={selectedChartOfAccounts}
                   closeModal={closeModal}
                   creating={false}
@@ -227,7 +199,6 @@ const ChartOfAccounts   = () => {
                 />
               )}
             </Table>
-
             {showSuccessAlert && (
               <Alert
                 severity="success"
