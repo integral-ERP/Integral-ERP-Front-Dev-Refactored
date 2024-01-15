@@ -168,34 +168,33 @@ const Table = ({
     Store: "store",
     "Transport Company": "courier",
     "Packages": "packages.length",
-      //---------------------Cristian
-      "Account": "accountNumber",
-      "Due Days" : "dueDays",
-      "Discount Percentage" : "discountPercentage",
-      "Discount Days" : "discountDays",
-      "Inactive" : "inactive",
-      //---------------
-      "Transaction Date" : "trasaDate",
-      "Due Date" : "due",
-      "Type Name" : "typeName",
-      "Apply" : "issuedByName",
-      "Payment Temse": "paymentByDesc",
-      "Account Name" : "accountByName",
-      "Type Code" : "typeByCode",
-      "Biling Address" : "bilingAddres",
-      //---------------
-      "Type Items & Service": "typeByCode",
-      "type Chart": "typeByCode",
-      "Type Chart":"typeChart",
-      "Account Type" : "issuedByName",
-      "Amt Due": "division",
-      //---------------
-      "Date": "date",
-      "Entipy": "customerByName",
-      "Account Name": "bankAccount",
-      "AR Amount":  "amountReceived",
-      "Memo":       "memo",
-      "nombre":     "nombre",
+    //---------------------Cristian
+    "Account": "accountNumber",
+    "Due Days" : "dueDays",
+    "Discount Percentage" : "discountPercentage",
+    "Discount Days" : "discountDays",
+    "Inactive" : "inactive",
+    //---------------
+    "Transaction Date" : "trasaDate",
+    "Due Date" : "due",
+    "Type Name" : "typeName",
+    "Apply" : "issuedByName",
+    "Payment Temse": "paymentByDesc",
+    "Account Name" : "accountByName",
+    "Type Code" : "typeByCode",
+    "Biling Address" : "bilingAddres",
+    //---------------
+    "Type Items & Service": "typeByCode",
+    "type Chart": "typeByCode",
+    "Type Chart":"typeChart",
+    "Account Type" : "issuedByName",
+    "Amt Due": "division",
+    //---------------
+    "Date": "date",
+    "Entity": "entity",
+    "AR Amount":  "amountReceived",
+    "Memo":       "memo",
+    "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {

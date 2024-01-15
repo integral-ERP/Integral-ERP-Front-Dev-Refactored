@@ -35,16 +35,11 @@ const ItemAndServiceCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (!creating && ItemServices) {
-      console.log("Editing itemAndServices...", ItemServices);
-=======
     
     
     
     
     if (!creating && itemAndService) {
->>>>>>> 88fd87059dd3707c98aced0e02672833ff6707b0
       setFormData({
         code: ItemServices.code || "",
         description: ItemServices.description || "",
@@ -86,25 +81,13 @@ const ItemAndServiceCreationForm = ({
       ));
 
     if (response.status >= 200 && response.status <= 300) {
-<<<<<<< HEAD
-      console.log("Item & Service successfully created/updated:", response.data);
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-        closeModal();
-        onDataChange();
-=======
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
 
->>>>>>> 88fd87059dd3707c98aced0e02672833ff6707b0
         setShowSuccessAlert(false);
         window.location.reload();
-<<<<<<< HEAD
-      }, );
-=======
       }, 1000);
->>>>>>> 88fd87059dd3707c98aced0e02672833ff6707b0
     } else {
       
       setShowErrorAlert(true);
@@ -125,12 +108,8 @@ const ItemAndServiceCreationForm = ({
     setFormData({ ...formData, type: type });
   };
 
-<<<<<<< HEAD
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-=======
 
 
->>>>>>> 88fd87059dd3707c98aced0e02672833ff6707b0
   const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {

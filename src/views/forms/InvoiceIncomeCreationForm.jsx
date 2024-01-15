@@ -55,11 +55,6 @@ const InvoiceIncomeCreationForm = ({
   const total = unit * rate;
 
   tota = resultado+total;
-  
-  
-  
-  
-  
   setformData(
     { ...formData, 
       totalAmount: rate, 

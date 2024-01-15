@@ -392,11 +392,6 @@ const BillsCreationForm = ({
           "Quantity",
           "Price",
           "Amount",
-
-
-
-
-
           "Options",
         ]}
         onSelect={handleSelectBill} // Make sure this line is correct

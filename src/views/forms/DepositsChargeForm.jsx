@@ -4,6 +4,7 @@ import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
+import Input from "../shared/components/Input";
 import AsyncSelect from "react-select/async";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import CustomerService from "../../services/CustomerService";
@@ -11,62 +12,70 @@ import CustomerService from "../../services/CustomerService";
 const DepositsChargeForm = ({ 
   onCancel, 
   deposits, 
-  setBills, 
+  setdeposits, 
   editing, 
   deposit, 
-}) => {
-  const formFormat = {
+}) => { const formFormat = {
     accountByName: "",
-    amount: 0.0,
+    amount: "",
     description: "",
     entity: "",
     accountById:"",
     account: "",
+    deposit:"",
   };
+
+  const [types, settype] = useState([]);
+  const [accounts, setaccounts] = useState([]);
+  const [resultado, setResultado] = useState(0);
+
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [total, settotal] = useState(0);
 
   const [formData, setformData] = useState(formFormat);
   const [accountByOptions, setaccountByOptions] = useState(formFormat);
   const [accountByName, setaccountByName] = useState([]);
+  const [entity, setentityByName] = useState([]);
   const [customeByOptions, setcustomeByOptions] = useState(formFormat);
   const [internalID, setinternalID] = useState(0);
   // --------------------------------------------------------------------------------
-
+  
   const addCommodity = () => {
-    const suma = parseInt(formData.amount);
-    setformData({ ...formData, suma: formData.suma });
+    const suma =parseInt(formData.amount) + parseInt(resultado);
+        setResultado(suma);
+        setformData(
+          { ...formData, suma: formData.suma, }
+          );
     const body = {
       id: internalID,
       accountByName: formData.accountByName,
       amount: formData.amount,
       description: formData.description,
       entity: formData.entity,
-      accountByType: formData.accountByType,
-      accountById: formData.accountById,
     };
     if (editing) {
       const indexToEdit = deposits.findIndex((comm) => comm.id == deposit.id);
       const copy = [...deposits];
       copy[indexToEdit] = body;
-      setBills(copy);
+      setdeposits(copy);
     } else {
-      setBills([...deposits, body]);
+      setdeposits([...deposits, body]);
       setinternalID(internalID + 1);
     }
     console.log("BILLSS= ", deposits);
   };
 
-  useEffect(() => {
-    if (formData.totalAmount && formData.quantity) {
-      setformData({
-        ...formData,
-        amount: formData.totalAmount * formData.quantity,
-      });
-      console.log("PReuba=", formData.totalAmount, formData.quantity);
-    }
-  }, [formData.totalAmount, formData.quantity]);
+  // useEffect(() => {
+  //   if (formData.totalAmount && formData.quantity) {
+  //     setformData({
+  //       ...formData,
+  //       amount: formData.totalAmount * formData.quantity,
+  //     });
+  //     console.log("PReuba=", formData.totalAmount, formData.quantity);
+  //   }
+  // }, [formData.totalAmount, formData.quantity]);
 
   useEffect(() => {
     console.log("FORMDATA= ", formData);
@@ -94,7 +103,10 @@ const DepositsChargeForm = ({
         accountByName: deposit.accountByName,
         description: deposit.description,
         accountByType: deposit.accountByType,
-        accountById: deposit.accountById,
+        amount: deposit.amount,
+        total:total,
+        entity: deposit.entity,
+        resultado: deposit.resultado,
       };
       setformData(formFormat);
     }
@@ -105,7 +117,7 @@ const DepositsChargeForm = ({
   const sendDataType = async () => {
     let rawData = {
       accountByName: formData.accountByName,
-      account: formData.account,
+      entity: formData.entity,
     };
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
@@ -143,7 +155,6 @@ const DepositsChargeForm = ({
     const customeWithType = addCustomerToObjects(customer, "customer");
 
     // Merge the arrays
-    // const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable"||"Income"||"Expense"||"Cost Of Goods Sold"||"Bank Account"||"Equity"||"Other Current Assets"||"Fixed Assets"||"Other Current Liabilities"||"Other Assets");
     const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
     const customeByOptions = [... customeWithType]
 
@@ -180,14 +191,16 @@ const DepositsChargeForm = ({
     settype(result.data);
     setformData({
       ...formData,
-      customerByCode: id,
-      customerByCode: name,
+      customerById: id,
+      entity: name,
     });
   };
 
+
+
   return (
     <div className="company-form row income-charge-form">
-      <h3>Invoices Creation Form</h3>
+      <h3>Deposit Creation Form</h3>
       <div className="row w-100">
         <div className="col-6">
           <div className="company-form__section">
@@ -207,37 +220,32 @@ const DepositsChargeForm = ({
             />
           </div>
           {/* --------------------------------------------------------------------------- */}
-          <div className="form-column">
-            <label htmlFor="amount" className="text-comm">
-              Amount
-            </label>
-            <input
-              className="form-input"
+          <div className="company-form__section">
+            <Input
               type="number"
-              id="amount"
-              readOnly
+              inputName="amount"
+              placeholder="amount"
               value={formData.amount}
-              onChange={(e) =>
+              changeHandler={(e) =>
                 setformData({ ...formData, amount: e.target.value })
               }
+              label="Amount"
             />
           </div>
           {/* ---------------------------------------------------------------------------- */}
-          <div>
-            <label htmlFor="description" className="text-comm">
-              Description
-            </label>
-            <input
-              name="description"
-              type="text"
-              className="form-input"
-              placeholder="Description..."
-              value={formData.description}
-              onChange={(e) =>
-                setformData({ ...formData, description: e.target.value })
-              }
-            />
-          </div>
+          
+          <div className="company-form__section">
+          <Input
+            type="text"
+            inputName="description"
+            placeholder="description"
+            value={formData.description}
+            changeHandler={(e) =>
+              setformData({ ...formData, description: e.target.value })
+            }
+            label="Description"
+          />
+        </div>
           {/* ---------------------------------------------------------------------------- */}
           <div className="company-form__section">
           <label htmlFor="customerByCode" className="form-label">
@@ -245,7 +253,7 @@ const DepositsChargeForm = ({
           </label>
           <AsyncSelect
             id="customerByCode"
-            // value={customerByCode.find((option) => option.id === formData.customerByCode)}
+            value={entity.find((option) => option.id === formData.entity)}
             onChange={(e) => {handleEntityBySelection(e);}}
             isClearable={true}
             placeholder="Search and select..."

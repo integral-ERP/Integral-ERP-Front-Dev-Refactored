@@ -28,22 +28,21 @@ const DepositsCreationForm = ({
   const [selectedDeposit, setselectedDeposit] = useState(null);
   const [deposits, setdeposits] = useState([]);
 
+  const [accountype, setAccountype] = useState("");
+  const [total, settotal] = useState(0);
+
   const formFormat = {
     bankAccount: "",
     trasaDate: today,
     memo: "",
+    total:"",
+    amount: "",
     deposits: [],
   };
 
   const [formData, setFormData] = useState({ formFormat });
-  const [accountype, setAccountype] = useState("");
-
 
   useEffect(() => {
-    
-    
-    
-    
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
       
@@ -51,6 +50,8 @@ const DepositsCreationForm = ({
         bankAccount: deposit.bankAccount,
         trasaDate: deposit.trasaDate,
         memo: deposit.memo,
+        amount: deposit.amount,
+        total:total,
       });
       setAccountype(deposit.bankAccount);
     }
@@ -63,6 +64,7 @@ const DepositsCreationForm = ({
       bankAccount: formData.bankAccount,
       date: formData.trasaDate,
       memo: formData.memo,
+      total: total,
       depositCharges:deposits,
     };
 
@@ -114,6 +116,22 @@ const DepositsCreationForm = ({
     setAccountype(bankAccount);
     setFormData({ ...formData, bankAccount: bankAccount });
   };
+
+  useEffect(() => {
+    let totall = 0;
+    for (const valor of deposits) {
+      let prueba = 0;
+
+      const totalP = 'amount';
+      prueba = valor[totalP];
+      totall = totall + parseInt(prueba);
+    }
+    settotal(totall);
+  }, [deposits]);
+
+  const handleCancel = () => {
+    window.location.reload();
+  }
 
   return (
     <div className="company-form">
@@ -208,13 +226,13 @@ const DepositsCreationForm = ({
         </div>
 
         <Table
+        data={deposits}
           columns={[
-            "Deposited",
-            "Entity",
-            "Date",
+            "Account Name",
             "Amount",
-            "Number",
-            "Division",
+            "Description",
+            "Entity",
+            "Options",
           ]}
           onSelect={handleSelectDeposit} // Make sure this line is correct
           onDelete={handleDepositDelete}
@@ -227,13 +245,24 @@ const DepositsCreationForm = ({
           showOptions={false}
         />
 
-    
+<div className="form-column">
+        <label htmlFor="tota" className="text-comm">
+          Total Amount:
+        </label>
+        <input
+          className="form-input"
+          type="number"
+          readOnly
+          id="tota"
+          value={total}
+        />
+      </div>
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
