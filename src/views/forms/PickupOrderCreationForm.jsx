@@ -1105,6 +1105,15 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
+              <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="issuedbyinfo"
+                placeholder="Apply to..."
+                value={formData.issuedByInfo}
+                readonly={true}
+              />
+            </div>
 
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

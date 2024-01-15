@@ -192,7 +192,9 @@ const Table = ({
       "Account Type" : "issuedByName",
       "Amt Due": "division",
       //---------------
-      "Entipy":     "customerByName",
+      "Date": "date",
+      "Entipy": "customerByName",
+      "Account Name": "bankAccount",
       "AR Amount":  "amountReceived",
       "Memo":       "memo",
       "nombre":     "nombre",

@@ -7,10 +7,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
-import AsyncSelect from "react-select/async";
 import Table from "../shared/components/Table";
 
 import DepositsService from "../../services/DepositsService";
+import DepositsChargeForm from "./DepositsChargeForm";
 
 
 const DepositsCreationForm = ({
@@ -19,24 +19,25 @@ const DepositsCreationForm = ({
   creating,
   ondepositDataChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("deposit");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
-
-  const [bankAccount, setbankAccount] = useState([]);
 
   const [showDepositsCreationForm, setshowDepositsCreationForm] = useState(false)
   const [showDepositEditForm, setshowDepositEditForm] = useState(false);
   const [selectedDeposit, setselectedDeposit] = useState(null);
   const [deposits, setdeposits] = useState([]);
+
   const formFormat = {
     bankAccount: "",
     trasaDate: today,
     memo: "",
+    deposits: [],
   };
 
   const [formData, setFormData] = useState({ formFormat });
+  const [accountype, setAccountype] = useState("");
+
 
   useEffect(() => {
     console.log("Creating=", creating);
@@ -49,6 +50,7 @@ const DepositsCreationForm = ({
         trasaDate: deposit.trasaDate,
         memo: deposit.memo,
       });
+      setAccountype(deposit.bankAccount);
     }
   }, [creating, deposit]);
 
@@ -59,16 +61,13 @@ const DepositsCreationForm = ({
       bankAccount: formData.bankAccount,
       date: formData.trasaDate,
       memo: formData.memo,
+      depositCharges:deposits,
     };
-
     console.log("DATA = ", formData);
     //-------------------------------------
     const response = await (creating
       ? DepositsService.createDeposit(rawData)
-      : DepositsService.updateDeposit(
-        deposit.id,
-        rawData
-      ));
+      : DepositsService.updateDeposits(deposit.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
       console.log(
@@ -111,11 +110,11 @@ const DepositsCreationForm = ({
       setdeposits(depositsCopy);
     }
   };
-
   const handlebankAccount = (bankAccount) => {
-    setbankAccount(bankAccount);
+    setAccountype(bankAccount);
     setFormData({ ...formData, bankAccount: bankAccount });
   };
+
   return (
     <div className="company-form">
       <div className="creation creation-container w-100">
@@ -168,7 +167,13 @@ const DepositsCreationForm = ({
             </div>
           </div>
           <div className="company-form__section">
-
+          <button
+            type="button"
+            className="button-addpiece"
+            onClick={() => setshowDepositsCreationForm(!showDepositsCreationForm)}
+          >
+            Add
+          </button>
             {showDepositsCreationForm && (
               <DepositsChargeForm
                 onCancel={setshowDepositsCreationForm}
@@ -203,7 +208,7 @@ const DepositsCreationForm = ({
         </div>
 
         <Table
-          // data={deposits}
+          data={deposits}
           columns={[
             "Deposited",
             "Entity",

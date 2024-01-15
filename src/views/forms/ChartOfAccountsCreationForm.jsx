@@ -27,8 +27,6 @@ const ChartOfAccountsCreationForm = ({
     typeChart: "",
   };
 
-  const handleCloseForm = () => {window.location.reload();}
-
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
@@ -71,8 +69,8 @@ const ChartOfAccountsCreationForm = ({
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
       : ChartOfAccountsService.updateChartOfAccounts(
-          ChartAccounts.id,
-          rawData
+        ChartAccounts.id,
+        rawData
         ));
 
     if (response.status >= 200 && response.status <= 300) {
@@ -83,7 +81,7 @@ const ChartOfAccountsCreationForm = ({
         onDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 2000);
+      }, );
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -146,6 +144,9 @@ const ChartOfAccountsCreationForm = ({
     updateChartOfAccounts();
   }, []);
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
   return (
     <div className="company-form">
       <div className="creation creation-container w-100">
@@ -171,20 +172,14 @@ const ChartOfAccountsCreationForm = ({
                 <option value="Accouns Payable">Accouns Payable</option>
                 <option value="Income">Income</option>
                 <option value="Expense">Expense</option>
-                <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
+                <option value="Cost Of Goods Sold">Cost Of Goods Sold</option>
                 <option value="Bank Account">Bank Account</option>
                 <option value="Undeposited Funds">Undeposited Funds</option>
                 <option value="Fixed Assets">Fixed Assets</option>
-                <option value="Fixed Assets">Other Assets</option>
-                <option value="Other Current Assets">
-                  Other Current Assets
-                </option>
-                <option value="Long Term Liabilities">
-                  Long Term Liabilities
-                </option>
-                <option value="Other Current Liabilities">
-                  Other Current Liabilities
-                </option>
+                <option value="Other Assets">Other Assets</option>
+                <option value="Other Current Assets">Other Current Assets</option>
+                <option value="Long Term Liabilities">Long Term Liabilities</option>
+                <option value="Other Current Liabilities">Other Current Liabilities</option>
                 <option value="Equity">Equity</option>
                 <option value="Credit Card">Credit Card</option>
               </select>
@@ -230,18 +225,18 @@ const ChartOfAccountsCreationForm = ({
                 }
                 value={formData.parentAccount}
               >
-                <option value="">Select a Parent Account</option>
-                {filteredData.map((ChartOfAccounts) => (
-                  <option
-                    key={ChartOfAccounts.id}
-                    value={ChartOfAccounts.id}
-                    data-key={ChartOfAccounts.type}
-                  >
-                    {ChartOfAccounts.name + " || " + ChartOfAccounts.type}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <option value="">Select a Parent Account</option>
+              {filteredData.map((ChartOfAccounts) => (
+                <option
+                  key={ChartOfAccounts.id}
+                  value={ChartOfAccounts.id}
+                  data-key={ChartOfAccounts.type}
+                >
+                  {ChartOfAccounts.name + " || " + ChartOfAccounts.type}
+                </option>
+              ))}
+            </select>
+          </div>
 
             <div className="">
               <div className="company-form__section">
@@ -288,7 +283,7 @@ const ChartOfAccountsCreationForm = ({
         <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="button-cancel" onClick={handleCloseForm}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>

@@ -17,6 +17,9 @@ const ItemsAndServices = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const columns = [
     "Code",
     "Description",
@@ -26,11 +29,40 @@ const ItemsAndServices = () => {
     "IATA Code",
   ];
 
-  const updateItemsAndServices = (url = null) => {
+  const {hideShowSlider} = useContext(GlobalContext);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      // Check if the click is inside the context menu or a table row
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
+        // Click is outside the context menu, close it
+        setShowContextMenu(false);
+      }
+    };
+
+    // Add the event listener when the component mounts
+    document.addEventListener("click", handleDocumentClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [showContextMenu]);// Only re-add the event listener when showContextMenu changes
+
+  const updateItemsAndServices  = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {
-        setItemsAndServices([...response.data.results].reverse());
+        const newItemsAndServices   = response.data.results.filter((ItemServices) => {
+          const ItemsAndServicestId  = ItemServices.id;
+          return !itemsAndServices.some(
+            (existingPickupOrder) => existingPickupOrder.id === ItemsAndServicestId 
+          );
+        });
 
+        setItemsAndServices([...response.data.results].reverse());
+        console.log("NEW ORDERS", [...itemsAndServices, ...newItemsAndServices  ]);
+        
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -39,6 +71,7 @@ const ItemsAndServices = () => {
         console.error(error);
       });
   };
+
   useEffect(() => {
     if (!initialDataFetched) {
       updateItemsAndServices();
@@ -68,21 +101,26 @@ const ItemsAndServices = () => {
     updateItemsAndServices();
   };
 
-  const handleSelectItemAndService = (itemAndService) => {
-    setSelectedItemAndService(itemAndService);
+  const handleSelectItemAndService = (PickupOrder) => {
+    setSelectedItemAndService(PickupOrder);
   };
 
   const handleEditItemAndService = () => {
     if (selectedeItemAndService) {
+      setIsEdit(true);
       openModal();
     } else {
-      alert("Please select an Item and Service to edit.");
+      alert("Please select an Items & Services to edit.");
     }
   };
 
   const handleAddItemAndService = () => {
     openModal();
   };
+
+  useEffect(() => {
+    console.log("editing?", isEdit);
+  }, [isEdit])
 
   const handleDeleteItemAndService = () => {
     if (selectedeItemAndService) {
@@ -92,20 +130,19 @@ const ItemsAndServices = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
-            updateItemsAndServices();
+            }, 1000);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
-      alert("Please select an Item and Service to delete.");
+      alert("Please select anItems & Services to delete.");
     }
   };
 
@@ -115,8 +152,7 @@ const ItemsAndServices = () => {
       const clickedElement = event.target;
       const isItemAndServiceButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-
-      if (!isItemAndServiceButton && !isTableRow) {
+      if (!isItemAndServiceButton && !isTableRow  && !isEdit) {
         setSelectedItemAndService(null);
       }
     };
@@ -128,12 +164,6 @@ const ItemsAndServices = () => {
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
-
-  const handleClose = () => {
-    window.location.reload();
-  }
-
-  const {hideShowSlider} = useContext(GlobalContext);
 
   return (
     <>
@@ -149,24 +179,27 @@ const ItemsAndServices = () => {
               onDelete={handleDeleteItemAndService}
               onEdit={handleEditItemAndService}
               onAdd={handleAddItemAndService}
-              importEnabled={false}
               title="Items & Services"
+              setData={setItemsAndServices}
+              showContextMenu={showContextMenu}
+              setShowContextMenu={setShowContextMenu}
+              importEnabled={false}
             >
               {selectedeItemAndService === null && (
                 <ItemAndServiceCreationForm
-                itemAndService={null}
-                  closeModal={handleClose}
+                  ItemServices={null}
+                  closeModal={closeModal}
                   creating={true}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                  onDataChange={handleItemAndServiceDataChange}
                 />
               )}
 
               {selectedeItemAndService !== null && (
                 <ItemAndServiceCreationForm
-                itemAndService={selectedeItemAndService}
-                  closeModal={handleClose}
+                  ItemServices={selectedeItemAndService}
+                  closeModal={closeModal}
                   creating={false}
-                  onitemAndServiceDataChange={handleItemAndServiceDataChange}
+                  onDataChange={handleItemAndServiceDataChange}
                 />
               )}
             </Table>
@@ -187,14 +220,9 @@ const ItemsAndServices = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>
-                  Error deleting Item and Service. Please try again
-                </strong>
+                <strong>Error deleting Item and Service. Please try again</strong>
               </Alert>
             )}
-
-            
-            
           </div>
         </div>
       </div>

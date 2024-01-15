@@ -85,9 +85,7 @@ const InvoiceIncomeCreationForm = ({
       quantity: formData.quantity,
       note: formData.note,
       status: formData.status,
-      // suma: formData.suma,
-
-      
+      // suma: formData.suma,  
     };
     if (editing) {
       const indexToEdit = commodities.findIndex(
