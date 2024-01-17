@@ -27,6 +27,7 @@ const Deposits = () => {
     "Amount",
     "Memo",
     "Reconciliation Date",    
+    "Deposit PDF",
   ];
   const updateDeposit = (url = null) => {
     DepositsService.getDeposits(url)

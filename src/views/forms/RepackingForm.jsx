@@ -180,23 +180,40 @@ const getCommodityById = (commodityId) => {
             }
             style={{width: '100%'}}
           />
-          <label htmlFor="">use internal commodity weight</label>
-          <input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/>
+          
+        </div>
+        <div className="useinter">
+          <table id="tableware" style={{width: '60%', border:'2px solid black'}}>
+            <tr>
+              <td><label className="textpack" htmlFor="">use internal commodity weight</label></td>
+              <td ><input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/></td>
+            </tr>
+          </table>
+        </div>
+        {/* ----------------------------------------------------------------------------------------------------------------------------------------- */}
+      <div  style={{margin: '1rem',}}>
+        {commodities.map((item) => (
+        <div key={item.id} cl className="position-table">
+          <table id="tableware">
+            <tr>
+              <td className="checkrepack">
+                <input
+                    type="checkbox"
+                    id={`commodity-${item.id}`}
+                    value={item.id}
+                    checked={internalCommodities.map((com) => com.id).includes(item.id)}
+                    onChange={(e) => handleCommoditySelection(e, item.id)}
+                />
+              </td>
+              <td className="textpack">
+                <label className="textpack" htmlFor={`commodity-${item.id}`}>{item.description}  -  {item.length}x{item.width}x{item.height}</label>
+              </td>
+            </tr>
+          </table>
+        </div>
+        ))}
       </div>
-      <div>
-      {commodities.map((item) => (
-    <div key={item.id}>
-        <input
-            type="checkbox"
-            id={`commodity-${item.id}`}
-            value={item.id}
-            checked={internalCommodities.map((com) => com.id).includes(item.id)}
-            onChange={(e) => handleCommoditySelection(e, item.id)}
-        />
-        <label htmlFor={`commodity-${item.id}`}>{item.description}</label>
-    </div>
-))}
-      </div>
+      {/* ----------------------------------------------------------------------------------------------------------------------------------------- */}
       <div>
         <button type="button" className="button-save" onClick={handleRepack}>Repack</button>
       </div>

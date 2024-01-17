@@ -75,6 +75,7 @@ const BillsCreationForm = ({
         carriVerndorByName: bill.carriVerndorByName,
         carriVerndorById: bill.carriVerndorById,
         billCharges: bill.billCharges,
+        carriVerndorByInfo: bill.carriVerndorByInfo,
         status: bill.status || 14,
       });
     }
@@ -181,7 +182,7 @@ const BillsCreationForm = ({
     const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
       } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
       }`;
-    setVendorCarriby(result.data);
+    // setVendorCarriby(result.data);
     setFormData({
       ...formData,
       carriVerndorById: id,
@@ -235,36 +236,35 @@ const BillsCreationForm = ({
               </div>
 
               <div className="company-form__section">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    label="Due Date"
-                    className="font-right"
-                    value={dayjs(formData.due)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        due: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
-
-              <div className="company-form__section">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    label="Transation Date"
-                    className="font-right"
-                    value={dayjs(formData.trasaDate)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        trasaDate: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Due Date"
+                  className="font-right"
+                  value={dayjs(formData.due)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      due: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+            <div className="company-form__section">
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Transation Date"
+                  className="font-right"
+                  value={dayjs(formData.trasaDate)}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                    })
+                  }
+                />
+              </LocalizationProvider>
+            </div>
               <div className="company-form__section">
                 <label htmlFor="account" className="form-label">
                   Account:
@@ -392,11 +392,6 @@ const BillsCreationForm = ({
           "Quantity",
           "Price",
           "Amount",
-
-
-
-
-
           "Options",
         ]}
         onSelect={handleSelectBill} // Make sure this line is correct

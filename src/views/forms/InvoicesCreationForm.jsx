@@ -190,7 +190,9 @@ const InvoicesCreationForm = ({
         invoiceCharges: invoice.invoiceCharges,
 
 
-        issuedByInfo: `${invoice.issuedByName}`,
+        issuedByInfo: `${invoice.issued_byObj?.street_and_number || ""} - ${invoice.issued_byObj?.city || ""
+      } - ${invoice.issued_byObj?.state || ""} - ${invoice.issued_byObj?.country || ""
+      } - ${invoice.issued_byObj?.zip_code || ""}`,
       });
     }
   }, [creating, invoice]);
@@ -263,16 +265,16 @@ const InvoicesCreationForm = ({
         invoice.id,
         rawData
       )
-        ? ItemsAndServicesService.createItemAndService(rawData)
-        : ItemsAndServicesService.updateItemsAndServicesService(
-          invoice.id,
-          rawData
-        )
-          ? ChartOfAccountsService.createChartOfAccounts(rawData)
-          : ChartOfAccountsService.updateChartOfAccounts(
-            invoice.id,
-            rawData
-          )
+      ? ItemsAndServicesService.createItemAndService(rawData)
+      : ItemsAndServicesService.updateItemsAndServicesService(
+        invoice.id,
+        rawData
+      )
+      ? ChartOfAccountsService.createChartOfAccounts(rawData)
+      : ChartOfAccountsService.updateChartOfAccounts(
+        invoice.id,
+        rawData
+      )
     );
   };
 
@@ -372,6 +374,25 @@ const InvoicesCreationForm = ({
     window.location.reload();
   }
 
+  const loadIssuedBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+
+    const options = [...(addTypeToObjects(
+      responseVendors,
+      "vendor"
+    )), ...(addTypeToObjects(
+      responseCustomers,
+      "customer"
+    )), ...(addTypeToObjects(
+      responseAgents,
+      "forwarding-agent"
+    ))];
+
+    return options;
+  };
+
   return (
     <div className="company-form">
       <div className="creation creation-container w-100">
@@ -460,7 +481,7 @@ const InvoicesCreationForm = ({
                 Apply To:
               </label>
               <AsyncSelect
-                id="apply"
+                id="issuedById"
                 onChange={(e) => handleIssuedBySelection(e)}
                 value={issuedByOptions.find(
                   (option) => option.id === formData.issuedById
@@ -468,6 +489,7 @@ const InvoicesCreationForm = ({
                 isClearable={true}
                 placeholder="Search and select..."
                 defaultOptions={issuedByOptions}
+                loadOptions={loadIssuedBySelectOptions}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
