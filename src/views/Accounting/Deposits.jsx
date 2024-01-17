@@ -102,7 +102,7 @@ const Deposits = () => {
               setShowSuccessAlert(false);
             }, 3000);
 
-            const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
+            const newDeposits = deposits.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
           } else {
             setShowErrorAlert(true);
