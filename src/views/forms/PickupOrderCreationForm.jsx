@@ -1258,9 +1258,6 @@ const PickupOrderCreationForm = ({
                   loadOptions={loadPickUpLocationSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
-                  getOptionInfo={(option) =>
-                    option[(street_and_number, city, state, country, zip_code)]
-                  }
                 />
               </div>
 

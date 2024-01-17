@@ -39,10 +39,6 @@ const DepositsCreationForm = ({
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    
-    
-    
-    
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
       
