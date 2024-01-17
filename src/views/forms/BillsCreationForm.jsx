@@ -39,6 +39,7 @@ const BillsCreationForm = ({
   const [showBillEditForm, setshowBillEditForm] = useState(false);
   const [selectedBill, setselectedBill] = useState(null);
   const [bills, setbills] = useState([]);
+  const [total, settotal] = useState(0);
 
   const formFormat = {
     status: 14,
@@ -52,6 +53,7 @@ const BillsCreationForm = ({
     accountByType: "",
     carriVerndorByName: "",
     carriVerndorById: "",
+    total: "",
     bills: [],
   };
 
@@ -66,6 +68,7 @@ const BillsCreationForm = ({
       setFormData({
         number: bill.number || "",
         due: bill.due || "",
+        division: total,
         trasaDate: bill.trasaDate,
         paymentById: bill.paymentById,
         paymentByDesc: bill.paymentByDesc,
@@ -81,15 +84,26 @@ const BillsCreationForm = ({
     }
   }, [creating, bill]);
 
+  useEffect(() => {
+    let totall = 0;
+    for (const valor of bills) {
+      let prueba = 0;
 
+      const totalP = 'amount';
+      prueba = valor[totalP];
+      totall = totall + prueba;
+    }
+    settotal(totall);
+  }, [bills]);
 
   const sendData = async () => {
     let rawData = {
       status: formData.status,
       number: formData.number || "",
       due: formData.due,
+      division: total,
       trasaDate: formData.trasaDate,
-
+      total: formData.total,
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
       paymentTemr: formData.paymentTemr,
@@ -403,6 +417,18 @@ const BillsCreationForm = ({
         onAdd={() => { }}
         showOptions={false}
       />
+      <div className="form-column">
+        <label htmlFor="tota" className="text-comm">
+          Total Amount:
+        </label>
+        <input
+          className="form-input"
+          type="number"
+          readOnly
+          id="tota"
+          value={total}
+        />
+      </div>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

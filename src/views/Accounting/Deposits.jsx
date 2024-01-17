@@ -22,9 +22,9 @@ const Deposits = () => {
   const {hideShowSlider} = useContext(GlobalContext);
   const columns = [
     "Date",
-    "Employee",
-    "Account Name",
-    "Amount",
+    // "Employee",
+    "Bank Account",
+    "Amount (USB)",
     "Memo",
     "Reconciliation Date",    
     "Deposit PDF",

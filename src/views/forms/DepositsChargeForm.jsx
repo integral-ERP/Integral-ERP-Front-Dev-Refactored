@@ -37,6 +37,7 @@ const DepositsChargeForm = ({
   const [formData, setformData] = useState(formFormat);
   const [accountByOptions, setaccountByOptions] = useState(formFormat);
   const [accountByName, setaccountByName] = useState([]);
+  const [accountById, setaccountByType] = useState([]);
   const [entity, setentityByName] = useState([]);
   const [customeByOptions, setcustomeByOptions] = useState(formFormat);
   const [internalID, setinternalID] = useState(0);
@@ -51,6 +52,7 @@ const DepositsChargeForm = ({
     const body = {
       id: internalID,
       accountByName: formData.accountByName,
+      accountByType: formData.accountByType,
       amount: formData.amount,
       description: formData.description,
       entity: formData.entity,
@@ -66,16 +68,6 @@ const DepositsChargeForm = ({
     }
     console.log("BILLSS= ", deposits);
   };
-
-  // useEffect(() => {
-  //   if (formData.totalAmount && formData.quantity) {
-  //     setformData({
-  //       ...formData,
-  //       amount: formData.totalAmount * formData.quantity,
-  //     });
-  //     console.log("PReuba=", formData.totalAmount, formData.quantity);
-  //   }
-  // }, [formData.totalAmount, formData.quantity]);
 
   useEffect(() => {
     console.log("FORMDATA= ", formData);
@@ -117,6 +109,7 @@ const DepositsChargeForm = ({
   const sendDataType = async () => {
     let rawData = {
       accountByName: formData.accountByName,
+      accountByType: formData.accountByType,
       entity: formData.entity,
     };
     const response = await (creating
@@ -136,7 +129,7 @@ const DepositsChargeForm = ({
         onInvoicesDataChange();
         setShowSuccessAlert(false);
         // window.location.reload();
-      }, 5000);
+      }, 1000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
@@ -151,11 +144,13 @@ const DepositsChargeForm = ({
     const addCustomerToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
     // Add 'type' property to each array
-    const accountWithType = addTypeToObjects(accoun, "accounten-termn");
-    const customeWithType = addCustomerToObjects(customer, "customer");
+    const accountWithType = addTypeToObjects(accoun, "accoun",);
+    const customeWithType = addCustomerToObjects(customer, "customer-chart");
 
     // Merge the arrays
-    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
+    // const accountByOptions = [...accountWithType].filter(account => (account.type == "Expense") || (account.type == "Equity") || (account.type == "Accouns Payable"));
+    const accountByOptions = [...accountWithType];
+
     const customeByOptions = [... customeWithType]
 
     setaccountByOptions(accountByOptions);
@@ -169,19 +164,19 @@ const DepositsChargeForm = ({
   //------------------------------------------------------------------------------------
   const handleAccountBySelection = async (event) => {
     const id = event.id;
-    const typeChart = event.typeChart;
+    const type = event.type;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    console.log("RESULTADO CHART", result.typeChart)
+    console.log("RESULTADO CHART", result.data.type)
     setaccounts(result.data)
     setformData({
       ...formData,
       accountById: id,
-      accountByType: typeChart,
+      accountByType: type,
       accountByName: name,
 
     });
-    console.log("TYPE_CHART=", typeChart);
+    console.log("TYPE_CHART=", type);
   };
   //------------------------------------------------------------------------------------
   const handleEntityBySelection = async (event) => {
@@ -205,17 +200,16 @@ const DepositsChargeForm = ({
         <div className="col-6">
           <div className="company-form__section">
             <label htmlFor="account" className="form-label">
-              Chart Account:
+            Account Name:
             </label>
             <AsyncSelect
               id="account"
-              value={accountByName.find(
-                (option) => option.id === formData.accountByName)}
-              onChange={(e) => { handleAccountBySelection(e); }}
+              value={accountByName.find((option) => option.id === formData.accountByName)}
+              onChange={(e) => {handleAccountBySelection(e); }}
               isClearable={true}
               placeholder="Search and select..."
               defaultOptions={accountByOptions}
-              getOptionLabel={(option) => option.name + " || " + "Accounts Receivable"}
+              getOptionLabel={(option) => option.name}
               getOptionValue={(option) => option.id}
             />
           </div>

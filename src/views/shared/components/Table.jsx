@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
+import GenerateDepositPDF from "../../others/GenerateDepositPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
@@ -190,11 +191,11 @@ const Table = ({
     "Account Type" : "issuedByName",
     "Amt Due": "division",
     //---------------
-    "Date": "date",
     "Entity": "entity",
-    "AR Amount":  "amountReceived",
-    "Memo":       "memo",
-    "nombre":     "nombre",
+    "Amount (USB)": "total",
+    "Memo": "memo",
+    "nombre": "nombre",
+    "Bank Account": "bankAccount",
   };
 
   const getStatus = (statusCode) => {
@@ -371,6 +372,17 @@ const Table = ({
 
   const generateBillPDF = () => {
     GenerateBillPDF(selectedRow)
+      .then((pdfUrl) => {
+
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
+  };
+
+  const generateDepositPDF = () => {
+    GenerateDepositPDF(selectedRow)
       .then((pdfUrl) => {
 
         window.open(pdfUrl, "_blank");
@@ -659,6 +671,10 @@ const Table = ({
                             </button>
                           ) : columnName === "Bill PDF" ? (
                             <button type="button" onClick={generateBillPDF}>
+                              <i className="fas fa-file-pdf"></i>
+                            </button>
+                          ) : columnName === "Deposit PDF" ? (
+                            <button type="button" onClick={generateDepositPDF}>
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (

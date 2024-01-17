@@ -261,14 +261,16 @@ const GenerateBillPDF = (data) => {
                     [
                       
                       {
+                        text: `TOTAL :`,
+                        alignment: `center`,
+                        colSpan: 3,
+                        rowSpan: 1,
                       },
-                      {
-                      },
-                      {
-                      },
+                      {},
+                      {},
                       {
                         text: 
-                        `${data.account || ``}`,
+                        `${data.division || ``}`,
                       },
                     ],
                     
