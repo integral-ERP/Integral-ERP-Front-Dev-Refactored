@@ -88,11 +88,12 @@
 }
 
 .generic-table {
-  width: 95%;
-  overflow-x: scroll;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  // overflow-x: scroll;
   border-collapse: collapse;
-  box-shadow: 1px 2px 17px -1px rgba(0, 0, 0, 0.42);
-  border-radius: 10px;
+  // border: 1px solid rgb(111, 105, 105);
   background: white;
   margin-inline: auto;
   margin-bottom: 30px;
@@ -117,11 +118,10 @@
 }
 
 .table-hover {
-  border-collapse: separate;
-  width: 100%;
-  height: 16vh;
+  border-collapse: collapse;
+  width: 99%;
   text-align: center;
-  margin: 8px;
+  // margin: 8px 0;
 }
 
 .alert-notification {
@@ -227,8 +227,8 @@
 }
 
 .css-13cymwt-control {
-  min-height: 4rem !important;
-  width: 81% !important;
+  min-height: 3rem !important;
+  // width: 100% !important;
   background: white;
   color: rgb(252, 6, 6) !important;
   height: 0rem !important;
@@ -256,7 +256,7 @@
 }
 
 .css-1xc3v61-indicatorContainer {
-  height: 3rem;
+  padding: 0 3px !important;
 }
 
 .margin-zero {
@@ -296,7 +296,7 @@
 #shipper,
 #consignee {
   min-width: 10px;
-  width: 90%;
+  width: 100%;
   height: 4rem;
   font-size: initial;
   text-align: left;
@@ -306,13 +306,14 @@
 #pickup,
 #delivery,
 #mainCarrier {
-  width: 90%;
+  width: 100%;
   margin: 0 0 0 15%;
 }
 
 .css-1jqq78o-placeholder {
   width: 100% !important;
   color: rgb(146, 146, 146) !important;
+  white-space: nowrap;
 }
 
 .with-ni {
@@ -326,9 +327,9 @@
 
 
 .text-comm {
-  width: 70%;
+  width: 100%;
   text-align: left;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   margin-bottom: 0rem;
 
