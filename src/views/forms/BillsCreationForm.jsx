@@ -80,6 +80,9 @@ const BillsCreationForm = ({
         billCharges: bill.billCharges,
         carriVerndorByInfo: bill.carriVerndorByInfo,
         status: bill.status || 14,
+        issuedByInfo: `${invoice.vendor_byObj?.street_and_number || ""} - ${bill.vendor_byObj?.city || ""
+      } - ${invoice.vendor_byObj?.state || ""} - ${invoice.vendor_byObj?.country || ""
+      } - ${invoice.vendor_byObj?.zip_code || ""}`,
       });
     }
   }, [creating, bill]);
@@ -148,9 +151,7 @@ const BillsCreationForm = ({
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
 
-    const accountByOptions = [...accountWithType].filter(
-      (account) => account.typeChart == "Accouns Payable"
-    );
+    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 
@@ -165,15 +166,16 @@ const BillsCreationForm = ({
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
+    const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
     
-    setaccounts(result.data);
+    setaccounts(result.data)
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
+      accountByName: name,
     });
-    
   };
 
 
@@ -284,21 +286,16 @@ const BillsCreationForm = ({
                   Account:
                 </label>
                 <AsyncSelect
-                  id="account"
-                  value={accountByOptions.find(
-                    (option) => option.id === formData.accountById
-                  )}
-                  onChange={(e) => {
-                    handleAccountBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={accountByOptions}
-                  getOptionLabel={(option) =>
-                    option.name + " || " + " Accouns Payable "
-                  }
-                  getOptionValue={(option) => option.id}
-                />
+                id="account"
+                value={accountByOptions.find(
+                  (option) => option.id === formData.accountById)}
+                onChange={(e) => { handleAccountBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={accountByOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
               </div>
             </div>
 

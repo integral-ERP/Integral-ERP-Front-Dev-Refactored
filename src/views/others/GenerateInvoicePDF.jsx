@@ -131,20 +131,31 @@ const GenerateInvoicePDF = (data) => {
                       },
                       {
                         text: "Invoice",
-                        fontSize: 14,
+                        fontSize: 16,
                         bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
+                        margin: [0, 15, 0, 15], // Adjust margin as needed
                       },
                     ],
                   },
                   {
-                    text: [
-
-                       `${data.issuedByName || ``} \n`,
-                      ``,
-                      ``,
-                      ``,
-                    ],
+                    stack: [
+                            {
+                              fontSize: 16,
+                              bold: true,
+                              text: [
+                                `PressEx Courier`,
+                              ],
+                            },
+                            {
+                              fontSize: 12,
+                              text: [
+                                `2020 NW 129th. Ave. Ste. 201`,
+                                `Miami, FL 33182`,
+                                `UNITED STATES`,
+                              ],
+                            }
+                    ]
+                   
                   },
                   {
                     stack: [
@@ -157,63 +168,64 @@ const GenerateInvoicePDF = (data) => {
                   },
                 ],
               },
-              
-              {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Payment Terms`, `${data.paymentByDesc || ``}`]],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Due Date`, `${data.due || ``}`]],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Transaction Date`, `${data.trasaDate || ``}`]],   
-                    },
-                  },
-                ],
-              },
-              {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [
-                          [
-                            {
-                              text: `Bill To`,
-                              fillColor: `#CCCCCC`,
-                              alignment: `left`,
-                            },
-                          ],
-                          [
-                            {
-                              text: `${data.invoiceCharges[0].typeByCode || ``} - ${data.invoiceCharges[0].issuedByInfo || ``}` ,
-                              fillColor: `#CCCCCC`,
-                              margin: [0, 0, 0, 0],
-                              lignment: `left`,
-                            },
-                          ],
-                        ],
-                    ],
-                    },
-                  },
-                ],
-              },
+//---------------------------------------------------------------------------------------
+{
+  margin: [0, 0, 0, 10],
+  table: {
+    widths: [`30%`, `70%`],
+    body: [
+      [
+        {
+          text: `Payment Terms`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+        {
+          text:   `${data.paymentByDesc || ``}`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+      ],  
+      [
+        {
+          text: `Due Date`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+        {
+          text: `${data.due || ``}`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+      ],  
+      [
+        {
+          text: `Transaction Date`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+        {
+          text: `${data.trasaDate || ``}`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+      ],  
+      [
+        {
+          text: `Bill To`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+        {
+          text:  `${data.invoiceCharges[0].typeByCode || ``} - ${data.invoiceCharges[0].issuedByInfo || ``}`,
+          bold: true,
+          margin: [0, 0, 0, 0],
+        },
+      ],  
+    ],
+  },
+},
+//---------------------------------------------------------------------------------------
               {
                 table: {
                   widths: [`40%`, `20%`, `20%`, `20%`],

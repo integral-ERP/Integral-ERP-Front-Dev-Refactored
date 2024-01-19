@@ -121,13 +121,24 @@ const GenerateDepositPDF = (data) => {
                     ],
                   },
                   {
-                    text: [
-
-                       `${data.issuedByName || ``} \n`,
-                      ``,
-                      ``,
-                      ``,
-                    ],
+                    stack: [
+                            {
+                              fontSize: 16,
+                              bold: true,
+                              text: [
+                                `PressEx Logistics`,
+                              ],
+                            },
+                            {
+                              fontSize: 12,
+                              text: [
+                                `2020 NW 129th. Ave. Ste. 201`,
+                                `Miami, FL 33182`,
+                                `UNITED STATES`,
+                              ],
+                            }
+                    ]
+                   
                   },
                   {
                     stack: [

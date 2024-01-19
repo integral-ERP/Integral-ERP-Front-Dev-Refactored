@@ -175,21 +175,23 @@ const Table = ({
     "Discount Percentage" : "discountPercentage",
     "Discount Days" : "discountDays",
     "Inactive" : "inactive",
-    //---------------
+    //---------------Invoice
     "Transaction Date" : "trasaDate",
     "Due Date" : "due",
     "Type Name" : "typeName",
     "Apply" : "issuedByName",
     "Payment Temse": "paymentByDesc",
-    "Account Name" : "accountByName",
+    "Account Name" : "accountByType",
     "Type Code" : "typeByCode",
     "Biling Address" : "bilingAddres",
     //---------------
     "Type Items & Service": "typeByCode",
+    "Applied to":"carriVerndorByName",
     "type Chart": "typeByCode",
     "Type Chart":"typeChart",
     "Account Type" : "issuedByName",
     "Amt Due": "division",
+    // "Employee": "accountByType",
     //---------------
     "Entity": "entity",
     "Amount (USB)": "total",

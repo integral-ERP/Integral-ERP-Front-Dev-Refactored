@@ -22,7 +22,7 @@ const ChartOfAccounts   = () => {
 
   const columns = [
     "Name",
-    "Type",
+    "Type Chart",
     "Account Number",
     "Currency",
     "Note",

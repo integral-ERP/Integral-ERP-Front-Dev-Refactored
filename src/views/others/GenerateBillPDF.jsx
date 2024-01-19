@@ -17,25 +17,7 @@ const GenerateBillPDF = (data) => {
 
   return new Promise((resolve, reject) => {
     let canvas = null;
-    let barcodeImage = null;
-    canvas = document.createElement('canvas');
-    const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128)
-      text: data.number + '', // Barcode data
-      scale: 3, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
-      includetext: true, // Include human-readable text below the barcode
-      textxalign: "center",
-    };
-    try {
-
-      canvas = bwipjs.toCanvas(canvas, barcodeOptions);
-      barcodeImage = canvas.toDataURL();
-    } catch (error) {
-      reject(error);
-    }
-
-
+    
     const chargesAmount = [];
     const chargesQuantity = [];
     const chargesTotalAmount = [];

@@ -20,7 +20,7 @@ const  ChartOfAccountsCreationForm = ({
 
   const formFormat = {
     name: "",
-    type: "",
+    typeChart: "",
     accountNumber: "",
     parentAccount: "",
     currency:"",
@@ -33,7 +33,7 @@ const  ChartOfAccountsCreationForm = ({
     if (!creating && chartOfAccounts) {
       setFormData({
         name: chartOfAccounts.name || "",
-        type: chartOfAccounts.type || "",
+        typeChart: chartOfAccounts.type || "",
         accountNumber: chartOfAccounts.accountNumber || "",
         parentAccount: chartOfAccounts.parentAccount || "",
         currency: chartOfAccounts.currency || "",
@@ -55,7 +55,7 @@ const  ChartOfAccountsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      type: formData.type,
+      typeChart: formData.type,
       accountNumber: formData.accountNumber,
       parentAccount: formData.parentAccount,
       currency: formData.currency,
