@@ -309,11 +309,14 @@
 }
 
 .logo_integral{
-  width: 20vh;
-  position: fixed;
-  margin-left: 50px;
+  width: 22vh;
   height: auto;
 
+}
+
+.menu_logo{
+  display: flex;
+  justify-content: center;
 }
 
 .dashboard__content {

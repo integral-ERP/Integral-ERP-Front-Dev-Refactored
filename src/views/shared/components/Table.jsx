@@ -620,6 +620,9 @@ const Table = ({
                         <th
                           className="th-separate"
                           key={columnName}
+                          style={{
+                            width: `${100 / Object.keys(visibleColumns).length}%`, // Corregido aquí
+                          }}
                           draggable
                           onDragStart={(e) => handleDragStart(e, columnIndex)}
                           onDragOver={(e) => handleDragOver(e, columnIndex)}
@@ -651,7 +654,8 @@ const Table = ({
                           data-key={row.id}
                           className="generic-table__td"
                           style={{
-                            minWidth: columnWidthsCalculated[columnName],
+                            // minWidth: columnWidthsCalculated[columnName],
+                            width: `${100 / columnOrder.length}%`, // Calcula el ancho dinámicamentewidth: {`${columnOrder.length / 100}%`},
                             whiteSpace: "nowrap",
                           }}
                         >

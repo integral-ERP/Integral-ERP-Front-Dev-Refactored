@@ -9,9 +9,9 @@
   gap: 3rem;
   margin: 2rem 0;
 
-  .form-textarea{
-    width: 90% !important;
-  }
+  // .form-textarea{
+  //   width: 90% !important;
+  // }
   
  
   &__tabs-button-container {
@@ -142,7 +142,7 @@
   }
 
   .form-input{
-    width: 70%;
+    width: 100%;
     background: white;
     color: black;
     height: 3rem;
@@ -168,7 +168,8 @@
   }
 
   .form-label{ 
-    width: 70%;
+    // width: 70%;
+    white-space: nowrap;
     text-align: left;
     font-size: 15px;
     font-weight: bold;
@@ -181,7 +182,7 @@
   }
 
   .form-textarea{
-    width: 70%;
+    width: 100%;
     background: white;
     color: black;
     font-size: initial;

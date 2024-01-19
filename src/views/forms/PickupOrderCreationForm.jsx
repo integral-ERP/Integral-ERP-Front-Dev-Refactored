@@ -1211,7 +1211,7 @@ const PickupOrderCreationForm = ({
               <h3>Pickup Information</h3>
               <span></span>
             </div>
-            <div className="row align-items-center mb-3">
+            <div className="row mb-3">
               <div className="col-3 text-start">
                 <label htmlFor="shipper" className="form-label">
                   Shipper:
@@ -1487,7 +1487,7 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
 
-            <div className="row align-items-center">
+            <div className="row ">
               <div className="col-6 text-start">
                 <Input
                   id="TextMainCarrier"
