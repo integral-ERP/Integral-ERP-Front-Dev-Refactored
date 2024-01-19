@@ -169,19 +169,10 @@
 
 
 .modal-body {
-
-
-
-
-
-
   display: flex;
   width: 100px;
   flex-direction: column;
   justify-content: start;
-
-
-
 }
 
 .modal-body label {
@@ -244,16 +235,16 @@
 
 
 .tr-margen {
-  border: 1px solid #ffffff;
+  // border: 1px solid #ffffff;
 
   font-size: small;
-  border-inline: 1px solid rgb(0, 0, 0);
+  // border-inline: 1px solid rgb(0, 0, 0);
 }
 
 .tr-margen:nth-child(odd) {
   background-color: #ffffff;
   white-space: nowrap;
-  border-inline: 1px solid rgb(0, 0, 0);
+  // border-inline: 1px solid rgb(0, 0, 0);
 }
 
 .tr-margen:nth-child(even) {
@@ -266,17 +257,41 @@
   background: rgb(177, 220, 255);
 }
 
+.generic-table__td {
+  border-left: 1px solid rgb(144, 135, 135); /* Borde izquierdo */
+  border-right: 1px solid rgb(144, 135, 135); /* Borde derecho */
+}
+
 .text-head {
-  font-size: small;
+  font-size: 10px;
   white-space: nowrap;
   border: solid 0px rgba(180, 180, 180);
+  background: #edeaea;
 
 }
 
 .th-separate {
-  white-space: pre-line;
-  color: #006BAD;
-  padding: 10px;
+  border: 1px solid rgb(144, 135, 135); 
+}
+.table-row {
+  border: 1px solid rgb(144, 135, 135); 
+}
+
+.th-separate, .generic-table__td {
+  // border: 1px solid #ddd;
+  padding: 8px 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  width: 5.59%;
+  display: inline-block;
+  font-size: 10px;
+}
+
+td:empty {
+  min-height: 33px; /* Ajusta el valor según sea necesario */
 }
 
 .add-select {
@@ -302,6 +317,8 @@
   &>div {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
 
@@ -434,8 +451,8 @@
 
 .cont-two {
   width: 100%;
-  padding: 10px;
-  margin: 10px;
+  // padding: 10px;
+  // margin: 10px;
 
   &__space {
     margin: 1.3rem 0 0 0;
@@ -858,9 +875,8 @@
 
 }
 
-td {
-  border-inline: 1px solid rgb(255, 255, 255) !important;
-}
+// td {
+// }
 
 .tr-margentable-primary {
   background: #a0a0a0ad;

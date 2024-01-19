@@ -280,7 +280,7 @@ const ExpenseChargeForm = ({
       
       <div className="containerr">
         <div className="cont-one">
-          <div className="form-colum">
+          <div className="form-colum w-100">
             <label htmlFor="description" className="text-comm">
               Description:
             </label>

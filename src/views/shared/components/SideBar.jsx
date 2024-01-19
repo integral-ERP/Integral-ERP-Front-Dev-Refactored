@@ -440,13 +440,12 @@ const Sidebar = () => {
       </div>
       <section onClick={(event) => { event.stopPropagation() }} className="home-section">
         <div className="home-content">
-          <i
-            className="bx bx-menu menu__icon"
+          <div className="menu_logo">
+          <i className="bx bx-menu menu__icon"
             onClick={() => { handleHideSidebar() }} 
           ></i>
           <img className="logo_integral" src={logoIntegral} alt="logo"/>
-   {/*        <span className="text">Integral</span> */}
-
+          </div>
           <div className="rith">
             <div className="profile-user">
               <div className="profile-content">

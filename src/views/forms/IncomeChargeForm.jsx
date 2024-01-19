@@ -465,7 +465,7 @@ const IncomeChargeForm = ({
         </div>
       </div>
       <div className="form-row">
-        <div className="form-column">
+        <div className="form-column mt-7.5">
           <Input
             type="checkbox"
             inputName="showInDocument"
