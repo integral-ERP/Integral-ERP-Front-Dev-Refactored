@@ -145,6 +145,10 @@ const CustomerCreationForm = ({
 
   };
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
+
   return (
     <div className="company-form">
       <div className="row w-100">
@@ -356,7 +360,7 @@ const CustomerCreationForm = ({
         <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>

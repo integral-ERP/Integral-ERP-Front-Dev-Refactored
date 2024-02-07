@@ -27,6 +27,7 @@ const Deposits = () => {
     "Amount",
     "Memo",
     "Reconciliation Date",    
+    "Deposit PDF",
   ];
   const updateDeposit = (url = null) => {
     DepositsService.getDeposits(url)
@@ -101,7 +102,7 @@ const Deposits = () => {
               setShowSuccessAlert(false);
             }, 3000);
 
-            const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
+            const newDeposits = deposits.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
           } else {
             setShowErrorAlert(true);
@@ -200,9 +201,6 @@ const Deposits = () => {
                 </strong>
               </Alert>
             )}
-
-         
-
           </div>
         </div>
       </div>

@@ -167,33 +167,34 @@ const Table = ({
     Client: "clientObj.name",
     Store: "store",
     "Transport Company": "courier",
-    Packages: "packages.length",
-
-    Account: "accountNumber",
-    "Due Days": "dueDays",
-    "Discount Percentage": "discountPercentage",
-    "Discount Days": "discountDays",
-    Inactive: "inactive",
-
-    "Transaction Date": "trasaDate",
-    "Due Date": "due",
-    "Type Name": "typeName",
-    Apply: "issuedByName",
+    "Packages": "packages.length",
+    //---------------------Cristian
+    "Account": "accountNumber",
+    "Due Days" : "dueDays",
+    "Discount Percentage" : "discountPercentage",
+    "Discount Days" : "discountDays",
+    "Inactive" : "inactive",
+    //---------------
+    "Transaction Date" : "trasaDate",
+    "Due Date" : "due",
+    "Type Name" : "typeName",
+    "Apply" : "issuedByName",
     "Payment Temse": "paymentByDesc",
-    "Account Name": "accountByName",
-    "Type Code": "typeByCode",
-    "Biling Address": "bilingAddres",
-
+    "Account Name" : "accountByName",
+    "Type Code" : "typeByCode",
+    "Biling Address" : "bilingAddres",
+    //---------------
     "Type Items & Service": "typeByCode",
     "type Chart": "typeByCode",
-    "Type Chart": "typeChart",
-    "Account Type": "issuedByName",
+    "Type Chart":"typeChart",
+    "Account Type" : "issuedByName",
     "Amt Due": "division",
-
-    Entipy: "customerByName",
-    "AR Amount": "amountReceived",
-    Memo: "memo",
-    nombre: "nombre",
+    //---------------
+    "Date": "date",
+    "Entity": "entity",
+    "AR Amount":  "amountReceived",
+    "Memo":       "memo",
+    "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {

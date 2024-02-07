@@ -9,18 +9,19 @@ import CurrencyService from "../../services/CurrencyService";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 
 const ItemAndServiceCreationForm = ({
-  itemAndService,
+  ItemServices,
   closeModal,
   creating,
+  onDataChange,
 }) => {
-
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setItemsAndServices] = useState([]);
   const [accounst, setaccounts] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [itemsAndServicestype, setItemsAndServicestype] = useState("");
-  const [formData, setFormData] = useState({
+
+  const formFormat = {
     code: "",
     description: "",
     accountName: "",
@@ -29,7 +30,9 @@ const ItemAndServiceCreationForm = ({
     currency: "",
     iataCode: "",
     price: 0.0,
-  });
+  };
+
+  const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
     
@@ -38,17 +41,17 @@ const ItemAndServiceCreationForm = ({
     
     if (!creating && itemAndService) {
       setFormData({
-        code: itemAndService.code || "",
-        description: itemAndService.description || "",
-        accountName: itemAndService.accountName,
-        type: itemAndService.type || "",
-        amount: itemAndService.amount || "",
-        currency: itemAndService.currency || "",
-        iataCode: itemAndService.iataCode || "",
-        price: itemAndService.amount,
+        code: ItemServices.code || "",
+        description: ItemServices.description || "",
+        accountName: ItemServices.accountName,
+        type: ItemServices.type || "",
+        amount: ItemServices.amount || "",
+        currency: ItemServices.currency || "",
+        iataCode: ItemServices.iataCode || "",
+        price: ItemServices.amount,
       });
     }
-  }, [creating, itemAndService]);
+  }, [creating, ItemServices]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,19 +64,19 @@ const ItemAndServiceCreationForm = ({
 
   const sendData = async () => {
     let rawData = {
-      code: formData.code,
-      description: formData.description,
-      accountName: formData.accountName ,
-      type: formData.type,
-      amount: formData.price,
-      currency: formData.currency,
-      iataCode: formData.iataCode,
+      code: formData.code || "",
+      description: formData.description || "",
+      accountName: formData.accountName || "",
+      type: formData.type || "",
+      amount: formData.price || "",
+      currency: formData.currency || "",
+      iataCode: formData.iataCode || "",
     };
     
     const response = await (creating
       ? ItemsAndServicesService.createItemAndService(rawData)
       : ItemsAndServicesService.updateItemsAndServices(
-        itemAndService.id,
+        ItemServices.id,
         rawData
       ));
 
@@ -83,7 +86,6 @@ const ItemAndServiceCreationForm = ({
         closeModal();
 
         setShowSuccessAlert(false);
-        setFormData(formData)
         window.location.reload();
       }, 1000);
     } else {
@@ -133,10 +135,13 @@ const ItemAndServiceCreationForm = ({
       });
     
   };
+
   useEffect(() => {
     updateItemsAndServices();
   }, []);
-
+  const handleCancel = () => {
+    window.location.reload();
+  }
   return (
     <div className="company-form">
       <div className="creation creation-container w-100">
@@ -265,53 +270,6 @@ const ItemAndServiceCreationForm = ({
             </div>
           </div>
         </div>
-
-
-
-
-        {/* <div className="col-6">
-          <div className="creation creation-container w-100">
-        <div className="company-form__section">
-          <Input
-            type="textarea"
-            inputName="street"
-            placeholder="Street & Address..."
-            value={formData.streetNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, streetNumber: e.target.value })
-            }
-            label="Street & Address"
-          />
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-country" className="form-label">
-            Country
-          </label>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-state" className="form-label">
-            State:
-          </label>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="wp-city" className="form-label">
-            City:
-          </label>
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="zipcode"
-            placeholder="Zip Code..."
-            value={formData.zipCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, zipCode: e.target.value })
-            }
-            label="Zip Code"
-          />
-        </div>
-      </div>
-      </div> */}
       </div>
 
 
@@ -319,7 +277,7 @@ const ItemAndServiceCreationForm = ({
         <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
@@ -354,17 +312,17 @@ const ItemAndServiceCreationForm = ({
 };
 
 ItemAndServiceCreationForm.propTypes = {
-  itemAndService: propTypes.object,
+  ItemServices: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  onitemAndServiceDataChange: propTypes.func,
+  onDataChange: propTypes.func,
 };
 
 ItemAndServiceCreationForm.defaultProps = {
-  itemAndService: {},
+  ItemServices: {},
   closeModal: null,
   creating: false,
-  onitemAndServiceDataChange: null,
+  onDataChange: null,
 };
 
 export default ItemAndServiceCreationForm;
