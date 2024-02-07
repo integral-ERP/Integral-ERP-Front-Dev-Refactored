@@ -471,50 +471,47 @@
 }
 
 .position-table{
-    width: 50%;
-    margin: 1px auto;
+  width: 50%;
+  margin: 1px auto;
 }
 
 #tableware {
-  border-collapse: collapse;
-  width: 100%;
+border-collapse: collapse;
+width: 100%;
 }
 
 .checkrepack{
-  width: 3rem !important;
-  padding: 0px 0 0px 5px !important
+width: 3rem !important;
+padding: 0px 0 0px 5px !important
 
 }
 #tableware td {
-  border: 0px solid #828282d2;
-  padding: 0 0 0 1rem;
-  text-align: left;
-  font-size: smaller !important; 
+border: 0px solid #828282d2;
+padding: 0 0 0 1rem;
+text-align: left;
+font-size: smaller !important; 
 }
 .textpack{
-  margin: 0 !important;
+margin: 0 !important;
 }
 
 #tableware tr:hover {background-color: #a2a2a2b3;}
 
 #tableware tr {
-  font-size: large !important;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #9191916d;
-  color: rgb(0, 0, 0);
+font-size: large !important;
+padding-top: 12px;
+padding-bottom: 12px;
+text-align: left;
+background-color: #9191916d;
+color: rgb(0, 0, 0);
 }
 
 .useinter{
-  margin: 1rem;
-  display: flex;
-  justify-content: center;
+margin: 1rem;
+display: flex;
+justify-content: center;
 }
 
 .checkbox{
-  margin: 5px 0 0 0 !important;
+margin: 5px 0 0 0 !important;
 }
-
-
-
