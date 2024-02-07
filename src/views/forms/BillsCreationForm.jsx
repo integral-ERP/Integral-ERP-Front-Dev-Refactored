@@ -78,11 +78,12 @@ const BillsCreationForm = ({
         carriVerndorByName: bill.carriVerndorByName,
         carriVerndorById: bill.carriVerndorById,
         billCharges: bill.billCharges,
-        carriVerndorByInfo: bill.carriVerndorByInfo,
+        // vendorByInfo: bill.vendorByInfo,
         status: bill.status || 14,
-        issuedByInfo: `${invoice.vendor_byObj?.street_and_number || ""} - ${bill.vendor_byObj?.city || ""
-      } - ${invoice.vendor_byObj?.state || ""} - ${invoice.vendor_byObj?.country || ""
-      } - ${invoice.vendor_byObj?.zip_code || ""}`,
+
+        vendorByInfo: `${bill.vendor_byObj?.street_and_number || ""} - ${bill.vendor_byObj?.city || ""
+      } - ${bill.vendor_byObj?.state || ""} - ${bill.vendor_byObj?.country || ""
+      } - ${bill.vendor_byObj?.zip_code || ""}`,
       });
     }
   }, [creating, bill]);
@@ -114,6 +115,7 @@ const BillsCreationForm = ({
       accountByType: formData.accountByType,
       carriVerndorByName: formData.carriVerndorByName,
       carriVerndorById: formData.carriVerndorById,
+      vendorByInfo: formData.vendorByInfo,
       billCharges: bills,
     };
 
@@ -203,7 +205,7 @@ const BillsCreationForm = ({
       ...formData,
       carriVerndorById: id,
       carriVerndorByName: name,
-      carriVerndorByInfo: info,
+      vendorByInfo: info,
     });
   };
 
@@ -323,9 +325,9 @@ const BillsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="textarea"
-                  inputName="carriVerndorByInfo"
+                  inputName="vendorByInfo"
                   placeholder="Apply to..."
-                  value={formData.carriVerndorByInfo}
+                  value={formData.vendorByInfo}
                   readonly={true}
                   label=""
                 />

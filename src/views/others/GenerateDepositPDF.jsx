@@ -2,18 +2,12 @@ import pdfMake from "pdfmake/build/pdfmake";
 
 import pdfFonts from "./vfs_fonts";
 import logo from "../../img/logo.png";
-import bwipjs from "bwip-js"; 
-import { BarcodeGenerator } from "barcode-generator";
 
 pdfMake.vfs = pdfFonts;
 
 const GenerateDepositPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  
-  
-
-
 
   return new Promise((resolve, reject) => {
 
@@ -89,9 +83,7 @@ const GenerateDepositPDF = (data) => {
           ];
         }
       });
-
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -100,7 +92,6 @@ const GenerateDepositPDF = (data) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
 
           const pdf = {
             content: [
@@ -122,6 +113,7 @@ const GenerateDepositPDF = (data) => {
                   },
                   {
                     stack: [
+                      
                             {
                               fontSize: 16,
                               bold: true,
@@ -130,25 +122,28 @@ const GenerateDepositPDF = (data) => {
                               ],
                             },
                             {
-                              fontSize: 12,
+                              fontSize: 10,
+                              fit:500,
                               text: [
-                                `2020 NW 129th. Ave. Ste. 201`,
-                                `Miami, FL 33182`,
-                                `UNITED STATES`,
+                                `2020 NW 129th. Ave. Suite. 201 Miami`,
+                              ],
+                            },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Florida 33182 United Stated,`,
+                              ],
+                              },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Tel: (3054567884), Fax: 786-9998847`,
                               ],
                             }
                     ]
                    
                   },
-                  {
-                    stack: [
-                      {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
-                      },
-                    ],
-                  },
+                  {},
                 ],
               },
               {

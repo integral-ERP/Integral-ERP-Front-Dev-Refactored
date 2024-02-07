@@ -5,6 +5,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Input from "../shared/components/Input";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import CurrencyService from "../../services/CurrencyService";
+import { fonts } from "pdfmake/build/pdfmake";
 
 const  ChartOfAccountsCreationForm = ({
   chartOfAccounts,
@@ -77,7 +78,7 @@ const  ChartOfAccountsCreationForm = ({
           setShowSuccessAlert(false);
           setFormData(formFormat)
           window.location.reload();
-        }, 1000);
+        }, 1500);
       } else {
         console.log("Something went wrong:", response);
         setShowErrorAlert(true);
@@ -276,10 +277,9 @@ const  ChartOfAccountsCreationForm = ({
   {/* Conditionally render the success alert */}
   {showSuccessAlert && (
   <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-    <AlertTitle>Success</AlertTitle>
-    <strong>
-    Chart Of Accounts {creating ? "created" : "updated"} successfully!
-    </strong>
+    {/* <AlertTitle>Success</AlertTitle> */}
+    <p className="succes"> Success </p>
+    <p className=" created"> Chart Of Accounts {creating ? "created" : "updated"} successfully! </p>
   </Alert>
   )}
   {showErrorAlert && (

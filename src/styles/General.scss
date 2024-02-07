@@ -98,6 +98,17 @@
   margin-inline: auto;
   margin-bottom: 30px;
   margin-top: 30px;
+  //-----------------------------------
+  // overflow-y: scroll;
+  // display: flex;
+  // justify-content: center;
+  // width: 96.5%;
+  // // /* border-collapse: collapse; */
+  // background: white;
+  // margin-inline: auto;
+  // margin-bottom: 30px;
+  // margin-top: 30px;
+  // margin-left: 0.2rem;
 
 }
 
@@ -125,8 +136,25 @@
 }
 
 .alert-notification {
-  position: absolute;
-  top: 5%;
+  position: fixed;
+  top: 50%;
+  background-color: #3498db !important;
+  border: 2px solid #006BAD;
+}
+
+.succes{
+  font-size: x-large;
+  font-weight: 500;
+  color: white;
+}
+
+.created{
+  font-size: medium;
+  color: white;
+}
+
+.css-1vooibu-MuiSvgIcon-root{
+  color: white;
 }
 
 .file-input-container {

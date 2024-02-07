@@ -166,8 +166,9 @@ const ChartOfAccounts   = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div className="content-page" style={!hideShowSlider ? {marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
+              id= 'table1'
               data={chartofAccounts}
               columns={columns}
               onSelect={handleSelectChartOfAccounts} // Make sure this line is correct

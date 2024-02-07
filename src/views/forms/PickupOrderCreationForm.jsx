@@ -986,7 +986,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 105000);
         } else {
           
           setShowErrorAlert(true);
@@ -1515,8 +1515,8 @@ const PickupOrderCreationForm = ({
         </div>
       </div>
 
-      <div className="col-12">
-        <div className="creation creation-container w-100">
+      {/* <div className="col-12">
+         <div className="creation creation-container w-100">
           <div className="form-label_name">
             <h3>Commodities</h3>
             <span></span>
@@ -1659,7 +1659,7 @@ const PickupOrderCreationForm = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div className="row w-100">
         <div className="col-6">
@@ -1765,10 +1765,8 @@ const PickupOrderCreationForm = ({
           onClose={() => setShowSuccessAlert(false)}
           className="alert-notification"
         >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Pick up Order {creating ? "created" : "updated"} successfully!
-          </strong>
+          <p className="succes"> Success </p>
+          <p className=" created"> Pick up Order {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
 

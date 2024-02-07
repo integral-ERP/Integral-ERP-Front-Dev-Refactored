@@ -15,7 +15,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
-import GenerateDepositPDF from "../../others/GenerateDepositPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
@@ -175,29 +174,27 @@ const Table = ({
     "Discount Percentage" : "discountPercentage",
     "Discount Days" : "discountDays",
     "Inactive" : "inactive",
-    //---------------Invoice
+    //---------------
     "Transaction Date" : "trasaDate",
     "Due Date" : "due",
     "Type Name" : "typeName",
     "Apply" : "issuedByName",
     "Payment Temse": "paymentByDesc",
-    "Account Name" : "accountByType",
+    "Account Name" : "accountByName",
     "Type Code" : "typeByCode",
     "Biling Address" : "bilingAddres",
     //---------------
     "Type Items & Service": "typeByCode",
-    "Applied to":"carriVerndorByName",
     "type Chart": "typeByCode",
     "Type Chart":"typeChart",
     "Account Type" : "issuedByName",
     "Amt Due": "division",
-    // "Employee": "accountByType",
     //---------------
+    "Date": "date",
     "Entity": "entity",
-    "Amount (USB)": "total",
-    "Memo": "memo",
-    "nombre": "nombre",
-    "Bank Account": "bankAccount",
+    "AR Amount":  "amountReceived",
+    "Memo":       "memo",
+    "nombre":     "nombre",
   };
 
   const getStatus = (statusCode) => {
@@ -374,17 +371,6 @@ const Table = ({
 
   const generateBillPDF = () => {
     GenerateBillPDF(selectedRow)
-      .then((pdfUrl) => {
-
-        window.open(pdfUrl, "_blank");
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
-  };
-
-  const generateDepositPDF = () => {
-    GenerateDepositPDF(selectedRow)
       .then((pdfUrl) => {
 
         window.open(pdfUrl, "_blank");
@@ -677,10 +663,6 @@ const Table = ({
                             </button>
                           ) : columnName === "Bill PDF" ? (
                             <button type="button" onClick={generateBillPDF}>
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Deposit PDF" ? (
-                            <button type="button" onClick={generateDepositPDF}>
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (

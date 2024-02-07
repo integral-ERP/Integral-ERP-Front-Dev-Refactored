@@ -2,21 +2,14 @@ import pdfMake from "pdfmake/build/pdfmake";
 
 import pdfFonts from "./vfs_fonts";
 import logo from "../../img/logo.png";
-import bwipjs from "bwip-js"; 
-import { BarcodeGenerator } from "barcode-generator";
 
 pdfMake.vfs = pdfFonts;
 
 const GenerateBillPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  
-  
-
-
 
   return new Promise((resolve, reject) => {
-    let canvas = null;
     
     const chargesAmount = [];
     const chargesQuantity = [];
@@ -88,12 +81,8 @@ const GenerateBillPDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          
-
-
         }
       });
-
     }
 
 
@@ -104,7 +93,6 @@ const GenerateBillPDF = (data) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
 
           const pdf = {
             content: [
@@ -117,90 +105,125 @@ const GenerateBillPDF = (data) => {
                         fit: [100, 100],
                       },
                       {
-                        text: "Bill",
-                        fontSize: 14,
+                        text: "Bill to",
+                        fontSize: 16,
                         bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
+                        margin: [0, 15, 0, 15], // Adjust margin as needed
                       },
-                    ],
-                  },
-                  {
-                    text: [
-
-                       `${data.issuedByName || ``} \n`,
-                      ``,
-                      ``,
-                      ``,
                     ],
                   },
                   {
                     stack: [
+                      
+                            {
+                              fontSize: 16,
+                              bold: true,
+                              text: [
+                                `PressEx Logistics`,
+                              ],
+                            },
+                            {
+                              fontSize: 10,
+                              fit:500,
+                              text: [
+                                `2020 NW 129th. Ave. Suite. 201 Miami`,
+                              ],
+                            },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Florida 33182 United Stated,`,
+                              ],
+                              },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Tel: (3054567884), Fax: 786-9998847`,
+                              ],
+                            }
+                    ]
+                   
+                  },
+                  {},
+                ],
+              },
+              //---------------------------------------------------------
+              {
+                table: {
+                  widths: [`30%`, `70%`],
+                  body: [
+                    [
                       {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
+                        text: `Date`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
                       },
-                    ],
-                  },
-                ],
+                      {
+                        text:  `${data.due || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                    [
+                      {
+                        text: `Due Date`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.trasaDate || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                    [
+                      {
+                        text: `Number`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text:  `${data.number || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                  ],
+                },
               },
-              
-              {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Payment Terms`, `${data.paymentByDesc || ``}`]],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Due Date`, `${data.due || ``}`]],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Transaction Date`, `${data.trasaDate || ``}`]],   
-                    },
-                  },
-                ],
+              { margin: [0, 10, 0, 10],
+                table: {
+                  widths: [`30%`, `70%`],
+                  body: [
+                    [
+                      {
+                        text: `Payment Terms`,
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.paymentByDesc || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      
+                    ],  
+                    [
+                      {
+                        text: `PREUBA`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2,
+                        rowSpan: 1,
+                      },
+                      {
+                      },
+                    ],  
+                    
+                  ],
+                },
               },
-              {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [
-                          [
-                            {
-                              text: `Bill To`,
-                              fillColor: `#CCCCCC`,
-                              alignment: `left`,
-                            },
-                          ],
-                          [
-                            {
-                              text: `${data.billCharges[0].typeByCode || ``} - ${data.billCharges[0].issuedByInfo || ``}` ,
-                              fillColor: `#CCCCCC`,
-                              margin: [0, 0, 0, 0],
-                              lignment: `left`,
-                            },
-                          ],
-                        ],
-                    ],
-                    },
-                  },
-                ],
-              },
+              //---------------------------------------------------------
               {
                 table: {
                   widths: [`40%`, `20%`, `20%`, `20%`],
@@ -243,7 +266,7 @@ const GenerateBillPDF = (data) => {
                     [
                       
                       {
-                        text: `TOTAL :`,
+                        text: `TOTAL (USD):`,
                         alignment: `center`,
                         colSpan: 3,
                         rowSpan: 1,

@@ -475,7 +475,7 @@ const ReleaseOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 1500);
         } else {
           
           setShowErrorAlert(true);
@@ -849,11 +849,10 @@ const ReleaseOrderCreationForm = ({
           onClose={() => setShowSuccessAlert(false)}
           className="alert-notification"
         >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Release Order {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
+          {/* <AlertTitle>Success</AlertTitle> */}
+    <p className="succes"> Success </p>
+    <p className=" created"> Release Order {creating ? "created" : "updated"} successfully! </p>
+  </Alert>
       )}
       {showErrorAlert && (
         <Alert

@@ -452,7 +452,7 @@ const Sidebar = () => {
                 <img className="img-usuario" src={usuario} alt="usuario" />
               </div>
               <div className="name-job">
-                <div className="profile_user">Usuario</div>
+                <div className="profile_user">User</div>
                 <div className="job">Rol</div>
               </div>
               <i className="bx bx-log-out profile-bx"></i>
