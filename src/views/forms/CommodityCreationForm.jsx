@@ -127,9 +127,9 @@ const CommodityCreationForm = ({
   return (
     <div className="income-charge-form">
       {/* <h3>Commodity Creation Form</h3> */}
-      <div className="form-row">
+      <div className="row w-100 mb">
 
-        <div className="form-column-create">
+        <div className="col-3">
           <label className="text-comm">Length:</label>
           <div className="input-group ">
             <input
@@ -147,7 +147,7 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="form-column-create">
+        <div className="col-3">
           <label className="text-comm">Height:</label>
           <div className="input-group ">
             <input
@@ -165,7 +165,7 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="form-column-create">
+        <div className="col-3">
           <label className="text-comm">Width:</label>
           <div className="input-group ">
             <input
@@ -183,7 +183,7 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="form-column-create">
+        <div className="col-3">
           <label className="text-comm">Weigth:</label>
           <div className="input-group ">
             <input
@@ -200,6 +200,8 @@ const CommodityCreationForm = ({
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
+
+        <div className="row w-100 mb-3">
         <label htmlFor="description" className="text-comm description-form">
           Cargo Description:
         </label>
@@ -213,8 +215,10 @@ const CommodityCreationForm = ({
           onChange={(e) =>
             setformData({ ...formData, description: e.target.value })
           }
-          style={{ width: "100%" }}
+          // style={{ width: "100%" }}
         />
+        </div>
+
         {locationEnabled && (<>
         <label htmlFor="location" className="text-comm" style={{marginTop: "10px"}}>Location:</label>
         <select name="location" id="location" onChange={(e) => {setformData({...formData, locationId: e.target.value, locationCode: e.target.options[e.target.selectedIndex].getAttribute("data-key")})}}>
@@ -223,6 +227,7 @@ const CommodityCreationForm = ({
             return (<option key={location.id} value={location.id} data-key={location.code}>{location.code}</option>)})}
         </select>
         </>)}
+
         <div className="table-hover charge-buttons">
           <button
             className="button-save pick "
