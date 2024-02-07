@@ -154,7 +154,7 @@ const IncomeChargeForm = ({
       };
       setformData(formFormat);
     }
-
+    
   }, []);
 
   const handleChargeRateChange = (e) => {
@@ -179,9 +179,8 @@ const IncomeChargeForm = ({
   return (
     <div className="income-charge-form">
       <h3>Income Charge Form</h3>
-
-      <div className="row w-100 mb-3">
-        <div className="col-6">
+      <div className="form-row">
+        <div className="form-column">
           <label htmlFor="charge" className="text-comm">
             Charge
           </label>
@@ -203,34 +202,6 @@ const IncomeChargeForm = ({
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="col-6">
-          <label htmlFor="currency" className="text-comm">
-            Currency
-          </label>
-          <select
-            id="currency"
-            className="form-input"
-            value={formData.currency}
-            onChange={(e) =>
-              setformData({ ...formData, currency: e.target.value })
-            }
-            ref={input4Ref}
-            onKeyDown={(e) => handleKeyDown(e, input5Ref)}
-          >
-            <option value="">Select a currency</option>
-            {Object.entries(currencies).map(([currencyCode, currencyName]) => (
-              <option key={currencyCode} value={currencyCode}>
-                {currencyCode} - {currencyName}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="row w-100 mb-3">
-        <div className="col-6">
           <label htmlFor="applyTo" className="text-comm">
             Apply to
           </label>
@@ -262,9 +233,6 @@ const IncomeChargeForm = ({
               </option>
             )}
           </select>
-        </div>
-
-        <div className="col-6">
           <label htmlFor="applyBy" className="text-comm">
             Apply by
           </label>
@@ -285,10 +253,27 @@ const IncomeChargeForm = ({
             <option value="container">Container</option>
           </select>
         </div>
-      </div>
-
-      <div className="row w-100 mb-3">
-        <div className="col-6">
+        <div className="form-column">
+          <label htmlFor="currency" className="text-comm">
+            Currency
+          </label>
+          <select
+            id="currency"
+            className="form-input"
+            value={formData.currency}
+            onChange={(e) =>
+              setformData({ ...formData, currency: e.target.value })
+            }
+            ref={input4Ref}
+            onKeyDown={(e) => handleKeyDown(e, input5Ref)}
+          >
+            <option value="">Select a currency</option>
+            {Object.entries(currencies).map(([currencyCode, currencyName]) => (
+              <option key={currencyCode} value={currencyCode}>
+                {currencyCode} - {currencyName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="paidAs" className="text-comm">
             Paid as
           </label>
@@ -306,9 +291,6 @@ const IncomeChargeForm = ({
             <option value="prepaid">Prepaid</option>
             <option value="collect">Collect</option>
           </select>
-        </div>
-
-        <div className="col-6">
           <label htmlFor="description" className="text-comm">
             Description:
           </label>
@@ -326,21 +308,19 @@ const IncomeChargeForm = ({
           />
         </div>
       </div>
-
-
-
-      <div className="row w-100 mb-3">
-        <div className="col-4">
+      <div className="form-row">
+        <div className="form-column ">
           <label htmlFor="numberOfPieces" className="text-comm">
             No. of Pieces
           </label>
           <input
             style={{
-              backgroundColor: `${formData.applyBy === "pieces" ||
+              backgroundColor: `${
+                formData.applyBy === "pieces" ||
                 formData.applyBy === "container"
-                ? ""
-                : "lightgray"
-                }`,
+                  ? ""
+                  : "lightgray"
+              }`,
             }}
             className="form-input"
             type="number"
@@ -356,8 +336,7 @@ const IncomeChargeForm = ({
             onKeyDown={(e) => handleKeyDown(e, input8Ref)}
           />
         </div>
-
-        <div className="col-4">
+        <div className="form-column">
           <label htmlFor="grossWeight" className="text-comm">
             Gross Weight
           </label>
@@ -365,8 +344,9 @@ const IncomeChargeForm = ({
             <input
               className="with-space"
               style={{
-                backgroundColor: `${formData.applyBy === "weight" ? "" : "lightgray"
-                  }`,
+                backgroundColor: `${
+                  formData.applyBy === "weight" ? "" : "lightgray"
+                }`,
                 marginRight: "0px",
               }}
               type="number"
@@ -394,8 +374,7 @@ const IncomeChargeForm = ({
             </select>
           </div>
         </div>
-
-        <div className="col-4">
+        <div className="form-column">
           <label htmlFor="grossVolume" className="text-comm">
             Gross Volume
           </label>
@@ -403,8 +382,9 @@ const IncomeChargeForm = ({
             <input
               className="with-space"
               style={{
-                backgroundColor: `${formData.applyBy === "volume" ? "" : "lightgray"
-                  }`,
+                backgroundColor: `${
+                  formData.applyBy === "volume" ? "" : "lightgray"
+                }`,
                 marginRight: "0px",
               }}
               type="number"
@@ -433,10 +413,8 @@ const IncomeChargeForm = ({
           </div>
         </div>
       </div>
-
-
-      <div className="row w-100 mb-3">
-        <div className="col-4">
+      <div className="form-row">
+        <div className="form-column">
           <label htmlFor="chargeableWeight" className="text-comm">
             Chargeable Weight (vlb)
           </label>
@@ -454,7 +432,7 @@ const IncomeChargeForm = ({
             onKeyDown={(e) => handleKeyDown(e, input13Ref)}
           />
         </div>
-        <div className="col-4">
+        <div className="form-column">
           <label htmlFor="rateCharge" className="text-comm">
             Rate Charge
           </label>
@@ -468,7 +446,7 @@ const IncomeChargeForm = ({
             onKeyDown={(e) => handleKeyDown(e, input14Ref)}
           />
         </div>
-        <div className="col-4">
+        <div className="form-column">
           <label htmlFor="totalAmount" className="text-comm">
             Total Amount
           </label>
@@ -486,41 +464,37 @@ const IncomeChargeForm = ({
           />
         </div>
       </div>
-
-      <div className="show_buttons">
-        <div className="form-row">
-          <div className="form-column mt-7.5">
-            <Input
-              type="checkbox"
-              inputName="showInDocument"
-              value={formData.show}
-              changeHandler={(e) =>
-                setformData({ ...formData, show: e.target.checked })
-              }
-              label="Show in document"
-              ref={input15Ref}
-            />
-          </div>
+      <div className="form-row">
+        <div className="form-column mt-7.5">
+          <Input
+            type="checkbox"
+            inputName="showInDocument"
+            value={formData.show}
+            changeHandler={(e) =>
+              setformData({ ...formData, show: e.target.checked })
+            }
+            label="Show in document"
+            ref={input15Ref}
+          />
         </div>
-
-        <div className="form-row">
-          <div className="table-hover charge-buttons">
-            <button
-              className="button-save__change"
-              style={{ marginRight: "10px" }}
-              type="button"
-              onClick={createCharge}
-            >
-              Create Charge
-            </button>
-            <button
-              className="button-cancel"
-              type="button"
-              onClick={() => onCancel(false)}
-            >
-              Cancel
-            </button>
-          </div>
+      </div>
+      <div className="form-row">
+        <div className="table-hover charge-buttons">
+          <button
+            className="button-save__change"
+            style={{ marginRight: "10px" }}
+            type="button"
+            onClick={createCharge}
+          >
+            Create Charge
+          </button>
+          <button
+            className="button-cancel"
+            type="button"
+            onClick={() => onCancel(false)}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

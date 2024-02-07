@@ -986,7 +986,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 105000);
+          }, 2000);
         } else {
           
           setShowErrorAlert(true);
@@ -1343,7 +1343,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="col-6 text-start" style={{marginBlockEnd: "auto"}}>
+              <div className="col-6 text-start">
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
                 </label>

@@ -18,7 +18,7 @@ const ExpenseChargeForm = ({
 }) => {
 
 
-
+  
   const [currencies, setcurrencies] = useState([]);
   const [itemsAndServices, setitemsAndServices] = useState([]);
   const [internalID, setinternalID] = useState(0);
@@ -65,7 +65,7 @@ const ExpenseChargeForm = ({
       nextInputRef.current.focus();
     }
   };
-
+  
   const [formData, setformData] = useState(formFormat);
   useEffect(() => {
     CurrenciesService.getCurrencies()
@@ -158,7 +158,7 @@ const ExpenseChargeForm = ({
       };
       setformData(formFormat);
     }
-
+    
   }, []);
 
   const handleChargeRateChange = (e) => {
@@ -182,9 +182,8 @@ const ExpenseChargeForm = ({
   return (
     <div className="income-charge-form">
       <h2 className=" tab-pane">Expense Charge Form</h2>
-
-      <div className="row w-100 mb-3">
-        <div className="col-6">
+      <div className="form-row">
+        <div className="form-column">
           <label htmlFor="charge" className="text-comm">
             Freight Service Class
           </label>
@@ -206,9 +205,6 @@ const ExpenseChargeForm = ({
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="col-6">
           <label htmlFor="applyTo" className="text-comm  tab-pane">
             Apply to
           </label>
@@ -241,10 +237,7 @@ const ExpenseChargeForm = ({
             )}
           </select>
         </div>
-      </div>
-
-      <div className="row w-100 mb-3">
-        <div className="col-6">
+        <div className="form-column">
           <label htmlFor="currency" className="text-comm">
             Currency
           </label>
@@ -265,9 +258,6 @@ const ExpenseChargeForm = ({
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="col-6">
           <label htmlFor="paidAs" className="text-comm  tab-pane">
             Paid as
           </label>
@@ -287,10 +277,10 @@ const ExpenseChargeForm = ({
           </select>
         </div>
       </div>
-
+      
       <div className="containerr">
         <div className="cont-one">
-          <div className="col-12">
+          <div className="form-colum w-100">
             <label htmlFor="description" className="text-comm">
               Description:
             </label>
@@ -304,107 +294,102 @@ const ExpenseChargeForm = ({
                 setformData({ ...formData, description: e.target.value })
               }
               ref={input5Ref}
-              onKeyDown={(e) => handleKeyDown(e, input6Ref)}
+            onKeyDown={(e) => handleKeyDown(e, input6Ref)}
             />
           </div>
-
-          <div className="row w-100 mb-3">
-          <div className="col-4">
-            <label htmlFor="numberOfPieces" className="text-comm">
-              No. of Pieces
-            </label>
+          <div className="form-column  tab-pane">
+          <label htmlFor="numberOfPieces" className="text-comm">
+            No. of Pieces
+          </label>
+          <input
+            
+            className="form-input"
+            type="number"
+            id="numberOfPieces"
+            readOnly={
+              formData.applyBy !== "pieces" && formData.applyBy !== "container"
+            }
+            value={formData.numberOfPieces}
+            onChange={(e) =>
+              setformData({ ...formData, numberOfPieces: e.target.value })
+            }
+            ref={input6Ref}
+            onKeyDown={(e) => handleKeyDown(e, input7Ref)}
+          />
+        </div>
+        <div className="form-column">
+          <label htmlFor="grossWeight" className="text-comm">
+            Gross Weight
+          </label>
+          <div className="input-space">
             <input
-
-              className="form-input"
+              className="with-space"
               type="number"
-              id="numberOfPieces"
-              readOnly={
-                formData.applyBy !== "pieces" && formData.applyBy !== "container"
-              }
-              value={formData.numberOfPieces}
+              id="grossWeight"
+              readOnly={formData.applyBy !== "weight"}
+              value={formData.grossWeight}
               onChange={(e) =>
-                setformData({ ...formData, numberOfPieces: e.target.value })
+                setformData({ ...formData, grossWeight: e.target.value })
               }
-              ref={input6Ref}
-              onKeyDown={(e) => handleKeyDown(e, input7Ref)}
+              ref={input7Ref}
+            onKeyDown={(e) => handleKeyDown(e, input8Ref)}
             />
-          </div>
-
-          <div className="col-4">
-            <label htmlFor="grossWeight" className="text-comm">
-              Gross Weight
-            </label>
-            <div className="input-space">
-              <input
-                className="with-space"
-                type="number"
-                id="grossWeight"
-                readOnly={formData.applyBy !== "weight"}
-                value={formData.grossWeight}
-                onChange={(e) =>
-                  setformData({ ...formData, grossWeight: e.target.value })
-                }
-                ref={input7Ref}
-                onKeyDown={(e) => handleKeyDown(e, input8Ref)}
-              />
-              <select
-                className="add-select"
-                id="weightUnit"
-                value={formData.weightUnit}
-                onChange={(e) =>
-                  setformData({ ...formData, weightUnit: e.target.value })
-                }
-                ref={input8Ref}
-                onKeyDown={(e) => handleKeyDown(e, input9Ref)}
-              >
-                <option value="kgs">kgs</option>
-                <option value="lbs">lbs</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="col-4">
-            <label htmlFor="grossVolume" className="text-comm">
-              Gross Volume
-            </label>
-            <div className="input-space">
-              <input
-                className="with-space"
-                style={{
-                  backgroundColor: `${formData.applyBy === "volume" ? "" : "lightgray"
-                    }`,
-                  marginRight: "0px",
-                }}
-                type="number"
-                id="grossVolume"
-                readOnly={formData.applyBy !== "volume"}
-                value={formData.grossVolume}
-                onChange={(e) =>
-                  setformData({ ...formData, grossVolume: e.target.value })
-                }
-                ref={input9Ref}
-                onKeyDown={(e) => handleKeyDown(e, input10Ref)}
-              />
-              <select
-                className="add-select"
-                id="volumeUnit"
-                value={formData.volumeUnit}
-                onChange={(e) =>
-                  setformData({ ...formData, volumeUnit: e.target.value })
-                }
-                ref={input10Ref}
-                onKeyDown={(e) => handleKeyDown(e, input11Ref)}
-              >
-                <option value="ft3">ft3</option>
-                <option value="m3">m3</option>
-              </select>
-            </div>
-          </div>
+            <select
+              className="add-select"
+              id="weightUnit"
+              value={formData.weightUnit}
+              onChange={(e) =>
+                setformData({ ...formData, weightUnit: e.target.value })
+              }
+              ref={input8Ref}
+            onKeyDown={(e) => handleKeyDown(e, input9Ref)}
+            >
+              <option value="kgs">kgs</option>
+              <option value="lbs">lbs</option>
+            </select>
           </div>
         </div>
-        <div className="row w-100 mb-3">
-        <div className="row w-100 mb-3">
-          <div className="col-6">
+        <div className="form-column">
+          <label htmlFor="grossVolume" className="text-comm">
+            Gross Volume
+          </label>
+          <div className="input-space">
+            <input
+              className="with-space"
+              style={{
+                backgroundColor: `${
+                  formData.applyBy === "volume" ? "" : "lightgray"
+                }`,
+                marginRight: "0px",
+              }}
+              type="number"
+              id="grossVolume"
+              readOnly={formData.applyBy !== "volume"}
+              value={formData.grossVolume}
+              onChange={(e) =>
+                setformData({ ...formData, grossVolume: e.target.value })
+              }
+              ref={input9Ref}
+            onKeyDown={(e) => handleKeyDown(e, input10Ref)}
+            />
+            <select
+              className="add-select"
+              id="volumeUnit"
+              value={formData.volumeUnit}
+              onChange={(e) =>
+                setformData({ ...formData, volumeUnit: e.target.value })
+              }
+              ref={input10Ref}
+            onKeyDown={(e) => handleKeyDown(e, input11Ref)}
+            >
+              <option value="ft3">ft3</option>
+              <option value="m3">m3</option>
+            </select>
+          </div>
+        </div>
+        </div>{/* ----------------------------END ONE---------------------------------- */}
+        <div className="cont-two">
+          <div className="form-colum">
             <label htmlFor="applyBy" className="text-comm">
               Apply By
             </label>
@@ -416,7 +401,7 @@ const ExpenseChargeForm = ({
                 setformData({ ...formData, applyBy: e.target.value })
               }
               ref={input11Ref}
-              onKeyDown={(e) => handleKeyDown(e, input12Ref)}
+            onKeyDown={(e) => handleKeyDown(e, input12Ref)}
             >
               {/* Add options for applyBy */}
               <option value="weight">Weight</option>
@@ -425,62 +410,55 @@ const ExpenseChargeForm = ({
               <option value="container">Container</option>
             </select>
           </div>
-          
-          <div className="col-6">
-            <label htmlFor="chargeableWeight" className="text-comm">
-              Chargeable Weight (vlb)
-            </label>
-            <input
-              className="form-input"
-              readOnly
-              id="chargeableWeight"
-              value={formData.chargeableWeight}
-              onChange={(e) =>
-                setformData({ ...formData, chargeableWeight: e.target.value })
-              }
-              ref={input12Ref}
-              onKeyDown={(e) => handleKeyDown(e, input13Ref)}
-            />
-          </div>
-          </div>
-
-          <div className="row w-100 mb-3">
-          <div className="col-6">
-            <label htmlFor="rateCharge" className="text-comm">
-              Rate Charge
-            </label>
-            <input
-              className="form-input"
-              type="number"
-              id="rateCharge"
-              value={formData.rateCharge}
-              onChange={(e) => handleChargeRateChange(e)}
-              ref={input13Ref}
-              onKeyDown={(e) => handleKeyDown(e, input14Ref)}
-            />
-          </div>
-
-          <div className="col-6">
-            <label htmlFor="totalAmount" className="text-comm">
-              Total Amount
-            </label>
-            <input
-              className="form-input"
-              type="number"
-              id="totalAmount"
-              readOnly
-              value={formData.totalAmount}
-              onChange={(e) =>
-                setformData({ ...formData, totalAmount: e.target.value })
-              }
-              ref={input14Ref}
-              onKeyDown={(e) => handleKeyDown(e, input15Ref)}
-            />
-          </div>
-          </div>
-          
-
+          {/* <div className="form-ro"> */}
+        <div className="form-column  tab-pane">
+          <label htmlFor="chargeableWeight" className="text-comm">
+            Chargeable Weight (vlb)
+          </label>
+          <input
+            className="form-input"
+            readOnly
+            id="chargeableWeight"
+            value={formData.chargeableWeight}
+            onChange={(e) =>
+              setformData({ ...formData, chargeableWeight: e.target.value })
+            }
+            ref={input12Ref}
+            onKeyDown={(e) => handleKeyDown(e, input13Ref)}
+          />
         </div>
+        <div className="form-column">
+          <label htmlFor="rateCharge" className="text-comm">
+            Rate Charge
+          </label>
+          <input
+            className="form-input"
+            type="number"
+            id="rateCharge"
+            value={formData.rateCharge}
+            onChange={(e) => handleChargeRateChange(e)}
+            ref={input13Ref}
+            onKeyDown={(e) => handleKeyDown(e, input14Ref)}
+          />
+        </div>
+        <div className="form-column">
+          <label htmlFor="totalAmount" className="text-comm">
+            Total Amount
+          </label>
+          <input
+            className="form-input"
+            type="number"
+            id="totalAmount"
+            readOnly
+            value={formData.totalAmount}
+            onChange={(e) =>
+              setformData({ ...formData, totalAmount: e.target.value })
+            }
+            ref={input14Ref}
+            onKeyDown={(e) => handleKeyDown(e, input15Ref)}
+          />
+        </div>
+        </div>{/* ----------------------------END TWO---------------------------------- */}
       </div>
       <div className="form-row">
         <div className="form-column">
