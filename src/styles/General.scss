@@ -88,8 +88,7 @@
 }
 
 .generic-table {
-  display: flex;
-  justify-content: center;
+
   width: 100%;
   // overflow-x: scroll;
   border-collapse: collapse;
@@ -98,17 +97,6 @@
   margin-inline: auto;
   margin-bottom: 30px;
   margin-top: 30px;
-  //-----------------------------------
-  // overflow-y: scroll;
-  // display: flex;
-  // justify-content: center;
-  // width: 96.5%;
-  // // /* border-collapse: collapse; */
-  // background: white;
-  // margin-inline: auto;
-  // margin-bottom: 30px;
-  // margin-top: 30px;
-  // margin-left: 0.2rem;
 
 }
 
@@ -233,7 +221,7 @@
 
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
   font-family: "Poppins", sans-serif !important;
-  font-size: 1.5rem !important;
+  font-size: 14px !important;
   font-weight: bold !important;
   color: #565656 !important;
   margin: 0rem 0 0 -1.4rem !important;
@@ -388,7 +376,7 @@
 
 .with-space {
   display: block;
-  width: 52%;
+  width: 100%;
   padding: 0rem 0 0 0.75rem;
   font-size: medium;
 }
@@ -397,7 +385,7 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  width: 110%;
+  width: 100%;
   justify-content: center;
 }
 
@@ -475,6 +463,8 @@
 } */
 
 .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+
+  padding-right: 0% !important;
 
   input {
     margin: 0 !important;
