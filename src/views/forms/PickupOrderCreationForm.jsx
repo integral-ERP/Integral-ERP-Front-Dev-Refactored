@@ -957,7 +957,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 2000);
+          }, 1000);
         } else {
 
           setShowErrorAlert(true);
@@ -1324,11 +1324,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-<<<<<<< HEAD
-              <div className="col-6 text-start">
-=======
               <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
->>>>>>> ca3a0aba7692df3aaa2f607dc142996c38f6a2a0
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
                 </label>
@@ -1500,8 +1496,8 @@ const PickupOrderCreationForm = ({
         </div>
       </div>
 
-      {/* <div className="col-12">
-         <div className="creation creation-container w-100">
+      <div className="col-12">
+        <div className="creation creation-container w-100">
           <div className="form-label_name">
             <h3>Commodities</h3>
             <span></span>
@@ -1644,7 +1640,7 @@ const PickupOrderCreationForm = ({
             </div>
           )}
         </div>
-      </div> */}
+      </div>
 
       <div className="row w-100">
         <div className="col-6">
@@ -1744,7 +1740,19 @@ const PickupOrderCreationForm = ({
         </button>
       </div>
 
-      {showSuccessAlert && (
+      {/* {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <AlertTitle>Success</AlertTitle>
+          <strong>
+            Pick up Order {creating ? "created" : "updated"} successfully!
+          </strong>
+        </Alert>
+      )} */}
+       {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1754,6 +1762,7 @@ const PickupOrderCreationForm = ({
           <p className=" created"> Pick up Order {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
+
 
       {showErrorAlert && (
         <Alert

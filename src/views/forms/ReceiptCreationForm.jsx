@@ -968,7 +968,7 @@ const ReceiptCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1500);
+          }, 1000);
         } else {
           
           setShowErrorAlert(true);
@@ -1394,8 +1394,6 @@ const ReceiptCreationForm = ({
             />
             <button
               type="button"
-              className="button-save"
-              style={{ margin: "0 1rem 0 0" }}
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
@@ -1656,17 +1654,30 @@ const ReceiptCreationForm = ({
           Cancel
         </button>
       </div>
-      {showSuccessAlert && (
+      {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
           className="alert-notification"
         >
-          {/* <AlertTitle>Success</AlertTitle> */}
+          <AlertTitle>Success</AlertTitle>
+          <strong>
+            Warehouse Receipt {creating ? "created" : "updated"} successfully!
+          </strong>
+        </Alert>
+      )} */}
+       {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
           <p className="succes"> Success </p>
-          <p className=" created"> Warehouse Receip {creating ? "created" : "updated"} successfully! </p>
+          <p className=" created">  Warehouse Receipt {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
+
+
       {showErrorAlert && (
         <Alert
           severity="error"
