@@ -525,7 +525,7 @@ const ReleaseOrderCreationForm = ({
               <h3>General</h3>
               <span></span>
             </div>
-            <div className="row align-items-center">
+            <div className="row mb-2">
               <div className="col-4 text-start">
                 <Input
                   type="number"
@@ -558,57 +558,6 @@ const ReleaseOrderCreationForm = ({
               </div>
 
               <div className="col-4 text-start">
-                <label htmlFor="clientToBill" className="form-label">
-                  Client to Bill:
-                </label>
-                <select
-                  name="clientToBill"
-                  id="clientToBill"
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an Option</option>
-                  <option value="releasedTo">Released To</option>
-                  <option value="other">Other</option>
-                </select>
-                <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p>
-                <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.clientToBillType !== "other"}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                  value={getAsyncSelectValue()}
-                  isClearable={true}
-                  defaultOptions={releasedToOptions}
-                  loadOptions={loadReleasedToOptionsSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-            </div>
-
-            <div className="row align-items-center mb-3">
-              <div className="col-4 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    label="Creation Date and Time"
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
-
-              <div className="col-4 text-start">
                 <label htmlFor="issuedBy" className="form-label">
                   Issued By:
                 </label>
@@ -628,9 +577,25 @@ const ReleaseOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
+              
             </div>
 
-            <div className="row align-items-center mb-3">
+            <div className="row mb-3">
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Creation Date and Time"
+                    className="font-right"
+                    value={dayjs(formData.createdDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
+              </div>
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
@@ -646,6 +611,7 @@ const ReleaseOrderCreationForm = ({
                   />
                 </LocalizationProvider>
               </div>
+
               <div className="col-4 text-start">
                 <label htmlFor="releasedTo" className="form-label">
                   Released To:
@@ -690,6 +656,47 @@ const ReleaseOrderCreationForm = ({
                   />
                 )}
               </div>
+            </div>
+
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="clientToBill" className="form-label">
+                  Client to Bill:
+                </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an Option</option>
+                  <option value="releasedTo">Released To</option>
+                  <option value="other">Other</option>
+                </select>
+               
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
+                </div>
+
+                <div className="col-6 text-start">
+                <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.clientToBillType !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                  value={getAsyncSelectValue()}
+                  isClearable={true}
+                  defaultOptions={releasedToOptions}
+                  loadOptions={loadReleasedToOptionsSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+                </div>
+              
+            
             </div>
           </div>
         </div>

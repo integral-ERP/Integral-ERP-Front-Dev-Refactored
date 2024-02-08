@@ -112,11 +112,9 @@ const PickupOrderCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -139,11 +137,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
@@ -173,11 +169,9 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       deliveryLocationId: id,
@@ -221,11 +215,9 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setconsignee(result.data);
     setFormData({
       ...formData,
@@ -249,11 +241,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setshipper(result.data);
     setFormData({
       ...formData,
@@ -273,11 +263,9 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -287,8 +275,8 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event.target?.value || "";
-    
-    
+
+
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -296,14 +284,14 @@ const PickupOrderCreationForm = ({
         type === "shipper"
           ? formData.shipperId
           : type === "consignee"
-          ? formData.consigneeId
-          : "";
+            ? formData.consigneeId
+            : "";
       setFormData({
         ...formData,
         client_to_bill_type: type,
       });
     } else {
-      
+
       const id = event.id;
       const type = event.type;
 
@@ -336,11 +324,9 @@ const PickupOrderCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
-        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${
-          pickupOrder.issued_byObj?.city || ""
-        } - ${pickupOrder.issued_byObj?.state || ""} - ${
-          pickupOrder.issued_byObj?.country || ""
-        } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
+          } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
+          } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
@@ -348,55 +334,40 @@ const PickupOrderCreationForm = ({
 
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
 
         pickupLocationId: pickupOrder.pickUpLocationObj?.data?.obj?.id,
-        pickupLocationInfo: `${
-          pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationType:
           pickupOrder.pickUpLocationObj?.data?.obj?.type_person,
 
         consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
         deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
         deliveryLocationType:
           pickupOrder.deliveryLocationObj?.data?.obj?.type_person,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -656,7 +627,7 @@ const PickupOrderCreationForm = ({
     fetchFormData();
   }, []);
 
-  useEffect(() => {}, [formData.pickupLocationId]);
+  useEffect(() => { }, [formData.pickupLocationId]);
 
   useEffect(() => {
     if (creating) {
@@ -693,11 +664,11 @@ const PickupOrderCreationForm = ({
   }, [commodities]);
 
   useEffect(() => {
-    
+
   }, [formData]);
 
   useEffect(() => {
-    
+
   }, [weightUpdated]);
 
   const [inputStyle, setinputStyle] = useState({});
@@ -728,7 +699,7 @@ const PickupOrderCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      
+
 
       setWeightUpdated(totalWeight);
     }
@@ -861,7 +832,7 @@ const PickupOrderCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           formData.client_to_bill_type === "shipper" ||
-          formData.client_to_bill_type === "consignee"
+            formData.client_to_bill_type === "consignee"
             ? auxVar
             : formData.client_to_bill,
       };
@@ -972,7 +943,7 @@ const PickupOrderCreationForm = ({
           supplier: formData.shipperId,
           weight: weightUpdated,
         };
-        
+
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
@@ -988,7 +959,7 @@ const PickupOrderCreationForm = ({
             window.location.reload();
           }, 1000);
         } else {
-          
+
           setShowErrorAlert(true);
         }
       };
@@ -1015,7 +986,7 @@ const PickupOrderCreationForm = ({
   }, []);
 
   const getAsyncSelectValue = () => {
-    
+
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
       selectedOption = releasedToOptions.find(
@@ -1023,7 +994,7 @@ const PickupOrderCreationForm = ({
           option.id === formData.shipperId &&
           option.type === formData.shipperType
       );
-      
+
     } else if (formData.client_to_bill_type === "consignee") {
       selectedOption = releasedToOptions.find(
         (option) =>
@@ -1156,7 +1127,7 @@ const PickupOrderCreationForm = ({
                 </LocalizationProvider>
               </div>
             </div>
-            <div className="row align-items-center">
+            <div className="row mb-3">
               <div className="col-4 text-start">
                 <label htmlFor="issuedby" className="form-label issuedBy">
                   Issued By:
@@ -1177,15 +1148,6 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
-              <div className="company-form__section">
-              <Input
-                type="textarea"
-                inputName="issuedbyinfo"
-                placeholder="Apply to..."
-                value={formData.issuedByInfo}
-                readonly={true}
-              />
-            </div>
 
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1202,6 +1164,20 @@ const PickupOrderCreationForm = ({
                 </LocalizationProvider>
               </div>
             </div>
+
+            <div className="row mb-3">
+              <div className="col-12 text-start">
+              <div className="company-form__section">
+                <Input
+                  type="textarea"
+                  inputName="issuedbyinfo"
+                  placeholder="Apply to..."
+                  value={formData.issuedByInfo}
+                  readonly={true}
+                />
+              </div>
+                </div>
+            </div>
           </div>
         </div>
         {/* Pickup Form */}
@@ -1211,8 +1187,9 @@ const PickupOrderCreationForm = ({
               <h3>Pickup Information</h3>
               <span></span>
             </div>
-            <div className="row mb-3">
-              <div className="col-3 text-start">
+
+            <div className="row">
+              <div className="col-6 text-start">
                 <label htmlFor="shipper" className="form-label">
                   Shipper:
                 </label>
@@ -1235,7 +1212,7 @@ const PickupOrderCreationForm = ({
                 />
               </div>
 
-              <div className="col-3 text-start">
+              <div className="col-6 text-start">
                 <Input
                   type="text"
                   inputName="invoiceNumber"
@@ -1246,8 +1223,23 @@ const PickupOrderCreationForm = ({
                   label="Purchase Order"
                 />
               </div>
+            </div>
 
-              <div className="col-3 text-start">
+            <div className="row mb-3">
+              <div className="col-12 text-start">
+                <Input
+                  id="TextShipperLocation"
+                  type="textarea"
+                  inputName="shipperinfo"
+                  placeholder="Shipper Location..."
+                  value={formData.shipperInfo}
+                  readonly={true}
+                />
+              </div>
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-6 text-start">
                 <label htmlFor="pickup" className="form-label">
                   Pick-up Location:
                 </label>
@@ -1270,7 +1262,7 @@ const PickupOrderCreationForm = ({
                 />
               </div>
 
-              <div className="col-3 text-start">
+              <div className="col-6 text-start">
                 <Input
                   type="text"
                   inputName="purchaseOrderNumber"
@@ -1285,19 +1277,8 @@ const PickupOrderCreationForm = ({
                 />
               </div>
             </div>
-            <div className="row align-items-center">
-              <div className="col-6 text-start">
-                <Input
-                  id="TextShipperLocation"
-                  type="textarea"
-                  inputName="shipperinfo"
-                  placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
-                  readonly={true}
-                />
-              </div>
-
-              <div className="col-6 text-start">
+            <div className="row mb-3">
+              <div className="col-12 text-start">
                 <Input
                   id="TextPickupLocation"
                   type="textarea"
@@ -1343,7 +1324,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="col-6 text-start" style={{marginBlockEnd: "auto"}}>
+              <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
                 </label>
@@ -1554,7 +1535,7 @@ const PickupOrderCreationForm = ({
                 onInspect={() => {
                   setshowCommodityInspect(!showCommodityInspect);
                 }}
-                onAdd={() => {}}
+                onAdd={() => { }}
                 showOptions={false}
               />
               <button
@@ -1591,7 +1572,7 @@ const PickupOrderCreationForm = ({
               (internalCommodity, index) => (
                 <CommodityCreationForm
                   key={index}
-                  onCancel={() => {}}
+                  onCancel={() => { }}
                   commodities={selectedCommodity.internalCommodities}
                   setCommodities={updateSelectedCommodity}
                   commodity={internalCommodity}
@@ -1691,11 +1672,11 @@ const PickupOrderCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}
@@ -1730,11 +1711,11 @@ const PickupOrderCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}

@@ -242,7 +242,7 @@ const PreAlertCreationForm = ({
               </div>
             </div>
 
-            <div className="row align-items-center">
+            <div className="row">
               <Input
                 type="number"
                 inputName="amount"
