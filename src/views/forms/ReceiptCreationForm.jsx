@@ -1003,7 +1003,7 @@ const ReceiptCreationForm = ({
               <h3>General</h3>
               <span></span>
             </div>
-            <div className="row align-items-center mb-3">
+            <div className="row mb-3" >
               <div className="col-4 text-start">
                 <Input
                   type="number"
@@ -1032,6 +1032,7 @@ const ReceiptCreationForm = ({
                   loadOptions={loadEmployeeSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
+                  placeholder="Search and select..."
                 />
               </div>
 
@@ -1054,6 +1055,7 @@ const ReceiptCreationForm = ({
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
+                      
                     />
                   )
                 ) : (
@@ -1070,6 +1072,7 @@ const ReceiptCreationForm = ({
                     loadOptions={loadDestinationAgentsSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    placeholder="Search and select..."
                   />
                 )}
               </div>
@@ -1131,7 +1134,7 @@ const ReceiptCreationForm = ({
               <h3>Shipper/Consignee</h3>
               <span></span>
             </div>
-            <div className="row align-items-center mb-3">
+            <div className="row mb-3">
               <div className="col-6 text-start">
                 <label htmlFor="shipper" className="form-label">
                   Shipper:
@@ -1201,7 +1204,7 @@ const ReceiptCreationForm = ({
               </div>
             </div>
 
-            <div className="row align-items-center">
+            <div className="row">
               <div className="col-6 text-start">
                 <label htmlFor="clientToBill" className="form-label">
                   Client to Bill:
@@ -1275,7 +1278,7 @@ const ReceiptCreationForm = ({
                 />
               </div>
 
-              <div className="col-6 text-start">
+              <div className="col-6 text-start" style={{ marginTop: '-5px' }}>
                 <Input
                   type="text"
                   inputName="purchaseOrderNumber"
@@ -1300,7 +1303,7 @@ const ReceiptCreationForm = ({
               <h3>Carrier Information</h3>
               <span></span>
             </div>
-            <div className="row align-items-center">
+            <div className="row">
               <div className="col-4 text-start">
                 <label htmlFor="mainCarrier" className="form-label">
                   Carrier:
@@ -1533,7 +1536,8 @@ const ReceiptCreationForm = ({
           <h3>Events</h3>
           <span></span>
         </div>
-        <div className="row align-items-center">
+        <div className="row">
+          
           <div className="col-12 text-start">
             <div className="container-box event-section">
               <div className="box__event--form">
@@ -1576,7 +1580,7 @@ const ReceiptCreationForm = ({
           <h3>Attachments</h3>
           <span></span>
         </div>
-        <div className="row align-items-center">
+        <div className="row">
           <div className="col-12">
             <input type="file" multiple onChange={handleFileUpload} />
             <ul>
@@ -1588,11 +1592,12 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
+      <div className="creation creation-container w-100">
       <div className="form-label_name">
         <h3>Notes</h3>
         <span></span>
       </div>
-      <div className="creation creation-container w-100">
+      
         <div className="row align-items-center">
           <div className="col-10 text-start">
             <label htmlFor="notes" className="form-label">
@@ -1604,7 +1609,7 @@ const ReceiptCreationForm = ({
               className="form-input"
               placeholder="Notes..."
               onChange={(e) => setNote(e.target.value)}
-              style={{ width: "100%" }}
+              style={{ width: "99%" }}
             />
           </div>
 
@@ -1622,7 +1627,7 @@ const ReceiptCreationForm = ({
               Add
             </button>
           </div>
-          <div className="row align-items-center">
+          <div className="row">
             <div className="col-10 text-start">
               <textarea
                 name="notes"
