@@ -40,8 +40,6 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
 
   return (
     <div className="income-charge-form">
-      <h3>Event Form</h3>
-
       <div>
         <div className="form-row">
           <div className="form-column-create">
@@ -64,7 +62,8 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Event Type:</label>
-            <select name="eventType" id="eventType">
+
+            <select name="eventType" id="eventType" style={{ height: '3rem' }}>
               <option value="arrivedDestination">Arrived at Destination</option>
               <option value="arrivedWarehouse">Arrived at Warehouse</option>
               <option value="arrivedWarehouseMIA">
@@ -111,7 +110,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Location:</label>
-            <select name="eventType" id="eventType">
+            <select name="eventType" id="eventType" style={{ height: '3rem' }}>
               <option value="arrivedDestination">Arrived at Destination</option>
               <option value="arrivedWarehouse">Arrived at Warehouse</option>
               <option value="arrivedWarehouseMIA">
