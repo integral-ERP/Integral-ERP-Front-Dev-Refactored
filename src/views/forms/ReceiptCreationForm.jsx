@@ -968,7 +968,7 @@ const ReceiptCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 2000);
         } else {
           
           setShowErrorAlert(true);
@@ -1081,8 +1081,9 @@ const ReceiptCreationForm = ({
             <div className="row align-items-center">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Entry Date and Time</p>
                   <DateTimePicker
-                    label="Entry Date and Time"
+                    // label="Entry Date and Time"
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
