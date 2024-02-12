@@ -765,7 +765,7 @@ const Table = ({
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid" style={{paddingLeft: "inherit"}}>
         {showOptions && (
           <div className="layout-fluid">
             <div className="d-flex justify-content-start align-items-center">

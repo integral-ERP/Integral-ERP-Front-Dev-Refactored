@@ -287,7 +287,7 @@ const IncomeChargeForm = ({
         </div>
       </div>
 
-      <div className="row w-100 mb-3">
+      <div className="row w-100 mb-4">
         <div className="col-6">
           <label htmlFor="paidAs" className="text-comm">
             Paid as
@@ -330,7 +330,7 @@ const IncomeChargeForm = ({
 
 
       <div className="row w-100 mb-3">
-        <div className="col-4">
+        <div className="col-6">
           <label htmlFor="numberOfPieces" className="text-comm">
             No. of Pieces
           </label>
@@ -356,8 +356,30 @@ const IncomeChargeForm = ({
             onKeyDown={(e) => handleKeyDown(e, input8Ref)}
           />
         </div>
+        <div className="col-6">
+          <label htmlFor="chargeableWeight" className="text-comm">
+            Chargeable Weight (vlb)
+          </label>
+          <input
+            style={{ backgroundColor: "lightgray" }}
+            className="form-input"
+            type="number"
+            readOnly
+            id="chargeableWeight"
+            value={formData.chargeableWeight}
+            onChange={(e) =>
+              setformData({ ...formData, chargeableWeight: e.target.value })
+            }
+            ref={input12Ref}
+            onKeyDown={(e) => handleKeyDown(e, input13Ref)}
+          />
+        </div>
+       
+      </div>
 
-        <div className="col-4">
+
+      <div className="row w-100 mb-3">
+      <div className="col-6">
           <label htmlFor="grossWeight" className="text-comm">
             Gross Weight
           </label>
@@ -395,7 +417,7 @@ const IncomeChargeForm = ({
           </div>
         </div>
 
-        <div className="col-4">
+        <div className="col-6">
           <label htmlFor="grossVolume" className="text-comm">
             Gross Volume
           </label>
@@ -432,29 +454,12 @@ const IncomeChargeForm = ({
             </select>
           </div>
         </div>
+       
+       
       </div>
 
-
       <div className="row w-100 mb-3">
-        <div className="col-4">
-          <label htmlFor="chargeableWeight" className="text-comm">
-            Chargeable Weight (vlb)
-          </label>
-          <input
-            style={{ backgroundColor: "lightgray" }}
-            className="form-input"
-            type="number"
-            readOnly
-            id="chargeableWeight"
-            value={formData.chargeableWeight}
-            onChange={(e) =>
-              setformData({ ...formData, chargeableWeight: e.target.value })
-            }
-            ref={input12Ref}
-            onKeyDown={(e) => handleKeyDown(e, input13Ref)}
-          />
-        </div>
-        <div className="col-4">
+      <div className="col-6">
           <label htmlFor="rateCharge" className="text-comm">
             Rate Charge
           </label>
@@ -468,7 +473,7 @@ const IncomeChargeForm = ({
             onKeyDown={(e) => handleKeyDown(e, input14Ref)}
           />
         </div>
-        <div className="col-4">
+        <div className="col-6">
           <label htmlFor="totalAmount" className="text-comm">
             Total Amount
           </label>
@@ -487,8 +492,10 @@ const IncomeChargeForm = ({
         </div>
       </div>
 
-      <div className="show_buttons">
-        <div className="form-row">
+
+
+      <div className="show_buttons mb-3">
+      <div className="form-row">
           <div className="form-column mt-7.5">
             <Input
               type="checkbox"
