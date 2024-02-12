@@ -4,6 +4,7 @@ import "../../styles/components/IncomeChargeForm.css";
 import CurrenciesService from "../../services/CurrencyService";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import Input from "../shared/components/Input";
+import { Padding } from "@mui/icons-material";
 
 const ExpenseChargeForm = ({
   onCancel,
@@ -305,10 +306,11 @@ const ExpenseChargeForm = ({
               }
               ref={input5Ref}
               onKeyDown={(e) => handleKeyDown(e, input6Ref)}
+              style={{ width: '97.5%', display: 'block' }}
             />
           </div>
 
-          <div className="row w-100 mb-3">
+          <div className="row w-100 mb-2">
           <div className="col-4">
             <label htmlFor="numberOfPieces" className="text-comm">
               No. of Pieces
@@ -402,8 +404,10 @@ const ExpenseChargeForm = ({
           </div>
           </div>
         </div>
-        <div className="row w-100 mb-3">
-        <div className="row w-100 mb-3">
+        <div className="row w-100">
+
+          
+        <div className="row w-100" style={{paddingRight: "0px"}}>
           <div className="col-6">
             <label htmlFor="applyBy" className="text-comm">
               Apply By
@@ -444,7 +448,7 @@ const ExpenseChargeForm = ({
           </div>
           </div>
 
-          <div className="row w-100 mb-3">
+          <div className="row w-100 mb-3" style={{paddingRight: "0px"}}>
           <div className="col-6">
             <label htmlFor="rateCharge" className="text-comm">
               Rate Charge

@@ -447,8 +447,10 @@ div.col-4.text-start .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
 }
 
 .layout-fluid{
-  width: 95%;
+  width: 98%;
   display: inline-block;
+  // padding-left: inherit;
+  padding-right: inherit
 }
 
 .main-container{
@@ -501,3 +503,4 @@ justify-content: center;
 .checkbox{
 margin: 5px 0 0 0 !important;
 }
+
