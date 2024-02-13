@@ -73,6 +73,14 @@ const Table = ({
     });
     return initialVisibility;
   });
+  const [visibleColumnOrder, setVisibleColumnOrder] = useState([]);
+
+  useEffect(() => {
+    // Filtrar las columnas visibles cuando cambia visibleColumns
+    const visibleColumnsArray = columnOrder.filter(columnName => visibleColumns[columnName]);
+    setVisibleColumnOrder(visibleColumnsArray);
+  }, [visibleColumns, columnOrder]);
+
 
   useEffect(() => {
     if (createWarehouseReceipt) {
@@ -170,32 +178,52 @@ const Table = ({
     "Packages": "packages.length",
     //---------------------Cristian
     "Account": "accountNumber",
-    "Due Days" : "dueDays",
-    "Discount Percentage" : "discountPercentage",
-    "Discount Days" : "discountDays",
-    "Inactive" : "inactive",
+    "Due Days": "dueDays",
+    "Discount Percentage": "discountPercentage",
+    "Discount Days": "discountDays",
+    "Inactive": "inactive",
     //---------------
-    "Transaction Date" : "trasaDate",
-    "Due Date" : "due",
-    "Type Name" : "typeName",
-    "Apply" : "issuedByName",
+    "Transaction Date": "trasaDate",
+    "Due Date": "due",
+    "Type Name": "typeName",
+    "Apply": "issuedByName",
     "Payment Temse": "paymentByDesc",
-    "Account Name" : "accountByName",
-    "Type Code" : "typeByCode",
-    "Biling Address" : "bilingAddres",
+    "Account Name": "accountByName",
+    "Type Code": "typeByCode",
+    "Biling Address": "bilingAddres",
     //---------------
     "Type Items & Service": "typeByCode",
     "type Chart": "typeByCode",
-    "Type Chart":"typeChart",
-    "Account Type" : "issuedByName",
+    "Type Chart": "typeChart",
+    "Account Type": "issuedByName",
     "Amt Due": "division",
     //---------------
     "Date": "date",
     "Entity": "entity",
-    "AR Amount":  "amountReceived",
-    "Memo":       "memo",
-    "nombre":     "nombre",
+    "AR Amount": "amountReceived",
+    "Memo": "memo",
+    "nombre": "nombre",
   };
+  const handleMapWithThead = () => {
+    return visibleColumnOrder.map((columnName, columnIndex) => {
+      return (
+        <th
+          className="th-separate"
+          key={columnName}
+          style={{
+            width: `${100 / visibleColumnOrder.length}%`,
+          }}
+          draggable
+          onDragStart={(e) => handleDragStart(e, columnIndex)}
+          onDragOver={(e) => handleDragOver(e, columnIndex)}
+          onDrop={(e) => handleDrop(e, columnIndex)}
+        >
+          {columnName}
+        </th>
+      );
+    });
+  };
+
 
   const getStatus = (statusCode) => {
     switch (statusCode.toString()) {
@@ -515,7 +543,7 @@ const Table = ({
           console.error("Error parsing XLSX file:", error);
         }
       } else {
-        
+
       }
     };
     reader.readAsText(file);
@@ -600,7 +628,7 @@ const Table = ({
             <table className="table-hover ">
               <thead className="text-head">
                 <tr>
-                  {columnOrder.map(
+                  {/* {columnOrder.map(
                     (columnName, columnIndex) =>
                       visibleColumns[columnName] && (
                         <th
@@ -617,18 +645,19 @@ const Table = ({
                           {columnName}
                         </th>
                       )
-                  )}
+                  )} */}
+
+                  {handleMapWithThead()}
                 </tr>
               </thead>
               <tbody>
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
-                        ? "table-primary"
-                        : ""
-                    }`}
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                      ? "table-primary"
+                      : ""
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={handleEdit}
@@ -641,7 +670,7 @@ const Table = ({
                           className="generic-table__td"
                           style={{
                             // minWidth: columnWidthsCalculated[columnName],
-                            width: `${100 / columnOrder.length}%`, // Calcula el ancho dinámicamentewidth: {`${columnOrder.length / 100}%`},
+                            width: `${100 / visibleColumnOrder.length}%`, // Calcula el ancho dinámicamentewidth: {`${columnOrder.length / 100}%`},
                             whiteSpace: "nowrap",
                           }}
                         >
@@ -700,15 +729,15 @@ const Table = ({
                               <i className="fas fa-times"></i>
                             )
                           ) : columnNameToProperty[columnName]?.includes(
-                              "."
-                            ) ? (
+                            "."
+                          ) ? (
                             getPropertyValue(
                               row,
                               columnNameToProperty[columnName]
                             )
                           ) : Array.isArray(
-                              row[columnNameToProperty[columnName]]
-                            ) ? (
+                            row[columnNameToProperty[columnName]]
+                          ) ? (
                             row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                           ) : (
                             row[columnNameToProperty[columnName]]
@@ -765,7 +794,7 @@ const Table = ({
 
   return (
     <>
-      <div className="container-fluid" style={{paddingLeft: "inherit"}}>
+      <div className="container-fluid" style={{ paddingLeft: "inherit" }}>
         {showOptions && (
           <div className="layout-fluid">
             <div className="d-flex justify-content-start align-items-center">
