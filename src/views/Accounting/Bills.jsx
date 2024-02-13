@@ -36,18 +36,17 @@ const Bills = () => {
   ] = useModal(false);
 
   const columns = [
-
     "Number",
-    "Payment Terms",
-    "Type",
+    // "Payment Terms",
+    // "Type",
     "Applied to",
     "Transaction Date",
     "Due Date",
     "Employee",
-    "Account Type",
-    "Exported",
-    "Amt. Paid(USD)",
-    "Amt. Due(USD)",
+    "Account Name",
+    // "Exported",
+    // "Amt. Paid(USD)",
+    "Amt Due",
     "Currency",
     "Bill PDF",
   ];

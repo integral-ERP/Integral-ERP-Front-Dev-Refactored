@@ -124,8 +124,25 @@
 }
 
 .alert-notification {
-  position: absolute;
-  top: 5%;
+  position: fixed;
+  top: 50%;
+  background-color: #3498db !important;
+  border: 2px solid #006BAD;
+}
+
+.succes{
+  font-size: x-large;
+  font-weight: 500;
+  color: white;
+}
+
+.created{
+  font-size: medium;
+  color: white;
+}
+
+.css-1vooibu-MuiSvgIcon-root{
+  color: white;
 }
 
 .file-input-container {

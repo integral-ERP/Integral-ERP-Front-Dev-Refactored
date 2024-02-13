@@ -968,7 +968,7 @@ const ReceiptCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 2000);
         } else {
           
           setShowErrorAlert(true);
@@ -1081,8 +1081,9 @@ const ReceiptCreationForm = ({
             <div className="row align-items-center">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Entry Date and Time</p>
                   <DateTimePicker
-                    label="Entry Date and Time"
+                    // label="Entry Date and Time"
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
@@ -1654,7 +1655,7 @@ const ReceiptCreationForm = ({
           Cancel
         </button>
       </div>
-      {showSuccessAlert && (
+      {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1665,7 +1666,19 @@ const ReceiptCreationForm = ({
             Warehouse Receipt {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
+      )} */}
+       {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <p className="succes"> Success </p>
+          <p className=" created">  Warehouse Receipt {creating ? "created" : "updated"} successfully! </p>
+        </Alert>
       )}
+
+
       {showErrorAlert && (
         <Alert
           severity="error"

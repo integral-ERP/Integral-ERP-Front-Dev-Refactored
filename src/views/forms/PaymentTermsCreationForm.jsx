@@ -29,8 +29,6 @@ const PaymentTermsCreationForms = ({
 
   useEffect(() => {
     if (!creating && paymentTerms) {
-      
-      
       setFormData({
         description: paymentTerms.description || "",
         dueDays: paymentTerms.dueDays || "",
@@ -41,17 +39,6 @@ const PaymentTermsCreationForms = ({
     }
   }, [creating, paymentTerms]);
 
-
-
-
-
-
-
-
-
-
-
-
   const sendData = async () => {
     let rawData = {
       description: formData.description || "",
@@ -60,11 +47,9 @@ const PaymentTermsCreationForms = ({
       discountDays: formData.discountDays || "",
       inactive: formData.inactive || false,
     };
-
     
     //-------------------------------------
-    
-
+    console.log("DATA:", formData);
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
@@ -82,7 +67,7 @@ const PaymentTermsCreationForms = ({
         window.location.reload();
       }, 1000);
     } else {
-      
+      console.log("Something went wrong:", response);
       setShowErrorAlert(true);
     }
   };
@@ -110,8 +95,8 @@ const PaymentTermsCreationForms = ({
       .catch((error) => {
         console.error(error);
       });
-    
   };
+  
   useEffect(() => {
     updatePaymentTerm();
   }, []);

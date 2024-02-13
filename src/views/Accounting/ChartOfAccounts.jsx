@@ -3,7 +3,7 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import ItemAndServiceCreationForm  from "../forms/ItemAndServiceCreationForm";
+import ChartOfAccountsCreationForm  from "../forms/ChartOfAccountsCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
@@ -53,8 +53,8 @@ const ChartOfAccounts   = () => {
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
-        const newChartOfAccounts  = response.data.results.filter((ChartAccounts) => {
-          const ChartAccountId  = ChartAccounts.id;
+        const newChartOfAccounts  = response.data.results.filter((chartOfAccounts) => {
+          const ChartAccountId  = chartOfAccounts.id;
           return !chartofAccounts.some(
             (existingPickupOrder) => existingPickupOrder.id === ChartAccountId 
           );
@@ -166,8 +166,9 @@ const ChartOfAccounts   = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div className="content-page" style={!hideShowSlider ? {marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
+              id= 'table1'
               data={chartofAccounts}
               columns={columns}
               onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
@@ -182,8 +183,8 @@ const ChartOfAccounts   = () => {
               importEnabled={false}
             >
               {selectedChartOfAccounts === null && (
-                <ItemAndServiceCreationForm
-                  ChartAccounts={null}
+                <ChartOfAccountsCreationForm
+                  chartOfAccounts={null}
                   closeModal={closeModal}
                   creating={true}
                   onDataChange={handleChartOfAccountDataChange}
@@ -191,8 +192,8 @@ const ChartOfAccounts   = () => {
               )}
 
               {selectedChartOfAccounts !== null && (
-                <ItemAndServiceCreationForm
-                  ChartAccounts={selectedChartOfAccounts}
+                <ChartOfAccountsCreationForm
+                  chartOfAccounts={selectedChartOfAccounts}
                   closeModal={closeModal}
                   creating={false}
                   onDataChange={handleChartOfAccountDataChange}

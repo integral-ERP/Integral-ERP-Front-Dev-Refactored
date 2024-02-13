@@ -475,7 +475,7 @@ const ReleaseOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 2000);
         } else {
           
           setShowErrorAlert(true);
@@ -583,8 +583,9 @@ const ReleaseOrderCreationForm = ({
             <div className="row mb-3">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Creation Date and Time</p>
                   <DateTimePicker
-                    label="Creation Date and Time"
+                    // label="Creation Date and Time"
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
@@ -598,8 +599,9 @@ const ReleaseOrderCreationForm = ({
               </div>
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Release Date and Time</p>
                   <DateTimePicker
-                    label="Release Date and Time"
+                    // label="Release Date and Time"
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
@@ -850,7 +852,7 @@ const ReleaseOrderCreationForm = ({
           Cancel
         </button>
       </div>
-      {showSuccessAlert && (
+      {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -860,6 +862,16 @@ const ReleaseOrderCreationForm = ({
           <strong>
             Release Order {creating ? "created" : "updated"} successfully!
           </strong>
+        </Alert>
+      )} */}
+      {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <p className="succes"> Success </p>
+          <p className=" created"> Release Order {creating ? "created" : "updated"} successfully!</p>
         </Alert>
       )}
       {showErrorAlert && (

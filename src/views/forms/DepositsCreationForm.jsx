@@ -33,7 +33,7 @@ const DepositsCreationForm = ({
 
   const formFormat = {
     bankAccount: "",
-    trasaDate: today,
+    creation_date: today,
     memo: "",
     total:"",
     amount: "",
@@ -48,7 +48,7 @@ const DepositsCreationForm = ({
       
       setFormData({
         bankAccount: deposit.bankAccount,
-        trasaDate: deposit.trasaDate,
+        creation_date: deposit.creation_date,
         memo: deposit.memo,
         amount: deposit.amount,
         total:total,
@@ -62,7 +62,7 @@ const DepositsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       bankAccount: formData.bankAccount,
-      date: formData.trasaDate,
+      creation_date: formData.creation_date,
       memo: formData.memo,
       total: total,
       depositCharges:deposits,
@@ -81,7 +81,7 @@ const DepositsCreationForm = ({
         ondepositDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 1000);
+      }, 500);
     } else {
       
       setShowErrorAlert(true);
@@ -145,11 +145,11 @@ const DepositsCreationForm = ({
                 <DateTimePicker
                   label="Transation Date"
                   className="font-right"
-                  value={dayjs(formData.trasaDate)}
+                  value={dayjs(formData.creation_date)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      trasaDate: dayjs(e).format("YYYY-MM-DD"),
+                      creation_date: dayjs(e).format("YYYY-MM-DD"),
                     })
                   }
                 />

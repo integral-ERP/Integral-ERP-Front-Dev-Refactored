@@ -124,16 +124,13 @@ const InvoicesCreationForm = ({
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
     
-    
     setaccounts(result.data)
     setformData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
       accountByName: name,
-
     });
-    
   };
 
 
@@ -188,7 +185,6 @@ const InvoicesCreationForm = ({
         status: invoice.status || "Open",
         typeChart: invoice.typeChart || "",
         invoiceCharges: invoice.invoiceCharges,
-
 
         issuedByInfo: `${invoice.issued_byObj?.street_and_number || ""} - ${invoice.issued_byObj?.city || ""
       } - ${invoice.issued_byObj?.state || ""} - ${invoice.issued_byObj?.country || ""
@@ -481,18 +477,20 @@ const InvoicesCreationForm = ({
                 Apply To:
               </label>
               <AsyncSelect
-                id="issuedById"
-                onChange={(e) => handleIssuedBySelection(e)}
-                value={issuedByOptions.find(
-                  (option) => option.id === formData.issuedById
-                )}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={issuedByOptions}
-                loadOptions={loadIssuedBySelectOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+                  id="issuedById"
+                  value={issuedByOptions.find(
+                    (option) => option.id === formData.issuedById
+                  )}
+                  onChange={(e) => {
+                    handleIssuedBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={issuedByOptions}
+                  loadOptions={loadIssuedBySelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
             </div>
             <div className="company-form__section">
               <Input
@@ -501,7 +499,6 @@ const InvoicesCreationForm = ({
                 placeholder="Apply to..."
                 value={formData.issuedByInfo}
                 readonly={true}
-                label=""
               />
             </div>
           </div>

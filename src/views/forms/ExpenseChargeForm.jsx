@@ -296,6 +296,10 @@ const ExpenseChargeForm = ({
               Description:
             </label>
             <input
+            style={{
+              width: "98%",
+              display: "flow",
+            }}
               name="description"
               type="text"
               className="form-input"

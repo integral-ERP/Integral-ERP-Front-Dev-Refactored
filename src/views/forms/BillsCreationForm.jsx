@@ -39,6 +39,7 @@ const BillsCreationForm = ({
   const [showBillEditForm, setshowBillEditForm] = useState(false);
   const [selectedBill, setselectedBill] = useState(null);
   const [bills, setbills] = useState([]);
+  const [total, settotal] = useState(0);
 
   const formFormat = {
     status: 14,
@@ -52,6 +53,7 @@ const BillsCreationForm = ({
     accountByType: "",
     carriVerndorByName: "",
     carriVerndorById: "",
+    total: "",
     bills: [],
   };
 
@@ -66,6 +68,7 @@ const BillsCreationForm = ({
       setFormData({
         number: bill.number || "",
         due: bill.due || "",
+        division: total,
         trasaDate: bill.trasaDate,
         paymentById: bill.paymentById,
         paymentByDesc: bill.paymentByDesc,
@@ -75,21 +78,36 @@ const BillsCreationForm = ({
         carriVerndorByName: bill.carriVerndorByName,
         carriVerndorById: bill.carriVerndorById,
         billCharges: bill.billCharges,
-        carriVerndorByInfo: bill.carriVerndorByInfo,
+        // vendorByInfo: bill.vendorByInfo,
         status: bill.status || 14,
+
+        vendorByInfo: `${bill.vendor_byObj?.street_and_number || ""} - ${bill.vendor_byObj?.city || ""
+      } - ${bill.vendor_byObj?.state || ""} - ${bill.vendor_byObj?.country || ""
+      } - ${bill.vendor_byObj?.zip_code || ""}`,
       });
     }
   }, [creating, bill]);
 
+  useEffect(() => {
+    let totall = 0;
+    for (const valor of bills) {
+      let prueba = 0;
 
+      const totalP = 'amount';
+      prueba = valor[totalP];
+      totall = totall + prueba;
+    }
+    settotal(totall);
+  }, [bills]);
 
   const sendData = async () => {
     let rawData = {
       status: formData.status,
       number: formData.number || "",
       due: formData.due,
+      division: total,
       trasaDate: formData.trasaDate,
-
+      total: formData.total,
       paymentById: formData.paymentById,
       paymentByDesc: formData.paymentByDesc,
       paymentTemr: formData.paymentTemr,
@@ -97,6 +115,7 @@ const BillsCreationForm = ({
       accountByType: formData.accountByType,
       carriVerndorByName: formData.carriVerndorByName,
       carriVerndorById: formData.carriVerndorById,
+      vendorByInfo: formData.vendorByInfo,
       billCharges: bills,
     };
 
@@ -134,9 +153,7 @@ const BillsCreationForm = ({
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
 
-    const accountByOptions = [...accountWithType].filter(
-      (account) => account.typeChart == "Accouns Payable"
-    );
+    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 
@@ -151,15 +168,16 @@ const BillsCreationForm = ({
   const handleAccountBySelection = async (event) => {
     const id = event.id;
     const typeChart = event.typeChart;
+    const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
     
-    setaccounts(result.data);
+    setaccounts(result.data)
     setFormData({
       ...formData,
       accountById: id,
       accountByType: typeChart,
+      accountByName: name,
     });
-    
   };
 
 
@@ -187,7 +205,7 @@ const BillsCreationForm = ({
       ...formData,
       carriVerndorById: id,
       carriVerndorByName: name,
-      carriVerndorByInfo: info,
+      vendorByInfo: info,
     });
   };
 
@@ -270,21 +288,16 @@ const BillsCreationForm = ({
                   Account:
                 </label>
                 <AsyncSelect
-                  id="account"
-                  value={accountByOptions.find(
-                    (option) => option.id === formData.accountById
-                  )}
-                  onChange={(e) => {
-                    handleAccountBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={accountByOptions}
-                  getOptionLabel={(option) =>
-                    option.name + " || " + " Accouns Payable "
-                  }
-                  getOptionValue={(option) => option.id}
-                />
+                id="account"
+                value={accountByOptions.find(
+                  (option) => option.id === formData.accountById)}
+                onChange={(e) => { handleAccountBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={accountByOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
               </div>
             </div>
 
@@ -312,9 +325,9 @@ const BillsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="textarea"
-                  inputName="carriVerndorByInfo"
+                  inputName="vendorByInfo"
                   placeholder="Apply to..."
-                  value={formData.carriVerndorByInfo}
+                  value={formData.vendorByInfo}
                   readonly={true}
                   label=""
                 />
@@ -403,6 +416,18 @@ const BillsCreationForm = ({
         onAdd={() => { }}
         showOptions={false}
       />
+      <div className="form-column">
+        <label htmlFor="tota" className="text-comm">
+          Total Amount:
+        </label>
+        <input
+          className="form-input"
+          type="number"
+          readOnly
+          id="tota"
+          value={total}
+        />
+      </div>
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save

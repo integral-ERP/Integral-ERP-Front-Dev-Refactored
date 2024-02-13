@@ -2,38 +2,14 @@ import pdfMake from "pdfmake/build/pdfmake";
 
 import pdfFonts from "./vfs_fonts";
 import logo from "../../img/logo.png";
-import bwipjs from "bwip-js"; 
 
 pdfMake.vfs = pdfFonts;
 
-const GenerateInvoicePDF = (data) => {
+const GenerateDepositPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  
-  
-
-
 
   return new Promise((resolve, reject) => {
-    let canvas = null;
-    let barcodeImage = null;
-    canvas = document.createElement('canvas');
-    const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128)
-      text: data.number + '', // Barcode data
-      scale: 3, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
-      includetext: true, // Include human-readable text below the barcode
-      textxalign: "center",
-    };
-    try {
-
-      canvas = bwipjs.toCanvas(canvas, barcodeOptions);
-      barcodeImage = canvas.toDataURL();
-    } catch (error) {
-      reject(error);
-    }
-
 
     const chargesAmount = [];
     const chargesQuantity = [];
@@ -41,14 +17,14 @@ const GenerateInvoicePDF = (data) => {
     const chargesDescription = [];
     let totalAmount = 0;
 
-    if (data.invoiceCharges) {
-      totalAmount = data.invoiceCharges.leng;
+    if (data.depositCharges) {
+      totalAmount = data.depositCharges.leng;
       let chargeAmount = "";
       let chargeQuantity = "";
       let chargeTotalAmount = "";
       let chargeDescription = "";
 
-      data.invoiceCharges?.forEach((chargeses, index) => {
+      data.depositCharges?.forEach((chargeses, index) => {
         chargeAmount += `${chargeses.amount}  \n`;
         chargeQuantity += `${chargeses.quantity}  \n`;
         chargeTotalAmount += `${chargeses.totalAmount} \n`;
@@ -86,8 +62,8 @@ const GenerateInvoicePDF = (data) => {
     }
 
 
-    if (data.invoiceCharges) {
-      data.invoiceCharges.forEach((charge) => {
+    if (data.depositCharges) {
+      data.depositCharges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
 
           
@@ -107,7 +83,6 @@ const GenerateInvoicePDF = (data) => {
           ];
         }
       });
-
     }
 
     fetch(logo)
@@ -117,7 +92,6 @@ const GenerateInvoicePDF = (data) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
 
           const pdf = {
             content: [
@@ -130,7 +104,7 @@ const GenerateInvoicePDF = (data) => {
                         fit: [100, 100],
                       },
                       {
-                        text: "Invoice",
+                        text: "Deposit Ticket",
                         fontSize: 16,
                         bold: true,
                         margin: [0, 15, 0, 15], // Adjust margin as needed
@@ -139,119 +113,128 @@ const GenerateInvoicePDF = (data) => {
                   },
                   {
                     stack: [
+                      
                             {
                               fontSize: 16,
                               bold: true,
                               text: [
-                                `PressEx Courier`,
+                                `PressEx Logistics`,
                               ],
                             },
                             {
-                              fontSize: 12,
+                              fontSize: 10,
+                              fit:500,
                               text: [
-                                `2020 NW 129th. Ave. Ste. 201`,
-                                `Miami, FL 33182`,
-                                `UNITED STATES`,
+                                `2020 NW 129th. Ave. Suite. 201 Miami`,
+                              ],
+                            },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Florida 33182 United Stated,`,
+                              ],
+                              },
+                            {
+                              fontSize: 10,
+                              text: [
+                                `Tel: (3054567884), Fax: 786-9998847`,
                               ],
                             }
                     ]
                    
                   },
-                  {
-                    stack: [
-                      {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
-                      },
-                    ],
-                  },
+                  {},
                 ],
               },
-//---------------------------------------------------------------------------------------
-{
-  margin: [0, 0, 0, 10],
-  table: {
-    widths: [`30%`, `70%`],
-    body: [
-      [
-        {
-          text: `Payment Terms`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-        {
-          text:   `${data.paymentByDesc || ``}`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-      ],  
-      [
-        {
-          text: `Due Date`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-        {
-          text: `${data.due || ``}`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-      ],  
-      [
-        {
-          text: `Transaction Date`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-        {
-          text: `${data.trasaDate || ``}`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-      ],  
-      [
-        {
-          text: `Bill To`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-        {
-          text:  `${data.invoiceCharges[0].typeByCode || ``} - ${data.invoiceCharges[0].issuedByInfo || ``}`,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-      ],  
-    ],
-  },
-},
-//---------------------------------------------------------------------------------------
               {
                 table: {
-                  widths: [`40%`, `20%`, `20%`, `20%`],
+                  widths: [`30%`, `70%`],
                   body: [
                     [
                       {
-                        text: `Description of Charges`,
+                        text: `Date`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text:  `${data.creation_date || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                    [
+                      {
+                        text: `Account Name`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.bankAccount || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                    [
+                      {
+                        text: `Account Number`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: ``,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                  ],
+                },
+              },
+              // --------------------------------------------------------------------------------
+              { margin: [0, 10, 0, 10],
+                table: {
+                  widths: [`30%`, `70%`],
+                  body: [
+                    [
+                      {
+                        text: `Memo`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Quantity`,
+                        text:  `${data.memo || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],  
+                    
+                  ],
+                },
+              },
+              //---------------------------------------------------------------------------------
+              {
+                table: {
+                  widths: [`20%`, `60%`, `20%`],
+                  heights: [`100vh`,`100vh`, `100vh`],
+                  body: [
+                    [
+                      {
+                        text: `Number`,
+                        alignment: `center`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Price`,
+                        text: `References`,
+                        alignment: `center`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                       },
-                      
                       {
                         text: `Amount`,
+                        alignment: `center`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
@@ -259,25 +242,39 @@ const GenerateInvoicePDF = (data) => {
                     ],
                   
                     [
-                      [chargesDescription,],
-                      [chargesQuantity,],
-                      [chargesTotalAmount],
-                      [chargesAmount,],
-                      
+                      {
+                        text: chargesDescription[0],
+                        alignment: `center`,
+                        bold: true,
+                        // fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: chargesQuantity[0],
+                        alignment: `center`,
+                        bold: true,
+                        // fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: chargesAmount[0],
+                        alignment: `center`,
+                        bold: true,
+                        // fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                      },
                     ],
                     [
-                      
-                      {
+                      { 
                         text: `TOTAL :`,
                         alignment: `center`,
-                        colSpan: 3,
+                        colSpan: 2,
                         rowSpan: 1,
                       },
                       {},
-                      {},
                       {
-                        text: 
-                        `${data.division || ``}`,
+                        text: `${data.total || ``}`,
+                        alignment: `center`,
                       },
                     ],
                     
@@ -335,6 +332,6 @@ const GenerateInvoicePDF = (data) => {
   });
 };
 
-export default GenerateInvoicePDF;
+export default GenerateDepositPDF;
 
 

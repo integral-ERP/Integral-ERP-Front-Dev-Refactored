@@ -957,7 +957,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 1000);
+          }, 2000);
         } else {
 
           setShowErrorAlert(true);
@@ -1035,8 +1035,9 @@ const PickupOrderCreationForm = ({
               </div>
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Creation Date and Time</p>
                   <DateTimePicker
-                    label="Creation Date and Time"
+                    
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
@@ -1113,8 +1114,9 @@ const PickupOrderCreationForm = ({
               </div>
               <div className="col-4 text-start" id="dates">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Pick-up Date and Time</p>
                   <DateTimePicker
-                    label="Pick-up Date and Time"
+                    // label="Pick-up Date and Time"
                     value={dayjs(formData.pickupDateAndTime)}
                     onChange={(e) =>
                       setFormData({
@@ -1151,8 +1153,9 @@ const PickupOrderCreationForm = ({
 
               <div className="col-4 text-start" id="dates">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p className="text-date">Delivery Date and Time</p>
                   <DateTimePicker
-                    label="Delivery Date and Time"
+                    // label="Delivery Date and Time"
                     value={dayjs(formData.deliveryDateAndTime)}
                     onChange={(e) =>
                       setFormData({
@@ -1496,7 +1499,7 @@ const PickupOrderCreationForm = ({
         </div>
       </div>
 
-      <div className="col-12">
+      {/* <div className="col-12">
         <div className="creation creation-container w-100">
           <div className="form-label_name">
             <h3>Commodities</h3>
@@ -1640,7 +1643,7 @@ const PickupOrderCreationForm = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div className="row w-100">
         <div className="col-6">
@@ -1740,7 +1743,7 @@ const PickupOrderCreationForm = ({
         </button>
       </div>
 
-      {showSuccessAlert && (
+      {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1751,7 +1754,18 @@ const PickupOrderCreationForm = ({
             Pick up Order {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
+      )} */}
+       {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <p className="succes"> Success </p>
+          <p className=" created"> Pick up Order {creating ? "created" : "updated"} successfully! </p>
+        </Alert>
       )}
+
 
       {showErrorAlert && (
         <Alert

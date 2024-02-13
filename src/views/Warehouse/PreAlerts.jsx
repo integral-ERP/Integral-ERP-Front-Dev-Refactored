@@ -1,215 +1,302 @@
-import { useState, useEffect, useContext } from "react";
-import Table from "../shared/components/Table";
+import { useState, useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { useModal } from "../../hooks/useModal"; // Import the useModal hook
+import CustomerService from "../../services/CustomerService";
+import Input from "../shared/components/Input";
+import dayjs from "dayjs";
 import PreAlertService from "../../services/PreAlertService";
-import Sidebar from "../shared/components/SideBar";
-import { GlobalContext } from "../../context/global";
-import PreAlertCreationForm from "../forms/PreAlertCreationForm";
+import AsyncSelect from "react-select/async";
+import Table from "../shared/components/Table";
 
-const PreAlerts = () => {
-  const { hideShowSlider } = useContext(GlobalContext);
-  const [preAlerts, setpreAlerts] = useState([]);
-  const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedPreAlert, setselectedPreAlert] = useState(null);
+const PreAlertCreationForm = ({
+  preAlert,
+  closeModal,
+  creating,
+  onPreAlertDataChange,
+}) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [nextPageURL, setNextPageURL] = useState("");
-  const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
-  const [isEdit, setIsEdit] = useState(false);
-  const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [createReleaseOrder, setCreatePreAlert] = useState(true);
-  const columns = [
-    " Date",
-    "Client",
-    "Tracking Number",
-    "Store",
-    "Transport Company",
-    "Packages",
-  ];
+  const [otherStore, setOtherStore] = useState(false);
+  const [otherCourier, setOtherCourier] = useState(false);
+  const [clients, setClients] = useState([]);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [packageId, setPackageId] = useState(0);
+  const today = dayjs().format("YYYY-MM-DD");
 
-  const updatePreAlerts = (url = null) => {
-    PreAlertService.getPreAlerts(url)
-      .then((response) => {
-        const newreleises = response.data.results.filter((release) => {
-          const pickupOrderId = release.id;
-          return !preAlerts.some(
-            (existingPickupOrder) => existingPickupOrder.id === pickupOrderId
-          );
-        });
-
-        setpreAlerts([...preAlerts, ...newreleises].reverse());
-        if (response.data.next) {
-          setNextPageURL(response.data.next);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const formFormat = {
+    created_at: today,
+    client: null,
+    tracking_number: null,
+    store: null,
+    courier: null,
+    packages: [],
   };
 
-  useEffect(() => {
-    if (!initialDataFetched) {
-      updatePreAlerts();
-      setInitialDataFetched(true);
-    }
-  }, []);
+  const [formData, setFormData] = useState(formFormat);
+  const [packageData, setPackageData] = useState({
+    id: packageId,
+    amount: 0,
+    description: "",
+  });
 
   useEffect(() => {
-    if (initialDataFetched) {
-      const number = preAlerts[0]?.number || 0;
-      setcurrentReleaseNumber(number);
+    if (!creating && preAlert != null) {
+      let updatedFormData = {
+        created_at: preAlert.created_at,
+        client: preAlert.client,
+        tracking_number: preAlert.tracking_number,
+        store: preAlert.store,
+        courier: preAlert.courier,
+        packages: preAlert.packages,
+      };
+
+      setFormData(updatedFormData);
     }
-  }, [preAlerts]);
+  }, [creating, preAlert]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && nextPageURL) {
-        updatePreAlerts(nextPageURL);
+    async function fetchData() {
+      const customers = (await CustomerService.getCustomers()).data.results;
+      setClients(customers);
+    }
+
+    fetchData();
+  }, [creating, preAlert]);
+
+  const sendData = async () => {
+    const createPickUp = async () => {
+      const response = await (creating
+        ? PreAlertService.createPreAlert(formData)
+        : PreAlertService.updatePreAlert(preAlert.id, formData));
+
+      if (response.status >= 200 && response.status <= 300) {
+
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          closeModal();
+          onPreAlertDataChange();
+          setShowSuccessAlert(false);
+          setFormData(formFormat);
+          window.location.reload();
+        }, 1000);
+      } else {
+
+        setShowErrorAlert(true);
       }
+    };
+    createPickUp();
+  };
+
+  const handleStoreSelection = (e) => {
+    const store = e.target.value;
+    if (store === "other") {
+      setOtherStore(true);
+      setFormData({ ...formData, store: null });
+    } else {
+      setFormData({ ...formData, store: store });
+      setOtherStore(false);
+    }
+  };
+
+  const handleCourierSelection = (e) => {
+    const courier = e.target.value;
+    if (courier === "other") {
+      setOtherCourier(true);
+      setFormData({ ...formData, courier: null });
+    } else {
+      setFormData({ ...formData, courier: courier });
+      setOtherCourier(false);
+    }
+  };
+
+  const handleAddPackage = () => {
+    const newPackage = { ...packageData };
+    const newPackcages = [...formData.packages, newPackage];
+    setFormData({ ...formData, packages: newPackcages });
+    setPackageData({
+      id: packageId + 1,
+      amount: 0,
+      description: "",
     });
-
-    const lastRow = document.querySelector(".table-row:last-child");
-    if (lastRow) {
-      observer.observe(lastRow);
-    }
-
-    return () => {
-
-      observer.disconnect();
-    };
-  }, [nextPageURL]);
-
-  const handlePreAlertsDataChange = () => {
-    updatePreAlerts();
-  };
-
-  const handleSelectPreAlert = (releaseOrder) => {
-    setselectedPreAlert(releaseOrder);
-  };
-
-  const handleEditPreAlerts = () => {
-    if (selectedPreAlert) {
-      setIsEdit(true);
-      openModal();
-      setCreatePreAlert(false);
-    } else {
-      alert("Please select a Pre Alert to edit.");
-    }
-  };
-
-  const handleAddPreAlert = () => {
-    setCreatePreAlert(true);
-    openModal();
-  };
-
-  const handleDeletePreAlert = () => {
-    if (selectedPreAlert) {
-      PreAlertService.deletePreAlert(selectedPreAlert.id)
-        .then((response) => {
-          if (response.status == 204) {
-            const newreceipts = preAlerts.filter(
-              (order) => order.id !== selectedPreAlert.id
-            );
-            setpreAlerts(newreceipts);
-            setShowSuccessAlert(true);
-            setTimeout(() => {
-              setShowSuccessAlert(false);
-            }, 3000);
-
-          } else {
-            setShowErrorAlert(true);
-            setTimeout(() => {
-              setShowErrorAlert(false);
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          
-        });
-    } else {
-      alert("Please select a Pre Alert to delete.");
-    }
+    setPackageId(packageId + 1);
   };
 
   useEffect(() => {
-    const handleWindowClick = (event) => {
 
-      const clickedElement = event.target;
-      const isreceiptsButton = clickedElement.classList.contains("ne");
-      const isTableRow = clickedElement.closest(".table-row");
-      const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
-      const isSelectMenu = event.target.id.includes("react-select");
+  }, [formData]);
 
-      if (
-        !isreceiptsButton &&
-        !isTableRow &&
-        !isEdit &&
-        !isInsideCompanyFormPickup &&
-        !isSelectMenu
-      ) {
-        setselectedPreAlert(null);
-      }
-    };
+  const handleSelectPackage = (actualPackage) => {
+    setSelectedPackage(actualPackage);
+  };
 
-    window.addEventListener("click", handleWindowClick);
-
-    return () => {
-
-      window.removeEventListener("click", handleWindowClick);
-    };
-  }, []);
-
-  const handleCancel = () => {
-    window.location.reload();
+  const handleDeletePackage = () => {
+    const newPackcages = formData.packages.filter(
+      (com) => com.id != selectedPackage.id
+    );
+    setFormData({ ...formData, packages: newPackcages });
   };
 
   return (
-    <>
-      <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-          <div
-            className="content-page"
-            style={
-              !hideShowSlider
-                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
-                : { marginInline: "auto" }
-            }
-          >
-            <Table
-              data={preAlerts}
-              columns={columns}
-              onSelect={handleSelectPreAlert} // Make sure this line is correct
-              selectedRow={selectedPreAlert}
-              onDelete={handleDeletePreAlert}
-              onEdit={handleEditPreAlerts}
-              onAdd={handleAddPreAlert}
-              title="Pre Alerts"
-              setData={setpreAlerts}
-              contextService={PreAlertService}
-              importEnabled={false}
-            >
-              {selectedPreAlert !== null && (
-                <PreAlertCreationForm
-                  preAlert={selectedPreAlert}
-                  closeModal={handleCancel}
-                  creating={false}
-                  onPreAlertDataChange={handlePreAlertsDataChange}
+    <div className="company-form release-order">
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h3>General</h3>
+              <span></span>
+            </div>
+            <div className="row align-items-center">
+              <div className="col-4 text-start">
+                <label htmlFor="employee" className="form-label">
+                  Client:
+                </label>
+                <AsyncSelect
+                  id="client"
+                  value={clients.find((option) => option.id == formData.client)}
+                  onChange={(e) => {
+                    setFormData({ ...formData, client: e.id });
+                  }}
+                  isClearable={true}
+                  defaultOptions={clients}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
                 />
-              )}
 
-              {selectedPreAlert === null && (
-                <PreAlertCreationForm
-                  preAlert={null}
-                  closeModal={handleCancel}
-                  creating={createReleaseOrder}
-                  onPreAlertDataChange={handlePreAlertsDataChange}
+                <Input
+                  type="text"
+                  inputName="trackingNumber"
+                  placeholder="Tracking number..."
+                  value={formData.tracking_number}
+                  changeHandler={(e) => {
+                    setFormData({ ...formData, tracking_number: e.target.value });
+                  }}
+                  readonly={false}
+                  label="Tracking Number"
                 />
-              )}
-            </Table>
+              </div>
 
+              <div className="col-4 text-start">
+                <label htmlFor="store" className="form-label">
+                  Store:
+                </label>
+                <select
+                  name="store"
+                  id="store"
+                  value={formData.store}
+                  onChange={(e) => {
+                    handleStoreSelection(e);
+                  }}
+                >
+                  <option value="">Select an Option</option>
+                  <option value="Amazon">Amazon</option>
+                  <option value="Walmart">Walmart</option>
+                  <option value="Costco">Costco</option>
+                  <option value="Ebay">Ebay</option>
+                  <option value="other">Other</option>
+                </select>
+                {otherStore && (
+                  <Input
+                    type="text"
+                    inputName="store"
+                    placeholder="Store name..."
+                    value={formData.store}
+                    readonly={false}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, store: e.target.value })
+                    }
+                    label=""
+                  />
+                )}
+
+                <label htmlFor="courier" className="form-label">
+                  Courier:
+                </label>
+                <select
+                  name="courier"
+                  id="courier"
+                  value={formData.courier}
+                  onChange={(e) => {
+                    handleCourierSelection(e);
+                  }}
+                >
+                  <option value="">Select an Option</option>
+                  <option value="DHL">DHL</option>
+                  <option value="USPS">USPS</option>
+                  <option value="Fedex">Fedex</option>
+                  <option value="UPS">UPS</option>
+                  <option value="other">Other</option>
+                </select>
+                {otherCourier && (
+                  <Input
+                    type="text"
+                    inputName="store"
+                    placeholder="Store name..."
+                    value={formData.courier}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, courier: e.target.value })
+                    }
+                    readonly={false}
+                    label=""
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className="row">
+              <Input
+                type="number"
+                inputName="amount"
+                placeholder="Amount..."
+                value={packageData.amount}
+                readonly={false}
+                changeHandler={(e) =>
+                  setPackageData({ ...packageData, amount: e.target.value })
+                }
+                label="Amount"
+              />
+              <Input
+                type="text"
+                inputName="description"
+                placeholder="Description..."
+                value={packageData.description}
+                readonly={false}
+                changeHandler={(e) =>
+                  setPackageData({
+                    ...packageData,
+                    description: e.target.value,
+                  })
+                }
+                label="Description"
+              />
+
+              <button
+                className="button-save pick "
+                type="button"
+                onClick={handleAddPackage}
+              >
+                <i className="fas fa-check-circle"></i>
+              </button>
+            </div>
+
+            <div className="row align-items-center">
+              <Table
+                data={formData.packages}
+                columns={["Amount", "Description", "Delete"]}
+                onSelect={handleSelectPackage}
+                selectedRow={selectedPackage}
+                onDelete={handleDeletePackage}
+                showOptions={false}
+              />
+            </div>
+
+            <div className="company-form__options-container">
+              <button className="button-save" onClick={sendData}>
+                Save
+              </button>
+              <button className="button-cancel" onClick={closeModal}>
+                Cancel
+              </button>
+            </div>
             {showSuccessAlert && (
               <Alert
                 severity="success"
@@ -217,7 +304,9 @@ const PreAlerts = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Success</AlertTitle>
-                <strong>Pre Alert deleted successfully!</strong>
+                <strong>
+                  Pre Alert {creating ? "created" : "updated"} successfully!
+                </strong>
               </Alert>
             )}
             {showErrorAlert && (
@@ -227,14 +316,17 @@ const PreAlerts = () => {
                 className="alert-notification"
               >
                 <AlertTitle>Error</AlertTitle>
-                <strong>Error deleting Pre Alert. Please try again</strong>
+                <strong>
+                  Error {creating ? "creating" : "updating"} Pre Alert. Please
+                  try again
+                </strong>
               </Alert>
             )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default PreAlerts;
+export default PreAlertCreationForm;

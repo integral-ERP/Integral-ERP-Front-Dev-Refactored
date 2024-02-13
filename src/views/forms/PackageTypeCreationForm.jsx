@@ -109,7 +109,7 @@ const PackageTypesCreationForm = ({
         onpackageTypeDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 1000);
+      }, 1500);
     } else {
       
       setShowErrorAlert(true);
@@ -364,10 +364,9 @@ const PackageTypesCreationForm = ({
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
         <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Package Type {creating ? "created" : "updated"} successfully!
-          </strong>
+           {/* <AlertTitle>Success</AlertTitle> */}
+          <p className="succes"> Success </p>
+          <p className=" created"> Package Type {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
       {showErrorAlert && (
