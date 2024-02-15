@@ -1398,6 +1398,7 @@ const ReceiptCreationForm = ({
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
+              className="button-save"
             >
               Repack
             </button>
@@ -1411,7 +1412,7 @@ const ReceiptCreationForm = ({
           ></RepackingForm>
         )}
 
-        <button
+        {/* <button
           type="button"
           onClick={() => {
             setshowRepackingForm(!showRepackingForm);
@@ -1419,7 +1420,7 @@ const ReceiptCreationForm = ({
           className="button-save"
         >
           Repacking
-        </button>
+        </button> */}
       </div>
 
       <div className="row w-100">
