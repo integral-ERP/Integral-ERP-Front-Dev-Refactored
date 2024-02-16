@@ -967,7 +967,7 @@ const ReceiptCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            window.location.href = `/warehouse/receipt`;
+            /* window.location.href = `/warehouse/receipt`; */
           }, 2000);
         } else {
           
