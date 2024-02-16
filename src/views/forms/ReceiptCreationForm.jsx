@@ -78,7 +78,8 @@ const ReceiptCreationForm = ({
   const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] =
     useState(false);
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
-
+  // Ocultar el botón si commodities es null o vacío
+  /* const isButtonDisabledSave = !commodities || commodities.length === 0; */
   const formFormat = {
 
     status: "",
@@ -1648,9 +1649,9 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-        <button className="button-save" onClick={sendData}>
+     {/*  {isButtonDisabledSave? null : <button  className="button-save" onClick={sendData}>
           Save
-        </button>
+        </button>} */}
 
         <button className="button-cancel" onClick={closeModal}>
           Cancel
