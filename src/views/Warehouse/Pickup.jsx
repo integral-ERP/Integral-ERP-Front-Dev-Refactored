@@ -50,7 +50,7 @@ const Pickup = () => {
     "Delivery Name",
     "Delivery Address",
     "Pieces",
-    "Weight",
+    // "Weight",
     "Carrier Name",
     "Carrier Address",
     "PRO Number",
@@ -280,14 +280,14 @@ const Pickup = () => {
       label: "Create Warehouse Receipt",
       handler: seteWarehouse,
     },
-    {
-      label: "Set/Reset In Transit",
-      handler: setInTransit,
-    },
-    {
-      label: "Set/Reset Delivered",
-      handler: setDelivered,
-    },
+    // {
+    //   label: "Set/Reset In Transit",
+    //   handler: setInTransit,
+    // },
+    // {
+    //   label: "Set/Reset Delivered",
+    //   handler: setDelivered,
+    // },
   ];
 
   return (
