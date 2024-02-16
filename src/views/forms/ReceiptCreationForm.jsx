@@ -126,16 +126,14 @@ const ReceiptCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    
-    
+
+
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -187,11 +185,9 @@ const ReceiptCreationForm = ({
   const handleSupplierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({ ...formData, supplierId: id, supplierInfo: info });
   };
 
@@ -212,12 +208,10 @@ const ReceiptCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setconsignee(result.data);
     setFormData({
       ...formData,
@@ -233,8 +227,8 @@ const ReceiptCreationForm = ({
       type === "shipper"
         ? formData.shipperId
         : type === "consignee"
-        ? formData.consigneeId
-        : "";
+          ? formData.consigneeId
+          : "";
     setFormData({
       ...formData,
       clientToBillId: id,
@@ -245,7 +239,7 @@ const ReceiptCreationForm = ({
   const handleShipperSelection = async (event) => {
     const id = event.id || formData.shipperId;
     const type = event.type || formData.shipperType;
-    
+
     let result;
     if (type === "forwarding-agent") {
       result = await ForwardingAgentService.getForwardingAgentById(id);
@@ -257,9 +251,8 @@ const ReceiptCreationForm = ({
       result = await VendorService.getVendorByID(id);
     }
     const info = result?.data
-      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${
-          result.data.state || ""
-        } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
+      } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
       : formData.shipperInfo;
     setshipper(result?.data || shipper);
     setFormData({
@@ -300,11 +293,9 @@ const ReceiptCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -345,13 +336,13 @@ const ReceiptCreationForm = ({
 
       const clickedElement = event.target;
       const isForm = clickedElement.closest(".income-charge-form");
-      
-      
+
+
       if (!isForm) {
 
         setselectedCommodity(null);
         setshowCommodityEditForm(false);
-        
+
       }
     };
 
@@ -370,7 +361,7 @@ const ReceiptCreationForm = ({
 
   const addNotes = () => {
     const updatedNotes = [...formData.notes, note];
-    
+
     setFormData({ ...formData, notes: updatedNotes });
   };
 
@@ -392,7 +383,7 @@ const ReceiptCreationForm = ({
   };
 
   const loadConsigneeOption = async (id, type) => {
-    
+
     let option = null;
     if (type === "customer") {
       option = await CustomerService.getCustomerById(id);
@@ -403,19 +394,19 @@ const ReceiptCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    
+
     setdefaultValueShipper(option.data);
   };
 
   useEffect(() => {
-    
+
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
       setattachments(pickupOrder.attachments);
 
-      
+
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person
@@ -441,65 +432,46 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
         shipperId: pickupOrder.shipper,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consigneeId: pickupOrder.consignee,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
+          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
+          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
@@ -508,7 +480,7 @@ const ReceiptCreationForm = ({
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
       };
-      
+
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -660,7 +632,7 @@ const ReceiptCreationForm = ({
 
     const options = addTypeToObjects(data, "employee");
 
-    
+
     return options;
   };
 
@@ -680,7 +652,7 @@ const ReceiptCreationForm = ({
   }, []);
 
   useEffect(() => {
-    
+
     if (creating) {
       setFormData({ ...formData, number: pickupNumber });
     }
@@ -708,11 +680,9 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
@@ -720,60 +690,43 @@ const ReceiptCreationForm = ({
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
 
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
+          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
+          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -811,7 +764,7 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      
+
 
       setWeightUpdated(totalWeight);
     }
@@ -835,7 +788,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createConsignee(consignee);
       if (response.status === 201) {
-        
+
         setconsigneeRequest(response.data.id);
       }
     }
@@ -860,7 +813,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
-        
+
         setshipperRequest(response.data.id);
       }
     }
@@ -879,7 +832,7 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        
+
         setclientToBillRequest(response.data.id);
       }
     }
@@ -894,7 +847,7 @@ const ReceiptCreationForm = ({
   };
 
   const checkUpdatesComplete = () => {
-    
+
     if (
       shipperRequest !== null &&
       consigneeRequest !== null &&
@@ -910,18 +863,18 @@ const ReceiptCreationForm = ({
   };
 
   useEffect(() => {
-    
-    
-    
-    
+
+
+
+
 
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
-        
-        
-        
-        
+
+
+
+
         let rawData = {
           status: 2,
           number: formData.number,
@@ -970,7 +923,7 @@ const ReceiptCreationForm = ({
             window.location.reload();
           }, 2000);
         } else {
-          
+
           setShowErrorAlert(true);
         }
       };
@@ -1055,7 +1008,7 @@ const ReceiptCreationForm = ({
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                      
+
                     />
                   )
                 ) : (
@@ -1081,7 +1034,7 @@ const ReceiptCreationForm = ({
             <div className="row align-items-center">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Entry Date and Time</p>
+                  <p className="text-date">Entry Date and Time</p>
                   <DateTimePicker
                     // label="Entry Date and Time"
                     className="font-right"
@@ -1390,10 +1343,11 @@ const ReceiptCreationForm = ({
               onInspect={() => {
                 setshowCommodityInspect(!showCommodityInspect);
               }}
-              onAdd={() => {}}
+              onAdd={() => { }}
               showOptions={false}
             />
             <button
+              className="button-save"
               type="button"
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
@@ -1452,11 +1406,11 @@ const ReceiptCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}
@@ -1505,11 +1459,11 @@ const ReceiptCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}
@@ -1536,7 +1490,7 @@ const ReceiptCreationForm = ({
           <span></span>
         </div>
         <div className="row">
-          
+
           <div className="col-12 text-start">
             <div className="container-box event-section">
               <div className="box__event--form">
@@ -1561,11 +1515,11 @@ const ReceiptCreationForm = ({
                     "Last Modified By",
                     "Last Modified On",
                   ]}
-                  onSelect={() => {}}
+                  onSelect={() => { }}
                   selectedRow={{}}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
-                  onAdd={() => {}}
+                  onDelete={() => { }}
+                  onEdit={() => { }}
+                  onAdd={() => { }}
                   showOptions={false}
                 />
               )}
@@ -1592,11 +1546,11 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="creation creation-container w-100">
-      <div className="form-label_name">
-        <h3>Notes</h3>
-        <span></span>
-      </div>
-      
+        <div className="form-label_name">
+          <h3>Notes</h3>
+          <span></span>
+        </div>
+
         <div className="row align-items-center">
           <div className="col-10 text-start">
             <label htmlFor="notes" className="form-label">
@@ -1667,7 +1621,7 @@ const ReceiptCreationForm = ({
           </strong>
         </Alert>
       )} */}
-       {showSuccessAlert && (
+      {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
