@@ -78,8 +78,16 @@ const ReceiptCreationForm = ({
   const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] =
     useState(false);
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
-  // Ocultar el botón si commodities es null o vacío
-  /* const isButtonDisabledSave = !commodities || commodities.length === 0; */
+  // Desabilitar el botón si commodities es null o vacío y cambio de estado 
+ /*  const [changeStateSave, setchangeStateSave] = useState(false);
+  const isButtonDisabled = !commodities || commodities.length === 0; 
+
+  useEffect(() => {
+    if (!isButtonDisabled) {
+      setchangeStateSave(false);
+    }
+  }, [isButtonDisabled]); */
+ 
   const formFormat = {
 
     status: "",
@@ -807,6 +815,14 @@ const ReceiptCreationForm = ({
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
+    // Mostrar la alerta si commodities es null o vacío
+    /* if (isButtonDisabled) {
+      alert('Please fill in data in the commodities section, do not leave empty spaces.');
+      setchangeStateSave(true);
+      return;
+    } */
+   
+
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -968,7 +984,7 @@ const ReceiptCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            /* window.location.href = `/warehouse/receipt`; */
+             /* window.location.href = `/warehouse/receipt`;  */
           }, 2000);
         } else {
           
@@ -1649,9 +1665,9 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-     {/*  {isButtonDisabledSave? null : <button  className="button-save" onClick={sendData}>
+       {/*  <button disabled={changeStateSave} className="button-save" onClick={sendData}>
           Save
-        </button>} */}
+        </button> */}
 
         <button className="button-cancel" onClick={closeModal}>
           Cancel
