@@ -79,14 +79,14 @@ const ReceiptCreationForm = ({
     useState(false);
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
   // Desabilitar el botón si commodities es null o vacío y cambio de estado 
- /*  const [changeStateSave, setchangeStateSave] = useState(false);
+  const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0; 
 
   useEffect(() => {
     if (!isButtonDisabled) {
       setchangeStateSave(false);
     }
-  }, [isButtonDisabled]); */
+  }, [isButtonDisabled]); 
  
   const formFormat = {
 
@@ -816,11 +816,11 @@ const ReceiptCreationForm = ({
 
   const sendData = async () => {
     // Mostrar la alerta si commodities es null o vacío
-    /* if (isButtonDisabled) {
+    if (isButtonDisabled) {
       alert('Please fill in data in the commodities section, do not leave empty spaces.');
       setchangeStateSave(true);
       return;
-    } */
+    } 
    
 
     if (commodities.length > 0) {
@@ -984,7 +984,8 @@ const ReceiptCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-             /* window.location.href = `/warehouse/receipt`;  */
+            //added redirect to warehouse receipt
+            window.location.href = `/warehouse/receipt`; 
           }, 2000);
         } else {
           
@@ -1429,6 +1430,7 @@ const ReceiptCreationForm = ({
           ></RepackingForm>
         )}
 
+        {/* button duplicado */}
         {/* <button
           type="button"
           onClick={() => {
@@ -1665,9 +1667,9 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-       {/*  <button disabled={changeStateSave} className="button-save" onClick={sendData}>
+         <button disabled={changeStateSave} className="button-save" onClick={sendData}>
           Save
-        </button> */}
+        </button> 
 
         <button className="button-cancel" onClick={closeModal}>
           Cancel
