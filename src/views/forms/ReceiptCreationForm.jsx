@@ -36,6 +36,8 @@ const ReceiptCreationForm = ({
   const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
+  //added warning alert for commodities
+  const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
@@ -770,8 +772,9 @@ const ReceiptCreationForm = ({
   const sendData = async () => {
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
-      alert('Please fill in data in the commodities section, do not leave empty spaces.');
       setchangeStateSave(true);
+      //added change estate for warning alert
+      setShowWarningAlert(true);
       return;
     } 
    
@@ -1651,6 +1654,18 @@ const ReceiptCreationForm = ({
           <p className=" created">  Warehouse Receipt {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
+
+        {/* added change estate for warning alert */}
+        { showWarningAlert && (
+        <Alert
+        severity="warning"
+          onClose={() => setShowWarningAlert(false)}
+          className="alert-notification-warning"
+        >
+         <p className="succes"> Please fill in data in the commodities section, do not leave empty spaces.</p>
+        </Alert>
+      )}
+
 
 
       {showErrorAlert && (

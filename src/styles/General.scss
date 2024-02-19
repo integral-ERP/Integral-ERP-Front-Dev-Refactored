@@ -130,6 +130,15 @@
   border: 2px solid #006BAD;
 }
 
+/* added warning notification */
+.alert-notification-warning {
+  position: fixed;
+  top: 50%;
+  background-color: #9fcf1a !important;
+  border: 2px solid #d9ec29;
+}
+
+
 .succes{
   font-size: x-large;
   font-weight: 500;
