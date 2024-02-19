@@ -1190,6 +1190,9 @@ const ReceiptCreationForm = ({
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
               </div>
             </div>
           </div>
@@ -1347,7 +1350,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                // "Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1370,7 +1373,6 @@ const ReceiptCreationForm = ({
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
-              className="button-save"
             >
               Repack
             </button>

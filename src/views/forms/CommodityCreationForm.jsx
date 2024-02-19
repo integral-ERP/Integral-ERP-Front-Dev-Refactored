@@ -201,22 +201,22 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="row w-100 mb-3">
-        <label htmlFor="description" className="text-comm description-form">
-          Cargo Description:
-        </label>
-        <input
-          name="description"
-          type="text"
-          className="form-input"
-          ref={input7Ref}
-          placeholder="Description..."
-          value={formData.description}
-          onChange={(e) =>
-            setformData({ ...formData, description: e.target.value })
-          }
-          // style={{ width: "100%" }}
-        />
+        <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
+          <label htmlFor="description" className="text-comm description-form">
+          Charge Description:
+          </label>
+          <input
+            name="description"
+            type="text"
+            className="form-input"
+            ref={input7Ref}
+            placeholder="Description..."
+            value={formData.description}
+            onChange={(e) =>
+              setformData({ ...formData, description: e.target.value })
+            }
+            
+          />
         </div>
 
         {locationEnabled && (<>
