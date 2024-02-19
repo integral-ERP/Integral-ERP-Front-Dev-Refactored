@@ -297,7 +297,7 @@ const ExpenseChargeForm = ({
             </label>
             <input
             style={{
-              width: "98%",
+              width: "97%",
               display: "flow",
             }}
               name="description"
@@ -310,7 +310,6 @@ const ExpenseChargeForm = ({
               }
               ref={input5Ref}
               onKeyDown={(e) => handleKeyDown(e, input6Ref)}
-              style={{ width: '97.5%', display: 'block' }}
             />
           </div>
 
