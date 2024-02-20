@@ -33,9 +33,9 @@ const DepositsCreationForm = ({
 
   const formFormat = {
     bankAccount: "",
-    creation_date: today,
+    date: today,
     memo: "",
-    total:"",
+    total: "",
     amount: "",
     deposits: [],
   };
@@ -45,30 +45,27 @@ const DepositsCreationForm = ({
   useEffect(() => {
     if (!creating && deposit) {
       setdeposits(deposit.depositCharges)
-      
+
       setFormData({
         bankAccount: deposit.bankAccount,
-        creation_date: deposit.creation_date,
+        date: deposit.date,
         memo: deposit.memo,
         amount: deposit.amount,
-        total:total,
+        total: total,
       });
       setAccountype(deposit.bankAccount);
     }
   }, [creating, deposit]);
 
-
-
   const sendData = async () => {
     let rawData = {
       bankAccount: formData.bankAccount,
-      creation_date: formData.creation_date,
+      date: formData.date,
       memo: formData.memo,
       total: total,
-      depositCharges:deposits,
+      depositCharges: deposits,
     };
 
-    
     //-------------------------------------
     const response = await (creating
       ? DepositsService.createDeposit(rawData)
@@ -83,7 +80,6 @@ const DepositsCreationForm = ({
         window.location.reload();
       }, 500);
     } else {
-      
       setShowErrorAlert(true);
     }
   };
@@ -145,12 +141,13 @@ const DepositsCreationForm = ({
                 <DateTimePicker
                   label="Transation Date"
                   className="font-right"
-                  value={dayjs(formData.creation_date)}
-                  onChange={(e) =>
+                  value={dayjs(formData.date)}
+                  onChange={(e) => {
                     setFormData({
                       ...formData,
-                      creation_date: dayjs(e).format("YYYY-MM-DD"),
+                      date: dayjs(e).format("YYYY-MM-DD"),
                     })
+                  }
                   }
                 />
               </LocalizationProvider>
@@ -185,13 +182,13 @@ const DepositsCreationForm = ({
             </div>
           </div>
           <div className="company-form__section">
-          <button
-            type="button"
-            className="button-addpiece"
-            onClick={() => setshowDepositsCreationForm(!showDepositsCreationForm)}
-          >
-            Add
-          </button>
+            <button
+              type="button"
+              className="button-addpiece"
+              onClick={() => setshowDepositsCreationForm(!showDepositsCreationForm)}
+            >
+              Add
+            </button>
             {showDepositsCreationForm && (
               <DepositsChargeForm
                 onCancel={setshowDepositsCreationForm}
@@ -208,8 +205,8 @@ const DepositsCreationForm = ({
                 editing={true}
               ></DepositsChargeForm>
             )}
-            {selectedDeposit?.containsDeposits &&
-              selectedDeposit.internalDeposits.map(
+            {/* selectedDeposit?.containsDeposits && */
+              selectedDeposit?.internalDeposits?.map(
                 (internalDeposit, index) => (
                   <DepositsChargeForm
                     key={index}
@@ -223,29 +220,29 @@ const DepositsCreationForm = ({
               )}
           </div>
         </div>
-        </div>
+      </div>
 
-        <Table
+      <Table
         data={deposits}
-          columns={[
-            "Account Name",
-            "Amount",
-            "Description",
-            "Entity",
-            "Options",
-          ]}
-          onSelect={handleSelectDeposit} // Make sure this line is correct
-          onDelete={handleDepositDelete}
-          onEdit={() => {
-            setshowDepositEditForm(!showDepositEditForm);
-          }}
-          onInspect={() => {
-          }}
-          onAdd={() => { }}
-          showOptions={false}
-        />
+        columns={[
+          "Account Name",
+          "Amount",
+          "Description",
+          "Entity",
+          "Options",
+        ]}
+        onSelect={handleSelectDeposit} // Make sure this line is correct
+        onDelete={handleDepositDelete}
+        onEdit={() => {
+          setshowDepositEditForm(!showDepositEditForm);
+        }}
+        onInspect={() => {
+        }}
+        onAdd={() => { }}
+        showOptions={false}
+      />
 
-<div className="form-column">
+      <div className="form-column">
         <label htmlFor="tota" className="text-comm">
           Total Amount:
         </label>
