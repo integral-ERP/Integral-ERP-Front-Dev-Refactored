@@ -7,34 +7,67 @@ import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import CurrencyService from "../../services/CurrencyService";
 import { fonts } from "pdfmake/build/pdfmake";
 
-const  ChartOfAccountsCreationForm = ({
+const ChartOfAccountsCreationForm = ({
   chartOfAccounts,
   closeModal,
-  creating, 
+  creating,
 
 }) => {
+  console.table(chartOfAccounts)
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [ChartOfAccounts, setChartOfAccounts] = useState([])
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [accountype, setAccountype] = useState("");
   const [currencies, setcurrencies] = useState([]);
+  const [filteredData, setFilteredData] = useState([])
+
+  useEffect(() => {
+    const updateChartOfAccounts = (url = null) => {
+      ChartOfAccountsService.getChartOfAccounts(url)
+        .then((response) => {
+          const newChartOfAccounts = response.data.results.filter(
+            (newChartOfAccount) => {
+              return !ChartOfAccounts.some(
+                (existingChartOfAccount) =>
+                  existingChartOfAccount.id === newChartOfAccount.id
+              );
+            }
+          );
+
+          setChartOfAccounts(
+            [...ChartOfAccounts, ...newChartOfAccounts].reverse()
+          );
+
+          setAccountype(chartOfAccounts.typeChart)
+          /* if (response.data.next) {} */
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    updateChartOfAccounts();
+  }, []);
 
   const formFormat = {
     name: "",
     typeChart: "",
+    type: "",
     accountNumber: "",
     parentAccount: "",
-    currency:"",
+    currency: "",
     note: "",
   };
 
   const [formData, setFormData] = useState({ formFormat });
-// -------------------------------------------------------------
+  // -------------------------------------------------------------
   useEffect(() => {
     if (!creating && chartOfAccounts) {
       setFormData({
         name: chartOfAccounts.name || "",
-        typeChart: chartOfAccounts.type || "",
+        typeChart: chartOfAccounts.typeChart || "",
+        type: chartOfAccounts.typeChart || "",
         accountNumber: chartOfAccounts.accountNumber || "",
         parentAccount: chartOfAccounts.parentAccount || "",
         currency: chartOfAccounts.currency || "",
@@ -44,9 +77,30 @@ const  ChartOfAccountsCreationForm = ({
   }, [creating, chartOfAccounts]);
 
   useEffect(() => {
+    setAccountype(chartOfAccounts?.parentAccount)
+  }, [chartOfAccounts]);
+
+  useEffect(() => {
+    //setAccountype(chartOfAccounts.parentAccount)
+    const handleSearch = (row) => {
+      let searchMatch = false
+      console.log("filtrando", row)
+      if (row.typeChart === accountype) { //se cambia row.type a row.typeChart
+        console.log("Hay informacion")
+        searchMatch = true
+      }
+      else {
+        console.log("No Hay informacion")
+      }
+      return searchMatch;
+    };
+    setFilteredData(ChartOfAccounts?.filter((row) => handleSearch(row)));
+  }, [ChartOfAccounts, accountype, creating])
+
+  useEffect(() => {
     const fetchData = async () => {
       const currenciesData = await CurrencyService.getCurrencies();
-      setcurrencies(currenciesData.data);
+      setcurrencies(Object.entries(currenciesData.data));
     };
 
     fetchData();
@@ -56,7 +110,8 @@ const  ChartOfAccountsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      typeChart: formData.type,
+      typeChart: formData.typeChart,
+      type: formData.typeChart,
       accountNumber: formData.accountNumber,
       parentAccount: formData.parentAccount,
       currency: formData.currency,
@@ -67,73 +122,29 @@ const  ChartOfAccountsCreationForm = ({
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
       : ChartOfAccountsService.updateChartOfAccounts(
         chartOfAccounts.id,
-          rawData
-        ));
+        rawData
+      ));
 
-      if (response.status >= 200 && response.status <= 300) {
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-          closeModal();
-  
-          setShowSuccessAlert(false);
-          setFormData(formFormat)
-          window.location.reload();
-        }, 1500);
-      } else {
-        console.log("Something went wrong:", response);
-        setShowErrorAlert(true);
-      }
-    };
-  
+    if (response.status >= 200 && response.status <= 300) {
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        closeModal();
+
+        setShowSuccessAlert(false);
+        setFormData(formFormat)
+        window.location.reload();
+      }, 1500);
+    } else {
+      console.log("Something went wrong:", response);
+      setShowErrorAlert(true);
+    }
+  };
+
   //---------------------------------------------------------------------------------------------------------------------------------------------------
-  const updateChartOfAccounts = (url = null) => {
-    ChartOfAccountsService.getChartOfAccounts(url)
-      .then((response) => {
-        const newChartOfAccounts = response.data.results.filter(
-          (newChartOfAccount) => {
-            return !ChartOfAccounts.some(
-              (existingChartOfAccount) =>
-                existingChartOfAccount.id === newChartOfAccount.id
-            );
-          }
-        );
 
-        setChartOfAccounts(
-          [...ChartOfAccounts, ...newChartOfAccounts].reverse()
-        );
-
-        if (response.data.next) {
-
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  useEffect(() => {
-      updateChartOfAccounts();
-    }, []);
-  
-  const [accountype, setAccountype] = useState("");
-  
-  const handleSearch = (row) => {
-    let searchMatch = false
-    console.log("filtrando", row)
-    if (row.type===accountype){
-      console.log("Hay informacion")
-      searchMatch = true
-    }
-    else{
-      console.log("No Hay informacion")
-    }
-    return searchMatch;
-  };
-  const filteredData = ChartOfAccounts.filter((row) => handleSearch(row));
-
-  const handleType = (type)=> {
+  const handleType = (type) => {
     setAccountype(type)
-    setFormData({...formData, type:type})
+    setFormData({ ...formData, type: type, typeChart: type })
   }
   //--------------------------------------------------------------------------------------------------------------------------------------------------
   const handleCancel = () => {
@@ -146,150 +157,151 @@ const  ChartOfAccountsCreationForm = ({
         <div className="row w-100">
           <div className="form-label_name"><h3>Items & Services</h3><span></span></div>
 
-      
-      <form
-        className={`tab-pane fade ${
-          activeTab === "definition" ? "show active" : ""
-        } company-form__general-form`}
-        id="general"
-        style={{ display: activeTab === "definition" ? "block" : "none" }}
-      >
-        <div className="">
-          <div className="company-form__section">
-            <label htmlFor="type" className="form-label">
-              Type:
-            </label>
-            <select
-              id="type"
-              className="form-input"
-              value={formData.type}
-              onChange={(e) => 
-                handleType(e.target.value )}
-            >
-              <option value="">Select a Type</option>
-              <option value="Accounts Receivable">Accounts Receivable</option>
-              <option value="Accouns Payable">Accouns Payable</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-              <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
-              <option value="Bank Account">Bank Account</option>
-              <option value="Undeposited Funds">Undeposited Funds</option>
-              <option value="Fixed Assets">Fixed Assets</option>
-              <option value="Fixed Assets">Other Assets</option>
-              <option value="Other Current Assets">Other Current Assets</option>
-              <option value="Long Term Liabilities">Long Term Liabilities</option>
-              <option value="Other Current Liabilities">Other Current Liabilities</option>
-              <option value="Equity">Equity</option>
-              <option value="Credit Card">Credit Card</option>
-            </select>
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="name"
-              placeholder="Name"
-              value={formData.name}
-              changeHandler={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              label="Name"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="num"
-              inputName="accountNumber"
-              placeholder="Account Number"
-              value={formData.accountNumber}
-              changeHandler={(e) =>
-                setFormData({ ...formData, accountNumber: e.target.value })
-              }
-              label="Account Number"
-            />
-          </div>
-          <div className="company-form__section">
-            <label htmlFor="chartofaccountsType" className="form-label">
-              Parent Account:
-            </label>
-            <select
-              id="parentAccount"
-              className="form-input"
-              inputName="parentAccount"
-                onChange={(e) => 
-                  setFormData({ ...formData, parentAccount: e.target.value })}
-                >
-              <option value="">Select a Parent Account</option>
-                {filteredData.map((ChartOfAccounts) => (
-                  <option
-                    key={ChartOfAccounts.id}
-                    value={ChartOfAccounts.id}
-                    data-key={ChartOfAccounts.type}
-                  >
 
-                    {ChartOfAccounts.name + " || " + ChartOfAccounts.type}
-                    
-                </option>))}
-            </select>
-          </div>
-        <div className="">
-          <div className="company-form__section">
-            <label htmlFor="currency" className="form-label">
-            Currency:
-            </label>
-            <select
-              id="currency"
-              className="form-input"
-              value={formData.currency}
-              onChange={(e) => 
-                setFormData({ ...formData, currency: e.target.value })}
-            >
-              <option value="">Select a currency</option>
-              <option value="COP Colombia Peso">COP Colombia Peso</option>
-              <option value="USD Unided States Dollar">USD Unided States Dollar</option>
-            </select>
-          </div>
+          <form
+            className={`tab-pane fade ${activeTab === "definition" ? "show active" : ""
+              } company-form__general-form`}
+            id="general"
+            style={{ display: activeTab === "definition" ? "block" : "none" }}
+          >
+            <div className="">
+              <div className="company-form__section">
+                <label htmlFor="type" className="form-label">
+                  Type:
+                </label>
+                <select
+                  id="type"
+                  className="form-input"
+                  value={formData.typeChart}
+                  onChange={(e) =>
+                    handleType(e.target.value)}
+                >
+                  <option value="">Select a Type</option>
+                  <option value="Accounts Receivable">Accounts Receivable</option>
+                  <option value="Accounts Payable">Accounts Payable</option>
+                  <option value="Income">Income</option>
+                  <option value="Expense">Expense</option>
+                  <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
+                  <option value="Bank Account">Bank Account</option>
+                  <option value="Non-deposit Funds">Non-deposit Funds</option>
+                  <option value="Fixed Assets">Fixed Assets</option>
+                  <option value="Fixed Assets">Other Assets</option>
+                  <option value="Other Current Assets">Other Current Assets</option>
+                  <option value="Long Term Liabilities">Long Term Liabilities</option>
+                  <option value="Other Current Liabilities">Other Current Liabilities</option>
+                  <option value="Equity">Equity</option>
+                  <option value="Credit Card">Credit Card</option>
+                </select>
+              </div>
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  label="Name"
+                />
+              </div>
+              <div className="company-form__section">
+                <Input
+                  type="num"
+                  inputName="accountNumber"
+                  placeholder="Account Number"
+                  value={formData.accountNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, accountNumber: e.target.value })
+                  }
+                  label="Account Number"
+                />
+              </div>
+              <div className="company-form__section">
+                <label htmlFor="chartofaccountsType" className="form-label">
+                  Parent Account:
+                </label>
+                <select
+                  id="parentAccount"
+                  className="form-input"
+                  value={formData.parentAccount ? formData.parentAccount : ""}
+                  //inputName="parentAccount"
+                  onChange={(e) =>
+                    setFormData({ ...formData, parentAccount: e.target.value })}
+                >
+                  <option value="">Select a Parent Account</option>
+                  {filteredData?.map((ChartOfAccounts) => (
+                    <option
+                      key={ChartOfAccounts.id}
+                      value={ChartOfAccounts.name + " || " + ChartOfAccounts.typeChart}
+                      data-key={ChartOfAccounts.typeChart}
+                    >
+
+                      {ChartOfAccounts.name + " || " + ChartOfAccounts.typeChart}
+
+                    </option>))}
+                </select>
+              </div>
+              <div className="">
+                <div className="company-form__section">
+                  <label htmlFor="currency" className="form-label">
+                    Currency:
+                  </label>
+                  <select
+                    id="currency"
+                    className="form-input"
+                    value={formData.currency}
+                    onChange={(e) =>
+                      setFormData({ ...formData, currency: e.target.value })}
+                  >
+                    <option value="">Select a currency</option>
+                    {currencies?.map((currency) => {
+                      return <option key={currency[0]} value={currency[0] + " " + currency[1]} data-key={currency[1]}>{currency[0] + " " + currency[1]}</option>
+                    })}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <Input
+                type="textarea"
+                inputName="note"
+                placeholder="Nota here..."
+                label="Note"
+                value={formData.note}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, note: e.target.value })
+                }
+              />
+            </div>
+          </form>
         </div>
-        </div>
-        <div className="form-group">
-          <Input
-              type="textarea"
-              inputName="note"
-              placeholder="Nota here..."
-              label="Note"
-              value={formData.note}
-              changeHandler={(e) =>
-                setFormData({ ...formData, note: e.target.value })
-              }
-          />
-        </div>
-      </form>    
-    </div>
-  </div>
-     
-  <div className="company-form__options-container">
-    <button className="button-save" onClick={sendData}>
-      Save
-    </button>
-    <button className="button-cancel" onClick={handleCancel}>
-      Cancel
-    </button>
-  </div>
-  {/* Conditionally render the success alert */}
-  {showSuccessAlert && (
-  <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-    {/* <AlertTitle>Success</AlertTitle> */}
-    <p className="succes"> Success </p>
-    <p className=" created"> Chart Of Accounts {creating ? "created" : "updated"} successfully! </p>
-  </Alert>
-  )}
-  {showErrorAlert && (
-    <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
-      <AlertTitle>Error</AlertTitle>
-      <strong>
-        Error {creating ? "creating" : "updating"} Chart Of Accounts. Please try again
-      </strong>
-    </Alert>
-  )}
+      </div>
+
+      <div className="company-form__options-container">
+        <button className="button-save" onClick={sendData}>
+          Save
+        </button>
+        <button className="button-cancel" onClick={handleCancel}>
+          Cancel
+        </button>
+      </div>
+      {/* Conditionally render the success alert */}
+      {showSuccessAlert && (
+        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
+          {/* <AlertTitle>Success</AlertTitle> */}
+          <p className="succes"> Success </p>
+          <p className=" created"> Chart Of Accounts {creating ? "created" : "updated"} successfully! </p>
+        </Alert>
+      )}
+      {showErrorAlert && (
+        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+          <AlertTitle>Error</AlertTitle>
+          <strong>
+            Error {creating ? "creating" : "updating"} Chart Of Accounts. Please try again
+          </strong>
+        </Alert>
+      )}
 
     </div>
   );

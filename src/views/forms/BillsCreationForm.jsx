@@ -40,6 +40,7 @@ const BillsCreationForm = ({
   const [selectedBill, setselectedBill] = useState(null);
   const [bills, setbills] = useState([]);
   const [total, settotal] = useState(0);
+  const [vendor, setVendor] = useState()
 
   const formFormat = {
     status: 14,
@@ -57,14 +58,19 @@ const BillsCreationForm = ({
     bills: [],
   };
 
+  const fetchVendorInBill = async () => {
+    const results = (await VendorService.getVendorByID(bill['carriVerndorById'])).data;
+    setVendor(results)
+  }
+  useEffect(() => {
+    fetchVendorInBill();
+  }, [])
+
   const [formData, setFormData] = useState({ formFormat });
 
   useEffect(() => {
-    
-    
     if (!creating && bill) {
       setbills(bill.billCharges);
-      
       setFormData({
         number: bill.number || "",
         due: bill.due || "",
@@ -80,13 +86,22 @@ const BillsCreationForm = ({
         billCharges: bill.billCharges,
         // vendorByInfo: bill.vendorByInfo,
         status: bill.status || 14,
-
-        vendorByInfo: `${bill.vendor_byObj?.street_and_number || ""} - ${bill.vendor_byObj?.city || ""
-      } - ${bill.vendor_byObj?.state || ""} - ${bill.vendor_byObj?.country || ""
-      } - ${bill.vendor_byObj?.zip_code || ""}`,
+        vendorByInfo: `${vendor?.street_and_number || ""} - ${vendor?.city || ""
+          } - ${vendor?.state || ""} - ${vendor?.country || ""
+          } - ${vendor?.zip_code || ""}`,
       });
     }
-  }, [creating, bill]);
+  }, [creating, bill, total, vendor?.street_and_number, vendor?.city, vendor?.state, vendor?.country, vendor?.zip_code]);
+
+  /* const fetchVendorInBill = async () => {
+    const results = (await VendorService.getVendorByID(bill['carriVerndorById'])).data.results;
+    console.log(results)
+    setVendor(results)
+    console.table(vendor)
+  }
+  useEffect(() => {
+    fetchVendorInBill()
+  }, []) */
 
   useEffect(() => {
     let totall = 0;
@@ -119,13 +134,13 @@ const BillsCreationForm = ({
       billCharges: bills,
     };
 
-    
+
     const response = await (creating
       ? BillsService.createBill(rawData)
       : BillsService.updateBill(bill.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      
+
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -134,7 +149,7 @@ const BillsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      
+
       setShowErrorAlert(true);
     }
   };
@@ -153,7 +168,7 @@ const BillsCreationForm = ({
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
 
-    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
+    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Payable");
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 
@@ -170,7 +185,7 @@ const BillsCreationForm = ({
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    
+
     setaccounts(result.data)
     setFormData({
       ...formData,
@@ -238,22 +253,22 @@ const BillsCreationForm = ({
         <div className="row w-100">
           <div className="form-label_name"><h3>Bill</h3><span></span>
           </div>
-         
-            <div className="col-6 text-start">
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="number"
-                  placeholder="PNF123456"
-                  value={formData.number}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, number: e.target.value })
-                  }
-                  label="Number"
-                />
-              </div>
 
-              <div className="company-form__section">
+          <div className="col-6 text-start">
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="number"
+                placeholder="PNF123456"
+                value={formData.number}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, number: e.target.value })
+                }
+                label="Number"
+              />
+            </div>
+
+            <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
                   label="Due Date"
@@ -283,11 +298,11 @@ const BillsCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
-              <div className="company-form__section">
-                <label htmlFor="account" className="form-label">
-                  Account:
-                </label>
-                <AsyncSelect
+            <div className="company-form__section">
+              <label htmlFor="account" className="form-label">
+                Account:
+              </label>
+              <AsyncSelect
                 id="account"
                 value={accountByOptions.find(
                   (option) => option.id === formData.accountById)}
@@ -298,62 +313,62 @@ const BillsCreationForm = ({
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}
               />
-              </div>
+            </div>
+          </div>
+
+          <div className="col-6 text-start">
+            <div className="company-form__section">
+              <label htmlFor="apply" className="form-label">
+                Vendor:
+              </label>
+              <AsyncSelect
+                id="apply"
+                value={carriVerndorByOptions.find(
+                  (option) => option.id === formData.carriVerndorById
+                )}
+                onChange={(e) => {
+                  handleVendorCarriBySelection(e);
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={carriVerndorByOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
             </div>
 
-            <div className="col-6 text-start">
-              <div className="company-form__section">
-                <label htmlFor="apply" className="form-label">
-                  Vendor:
-                </label>
-                <AsyncSelect
-                  id="apply"
-                  value={carriVerndorByOptions.find(
-                    (option) => option.id === formData.carriVerndorById
-                  )}
-                  onChange={(e) => {
-                    handleVendorCarriBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={carriVerndorByOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-
-              <div className="company-form__section">
-                <Input
-                  type="textarea"
-                  inputName="vendorByInfo"
-                  placeholder="Apply to..."
-                  value={formData.vendorByInfo}
-                  readonly={true}
-                  label=""
-                />
-              </div>
-
-              <div className="company-form__section">
-                <label htmlFor="paymentTem" className="form-label">
-                  Payment Terms:
-                </label>
-                <AsyncSelect
-                  id="paymentTem"
-                  value={paymentByOptions.find(
-                    (option) => option.id === formData.paymentById
-                  )}
-                  onChange={(e) => {
-                    handlePaymentBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={paymentByOptions}
-                  getOptionLabel={(option) => option.description}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
+            <div className="company-form__section">
+              <Input
+                type="textarea"
+                inputName="vendorByInfo"
+                placeholder="Apply to..."
+                value={formData.vendorByInfo}
+                readonly={true}
+                label=""
+              />
             </div>
-          
+
+            <div className="company-form__section">
+              <label htmlFor="paymentTem" className="form-label">
+                Payment Terms:
+              </label>
+              <AsyncSelect
+                id="paymentTem"
+                value={paymentByOptions.find(
+                  (option) => option.id === formData.paymentById
+                )}
+                onChange={(e) => {
+                  handlePaymentBySelection(e);
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={paymentByOptions}
+                getOptionLabel={(option) => option.description}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+          </div>
+
         </div>
 
 
