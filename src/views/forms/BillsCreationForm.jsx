@@ -168,7 +168,7 @@ const BillsCreationForm = ({
     const carriVerndorWithType = addTypeToObjects(carriVerndo, "carri-Verndor");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
 
-    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Payable");
+    const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accouns Payable");
     const carriVerndorByOptions = [...carriVerndorWithType];
     const paymentByOptions = [...paymentsWithType];
 

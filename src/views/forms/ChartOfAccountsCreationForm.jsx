@@ -13,42 +13,11 @@ const ChartOfAccountsCreationForm = ({
   creating,
 
 }) => {
-  console.table(chartOfAccounts)
   const [activeTab, setActiveTab] = useState("definition");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [ChartOfAccounts, setChartOfAccounts] = useState([])
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [accountype, setAccountype] = useState("");
   const [currencies, setcurrencies] = useState([]);
-  const [filteredData, setFilteredData] = useState([])
-
-  useEffect(() => {
-    const updateChartOfAccounts = (url = null) => {
-      ChartOfAccountsService.getChartOfAccounts(url)
-        .then((response) => {
-          const newChartOfAccounts = response.data.results.filter(
-            (newChartOfAccount) => {
-              return !ChartOfAccounts.some(
-                (existingChartOfAccount) =>
-                  existingChartOfAccount.id === newChartOfAccount.id
-              );
-            }
-          );
-
-          setChartOfAccounts(
-            [...ChartOfAccounts, ...newChartOfAccounts].reverse()
-          );
-
-          setAccountype(chartOfAccounts.typeChart)
-          /* if (response.data.next) {} */
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
-
-    updateChartOfAccounts();
-  }, []);
 
   const formFormat = {
     name: "",
@@ -77,30 +46,15 @@ const ChartOfAccountsCreationForm = ({
   }, [creating, chartOfAccounts]);
 
   useEffect(() => {
-    setAccountype(chartOfAccounts?.parentAccount)
-  }, [chartOfAccounts]);
-
-  useEffect(() => {
-    //setAccountype(chartOfAccounts.parentAccount)
-    const handleSearch = (row) => {
-      let searchMatch = false
-      console.log("filtrando", row)
-      if (row.typeChart === accountype) { //se cambia row.type a row.typeChart
-        console.log("Hay informacion")
-        searchMatch = true
-      }
-      else {
-        console.log("No Hay informacion")
-      }
-      return searchMatch;
-    };
-    setFilteredData(ChartOfAccounts?.filter((row) => handleSearch(row)));
-  }, [ChartOfAccounts, accountype, creating])
-
-  useEffect(() => {
     const fetchData = async () => {
       const currenciesData = await CurrencyService.getCurrencies();
-      setcurrencies(Object.entries(currenciesData.data));
+      let arr1 = Object.keys(currenciesData.data).filter(c => c == "USD" || c == "COP");
+      let arr2 = Object.values(currenciesData.data).filter(c => c == "United States Dollar" || c == "Colombian Peso");
+      let combinedArray = [];
+      for (let i = 0; i < arr1.length; i++) {
+        combinedArray.push([arr1[i], arr2[i]]);
+      }
+      setcurrencies(combinedArray);
     };
 
     fetchData();
@@ -142,6 +96,54 @@ const ChartOfAccountsCreationForm = ({
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------
 
+  useEffect(() => {
+    const updateChartOfAccounts = (url = null) => {
+      ChartOfAccountsService.getChartOfAccounts(url)
+        .then((response) => {
+          const newChartOfAccounts = response.data.results.filter(
+            (newChartOfAccount) => {
+              return !ChartOfAccounts.some(
+                (existingChartOfAccount) =>
+                  existingChartOfAccount.id === newChartOfAccount.id
+              );
+            }
+          );
+
+          setChartOfAccounts(
+            [...ChartOfAccounts, ...newChartOfAccounts].reverse()
+          );
+
+          setAccountype(chartOfAccounts.typeChart)
+          /* if (response.data.next) {} */
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    updateChartOfAccounts();
+  }, []);
+  const [accountype, setAccountype] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  useEffect(() => {
+    //setAccountype(chartOfAccounts.parentAccount)
+    const handleSearch = (row) => {
+      let searchMatch = false
+      console.log("filtrando", row)
+      if (row.typeChart === accountype) { //se cambia row.type a row.typeChart
+        console.log("Hay informacion")
+        searchMatch = true
+      }
+      else {
+        console.log("No Hay informacion")
+      }
+      return searchMatch;
+    };
+    setFilteredData(ChartOfAccounts?.filter((row) => handleSearch(row)));
+  }, [ChartOfAccounts, accountype, creating])
+  useEffect(() => {
+    setAccountype(chartOfAccounts?.parentAccount)
+  }, [chartOfAccounts]);
   const handleType = (type) => {
     setAccountype(type)
     setFormData({ ...formData, type: type, typeChart: type })
@@ -178,12 +180,12 @@ const ChartOfAccountsCreationForm = ({
                 >
                   <option value="">Select a Type</option>
                   <option value="Accounts Receivable">Accounts Receivable</option>
-                  <option value="Accounts Payable">Accounts Payable</option>
+                  <option value="Accouns Payable">Accouns Payable</option>
                   <option value="Income">Income</option>
                   <option value="Expense">Expense</option>
                   <option value="Cost Of Goods Sold<">Cost Of Goods Sold</option>
                   <option value="Bank Account">Bank Account</option>
-                  <option value="Non-deposit Funds">Non-deposit Funds</option>
+                  <option value="Undeposited Funds">Undeposited Funds</option>
                   <option value="Fixed Assets">Fixed Assets</option>
                   <option value="Fixed Assets">Other Assets</option>
                   <option value="Other Current Assets">Other Current Assets</option>
@@ -225,7 +227,6 @@ const ChartOfAccountsCreationForm = ({
                   id="parentAccount"
                   className="form-input"
                   value={formData.parentAccount ? formData.parentAccount : ""}
-                  //inputName="parentAccount"
                   onChange={(e) =>
                     setFormData({ ...formData, parentAccount: e.target.value })}
                 >

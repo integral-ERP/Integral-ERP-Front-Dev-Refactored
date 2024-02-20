@@ -11,7 +11,7 @@ class ChartOfAccountsService {
   }
 
   async updateChartOfAccounts(id, data) {
-    const response = await axios.put(`${this.BASE_URL}ChartAccounts/${id}/`,data);
+    const response = await axios.put(`${this.BASE_URL}ChartAccounts/${id}/`, data);
     return response;
   }
 
