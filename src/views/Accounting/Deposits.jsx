@@ -2,10 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import ModalForm from "../shared/components/ModalForm";import Sidebar
-from "../shared/components/SideBar";import { useModal } 
-from "../../hooks/useModal"; // Import the useModal hook
-
+import ModalForm from "../shared/components/ModalForm";
+import Sidebar from "../shared/components/SideBar";
+import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import DepositsCreationForm from "../forms/DepositsCreationForm";
 import DepositsService from "../../services/DepositsService";
 import { GlobalContext } from "../../context/global";
@@ -19,22 +18,20 @@ const Deposits = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
+  const [isEdit, setIsEdit] = useState(false);
   const columns = [
     "Date",
     // "Employee",
     "Bank Account",
     "Amount (USB)",
     "Memo",
-    "Reconciliation Date",    
+    "Reconciliation Date",
     "Deposit PDF",
   ];
   const updateDeposit = (url = null) => {
     DepositsService.getDeposits(url)
       .then((response) => {
-        setDeposits(
-          [...response.data.results].reverse()
-        );
 
         setDeposits([...response.data.results].reverse());
 
@@ -82,6 +79,7 @@ const Deposits = () => {
 
   const handleEditDeposits = () => {
     if (selectedDeposits) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Deposits to edit.");
@@ -112,7 +110,7 @@ const Deposits = () => {
           }
         })
         .catch((error) => {
-          
+
         });
     } else {
       alert("Please select a Deposits to delete.");
@@ -126,7 +124,7 @@ const Deposits = () => {
       const isDepositsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isDepositsButton && !isTableRow) {
+      if (!isDepositsButton && !isTableRow && !isEdit) {
         setSelectedDeposits(null);
       }
     };
@@ -137,7 +135,7 @@ const Deposits = () => {
 
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   return (
     <>
@@ -156,28 +154,28 @@ const Deposits = () => {
               title="Deposits"
               importEnabled={false}
             >
-               {selectedDeposits !== null && (
-             
+              {selectedDeposits === null && (
+
+                <DepositsCreationForm
+                  deposit={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  ondepositDataChange={handleDepositsDataChange}
+                />
+
+              )}
+
+              {selectedDeposits !== null && (
+
                 <DepositsCreationForm
                   deposit={selectedDeposits}
                   closeModal={closeModal}
                   creating={false}
                   ondepositDataChange={handleDepositsDataChange}
                 />
-            
-            )}
 
-            {selectedDeposits === null && (
-             
-                <DepositsCreationForm
-                  deposit={selectedDeposits}
-                  closeModal={closeModal}
-                  creating={true}
-                  ondepositDataChange={handleDepositsDataChange}
-                />
-            
-            )}
-              </Table>
+              )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
