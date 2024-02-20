@@ -130,7 +130,16 @@
   border: 2px solid #006BAD;
 }
 
-.succes {
+/* added warning notification */
+.alert-notification-warning {
+  position: fixed;
+  top: 50%;
+  background-color: #cf771a !important;
+  border: 2px solid #ec5729;
+}
+
+
+.succes{
   font-size: x-large;
   font-weight: 500;
   color: white;
