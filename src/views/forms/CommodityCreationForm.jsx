@@ -41,6 +41,9 @@ const CommodityCreationForm = ({
   const input5Ref = useRef(null);
   const input6Ref = useRef(null);
   const input7Ref = useRef(null);
+  
+  //added validation of commodities for change border color in inputs
+  const ValidationCommodities= !commodities || commodities.length === 0;
 
   const addCommodity = () => {
     const body = {
@@ -142,6 +145,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, length: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -160,6 +168,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, height: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -178,6 +191,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, width: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -196,6 +214,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, weight: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
