@@ -120,7 +120,6 @@ const ChartOfAccountsCreationForm = ({
           console.error(error);
         });
     };
-
     updateChartOfAccounts();
   }, []);
   const [accountype, setAccountype] = useState("");

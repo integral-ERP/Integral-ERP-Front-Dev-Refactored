@@ -78,7 +78,16 @@ const ReceiptCreationForm = ({
   const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] =
     useState(false);
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
+  // Desabilitar el botón si commodities es null o vacío y cambio de estado 
+  const [changeStateSave, setchangeStateSave] = useState(false);
+  const isButtonDisabled = !commodities || commodities.length === 0; 
 
+  useEffect(() => {
+    if (!isButtonDisabled) {
+      setchangeStateSave(false);
+    }
+  }, [isButtonDisabled]); 
+ 
   const formFormat = {
 
     status: "",
@@ -759,6 +768,14 @@ const ReceiptCreationForm = ({
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
+    // Mostrar la alerta si commodities es null o vacío
+    if (isButtonDisabled) {
+      alert('Please fill in data in the commodities section, do not leave empty spaces.');
+      setchangeStateSave(true);
+      return;
+    } 
+   
+
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -920,7 +937,8 @@ const ReceiptCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            window.location.reload();
+            //added redirect to warehouse receipt
+            window.location.href = `/warehouse/receipt`; 
           }, 2000);
         } else {
 
@@ -1172,6 +1190,9 @@ const ReceiptCreationForm = ({
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
               </div>
             </div>
           </div>
@@ -1329,7 +1350,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                // "Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1365,7 +1386,8 @@ const ReceiptCreationForm = ({
           ></RepackingForm>
         )}
 
-        <button
+        {/* button duplicado */}
+        {/* <button
           type="button"
           onClick={() => {
             setshowRepackingForm(!showRepackingForm);
@@ -1373,7 +1395,7 @@ const ReceiptCreationForm = ({
           className="button-save"
         >
           Repacking
-        </button>
+        </button> */}
       </div>
 
       <div className="row w-100">
@@ -1601,9 +1623,9 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-        <button className="button-save" onClick={sendData}>
+         <button disabled={changeStateSave} className="button-save" onClick={sendData}>
           Save
-        </button>
+        </button> 
 
         <button className="button-cancel" onClick={closeModal}>
           Cancel
