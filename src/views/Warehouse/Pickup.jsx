@@ -38,6 +38,9 @@ const Pickup = () => {
     y: 0,
   });
   const [showContextMenu, setShowContextMenu] = useState(false);
+  //added warning alert for delete pickup order
+  const [showWarningAlert, setShowWarningAlert] = useState(false);
+  const StatusEmpty=14;
 
   const columns = [
     "Status",
@@ -179,33 +182,38 @@ const Pickup = () => {
 
   const handleDeletePickupOrder = () => {
     if (selectedPickupOrder) {
-      PickupService.deletePickup(selectedPickupOrder.id)
-        .then((response) => {
-          if (response.status == 204) {
-            const newPickupOrders = pickupOrders.filter(
-              (order) => order.id !== selectedPickupOrder.id
-            );
-            setpickupOrders(newPickupOrders);
-            setShowSuccessAlert(true);
-            releaseOrders.forEach((release) => {
-              if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)){
-                ReleaseService.deleteRelease(release.id);
-              }
-            })
-            setTimeout(() => {
-              setShowSuccessAlert(false);
-            }, 3000);
+      //added warning alert for delete pickup order
+      if (selectedPickupOrder.status == StatusEmpty) {
+        PickupService.deletePickup(selectedPickupOrder.id)
+          .then((response) => {
+            if (response.status == 204) {
+              const newPickupOrders = pickupOrders.filter(
+                (order) => order.id !== selectedPickupOrder.id
+              );
+              setpickupOrders(newPickupOrders);
+              setShowSuccessAlert(true);
+              releaseOrders.forEach((release) => {
+                if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)){
+                  ReleaseService.deleteRelease(release.id);
+                }
+              })
+              setTimeout(() => {
+                setShowSuccessAlert(false);
+              }, 3000);
 
-          } else {
-            setShowErrorAlert(true);
-            setTimeout(() => {
-              setShowErrorAlert(false);
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          
-        });
+            } else {
+              setShowErrorAlert(true);
+              setTimeout(() => {
+                setShowErrorAlert(false);
+              }, 3000);
+            }
+          })
+          .catch((error) => {
+            
+          });
+      } else {
+        setShowWarningAlert(true);
+      }
     } else {
       alert("Please select a Pickup Order to delete.");
     }
@@ -355,6 +363,18 @@ const Pickup = () => {
                 <strong>Pick-up Order deleted successfully!</strong>
               </Alert>
             )}
+
+            {/* added warning alert fro delete pickup order */}
+              { showWarningAlert && (
+              <Alert
+              severity="warning"
+                onClose={() => setShowWarningAlert(false)}
+                className="alert-notification-warning"
+              >
+              <p className="succes"> It is not allowed to delete this order</p>
+              </Alert>
+            )}
+            
             {showErrorAlert && (
               <Alert
                 severity="error"
