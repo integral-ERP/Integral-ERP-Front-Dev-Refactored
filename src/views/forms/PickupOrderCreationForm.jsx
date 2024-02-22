@@ -30,6 +30,7 @@ const PickupOrderCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
 }) => {
+  console.log(pickupOrder)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
@@ -66,6 +67,7 @@ const PickupOrderCreationForm = ({
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
+  const [CTBType, setCTBType] = useState("")
   const formFormat = {
 
     status: 14,
@@ -274,8 +276,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
+    console.log(event)
     const type = event.target?.value || "";
-
 
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
@@ -291,9 +293,10 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
       });
     } else {
-
+      setCTBType(event.type);
       const id = event.id;
-      const type = event.type;
+      const type = event.type === "shipper" ? "shipper" :
+        event.type === "consignee" ? "consignee" : "other";
 
       setFormData({
         ...formData,
@@ -302,6 +305,10 @@ const PickupOrderCreationForm = ({
       });
     }
   };
+
+  /* useEffect(() => {
+    getAsyncSelectValue()
+  }, [CTBType]) */
 
   useEffect(() => {
     if (!creating && pickupOrder != null) {
@@ -376,28 +383,44 @@ const PickupOrderCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         client_to_billById:
-          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
+          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
+            pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
+            pickupOrder.client_to_billObj?.data?.obj?.id,
         client_to_bill_type:
-          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
+          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person ?
+            (pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id === pickupOrder.shipperObj?.data?.obj?.id ? "shipper" :
+              (pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id === pickupOrder.consigneeObj?.data?.obj?.id ? "consignee" : "other")) :
+            "other",
       };
       handleClientToBillSelection({
         id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
         type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
       });
+      setCTBType(
+        pickupOrder.client_to_billObj?.data?.obj?.type_person ?
+          pickupOrder.client_to_billObj?.data?.obj?.type_person : "")
       setFormData(updatedFormData);
       setcanRender(true);
     }
   }, [creating, pickupOrder]);
 
-  const fetchFormData = async () => {
-    const forwardingAgents = (
-      await ForwardingAgentService.getForwardingAgents()
-    ).data.results;
-    const customers = (await CustomerService.getCustomers()).data.results;
-    const vendors = (await VendorService.getVendors()).data.results;
-    const employees = (await EmployeeService.getEmployees()).data.results;
-    const carriers = (await CarrierService.getCarriers()).data.results;
+  useEffect(() => {
+    if (charges.length > 0) {
+      setshowExpenseForm(true)
+      setshowIncomeForm(true)
+    }
+  }, [charges.length])
 
+  const SortArray = (x, y) => {
+    return new Intl.Collator('es').compare(x.name, y.name);
+  }
+
+  const fetchFormData = async () => {
+    const forwardingAgents = ((await ForwardingAgentService.getForwardingAgents()).data.results);
+    const customers = ((await CustomerService.getCustomers()).data.results);
+    const vendors = ((await VendorService.getVendors()).data.results);
+    const employees = ((await EmployeeService.getEmployees()).data.results);
+    const carriers = ((await CarrierService.getCarriers()).data.results);
 
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
@@ -447,15 +470,15 @@ const PickupOrderCreationForm = ({
     ];
 
 
-    setIssuedByOptions(issuedByOptions);
-    setDestinationAgentOptions(destinationAgentOptions);
-    setEmployeeOptions(employeeOptions);
-    setShipperOptions(shipperOptions);
-    setPickupLocationOptions(pickupLocationOptions);
-    setConsigneeOptions(consigneeOptions);
-    setDeliveryLocationOptions(deliveryLocationOptions);
-    setCarrierOptions(carrierOptions);
-    setReleasedToOptions(clientToBillOptions);
+    setIssuedByOptions(issuedByOptions.sort(SortArray));
+    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
+    setEmployeeOptions(employeeOptions.sort(SortArray));
+    setShipperOptions(shipperOptions.sort(SortArray));
+    setPickupLocationOptions(pickupLocationOptions.sort(SortArray));
+    setConsigneeOptions(consigneeOptions.sort(SortArray));
+    setDeliveryLocationOptions(deliveryLocationOptions.sort(SortArray));
+    setCarrierOptions(carrierOptions.sort(SortArray));
+    setReleasedToOptions(clientToBillOptions.sort(SortArray));
   };
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
@@ -664,7 +687,7 @@ const PickupOrderCreationForm = ({
   }, [commodities]);
 
   useEffect(() => {
-
+    console.log(formData)
   }, [formData]);
 
   useEffect(() => {
@@ -809,17 +832,8 @@ const PickupOrderCreationForm = ({
 
     let clientToBillName = "";
 
-    if (formData.client_to_bill_type === "customer") {
-      clientToBillName = "customerid";
-    }
-    if (formData.client_to_bill_type === "vendor") {
-      clientToBillName = "vendorid";
-    }
-    if (formData.client_to_bill_type === "agent") {
-      clientToBillName = "agentid";
-    }
-    if (formData.client_to_bill_type === "carrier") {
-      clientToBillName = "carrierid";
+    if (formData.client_to_bill_type === "other") {
+      clientToBillName = CTBType + "id";
     }
     if (formData.client_to_bill_type === "shipper") {
       clientToBillName = "shipperid";
@@ -836,7 +850,7 @@ const PickupOrderCreationForm = ({
             ? auxVar
             : formData.client_to_bill,
       };
-
+      console.log(clientToBill)
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
@@ -986,7 +1000,6 @@ const PickupOrderCreationForm = ({
   }, []);
 
   const getAsyncSelectValue = () => {
-
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
       selectedOption = releasedToOptions.find(
@@ -1004,9 +1017,10 @@ const PickupOrderCreationForm = ({
     } else {
       selectedOption = releasedToOptions.find(
         (option) =>
-          option.id === formData.client_to_bill &&
-          option.type === formData.client_to_bill_type
+          option.id === formData.client_to_bill ? formData.client_to_bill : formData.client_to_billById &&
+            option.type === CTBType
       );
+      console.log(selectedOption)
     }
     return selectedOption;
   };
@@ -1035,9 +1049,9 @@ const PickupOrderCreationForm = ({
               </div>
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Creation Date and Time</p>
+                  <p className="text-date">Creation Date and Time</p>
                   <DateTimePicker
-                    
+
                     className="font-right"
                     value={dayjs(formData.createdDateAndTime)}
                     onChange={(e) =>
@@ -1114,7 +1128,7 @@ const PickupOrderCreationForm = ({
               </div>
               <div className="col-4 text-start" id="dates">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Pick-up Date and Time</p>
+                  <p className="text-date">Pick-up Date and Time</p>
                   <DateTimePicker
                     // label="Pick-up Date and Time"
                     value={dayjs(formData.pickupDateAndTime)}
@@ -1153,7 +1167,7 @@ const PickupOrderCreationForm = ({
 
               <div className="col-4 text-start" id="dates">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Delivery Date and Time</p>
+                  <p className="text-date">Delivery Date and Time</p>
                   <DateTimePicker
                     // label="Delivery Date and Time"
                     value={dayjs(formData.deliveryDateAndTime)}
@@ -1170,16 +1184,16 @@ const PickupOrderCreationForm = ({
 
             <div className="row mb-3">
               <div className="col-12 text-start">
-              <div className="company-form__section">
-                <Input
-                  type="textarea"
-                  inputName="issuedbyinfo"
-                  placeholder="Apply to..."
-                  value={formData.issuedByInfo}
-                  readonly={true}
-                />
-              </div>
+                <div className="company-form__section">
+                  <Input
+                    type="textarea"
+                    inputName="issuedbyinfo"
+                    placeholder="Apply to..."
+                    value={formData.issuedByInfo}
+                    readonly={true}
+                  />
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1287,8 +1301,8 @@ const PickupOrderCreationForm = ({
                   type="textarea"
                   inputName="pickupinfo"
                   placeholder="Pick-up Location..."
+                  value={formData.pickupLocationInfo}
                   readonly={true}
-                  value={formData.pickupInfo}
                 />
               </div>
             </div>
@@ -1408,9 +1422,9 @@ const PickupOrderCreationForm = ({
                   <option value="consignee">Ultimate Consignee</option>
                   <option value="other">Other</option>
                 </select>
-                <p style={{ color: "red" }}>
+                {/* <p style={{ color: "red" }}>
                   Note: Always select a client to bill when editing
-                </p>
+                </p> */}
               </div>
               <div className="col-6 text-start">
                 <AsyncSelect
@@ -1666,7 +1680,7 @@ const PickupOrderCreationForm = ({
 
             {showIncomeForm && (
               <Table
-                data={charges}
+                data={charges.filter(((c) => c.type === "income"))}
                 columns={[
                   "Status",
                   "Type",
@@ -1705,7 +1719,7 @@ const PickupOrderCreationForm = ({
             )}
             {showExpenseForm && (
               <Table
-                data={charges}
+                data={charges.filter(((c) => c.type === "expense"))}
                 columns={[
                   "Status",
                   "Type",
@@ -1755,7 +1769,7 @@ const PickupOrderCreationForm = ({
           </strong>
         </Alert>
       )} */}
-       {showSuccessAlert && (
+      {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}

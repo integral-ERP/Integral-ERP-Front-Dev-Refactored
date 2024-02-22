@@ -58,6 +58,10 @@ const BillsCreationForm = ({
     bills: [],
   };
 
+  const SortArray = (x, y) => {
+    return new Intl.Collator('es').compare(x.name, y.name);
+  }
+
   const fetchVendorInBill = async () => {
     const results = (await VendorService.getVendorByID(bill['carriVerndorById'])).data;
     setVendor(results)
@@ -173,7 +177,7 @@ const BillsCreationForm = ({
     const paymentByOptions = [...paymentsWithType];
 
     setAccountByOptions(accountByOptions);
-    setcarriVerndoByOptions(carriVerndorByOptions);
+    setcarriVerndoByOptions(carriVerndorByOptions.sort(SortArray));
     setPaymentByOptions(paymentByOptions);
   };
   useEffect(() => {
