@@ -295,12 +295,15 @@ const InvoicesCreationForm = ({
     });
   };
 
+  const SortArray = (x, y) => {
+    return new Intl.Collator('es').compare(x.name, y.name);
+  }
+
   const fetchFormData = async () => {
     const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
     const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
     const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
     const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
@@ -320,9 +323,9 @@ const InvoicesCreationForm = ({
     const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
     const typeByOptions = [...typeWithType];
 
-    setIssuedByOptions(issuedByOptions);
+    setIssuedByOptions(issuedByOptions.sort(SortArray));
     setPaymentByOptions(paymentByOptions);
-    setAccountByOptions(accountByOptions);
+    setAccountByOptions(accountByOptions.sort(SortArray));
     setptypeByOptions(typeByOptions);
 
   };

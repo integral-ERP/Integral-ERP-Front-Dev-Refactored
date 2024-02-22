@@ -80,8 +80,8 @@ const PaymentsCreationForm = ({
       totale += subtotal
     });
     settotal(totale);
-    
-    
+
+
   };
 
   const handleAccountBySelection = async (event) => {
@@ -89,7 +89,7 @@ const PaymentsCreationForm = ({
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    
+
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -98,7 +98,7 @@ const PaymentsCreationForm = ({
       accountRecei: name,
 
     });
-    
+
   };
 
   const handleAccountBanckBySelection = async (event) => {
@@ -106,7 +106,7 @@ const PaymentsCreationForm = ({
     const typeChartBanck = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    
+
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -115,7 +115,7 @@ const PaymentsCreationForm = ({
       accountReceiBank: name,
 
     });
-    
+
   };
 
 
@@ -141,9 +141,6 @@ const PaymentsCreationForm = ({
     }
   }, [creating, payments]);
 
-
-
-
   const sendData = async () => {
     let rawData = {
       customerById: formData.customerById,
@@ -164,7 +161,7 @@ const PaymentsCreationForm = ({
       accountByBankId: formData.accountByBankId,
       accountByBankType: formData.accountByBankType,
     };
-    
+
     const response = await (creating
       ? PaymentsService.createPayment(rawData)
       : PaymentsService.updatePayment(
@@ -181,16 +178,18 @@ const PaymentsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      
+
       setShowErrorAlert(true);
     }
   };
 
+  const SortArray = (x, y) => {
+    return new Intl.Collator('es').compare(x.name, y.name);
+  }
 
   const fetchFormData = async () => {
     const customer = (await CustomerService.getCustomers()).data.results;
     const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
-
 
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
@@ -203,12 +202,12 @@ const PaymentsCreationForm = ({
 
     const customerByOptions = [...customerWithType];
     const accountByReceivable = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
-    
-    const accountBybank = [...accountWithType].filter(account => account.typeChart == "Bank Account");
-    
 
-    setCustomerByOptions(customerByOptions);
-    setaccountByReceivable(accountByReceivable);
+    const accountBybank = [...accountWithType].filter(account => account.typeChart == "Bank Account");
+
+
+    setCustomerByOptions(customerByOptions.sort(SortArray));
+    setaccountByReceivable(accountByReceivable.sort(SortArray));
     setaccountBybank(accountBybank);
   };
 
@@ -216,17 +215,19 @@ const PaymentsCreationForm = ({
     fetchFormData();
   }, []);
 
-
+  const handleCancel = () => {
+    window.location.reload();
+  }
 
   return (
     <div className="company-form">
-    
-        <div className="creation creation-container w-100">
+
+      <div className="creation creation-container w-100">
         <div className="form-label_name"><h3>Accounting Transaction</h3><span></span></div>
-          <div className="row w-100">
+        <div className="row w-100">
           <div className="col-6 text-start">
 
-          <div className="company-form__section">
+            <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
                   label="Transaction Date"
@@ -284,10 +285,10 @@ const PaymentsCreationForm = ({
               />
             </div>
           </div>
-          
+
 
           <div className="col-6 text-start">
-           
+
 
             <div className="company-form__section">
               <Input
@@ -336,28 +337,28 @@ const PaymentsCreationForm = ({
               />
             </div>
           </div>
-          </div>
         </div>
-        <Table
-          data={Payments}
-          columns={[
-            "Name",
-            "Number",
-            "Account Type",
-            "type Chart",
-            "Transaction Date",
-            "Due Date",
-            "Apply",
-            "Payment Temse",
-          ]}
-          onAdd={() => { }}
-          showOptions={false}
-        />
+      </div>
+      <Table
+        data={Payments}
+        columns={[
+          "Name",
+          "Number",
+          "Account Type",
+          "type Chart",
+          "Transaction Date",
+          "Due Date",
+          "Apply",
+          "Payment Temse",
+        ]}
+        onAdd={() => { }}
+        showOptions={false}
+      />
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
