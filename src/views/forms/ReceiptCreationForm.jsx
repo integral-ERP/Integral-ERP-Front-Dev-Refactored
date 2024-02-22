@@ -90,6 +90,8 @@ const ReceiptCreationForm = ({
     }
   }, [isButtonDisabled]); 
  
+    //added variable editing for commodities
+  const [editingComodity, setEditingComodity] = useState(false);
   const formFormat = {
 
     status: "",
@@ -326,6 +328,13 @@ const ReceiptCreationForm = ({
     setcommodities(newCommodities);
   };
 
+  //added edit commodities
+  const handleCommodityEdit = () => {
+    console.log("commodities description ", selectedCommodity.description);
+    setEditingComodity(true);
+    console.log("commodities description ", selectedCommodity);
+  }
+
   const updateSelectedCommodity = (updatedInternalCommodities) => {
     const updatedCommodity = { ...selectedCommodity };
     updatedCommodity.internalCommodities = updatedInternalCommodities;
@@ -341,6 +350,7 @@ const ReceiptCreationForm = ({
       setcommodities(commoditiesCopy);
     }
   };
+  
 
   useEffect(() => {
     const handleModalClick = (event) => {
@@ -1338,6 +1348,10 @@ const ReceiptCreationForm = ({
           commodities={commodities}
           setCommodities={setcommodities}
           setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+          /* added tres parametros */
+          editing={editingComodity}
+          commodity={selectedCommodity}
+          setEditingComodity={setEditingComodity}
         ></CommodityCreationForm>
 
         {showCommodityCreationForm && (
@@ -1358,9 +1372,7 @@ const ReceiptCreationForm = ({
               onSelect={handleSelectCommodity} // Make sure this line is correct
               selectedRow={selectedCommodity}
               onDelete={handleCommodityDelete}
-              onEdit={() => {
-                setshowCommodityEditForm(!showCommodityEditForm);
-              }}
+              onEdit={handleCommodityEdit}
               onInspect={() => {
                 setshowCommodityInspect(!showCommodityInspect);
               }}
@@ -1373,7 +1385,7 @@ const ReceiptCreationForm = ({
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
-              className="button-save"
+              
             >
               Repack
             </button>

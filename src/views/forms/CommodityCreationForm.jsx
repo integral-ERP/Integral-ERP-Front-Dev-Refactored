@@ -12,6 +12,7 @@ const CommodityCreationForm = ({
   editing,
   commodity,
   locationEnabled,
+  setEditingComodity,
 }) => {
   const formFormat = {
     id: "",
@@ -61,15 +62,16 @@ const CommodityCreationForm = ({
       locationCode: formData.locationCode
     };
     if (editing) {
-      const indexToEdit = commodities.findIndex(
-        (comm) => comm.id == commodity.id
-      );
-      const copy = [...commodities];
-      copy[indexToEdit] = body;
-      setCommodities(copy);
+      // Update the specific commodity being edited
+      setCommodities((prevCommodities) => {
+        return prevCommodities.map((prevCommodity) =>
+          prevCommodity.id === commodity.id ? formData : prevCommodity
+        );
+      });
+      setEditingComodity(false);
     } else {
       setShowCommoditiesCreationForm(true)
-    setCommodities([...commodities, body]);
+     setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
     setformData(formFormat);
@@ -97,7 +99,7 @@ const CommodityCreationForm = ({
     }
   }, [formData.height, formData.length, formData.width, formData.weight]);
   
-
+  /* added comidity y editing */
   useEffect(() => {
     if (editing) {
       const formFormat = {
@@ -110,11 +112,12 @@ const CommodityCreationForm = ({
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
         locationId: commodity.locationId,
-        locationCode: commodity.locationCode
+        locationCode: commodity.locationCode,
       };
       setformData(formFormat);
     }
-  }, []);
+  }, [commodity, editing]);
+  
 
   useEffect(() => {
     LocationService.getLocations()
@@ -293,14 +296,17 @@ const CommodityCreationForm = ({
   );
 };
 
+/* added prop editing */
 CommodityCreationForm.propTypes = {
   onCancel: propTypes.func,
   commodities: propTypes.array,
+  editing: propTypes.bool,
 };
 
 CommodityCreationForm.defaultProps = {
   onCancel: null,
   commodities: [],
+  editing: false,
 };
 
 export default CommodityCreationForm;
