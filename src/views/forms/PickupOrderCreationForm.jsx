@@ -30,7 +30,6 @@ const PickupOrderCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
 }) => {
-  console.log(pickupOrder)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
@@ -111,11 +110,11 @@ const PickupOrderCreationForm = ({
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
+    const id = event?.id || "";
+    const type = event?.type || "";
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -126,8 +125,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handlePickUpSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
+    const id = event?.id || "";
+    const type = event?.type || "";
 
     let result;
     if (type === "forwarding-agent") {
@@ -139,13 +138,14 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
       pickupInfo: info,
+      pickupLocationInfo: info,
       pickupLocationType: type,
     });
   };
@@ -155,8 +155,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handleDeliveryLocationSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
+    const id = event?.id || "";
+    const type = event?.type || "";
 
     let result;
     if (type === "forwarding-agent") {
@@ -171,8 +171,8 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -183,17 +183,17 @@ const PickupOrderCreationForm = ({
   };
 
   const handleDestinationAgentSelection = async (event) => {
-    const id = event.id;
+    const id = event?.id;
     setFormData({
       ...formData,
       destinationAgentId: id,
     });
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    setagent(result.data);
+    setagent(result?.data);
   };
 
   const handleEmployeeSelection = async (event) => {
-    const id = event.id;
+    const id = event?.id;
     setFormData({
       ...formData,
       employeeId: id,
@@ -201,8 +201,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handleConsigneeSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
+    const id = event?.id || "";
+    const type = event?.type || "";
 
     let result;
     if (type === "forwarding-agent") {
@@ -217,10 +217,10 @@ const PickupOrderCreationForm = ({
     if (type === "carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
-    setconsignee(result.data);
+    setconsignee(result?.data);
     setFormData({
       ...formData,
       consigneeId: id,
@@ -230,8 +230,8 @@ const PickupOrderCreationForm = ({
   };
 
   const handleShipperSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
+    const id = event?.id || "";
+    const type = event?.type || "";
 
     let result;
     if (type === "forwarding-agent") {
@@ -243,10 +243,10 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
-    setshipper(result.data);
+    setshipper(result?.data);
     setFormData({
       ...formData,
       shipperId: id,
@@ -263,10 +263,10 @@ const PickupOrderCreationForm = ({
   };
 
   const handleMainCarrierSelection = async (event) => {
-    const id = event.id;
+    const id = event?.id || "";
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -276,7 +276,6 @@ const PickupOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    console.log(event)
     const type = event.target?.value || "";
 
     if (type === "other") {
@@ -340,7 +339,7 @@ const PickupOrderCreationForm = ({
         weight: pickupOrder.weight,
 
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
-        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person,
+        shipperType: pickupOrder.shipperObj?.data?.obj?.type_person !== "agent" ? pickupOrder.shipperObj?.data?.obj?.type_person : "forwarding-agent",
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
@@ -352,7 +351,7 @@ const PickupOrderCreationForm = ({
           } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
           }`,
         pickupLocationType:
-          pickupOrder.pickUpLocationObj?.data?.obj?.type_person,
+          pickupOrder.pickUpLocationObj?.data?.obj?.type_person !== "agent" ? pickupOrder.pickUpLocationObj?.data?.obj?.type_person : "forwarding-agent",
 
         consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -433,7 +432,7 @@ const PickupOrderCreationForm = ({
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "carrier");
+    const carriersWithType = addTypeToObjects(carriers, "Carrier");
 
 
     const issuedByOptions = [...forwardingAgentsWithType];
@@ -643,7 +642,7 @@ const PickupOrderCreationForm = ({
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
 
-    setdefaultValueShipper(option.data);
+    setdefaultValueShipper(option?.data);
   };
 
   useEffect(() => {
@@ -685,14 +684,6 @@ const PickupOrderCreationForm = ({
       setFormData({ ...formData, status: 5 });
     }
   }, [commodities]);
-
-  useEffect(() => {
-    console.log(formData)
-  }, [formData]);
-
-  useEffect(() => {
-
-  }, [weightUpdated]);
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
@@ -1020,7 +1011,6 @@ const PickupOrderCreationForm = ({
           option.id === formData.client_to_bill ? formData.client_to_bill : formData.client_to_billById &&
             option.type === CTBType
       );
-      console.log(selectedOption)
     }
     return selectedOption;
   };
@@ -1215,11 +1205,7 @@ const PickupOrderCreationForm = ({
                   onChange={(e) => {
                     handleShipperSelection(e);
                   }}
-                  value={shipperOptions.find(
-                    (option) =>
-                      option.id === formData.shipperId &&
-                      option.type === formData.shipperType
-                  )}
+                  value={shipperOptions.find((option) => option.id === formData.shipperId && option.type === formData.shipperType)}
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={shipperOptions}
