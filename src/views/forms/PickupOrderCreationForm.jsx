@@ -168,7 +168,7 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    if (type === "carrier") {
+    if (type === "Carrier") {
       result = await CarrierService.getCarrierById(id);
     }
     const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
@@ -214,7 +214,7 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    if (type === "carrier") {
+    if (type === "Carrier") {
       result = await CarrierService.getCarrierById(id);
     }
     const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
@@ -276,7 +276,7 @@ const PickupOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    const type = event.target?.value || "";
+    const type = event?.target?.value || "";
 
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
@@ -292,10 +292,10 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
       });
     } else {
-      setCTBType(event.type);
-      const id = event.id;
-      const type = event.type === "shipper" ? "shipper" :
-        event.type === "consignee" ? "consignee" : "other";
+      setCTBType(event?.type);
+      const id = event?.id;
+      const type = event?.type === "shipper" ? "shipper" :
+        event?.type === "consignee" ? "consignee" : "other";
 
       setFormData({
         ...formData,
@@ -304,10 +304,6 @@ const PickupOrderCreationForm = ({
       });
     }
   };
-
-  /* useEffect(() => {
-    getAsyncSelectValue()
-  }, [CTBType]) */
 
   useEffect(() => {
     if (!creating && pickupOrder != null) {
@@ -361,7 +357,7 @@ const PickupOrderCreationForm = ({
         consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
         deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
         deliveryLocationType:
-          pickupOrder.deliveryLocationObj?.data?.obj?.type_person,
+          pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent" ? pickupOrder.deliveryLocationObj?.data?.obj?.type_person : "forwarding-agent",
         deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
           } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
@@ -385,19 +381,24 @@ const PickupOrderCreationForm = ({
           pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
             pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
             pickupOrder.client_to_billObj?.data?.obj?.id,
+        client_to_bill:
+          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
+            pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
+            pickupOrder.client_to_billObj?.data?.obj?.id,
         client_to_bill_type:
           pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person ?
             (pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id === pickupOrder.shipperObj?.data?.obj?.id ? "shipper" :
               (pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id === pickupOrder.consigneeObj?.data?.obj?.id ? "consignee" : "other")) :
             "other",
       };
+      let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person : pickupOrder.client_to_billObj?.data?.obj?.type_person;
+      setCTBType(temp !== "agent" ? temp : "forwarding-agent")
       handleClientToBillSelection({
-        id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
-        type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person,
+        id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
+          pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
+          pickupOrder.client_to_billObj?.data?.obj?.id,
+        type: temp !== "agent" ? temp : "forwarding-agent",
       });
-      setCTBType(
-        pickupOrder.client_to_billObj?.data?.obj?.type_person ?
-          pickupOrder.client_to_billObj?.data?.obj?.type_person : "")
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -465,7 +466,7 @@ const PickupOrderCreationForm = ({
 
     const clientToBillOptions = [
       ...customersWithType,
-      forwardingAgentsWithType,
+      ...forwardingAgentsWithType,
     ];
 
 
@@ -547,7 +548,7 @@ const PickupOrderCreationForm = ({
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "carrier"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
     return options;
@@ -584,7 +585,7 @@ const PickupOrderCreationForm = ({
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "carrier"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
     return options;
@@ -594,7 +595,7 @@ const PickupOrderCreationForm = ({
     const responseCarriers = (await CarrierService.search(inputValue)).data
       .results;
 
-    const options = [...addTypeToObjects(responseCarriers, "carrier")];
+    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
 
     return options;
   };
@@ -624,7 +625,7 @@ const PickupOrderCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if (type === "carrier") {
+    if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option.data);
@@ -729,7 +730,7 @@ const PickupOrderCreationForm = ({
     if (formData.consigneeType === "forwarding-agent") {
       consigneeName = "agentid";
     }
-    if (formData.consigneeType === "carrier") {
+    if (formData.consigneeType === "Carrier") {
       consigneeName = "carrierid";
     }
     if (consigneeName !== "") {
@@ -756,7 +757,7 @@ const PickupOrderCreationForm = ({
     if (formData.deliveryLocationType === "forwarding-agent") {
       deliveryLocationName = "agentid";
     }
-    if (formData.deliveryLocationType === "carrier") {
+    if (formData.deliveryLocationType === "Carrier") {
       deliveryLocationName = "carrierid";
     }
     if (deliveryLocationName !== "") {
@@ -780,7 +781,7 @@ const PickupOrderCreationForm = ({
     if (formData.pickupLocationType === "forwarding-agent") {
       pickUpLocationName = "agentid";
     }
-    if (formData.pickupLocationType === "carrier") {
+    if (formData.pickupLocationType === "Carrier") {
       pickUpLocationName = "carrierid";
     }
     if (pickUpLocationName !== "") {
@@ -804,7 +805,7 @@ const PickupOrderCreationForm = ({
     if (formData.shipperType === "forwarding-agent") {
       shipperName = "agentid";
     }
-    if (formData.shipperType === "carrier") {
+    if (formData.shipperType === "Carrier") {
       shipperName = "carrierid";
     }
     if (shipperName !== "") {
@@ -824,7 +825,18 @@ const PickupOrderCreationForm = ({
     let clientToBillName = "";
 
     if (formData.client_to_bill_type === "other") {
-      clientToBillName = CTBType + "id";
+      if (CTBType === "customer") {
+        clientToBillName = "customerid";
+      }
+      if (CTBType === "vendor") {
+        clientToBillName = "vendorid";
+      }
+      if (CTBType === "forwarding-agent") {
+        clientToBillName = "agentid";
+      }
+      if (CTBType === "carrier") {
+        clientToBillName = "carrierid";
+      }
     }
     if (formData.client_to_bill_type === "shipper") {
       clientToBillName = "shipperid";
@@ -962,7 +974,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 2000);
+          }, 2000 /* 2147483647 */);
         } else {
 
           setShowErrorAlert(true);
@@ -1008,12 +1020,21 @@ const PickupOrderCreationForm = ({
     } else {
       selectedOption = releasedToOptions.find(
         (option) =>
-          option.id === formData.client_to_bill ? formData.client_to_bill : formData.client_to_billById &&
-            option.type === CTBType
+          option.id === formData.client_to_bill &&
+          option.type === CTBType
       );
     }
     return selectedOption;
   };
+
+  /* useEffect(() => {
+    console.log(pickupOrder);
+    console.log(formData);
+    console.log(CTBType);
+    console.log(releasedToOptions);
+    let selectedOption = releasedToOptions.find((option) => option.id === formData.client_to_bill && option.type === CTBType);
+    console.log(selectedOption);
+  }, [CTBType, formData]) */
 
   return (
     <form className="company-form pickup">
