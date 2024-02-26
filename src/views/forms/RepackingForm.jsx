@@ -18,6 +18,10 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     useInternalWeight: false
   };
   const [formData, setformData] = useState(formFormat);
+  //added unrepack
+  const [repackedItems, setRepackedItems] = useState([]);
+  const [selectedRepackId, setSelectedRepackId] = useState(null);
+
 
   useEffect(() => {
     PackageTypeService.getPackageTypes()
@@ -49,21 +53,45 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const handleCommoditySelection = (e, commodityId) => {
     const isChecked = e.target.checked;
 
-
     setinternalCommodities((prevCommodities) => {
-        if (isChecked) {
-            return [...prevCommodities, getCommodityById(commodityId)];
-        } else {
+      const updatedCommodities = isChecked
+        ? [...prevCommodities, getCommodityById(commodityId)]
+        : prevCommodities.filter((item) => item.id !== commodityId);
 
-            return prevCommodities.filter((item) => item.id !== commodityId);
-        }
+      setSelectedRepackId(isChecked ? commodityId : null); // Almacena el ID del empaquetado seleccionado
+      return updatedCommodities;
     });
-};
+  };
 
 
 const getCommodityById = (commodityId) => {
     return commodities.find((item) => item.id === commodityId);
 };
+//added unrepack
+const handleUNRepack = () => {
+  if (selectedRepackId) {
+    const remainingRepackedItems = repackedItems.filter((item) => item.id !== selectedRepackId);
+
+    const repackedItem = repackedItems.find((item) => item.id === selectedRepackId);
+
+    if (repackedItem) {
+      const remainingCommodities = commodities.filter(
+        (commodity) => commodity.id !== repackedItem.id
+      );
+     
+      const unpackedCommodities = [...repackedItem.internalCommodities];
+    
+      setCommodities([...unpackedCommodities, ...remainingCommodities]);
+
+      setRepackedItems(remainingRepackedItems);
+
+      // Limpia el ID del empaquetado seleccionado
+      setSelectedRepackId(null);
+    }
+  }
+};
+
+
 
   const handleRepack = () => {
     let internalWeight = 0;
@@ -93,6 +121,10 @@ const getCommodityById = (commodityId) => {
     setformData(formFormat);
     setinternalCommodities([]);
 
+    //added things for repack
+    console.log("Repacking successful formdata", formData);
+    console.log("Repacking successful commodities",commodities);
+    setRepackedItems((prevRepackedItems) => [...prevRepackedItems, { ...newCommodity }]);
   };
   
 
@@ -216,6 +248,10 @@ const getCommodityById = (commodityId) => {
       {/* ----------------------------------------------------------------------------------------------------------------------------------------- */}
       <div>
         <button type="button" className="button-save" onClick={handleRepack}>Repack</button>
+      </div>
+      {/* added unrepack button */}
+      <div>
+        <button type="button" className="button-save" onClick={handleUNRepack }>UNRepack</button>
       </div>
     </div>
   );

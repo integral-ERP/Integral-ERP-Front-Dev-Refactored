@@ -36,6 +36,8 @@ const ReceiptCreationForm = ({
   const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
+  //added warning alert for commodities
+  const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
@@ -86,8 +88,10 @@ const ReceiptCreationForm = ({
     if (!isButtonDisabled) {
       setchangeStateSave(false);
     }
-  }, [isButtonDisabled]);
-
+  }, [isButtonDisabled]); 
+ 
+    //added variable editing for commodities
+  const [editingComodity, setEditingComodity] = useState(false);
   const formFormat = {
 
     status: "",
@@ -326,6 +330,13 @@ const ReceiptCreationForm = ({
     setcommodities(newCommodities);
   };
 
+  //added edit commodities
+  const handleCommodityEdit = () => {
+    console.log("commodities description ", selectedCommodity.description);
+    setEditingComodity(true);
+    console.log("commodities description ", selectedCommodity);
+  }
+
   const updateSelectedCommodity = (updatedInternalCommodities) => {
     const updatedCommodity = { ...selectedCommodity };
     updatedCommodity.internalCommodities = updatedInternalCommodities;
@@ -341,6 +352,7 @@ const ReceiptCreationForm = ({
       setcommodities(commoditiesCopy);
     }
   };
+  
 
   useEffect(() => {
     const handleModalClick = (event) => {
@@ -782,8 +794,9 @@ const ReceiptCreationForm = ({
   const sendData = async () => {
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
-      alert('Please fill in data in the commodities section, do not leave empty spaces.');
       setchangeStateSave(true);
+      //added change estate for warning alert
+      setShowWarningAlert(true);
       return;
     }
 
@@ -980,6 +993,10 @@ const ReceiptCreationForm = ({
       });
     }
   }, []);
+
+  const handleCancel = () => {
+    window.location.reload();
+  }
 
   return (
     <div className="company-form receipt">
@@ -1355,6 +1372,10 @@ const ReceiptCreationForm = ({
           commodities={commodities}
           setCommodities={setcommodities}
           setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+          /* added tres parametros */
+          editing={editingComodity}
+          commodity={selectedCommodity}
+          setEditingComodity={setEditingComodity}
         ></CommodityCreationForm>
 
         {showCommodityCreationForm && (
@@ -1375,9 +1396,7 @@ const ReceiptCreationForm = ({
               onSelect={handleSelectCommodity} // Make sure this line is correct
               selectedRow={selectedCommodity}
               onDelete={handleCommodityDelete}
-              onEdit={() => {
-                setshowCommodityEditForm(!showCommodityEditForm);
-              }}
+              onEdit={handleCommodityEdit}
               onInspect={() => {
                 setshowCommodityInspect(!showCommodityInspect);
               }}
@@ -1390,6 +1409,7 @@ const ReceiptCreationForm = ({
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
+
             >
               Repack
             </button>
@@ -1644,7 +1664,7 @@ const ReceiptCreationForm = ({
           Save
         </button>
 
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
@@ -1670,6 +1690,19 @@ const ReceiptCreationForm = ({
           <p className=" created">  Warehouse Receipt {creating ? "created" : "updated"} successfully! </p>
         </Alert>
       )}
+
+        {/* added change estate for warning alert */}
+        { showWarningAlert && (
+        <Alert
+        severity="warning"
+          onClose={() => setShowWarningAlert(false)}
+          className="alert-notification-warning"
+        >
+         <p className="succes"> Please fill in data in the commodities section, do not leave empty spaces.</p>
+         <p className="succes"> Don't leave empty fields.</p>
+        </Alert>
+      )}
+
 
 
       {showErrorAlert && (

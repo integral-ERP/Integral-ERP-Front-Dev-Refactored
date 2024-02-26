@@ -12,6 +12,7 @@ const CommodityCreationForm = ({
   editing,
   commodity,
   locationEnabled,
+  setEditingComodity,
 }) => {
   const formFormat = {
     id: "",
@@ -41,6 +42,9 @@ const CommodityCreationForm = ({
   const input5Ref = useRef(null);
   const input6Ref = useRef(null);
   const input7Ref = useRef(null);
+  
+  //added validation of commodities for change border color in inputs
+  const ValidationCommodities= !commodities || commodities.length === 0;
 
   const addCommodity = () => {
     const body = {
@@ -58,15 +62,16 @@ const CommodityCreationForm = ({
       locationCode: formData.locationCode
     };
     if (editing) {
-      const indexToEdit = commodities.findIndex(
-        (comm) => comm.id == commodity.id
-      );
-      const copy = [...commodities];
-      copy[indexToEdit] = body;
-      setCommodities(copy);
+      // Update the specific commodity being edited
+      setCommodities((prevCommodities) => {
+        return prevCommodities.map((prevCommodity) =>
+          prevCommodity.id === commodity.id ? formData : prevCommodity
+        );
+      });
+      setEditingComodity(false);
     } else {
       setShowCommoditiesCreationForm(true)
-    setCommodities([...commodities, body]);
+     setCommodities([...commodities, body]);
       setinternalID(internalID + 1);
     }
     setformData(formFormat);
@@ -94,7 +99,7 @@ const CommodityCreationForm = ({
     }
   }, [formData.height, formData.length, formData.width, formData.weight]);
   
-
+  /* added comidity y editing */
   useEffect(() => {
     if (editing) {
       const formFormat = {
@@ -107,11 +112,12 @@ const CommodityCreationForm = ({
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
         locationId: commodity.locationId,
-        locationCode: commodity.locationCode
+        locationCode: commodity.locationCode,
       };
       setformData(formFormat);
     }
-  }, []);
+  }, [commodity, editing]);
+  
 
   useEffect(() => {
     LocationService.getLocations()
@@ -142,6 +148,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, length: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -160,6 +171,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, height: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -178,6 +194,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, width: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -196,6 +217,11 @@ const CommodityCreationForm = ({
               onChange={(e) =>
                 setformData({ ...formData, weight: e.target.value })
               }
+              /* added style for validation commodities */
+              style={{
+                borderColor: ValidationCommodities ? 'green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
+              }}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
@@ -270,14 +296,17 @@ const CommodityCreationForm = ({
   );
 };
 
+/* added prop editing */
 CommodityCreationForm.propTypes = {
   onCancel: propTypes.func,
   commodities: propTypes.array,
+  editing: propTypes.bool,
 };
 
 CommodityCreationForm.defaultProps = {
   onCancel: null,
   commodities: [],
+  editing: false,
 };
 
 export default CommodityCreationForm;
