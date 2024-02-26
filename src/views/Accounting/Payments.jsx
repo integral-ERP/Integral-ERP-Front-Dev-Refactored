@@ -18,6 +18,7 @@ const Payments = () => {
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const { hideShowSlider } = useContext(GlobalContext);
+  const [isEdit, setIsEdit] = useState(false);
   const columns = [
     "Number",
     "Entipy",
@@ -45,8 +46,7 @@ const Payments = () => {
           }
         );
 
-        setChartOfAccounts([...response.data.results].reverse());
-        
+        setPayments([...response.data.results].reverse());
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -56,22 +56,6 @@ const Payments = () => {
         console.error(error);
       });
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     if (!initialDataFetched) {
@@ -108,6 +92,7 @@ const Payments = () => {
 
   const handleEditPayments = () => {
     if (selectedPayments) {
+      setIsEdit(true);
       openModal();
     } else {
       alert("Please select a Payments to edit.");
@@ -131,7 +116,7 @@ const Payments = () => {
             const newPaymentsTerms = payments.filter(
               (order) => order.id !== selectedPayments.id
             );
-            setChartOfAccounts(newPaymentsTerms);
+            setPayments(newPaymentsTerms);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -140,7 +125,7 @@ const Payments = () => {
           }
         })
         .catch((error) => {
-          
+
         });
     } else {
       alert("Please select a Payments to delete.");
@@ -154,7 +139,7 @@ const Payments = () => {
       const isPaymentsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isPaymentsButton && !isTableRow) {
+      if (!isPaymentsButton && !isTableRow && !isEdit) {
         setSelectedPayments(null);
       }
     };
@@ -165,7 +150,7 @@ const Payments = () => {
 
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   return (
     <>

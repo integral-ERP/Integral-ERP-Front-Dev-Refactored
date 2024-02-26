@@ -676,12 +676,10 @@ const ReleaseOrderCreationForm = ({
                   <option value="releasedTo">Released To</option>
                   <option value="other">Other</option>
                 </select>
-               
                 <p style={{ color: "red" }}>
                   Note: Always select a client to bill when editing
                 </p>
                 </div>
-
                 <div className="col-6 text-start">
                 <AsyncSelect
                   id="releasedToOther"

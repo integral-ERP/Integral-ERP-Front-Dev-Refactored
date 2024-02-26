@@ -151,7 +151,7 @@ const CommodityCreationForm = ({
               /* added style for validation commodities */
               style={{
                 borderColor: ValidationCommodities ? 'green' : '',
-                boxShadow: ValidationCommodities ? '0 0 1px 2px green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
             />
             <span className="input-group-text num-com">in</span>
@@ -174,7 +174,7 @@ const CommodityCreationForm = ({
               /* added style for validation commodities */
               style={{
                 borderColor: ValidationCommodities ? 'green' : '',
-                boxShadow: ValidationCommodities ? '0 0 1px 2px green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
             />
             <span className="input-group-text num-com">in</span>
@@ -197,7 +197,7 @@ const CommodityCreationForm = ({
               /* added style for validation commodities */
               style={{
                 borderColor: ValidationCommodities ? 'green' : '',
-                boxShadow: ValidationCommodities ? '0 0 1px 2px green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
             />
             <span className="input-group-text num-com">in</span>
@@ -220,29 +220,29 @@ const CommodityCreationForm = ({
               /* added style for validation commodities */
               style={{
                 borderColor: ValidationCommodities ? 'green' : '',
-                boxShadow: ValidationCommodities ? '0 0 1px 2px green' : '',
+                boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
 
-        <div className="row w-100 mb-3">
-        <label htmlFor="description" className="text-comm description-form">
-          Cargo Description:
-        </label>
-        <input
-          name="description"
-          type="text"
-          className="form-input"
-          ref={input7Ref}
-          placeholder="Description..."
-          value={formData.description}
-          onChange={(e) =>
-            setformData({ ...formData, description: e.target.value })
-          }
-          // style={{ width: "100%" }}
-        />
+        <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
+          <label htmlFor="description" className="text-comm description-form">
+          Charge Description:
+          </label>
+          <input
+            name="description"
+            type="text"
+            className="form-input"
+            ref={input7Ref}
+            placeholder="Description..."
+            value={formData.description}
+            onChange={(e) =>
+              setformData({ ...formData, description: e.target.value })
+            }
+            
+          />
         </div>
 
         {locationEnabled && (<>

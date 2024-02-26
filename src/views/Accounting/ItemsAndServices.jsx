@@ -29,7 +29,7 @@ const ItemsAndServices = () => {
     "IATA Code",
   ];
 
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -50,19 +50,19 @@ const ItemsAndServices = () => {
     };
   }, [showContextMenu]);// Only re-add the event listener when showContextMenu changes
 
-  const updateItemsAndServices  = (url = null) => {
+  const updateItemsAndServices = (url = null) => {
     ItemsAndServicesService.getItemsAndServices(url)
       .then((response) => {
-        const newItemsAndServices   = response.data.results.filter((ItemServices) => {
-          const ItemsAndServicestId  = ItemServices.id;
+        const newItemsAndServices = response.data.results.filter((ItemServices) => {
+          const ItemsAndServicestId = ItemServices.id;
           return !itemsAndServices.some(
-            (existingPickupOrder) => existingPickupOrder.id === ItemsAndServicestId 
+            (existingPickupOrder) => existingPickupOrder.id === ItemsAndServicestId
           );
         });
 
         setItemsAndServices([...response.data.results].reverse());
-        console.log("NEW ORDERS", [...itemsAndServices, ...newItemsAndServices  ]);
-        
+        console.log("NEW ORDERS", [...itemsAndServices, ...newItemsAndServices]);
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -139,7 +139,7 @@ const ItemsAndServices = () => {
           }
         })
         .catch((error) => {
-          
+
         });
     } else {
       alert("Please select anItems & Services to delete.");
@@ -152,7 +152,7 @@ const ItemsAndServices = () => {
       const clickedElement = event.target;
       const isItemAndServiceButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      if (!isItemAndServiceButton && !isTableRow  && !isEdit) {
+      if (!isItemAndServiceButton && !isTableRow && !isEdit) {
         setSelectedItemAndService(null);
       }
     };
@@ -163,7 +163,7 @@ const ItemsAndServices = () => {
 
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   return (
     <>

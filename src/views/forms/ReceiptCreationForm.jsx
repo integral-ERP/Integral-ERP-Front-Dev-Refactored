@@ -978,6 +978,10 @@ const ReceiptCreationForm = ({
     }
   }, []);
 
+  const handleCancel = () => {
+    window.location.reload();
+  }
+
   return (
     <div className="company-form receipt">
       <div className="row w-100">
@@ -1203,6 +1207,9 @@ const ReceiptCreationForm = ({
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
               </div>
             </div>
           </div>
@@ -1364,7 +1371,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                // "Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1385,7 +1392,7 @@ const ReceiptCreationForm = ({
               onClick={() => {
                 setshowRepackingForm(!showRepackingForm);
               }}
-              
+
             >
               Repack
             </button>
@@ -1640,7 +1647,7 @@ const ReceiptCreationForm = ({
           Save
         </button> 
 
-        <button className="button-cancel" onClick={closeModal}>
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
@@ -1675,6 +1682,7 @@ const ReceiptCreationForm = ({
           className="alert-notification-warning"
         >
          <p className="succes"> Please fill in data in the commodities section, do not leave empty spaces.</p>
+         <p className="succes"> Don't leave empty fields.</p>
         </Alert>
       )}
 

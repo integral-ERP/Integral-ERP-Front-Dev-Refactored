@@ -17,7 +17,7 @@ const Invoices = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
   const [isEdit, setIsEdit] = useState(false);
   const columns = [
     "Number",
@@ -42,16 +42,16 @@ const Invoices = () => {
   const updateInvoices = (url = null) => {
     InvoicesService.getInvoices(url)
       .then((response) => {
-        const newInvoices  = response.data.results.filter((invoice) => {
-          const InvoiceId  = invoice.id;
+        const newInvoices = response.data.results.filter((invoice) => {
+          const InvoiceId = invoice.id;
           return !invoices.some(
-            (existingPickupOrder) => existingPickupOrder.id === InvoiceId 
+            (existingPickupOrder) => existingPickupOrder.id === InvoiceId
           );
         });
 
         setInvoices([...response.data.results].reverse());
-        
-        
+
+
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -97,7 +97,6 @@ const Invoices = () => {
 
   const handleEditInvoices = () => {
     if (selectedInvoices) {
-      
       setIsEdit(true);
       openModal();
     } else {
@@ -106,9 +105,9 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    
+
   }, [isEdit])
-  
+
 
   const handleAddInvoices = () => {
     openModal();
@@ -134,7 +133,7 @@ const Invoices = () => {
           }
         })
         .catch((error) => {
-          
+
         });
     } else {
       alert("Please select a Invoice to delete.");
@@ -148,7 +147,7 @@ const Invoices = () => {
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       if (!isPickupOrdersButton && !isTableRow && !isEdit) {
-        
+
         setSelectedInvoices(null);
       }
     };
