@@ -82,7 +82,7 @@ const ReceiptCreationForm = ({
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
   // Desabilitar el botón si commodities es null o vacío y cambio de estado 
   const [changeStateSave, setchangeStateSave] = useState(false);
-  const isButtonDisabled = !commodities || commodities.length === 0; 
+  const isButtonDisabled = !commodities || commodities.length === 0;
 
   useEffect(() => {
     if (!isButtonDisabled) {
@@ -126,6 +126,8 @@ const ReceiptCreationForm = ({
     invoiceNumber: "",
     purchaseOrderNumber: "",
 
+    clientToBillId: "",
+    clientToBillType: "",
 
     commodities: [],
     notes: [],
@@ -444,6 +446,9 @@ const ReceiptCreationForm = ({
       setshipperRequest(pickupOrder.shipper);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
+      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
+        pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
+        pickupOrder.client_to_billObj?.data?.obj?.id;
       let updatedFormData = {
 
         status: pickupOrder.status,
@@ -496,6 +501,8 @@ const ReceiptCreationForm = ({
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
+        clientToBillId: CTBID,
+        clientToBillType: CTBID === pickupOrder.shipper ? "shipper" : (CTBID === pickupOrder.consignee ? "consignee" : ""),
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
@@ -691,6 +698,9 @@ const ReceiptCreationForm = ({
       setSupplierOptions([pickupOrder.supplierObj]);
       setcommodities(pickupOrder.commodities);
 
+      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
+        pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
+        pickupOrder.client_to_billObj?.data?.obj?.id;
       let updatedFormData = {
 
         status: 4,
@@ -752,6 +762,8 @@ const ReceiptCreationForm = ({
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
+        clientToBillId: CTBID,
+        clientToBillType: CTBID === pickupOrder.consigneeObj.data?.obj?.id ? "consignee" : CTBID === pickupOrder.shipperObj.data?.obj?.id ? "shipper" : "",
 
         commodities: pickupOrder.commodities,
         notes: [],
@@ -786,8 +798,8 @@ const ReceiptCreationForm = ({
       //added change estate for warning alert
       setShowWarningAlert(true);
       return;
-    } 
-   
+    }
+
 
     if (commodities.length > 0) {
       let totalWeight = 0;
@@ -951,7 +963,7 @@ const ReceiptCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             //added redirect to warehouse receipt
-            window.location.href = `/warehouse/receipt`; 
+            window.location.href = `/warehouse/receipt`;
           }, 2000);
         } else {
 
@@ -966,6 +978,10 @@ const ReceiptCreationForm = ({
     allStateUpdatesComplete,
     clientToBillRequest,
   ]);
+
+  /* useEffect(() => {
+    console.log(formData)
+  }, [formData]) */
 
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -1199,6 +1215,7 @@ const ReceiptCreationForm = ({
                   Client to Bill:
                 </label>
                 <select
+                  value={formData.clientToBillType}
                   name="clientToBill"
                   id="clientToBill"
                   onChange={(e) => handleClientToBillSelection(e)}
@@ -1207,9 +1224,9 @@ const ReceiptCreationForm = ({
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
-                <p style={{ color: "red" }}>
+                {/* <p style={{ color: "red" }}>
                   Note: Always select a client to bill when editing
-                </p>
+                </p> */}
               </div>
             </div>
           </div>
@@ -1643,9 +1660,9 @@ const ReceiptCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-         <button disabled={changeStateSave} className="button-save" onClick={sendData}>
+        <button disabled={changeStateSave} className="button-save" onClick={sendData}>
           Save
-        </button> 
+        </button>
 
         <button className="button-cancel" onClick={handleCancel}>
           Cancel
