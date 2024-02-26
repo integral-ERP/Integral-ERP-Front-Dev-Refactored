@@ -22,6 +22,7 @@ const ChartOfAccountsCreationForm = ({
   const formFormat = {
     name: "",
     typeChart: "",
+    type: "",
     accountNumber: "",
     parentAccount: "",
     currency: "",
@@ -34,7 +35,8 @@ const ChartOfAccountsCreationForm = ({
     if (!creating && chartOfAccounts) {
       setFormData({
         name: chartOfAccounts.name || "",
-        typeChart: chartOfAccounts.type || "",
+        typeChart: chartOfAccounts.typeChart || "",
+        type: chartOfAccounts.typeChart || "",
         accountNumber: chartOfAccounts.accountNumber || "",
         parentAccount: chartOfAccounts.parentAccount || "",
         currency: chartOfAccounts.currency || "",
@@ -46,7 +48,13 @@ const ChartOfAccountsCreationForm = ({
   useEffect(() => {
     const fetchData = async () => {
       const currenciesData = await CurrencyService.getCurrencies();
-      setcurrencies(currenciesData.data);
+      let arr1 = Object.keys(currenciesData.data).filter(c => c == "USD" || c == "COP");
+      let arr2 = Object.values(currenciesData.data).filter(c => c == "United States Dollar" || c == "Colombian Peso");
+      let combinedArray = [];
+      for (let i = 0; i < arr1.length; i++) {
+        combinedArray.push([arr1[i], arr2[i]]);
+      }
+      setcurrencies(combinedArray);
     };
 
     fetchData();
@@ -56,7 +64,8 @@ const ChartOfAccountsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      typeChart: formData.type,
+      typeChart: formData.typeChart,
+      type: formData.typeChart,
       accountNumber: formData.accountNumber,
       parentAccount: formData.parentAccount,
       currency: formData.currency,
@@ -86,55 +95,57 @@ const ChartOfAccountsCreationForm = ({
   };
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------
-  const updateChartOfAccounts = (url = null) => {
-    ChartOfAccountsService.getChartOfAccounts(url)
-      .then((response) => {
-        const newChartOfAccounts = response.data.results.filter(
-          (newChartOfAccount) => {
-            return !ChartOfAccounts.some(
-              (existingChartOfAccount) =>
-                existingChartOfAccount.id === newChartOfAccount.id
-            );
-          }
-        );
-
-        setChartOfAccounts(
-          [...ChartOfAccounts, ...newChartOfAccounts].reverse()
-        );
-
-        if (response.data.next) {
-
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   useEffect(() => {
+    const updateChartOfAccounts = (url = null) => {
+      ChartOfAccountsService.getChartOfAccounts(url)
+        .then((response) => {
+          const newChartOfAccounts = response.data.results.filter(
+            (newChartOfAccount) => {
+              return !ChartOfAccounts.some(
+                (existingChartOfAccount) =>
+                  existingChartOfAccount.id === newChartOfAccount.id
+              );
+            }
+          );
+
+          setChartOfAccounts(
+            [...ChartOfAccounts, ...newChartOfAccounts].reverse()
+          );
+
+          setAccountype(chartOfAccounts.typeChart)
+          /* if (response.data.next) {} */
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
     updateChartOfAccounts();
   }, []);
-
   const [accountype, setAccountype] = useState("");
-
-  const handleSearch = (row) => {
-    let searchMatch = false
-    console.log("filtrando", row)
-    // if (row.type === accountype) {
-      if (row.typeChart === accountype) {
-      console.log("Hay informacion")
-      searchMatch = true
-    }
-    else {
-      console.log("No Hay informacion")
-    }
-    return searchMatch;
-  };
-  const filteredData = ChartOfAccounts.filter((row) => handleSearch(row));
-
+  const [filteredData, setFilteredData] = useState([]);
+  useEffect(() => {
+    //setAccountype(chartOfAccounts.parentAccount)
+    const handleSearch = (row) => {
+      let searchMatch = false
+      console.log("filtrando", row)
+      if (row.typeChart === accountype) { //se cambia row.type a row.typeChart
+        console.log("Hay informacion")
+        searchMatch = true
+      }
+      else {
+        console.log("No Hay informacion")
+      }
+      return searchMatch;
+    };
+    setFilteredData(ChartOfAccounts?.filter((row) => handleSearch(row)));
+  }, [ChartOfAccounts, accountype, creating])
+  useEffect(() => {
+    setAccountype(chartOfAccounts?.parentAccount)
+  }, [chartOfAccounts]);
   const handleType = (type) => {
     setAccountype(type)
-    setFormData({ ...formData, type: type })
+    setFormData({ ...formData, type: type, typeChart: type })
   }
   //--------------------------------------------------------------------------------------------------------------------------------------------------
   const handleCancel = () => {
@@ -162,7 +173,7 @@ const ChartOfAccountsCreationForm = ({
                 <select
                   id="type"
                   className="form-input"
-                  value={formData.type}
+                  value={formData.typeChart}
                   onChange={(e) =>
                     handleType(e.target.value)}
                 >
@@ -214,16 +225,16 @@ const ChartOfAccountsCreationForm = ({
                 <select
                   id="parentAccount"
                   className="form-input"
-                  inputName="parentAccount"
+                  value={formData.parentAccount ? formData.parentAccount : ""}
                   onChange={(e) =>
                     setFormData({ ...formData, parentAccount: e.target.value })}
                 >
                   <option value="">Select a Parent Account</option>
-                  {filteredData.map((ChartOfAccounts) => (
+                  {filteredData?.map((ChartOfAccounts) => (
                     <option
                       key={ChartOfAccounts.id}
-                      value={ChartOfAccounts.id}
-                      data-key={ChartOfAccounts.type}
+                      value={ChartOfAccounts.name + " || " + ChartOfAccounts.typeChart}
+                      data-key={ChartOfAccounts.typeChart}
                     >
 
                       {ChartOfAccounts.name + " || " + ChartOfAccounts.typeChart}
@@ -244,8 +255,9 @@ const ChartOfAccountsCreationForm = ({
                       setFormData({ ...formData, currency: e.target.value })}
                   >
                     <option value="">Select a currency</option>
-                    <option value="COP Colombia Peso">COP Colombia Peso</option>
-                    <option value="USD Unided States Dollar">USD Unided States Dollar</option>
+                    {currencies?.map((currency) => {
+                      return <option key={currency[0]} value={currency[0] + " " + currency[1]} data-key={currency[1]}>{currency[0] + " " + currency[1]}</option>
+                    })}
                   </select>
                 </div>
               </div>

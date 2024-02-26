@@ -3,16 +3,16 @@ import Table from "../shared/components/Table";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import ModalForm from "../shared/components/ModalForm";
-import ChartOfAccountsCreationForm  from "../forms/ChartOfAccountsCreationForm";
+import ChartOfAccountsCreationForm from "../forms/ChartOfAccountsCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 
-const ChartOfAccounts   = () => {
+const ChartOfAccounts = () => {
   const [chartofAccounts, setChartOfAccounts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [selectedChartOfAccounts , setSelectedChartOfAccounts] = useState(null);
+  const [selectedChartOfAccounts, setSelectedChartOfAccounts] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
@@ -29,7 +29,7 @@ const ChartOfAccounts   = () => {
 
   ];
 
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -53,16 +53,16 @@ const ChartOfAccounts   = () => {
   const updateChartOfAccounts = (url = null) => {
     ChartOfAccountsService.getChartOfAccounts(url)
       .then((response) => {
-        const newChartOfAccounts  = response.data.results.filter((chartOfAccounts) => {
-          const ChartAccountId  = chartOfAccounts.id;
+        const newChartOfAccounts = response.data.results.filter((chartOfAccounts) => {
+          const ChartAccountId = chartOfAccounts.id;
           return !chartofAccounts.some(
-            (existingPickupOrder) => existingPickupOrder.id === ChartAccountId 
+            (existingPickupOrder) => existingPickupOrder.id === ChartAccountId
           );
         });
 
         setChartOfAccounts([...response.data.results].reverse());
-        
-        
+
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -106,7 +106,7 @@ const ChartOfAccounts   = () => {
   };
 
   const handleEditChartOfAccounts = () => {
-    if (selectedChartOfAccounts ) {
+    if (selectedChartOfAccounts) {
       setIsEdit(true);
       openModal();
     } else {
@@ -119,7 +119,7 @@ const ChartOfAccounts   = () => {
   };
 
   const handleDeleteChartOfAccounts = () => {
-    if (selectedChartOfAccounts ) {
+    if (selectedChartOfAccounts) {
       ChartOfAccountsService.deleteChartOfAccounts(selectedChartOfAccounts.id)
         .then((response) => {
           if (response.status == 204) {
@@ -135,7 +135,7 @@ const ChartOfAccounts   = () => {
           }
         })
         .catch((error) => {
-          
+          console.error(error)
         });
     } else {
       alert("Please select a Chart Of Accounts   Order to delete.");
@@ -148,7 +148,7 @@ const ChartOfAccounts   = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      if (!isPickupOrdersButton && !isTableRow  && !isEdit) {
+      if (!isPickupOrdersButton && !isTableRow && !isEdit) {
         setSelectedChartOfAccounts(null);
       }
     };
@@ -166,13 +166,13 @@ const ChartOfAccounts   = () => {
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? {marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
             <Table
-              id= 'table1'
+              id='table1'
               data={chartofAccounts}
               columns={columns}
               onSelect={handleSelectChartOfAccounts} // Make sure this line is correct
-              selectedRow={selectedChartOfAccounts }
+              selectedRow={selectedChartOfAccounts}
               onDelete={handleDeleteChartOfAccounts}
               onEdit={handleEditChartOfAccounts}
               onAdd={handleAddChartOfAccounts}
@@ -227,4 +227,4 @@ const ChartOfAccounts   = () => {
   );
 };
 
-export default ChartOfAccounts  ;
+export default ChartOfAccounts;

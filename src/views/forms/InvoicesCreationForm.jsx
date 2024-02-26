@@ -20,8 +20,6 @@ import ForwardingAgentService from "../../services/ForwardingAgentService";
 import ItemsAndServicesService from "../../services/ItemsAndServicesService";
 import ChartOfAccountsService from "../../services/ChartOfAccountsService";
 
-import React, { createContext, useContext } from 'react';
-
 import InvoiceIncomeCreationForm from "./InvoiceIncomeCreationForm";
 
 const InvoicesCreationForm = ({
@@ -87,7 +85,16 @@ const InvoicesCreationForm = ({
     commodities: [],
   };
 
+  const [agent, setAgent] = useState()
   const [formData, setformData] = useState(formFormat);
+
+  const fetchAgentOnInvoice = async () => {
+    const results = (await ForwardingAgentService.getForwardingAgentById(invoice['issued_by'])).data;
+    setAgent(results)
+  }
+  useEffect(() => {
+    fetchAgentOnInvoice();
+  }, [])
 
   const handleIssuedBySelection = async (event) => {
     const id = event.id;
@@ -123,7 +130,7 @@ const InvoicesCreationForm = ({
     const typeChart = event.typeChart;
     const name = event.name;
     const result = await ChartOfAccountsService.getChartOfAccountsId(id);
-    
+
     setaccounts(result.data)
     setformData({
       ...formData,
@@ -186,12 +193,12 @@ const InvoicesCreationForm = ({
         typeChart: invoice.typeChart || "",
         invoiceCharges: invoice.invoiceCharges,
 
-        issuedByInfo: `${invoice.issued_byObj?.street_and_number || ""} - ${invoice.issued_byObj?.city || ""
-      } - ${invoice.issued_byObj?.state || ""} - ${invoice.issued_byObj?.country || ""
-      } - ${invoice.issued_byObj?.zip_code || ""}`,
+        issuedByInfo: `${agent?.street_and_number || ""} - ${agent?.city || ""
+          } - ${agent?.state || ""} - ${agent?.country || ""
+          } - ${agent?.zip_code || ""}`,
       });
     }
-  }, [creating, invoice]);
+  }, [agent?.city, agent?.country, agent?.state, agent?.street_and_number, agent?.zip_code, creating, invoice, total]);
 
   const sendData = async () => {
     let rawData = {
@@ -224,7 +231,7 @@ const InvoicesCreationForm = ({
 
       invoiceCharges: commodities,
     };
-    
+
     const response = await (creating
       ? InvoicesService.createInvoice(rawData)
       : InvoicesService.updateInvoices(
@@ -241,7 +248,7 @@ const InvoicesCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      
+
       setShowErrorAlert(true);
     }
   };
@@ -254,23 +261,23 @@ const InvoicesCreationForm = ({
 
     };
 
-    
+
     const response = await (creating
       ? CustomerService.CustomerService(rawData)
       : CustomerService.updateCustomer(
         invoice.id,
         rawData
       )
-      ? ItemsAndServicesService.createItemAndService(rawData)
-      : ItemsAndServicesService.updateItemsAndServicesService(
-        invoice.id,
-        rawData
-      )
-      ? ChartOfAccountsService.createChartOfAccounts(rawData)
-      : ChartOfAccountsService.updateChartOfAccounts(
-        invoice.id,
-        rawData
-      )
+        ? ItemsAndServicesService.createItemAndService(rawData)
+        : ItemsAndServicesService.updateItemsAndServicesService(
+          invoice.id,
+          rawData
+        )
+          ? ChartOfAccountsService.createChartOfAccounts(rawData)
+          : ChartOfAccountsService.updateChartOfAccounts(
+            invoice.id,
+            rawData
+          )
     );
   };
 
@@ -288,12 +295,15 @@ const InvoicesCreationForm = ({
     });
   };
 
+  const SortArray = (x, y) => {
+    return new Intl.Collator('es').compare(x.name, y.name);
+  }
+
   const fetchFormData = async () => {
     const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
     const paiment = (await PaymentTermsService.getPaymentTerms()).data.results;
     const accoun = (await ChartOfAccountsService.getChartOfAccounts()).data.results;
     const type = (await ItemsAndServicesService.getItemsAndServices()).data.results;
-
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
@@ -313,9 +323,9 @@ const InvoicesCreationForm = ({
     const accountByOptions = [...accountWithType].filter(account => account.typeChart == "Accounts Receivable");
     const typeByOptions = [...typeWithType];
 
-    setIssuedByOptions(issuedByOptions);
+    setIssuedByOptions(issuedByOptions.sort(SortArray));
     setPaymentByOptions(paymentByOptions);
-    setAccountByOptions(accountByOptions);
+    setAccountByOptions(accountByOptions.sort(SortArray));
     setptypeByOptions(typeByOptions);
 
   };
@@ -477,20 +487,20 @@ const InvoicesCreationForm = ({
                 Apply To:
               </label>
               <AsyncSelect
-                  id="issuedById"
-                  value={issuedByOptions.find(
-                    (option) => option.id === formData.issuedById
-                  )}
-                  onChange={(e) => {
-                    handleIssuedBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={issuedByOptions}
-                  loadOptions={loadIssuedBySelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
+                id="issuedById"
+                value={issuedByOptions.find(
+                  (option) => option.id === formData.issuedById
+                )}
+                onChange={(e) => {
+                  handleIssuedBySelection(e);
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={issuedByOptions}
+                loadOptions={loadIssuedBySelectOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
             </div>
             <div className="company-form__section">
               <Input
@@ -546,8 +556,8 @@ const InvoicesCreationForm = ({
 
       </div>
 
-       
-      
+
+
 
       <Table
         data={commodities}
