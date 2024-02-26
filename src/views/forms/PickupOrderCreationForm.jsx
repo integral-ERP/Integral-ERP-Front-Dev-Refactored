@@ -143,7 +143,8 @@ const PickupOrderCreationForm = ({
     setFormData({
       ...formData,
       pickupLocationId: id,
-      pickupInfo: info,
+      // pickupInfo: info,
+      pickupLocationInfo: info,
       pickupLocationType: type,
     });
   };
@@ -643,7 +644,8 @@ const PickupOrderCreationForm = ({
     { selectedId: "#pickupdateandtime", asociatedId: "#pickupdateandtime" },
     { selectedId: "#deliverydateandtime", asociatedId: "#deliverydateandtime" },
     { selectedId: "#shipper > div", asociatedId: "#shipperinfo" },
-    { selectedId: "#pickupLocation > div", asociatedId: "#pickupinfo" },
+    // { selectedId: "#pickupLocation > div", asociatedId: "#pickupinfo" },
+    { selectedId: "#pickupLocation > div", asociatedId: "#pickupLocationInfo" },
     { selectedId: "#consignee > div", asociatedId: "#consigneeInfo" },
     { selectedId: "#deliveryLocation > div", asociatedId: "#deliveryInfo" },
     {
@@ -1288,7 +1290,8 @@ const PickupOrderCreationForm = ({
                   inputName="pickupinfo"
                   placeholder="Pick-up Location..."
                   readonly={true}
-                  value={formData.pickupInfo}
+                  // value={formData.pickupInfo}
+                  value={formData.pickupLocationInfo}
                 />
               </div>
             </div>
