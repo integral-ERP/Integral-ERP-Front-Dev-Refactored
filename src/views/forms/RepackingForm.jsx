@@ -94,7 +94,7 @@ const handleUNRepack = () => {
 
 
   const handleRepack = () => {
-    let internalWeight = 0;
+    let internalWeight = formData.weight;//added thing for repack
     if(formData.useInternalWeight){
       internalCommodities.forEach(element => {
         internalWeight += Number(element.weight);
@@ -216,7 +216,7 @@ const handleUNRepack = () => {
         </div>
         <div className="useinter">
           <table id="tableware" style={{width: '60%', border:'2px solid black'}}>
-            <tr>
+            <tr style={{display:'none'}}>{/* desabilitado de uso de peso interno */}
               <td><label className="textpack" htmlFor="">use internal commodity weight</label></td>
               <td ><input type="checkbox" value={formData.useInternalWeight} onChange={(e) => {setformData({...formData, useInternalWeight: e.target.checked})}}/></td>
             </tr>
