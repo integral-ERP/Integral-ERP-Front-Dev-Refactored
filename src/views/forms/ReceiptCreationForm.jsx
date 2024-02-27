@@ -1406,31 +1406,31 @@ const ReceiptCreationForm = ({
             {/* added view commodities */}
              {showCommodityInspect && (
         <div className="repacking-container">
-          <p>{selectedCommodity.description}</p>
-          <p>Weight: {selectedCommodity.weight}</p>
-          <p>Height: {selectedCommodity.height}</p>
-          <p>Width: {selectedCommodity.width}</p>
-          <p>Length: {selectedCommodity.length}</p>
-          <p>Volumetric Weight: {selectedCommodity.volumetricWeight}</p>
-          <p>Chargeable Weight: {selectedCommodity.chargedWeight}</p>
-          {/* <p>
-            Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}
-          </p> */}
-          {selectedCommodity.internalCommodities.map((com) => {
-            return (
-              <div key={com.id} className="card">
-                <p>{com.description}</p>
-                <p>Weight: {com.weight}</p>
-                <p>Height: {com.height}</p>
-                <p>Width: {com.width}</p>
-                <p>Length: {com.length}</p>
-                <p>Volumetric Weight: {com.volumetricWeight}</p>
-                <p>Chargeable Weight: {com.chargedWeight}</p>
-                {/* <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-              </div>
-            );
-          })}
+        <div className="main-commodity">
+          <p className="item-description">{selectedCommodity.description}</p>
+          <p className="item-info">Weight: {selectedCommodity.weight}</p>
+          <p className="item-info">Height: {selectedCommodity.height}</p>
+          <p className="item-info">Width: {selectedCommodity.width}</p>
+          <p className="item-info">Length: {selectedCommodity.length}</p>
+          <p className="item-info">Volumetric Weight: {selectedCommodity.volumetricWeight}</p>
+          <p className="item-info">Chargeable Weight: {selectedCommodity.chargedWeight}</p>
+          {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
         </div>
+      
+        {selectedCommodity.internalCommodities.map((com) => (
+          <div key={com.id} className="card">
+            <p className="item-description">{com.description}</p>
+            <p className="item-info">Weight: {com.weight}</p>
+            <p className="item-info">Height: {com.height}</p>
+            <p className="item-info">Width: {com.width}</p>
+            <p className="item-info">Length: {com.length}</p>
+            <p className="item-info">Volumetric Weight: {com.volumetricWeight}</p>
+            <p className="item-info">Chargeable Weight: {com.chargedWeight}</p>
+            {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+          </div>
+        ))}
+      </div>
+      
       )}
             <button
               className="button-save"
