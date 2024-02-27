@@ -32,6 +32,7 @@ const ReceiptCreationForm = ({
   setcurrentPickUpNumber,
   fromPickUp,
 }) => {
+  console.log(pickupOrder);
   const [activeTab, setActiveTab] = useState("general");
   const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -88,9 +89,9 @@ const ReceiptCreationForm = ({
     if (!isButtonDisabled) {
       setchangeStateSave(false);
     }
-  }, [isButtonDisabled]); 
- 
-    //added variable editing for commodities
+  }, [isButtonDisabled]);
+
+  //added variable editing for commodities
   const [editingComodity, setEditingComodity] = useState(false);
   const formFormat = {
 
@@ -352,7 +353,7 @@ const ReceiptCreationForm = ({
       setcommodities(commoditiesCopy);
     }
   };
-  
+
 
   useEffect(() => {
     const handleModalClick = (event) => {
@@ -446,9 +447,9 @@ const ReceiptCreationForm = ({
       setshipperRequest(pickupOrder.shipper);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
-      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
-        pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
-        pickupOrder.client_to_billObj?.data?.obj?.id;
+      let CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ?
+        pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id :
+        pickupOrder.clientBillObj?.data?.obj?.id;
       let updatedFormData = {
 
         status: pickupOrder.status,
@@ -464,7 +465,9 @@ const ReceiptCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
-        shipperId: pickupOrder.shipper,
+        shipper: pickupOrder.shipper,
+        shipperId: pickupOrder.shipperObj.data?.obj?.id, //pickupOrder.shipper
+        shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
           } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
@@ -475,7 +478,9 @@ const ReceiptCreationForm = ({
           } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
           }`,
 
-        consigneeId: pickupOrder.consignee,
+        consignee: pickupOrder.consignee,
+        consigneeId: pickupOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
+        consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
           } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
@@ -502,7 +507,7 @@ const ReceiptCreationForm = ({
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
         clientToBillId: CTBID,
-        clientToBillType: CTBID === pickupOrder.shipper ? "shipper" : (CTBID === pickupOrder.consignee ? "consignee" : ""),
+        clientToBillType: CTBID === pickupOrder.shipperObj.data?.obj?.id ? "shipper" : (CTBID === pickupOrder.consigneeObj.data?.obj?.id ? "consignee" : ""),
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
@@ -698,9 +703,9 @@ const ReceiptCreationForm = ({
       setSupplierOptions([pickupOrder.supplierObj]);
       setcommodities(pickupOrder.commodities);
 
-      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ?
-        pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id :
-        pickupOrder.client_to_billObj?.data?.obj?.id;
+      let CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ?
+        pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id :
+        pickupOrder.clientBillObj?.data?.obj?.id;
       let updatedFormData = {
 
         status: 4,
@@ -979,9 +984,9 @@ const ReceiptCreationForm = ({
     clientToBillRequest,
   ]);
 
-  /* useEffect(() => {
+  useEffect(() => {
     console.log(formData)
-  }, [formData]) */
+  }, [formData])
 
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -1691,15 +1696,15 @@ const ReceiptCreationForm = ({
         </Alert>
       )}
 
-        {/* added change estate for warning alert */}
-        { showWarningAlert && (
+      {/* added change estate for warning alert */}
+      {showWarningAlert && (
         <Alert
-        severity="warning"
+          severity="warning"
           onClose={() => setShowWarningAlert(false)}
           className="alert-notification-warning"
         >
-         <p className="succes"> Please fill in data in the commodities section, do not leave empty spaces.</p>
-         <p className="succes"> Don't leave empty fields.</p>
+          <p className="succes"> Please fill in data in the commodities section, do not leave empty spaces.</p>
+          <p className="succes"> Don't leave empty fields.</p>
         </Alert>
       )}
 
