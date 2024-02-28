@@ -8,6 +8,9 @@ import "./styles/components/ModalForms.scss";
 import "./styles/components/Table.scss";
 import "./styles/pages/Login.scss";
 import "./styles/pages/Maintenance.scss";
+
+// import "./styles/js/script.js";
+
 import 'boxicons';
 import { AuthProvider } from "./hooks/useAuth";
 import { BrowserRouter } from 'react-router-dom';

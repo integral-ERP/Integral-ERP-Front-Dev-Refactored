@@ -139,7 +139,7 @@
 }
 
 
-.succes{
+.succes {
   font-size: x-large;
   font-weight: 500;
   color: white;
@@ -540,4 +540,61 @@ div.col-4.text-start .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
   font-weight: bold;
   font-size: 14px;
   margin: 0;
+}
+
+//---------------------------------------------------------------
+#toggleBoton {
+  display: none;
+  /* Oculta el checkbox */
+}
+
+#miDiv {
+  display: none;
+  /* Inicialmente oculto */
+  // width: 200px;
+  // height: 100px;
+  // background-color: red;
+  // margin-top: 20px;
+  // transition: opacity 3.5s ease;
+}
+
+/* Muestra el div cuando el checkbox está seleccionado */
+#toggleBoton:checked + label + #miDiv {
+// #miDiv.visible {
+  display: flex;
+  opacity: 1;
+}
+
+/* Oculta el div cuando el checkbox no está seleccionado */
+#toggleBoton:not(:checked) + label + #miDiv {
+// #miDiv.hidden {
+  display: none;
+  opacity: 0;
+}
+
+//---------------------------------------------------------------
+#toggleBoton:checked+label::after {
+  content: "Close Charge";
+}
+
+/* Cambia el texto del label cuando el checkbox no está seleccionado */
+#toggleBoton:not(:checked)+label::after {
+  content: "Open Charge";
+}
+
+.button-charge {
+  width: 12rem;
+  height: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: #006BAD;
+  background-color: #006BAD;
+  color: white;
+  cursor: pointer;
+  transition: background-color 9.7s ease;
 }
