@@ -1446,8 +1446,8 @@ const ReceiptCreationForm = ({
                   </p>
                   {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
                 </div>
-
-                {selectedCommodity.internalCommodities.map((com) => (
+                 {/*  fix the repacking show internalCommodities for edition */}
+                {selectedCommodity.internalCommodities && selectedCommodity.internalCommodities.map((com) => (
                   <div key={com.id} className="card">
                     <p className="item-description">{com.description}</p>
                     <p className="item-info">Weight: {com.weight}</p>
