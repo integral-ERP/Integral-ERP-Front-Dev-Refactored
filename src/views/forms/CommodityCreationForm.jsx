@@ -65,7 +65,7 @@ const CommodityCreationForm = ({
       // Update the specific commodity being edited
       setCommodities((prevCommodities) => {
         return prevCommodities.map((prevCommodity) =>
-          prevCommodity.id === commodity.id ? formData : prevCommodity
+        prevCommodity.id === commodity.id ? { ...formData, internalCommodities: prevCommodity.internalCommodities } : prevCommodity   // Update the internalCommodities array
         );
       });
       setEditingComodity(false);

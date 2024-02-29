@@ -1,23 +1,53 @@
 .container-box.event-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
 
-    .box__event--form {
-        width: 100%;
+  .box__event--form {
+    width: 100%;
 
-        &>.income-charge-form {
-            width: 100% !important;
-            & > div {
-                display: flex;
-                flex-direction: row !important;
-                gap: 10px;
-                & .form-row:nth-child(3) {
-                    display: block !important;
-                }
-            }
+    & > .income-charge-form {
+      width: 100% !important;
+      & > div {
+        display: flex;
+        flex-direction: row !important;
+        gap: 10px;
+        & .form-row:nth-child(3) {
+          display: block !important;
         }
+      }
     }
+  }
 }
 
+.repacking-container {
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 15px;
+  border-radius: 5px;
+}
+
+.main-commodity {
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.item-description {
+  font-weight: bold;
+}
+
+.item-info {
+  margin: 5px 0;
+}
