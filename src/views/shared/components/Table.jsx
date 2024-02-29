@@ -40,6 +40,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
+  hiddenTrashButton,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -697,8 +698,8 @@ const Table = ({
                           ) : columnName === "Status" ? (
                             getStatus(row[columnNameToProperty[columnName]])
                           ) : columnName === "Options" ? (
-                            <>
-                              <button type="button" onClick={onDelete}>
+                            <> {/* added hiden button trash for table commodity creation form */}
+                              <button type="button" onClick={onDelete} style={{ display: hiddenTrashButton ? 'none' : 'inline-block' }} >
                                 <i className="fas fa-trash"></i>
                               </button>
                               <button type="button" onClick={onEdit}>
