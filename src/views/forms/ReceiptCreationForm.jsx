@@ -972,7 +972,9 @@ const ReceiptCreationForm = ({
 
         if (response.status >= 200 && response.status <= 300) {
           if (fromPickUp) {
-            const newPickup = { ...pickupOrder, status: 7 };
+            //added onhand status
+            const statusOnhand=4;
+            const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
           setcurrentPickUpNumber(currentPickUpNumber + 1);
