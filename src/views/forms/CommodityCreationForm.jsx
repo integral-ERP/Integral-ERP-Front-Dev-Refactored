@@ -263,10 +263,13 @@ const CommodityCreationForm = ({
           >
             <i className="fas fa-check-circle"></i>
           </button>
-          <button
+
+            
+          <button 
             className="button-cancel pick "
             type="button"
             onClick={() => onCancel(false)}
+            style={{ display:'none' }}
           >
             <i className="fas fa-times-circle"></i>
           </button>
