@@ -15,7 +15,7 @@ const HeaderDashboard = () => {
             </div>
             <div>
                 <input type="search" placeholder="Search" />
-                <div>Tasa Representativa del mercado: $4761.64</div>
+                <div className="aviso">Tasa Representativa del mercado: $4761.64</div>
             </div>
 
         </header>

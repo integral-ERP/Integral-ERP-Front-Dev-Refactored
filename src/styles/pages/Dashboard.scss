@@ -1,10 +1,15 @@
 
 @media screen and (max-width: 580px){
+
+  body{
+    overflow-x: hidden;
+  }
+  
   .dashboard__layout {
 
     background-size: cover; /* Hace que la imagen ocupe toda la pantalla */
     background-attachment: fixed; /* Fija la imagen para que no se desplace con el contenido */
-    width: min-content !important;
+    width: 111vw;
     min-height: 100vh;
     background-position: 11px 50px;
     background-repeat: no-repeat;
