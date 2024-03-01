@@ -65,7 +65,7 @@ const CommodityCreationForm = ({
       // Update the specific commodity being edited
       setCommodities((prevCommodities) => {
         return prevCommodities.map((prevCommodity) =>
-          prevCommodity.id === commodity.id ? formData : prevCommodity
+        prevCommodity.id === commodity.id ? { ...formData, internalCommodities: prevCommodity.internalCommodities } : prevCommodity   // Update the internalCommodities array
         );
       });
       setEditingComodity(false);
@@ -263,10 +263,13 @@ const CommodityCreationForm = ({
           >
             <i className="fas fa-check-circle"></i>
           </button>
-          <button
+
+            
+          <button 
             className="button-cancel pick "
             type="button"
             onClick={() => onCancel(false)}
+            style={{ display:'none' }}
           >
             <i className="fas fa-times-circle"></i>
           </button>
