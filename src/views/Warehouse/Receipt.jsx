@@ -10,7 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 
 const Receipt = () => {
-  const {hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext)
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -40,9 +40,9 @@ const Receipt = () => {
           const pickupOrderId = pickupOrder.id;
           return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
         });
-        
+
         setreceipts([...receipts, ...newreceipts].reverse());
-        
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,9 +61,9 @@ const Receipt = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      
+
       const number = receipts[0]?.number || 0;
-      
+
       setcurrentPickupNumber(number);
     }
   }, [receipts]);
@@ -92,7 +92,7 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    
+
   };
 
   const handleEditreceipts = () => {
@@ -148,7 +148,7 @@ const Receipt = () => {
 
       if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu) {
         setSelectedPickupOrder(null);
-        
+
       }
     };
 
@@ -158,7 +158,7 @@ const Receipt = () => {
 
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  },);
 
   const handleCancel = () => {
     window.location.reload();
@@ -184,7 +184,7 @@ const Receipt = () => {
               importEnabled={false}
             >
               {selectedPickupOrder !== null && (
-             
+
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={handleCancel}
@@ -193,11 +193,11 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-           
-            )}
 
-            {selectedPickupOrder === null && (
-              
+              )}
+
+              {selectedPickupOrder === null && (
+
                 <ReceiptCreationForm
                   pickupOrder={null}
                   closeModal={handleCancel}
@@ -206,9 +206,9 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-             
-            )}
-              </Table>
+
+              )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
