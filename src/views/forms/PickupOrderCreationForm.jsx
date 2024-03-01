@@ -966,6 +966,8 @@ const PickupOrderCreationForm = ({
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
 
+        console.log ( response.status ,"-----------STATUS")
+
         if (response.status >= 200 && response.status <= 300) {
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);

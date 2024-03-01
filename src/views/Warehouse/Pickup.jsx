@@ -52,7 +52,7 @@ const Pickup = () => {
     "Pickup Address",
     "Delivery Name",
     "Delivery Address",
-    "Pieces",
+    // "Pieces",
     // "Weight",
     "Carrier Name",
     "Carrier Address",
