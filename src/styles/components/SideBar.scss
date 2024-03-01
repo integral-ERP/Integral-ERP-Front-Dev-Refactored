@@ -24,7 +24,7 @@
   .sidebar.close {
     text-align: center;
     min-width: 2.5rem;
-    width: 7%;
+    width: 5.5vh;
     
   
      &  .logo_icon{
@@ -55,7 +55,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: scroll;
   }
   
   .sidebar .logo-details {
@@ -310,8 +310,8 @@
   }
   
   .logo_integral{
-    width: 22vh;
-    height: auto;
+    width: 35vw;
+    height: 10vw;
   
   }
   
@@ -372,6 +372,7 @@
   
   
   .home-section {
+    width: min-content;
     position: relative;
     background:#006BAD;
     height: 8vh;
@@ -385,15 +386,17 @@
   
   
   .sidebar.close~.home-section {
-    left: 8%;
-    width: 97%
+    left: 6%;
+    width: min-content !important;
   }
   
   .home-section .home-content {
     height: 100%;
+    width: 100vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: 5vw;
   }
   
   .home-section .home-content .bx-menu,
