@@ -125,7 +125,7 @@ const Table = ({
     Status: "status",
     Type: "type",
     Number: "number",
-    Date: "creation_date",
+    "Date": "creation_date",
     "Ship Date": "pick_up_date",
     "Delivery Date": "delivery_date",
     "Pickup Name": "pickUpLocationObj.data.obj.name",
@@ -199,7 +199,7 @@ const Table = ({
     "Account Type": "issuedByName",
     "Amt Due": "division",
     //---------------
-    "Date": "date",
+    // " Date": "date",
     "Entity": "entity",
     "AR Amount": "amountReceived",
     "Memo": "memo",

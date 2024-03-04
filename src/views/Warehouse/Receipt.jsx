@@ -43,6 +43,17 @@ const Receipt = () => {
         });
 
         setreceipts([...receipts, ...newreceipts].reverse());
+        console.log("BANDERA-0");
+        if (pickupOrderId) {
+          console.log("BANDERA-1");
+        }
+
+        if (pickupOrderId == null) {
+          console.log("BANDERA-2");
+        }
+        if (!pickupOrderId) {
+          console.log("BANDERA-3");
+        }
 
         if (response.data.next) {
           setNextPageURL(response.data.next);

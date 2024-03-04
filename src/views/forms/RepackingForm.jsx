@@ -8,12 +8,12 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const formFormat = {
     package_type_id: "",
     package_type_description: "",
-    weight: 0,
-    length: 0,
-    width: 0,
-    height: 0,
-    volumetricWeight: 0,
-    chargedWeight: 0,
+    weight: "",
+    length: "",
+    width: "",
+    height: "",
+    volumetricWeight: "",
+    chargedWeight: "",
     description: "",
     useInternalWeight: false,
   };

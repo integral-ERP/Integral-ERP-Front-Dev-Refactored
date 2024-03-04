@@ -40,7 +40,7 @@ const Pickup = () => {
   const [showContextMenu, setShowContextMenu] = useState(false);
   //added warning alert for delete pickup order
   const [showWarningAlert, setShowWarningAlert] = useState(false);
-  const StatusEmpty=14;
+  const StatusEmpty = 14;
 
   const columns = [
     "Status",
@@ -64,11 +64,14 @@ const Pickup = () => {
   ];
 
   const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent the browser's default context menu
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    setContextMenuPosition({ x: clickX, y: clickY });
-    setShowContextMenu(true);
+    selectedPickupOrder
+    if (selectedPickupOrder.status != '4') {
+      e.preventDefault(); // Prevent the browser's default context menu
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+      setContextMenuPosition({ x: clickX, y: clickY });
+      setShowContextMenu(true);
+    }
   };
 
   useEffect(() => {
@@ -90,7 +93,7 @@ const Pickup = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
- 
+
 
 
   const updatePickupOrders = (url = null) => {
@@ -112,7 +115,7 @@ const Pickup = () => {
         console.error(error);
       });
 
-      ReleaseService.getReleases(url)
+    ReleaseService.getReleases(url)
       .then((response) => {
         setReleaseOrders((response.data.results).reverse());
       })
@@ -131,7 +134,7 @@ const Pickup = () => {
   useEffect(() => {
     if (initialDataFetched) {
       const number = pickupOrders[0]?.number || 0;
-     setcurrentPickupNumber(number);
+      setcurrentPickupNumber(number);
     }
   }, [pickupOrders]);
 
@@ -162,7 +165,7 @@ const Pickup = () => {
   };
 
   const handleEditPickupOrders = () => {
-    
+
     if (selectedPickupOrder) {
       setIsEdit(true);
       openModal();
@@ -172,9 +175,9 @@ const Pickup = () => {
   };
 
   useEffect(() => {
-    
+
   }, [selectedPickupOrder])
-  
+
 
   const handleAddPickupOrder = () => {
     openModal();
@@ -193,7 +196,7 @@ const Pickup = () => {
               setpickupOrders(newPickupOrders);
               setShowSuccessAlert(true);
               releaseOrders.forEach((release) => {
-                if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)){
+                if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)) {
                   ReleaseService.deleteRelease(release.id);
                 }
               })
@@ -209,7 +212,7 @@ const Pickup = () => {
             }
           })
           .catch((error) => {
-            
+
           });
       } else {
         setShowWarningAlert(true);
@@ -221,12 +224,11 @@ const Pickup = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
-        
+
         setSelectedPickupOrder(null);
       }
     };
@@ -246,41 +248,41 @@ const Pickup = () => {
   }, [createWarehouseReceipt]);
 
   const seteWarehouse = () => {
-    if(selectedPickupOrder){
+    if (selectedPickupOrder) {
       setCreateWarehouseReceipt(true)
     } else {
-     alert("Please select a pickup order to continue.");
+      alert("Please select a pickup order to continue.");
     }
   }
 
   const setInTransit = async () => {
-    if(selectedPickupOrder){
-      const updatedPickuporder = {...selectedPickupOrder, status: 6};
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: 6 };
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      if (response.status === 200){
+      if (response.status === 200) {
         window.location.reload(true);
 
       }
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }
 
   const setDelivered = async () => {
-    if(selectedPickupOrder){
-      const updatedPickuporder = {...selectedPickupOrder, status: 9};
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: 9 };
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
-      if (response.status === 200){
+      if (response.status === 200) {
         window.location.reload(true);
 
       }
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
   }
 
   const handleCancel = () => {
-    
+
   }
 
   const contextMenuOptions = [
@@ -288,21 +290,13 @@ const Pickup = () => {
       label: "Create Warehouse Receipt",
       handler: seteWarehouse,
     },
-    // {
-    //   label: "Set/Reset In Transit",
-    //   handler: setInTransit,
-    // },
-    // {
-    //   label: "Set/Reset Delivered",
-    //   handler: setDelivered,
-    // },
   ];
 
   return (
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
-          <div  style={{ pointerEvents: isOpen ? "none" : undefined }}>
+          <div style={{ pointerEvents: isOpen ? "none" : undefined }}>
             <Sidebar />
           </div>
 
@@ -336,11 +330,11 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-             
-            )}
 
-            {selectedPickupOrder === null && (
-              
+              )}
+
+              {selectedPickupOrder === null && (
+
                 <PickupOrderCreationForm
                   pickupOrder={null}
                   closeModal={handleCancel}
@@ -349,9 +343,10 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-             
-            )}
-              </Table>
+
+              )}
+
+            </Table>
 
             {showSuccessAlert && (
               <Alert
@@ -365,16 +360,16 @@ const Pickup = () => {
             )}
 
             {/* added warning alert fro delete pickup order */}
-              { showWarningAlert && (
+            {showWarningAlert && (
               <Alert
-              severity="warning"
+                severity="warning"
                 onClose={() => setShowWarningAlert(false)}
                 className="alert-notification-warning"
               >
-              <p className="succes"> It is not allowed to delete this order</p>
+                <p className="succes"> It is not allowed to delete this order</p>
               </Alert>
             )}
-            
+
             {showErrorAlert && (
               <Alert
                 severity="error"
@@ -386,34 +381,8 @@ const Pickup = () => {
               </Alert>
             )}
 
-            {/* {selectedPickupOrder !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
-                  pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
-                  creating={false}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )}
-
-            {selectedPickupOrder === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <PickupOrderCreationForm
-                  pickupOrder={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onpickupOrderDataChange={handlePickupOrdersDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )} */}
-
             {selectedPickupOrder !== null && createWarehouseReceipt && (
-               <div className="layout-fluid">
+              <div className="layout-fluid">
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModalReceiptCreation}
@@ -423,7 +392,7 @@ const Pickup = () => {
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromPickUp={true}
                 />
-            </div>
+              </div>
             )}
           </div>
         </div>
