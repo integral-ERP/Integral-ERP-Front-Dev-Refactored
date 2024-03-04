@@ -52,7 +52,7 @@ const Pickup = () => {
     "Pickup Address",
     "Delivery Name",
     "Delivery Address",
-    // "Pieces",
+    "Pieces",
     // "Weight",
     "Carrier Name",
     "Carrier Address",
@@ -64,12 +64,8 @@ const Pickup = () => {
   ];
 
   const handleContextMenu = (e) => {
-    console.log("Bandera-1=", pickupOrders)
-    console.log("Bandera-3=", selectedPickupOrder.status)
-
     selectedPickupOrder
     if (selectedPickupOrder.status != '4') {
-      console.log("Bandera-3=", pickupOrders[0].status)
       e.preventDefault(); // Prevent the browser's default context menu
       const clickX = e.clientX;
       const clickY = e.clientY;
