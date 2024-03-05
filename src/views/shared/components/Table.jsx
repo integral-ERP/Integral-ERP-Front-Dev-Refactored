@@ -78,10 +78,11 @@ const Table = ({
 
   useEffect(() => {
     // Filtrar las columnas visibles cuando cambia visibleColumns
-    const visibleColumnsArray = columnOrder.filter(columnName => visibleColumns[columnName]);
+    const visibleColumnsArray = columnOrder.filter(
+      (columnName) => visibleColumns[columnName]
+    );
     setVisibleColumnOrder(visibleColumnsArray);
   }, [visibleColumns, columnOrder]);
-
 
   useEffect(() => {
     if (createWarehouseReceipt) {
@@ -176,18 +177,18 @@ const Table = ({
     Client: "clientObj.name",
     Store: "store",
     "Transport Company": "courier",
-    "Packages": "packages.length",
+    Packages: "packages.length",
     //---------------------Cristian
-    "Account": "accountNumber",
+    Account: "accountNumber",
     "Due Days": "dueDays",
     "Discount Percentage": "discountPercentage",
     "Discount Days": "discountDays",
-    "Inactive": "inactive",
+    Inactive: "inactive",
     //---------------
     "Transaction Date": "trasaDate",
     "Due Date": "due",
     "Type Name": "typeName",
-    "Apply": "issuedByName",
+    Apply: "issuedByName",
     "Payment Temse": "paymentByDesc",
     "Account Name": "accountByName",
     "Type Code": "typeByCode",
@@ -202,8 +203,8 @@ const Table = ({
     // " Date": "date",
     "Entity": "entity",
     "AR Amount": "amountReceived",
-    "Memo": "memo",
-    "nombre": "nombre",
+    Memo: "memo",
+    nombre: "nombre",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -224,7 +225,6 @@ const Table = ({
       );
     });
   };
-
 
   const getStatus = (statusCode) => {
     switch (statusCode.toString()) {
@@ -357,7 +357,6 @@ const Table = ({
   const generatePDF = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -368,7 +367,6 @@ const Table = ({
   const generatePDFReceipt = () => {
     GenerateReceiptPdf(selectedRow)
       .then((pdfUrl) => {
-
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -379,7 +377,6 @@ const Table = ({
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
       .then((pdfUrl) => {
-
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -390,7 +387,6 @@ const Table = ({
   const generatePDFInvoice = () => {
     GenerateInvoicePDF(selectedRow)
       .then((pdfUrl) => {
-
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -401,7 +397,6 @@ const Table = ({
   const generateBillPDF = () => {
     GenerateBillPDF(selectedRow)
       .then((pdfUrl) => {
-
         window.open(pdfUrl, "_blank");
       })
       .catch((error) => {
@@ -461,7 +456,6 @@ const Table = ({
     const result = {};
 
     if (xml.nodeType === 1) {
-
       if (xml.attributes.length > 0) {
         result["@attributes"] = {};
         for (let i = 0; i < xml.attributes.length; i++) {
@@ -470,7 +464,6 @@ const Table = ({
         }
       }
     } else if (xml.nodeType === 3) {
-
       result["#text"] = xml.nodeValue;
     }
 
@@ -507,16 +500,12 @@ const Table = ({
       if (fileType === "json") {
         try {
           const importedData = JSON.parse(content);
-
-
         } catch (error) {
           console.error("Error parsing JSON file:", error);
         }
       } else if (fileType === "csv") {
         try {
           const importedData = Papa.parse(content, { header: true }).data;
-
-
         } catch (error) {
           console.error("Error parsing CSV file:", error);
         }
@@ -525,8 +514,6 @@ const Table = ({
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(content, "text/xml");
           const importedData = xmlToJs(xmlDoc);
-
-
         } catch (error) {
           console.error("Error parsing XML file:", error);
         }
@@ -538,44 +525,34 @@ const Table = ({
             workbook.Sheets[sheetName],
             { header: 1 }
           );
-
-
         } catch (error) {
           console.error("Error parsing XLSX file:", error);
         }
       } else {
-
       }
     };
     reader.readAsText(file);
   };
 
   const handleDragStart = (e, columnIndex) => {
-
     e.dataTransfer.setData("text/plain", columnIndex);
   };
 
   const handleDragOver = (e) => {
-
     e.preventDefault();
   };
 
   const handleDrop = (e, targetColumnIndex) => {
-
     const sourceColumnIndex = parseInt(
       e.dataTransfer.getData("text/plain"),
       10
     );
 
-
     const newColumnOrder = [...columnOrder];
-
 
     const [draggedColumn] = newColumnOrder.splice(sourceColumnIndex, 1);
 
-
     newColumnOrder.splice(targetColumnIndex, 0, draggedColumn);
-
 
     setColumnOrder(newColumnOrder);
   };
@@ -594,7 +571,6 @@ const Table = ({
     return value;
   }
 
-
   const getCellValue = (row, columnName) => {
     if (columnName === "Delete") {
       return <i className="fas fa-trash" onClick={elementDelete}></i>; // Handle special columns as needed
@@ -604,14 +580,12 @@ const Table = ({
       return <i className="fas fa-file-pdf"></i>; // Handle special columns as needed
     }
 
-
     if (columnNameToProperty[columnName]?.includes(".")) {
       return getPropertyValue(row, columnNameToProperty[columnName]);
     } else {
       return row[columnNameToProperty[columnName]];
     }
   };
-
 
   const getTextWidth = (text) => {
     const canvas = document.createElement("canvas");
@@ -655,13 +629,18 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                      ? "table-primary"
-                      : ""
-                      }`}
+                    className={`table-row  tr-margen${
+                      selectedRow && selectedRow.id === row.id
+                        ? "table-primary"
+                        : ""
+                    }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
-                    onDoubleClick={handleEdit}
+                    onDoubleClick={
+                      columnOrder.includes("Repack Options")
+                        ? onInspect
+                        : handleEdit
+                    }
                   >
                     {columnOrder.map((columnName) =>
                       visibleColumns[columnName] ? (
@@ -730,15 +709,15 @@ const Table = ({
                               <i className="fas fa-times"></i>
                             )
                           ) : columnNameToProperty[columnName]?.includes(
-                            "."
-                          ) ? (
+                              "."
+                            ) ? (
                             getPropertyValue(
                               row,
                               columnNameToProperty[columnName]
                             )
                           ) : Array.isArray(
-                            row[columnNameToProperty[columnName]]
-                          ) ? (
+                              row[columnNameToProperty[columnName]]
+                            ) ? (
                             row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                           ) : (
                             row[columnNameToProperty[columnName]]
@@ -759,7 +738,6 @@ const Table = ({
     }
   };
 
-
   const columnWidthsCalculated = columns.reduce((widths, columnName) => {
     const maxColumnWidth = Math.max(
       ...filteredData.map((row) => {
@@ -768,13 +746,11 @@ const Table = ({
             ? "" // Handle special columns as needed
             : getCellValue(row, columnName);
 
-
         const cellWidth = getTextWidth(value);
 
         return cellWidth;
       })
     );
-
 
     widths[columnName] = Math.max(maxColumnWidth, 100);
 
@@ -1045,7 +1021,7 @@ const Table = ({
                                   type="button"
                                   className="btn btn-primary"
                                   onClick={() =>
-                                    handleColumnVisibilityChange('default')
+                                    handleColumnVisibilityChange("default")
                                   }
                                 >
                                   Default
