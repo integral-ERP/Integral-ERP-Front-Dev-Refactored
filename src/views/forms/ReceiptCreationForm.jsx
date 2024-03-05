@@ -1428,8 +1428,8 @@ const ReceiptCreationForm = ({
               }}
               onAdd={() => {}}
               showOptions={false}
-              /* added hiden button trash */
-              hiddenTrashButton={true}
+              /* deleted variable hiden button trash */
+              
             />
             {/* added view commodities */}
             {showCommodityInspect && (
