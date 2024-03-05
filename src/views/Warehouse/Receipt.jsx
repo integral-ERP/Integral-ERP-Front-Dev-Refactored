@@ -10,7 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 
 const Receipt = () => {
-  const { hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext);
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -38,7 +38,9 @@ const Receipt = () => {
       .then((response) => {
         const newreceipts = response.data.results.filter((pickupOrder) => {
           const pickupOrderId = pickupOrder.id;
-          return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
+          return !receipts.some(
+            (existingPickupOrder) => existingPickupOrder.id === pickupOrderId
+          );
         });
 
         setreceipts([...receipts, ...newreceipts].reverse());
@@ -61,7 +63,6 @@ const Receipt = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-
       const number = receipts[0]?.number || 0;
 
       setcurrentPickupNumber(number);
@@ -81,7 +82,6 @@ const Receipt = () => {
     }
 
     return () => {
-
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -92,7 +92,6 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-
   };
 
   const handleEditreceipts = () => {
@@ -115,13 +114,14 @@ const Receipt = () => {
       ReceiptService.deleteReceipt(selectedPickupOrder.id)
         .then((response) => {
           if (response.status == 204) {
-            const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
+            const newreceipts = receipts.filter(
+              (order) => order.id !== selectedPickupOrder.id
+            );
             setreceipts(newreceipts);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -139,37 +139,47 @@ const Receipt = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
       const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu) {
+      if (
+        !isreceiptsButton &&
+        !isTableRow &&
+        !isEdit &&
+        !isInsideCompanyFormPickup &&
+        !isSelectMenu
+      ) {
         setSelectedPickupOrder(null);
-
       }
     };
 
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-
       window.removeEventListener("click", handleWindowClick);
     };
-  },);
+  });
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={receipts}
               columns={columns}
@@ -184,7 +194,6 @@ const Receipt = () => {
               importEnabled={false}
             >
               {selectedPickupOrder !== null && (
-
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={handleCancel}
@@ -192,12 +201,11 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromReceipt={true}
                 />
-
               )}
 
               {selectedPickupOrder === null && (
-
                 <ReceiptCreationForm
                   pickupOrder={null}
                   closeModal={handleCancel}
@@ -206,7 +214,6 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-
               )}
             </Table>
 
