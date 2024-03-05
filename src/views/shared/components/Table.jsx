@@ -126,7 +126,7 @@ const Table = ({
     Status: "status",
     Type: "type",
     Number: "number",
-    Date: "creation_date",
+    "Date": "creation_date",
     "Ship Date": "pick_up_date",
     "Delivery Date": "delivery_date",
     "Pickup Name": "pickUpLocationObj.data.obj.name",
@@ -200,8 +200,8 @@ const Table = ({
     "Account Type": "issuedByName",
     "Amt Due": "division",
     //---------------
-    Date: "date",
-    Entity: "entity",
+    // " Date": "date",
+    "Entity": "entity",
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
@@ -795,6 +795,7 @@ const Table = ({
             <div>
               {showOptions && (
                 <div className="row w-100 align-items-center">
+                  {/* <div className="movile"> */}
                   {/* Search menu */}
                   <div className="col-6">
                     <div className="position-search mt-3">
@@ -1083,7 +1084,7 @@ const Table = ({
                           </div>
                           <div className="col-2 d-flex">
                             <button
-                              className="generic-button"
+                              className="generic-button-eye"
                               onClick={() => setShowColumnMenu(!showColumnMenu)}
                             >
                               <i className="fas fa-eye menu-icon fa-3x ne"></i>
@@ -1091,7 +1092,7 @@ const Table = ({
                             <button
                               type="button"
                               onClick={() => setShowFilterMenu(!showFilterMenu)}
-                              className="generic-button"
+                              className="generic-button-filter"
                             >
                               <i className="fas fa-filter menu-icon fa-3x ne"></i>
                             </button>
@@ -1101,6 +1102,7 @@ const Table = ({
                     </div>
                   </div>
                 </div>
+                // </div>
               )}
             </div>
           </div>

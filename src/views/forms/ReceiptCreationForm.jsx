@@ -33,7 +33,6 @@ const ReceiptCreationForm = ({
   fromPickUp,
   fromReceipt,
 }) => {
-  console.log(pickupOrder);
   const [activeTab, setActiveTab] = useState("general");
   const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -982,10 +981,16 @@ const ReceiptCreationForm = ({
 
         if (response.status >= 200 && response.status <= 300) {
           if (fromPickUp) {
+            console.log("BANDERA-1 = ", fromPickUp)
             //added onhand status
             const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
+          }
+
+          if (!fromPickUp) {
+            //added onhand status
+            console.log("BANDERA-2 = ", fromPickUp)
           }
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
@@ -1010,9 +1015,9 @@ const ReceiptCreationForm = ({
     clientToBillRequest,
   ]);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  /* useEffect(() => {
+    console.log(formData)
+  }, [formData]) */
 
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -1518,7 +1523,10 @@ const ReceiptCreationForm = ({
         </button> */}
       </div>
 
-      <div className="row w-100">
+      <input type="checkbox" id="toggleBoton"></input>
+      <label className="button-charge" for="toggleBoton" ></label>
+
+      <div className="row w-100" id="miDiv">
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">

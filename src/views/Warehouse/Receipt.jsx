@@ -8,6 +8,7 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReceiptService from "../../services/ReceiptService";
 import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
+import PickupService from "../../services/PickupService";
 
 const Receipt = () => {
   const { hideShowSlider } = useContext(GlobalContext);
@@ -44,6 +45,17 @@ const Receipt = () => {
         });
 
         setreceipts([...receipts, ...newreceipts].reverse());
+        console.log("BANDERA-0");
+        if (pickupOrderId) {
+          console.log("BANDERA-1");
+        }
+
+        if (pickupOrderId == null) {
+          console.log("BANDERA-2");
+        }
+        if (!pickupOrderId) {
+          console.log("BANDERA-3");
+        }
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -109,33 +121,63 @@ const Receipt = () => {
     openModal();
   };
 
-  const handleDeletePickupOrder = () => {
-    if (selectedPickupOrder) {
-      ReceiptService.deleteReceipt(selectedPickupOrder.id)
-        .then((response) => {
-          if (response.status == 204) {
-            const newreceipts = receipts.filter(
-              (order) => order.id !== selectedPickupOrder.id
-            );
+ const handleDeletePickupOrder = async () => {
+  if (selectedPickupOrder) {
+    try {
+      
+      // Obtener todas las pickups
+      const response = await PickupService.getPickups();
+      const resultsArray = response.data.results;
+      
+
+      for (let i = 0; i < resultsArray.length; i++) {
+        const pickUpLocationObj = resultsArray[i].number;
+        const getpickupOrderId = resultsArray[i].id;
+        
+        if (pickUpLocationObj === selectedPickupOrder.number) {
+          
+          const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
+          const newPickup = { ...getpickupforId , status: 14 };
+          // Actualizar la pickup con el nuevo estado de empty
+          await PickupService.updatePickup(getpickupOrderId, newPickup);
+          //console.log("Actualizado correctamente");
+
+          // Después de la actualización, proceder con ReceiptService para eliminarlo 
+          try {
+            await ReceiptService.deleteReceipt(selectedPickupOrder.id);
+            //console.log("Eliminado correctamente");
+
+            // Actualizar el estado de receipts eliminando la orden
+            const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
             setreceipts(newreceipts);
+
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-          } else {
+          } catch (error) {
+            console.error("Error al eliminar el recibo:", error);
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
             }, 3000);
           }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      alert("Please select a Pickup Order to delete.");
+
+          // Salir del bucle después de la actualización
+          break;
+        }
+      }
+    } catch (error) {
+      console.error("Error al obtener las pickups:", error);
     }
-  };
+  } else {
+    alert("Por favor, selecciona una Orden de Recogida para eliminar.");
+  }
+};
+
+  
+  
+  
 
   useEffect(() => {
     const handleWindowClick = (event) => {
