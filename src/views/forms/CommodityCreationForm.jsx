@@ -47,6 +47,18 @@ const CommodityCreationForm = ({
   const ValidationCommodities= !commodities || commodities.length === 0;
 
   const addCommodity = () => {
+    // Check if any of the required fields are empty or null
+    if (
+      !formData.length ||
+      !formData.height ||
+      !formData.width ||
+      !formData.weight ||
+      !formData.description
+    ) {
+      // Show an alert or handle the validation error as needed
+      alert("Please fill in all required fields.");
+      return;
+    }
     const body = {
       id: internalID,
       length: formData.length,
@@ -153,6 +165,7 @@ const CommodityCreationForm = ({
                 borderColor: ValidationCommodities ? 'green' : '',
                 boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
+              
             />
             <span className="input-group-text num-com">in</span>
           </div>
