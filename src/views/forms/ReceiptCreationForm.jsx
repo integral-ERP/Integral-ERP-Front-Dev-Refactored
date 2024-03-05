@@ -31,6 +31,7 @@ const ReceiptCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
   fromPickUp,
+  fromReceipt,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [note, setNote] = useState("");
@@ -220,7 +221,7 @@ const ReceiptCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    if (type === "carrier") {
+    if (type === "Carrier") {
       result = await CarrierService.getCarrierById(id);
     }
 
@@ -393,10 +394,10 @@ const ReceiptCreationForm = ({
     if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if (type === "agent") {
+    if (type === "forwarding-agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-    if (type === "carrier") {
+    if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option.data);
@@ -410,11 +411,17 @@ const ReceiptCreationForm = ({
     if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if (type === "agent") {
+    if (type === "forwarding-agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-
+    if (type === "Carrier") {
+      option = await CarrierService.getCarrierById(id);
+    }
     setdefaultValueShipper(option.data);
+  };
+
+  const SortArray = (x, y) => {
+    return new Intl.Collator("es").compare(x.name, y.name);
   };
 
   useEffect(() => {
@@ -426,11 +433,15 @@ const ReceiptCreationForm = ({
 
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
-        pickupOrder.shipperObj?.data?.obj?.type_person
+        pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
+          ? pickupOrder.shipperObj?.data?.obj?.type_person
+          : "forwarding-agent"
       );
       loadConsigneeOption(
         pickupOrder.consigneeObj?.data?.obj?.id,
-        pickupOrder.consigneeObj?.data?.obj?.type_person
+        pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
+          ? pickupOrder.consigneeObj?.data?.obj?.type_person
+          : "forwarding-agent"
       );
       setshowExpenseForm(true);
       setshowIncomeForm(true);
@@ -440,9 +451,17 @@ const ReceiptCreationForm = ({
       setshipperRequest(pickupOrder.shipper);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
-      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-        ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-        : pickupOrder.client_to_billObj?.data?.obj?.id;
+
+      let CTBID = "";
+      if (fromReceipt) {
+        CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.clientBillObj?.data?.obj?.id;
+      } else {
+        CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.client_to_billObj?.data?.obj?.id;
+      }
       let updatedFormData = {
         status: pickupOrder.status,
         number: pickupOrder.number,
@@ -459,7 +478,9 @@ const ReceiptCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
-        shipperId: pickupOrder.shipper,
+        shipper: pickupOrder.shipper,
+        shipperId: pickupOrder.shipperObj.data?.obj?.id, //pickupOrder.shipper
+        shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipperInfo: `${
           pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
         } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
@@ -476,7 +497,9 @@ const ReceiptCreationForm = ({
           pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
         }`,
 
-        consigneeId: pickupOrder.consignee,
+        consignee: pickupOrder.consignee,
+        consigneeId: pickupOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
+        consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeInfo: `${
           pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
         } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
@@ -515,9 +538,9 @@ const ReceiptCreationForm = ({
 
         clientToBillId: CTBID,
         clientToBillType:
-          CTBID === pickupOrder.shipper
+          CTBID === pickupOrder.shipperObj.data?.obj?.id
             ? "shipper"
-            : CTBID === pickupOrder.consignee
+            : CTBID === pickupOrder.consigneeObj.data?.obj?.id
             ? "consignee"
             : "",
 
@@ -550,7 +573,7 @@ const ReceiptCreationForm = ({
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "carrier");
+    const carriersWithType = addTypeToObjects(carriers, "Carrier");
 
     const issuedByOptions = [...forwardingAgentsWithType];
     const destinationAgentOptions = [...forwardingAgentsWithType];
@@ -570,37 +593,13 @@ const ReceiptCreationForm = ({
 
     const carrierOptions = [...carriersWithType];
 
-    issuedByOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    destinationAgentOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    employeeOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    shipperOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    consigneeOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    carrierOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
-
-    setIssuedByOptions(issuedByOptions);
-    setDestinationAgentOptions(destinationAgentOptions);
-    setEmployeeOptions(employeeOptions);
-    setShipperOptions(shipperOptions);
-    setConsigneeOptions(consigneeOptions);
-    setCarrierOptions(carrierOptions);
-    setSupplierOptions(carrierOptions);
+    setIssuedByOptions(issuedByOptions.sort(SortArray));
+    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
+    setEmployeeOptions(employeeOptions.sort(SortArray));
+    setShipperOptions(shipperOptions.sort(SortArray));
+    setConsigneeOptions(consigneeOptions.sort(SortArray));
+    setCarrierOptions(carrierOptions.sort(SortArray));
+    setSupplierOptions(carrierOptions.sort(SortArray));
   };
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
@@ -662,7 +661,7 @@ const ReceiptCreationForm = ({
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "carrier"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
     return options;
@@ -681,7 +680,7 @@ const ReceiptCreationForm = ({
     const responseCarriers = (await CarrierService.search(inputValue)).data
       .results;
 
-    const options = [...addTypeToObjects(responseCarriers, "carrier")];
+    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
 
     return options;
   };
@@ -710,9 +709,16 @@ const ReceiptCreationForm = ({
       setSupplierOptions([pickupOrder.supplierObj]);
       setcommodities(pickupOrder.commodities);
 
-      let CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-        ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-        : pickupOrder.client_to_billObj?.data?.obj?.id;
+      let CTBID = "";
+      if (fromReceipt) {
+        CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.clientBillObj?.data?.obj?.id;
+      } else {
+        CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.client_to_billObj?.data?.obj?.id;
+      }
       let updatedFormData = {
         status: 4,
         weight: pickupOrder.weight,
@@ -853,7 +859,7 @@ const ReceiptCreationForm = ({
     if (formData.consigneeType === "forwarding-agent") {
       consigneeName = "agentid";
     }
-    if (formData.consigneeType === "carrier") {
+    if (formData.consigneeType === "Carrier") {
       consigneeName = "carrierid";
     }
     if (consigneeName !== "") {
@@ -877,7 +883,7 @@ const ReceiptCreationForm = ({
     if (formData.shipperType === "forwarding-agent") {
       shipperName = "agentid";
     }
-    if (formData.shipperType === "carrier") {
+    if (formData.shipperType === "Carrier") {
       shipperName = "carrierid";
     }
     if (shipperName !== "") {
@@ -900,7 +906,10 @@ const ReceiptCreationForm = ({
     }
     if (clientToBillName !== "") {
       const clientToBill = {
-        [clientToBillName]: formData.clientToBillId,
+        [clientToBillName]:
+          clientToBillName === "shipperid"
+            ? formData.shipper
+            : formData.consignee,
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -974,7 +983,7 @@ const ReceiptCreationForm = ({
           if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp)
             //added onhand status
-            const statusOnhand=4;
+            const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
           }
@@ -1390,7 +1399,11 @@ const ReceiptCreationForm = ({
 
       <div className="creation creation-container w-100">
         <div className="form-label_name">
-          {editingComodity ?(<h3 style={{color: "blue" , fontWeight: "bold"}}> Edition</h3>):(<h3>Commodities</h3>)}
+          {editingComodity ? (
+            <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
+          ) : (
+            <h3>Commodities</h3>
+          )}
           <span></span>
         </div>
         <CommodityCreationForm
@@ -1456,23 +1469,24 @@ const ReceiptCreationForm = ({
                   </p>
                   {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
                 </div>
-                 {/*  fix the repacking show internalCommodities for edition */}
-                {selectedCommodity.internalCommodities && selectedCommodity.internalCommodities.map((com) => (
-                  <div key={com.id} className="card">
-                    <p className="item-description">{com.description}</p>
-                    <p className="item-info">Weight: {com.weight}</p>
-                    <p className="item-info">Height: {com.height}</p>
-                    <p className="item-info">Width: {com.width}</p>
-                    <p className="item-info">Length: {com.length}</p>
-                    <p className="item-info">
-                      Volumetric Weight: {com.volumetricWeight}
-                    </p>
-                    <p className="item-info">
-                      Chargeable Weight: {com.chargedWeight}
-                    </p>
-                    {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                  </div>
-                ))}
+                {/*  fix the repacking show internalCommodities for edition */}
+                {selectedCommodity.internalCommodities &&
+                  selectedCommodity.internalCommodities.map((com) => (
+                    <div key={com.id} className="card">
+                      <p className="item-description">{com.description}</p>
+                      <p className="item-info">Weight: {com.weight}</p>
+                      <p className="item-info">Height: {com.height}</p>
+                      <p className="item-info">Width: {com.width}</p>
+                      <p className="item-info">Length: {com.length}</p>
+                      <p className="item-info">
+                        Volumetric Weight: {com.volumetricWeight}
+                      </p>
+                      <p className="item-info">
+                        Chargeable Weight: {com.chargedWeight}
+                      </p>
+                      {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                    </div>
+                  ))}
               </div>
             )}
             <button

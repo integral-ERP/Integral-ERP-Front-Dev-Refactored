@@ -35,11 +35,13 @@ const Repacking = () => {
       setReceipts(receiptOrders);
       const commoditiesExtracted = [];
       let pickIds = 80000;
-      let receiptIds = 9000; 
+      let receiptIds = 9000;
 
       pickupOrders.forEach((pickupOrder) => {
         const { commodities } = pickupOrder;
-        const repackedCommodities = commodities.filter((commodity) => commodity.containsCommodities === true);
+        const repackedCommodities = commodities.filter(
+          (commodity) => commodity.containsCommodities === true
+        );
 
         const commoditiesWithParentId = repackedCommodities.map((commodity) => {
           const updatedCommodity = {
@@ -51,9 +53,9 @@ const Repacking = () => {
             originalId: commodity.id,
             id: pickIds,
           };
-      
+
           pickIds++;
-      
+
           return updatedCommodity;
         });
         commoditiesExtracted.push(...commoditiesWithParentId);
@@ -66,7 +68,9 @@ const Repacking = () => {
 
       receiptOrders.forEach((receiptOrder) => {
         const { commodities } = receiptOrder;
-        const repackedCommodities = commodities.filter((commodity) => commodity.containsCommodities === true);
+        const repackedCommodities = commodities.filter(
+          (commodity) => commodity.containsCommodities === true
+        );
         const commoditiesWithParentId = repackedCommodities.map((commodity) => {
           const updatedCommodity = {
             ...commodity,
@@ -77,9 +81,9 @@ const Repacking = () => {
             originalId: commodity.id,
             id: receiptIds,
           };
-      
+
           receiptIds++;
-      
+
           return updatedCommodity;
         });
         commoditiesExtracted.push(...commoditiesWithParentId);
@@ -101,50 +105,58 @@ const Repacking = () => {
   }, []);
 
   const handleSelectCommodity = (commodity) => {
-    
     setSelectedCommodity(commodity);
   };
 
   const handleUnpackCommodity = () => {
-    if(selectedCommodity){
-        const internalCommodities = selectedCommodity.internalCommodities;
-        if(selectedCommodity.comesFrom === "PickUp Order"){
-            const order = pickups.find((pickup) => pickup.id == selectedCommodity.parentId);
-            order.commodities = order.commodities.filter((item) => item.id !== selectedCommodity.originalId);
-            order.commodities = [...order.commodities, ...internalCommodities];
-            let repacked = false;
-            order.commodities.forEach((item) => {
-              if(item.containsCommodities){
-                repacked = true;
-              }
-            })
-            order.containsCommodities = repacked;
-            PickupService.updatePickup(order.id, order);
-        }
-        if(selectedCommodity.comesFrom === "Warehouse Receipt"){
-            const order = receipts.find((pickup) => pickup.id == selectedCommodity.parentId);
-            order.commodities = order.commodities.filter((item) => item.id !== selectedCommodity.originalId);
-            order.commodities = [...order.commodities, ...internalCommodities];
-            let repacked = false;
-            order.commodities.forEach((item) => {
-              if(item.containsCommodities){
-                repacked = true;
-              }
-            })
-            order.containsCommodities = repacked;
-            ReceiptService.updateReceipt(order.id, order);
-        }
-        const newCommodities = repackedCommodities.filter((item) => item.id !== selectedCommodity.id);
-        setRepackedCommodities(newCommodities);
+    if (selectedCommodity) {
+      const internalCommodities = selectedCommodity.internalCommodities;
+      if (selectedCommodity.comesFrom === "PickUp Order") {
+        const order = pickups.find(
+          (pickup) => pickup.id == selectedCommodity.parentId
+        );
+        order.commodities = order.commodities.filter(
+          (item) => item.id !== selectedCommodity.originalId
+        );
+        order.commodities = [...order.commodities, ...internalCommodities];
+        let repacked = false;
+        order.commodities.forEach((item) => {
+          if (item.containsCommodities) {
+            repacked = true;
+          }
+        });
+        order.containsCommodities = repacked;
+        PickupService.updatePickup(order.id, order);
+      }
+      if (selectedCommodity.comesFrom === "Warehouse Receipt") {
+        const order = receipts.find(
+          (pickup) => pickup.id == selectedCommodity.parentId
+        );
+        order.commodities = order.commodities.filter(
+          (item) => item.id !== selectedCommodity.originalId
+        );
+        order.commodities = [...order.commodities, ...internalCommodities];
+        let repacked = false;
+        order.commodities.forEach((item) => {
+          if (item.containsCommodities) {
+            repacked = true;
+          }
+        });
+        order.containsCommodities = repacked;
+        ReceiptService.updateReceipt(order.id, order);
+      }
+      const newCommodities = repackedCommodities.filter(
+        (item) => item.id !== selectedCommodity.id
+      );
+      setRepackedCommodities(newCommodities);
     }
-  }
+  };
 
   const handleInspectCommodity = () => {
-    if(selectedCommodity !== null){
-        openModal();
-        
-    }else{
-        alert("Please select a Commodity to inspect");
+    if (selectedCommodity !== null) {
+      openModal();
+    } else {
+      alert("Please select a Commodity to inspect");
     }
   };
 

@@ -10,12 +10,10 @@ import PickupService from "../../services/PickupService";
 import Sidebar from "../shared/components/SideBar";
 import ReceiptCreationForm from "../forms/ReceiptCreationForm";
 import ReleaseService from "../../services/ReleaseService";
-import { GlobalContext } from "../../context/global"
-
-
+import { GlobalContext } from "../../context/global";
 
 const Pickup = () => {
-  const { hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext);
   const [pickupOrders, setpickupOrders] = useState([]);
   const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
@@ -89,25 +87,18 @@ const Pickup = () => {
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
-
-
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
-
         setShowContextMenu(false);
       }
     };
 
-
     document.addEventListener("click", handleDocumentClick);
-
 
     return () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
-
-
 
   const updatePickupOrders = (url = null) => {
     PickupService.getPickups(url)
@@ -130,7 +121,7 @@ const Pickup = () => {
 
     ReleaseService.getReleases(url)
       .then((response) => {
-        setReleaseOrders((response.data.results).reverse());
+        setReleaseOrders(response.data.results.reverse());
       })
       .catch((error) => {
         console.error(error);
@@ -164,7 +155,6 @@ const Pickup = () => {
     }
 
     return () => {
-
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -178,7 +168,6 @@ const Pickup = () => {
   };
 
   const handleEditPickupOrders = () => {
-
     if (selectedPickupOrder) {
       setIsEdit(true);
       openModal();
@@ -187,9 +176,7 @@ const Pickup = () => {
     }
   };
 
-  useEffect(() => {
-
-  }, [selectedPickupOrder])
+  useEffect(() => {}, [selectedPickupOrder]);
 
 
   const handleAddPickupOrder = () => {
@@ -212,11 +199,10 @@ const Pickup = () => {
                 if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)) {
                   ReleaseService.deleteRelease(release.id);
                 }
-              })
+              });
               setTimeout(() => {
                 setShowSuccessAlert(false);
               }, 3000);
-
             } else {
               setShowErrorAlert(true);
               setTimeout(() => {
@@ -224,9 +210,7 @@ const Pickup = () => {
               }, 3000);
             }
           })
-          .catch((error) => {
-
-          });
+          .catch((error) => {});
       } else {
         setShowWarningAlert(true);
       }
@@ -241,7 +225,6 @@ const Pickup = () => {
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
-
         setSelectedPickupOrder(null);
       }
     };
@@ -249,10 +232,9 @@ const Pickup = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-
       window.removeEventListener("click", handleWindowClick);
     };
-  },);
+  });
 
   useEffect(() => {
     if (createWarehouseReceipt) {
@@ -262,11 +244,11 @@ const Pickup = () => {
 
   const seteWarehouse = () => {
     if (selectedPickupOrder) {
-      setCreateWarehouseReceipt(true)
+      setCreateWarehouseReceipt(true);
     } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
   const setInTransit = async () => {
     if (selectedPickupOrder) {
@@ -274,12 +256,11 @@ const Pickup = () => {
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
-
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
   const setDelivered = async () => {
     if (selectedPickupOrder) {
@@ -313,17 +294,13 @@ const Pickup = () => {
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
-
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
-
-  const handleCancel = () => {
-
-  }
+  const handleCancel = () => {};
 
   const contextMenuOptions = [
     {
@@ -359,7 +336,14 @@ const Pickup = () => {
             <Sidebar />
           </div>
 
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={pickupOrders}
               columns={columns}
@@ -380,7 +364,6 @@ const Pickup = () => {
               createWarehouseReceipt={createWarehouseReceipt}
             >
               {selectedPickupOrder !== null && (
-
                 <PickupOrderCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={handleCancel}
@@ -389,11 +372,9 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-
               )}
 
               {selectedPickupOrder === null && (
-
                 <PickupOrderCreationForm
                   pickupOrder={null}
                   closeModal={handleCancel}
@@ -402,9 +383,7 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-
               )}
-
             </Table>
 
             {showSuccessAlert && (
@@ -455,8 +434,6 @@ const Pickup = () => {
             )}
           </div>
         </div>
-
-
       </div>
     </>
   );
