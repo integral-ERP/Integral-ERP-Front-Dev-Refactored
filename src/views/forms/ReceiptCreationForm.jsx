@@ -138,6 +138,9 @@ const ReceiptCreationForm = ({
     purchase_order_number: "",
   };
   const [formData, setFormData] = useState(formFormat);
+  //added unrepack
+  const [repackedItems, setRepackedItems] = useState([]);
+  const [selectedRepackId, setSelectedRepackId] = useState(null);
 
   const handleIssuedBySelection = async (event) => {
     const id = event.id;
@@ -326,14 +329,31 @@ const ReceiptCreationForm = ({
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
+    console.log("selected commodity ", commodity);
   };
 
   const handleCommodityDelete = () => {
-    const newCommodities = commodities.filter(
-      (com) => com.id != selectedCommodity.id
-    );
-    setcommodities(newCommodities);
+    if (selectedCommodity.internalCommodities && selectedCommodity.internalCommodities.length > 0) {
+      // Realizar desempaque (unpack)
+      const remainingCommodities = commodities.filter(
+        (commodity) => commodity.id !== selectedCommodity.id
+      );
+  
+      const unpackedCommodities = [...selectedCommodity.internalCommodities];
+      // Actualizar el estado con la información más reciente
+      setcommodities([...remainingCommodities, ...unpackedCommodities]);
+      setSelectedRepackId(null);
+    } else {
+      // Elimina el commodity si no contiene commodities internos
+      const newCommodities = commodities.filter(
+        (com) => com.id !== selectedCommodity.id
+      );
+      
+      setcommodities(newCommodities);
+    }
   };
+  
+  
 
   //added edit commodities
   const handleCommodityEdit = () => {
@@ -1441,8 +1461,8 @@ const ReceiptCreationForm = ({
               }}
               onAdd={() => {}}
               showOptions={false}
-              /* added hiden button trash */
-              hiddenTrashButton={true}
+              /* deleted variable hiden button trash */
+              
             />
             {/* added view commodities */}
             {showCommodityInspect && (

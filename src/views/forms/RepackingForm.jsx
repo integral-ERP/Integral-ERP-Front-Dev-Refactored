@@ -71,7 +71,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       const repackedItem = repackedItems.find(
         (item) => item.id === selectedRepackId
       );
-
+      
       if (repackedItem) {
         const remainingCommodities = commodities.filter(
           (commodity) => commodity.id !== repackedItem.id

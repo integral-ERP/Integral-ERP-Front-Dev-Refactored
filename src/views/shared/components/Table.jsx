@@ -44,7 +44,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
-  hiddenTrashButton,
+  
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -686,18 +686,8 @@ const Table = ({
                           ) : columnName === "Status" ? (
                             getStatus(row[columnNameToProperty[columnName]])
                           ) : columnName === "Options" ? (
-                            <>
-                              {" "}
-                              {/* added hiden button trash for table commodity creation form */}
-                              <button
-                                type="button"
-                                onClick={onDelete}
-                                style={{
-                                  display: hiddenTrashButton
-                                    ? "none"
-                                    : "inline-block",
-                                }}
-                              >
+                            <> {/* added hiden button trash for table commodity creation form */}
+                              <button type="button" onClick={onDelete}  >
                                 <i className="fas fa-trash"></i>
                               </button>
                               <button type="button" onClick={onEdit}>
@@ -806,7 +796,7 @@ const Table = ({
                 <div className="row w-100 align-items-center">
                   {/* <div className="movile"> */}
                   {/* Search menu */}
-                  <div className="col-6">
+                  <div className="col-6" id="input-container--first">
                     <div className="position-search mt-3">
                       <div className="search">
                         <div className="search-container">
@@ -1062,7 +1052,7 @@ const Table = ({
                       )}
                     </div>
                   </div>
-                  <div className="col-6 d-flex justify-content-end">
+                  <div className="col-6 d-flex justify-content-end" id="input-container--second">
                     <div className="button-container">
                       <div className="export-box">
                         <div className="row mx-0">
@@ -1084,7 +1074,7 @@ const Table = ({
                                 </select>
                               </label>
                               <button
-                                className="generic-button"
+                                className="generic-button-export generic-button"
                                 onClick={handleExport}
                               >
                                 <i className="fas fa-file-export menu-icon fa-3x"></i>
