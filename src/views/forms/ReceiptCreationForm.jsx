@@ -329,6 +329,7 @@ const ReceiptCreationForm = ({
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
+    console.log("selected commodity ", commodity);
   };
 
   const handleCommodityDelete = () => {
