@@ -664,36 +664,36 @@ const Table = ({
                           }}
                         >
                           {columnName === "View PDF" ? (
-                            <button type="button" onClick={generatePDF}>
+                            <button type="button" onClick={generatePDF} className="custom-button">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
-                            <button type="button" onClick={generatePDFReceipt}>
+                            <button type="button" onClick={generatePDFReceipt} className="custom-button">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Release PDF" ? (
-                            <button type="button" onClick={generatePDFRelease}>
+                            <button type="button" onClick={generatePDFRelease} className="custom-button">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Invoice PDF" ? (
-                            <button type="button" onClick={generatePDFInvoice}>
+                            <button type="button" onClick={generatePDFInvoice} className="custom-button">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Bill PDF" ? (
-                            <button type="button" onClick={generateBillPDF}>
+                            <button type="button" onClick={generateBillPDF} className="custom-button">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (
                             getStatus(row[columnNameToProperty[columnName]])
                           ) : columnName === "Options" ? (
                             <> {/* added hiden button trash for table commodity creation form */}
-                              <button type="button" onClick={onDelete}  >
+                              <button type="button" onClick={onDelete} className="custom-button">
                                 <i className="fas fa-trash"></i>
                               </button>
-                              <button type="button" onClick={onEdit}>
+                              <button type="button" onClick={onEdit} className="custom-button">
                                 <i className="fas fa-pencil-alt"></i>
                               </button>
-                              <button type="button" onClick={onInspect}>
+                              <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
                             </>
