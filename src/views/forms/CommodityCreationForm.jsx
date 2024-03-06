@@ -47,8 +47,22 @@ const CommodityCreationForm = ({
   const ValidationCommodities= !commodities || commodities.length === 0;
 
   const addCommodity = () => {
+    // Check if any of the required fields are empty or null
+    if (
+      !formData.length ||
+      !formData.height ||
+      !formData.width ||
+      !formData.weight ||
+      !formData.description
+    ) {
+      // Show an alert or handle the validation error as needed
+      alert("Please fill in all required fields.");
+      return;
+    }
+    // Find the maximum internalID in the existing commodities
+    const maxInternalID = Math.max(...commodities.map((c) => c.id), 0);
     const body = {
-      id: internalID,
+      id: maxInternalID + 1,
       length: formData.length,
       height: formData.height,
       width: formData.width,
@@ -65,14 +79,14 @@ const CommodityCreationForm = ({
       // Update the specific commodity being edited
       setCommodities((prevCommodities) => {
         return prevCommodities.map((prevCommodity) =>
-          prevCommodity.id === commodity.id ? formData : prevCommodity
+        prevCommodity.id === commodity.id ? { ...formData, internalCommodities: prevCommodity.internalCommodities } : prevCommodity   // Update the internalCommodities array
         );
       });
       setEditingComodity(false);
     } else {
       setShowCommoditiesCreationForm(true)
      setCommodities([...commodities, body]);
-      setinternalID(internalID + 1);
+      //deleted this ->setinternalID(internalID + 1);
     }
     setformData(formFormat);
   };
@@ -153,6 +167,7 @@ const CommodityCreationForm = ({
                 borderColor: ValidationCommodities ? 'green' : '',
                 boxShadow: ValidationCommodities ? '0 0 1px 0.2px blue' : '',
               }}
+              
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -263,10 +278,13 @@ const CommodityCreationForm = ({
           >
             <i className="fas fa-check-circle"></i>
           </button>
-          <button
+
+            
+          <button 
             className="button-cancel pick "
             type="button"
             onClick={() => onCancel(false)}
+            style={{ display:'none' }}
           >
             <i className="fas fa-times-circle"></i>
           </button>

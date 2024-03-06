@@ -1131,3 +1131,126 @@
 }
 
 
+.layout-fluid {
+  width: 98%;
+  display: inline-block;
+  // padding-left: inherit;
+  padding-right: inherit
+}
+
+.main-container {
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+.position-table {
+  width: 50%;
+  margin: 1px auto;
+}
+
+#tableware {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.checkrepack {
+  width: 3rem !important;
+  padding: 0px 0 0px 5px !important
+}
+
+#tableware td {
+  border: 0px solid #828282d2;
+  padding: 0 0 0 1rem;
+  text-align: left;
+  font-size: smaller !important;
+}
+
+.textpack {
+  margin: 0 !important;
+}
+
+#tableware tr:hover {
+  background-color: #a2a2a2b3;
+}
+
+#tableware tr {
+  font-size: large !important;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #9191916d;
+  color: rgb(0, 0, 0);
+}
+
+.useinter {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.checkbox {
+  margin: 5px 0 0 0 !important;
+}
+
+.text-date {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
+//---------------------------------------------------------------
+#toggleBoton {
+  display: none;
+  /* Oculta el checkbox */
+}
+
+#miDiv {
+  display: none;
+  /* Inicialmente oculto */
+  // width: 200px;
+  // height: 100px;
+  // background-color: red;
+  // margin-top: 20px;
+  // transition: opacity 3.5s ease;
+}
+
+/* Muestra el div cuando el checkbox está seleccionado */
+#toggleBoton:checked + label + #miDiv {
+// #miDiv.visible {
+  display: flex;
+  opacity: 1;
+}
+
+/* Oculta el div cuando el checkbox no está seleccionado */
+#toggleBoton:not(:checked) + label + #miDiv {
+// #miDiv.hidden {
+  display: none;
+  opacity: 0;
+}
+
+//---------------------------------------------------------------
+#toggleBoton:checked+label::after {
+  content: "Close Charge";
+}
+
+/* Cambia el texto del label cuando el checkbox no está seleccionado */
+#toggleBoton:not(:checked)+label::after {
+  content: "Open Charge";
+}
+
+.button-charge {
+  width: 12rem;
+  height: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.6rem;
+  margin: 0;
+  padding: 0;
+  border-color: #006BAD;
+  background-color: #006BAD;
+  color: white;
+  cursor: pointer;
+  transition: background-color 9.7s ease;
+}

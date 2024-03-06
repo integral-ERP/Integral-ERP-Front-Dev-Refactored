@@ -8,9 +8,10 @@ import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReceiptService from "../../services/ReceiptService";
 import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
+import PickupService from "../../services/PickupService";
 
 const Receipt = () => {
-  const {hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext);
   const [receipts, setreceipts] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
@@ -38,11 +39,24 @@ const Receipt = () => {
       .then((response) => {
         const newreceipts = response.data.results.filter((pickupOrder) => {
           const pickupOrderId = pickupOrder.id;
-          return !receipts.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
+          return !receipts.some(
+            (existingPickupOrder) => existingPickupOrder.id === pickupOrderId
+          );
         });
-        
+
         setreceipts([...receipts, ...newreceipts].reverse());
-        
+        console.log("BANDERA-0");
+        if (pickupOrderId) {
+          console.log("BANDERA-1");
+        }
+
+        if (pickupOrderId == null) {
+          console.log("BANDERA-2");
+        }
+        if (!pickupOrderId) {
+          console.log("BANDERA-3");
+        }
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -61,9 +75,8 @@ const Receipt = () => {
 
   useEffect(() => {
     if (initialDataFetched) {
-      
       const number = receipts[0]?.number || 0;
-      
+
       setcurrentPickupNumber(number);
     }
   }, [receipts]);
@@ -81,7 +94,6 @@ const Receipt = () => {
     }
 
     return () => {
-
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -92,7 +104,6 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    
   };
 
   const handleEditreceipts = () => {
@@ -110,66 +121,107 @@ const Receipt = () => {
     openModal();
   };
 
-  const handleDeletePickupOrder = () => {
-    if (selectedPickupOrder) {
-      ReceiptService.deleteReceipt(selectedPickupOrder.id)
-        .then((response) => {
-          if (response.status == 204) {
+ const handleDeletePickupOrder = async () => {
+  if (selectedPickupOrder) {
+    try {
+      
+      // Obtener todas las pickups
+      const response = await PickupService.getPickups();
+      const resultsArray = response.data.results;
+      
+
+      for (let i = 0; i < resultsArray.length; i++) {
+        const pickUpLocationObj = resultsArray[i].number;
+        const getpickupOrderId = resultsArray[i].id;
+        
+        if (pickUpLocationObj === selectedPickupOrder.number) {
+          
+          const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
+          const newPickup = { ...getpickupforId , status: 14 };
+          // Actualizar la pickup con el nuevo estado de empty
+          await PickupService.updatePickup(getpickupOrderId, newPickup);
+          //console.log("Actualizado correctamente");
+
+          // Después de la actualización, proceder con ReceiptService para eliminarlo 
+          try {
+            await ReceiptService.deleteReceipt(selectedPickupOrder.id);
+            //console.log("Eliminado correctamente");
+
+            // Actualizar el estado de receipts eliminando la orden
             const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
             setreceipts(newreceipts);
+
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-
-          } else {
+          } catch (error) {
+            console.error("Error al eliminar el recibo:", error);
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
             }, 3000);
           }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      alert("Please select a Pickup Order to delete.");
+
+          // Salir del bucle después de la actualización
+          break;
+        }
+      }
+    } catch (error) {
+      console.error("Error al obtener las pickups:", error);
     }
-  };
+  } else {
+    alert("Por favor, selecciona una Orden de Recogida para eliminar.");
+  }
+};
+
+  
+  
+  
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
       const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu) {
+      if (
+        !isreceiptsButton &&
+        !isTableRow &&
+        !isEdit &&
+        !isInsideCompanyFormPickup &&
+        !isSelectMenu
+      ) {
         setSelectedPickupOrder(null);
-        
       }
     };
 
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  });
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={receipts}
               columns={columns}
@@ -184,7 +236,6 @@ const Receipt = () => {
               importEnabled={false}
             >
               {selectedPickupOrder !== null && (
-             
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={handleCancel}
@@ -192,12 +243,11 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  fromReceipt={true}
                 />
-           
-            )}
+              )}
 
-            {selectedPickupOrder === null && (
-              
+              {selectedPickupOrder === null && (
                 <ReceiptCreationForm
                   pickupOrder={null}
                   closeModal={handleCancel}
@@ -206,9 +256,8 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                 />
-             
-            )}
-              </Table>
+              )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert

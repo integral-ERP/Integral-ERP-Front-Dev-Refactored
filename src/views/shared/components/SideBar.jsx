@@ -99,7 +99,7 @@ const Sidebar = () => {
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
               </li>
               <li>
-                <Link to={"/warehouse/receipt"}>Reception</Link>
+                <Link to={"/warehouse/receipt"}>Warehouse Receipts</Link> {/* changed name  */}
               </li>
               <li>
                 <Link to={"/warehouse/release"}>Release</Link>
