@@ -384,10 +384,14 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
           pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
         }`,
+<<<<<<< HEAD
+        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
+=======
         consigneeType:
           pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.consigneeObj?.data?.obj?.type_person
             : "forwarding-agent",
+>>>>>>> 3a358e41ce0b77fc9ed66090e759961ad8e1a08f
         deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
         deliveryLocationType:
           pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
@@ -898,7 +902,11 @@ const PickupOrderCreationForm = ({
             ? auxVar
             : formData.client_to_bill,
       };
+<<<<<<< HEAD
+      console.log(clientToBill);
+=======
 
+>>>>>>> 3a358e41ce0b77fc9ed66090e759961ad8e1a08f
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
@@ -1358,7 +1366,7 @@ const PickupOrderCreationForm = ({
       </div>
 
       <div className="row w-100">
-        <div className="col-6">
+      <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
               <h3>Delivery Information</h3>
@@ -1390,7 +1398,11 @@ const PickupOrderCreationForm = ({
 
               <div
                 className="col-6 text-start"
+<<<<<<< HEAD
+                style={{ marginBlockEnd: "auto"}}
+=======
                 style={{ marginBlockEnd: "auto" }}
+>>>>>>> 3a358e41ce0b77fc9ed66090e759961ad8e1a08f
               >
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
@@ -1494,7 +1506,7 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
 
-        <div className="col-6">
+        <div className="col-6" >
           <div className="creation creation-container w-100">
             <div className="form-label_name">
               <h3>Carrier Information</h3>
@@ -1709,11 +1721,16 @@ const PickupOrderCreationForm = ({
         </div>
       </div> */}
 
+<<<<<<< HEAD
+      <div className="row w-100">
+      <div className="col-6">
+=======
       <input type="checkbox" id="toggleBoton"></input>
       <label className="button-charge" for="toggleBoton" ></label>
 
       <div className="row w-100"  id="miDiv">
         <div className="col-6">
+>>>>>>> 3a358e41ce0b77fc9ed66090e759961ad8e1a08f
           <div className="creation creation-container w-100">
             <div className="form-label_name">
               <h3>Charges Income </h3>
