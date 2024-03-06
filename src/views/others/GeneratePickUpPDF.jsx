@@ -10,8 +10,6 @@ const GeneratePickUpPDF = (data) => {
   const barcodeImage = canvas.toDataURL();
   
 
-
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;

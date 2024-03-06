@@ -19,6 +19,10 @@ import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
+import Receipt from "../../Warehouse/Receipt";
+
+import { PDFDocument } from "pdf-lib";
+
 const Table = ({
   data,
   columns,
@@ -363,16 +367,22 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
   };
-
+  //-------------------------------------------------------------------------------------------------------
   const generatePDFReceipt = () => {
-    GenerateReceiptPdf(selectedRow)
-      .then((pdfUrl) => {
-        window.open(pdfUrl, "_blank");
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
-  };
+    console.log("SelectR = ", selectedRow.commodities.length)
+    const numCon = selectedRow.commodities.length;
+    for (let i = 0; i < numCon; i++) {
+      GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+        .then((pdfUrl) => {
+          window.open(pdfUrl);
+        })
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+        });
+    }
+  }
+  //-------------------------------------------------------------------------------------------------------
+
 
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
@@ -629,11 +639,10 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
-                        ? "table-primary"
-                        : ""
-                    }`}
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                      ? "table-primary"
+                      : ""
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -719,15 +728,15 @@ const Table = ({
                               <i className="fas fa-times"></i>
                             )
                           ) : columnNameToProperty[columnName]?.includes(
-                              "."
-                            ) ? (
+                            "."
+                          ) ? (
                             getPropertyValue(
                               row,
                               columnNameToProperty[columnName]
                             )
                           ) : Array.isArray(
-                              row[columnNameToProperty[columnName]]
-                            ) ? (
+                            row[columnNameToProperty[columnName]]
+                          ) ? (
                             row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                           ) : (
                             row[columnNameToProperty[columnName]]

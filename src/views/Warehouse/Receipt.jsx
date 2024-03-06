@@ -45,17 +45,17 @@ const Receipt = () => {
         });
 
         setreceipts([...receipts, ...newreceipts].reverse());
-        console.log("BANDERA-0");
-        if (pickupOrderId) {
-          console.log("BANDERA-1");
-        }
+        // console.log("BANDERA-0");
+        // if (pickupOrderId) {
+        //   console.log("BANDERA-1");
+        // }
 
-        if (pickupOrderId == null) {
-          console.log("BANDERA-2");
-        }
-        if (!pickupOrderId) {
-          console.log("BANDERA-3");
-        }
+        // if (pickupOrderId == null) {
+        //   console.log("BANDERA-2");
+        // }
+        // if (!pickupOrderId) {
+        //   console.log("BANDERA-3");
+        // }
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -104,6 +104,8 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
+    console.log("receipts", receipts[0])
+    console.log("Pieces", receipts[0].commodities.length)
   };
 
   const handleEditreceipts = () => {
@@ -121,63 +123,63 @@ const Receipt = () => {
     openModal();
   };
 
- const handleDeletePickupOrder = async () => {
-  if (selectedPickupOrder) {
-    try {
-      
-      // Obtener todas las pickups
-      const response = await PickupService.getPickups();
-      const resultsArray = response.data.results;
-      
+  const handleDeletePickupOrder = async () => {
+    if (selectedPickupOrder) {
+      try {
 
-      for (let i = 0; i < resultsArray.length; i++) {
-        const pickUpLocationObj = resultsArray[i].number;
-        const getpickupOrderId = resultsArray[i].id;
-        
-        if (pickUpLocationObj === selectedPickupOrder.number) {
-          
-          const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
-          const newPickup = { ...getpickupforId , status: 14 };
-          // Actualizar la pickup con el nuevo estado de empty
-          await PickupService.updatePickup(getpickupOrderId, newPickup);
-          //console.log("Actualizado correctamente");
+        // Obtener todas las pickups
+        const response = await PickupService.getPickups();
+        const resultsArray = response.data.results;
 
-          // Después de la actualización, proceder con ReceiptService para eliminarlo 
-          try {
-            await ReceiptService.deleteReceipt(selectedPickupOrder.id);
-            //console.log("Eliminado correctamente");
 
-            // Actualizar el estado de receipts eliminando la orden
-            const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
-            setreceipts(newreceipts);
+        for (let i = 0; i < resultsArray.length; i++) {
+          const pickUpLocationObj = resultsArray[i].number;
+          const getpickupOrderId = resultsArray[i].id;
 
-            setShowSuccessAlert(true);
-            setTimeout(() => {
-              setShowSuccessAlert(false);
-            }, 3000);
-          } catch (error) {
-            console.error("Error al eliminar el recibo:", error);
-            setShowErrorAlert(true);
-            setTimeout(() => {
-              setShowErrorAlert(false);
-            }, 3000);
+          if (pickUpLocationObj === selectedPickupOrder.number) {
+
+            const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
+            const newPickup = { ...getpickupforId, status: 14 };
+            // Actualizar la pickup con el nuevo estado de empty
+            await PickupService.updatePickup(getpickupOrderId, newPickup);
+            //console.log("Actualizado correctamente");
+
+            // Después de la actualización, proceder con ReceiptService para eliminarlo 
+            try {
+              await ReceiptService.deleteReceipt(selectedPickupOrder.id);
+              //console.log("Eliminado correctamente");
+
+              // Actualizar el estado de receipts eliminando la orden
+              const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
+              setreceipts(newreceipts);
+
+              setShowSuccessAlert(true);
+              setTimeout(() => {
+                setShowSuccessAlert(false);
+              }, 3000);
+            } catch (error) {
+              console.error("Error al eliminar el recibo:", error);
+              setShowErrorAlert(true);
+              setTimeout(() => {
+                setShowErrorAlert(false);
+              }, 3000);
+            }
+
+            // Salir del bucle después de la actualización
+            break;
           }
-
-          // Salir del bucle después de la actualización
-          break;
         }
+      } catch (error) {
+        console.error("Error al obtener las pickups:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener las pickups:", error);
+    } else {
+      alert("Por favor, selecciona una Orden de Recogida para eliminar.");
     }
-  } else {
-    alert("Por favor, selecciona una Orden de Recogida para eliminar.");
-  }
-};
+  };
 
-  
-  
-  
+
+
+
 
   useEffect(() => {
     const handleWindowClick = (event) => {
