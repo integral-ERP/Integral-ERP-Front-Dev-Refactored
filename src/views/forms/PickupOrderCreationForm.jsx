@@ -22,6 +22,9 @@ import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
 
+import Modal from "react-bootstrap/Modal";
+import "../../styles/components/BModalWidth.scss";
+
 const PickupOrderCreationForm = ({
   pickupOrder,
   closeModal,
@@ -29,6 +32,7 @@ const PickupOrderCreationForm = ({
   onpickupOrderDataChange,
   currentPickUpNumber,
   setcurrentPickUpNumber,
+  showBModal,
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -67,6 +71,18 @@ const PickupOrderCreationForm = ({
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
   const [CTBType, setCTBType] = useState("");
+  //Bootstrap Modal
+  const [showBM, setShowBM] = useState(false);
+
+  const handleCloseBM = () => {
+    setShowBM(false);
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    showBModal ? setShowBM(true) : setShowBM(false);
+  }, [showBModal]);
+  //--
   const formFormat = {
     status: 14,
     number: pickupNumber,
@@ -1070,324 +1086,339 @@ const PickupOrderCreationForm = ({
   }, [CTBType, formData]) */
 
   return (
-    <form className="company-form pickup">
-      <div className="row w-100">
-        {/* General Form */}
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>General</h3>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-4 text-start text-start">
-                <Input
-                  id="pickupnumber"
-                  type="number"
-                  inputName="pickupnumber"
-                  placeholder="Pickup Order Number..."
-                  value={formData.number}
-                  readonly={true}
-                  label="Number"
-                />
-              </div>
-              <div className="col-4 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Creation Date and Time</p>
-                  <DateTimePicker
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
-              <div className="col-4 text-start">
-                <label htmlFor="destinationAgent" className="form-label">
-                  Destination Agent:
-                </label>
-                {!creating ? (
-                  canRender && (
+    <Modal
+      show={showBM}
+      onHide={handleCloseBM}
+      animation={false}
+      backdrop="static"
+      dialogClassName="bmodal-width"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Pick-up Order Creation Form</Modal.Title>
+      </Modal.Header>
+      <div>
+        <form className="company-form pickup">
+          <div className="row w-100">
+            {/* General Form */}
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name">
+                  <h3>General</h3>
+                  <span></span>
+                </div>
+                <div className="row align-items-center mb-3">
+                  <div className="col-4 text-start text-start">
+                    <Input
+                      id="pickupnumber"
+                      type="number"
+                      inputName="pickupnumber"
+                      placeholder="Pickup Order Number..."
+                      value={formData.number}
+                      readonly={true}
+                      label="Number"
+                    />
+                  </div>
+                  <div className="col-4 text-start">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <p className="text-date">Creation Date and Time</p>
+                      <DateTimePicker
+                        className="font-right"
+                        value={dayjs(formData.createdDateAndTime)}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          })
+                        }
+                      />
+                    </LocalizationProvider>
+                  </div>
+                  <div className="col-4 text-start">
+                    <label htmlFor="destinationAgent" className="form-label">
+                      Destination Agent:
+                    </label>
+                    {!creating ? (
+                      canRender && (
+                        <AsyncSelect
+                          id="destinationAgent"
+                          onChange={(e) => {
+                            handleDestinationAgentSelection(e);
+                          }}
+                          className="async-option"
+                          isClearable={true}
+                          defaultOptions={destinationAgentOptions}
+                          loadOptions={loadDestinationAgentsSelectOptions}
+                          getOptionLabel={(option) => option.name}
+                          getOptionValue={(option) => option.id}
+                          value={destinationAgentOptions.find(
+                            (option) =>
+                              option.id === formData.destinationAgentId
+                          )}
+                        />
+                      )
+                    ) : (
+                      <AsyncSelect
+                        id="destinationAgentId"
+                        onChange={(e) => {
+                          handleDestinationAgentSelection(e);
+                        }}
+                        className="async-option"
+                        isClearable={true}
+                        defaultOptions={destinationAgentOptions}
+                        loadOptions={loadDestinationAgentsSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                        value={destinationAgentOptions.find(
+                          (option) => option.id === formData.destinationAgentId
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="row align-items-center mb-3">
+                  <div className="col-4 text-start">
+                    <label htmlFor="employee" className="form-label">
+                      Employee:
+                    </label>
                     <AsyncSelect
-                      id="destinationAgent"
+                      id="employeeId"
+                      defaultValue={formData.employeeId}
                       onChange={(e) => {
-                        handleDestinationAgentSelection(e);
+                        handleEmployeeSelection(e);
                       }}
-                      className="async-option"
                       isClearable={true}
-                      defaultOptions={destinationAgentOptions}
-                      loadOptions={loadDestinationAgentsSelectOptions}
+                      placeholder="Search and select..."
+                      defaultOptions={employeeOptions}
+                      value={employeeOptions.find(
+                        (employee) => employee.id === formData.employeeId
+                      )}
+                      loadOptions={loadEmployeeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                      value={destinationAgentOptions.find(
-                        (option) => option.id === formData.destinationAgentId
-                      )}
                     />
-                  )
-                ) : (
-                  <AsyncSelect
-                    id="destinationAgentId"
-                    onChange={(e) => {
-                      handleDestinationAgentSelection(e);
-                    }}
-                    className="async-option"
-                    isClearable={true}
-                    defaultOptions={destinationAgentOptions}
-                    loadOptions={loadDestinationAgentsSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    value={destinationAgentOptions.find(
-                      (option) => option.id === formData.destinationAgentId
-                    )}
-                  />
-                )}
-              </div>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-4 text-start">
-                <label htmlFor="employee" className="form-label">
-                  Employee:
-                </label>
-                <AsyncSelect
-                  id="employeeId"
-                  defaultValue={formData.employeeId}
-                  onChange={(e) => {
-                    handleEmployeeSelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={employeeOptions}
-                  value={employeeOptions.find(
-                    (employee) => employee.id === formData.employeeId
-                  )}
-                  loadOptions={loadEmployeeSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              <div className="col-4 text-start" id="dates">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Pick-up Date and Time</p>
-                  <DateTimePicker
-                    // label="Pick-up Date and Time"
-                    value={dayjs(formData.pickupDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                    className="creation creation-label"
-                  />
-                </LocalizationProvider>
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-4 text-start">
-                <label htmlFor="issuedby" className="form-label issuedBy">
-                  Issued By:
-                </label>
-                <AsyncSelect
-                  id="issuedById"
-                  value={issuedByOptions.find(
-                    (option) => option.id === formData.issuedById
-                  )}
-                  onChange={(e) => {
-                    handleIssuedBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={issuedByOptions}
-                  loadOptions={loadIssuedBySelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
+                  </div>
+                  <div className="col-4 text-start" id="dates">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <p className="text-date">Pick-up Date and Time</p>
+                      <DateTimePicker
+                        // label="Pick-up Date and Time"
+                        value={dayjs(formData.pickupDateAndTime)}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          })
+                        }
+                        className="creation creation-label"
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-4 text-start">
+                    <label htmlFor="issuedby" className="form-label issuedBy">
+                      Issued By:
+                    </label>
+                    <AsyncSelect
+                      id="issuedById"
+                      value={issuedByOptions.find(
+                        (option) => option.id === formData.issuedById
+                      )}
+                      onChange={(e) => {
+                        handleIssuedBySelection(e);
+                      }}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={issuedByOptions}
+                      loadOptions={loadIssuedBySelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
 
-              <div className="col-4 text-start" id="dates">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Delivery Date and Time</p>
-                  <DateTimePicker
-                    // label="Delivery Date and Time"
-                    value={dayjs(formData.deliveryDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
+                  <div className="col-4 text-start" id="dates">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <p className="text-date">Delivery Date and Time</p>
+                      <DateTimePicker
+                        // label="Delivery Date and Time"
+                        value={dayjs(formData.deliveryDateAndTime)}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          })
+                        }
+                      />
+                    </LocalizationProvider>
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-12 text-start">
+                    <div className="company-form__section">
+                      <Input
+                        type="textarea"
+                        inputName="issuedbyinfo"
+                        placeholder="Apply to..."
+                        value={formData.issuedByInfo}
+                        readonly={true}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+            {/* Pickup Form */}
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name">
+                  <h3>Pickup Information</h3>
+                  <span></span>
+                </div>
 
-            <div className="row mb-3">
-              <div className="col-12 text-start">
-                <div className="company-form__section">
-                  <Input
-                    type="textarea"
-                    inputName="issuedbyinfo"
-                    placeholder="Apply to..."
-                    value={formData.issuedByInfo}
-                    readonly={true}
-                  />
+                <div className="row">
+                  <div className="col-6 text-start">
+                    <label htmlFor="shipper" className="form-label">
+                      Shipper:
+                    </label>
+                    <AsyncSelect
+                      id="shipper"
+                      onChange={(e) => {
+                        handleShipperSelection(e);
+                      }}
+                      value={shipperOptions.find(
+                        (option) =>
+                          option.id === formData.shipperId &&
+                          option.type === formData.shipperType
+                      )}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={shipperOptions}
+                      loadOptions={loadShipperSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+
+                  <div className="col-6 text-start">
+                    <Input
+                      type="text"
+                      inputName="invoiceNumber"
+                      value={formData.invoiceNumber}
+                      changeHandler={(e) =>
+                        setFormData({
+                          ...formData,
+                          invoiceNumber: e.target.value,
+                        })
+                      }
+                      label="Purchase Order"
+                    />
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-12 text-start">
+                    <Input
+                      id="TextShipperLocation"
+                      type="textarea"
+                      inputName="shipperinfo"
+                      placeholder="Shipper Location..."
+                      value={formData.shipperInfo}
+                      readonly={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-6 text-start">
+                    <label htmlFor="pickup" className="form-label">
+                      Pick-up Location:
+                    </label>
+                    <AsyncSelect
+                      id="pickupLocation"
+                      onChange={(e) => {
+                        handlePickUpSelection(e);
+                      }}
+                      value={pickupLocationOptions.find(
+                        (option) =>
+                          option.id === formData.pickupLocationId &&
+                          option.type === formData.pickupLocationType
+                      )}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={pickupLocationOptions}
+                      loadOptions={loadPickUpLocationSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+
+                  <div className="col-6 text-start">
+                    <Input
+                      type="text"
+                      inputName="purchaseOrderNumber"
+                      value={formData.purchaseOrderNumber}
+                      changeHandler={(e) =>
+                        setFormData({
+                          ...formData,
+                          purchaseOrderNumber: e.target.value,
+                        })
+                      }
+                      label="Invoice Number"
+                    />
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-12 text-start">
+                    <Input
+                      id="TextPickupLocation"
+                      type="textarea"
+                      inputName="pickupinfo"
+                      placeholder="Pick-up Location..."
+                      readonly={true}
+                      // value={formData.pickupInfo}
+                      value={formData.pickupLocationInfo}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        {/* Pickup Form */}
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Pickup Information</h3>
-              <span></span>
-            </div>
 
-            <div className="row">
-              <div className="col-6 text-start">
-                <label htmlFor="shipper" className="form-label">
-                  Shipper:
-                </label>
-                <AsyncSelect
-                  id="shipper"
-                  onChange={(e) => {
-                    handleShipperSelection(e);
-                  }}
-                  value={shipperOptions.find(
-                    (option) =>
-                      option.id === formData.shipperId &&
-                      option.type === formData.shipperType
-                  )}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={shipperOptions}
-                  loadOptions={loadShipperSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="invoiceNumber"
-                  value={formData.invoiceNumber}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, invoiceNumber: e.target.value })
-                  }
-                  label="Purchase Order"
-                />
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-12 text-start">
-                <Input
-                  id="TextShipperLocation"
-                  type="textarea"
-                  inputName="shipperinfo"
-                  placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
-                  readonly={true}
-                />
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="pickup" className="form-label">
-                  Pick-up Location:
-                </label>
-                <AsyncSelect
-                  id="pickupLocation"
-                  onChange={(e) => {
-                    handlePickUpSelection(e);
-                  }}
-                  value={pickupLocationOptions.find(
-                    (option) =>
-                      option.id === formData.pickupLocationId &&
-                      option.type === formData.pickupLocationType
-                  )}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={pickupLocationOptions}
-                  loadOptions={loadPickUpLocationSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="purchaseOrderNumber"
-                  value={formData.purchaseOrderNumber}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      purchaseOrderNumber: e.target.value,
-                    })
-                  }
-                  label="Invoice Number"
-                />
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-12 text-start">
-                <Input
-                  id="TextPickupLocation"
-                  type="textarea"
-                  inputName="pickupinfo"
-                  placeholder="Pick-up Location..."
-                  readonly={true}
-                  // value={formData.pickupInfo}
-                  value={formData.pickupLocationInfo}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row w-100">
-      <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Delivery Information</h3>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="consignee" className="form-label">
-                  Consignee:
-                </label>
-                <div className="custom-select">
-                  <AsyncSelect
-                    id="consignee"
-                    onChange={(e) => handleConsigneeSelection(e)}
-                    value={consigneeOptions.find(
-                      (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type === formData.consigneeType
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
+          <div className="row w-100">
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name">
+                  <h3>Delivery Information</h3>
+                  <span></span>
                 </div>
-              </div>
+                <div className="row align-items-center mb-3">
+                  <div className="col-6 text-start">
+                    <label htmlFor="consignee" className="form-label">
+                      Consignee:
+                    </label>
+                    <div className="custom-select">
+                      <AsyncSelect
+                        id="consignee"
+                        onChange={(e) => handleConsigneeSelection(e)}
+                        value={consigneeOptions.find(
+                          (option) =>
+                            option.id === formData.consigneeId &&
+                            option.type === formData.consigneeType
+                        )}
+                        isClearable={true}
+                        placeholder="Search and select..."
+                        defaultOptions={consigneeOptions}
+                        loadOptions={loadConsigneeSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                      />
+                    </div>
+                  </div>
 
               <div
                 className="col-6 text-start"
-                style={{ marginBlockEnd: "auto"}}
+                style={{ marginBlockEnd: "auto" }}
               >
                 <label htmlFor="delivery" className="form-label">
                   Delivery Location:
@@ -1412,86 +1443,86 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
 
-            <div className="row align-items-center">
-              <div className="col-6 text-start">
-                <div className="company-form__section">
-                  <Input
-                    id="TextConsignee"
-                    type="textarea"
-                    inputName="consigneeInfo"
-                    placeholder="Consignee Info..."
-                    value={formData.consigneeInfo}
-                    readonly={true}
-                    label="Address"
-                  />
-                </div>
-              </div>
+                <div className="row align-items-center">
+                  <div className="col-6 text-start">
+                    <div className="company-form__section">
+                      <Input
+                        id="TextConsignee"
+                        type="textarea"
+                        inputName="consigneeInfo"
+                        placeholder="Consignee Info..."
+                        value={formData.consigneeInfo}
+                        readonly={true}
+                        label="Address"
+                      />
+                    </div>
+                  </div>
 
-              <div className="col-6 text-start">
-                <div className="company-form__section">
-                  <Input
-                    id="TextDeliveryLocation"
-                    type="textarea"
-                    inputName="deliveryInfo"
-                    placeholder="Delivery Info..."
-                    value={formData.deliveryLocationInfo}
-                    readonly={true}
-                    label="Address"
-                  />
+                  <div className="col-6 text-start">
+                    <div className="company-form__section">
+                      <Input
+                        id="TextDeliveryLocation"
+                        type="textarea"
+                        inputName="deliveryInfo"
+                        placeholder="Delivery Info..."
+                        value={formData.deliveryLocationInfo}
+                        readonly={true}
+                        label="Address"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="row align-items-center">
-              <div className="col-6 text-start">
-                <label
-                  htmlFor="language"
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                    color: "#565656",
-                    marginRight: "10px",
-                  }}
-                >
-                  Client to Bill:
-                </label>
-                <select
-                  name="clientToBill"
-                  id="clientToBill"
-                  className="form-input"
-                  value={formData.client_to_bill_type}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an option</option>
-                  <option value="shipper">Shipper</option>
-                  <option value="consignee">Ultimate Consignee</option>
-                  <option value="other">Other</option>
-                </select>
-                {/* <p style={{ color: "red" }}>
+                <div className="row align-items-center">
+                  <div className="col-6 text-start">
+                    <label
+                      htmlFor="language"
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                        color: "#565656",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Client to Bill:
+                    </label>
+                    <select
+                      name="clientToBill"
+                      id="clientToBill"
+                      className="form-input"
+                      value={formData.client_to_bill_type}
+                      onChange={(e) => {
+                        handleClientToBillSelection(e);
+                      }}
+                    >
+                      <option value="">Select an option</option>
+                      <option value="shipper">Shipper</option>
+                      <option value="consignee">Ultimate Consignee</option>
+                      <option value="other">Other</option>
+                    </select>
+                    {/* <p style={{ color: "red" }}>
                   Note: Always select a client to bill when editing
                 </p> */}
-              </div>
-              <div className="col-6 text-start">
-                <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.client_to_bill_type !== "other"}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                  value={getAsyncSelectValue()}
-                  isClearable={true}
-                  defaultOptions={releasedToOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
+                  </div>
+                  <div className="col-6 text-start">
+                    <AsyncSelect
+                      id="releasedToOther"
+                      isDisabled={formData.client_to_bill_type !== "other"}
+                      onChange={(e) => {
+                        handleClientToBillSelection(e);
+                      }}
+                      value={getAsyncSelectValue()}
+                      isClearable={true}
+                      defaultOptions={releasedToOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="col-6" >
+        <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
               <h3>Carrier Information</h3>
@@ -1532,35 +1563,35 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
 
-            <div className="row ">
-              <div className="col-6 text-start">
-                <Input
-                  id="TextMainCarrier"
-                  type="textarea"
-                  inputName="issuedbydata"
-                  value={formData.mainCarrierInfo}
-                  readonly={true}
-                  label="Address"
-                />
-              </div>
-              <div className="col-6 text-start">
-                <Input
-                  id="proNumber"
-                  type="text"
-                  inputName="proNumber"
-                  value={formData.proNumber}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, proNumber: e.target.value })
-                  }
-                  label="PRO Number"
-                />
+                <div className="row ">
+                  <div className="col-6 text-start">
+                    <Input
+                      id="TextMainCarrier"
+                      type="textarea"
+                      inputName="issuedbydata"
+                      value={formData.mainCarrierInfo}
+                      readonly={true}
+                      label="Address"
+                    />
+                  </div>
+                  <div className="col-6 text-start">
+                    <Input
+                      id="proNumber"
+                      type="text"
+                      inputName="proNumber"
+                      value={formData.proNumber}
+                      changeHandler={(e) =>
+                        setFormData({ ...formData, proNumber: e.target.value })
+                      }
+                      label="PRO Number"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* <div className="col-12">
+          {/* <div className="col-12">
         <div className="creation creation-container w-100">
           <div className="form-label_name">
             <h3>Commodities</h3>
@@ -1706,11 +1737,11 @@ const PickupOrderCreationForm = ({
         </div>
       </div> */}
 
-      <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton" ></label>
+          <input type="checkbox" id="toggleBoton"></input>
+          <label className="button-charge" for="toggleBoton"></label>
 
-      <div className="row w-100"id="miDiv" >
-      <div className="col-6">
+      <div className="row w-100"  id="miDiv">
+        <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
               <h3>Charges Income </h3>
@@ -1728,89 +1759,86 @@ const PickupOrderCreationForm = ({
               ></IncomeChargeForm>
             )}
 
-            {showIncomeForm && (
-              <Table
-                data={charges.filter((c) => c.type === "income")}
-                columns={[
-                  "Status",
-                  "Type",
-                  "Description",
-                  "Quantity",
-                  "Price",
-                  "Currency",
-                ]}
-                onSelect={() => {}} // Make sure this line is correct
-                selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
-                showOptions={false}
-              />
-            )}
-          </div>
-        </div>
-
-        
-        
-
-        <div className="col-6">    
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Charges Expense </h3>
-              <span></span>
+                {showIncomeForm && (
+                  <Table
+                    data={charges.filter((c) => c.type === "income")}
+                    columns={[
+                      "Status",
+                      "Type",
+                      "Description",
+                      "Quantity",
+                      "Price",
+                      "Currency",
+                    ]}
+                    onSelect={() => {}} // Make sure this line is correct
+                    selectedRow={{}}
+                    onDelete={() => {}}
+                    onEdit={() => {}}
+                    onAdd={() => {}}
+                    showOptions={false}
+                  />
+                )}
+              </div>
             </div>
-            {true && (
-              <ExpenseChargeForm
-                onCancel={setshowExpenseForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-              ></ExpenseChargeForm>
-            )}
-            {showExpenseForm && (
-              <Table
-                data={charges.filter((c) => c.type === "expense")}
-                columns={[
-                  "Status",
-                  "Type",
-                  "Description",
-                  "Quantity",
-                  "Price",
-                  "Currency",
-                ]}
-                onSelect={() => {}} // Make sure this line is correct
-                selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
-                showOptions={false}
-              />
-            )}
+
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name">
+                  <h3>Charges Expense </h3>
+                  <span></span>
+                </div>
+                {true && (
+                  <ExpenseChargeForm
+                    onCancel={setshowExpenseForm}
+                    charges={charges}
+                    setcharges={setcharges}
+                    commodities={commodities}
+                    agent={agent}
+                    consignee={consignee}
+                    shipper={shipper}
+                  ></ExpenseChargeForm>
+                )}
+                {showExpenseForm && (
+                  <Table
+                    data={charges.filter((c) => c.type === "expense")}
+                    columns={[
+                      "Status",
+                      "Type",
+                      "Description",
+                      "Quantity",
+                      "Price",
+                      "Currency",
+                    ]}
+                    onSelect={() => {}} // Make sure this line is correct
+                    selectedRow={{}}
+                    onDelete={() => {}}
+                    onEdit={() => {}}
+                    onAdd={() => {}}
+                    showOptions={false}
+                  />
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="company-form__options-container">
-        <button
-          className="button-save"
-          onClick={(e) => {
-            e.preventDefault();
-            sendData();
-          }}
-          type="submit"
-        >
-          Save
-        </button>
+          <div className="company-form__options-container">
+            <button
+              className="button-save"
+              onClick={(e) => {
+                e.preventDefault();
+                sendData();
+              }}
+              type="submit"
+            >
+              Save
+            </button>
 
-        <button className="button-cancel" onClick={closeModal}>
-          Cancel
-        </button>
-      </div>
+            <button className="button-cancel" onClick={closeModal}>
+              Cancel
+            </button>
+          </div>
 
-      {/* {showSuccessAlert && (
+          {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1822,34 +1850,38 @@ const PickupOrderCreationForm = ({
           </strong>
         </Alert>
       )} */}
-      {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <p className="succes"> Success </p>
-          <p className=" created">
-            {" "}
-            Pick up Order {creating ? "created" : "updated"} successfully!{" "}
-          </p>
-        </Alert>
-      )}
+          {showSuccessAlert && (
+            <Alert
+              severity="success"
+              onClose={() => setShowSuccessAlert(false)}
+              className="alert-notification"
+            >
+              <p className="succes"> Success </p>
+              <p className=" created">
+                {" "}
+                Pick up Order {creating
+                  ? "created"
+                  : "updated"} successfully!{" "}
+              </p>
+            </Alert>
+          )}
 
-      {showErrorAlert && (
-        <Alert
-          severity="error"
-          onClose={() => setShowErrorAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Error</AlertTitle>
-          <strong>
-            Error {creating ? "creating" : "updating"} Pick up Order. Please try
-            again
-          </strong>
-        </Alert>
-      )}
-    </form>
+          {showErrorAlert && (
+            <Alert
+              severity="error"
+              onClose={() => setShowErrorAlert(false)}
+              className="alert-notification"
+            >
+              <AlertTitle>Error</AlertTitle>
+              <strong>
+                Error {creating ? "creating" : "updating"} Pick up Order. Please
+                try again
+              </strong>
+            </Alert>
+          )}
+        </form>
+      </div>
+    </Modal>
   );
 };
 

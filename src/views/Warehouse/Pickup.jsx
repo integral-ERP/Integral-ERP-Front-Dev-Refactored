@@ -40,11 +40,11 @@ const Pickup = () => {
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
   //added status for update context menu
- /*  const StatusOnHand = 4;
-  const StatusInTransit= 6;
+  const StatusOnHand = 4;
+  const StatusInTransit = 6;
   const StatusDelivered = 9;
-  const StatusOnHold = 12;  
-  const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false); */
+  const StatusOnHold = 12;
+  const [contextMenuOptionsState, setContextMenuOptionsState] = useState(false);
 
   const columns = [
     "Status",
@@ -68,7 +68,6 @@ const Pickup = () => {
   ];
 
   const handleContextMenu = (e) => {
-    
     if (selectedPickupOrder) {
       e.preventDefault(); // Prevent the browser's default context menu
       const clickX = e.clientX;
@@ -77,7 +76,13 @@ const Pickup = () => {
       setShowContextMenu(true);
       //added context menu for status onhand
       if (selectedPickupOrder.status != StatusEmpty) {
+<<<<<<< HEAD
         setShowContextMenu(false);
+=======
+        setContextMenuOptionsState(true);
+      } else {
+        setContextMenuOptionsState(false);
+>>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
       }
       
     }
@@ -176,7 +181,6 @@ const Pickup = () => {
 
   useEffect(() => {}, [selectedPickupOrder]);
 
-
   const handleAddPickupOrder = () => {
     openModal();
   };
@@ -194,7 +198,11 @@ const Pickup = () => {
               setpickupOrders(newPickupOrders);
               setShowSuccessAlert(true);
               releaseOrders.forEach((release) => {
-                if (release.warehouse_receipt && String(release.warehouse_receipt) === String(selectedPickupOrder.id)) {
+                if (
+                  release.warehouse_receipt &&
+                  String(release.warehouse_receipt) ===
+                    String(selectedPickupOrder.id)
+                ) {
                   ReleaseService.deleteRelease(release.id);
                 }
               });
@@ -222,7 +230,12 @@ const Pickup = () => {
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
-      if (!isPickupOrdersButton && !isTableRow && !createWarehouseReceipt && !isEdit) {
+      if (
+        !isPickupOrdersButton &&
+        !isTableRow &&
+        !createWarehouseReceipt &&
+        !isEdit
+      ) {
         setSelectedPickupOrder(null);
       }
     };
@@ -250,8 +263,14 @@ const Pickup = () => {
 
   /* const setInTransit = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = { ...selectedPickupOrder, status: StatusInTransit };
-      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      const updatedPickuporder = {
+        ...selectedPickupOrder,
+        status: StatusInTransit,
+      };
+      const response = await PickupService.updatePickup(
+        selectedPickupOrder.id,
+        updatedPickuporder
+      );
       if (response.status === 200) {
         window.location.reload(true);
       }
@@ -262,34 +281,50 @@ const Pickup = () => {
 
   const setDelivered = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = { ...selectedPickupOrder, status: StatusDelivered };
-      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      const updatedPickuporder = {
+        ...selectedPickupOrder,
+        status: StatusDelivered,
+      };
+      const response = await PickupService.updatePickup(
+        selectedPickupOrder.id,
+        updatedPickuporder
+      );
       if (response.status === 200) {
         window.location.reload(true);
-
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
-  const setOnHand= async () => {
+  const setOnHand = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHand };
-      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      const updatedPickuporder = {
+        ...selectedPickupOrder,
+        status: StatusOnHand,
+      };
+      const response = await PickupService.updatePickup(
+        selectedPickupOrder.id,
+        updatedPickuporder
+      );
       if (response.status === 200) {
         window.location.reload(true);
-
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
-  const setOnHold= async () => {
+  const setOnHold = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHold };
-      const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
+      const updatedPickuporder = {
+        ...selectedPickupOrder,
+        status: StatusOnHold,
+      };
+      const response = await PickupService.updatePickup(
+        selectedPickupOrder.id,
+        updatedPickuporder
+      );
       if (response.status === 200) {
         window.location.reload(true);
       }
@@ -323,8 +358,13 @@ const Pickup = () => {
     {
       label: "OnHand",
       handler: setOnHand,
+<<<<<<< HEAD
     }
   ] */
+=======
+    },
+  ];
+>>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
 
   return (
     <>
@@ -356,7 +396,15 @@ const Pickup = () => {
               showContextMenu={showContextMenu}
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
+<<<<<<< HEAD
               contextMenuOptions={contextMenuOptions}
+=======
+              contextMenuOptions={
+                contextMenuOptionsState
+                  ? contextMenuOptionsStatus
+                  : contextMenuOptions
+              }
+>>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
               contextService={PickupService}
               importEnabled={false}
               createWarehouseReceipt={createWarehouseReceipt}
@@ -369,6 +417,7 @@ const Pickup = () => {
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
 
@@ -380,6 +429,7 @@ const Pickup = () => {
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>
@@ -402,7 +452,10 @@ const Pickup = () => {
                 onClose={() => setShowWarningAlert(false)}
                 className="alert-notification-warning"
               >
-                <p className="succes"> It is not allowed to delete this order</p>
+                <p className="succes">
+                  {" "}
+                  It is not allowed to delete this order
+                </p>
               </Alert>
             )}
 
@@ -427,6 +480,7 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromPickUp={true}
+                  showBModal={true}
                 />
               </div>
             )}

@@ -139,31 +139,32 @@ const Receipt = () => {
   const handleDeletePickupOrder = async () => {
     if (selectedPickupOrder) {
       try {
-
         // Obtener todas las pickups
         const response = await PickupService.getPickups();
         const resultsArray = response.data.results;
-
 
         for (let i = 0; i < resultsArray.length; i++) {
           const pickUpLocationObj = resultsArray[i].number;
           const getpickupOrderId = resultsArray[i].id;
 
           if (pickUpLocationObj === selectedPickupOrder.number) {
-
-            const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
+            const getpickupforId = await PickupService.getPickupById(
+              getpickupOrderId
+            );
             const newPickup = { ...getpickupforId, status: 14 };
             // Actualizar la pickup con el nuevo estado de empty
             await PickupService.updatePickup(getpickupOrderId, newPickup);
             //console.log("Actualizado correctamente");
 
-            // Después de la actualización, proceder con ReceiptService para eliminarlo 
+            // Después de la actualización, proceder con ReceiptService para eliminarlo
             try {
               await ReceiptService.deleteReceipt(selectedPickupOrder.id);
               //console.log("Eliminado correctamente");
 
               // Actualizar el estado de receipts eliminando la orden
-              const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
+              const newreceipts = receipts.filter(
+                (order) => order.id !== selectedPickupOrder.id
+              );
               setreceipts(newreceipts);
 
               setShowSuccessAlert(true);
@@ -189,6 +190,7 @@ const Receipt = () => {
       alert("Por favor, selecciona una Orden de Recogida para eliminar.");
     }
   };
+<<<<<<< HEAD
 
   //added context menu
 
@@ -311,6 +313,8 @@ const Receipt = () => {
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
 
+=======
+>>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
 
   useEffect(() => {
     const handleWindowClick = (event) => {
@@ -382,6 +386,7 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromReceipt={true}
+                  showBModal={true}
                 />
               )}
 
@@ -393,6 +398,7 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>
