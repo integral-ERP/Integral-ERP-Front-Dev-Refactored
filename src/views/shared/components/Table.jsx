@@ -664,23 +664,23 @@ const Table = ({
                           }}
                         >
                           {columnName === "View PDF" ? (
-                            <button type="button" onClick={generatePDF} className="custom-button">
+                            <button type="button" onClick={generatePDF} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
-                            <button type="button" onClick={generatePDFReceipt} className="custom-button">
+                            <button type="button" onClick={generatePDFReceipt} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Release PDF" ? (
-                            <button type="button" onClick={generatePDFRelease} className="custom-button">
+                            <button type="button" onClick={generatePDFRelease} className="custom-butto-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Invoice PDF" ? (
-                            <button type="button" onClick={generatePDFInvoice} className="custom-button">
+                            <button type="button" onClick={generatePDFInvoice} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Bill PDF" ? (
-                            <button type="button" onClick={generateBillPDF} className="custom-button">
+                            <button type="button" onClick={generateBillPDF} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (
