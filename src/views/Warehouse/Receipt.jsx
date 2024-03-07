@@ -10,6 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 import PickupService from "../../services/PickupService";
 
+
 const Receipt = () => {
   const { hideShowSlider } = useContext(GlobalContext);
   const [receipts, setreceipts] = useState([]);
@@ -22,6 +23,18 @@ const Receipt = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [createReceiptOrder, setCreateReceiptOrder] = useState(true);
+  //added menu context
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  const StatusOnHand = 4;
+  const StatusInTransit= 6;
+  const StatusDelivered = 9;
+  const StatusOnHold = 12;  
+  const StatusPending = 2;
+  //------------
   const columns = [
     "Status",
     "Number",
@@ -177,7 +190,125 @@ const Receipt = () => {
     }
   };
 
+  //added context menu
 
+  const setOnHold= async () => {
+    if (selectedPickupOrder) {
+      
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHold };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  };
+
+  const setInTransit = async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusInTransit };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  };
+
+  const setDelivered = async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusDelivered };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+  const setOnHand= async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHand };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+  const setPending= async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusPending };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
+
+  const contextMenuOptions = [
+    {
+      label: "On Hold",
+      handler: setOnHold
+    },
+    {
+      label: "In Transit",
+      handler: setInTransit,
+    },
+    {
+      label: "Delivered",
+      handler: setDelivered,
+    },
+    {
+      label: "On Hand",
+      handler: setOnHand,
+    },
+    {
+      label: "Pending",
+      handler: setPending,
+    }
+  ];
+
+  const handleContextMenu = (e) => {
+    
+    if (selectedPickupOrder) {
+      //console.log("selectedPickupOrder", selectedPickupOrder);
+      e.preventDefault(); // Prevent the browser's default context menu
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+      setContextMenuPosition({ x: clickX, y: clickY });
+      setShowContextMenu(true);
+      
+    }
+  };
+
+
+  // Add the event listener for context menu
+ useEffect(() => {
+    const handleDocumentClick = (e) => {
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
+        setShowContextMenu(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
 
 
@@ -232,6 +363,11 @@ const Receipt = () => {
               onDelete={handleDeletePickupOrder}
               onEdit={handleEditreceipts}
               onAdd={handleAddPickupOrder}
+              handleContextMenu={handleContextMenu}
+              showContextMenu={showContextMenu}
+              contextMenuPosition={contextMenuPosition}
+              setShowContextMenu={setShowContextMenu}
+              contextMenuOptions={contextMenuOptions}
               title="Warehouse Receipts"
               setData={setreceipts}
               contextService={ReceiptService}

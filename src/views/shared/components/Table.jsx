@@ -22,7 +22,7 @@ import { useModal } from "../../../hooks/useModal";
 
 import Receipt from "../../Warehouse/Receipt";
 
-import { PDFDocument } from "pdf-lib";
+
 
 const Table = ({
   data,
@@ -722,15 +722,15 @@ const Table = ({
                             </>
                           ) : columnName === "Repack Options" ? (
                             <>
-                              <button type="button" onClick={onInspect}>
+                              <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button type="button" onClick={onEdit}>
+                              <button type="button" onClick={onEdit} className="custom-button">
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>
                           ) : columnName === "Delete" ? (
-                            <button type="button" onClick={onDelete}>
+                            <button type="button" onClick={onDelete} className="custom-button">
                               <i className="fas fa-trash"></i>
                             </button>
                           ) : typeof columnNameToProperty[columnName] ===
