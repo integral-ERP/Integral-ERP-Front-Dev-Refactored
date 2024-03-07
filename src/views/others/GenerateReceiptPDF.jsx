@@ -11,10 +11,7 @@ pdfMake.vfs = pdfFonts;
 const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  // ------------------------------------------------------------------------------------------------------------------
 
-
-  // ------------------------------------------------------------------------------------------------------------------
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -29,6 +26,7 @@ const GenerateReceiptPDF = (data, numCon) => {
       textxalign: "center",
       bold: true,
     };
+    barcodeOptions.text = barcodeOptions.text.toUpperCase();
     try {
 
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
