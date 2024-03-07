@@ -75,7 +75,7 @@ const Sidebar = () => {
 
             <ul className="sub-menu blank">
               <li>
-                <Link className="link_name">Home</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Home</Link>
               </li>
             </ul>
           </li>
@@ -93,7 +93,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Warehouse</Link>
+                <Link className="link_name" style={{display: 'flex'}} >Warehouse</Link>
               </li>
               <li>
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
@@ -122,7 +122,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Shipments</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Shipments</Link>
               </li>
               <li>
                 <Link to={"/shipments"}>Shipment list</Link>
@@ -147,7 +147,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Rates</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Rates</Link>
               </li>
               <li>
                 <Link to={"/rates/standard"}>Standard Rates</Link>
@@ -174,7 +174,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Customs</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Customs</Link>
               </li>
               <li>
                 <Link to={"/customs/1166xml"}>1166 XML Import</Link>
@@ -220,7 +220,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Accounting</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Accounting</Link>
               </li>
               <li>
                 <Link to={"/accounting/chartofaccounts"}> Chart of Accounts </Link>
@@ -263,7 +263,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Online Customer</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Online Customer</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>
@@ -295,7 +295,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Agent</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Agent</Link>
               </li>
               <li>
                 <Link to={"/agent/search"}>Search</Link>
@@ -324,11 +324,8 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link to={"/maintenance"}>
-                  <a className="link_name" href="#">
-                    Maintenance
-                  </a>
-                </Link>
+              <Link className="link_name" style={{display: 'flex'}}>Maintenance</Link>
+
               </li>
               <li>
                 <Link to={"/maintenance/carriers"}>Carriers</Link>
@@ -382,7 +379,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name">Configuration</Link>
+                <Link className="link_name" style={{display: 'flex'}}>Configuration</Link>
               </li>
               <li>
                 <Link onClick={openCompanyForm}>

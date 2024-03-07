@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+import generateLabelPDF from "../../others/generateLabelPDF";
 import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
 import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
@@ -18,6 +19,10 @@ import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
+
+import Receipt from "../../Warehouse/Receipt";
+
+
 
 const Table = ({
   data,
@@ -40,7 +45,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
-  hiddenTrashButton,
+
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -363,16 +368,36 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
   };
-
+  //-------------------------------------------------------------------------------------------------------
   const generatePDFReceipt = () => {
-    GenerateReceiptPdf(selectedRow)
-      .then((pdfUrl) => {
-        window.open(pdfUrl, "_blank");
-      })
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
-  };
+    console.log("SelectR = ", selectedRow.commodities.length)
+    const numCon = selectedRow.commodities.length;
+    for (let i = 0; i < 1; i++) {
+      GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+        .then((pdfUrl) => {
+          window.open(pdfUrl);
+        })
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+        });
+    }
+  }
+  //-------------------------------------------------------------------------------------------------------
+  const generatePDFLabel = () => {
+    console.log("SelectR = ", selectedRow.commodities.length)
+    const numCon = selectedRow.commodities.length;
+    for (let i = 0; i < numCon; i++) {
+      generateLabelPDF(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+        .then((pdfUrl) => {
+          window.open(pdfUrl);
+        })
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+        });
+    }
+  }
+  //-------------------------------------------------------------------------------------------------------
+
 
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
@@ -629,11 +654,10 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
-                        ? "table-primary"
-                        : ""
-                    }`}
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                      ? "table-primary"
+                      : ""
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -655,60 +679,58 @@ const Table = ({
                           }}
                         >
                           {columnName === "View PDF" ? (
-                            <button type="button" onClick={generatePDF}>
+                            <button type="button" onClick={generatePDF} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
-                            <button type="button" onClick={generatePDFReceipt}>
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "View Release PDF" ? (
-                            <button type="button" onClick={generatePDFRelease}>
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
+                            <>
+                              {/* <button type="button" onClick={generatePDFReceipt} className="custom-button">
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                              <button type="button" onClick={generatePDFLabel} className="custom-button">
+                                <i className="fas fa-file-pdf"></i>
+                              </button> */}
+                              <div className="pdf-content">
+                                <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
+                                  <option value="">Select format </option>
+                                  <option value="receipt">PDF Receipt</option>
+                                  <option value="label">PDF Label</option>
+                                </select>
+                              </div>
+                            </>
                           ) : columnName === "Invoice PDF" ? (
-                            <button type="button" onClick={generatePDFInvoice}>
+                            <button type="button" onClick={generatePDFInvoice} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Bill PDF" ? (
-                            <button type="button" onClick={generateBillPDF}>
+                            <button type="button" onClick={generateBillPDF} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (
                             getStatus(row[columnNameToProperty[columnName]])
                           ) : columnName === "Options" ? (
-                            <>
-                              {" "}
-                              {/* added hiden button trash for table commodity creation form */}
-                              <button
-                                type="button"
-                                onClick={onDelete}
-                                style={{
-                                  display: hiddenTrashButton
-                                    ? "none"
-                                    : "inline-block",
-                                }}
-                              >
+                            <> {/* added hiden button trash for table commodity creation form */}
+                              <button type="button" onClick={onDelete} className="custom-button">
                                 <i className="fas fa-trash"></i>
                               </button>
-                              <button type="button" onClick={onEdit}>
+                              <button type="button" onClick={onEdit} className="custom-button">
                                 <i className="fas fa-pencil-alt"></i>
                               </button>
-                              <button type="button" onClick={onInspect}>
+                              <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
                             </>
                           ) : columnName === "Repack Options" ? (
                             <>
-                              <button type="button" onClick={onInspect}>
+                              <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button type="button" onClick={onEdit}>
+                              <button type="button" onClick={onEdit} className="custom-button">
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>
                           ) : columnName === "Delete" ? (
-                            <button type="button" onClick={onDelete}>
+                            <button type="button" onClick={onDelete} className="custom-button">
                               <i className="fas fa-trash"></i>
                             </button>
                           ) : typeof columnNameToProperty[columnName] ===
@@ -719,15 +741,15 @@ const Table = ({
                               <i className="fas fa-times"></i>
                             )
                           ) : columnNameToProperty[columnName]?.includes(
-                              "."
-                            ) ? (
+                            "."
+                          ) ? (
                             getPropertyValue(
                               row,
                               columnNameToProperty[columnName]
                             )
                           ) : Array.isArray(
-                              row[columnNameToProperty[columnName]]
-                            ) ? (
+                            row[columnNameToProperty[columnName]]
+                          ) ? (
                             row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                           ) : (
                             row[columnNameToProperty[columnName]]
@@ -797,7 +819,7 @@ const Table = ({
                 <div className="row w-100 align-items-center">
                   {/* <div className="movile"> */}
                   {/* Search menu */}
-                  <div className="col-6">
+                  <div className="col-6" id="input-container--first">
                     <div className="position-search mt-3">
                       <div className="search">
                         <div className="search-container">
@@ -1053,7 +1075,7 @@ const Table = ({
                       )}
                     </div>
                   </div>
-                  <div className="col-6 d-flex justify-content-end">
+                  <div className="col-6 d-flex justify-content-end" id="input-container--second">
                     <div className="button-container">
                       <div className="export-box">
                         <div className="row mx-0">
@@ -1075,7 +1097,7 @@ const Table = ({
                                 </select>
                               </label>
                               <button
-                                className="generic-button"
+                                className="generic-button-export generic-button"
                                 onClick={handleExport}
                               >
                                 <i className="fas fa-file-export menu-icon fa-3x"></i>

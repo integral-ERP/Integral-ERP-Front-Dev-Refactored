@@ -4,24 +4,29 @@ import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
+pdfMake.vfs = pdfFonts;
 
-const GeneratePickUpPDF = (data) => {
+
+
+const generateLabelPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  
+
 
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
     canvas = document.createElement('canvas');
     const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128)
-      text: data.number + '', // Barcode data
+      bcid: "code128", // Barcode type (e.g., code128),
+      text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + numCon,
       scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
+      height: 20, // Height of the barcode
       includetext: true, // Include human-readable text below the barcode
       textxalign: "center",
+      bold: true,
     };
+    barcodeOptions.text = barcodeOptions.text.toUpperCase();
     try {
 
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
@@ -41,7 +46,7 @@ const GeneratePickUpPDF = (data) => {
       let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
-      data.commodities?.forEach((commodity, index) => {
+      data.commodities?.forEach((commodity) => {
         firstRowText += `1; Pallet \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
@@ -97,7 +102,7 @@ const GeneratePickUpPDF = (data) => {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
 
-          
+
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -112,12 +117,12 @@ const GeneratePickUpPDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          
+
 
           chargeRows.push(chargeRow);
         }
       });
-      
+
     }
 
 
@@ -141,36 +146,27 @@ const GeneratePickUpPDF = (data) => {
                         fit: [100, 100],
                       },
                       {
-                        text: "Pick-up Order",
+                        text: "Warehouse Receipt",
                         fontSize: 14,
                         bold: true,
                         margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                      {
-                        text: "Land Bill of Landing",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
+                      }
                     ],
                   },
                   {
                     text: [
                       `Issued By \n`,
                       `${data.issued_byObj?.name || ``} \n`,
-                      `${
-                        data.issued_byObj?.phone
-                          ? `Tel: ${data.issued_byObj.phone}, `
-                          : ``
-                      }${
-                        data.issued_byObj?.fax
-                          ? `Fax: ${data.issued_byObj.fax}`
-                          : ``
+                      `${data.issued_byObj?.phone
+                        ? `Tel: ${data.issued_byObj.phone}, `
+                        : ``
+                      }${data.issued_byObj?.fax
+                        ? `Fax: ${data.issued_byObj.fax}`
+                        : ``
                       }\n`,
                       `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}, ${
-                        data.issuedBy?.state || ``
-                      } ${data.issued_byObj?.zip_code || ``} \n`,
+                      `${data.issued_byObj?.city || ``}
+                       ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``}`,
                       `${data.issued_byObj?.country || ``}`,
                     ],
                   },
@@ -190,184 +186,185 @@ const GeneratePickUpPDF = (data) => {
                   [
                     {}, // Empty cell for the logo image (rowspan: 2)
                   ],
+                  {},
                   {
                     style: `tableExample`,
                     table: {
                       width: `*`,
                       body: [
-                        [`Received By:`, `${data.employeeObj?.name || ``}`],
+                        [`Receipt Number`, `${data.number || ``}`],
+                        [`Received Date/Time`, `${data.creation_date || ``}`],
+                        [`Received By`, `${data.employeeObj?.name || ``}`]
                       ],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Received Date`, `${data.creation_date || ``}`]],
                       margin: [5, 0, 5, 0],
                     },
                   },
                 ],
               },
               {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Pickup Date`, `${data.pick_up_date || ``}`]],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Delivery Date`, `${data.delivery_date || ``}`]],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [`Carrier`, `${data.main_carrierObj?.name || ``}`],
-                      ],
-                    },
-                  },
-                ],
-              },
-              {
                 table: {
-                  widths: [`33%`, `33%`, `33%`],
+                  widths: [`15%`, `35%`, `15%`, '35%'],
                   body: [
                     [
                       {
-                        text: `Pickup Company`,
+                        text: `Shipper Information`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        colSpan: 2
                       },
+                      {},
                       {
-                        text: `Delivery Company`,
+                        text: `Consignee Information`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        colSpan: 2
                       },
-                      {
-                        text: `PRO Number`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
+                      {},
                     ],
                     [
                       {
-                        text: `${
-                          data.pickUpLocationObj?.data?.obj?.name || ``
-                        }`,
+                        text: [
+                          `${data.shipperObj?.data?.obj?.name || ``
+                          } \n`,
+                          `${data.shipperObj?.data?.obj
+                            ?.street_and_number || ``
+                          } \n`,
+                          `${data.shipperObj?.data?.obj?.city || ``
+                          }, ${data.shipperObj?.data?.obj?.state || ``
+                          } ${data.shipperObj?.data?.obj?.zip_code || ``
+                          } \n`,
+                          `${data.shipperObj?.data?.obj?.country || ``
+                          }`,
+                          `${data.shipperObj?.phone
+                            ? `Tel: ${data.shipperObj.phone}, `
+                            : ``
+                          }${data.shipperObj?.fax
+                            ? `Fax: ${data.shipperObj.fax}`
+                            : ``
+                          }\n`,
+                        ],
+                        colSpan: 2
+                      },
+                      {},
+                      {
+                        text: [
+                          `${data.consigneeObj?.data?.obj?.name || ``
+                          } \n`,
+                          `${data.consigneeObj?.data?.obj
+                            ?.street_and_number || ``
+                          } \n`,
+                          `${data.consigneeObj?.data?.obj?.city || ``
+                          }, ${data.consigneeObj?.data?.obj?.state || ``
+                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
+                          } \n`,
+                          `${data.consigneeObj?.data?.obj?.country || ``
+                          }`,
+                          `${data.consigneeObj?.phone
+                            ? `Tel: ${data.consigneeObj.phone}, `
+                            : ``
+                          }${data.consigneeObj?.fax
+                            ? `Fax: ${data.consigneeObj.fax}`
+                            : ``
+                          }\n`,
+                        ],
+                        colSpan: 2
+                      },
+                      {},
+                    ],
+                    [
+                      {
+                        text: "Inland and Supplier Information",
+                        margin: [0, 0, 0, 0],
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        colSpan: 4,
+                        alignment: "center"
+                      },
+                      {},
+                      {},
+                      {}
+                    ],
+                    [
+                      {
+                        text: `Carrier Name`,
+                        margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${
-                          data.deliveryLocationObj?.data?.obj?.name || ``
-                        }`,
+                        text: `${data.mainCarrierObj?.name || ``}`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `Suppliers Name`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.mainCarrierObj?.name || ``}`,
+                        margin: [0, 0, 0, 0],
+                      }
+                    ],
+                    [
+                      {
+                        text: `PRO Number`,
+                        margin: [0, 0, 0, 0],
                       },
                       {
                         text: `${data.pro_number || ``}`,
-                      },
-                    ],
-                    [
-                      {
-                        text: [
-                          `${data.pickUpLocationObj?.data?.obj?.name || ``} \n`,
-                          `${
-                            data.pickUpLocationObj?.data?.obj
-                              ?.street_and_number || ``
-                          } \n`,
-                          `${data.pickUpLocationObj?.data?.obj?.city || ``}, ${
-                            data.pickUpLocationObj?.data?.obj?.state || ``
-                          } ${
-                            data.pickUpLocationObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.pickUpLocationObj?.data?.obj?.country || ``}`,
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
-                        ],
-                        margin: [0, 0, 0, 20],
-                      },
-                      {
-                        text: [
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj
-                              ?.street_and_number || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.city || ``
-                          }, ${
-                            data.deliveryLocationObj?.data?.obj?.state || ``
-                          } ${
-                            data.deliveryLocationObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.country || ``
-                          }`,
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
-                        ],
-                        margin: [0, 0, 0, 10],
-                      },
-                      {
-                        text: [
-                          `Tracking Number: \n`,
-                          `${data.tracking_number || ``}`,
-                        ],
-                        margin: [0, 0, 0, 10],
-                      },
-                    ],
-                    [
-                      {
-                        text: `Original Shipper Information`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Final Consignee Information`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
+                        text: `Tracking Number`,
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Charges`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
+                        text: `${data.tracking_number || ``}`,
                         margin: [0, 0, 0, 0],
-                      },
+                      }
                     ],
                     [
                       {
-                        text: `${data.shipperObj?.data?.obj?.name || ``}`,
+                        text: `Invoice Number`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.invoice_number || ``}`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `P.O Number`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `${data.pro_number || ``}`,
+                        margin: [0, 0, 0, 0],
+                      }
+                    ],
+                    [
+                      {
+                        text: `Notes`,
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2
+                      },
+                      {},
+                      {
+                        text: `Applicable Charges`,
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2
+                      },
+                      {},
+                    ],
+                    [
+                      {
+                        text: `${data.notes || ``}`,
                         rowSpan: 2,
+                        colSpan: 2
                       },
-                      {
-                        text: `${data.consigneeObj?.data?.obj?.name || ``}`,
-                      },
+                      {},
                       {
                         style: `tableExampleLeft`,
                         table: {
@@ -378,13 +375,14 @@ const GeneratePickUpPDF = (data) => {
                           ],
                         },
                         rowSpan: 2,
+                        colSpan: 2
                       },
+                      {},
                     ],
                     [
                       {},
-                      {
-                        text: `Invoice: ${data.invoice_number || ``}`,
-                      },
+                      {},
+                      {},
                       {},
                     ],
                   ],
@@ -421,20 +419,20 @@ const GeneratePickUpPDF = (data) => {
                         text: `Weight`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
-                        rowSpan: 2,
+                        rowSpan: 3,
                         alignment: "center"
                       },
                       {
                         text: `Volume`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
-                        rowSpan: 2,
+                        rowSpan: 3,
                         alignment: "center"
                       },
                     ],
                     [
                       {
-                        text: `PO Number`,
+                        text: `Location`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                         colSpan: 2,
@@ -447,6 +445,30 @@ const GeneratePickUpPDF = (data) => {
                       },
                       {
                         text: `Notes`,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2,
+                      },
+                      {},
+                      {},
+                      {
+                      },
+                    ],
+                    [
+                      {
+                        text: `Quantity`,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2,
+                      },
+                      {},
+                      {
+                        text: `PO Number`,
+                        fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
+                      },
+                      {
+                        text: `Part Number / Model / Serial Number`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                         colSpan: 2,
@@ -482,7 +504,7 @@ const GeneratePickUpPDF = (data) => {
                       {},
                       {},
                       {
-                        text: totalPieces,
+                        text: numCon + '/' + totalPieces,
                       },
                       {
                         text: [
@@ -548,4 +570,4 @@ const GeneratePickUpPDF = (data) => {
   });
 };
 
-export default GeneratePickUpPDF;
+export default generateLabelPDF;

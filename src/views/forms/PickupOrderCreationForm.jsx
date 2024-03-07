@@ -400,10 +400,7 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
           pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
         }`,
-        consigneeType:
-          pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
-            ? pickupOrder.consigneeObj?.data?.obj?.type_person
-            : "forwarding-agent",
+        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
         deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
         deliveryLocationType:
           pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
@@ -914,7 +911,7 @@ const PickupOrderCreationForm = ({
             ? auxVar
             : formData.client_to_bill,
       };
-
+      console.log(clientToBill);
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
@@ -1388,36 +1385,63 @@ const PickupOrderCreationForm = ({
             </div>
           </div>
 
-          <div className="row w-100">
-            <div className="col-6">
-              <div className="creation creation-container w-100">
-                <div className="form-label_name">
-                  <h3>Delivery Information</h3>
-                  <span></span>
+      <div className="row w-100">
+      <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h3>Delivery Information</h3>
+              <span></span>
+            </div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="consignee" className="form-label">
+                  Consignee:
+                </label>
+                <div className="custom-select">
+                  <AsyncSelect
+                    id="consignee"
+                    onChange={(e) => handleConsigneeSelection(e)}
+                    value={consigneeOptions.find(
+                      (option) =>
+                        option.id === formData.consigneeId &&
+                        option.type === formData.consigneeType
+                    )}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
                 </div>
-                <div className="row align-items-center mb-3">
-                  <div className="col-6 text-start">
-                    <label htmlFor="consignee" className="form-label">
-                      Consignee:
-                    </label>
-                    <div className="custom-select">
-                      <AsyncSelect
-                        id="consignee"
-                        onChange={(e) => handleConsigneeSelection(e)}
-                        value={consigneeOptions.find(
-                          (option) =>
-                            option.id === formData.consigneeId &&
-                            option.type === formData.consigneeType
-                        )}
-                        isClearable={true}
-                        placeholder="Search and select..."
-                        defaultOptions={consigneeOptions}
-                        loadOptions={loadConsigneeSelectOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                      />
-                    </div>
-                  </div>
+              </div>
+
+              <div
+                className="col-6 text-start"
+                style={{ marginBlockEnd: "auto"}}
+              >
+                <label htmlFor="delivery" className="form-label">
+                  Delivery Location:
+                </label>
+                <AsyncSelect
+                  id="deliveryLocation"
+                  onChange={(e) => {
+                    handleDeliveryLocationSelection(e);
+                  }}
+                  value={deliveryLocationOptions.find(
+                    (option) =>
+                      option.id === formData.deliveryLocationId &&
+                      option.type === formData.deliveryLocationType
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={deliveryLocationOptions}
+                  loadOptions={loadDeliveryLocationSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+            </div>
 
                   <div
                     className="col-6 text-start"
@@ -1743,8 +1767,27 @@ const PickupOrderCreationForm = ({
         </div>
       </div> */}
 
-          <input type="checkbox" id="toggleBoton"></input>
-          <label className="button-charge" for="toggleBoton"></label>
+      <input type="checkbox" id="toggleBoton"></input>
+      <label className="button-charge" for="toggleBoton" ></label>
+
+      <div className="row w-100"id="miDiv" >
+      <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h3>Charges Income </h3>
+              <span></span>
+            </div>
+            {true && (
+              <IncomeChargeForm
+                onCancel={setshowIncomeForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+              ></IncomeChargeForm>
+            )}
 
           <div className="row w-100" id="miDiv">
             <div className="col-6">

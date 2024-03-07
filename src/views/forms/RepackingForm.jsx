@@ -71,7 +71,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       const repackedItem = repackedItems.find(
         (item) => item.id === selectedRepackId
       );
-
+      
       if (repackedItem) {
         const remainingCommodities = commodities.filter(
           (commodity) => commodity.id !== repackedItem.id
@@ -90,6 +90,25 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   };
 
   const handleRepack = () => {
+    //added validation of the form 
+    if (
+      !formData.package_type_description ||
+      !formData.length ||
+      !formData.height ||
+      !formData.width ||
+      !formData.weight ||
+      !formData.description
+    ) {
+      // Show an alert or handle the validation error as needed
+      alert("Please fill in all required fields in the form repack.");
+      return;
+    }
+    //Show alert validation check cimmodities for repack
+    if (internalCommodities.length === 0) {
+      alert("Please select at least one commodity to repack");
+      return;
+    }
+
     let internalWeight = formData.weight; //added thing for repack
     if (formData.useInternalWeight) {
       internalCommodities.forEach((element) => {
@@ -124,6 +143,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       ...prevRepackedItems,
       { ...newCommodity },
     ]);
+
   };
 
   return (
@@ -134,6 +154,8 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         <select
           name="containerType"
           id="containerType"
+          /* added valor para repack */
+          value={formData.package_type_id}
           onChange={(e) => {
             setformData({
               ...formData,

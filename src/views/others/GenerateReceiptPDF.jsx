@@ -6,11 +6,11 @@ import bwipjs from "bwip-js";
 pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
-const GenerateReceiptPDF = (data) => {
+
+
+const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  
-
 
 
   return new Promise((resolve, reject) => {
@@ -23,6 +23,7 @@ const GenerateReceiptPDF = (data) => {
       scale: 2, // Scale factor for the barcode size
       height: 10, // Height of the barcode
     };
+    barcodeOptions.text = barcodeOptions.text.toUpperCase();
     try {
 
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
@@ -98,7 +99,7 @@ const GenerateReceiptPDF = (data) => {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
 
-          
+
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -113,12 +114,12 @@ const GenerateReceiptPDF = (data) => {
               margin: [0, 0, 0, 0],
             },
           ];
-          
+
 
           chargeRows.push(chargeRow);
         }
       });
-      
+
     }
 
 
@@ -153,19 +154,16 @@ const GenerateReceiptPDF = (data) => {
                     text: [
                       `Issued By \n`,
                       `${data.issued_byObj?.name || ``} \n`,
-                      `${
-                        data.issued_byObj?.phone
-                          ? `Tel: ${data.issued_byObj.phone}, `
-                          : ``
-                      }${
-                        data.issued_byObj?.fax
-                          ? `Fax: ${data.issued_byObj.fax}`
-                          : ``
+                      `${data.issued_byObj?.phone
+                        ? `Tel: ${data.issued_byObj.phone}, `
+                        : ``
+                      }${data.issued_byObj?.fax
+                        ? `Fax: ${data.issued_byObj.fax}`
+                        : ``
                       }\n`,
                       `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}, ${
-                        data.issuedBy?.state || ``
-                      } ${data.issued_byObj?.zip_code || ``} \n`,
+                      `${data.issued_byObj?.city || ``}
+                       ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``}`,
                       `${data.issued_byObj?.country || ``}`,
                     ],
                   },
@@ -225,31 +223,23 @@ const GenerateReceiptPDF = (data) => {
                     [
                       {
                         text: [
-                          `${
-                            data.shipperObj?.data?.obj?.name || ``
+                          `${data.shipperObj?.data?.obj?.name || ``
                           } \n`,
-                          `${
-                            data.shipperObj?.data?.obj
-                              ?.street_and_number || ``
+                          `${data.shipperObj?.data?.obj
+                            ?.street_and_number || ``
                           } \n`,
-                          `${
-                            data.shipperObj?.data?.obj?.city || ``
-                          }, ${
-                            data.shipperObj?.data?.obj?.state || ``
-                          } ${
-                            data.shipperObj?.data?.obj?.zip_code || ``
+                          `${data.shipperObj?.data?.obj?.city || ``
+                          }, ${data.shipperObj?.data?.obj?.state || ``
+                          } ${data.shipperObj?.data?.obj?.zip_code || ``
                           } \n`,
-                          `${
-                            data.shipperObj?.data?.obj?.country || ``
+                          `${data.shipperObj?.data?.obj?.country || ``
                           }`,
-                          `${
-                            data.shipperObj?.phone
-                              ? `Tel: ${data.shipperObj.phone}, `
-                              : ``
-                          }${
-                            data.shipperObj?.fax
-                              ? `Fax: ${data.shipperObj.fax}`
-                              : ``
+                          `${data.shipperObj?.phone
+                            ? `Tel: ${data.shipperObj.phone}, `
+                            : ``
+                          }${data.shipperObj?.fax
+                            ? `Fax: ${data.shipperObj.fax}`
+                            : ``
                           }\n`,
                         ],
                         colSpan: 2
@@ -257,31 +247,23 @@ const GenerateReceiptPDF = (data) => {
                       {},
                       {
                         text: [
-                          `${
-                            data.consigneeObj?.data?.obj?.name || ``
+                          `${data.consigneeObj?.data?.obj?.name || ``
                           } \n`,
-                          `${
-                            data.consigneeObj?.data?.obj
-                              ?.street_and_number || ``
+                          `${data.consigneeObj?.data?.obj
+                            ?.street_and_number || ``
                           } \n`,
-                          `${
-                            data.consigneeObj?.data?.obj?.city || ``
-                          }, ${
-                            data.consigneeObj?.data?.obj?.state || ``
-                          } ${
-                            data.consigneeObj?.data?.obj?.zip_code || ``
+                          `${data.consigneeObj?.data?.obj?.city || ``
+                          }, ${data.consigneeObj?.data?.obj?.state || ``
+                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
                           } \n`,
-                          `${
-                            data.consigneeObj?.data?.obj?.country || ``
+                          `${data.consigneeObj?.data?.obj?.country || ``
                           }`,
-                          `${
-                            data.consigneeObj?.phone
-                              ? `Tel: ${data.consigneeObj.phone}, `
-                              : ``
-                          }${
-                            data.consigneeObj?.fax
-                              ? `Fax: ${data.consigneeObj.fax}`
-                              : ``
+                          `${data.consigneeObj?.phone
+                            ? `Tel: ${data.consigneeObj.phone}, `
+                            : ``
+                          }${data.consigneeObj?.fax
+                            ? `Fax: ${data.consigneeObj.fax}`
+                            : ``
                           }\n`,
                         ],
                         colSpan: 2
@@ -325,7 +307,7 @@ const GenerateReceiptPDF = (data) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.pro_number|| ``}`,
+                        text: `${data.pro_number || ``}`,
                         margin: [0, 0, 0, 0],
                       },
                       {
@@ -333,7 +315,7 @@ const GenerateReceiptPDF = (data) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.tracking_number|| ``}`,
+                        text: `${data.tracking_number || ``}`,
                         margin: [0, 0, 0, 0],
                       }
                     ],
