@@ -93,7 +93,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" >Warehouse</Link>
+                <Link className="link_name" style={{display: 'flex'}} >Warehouse</Link>
               </li>
               <li>
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
