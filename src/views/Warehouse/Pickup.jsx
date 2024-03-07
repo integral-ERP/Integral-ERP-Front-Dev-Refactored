@@ -40,11 +40,11 @@ const Pickup = () => {
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
   //added status for update context menu
-  const StatusOnHand = 4;
+ /*  const StatusOnHand = 4;
   const StatusInTransit= 6;
   const StatusDelivered = 9;
   const StatusOnHold = 12;  
-  const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false);
+  const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false); */
 
   const columns = [
     "Status",
@@ -77,11 +77,9 @@ const Pickup = () => {
       setShowContextMenu(true);
       //added context menu for status onhand
       if (selectedPickupOrder.status != StatusEmpty) {
-        setContextMenuOptionsState(true);
+        setShowContextMenu(false);
       }
-      else {
-        setContextMenuOptionsState(false);
-      }
+      
     }
   };
 
@@ -250,7 +248,7 @@ const Pickup = () => {
     }
   };
 
-  const setInTransit = async () => {
+  /* const setInTransit = async () => {
     if (selectedPickupOrder) {
       const updatedPickuporder = { ...selectedPickupOrder, status: StatusInTransit };
       const response = (await PickupService.updatePickup(selectedPickupOrder.id, updatedPickuporder));
@@ -298,7 +296,7 @@ const Pickup = () => {
     } else {
       alert("Please select a pickup order to continue.");
     }
-  };
+  }; */
 
   const handleCancel = () => {};
 
@@ -309,7 +307,7 @@ const Pickup = () => {
     },
   ];
 
-  const contextMenuOptionsStatus = [
+  /* const contextMenuOptionsStatus = [
     {
       label: "OnHold",
       handler: setOnHold,
@@ -326,7 +324,7 @@ const Pickup = () => {
       label: "OnHand",
       handler: setOnHand,
     }
-  ]
+  ] */
 
   return (
     <>
@@ -358,7 +356,7 @@ const Pickup = () => {
               showContextMenu={showContextMenu}
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
-              contextMenuOptions={contextMenuOptionsState ? contextMenuOptionsStatus : contextMenuOptions}
+              contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
               importEnabled={false}
               createWarehouseReceipt={createWarehouseReceipt}

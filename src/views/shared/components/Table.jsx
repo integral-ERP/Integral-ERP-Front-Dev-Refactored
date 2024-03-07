@@ -21,7 +21,7 @@ import { useModal } from "../../../hooks/useModal";
 
 import Receipt from "../../Warehouse/Receipt";
 
-import { PDFDocument } from "pdf-lib";
+
 
 const Table = ({
   data,
