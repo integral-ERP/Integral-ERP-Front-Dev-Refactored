@@ -1706,7 +1706,10 @@ const PickupOrderCreationForm = ({
         </div>
       </div> */}
 
-      <div className="row w-100">
+      <input type="checkbox" id="toggleBoton"></input>
+      <label className="button-charge" for="toggleBoton" ></label>
+
+      <div className="row w-100"id="miDiv" >
       <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">

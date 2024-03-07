@@ -1241,6 +1241,13 @@
 }
 
 //---------------------------------------------------------------
+
+.pdf-content{
+  margin: 0 9% 0 10%;
+  height: 3rem;
+  width: 70%;
+}
+
 #toggleBoton:checked+label::after {
   content: "Close Charge";
 }
