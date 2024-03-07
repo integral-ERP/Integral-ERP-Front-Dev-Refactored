@@ -139,18 +139,15 @@ const Receipt = () => {
   const handleDeletePickupOrder = async () => {
     if (selectedPickupOrder) {
       try {
-
         // Obtener todas las pickups
         const response = await PickupService.getPickups();
         const resultsArray = response.data.results;
-
-
+        
         for (let i = 0; i < resultsArray.length; i++) {
           const pickUpLocationObj = resultsArray[i].number;
           const getpickupOrderId = resultsArray[i].id;
 
           if (pickUpLocationObj === selectedPickupOrder.number) {
-
             const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
             const newPickup = { ...getpickupforId, status: 14 };
             // Actualizar la pickup con el nuevo estado de empty
@@ -310,8 +307,6 @@ const Receipt = () => {
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
-
-
   useEffect(() => {
     const handleWindowClick = (event) => {
       const clickedElement = event.target;
@@ -382,6 +377,7 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromReceipt={true}
+                  showBModal={true}
                 />
               )}
 
@@ -393,6 +389,7 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>
