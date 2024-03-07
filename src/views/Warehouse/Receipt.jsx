@@ -121,63 +121,60 @@ const Receipt = () => {
     openModal();
   };
 
- const handleDeletePickupOrder = async () => {
-  if (selectedPickupOrder) {
-    try {
-      
-      // Obtener todas las pickups
-      const response = await PickupService.getPickups();
-      const resultsArray = response.data.results;
-      
+  const handleDeletePickupOrder = async () => {
+    if (selectedPickupOrder) {
+      try {
+        // Obtener todas las pickups
+        const response = await PickupService.getPickups();
+        const resultsArray = response.data.results;
 
-      for (let i = 0; i < resultsArray.length; i++) {
-        const pickUpLocationObj = resultsArray[i].number;
-        const getpickupOrderId = resultsArray[i].id;
-        
-        if (pickUpLocationObj === selectedPickupOrder.number) {
-          
-          const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
-          const newPickup = { ...getpickupforId , status: 14 };
-          // Actualizar la pickup con el nuevo estado de empty
-          await PickupService.updatePickup(getpickupOrderId, newPickup);
-          //console.log("Actualizado correctamente");
+        for (let i = 0; i < resultsArray.length; i++) {
+          const pickUpLocationObj = resultsArray[i].number;
+          const getpickupOrderId = resultsArray[i].id;
 
-          // Después de la actualización, proceder con ReceiptService para eliminarlo 
-          try {
-            await ReceiptService.deleteReceipt(selectedPickupOrder.id);
-            //console.log("Eliminado correctamente");
+          if (pickUpLocationObj === selectedPickupOrder.number) {
+            const getpickupforId = await PickupService.getPickupById(
+              getpickupOrderId
+            );
+            const newPickup = { ...getpickupforId, status: 14 };
+            // Actualizar la pickup con el nuevo estado de empty
+            await PickupService.updatePickup(getpickupOrderId, newPickup);
+            //console.log("Actualizado correctamente");
 
-            // Actualizar el estado de receipts eliminando la orden
-            const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
-            setreceipts(newreceipts);
+            // Después de la actualización, proceder con ReceiptService para eliminarlo
+            try {
+              await ReceiptService.deleteReceipt(selectedPickupOrder.id);
+              //console.log("Eliminado correctamente");
 
-            setShowSuccessAlert(true);
-            setTimeout(() => {
-              setShowSuccessAlert(false);
-            }, 3000);
-          } catch (error) {
-            console.error("Error al eliminar el recibo:", error);
-            setShowErrorAlert(true);
-            setTimeout(() => {
-              setShowErrorAlert(false);
-            }, 3000);
+              // Actualizar el estado de receipts eliminando la orden
+              const newreceipts = receipts.filter(
+                (order) => order.id !== selectedPickupOrder.id
+              );
+              setreceipts(newreceipts);
+
+              setShowSuccessAlert(true);
+              setTimeout(() => {
+                setShowSuccessAlert(false);
+              }, 3000);
+            } catch (error) {
+              console.error("Error al eliminar el recibo:", error);
+              setShowErrorAlert(true);
+              setTimeout(() => {
+                setShowErrorAlert(false);
+              }, 3000);
+            }
+
+            // Salir del bucle después de la actualización
+            break;
           }
-
-          // Salir del bucle después de la actualización
-          break;
         }
+      } catch (error) {
+        console.error("Error al obtener las pickups:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener las pickups:", error);
+    } else {
+      alert("Por favor, selecciona una Orden de Recogida para eliminar.");
     }
-  } else {
-    alert("Por favor, selecciona una Orden de Recogida para eliminar.");
-  }
-};
-
-  
-  
-  
+  };
 
   useEffect(() => {
     const handleWindowClick = (event) => {
@@ -244,6 +241,7 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromReceipt={true}
+                  showBModal={true}
                 />
               )}
 
@@ -255,6 +253,7 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>
