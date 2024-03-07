@@ -8,7 +8,7 @@ pdfMake.vfs = pdfFonts;
 
 
 
-const GenerateReceiptPDF = (data, numCon) => {
+const generateLabelPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
 
@@ -19,9 +19,12 @@ const GenerateReceiptPDF = (data, numCon) => {
     canvas = document.createElement('canvas');
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128),
-      text: data.number + '',
+      text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + numCon,
       scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
+      height: 20, // Height of the barcode
+      includetext: true, // Include human-readable text below the barcode
+      textxalign: "center",
+      bold: true,
     };
     barcodeOptions.text = barcodeOptions.text.toUpperCase();
     try {
@@ -501,7 +504,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                       {},
                       {},
                       {
-                        text: totalPieces,
+                        text: numCon + '/' + totalPieces,
                       },
                       {
                         text: [
@@ -567,4 +570,4 @@ const GenerateReceiptPDF = (data, numCon) => {
   });
 };
 
-export default GenerateReceiptPDF;
+export default generateLabelPDF;

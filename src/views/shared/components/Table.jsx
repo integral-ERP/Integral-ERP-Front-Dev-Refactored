@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+import generateLabelPDF from "../../others/generateLabelPDF";
 import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
 import { GlobalContext } from "../../../context/global";
 import DatePicker from "react-datepicker";
@@ -44,7 +45,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
-  
+
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -371,8 +372,22 @@ const Table = ({
   const generatePDFReceipt = () => {
     console.log("SelectR = ", selectedRow.commodities.length)
     const numCon = selectedRow.commodities.length;
-    for (let i = 0; i < numCon; i++) {
+    for (let i = 0; i < 1; i++) {
       GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+        .then((pdfUrl) => {
+          window.open(pdfUrl);
+        })
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+        });
+    }
+  }
+  //-------------------------------------------------------------------------------------------------------
+  const generatePDFLabel = () => {
+    console.log("SelectR = ", selectedRow.commodities.length)
+    const numCon = selectedRow.commodities.length;
+    for (let i = 0; i < numCon; i++) {
+      generateLabelPDF(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
         .then((pdfUrl) => {
           window.open(pdfUrl);
         })
@@ -668,13 +683,21 @@ const Table = ({
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
-                            <button type="button" onClick={generatePDFReceipt} className="custom-button-pdf">
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "View Release PDF" ? (
-                            <button type="button" onClick={generatePDFRelease} className="custom-button-pdf">
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
+                            <>
+                              {/* <button type="button" onClick={generatePDFReceipt} className="custom-button">
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                              <button type="button" onClick={generatePDFLabel} className="custom-button">
+                                <i className="fas fa-file-pdf"></i>
+                              </button> */}
+                              <div className="pdf-content">
+                                <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
+                                  <option value="">Select format </option>
+                                  <option value="receipt">PDF Receipt</option>
+                                  <option value="label">PDF Label</option>
+                                </select>
+                              </div>
+                            </>
                           ) : columnName === "Invoice PDF" ? (
                             <button type="button" onClick={generatePDFInvoice} className="custom-button-pdf">
                               <i className="fas fa-file-pdf"></i>
