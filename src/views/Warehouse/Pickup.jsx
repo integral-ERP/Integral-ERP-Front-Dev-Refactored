@@ -40,11 +40,11 @@ const Pickup = () => {
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
   //added status for update context menu
-  const StatusOnHand = 4;
-  const StatusInTransit = 6;
+ /*  const StatusOnHand = 4;
+  const StatusInTransit= 6;
   const StatusDelivered = 9;
-  const StatusOnHold = 12;
-  const [contextMenuOptionsState, setContextMenuOptionsState] = useState(false);
+  const StatusOnHold = 12;  
+  const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false); */
 
   const columns = [
     "Status",
@@ -354,7 +354,7 @@ const Pickup = () => {
       handler: setOnHand,
     }
   ] */
-
+  
   return (
     <>
       <div className="dashboard__layout">

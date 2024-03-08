@@ -349,12 +349,15 @@ const ReceiptCreationForm = ({
   };
 
   const handleCommodityDelete = () => {
-    if (selectedCommodity.internalCommodities && selectedCommodity.internalCommodities.length > 0) {
+    if (
+      selectedCommodity.internalCommodities &&
+      selectedCommodity.internalCommodities.length > 0
+    ) {
       // Realizar desempaque (unpack)
       const remainingCommodities = commodities.filter(
         (commodity) => commodity.id !== selectedCommodity.id
       );
-  
+
       const unpackedCommodities = [...selectedCommodity.internalCommodities];
       // Actualizar el estado con la información más reciente
       setcommodities([...remainingCommodities, ...unpackedCommodities]);
@@ -364,12 +367,10 @@ const ReceiptCreationForm = ({
       const newCommodities = commodities.filter(
         (com) => com.id !== selectedCommodity.id
       );
-      
+
       setcommodities(newCommodities);
     }
   };
-  
-  
 
   //added edit commodities
   const handleCommodityEdit = () => {
@@ -1308,8 +1309,8 @@ const ReceiptCreationForm = ({
                       <option value="shipper">Shipper</option>
                     </select>
                     {/* <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p> */}
+                        Note: Always select a client to bill when editing
+                      </p> */}
                   </div>
                 </div>
               </div>
@@ -1472,113 +1473,115 @@ const ReceiptCreationForm = ({
               editing={editingComodity}
               commodity={selectedCommodity}
               setEditingComodity={setEditingComodity}
-            ></CommodityCreationForm>
-
-        {showCommodityCreationForm && (
-          <>
-            <Table
-              data={commodities}
-              columns={[
-                "Description",
-                " Length",
-                " Height",
-                " Width",
-                " Weight",
-                // "Location",
-                " Volumetric Weight",
-                " Chargeable Weight",
-                "Options",
-              ]}
-              onSelect={handleSelectCommodity} // Make sure this line is correct
-              selectedRow={selectedCommodity}
-              onDelete={handleCommodityDelete}
-              onEdit={handleCommodityEdit}
-              onInspect={() => {
-                setshowCommodityInspect(!showCommodityInspect);
-              }}
-              onAdd={() => {}}
-              showOptions={false}
-              /* added hiden button trash */
-              hiddenTrashButton={true}
             />
-            {/* added view commodities */}
-            {showCommodityInspect && (
-              <div className="repacking-container">
-                <div className="main-commodity">
-                  <p className="item-description">
-                    {selectedCommodity.description}
-                  </p>
-                  <p className="item-info">
-                    Weight: {selectedCommodity.weight}
-                  </p>
-                  <p className="item-info">
-                    Height: {selectedCommodity.height}
-                  </p>
-                  <p className="item-info">Width: {selectedCommodity.width}</p>
-                  <p className="item-info">
-                    Length: {selectedCommodity.length}
-                  </p>
-                  <p className="item-info">
-                    Volumetric Weight: {selectedCommodity.volumetricWeight}
-                  </p>
-                  <p className="item-info">
-                    Chargeable Weight: {selectedCommodity.chargedWeight}
-                  </p>
-                  {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
-                </div>
-                {/*  fix the repacking show internalCommodities for edition */}
-                {selectedCommodity.internalCommodities &&
-                  selectedCommodity.internalCommodities.map((com) => (
-                    <div key={com.id} className="card">
-                      <p className="item-description">{com.description}</p>
-                      <p className="item-info">Weight: {com.weight}</p>
-                      <p className="item-info">Height: {com.height}</p>
-                      <p className="item-info">Width: {com.width}</p>
-                      <p className="item-info">Length: {com.length}</p>
-                      <p className="item-info">
-                        Volumetric Weight: {com.volumetricWeight}
+            <br />
+
+            {showCommodityCreationForm && (
+              <div className="text-center">
+                <Table
+                  data={commodities}
+                  columns={[
+                    "Description",
+                    " Length",
+                    " Height",
+                    " Width",
+                    " Weight",
+                    // "Location",
+                    " Volumetric Weight",
+                    " Chargeable Weight",
+                    "Options",
+                  ]}
+                  onSelect={handleSelectCommodity} // Make sure this line is correct
+                  selectedRow={selectedCommodity}
+                  onDelete={handleCommodityDelete}
+                  onEdit={handleCommodityEdit}
+                  onInspect={() => {
+                    setshowCommodityInspect(!showCommodityInspect);
+                  }}
+                  onAdd={() => {}}
+                  showOptions={false}
+                  /* deleted variable hiden button trash */
+                />
+                {/* added view commodities */}
+                {showCommodityInspect && (
+                  <div className="repacking-container">
+                    <div className="main-commodity">
+                      <p className="item-description">
+                        {selectedCommodity.description}
                       </p>
                       <p className="item-info">
-                        Chargeable Weight: {com.chargedWeight}
+                        Weight: {selectedCommodity.weight}
                       </p>
-                      {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                      <p className="item-info">
+                        Height: {selectedCommodity.height}
+                      </p>
+                      <p className="item-info">
+                        Width: {selectedCommodity.width}
+                      </p>
+                      <p className="item-info">
+                        Length: {selectedCommodity.length}
+                      </p>
+                      <p className="item-info">
+                        Volumetric Weight: {selectedCommodity.volumetricWeight}
+                      </p>
+                      <p className="item-info">
+                        Chargeable Weight: {selectedCommodity.chargedWeight}
+                      </p>
+                      {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
                     </div>
-                  ))}
+                    {/*  fix the repacking show internalCommodities for edition */}
+                    {selectedCommodity.internalCommodities &&
+                      selectedCommodity.internalCommodities.map((com) => (
+                        <div key={com.id} className="card">
+                          <p className="item-description">{com.description}</p>
+                          <p className="item-info">Weight: {com.weight}</p>
+                          <p className="item-info">Height: {com.height}</p>
+                          <p className="item-info">Width: {com.width}</p>
+                          <p className="item-info">Length: {com.length}</p>
+                          <p className="item-info">
+                            Volumetric Weight: {com.volumetricWeight}
+                          </p>
+                          <p className="item-info">
+                            Chargeable Weight: {com.chargedWeight}
+                          </p>
+                          {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                        </div>
+                      ))}
+                  </div>
+                )}
+                <button
+                  className="button-save"
+                  type="button"
+                  onClick={() => {
+                    setshowRepackingForm(!showRepackingForm);
+                  }}
+                >
+                  Repack
+                </button>
+                <br />
+                <br />
+                <br />
+
+                {showRepackingForm && (
+                  <RepackingForm
+                    commodities={commodities}
+                    setCommodities={setcommodities}
+                  />
+                )}
               </div>
             )}
-            <button
-              className="button-save"
-              type="button"
-              onClick={() => {
-                setshowRepackingForm(!showRepackingForm);
-              }}
-            >
-              Repack
-            </button>
-            <br />
-            <br />
-            <br />
-          </>
-        )}
-
-            {showRepackingForm && (
-              <RepackingForm
-                commodities={commodities}
-                setCommodities={setcommodities}
-              ></RepackingForm>
-            )}
-
-            {/* button duplicado */}
-            {/* <button
-          type="button"
-          onClick={() => {
-            setshowRepackingForm(!showRepackingForm);
-          }}
-          className="button-save"
-        >
-          Repacking
-        </button> */}
           </div>
+
+          {/* button duplicado */}
+          {/* <button
+                  type="button"
+                  onClick={() => {
+                    setshowRepackingForm(!showRepackingForm);
+                  }}
+                  className="button-save"
+                >
+                  Repacking
+                </button> */}
 
           <input type="checkbox" id="toggleBoton"></input>
           <label className="button-charge" for="toggleBoton"></label>
@@ -1599,7 +1602,7 @@ const ReceiptCreationForm = ({
                     agent={agent}
                     consignee={consignee}
                     shipper={shipper}
-                  ></IncomeChargeForm>
+                  />
                 )}
 
                 {showIncomeForm && (
@@ -1632,7 +1635,7 @@ const ReceiptCreationForm = ({
                     shipper={shipper}
                     editing={true}
                     charge={selectedIncomeCharge}
-                  ></IncomeChargeForm>
+                  />
                 )}
               </div>
             </div>
@@ -1652,7 +1655,7 @@ const ReceiptCreationForm = ({
                     agent={agent}
                     consignee={consignee}
                     shipper={shipper}
-                  ></ExpenseChargeForm>
+                  />
                 )}
 
                 {showExpenseForm && (
@@ -1685,7 +1688,7 @@ const ReceiptCreationForm = ({
                     shipper={shipper}
                     editing={true}
                     charge={selectedIncomeCharge}
-                  ></ExpenseChargeForm>
+                  />
                 )}
               </div>
             </div>
@@ -1704,7 +1707,7 @@ const ReceiptCreationForm = ({
                       onCancel={setshowEventForm}
                       events={events}
                       setevents={setEvents}
-                    ></EventCreationForm>
+                    />
                   </div>
                   {events && events.length > 0 && (
                     <Table

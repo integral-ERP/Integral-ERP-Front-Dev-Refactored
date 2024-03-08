@@ -142,29 +142,25 @@ const Receipt = () => {
         // Obtener todas las pickups
         const response = await PickupService.getPickups();
         const resultsArray = response.data.results;
-
+        
         for (let i = 0; i < resultsArray.length; i++) {
           const pickUpLocationObj = resultsArray[i].number;
           const getpickupOrderId = resultsArray[i].id;
 
           if (pickUpLocationObj === selectedPickupOrder.number) {
-            const getpickupforId = await PickupService.getPickupById(
-              getpickupOrderId
-            );
+            const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
             const newPickup = { ...getpickupforId, status: 14 };
             // Actualizar la pickup con el nuevo estado de empty
             await PickupService.updatePickup(getpickupOrderId, newPickup);
             //console.log("Actualizado correctamente");
 
-            // Después de la actualización, proceder con ReceiptService para eliminarlo
+            // Después de la actualización, proceder con ReceiptService para eliminarlo 
             try {
               await ReceiptService.deleteReceipt(selectedPickupOrder.id);
               //console.log("Eliminado correctamente");
 
               // Actualizar el estado de receipts eliminando la orden
-              const newreceipts = receipts.filter(
-                (order) => order.id !== selectedPickupOrder.id
-              );
+              const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
               setreceipts(newreceipts);
 
               setShowSuccessAlert(true);
@@ -310,8 +306,6 @@ const Receipt = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
-
-
 
   useEffect(() => {
     const handleWindowClick = (event) => {
