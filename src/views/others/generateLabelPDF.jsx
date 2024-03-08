@@ -401,5 +401,3 @@ const generateLabelPDF = (data, numCon) => {
 };
 
 export default generateLabelPDF;
-
-
