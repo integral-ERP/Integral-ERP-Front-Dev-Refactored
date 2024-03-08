@@ -76,13 +76,7 @@ const Pickup = () => {
       setShowContextMenu(true);
       //added context menu for status onhand
       if (selectedPickupOrder.status != StatusEmpty) {
-<<<<<<< HEAD
         setShowContextMenu(false);
-=======
-        setContextMenuOptionsState(true);
-      } else {
-        setContextMenuOptionsState(false);
->>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
       }
       
     }
@@ -358,13 +352,8 @@ const Pickup = () => {
     {
       label: "OnHand",
       handler: setOnHand,
-<<<<<<< HEAD
     }
   ] */
-=======
-    },
-  ];
->>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
 
   return (
     <>
@@ -396,15 +385,7 @@ const Pickup = () => {
               showContextMenu={showContextMenu}
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
-<<<<<<< HEAD
               contextMenuOptions={contextMenuOptions}
-=======
-              contextMenuOptions={
-                contextMenuOptionsState
-                  ? contextMenuOptionsStatus
-                  : contextMenuOptions
-              }
->>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
               contextService={PickupService}
               importEnabled={false}
               createWarehouseReceipt={createWarehouseReceipt}

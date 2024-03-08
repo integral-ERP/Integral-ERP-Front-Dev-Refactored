@@ -7,11 +7,9 @@ pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-
 const generateLabelPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -102,7 +100,6 @@ const generateLabelPDF = (data, numCon) => {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
 
-
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -118,7 +115,6 @@ const generateLabelPDF = (data, numCon) => {
             },
           ];
 
-
           chargeRows.push(chargeRow);
         }
       });
@@ -132,7 +128,6 @@ const generateLabelPDF = (data, numCon) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
 
           const pdf = {
             content: [
@@ -259,7 +254,7 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
-                        text: "Here description", margin: [0, 0, 0, 0],
+                        text: "Here description",
                         margin: [0, 0, 0, 200],
                         colSpan: 4,
                         alignment: "left",
@@ -391,7 +386,6 @@ const generateLabelPDF = (data, numCon) => {
             },
           };
 
-
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {
             const pdfUrl = URL.createObjectURL(blob);
@@ -407,3 +401,5 @@ const generateLabelPDF = (data, numCon) => {
 };
 
 export default generateLabelPDF;
+
+

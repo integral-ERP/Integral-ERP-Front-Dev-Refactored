@@ -190,7 +190,6 @@ const Receipt = () => {
       alert("Por favor, selecciona una Orden de Recogida para eliminar.");
     }
   };
-<<<<<<< HEAD
 
   //added context menu
 
@@ -313,8 +312,6 @@ const Receipt = () => {
   }, [showContextMenu]); // Only re-add the event listener when showContextMenu changes
 
 
-=======
->>>>>>> cc37821d466105212c1664a5c7eb31a406b33176
 
   useEffect(() => {
     const handleWindowClick = (event) => {
