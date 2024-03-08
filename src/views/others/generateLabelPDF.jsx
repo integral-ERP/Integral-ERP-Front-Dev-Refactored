@@ -45,7 +45,7 @@ const generateLabelPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n`;
+        firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
         sixthRowText += `${commodity.weight} lbs \n`;
@@ -140,6 +140,13 @@ const generateLabelPDF = (data, numCon) => {
                         fit: [150, 150],
                       },
                       {
+<<<<<<< HEAD
+=======
+                        text: "",
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 10, 0, 0], // Adjust margin as needed
+>>>>>>> d05020e2179242f9c031cfcf9ffa2ea7b481b5d4
                       }
                     ],
                   },
@@ -239,10 +246,16 @@ const generateLabelPDF = (data, numCon) => {
                       },
                       {},
                     ],
+                    // ------------------------------------------------------------
                     [
                       {
+<<<<<<< HEAD
                         text: "DESCRIPTION",
                         margin: [0, 0, 0, 10],
+=======
+                        text: "WAYBILL NUMBER",
+                        margin: [0, 0, 0, 0],
+>>>>>>> d05020e2179242f9c031cfcf9ffa2ea7b481b5d4
                         bold: true,
                         fillColor: `#CCCCCC`,
                         colSpan: 4,
@@ -254,10 +267,36 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
+<<<<<<< HEAD
                         text: "Here description",
                         margin: [0, 0, 0, 200],
                         colSpan: 4,
                         alignment: "left",
+=======
+                        text: "WAYBILL NUMBER",
+                        margin: [0, 0, 0, 0],
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        colSpan: 4,
+                        alignment: "center"
+                      },
+                    ],
+                    //-------------------------------------------------------------
+                    [
+                      {
+
+                        
+
+                      },
+                      {},
+                      {},
+                      {}
+                    ],
+                    [
+                      {
+                        text: `Declared value`,
+                        margin: [0, 0, 0, 0],
+>>>>>>> d05020e2179242f9c031cfcf9ffa2ea7b481b5d4
                       },
                       {},
                       {},
