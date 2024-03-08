@@ -1384,65 +1384,36 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
           </div>
-
-      <div className="row w-100">
-      <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Delivery Information</h3>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="consignee" className="form-label">
-                  Consignee:
-                </label>
-                <div className="custom-select">
-                  <AsyncSelect
-                    id="consignee"
-                    onChange={(e) => handleConsigneeSelection(e)}
-                    value={consigneeOptions.find(
-                      (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type === formData.consigneeType
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
+          <div className="row w-100">
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name">
+                  <h3>Delivery Information</h3>
+                  <span></span>
                 </div>
-              </div>
-
-              <div
-                className="col-6 text-start"
-                style={{ marginBlockEnd: "auto"}}
-              >
-                <label htmlFor="delivery" className="form-label">
-                  Delivery Location:
-                </label>
-                <AsyncSelect
-                  id="deliveryLocation"
-                  onChange={(e) => {
-                    handleDeliveryLocationSelection(e);
-                  }}
-                  value={deliveryLocationOptions.find(
-                    (option) =>
-                      option.id === formData.deliveryLocationId &&
-                      option.type === formData.deliveryLocationType
-                  )}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={deliveryLocationOptions}
-                  loadOptions={loadDeliveryLocationSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-            </div>
-
+                <div className="row align-items-center mb-3">
+                  <div className="col-6 text-start">
+                    <label htmlFor="consignee" className="form-label">
+                      Consignee:
+                    </label>
+                    <div className="custom-select">
+                      <AsyncSelect
+                        id="consignee"
+                        onChange={(e) => handleConsigneeSelection(e)}
+                        value={consigneeOptions.find(
+                          (option) =>
+                            option.id === formData.consigneeId &&
+                            option.type === formData.consigneeType
+                        )}
+                        isClearable={true}
+                        placeholder="Search and select..."
+                        defaultOptions={consigneeOptions}
+                        loadOptions={loadConsigneeSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                      />
+                    </div>
+                  </div>
                   <div
                     className="col-6 text-start"
                     style={{ marginBlockEnd: "auto" }}
@@ -1469,7 +1440,31 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-
+                <div
+                  className="col-6 text-start"
+                  style={{ marginBlockEnd: "auto" }}
+                >
+                  <label htmlFor="delivery" className="form-label">
+                    Delivery Location:
+                  </label>
+                  <AsyncSelect
+                    id="deliveryLocation"
+                    onChange={(e) => {
+                      handleDeliveryLocationSelection(e);
+                    }}
+                    value={deliveryLocationOptions.find(
+                      (option) =>
+                        option.id === formData.deliveryLocationId &&
+                        option.type === formData.deliveryLocationType
+                    )}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={deliveryLocationOptions}
+                    loadOptions={loadDeliveryLocationSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
                 <div className="row align-items-center">
                   <div className="col-6 text-start">
                     <div className="company-form__section">
@@ -1484,7 +1479,6 @@ const PickupOrderCreationForm = ({
                       />
                     </div>
                   </div>
-
                   <div className="col-6 text-start">
                     <div className="company-form__section">
                       <Input
@@ -1499,7 +1493,6 @@ const PickupOrderCreationForm = ({
                     </div>
                   </div>
                 </div>
-
                 <div className="row align-items-center">
                   <div className="col-6 text-start">
                     <label
@@ -1528,8 +1521,8 @@ const PickupOrderCreationForm = ({
                       <option value="other">Other</option>
                     </select>
                     {/* <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p> */}
+                      Note: Always select a client to bill when editing
+                    </p> */}
                   </div>
                   <div className="col-6 text-start">
                     <AsyncSelect
@@ -1548,7 +1541,6 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
             </div>
-
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
@@ -1592,7 +1584,6 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-
                 <div className="row ">
                   <div className="col-6 text-start">
                     <Input
@@ -1620,14 +1611,7 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
           </div>
-
-          {/* <div className="col-12">
-        <div className="creation creation-container w-100">
-          <div className="form-label_name">
-            <h3>Commodities</h3>
-            <span></span>
-          </div>
-
+          {/*<div className="col-12"><div className="creation creation-container w-100"><div className="form-label_name"><h3>Commodities</h3><span></span></div>
           <CommodityCreationForm
             onCancel={setshowCommodityCreationForm}
             commodities={commodities}
@@ -1635,7 +1619,6 @@ const PickupOrderCreationForm = ({
             setShowCommoditiesCreationForm={setshowCommodityCreationForm}
             locationEnabled={false}
           ></CommodityCreationForm>
-
           {showCommodityCreationForm && (
             <>
               <Table
@@ -1766,28 +1749,8 @@ const PickupOrderCreationForm = ({
           )}
         </div>
       </div> */}
-
-      <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton" ></label>
-
-      <div className="row w-100"id="miDiv" >
-      <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Charges Income </h3>
-              <span></span>
-            </div>
-            {true && (
-              <IncomeChargeForm
-                onCancel={setshowIncomeForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-              ></IncomeChargeForm>
-            )}
+          <input type="checkbox" id="toggleBoton"></input>
+          <label className="button-charge" for="toggleBoton"></label>
 
           <div className="row w-100" id="miDiv">
             <div className="col-6">
@@ -1805,7 +1768,7 @@ const PickupOrderCreationForm = ({
                     agent={agent}
                     consignee={consignee}
                     shipper={shipper}
-                  ></IncomeChargeForm>
+                  />
                 )}
 
                 {showIncomeForm && (
@@ -1845,7 +1808,7 @@ const PickupOrderCreationForm = ({
                     agent={agent}
                     consignee={consignee}
                     shipper={shipper}
-                  ></ExpenseChargeForm>
+                  />
                 )}
                 {showExpenseForm && (
                   <Table
@@ -1886,19 +1849,6 @@ const PickupOrderCreationForm = ({
               Cancel
             </button>
           </div>
-
-          {/* {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Pick up Order {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
-      )} */}
           {showSuccessAlert && (
             <Alert
               severity="success"
