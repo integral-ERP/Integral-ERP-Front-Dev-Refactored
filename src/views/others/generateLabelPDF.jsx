@@ -47,7 +47,7 @@ const generateLabelPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n`;
+        firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
         sixthRowText += `${commodity.weight} lbs \n`;
@@ -146,7 +146,7 @@ const generateLabelPDF = (data, numCon) => {
                         fit: [100, 100],
                       },
                       {
-                        text: "Warehouse Receipt",
+                        text: "",
                         fontSize: 14,
                         bold: true,
                         margin: [0, 10, 0, 0], // Adjust margin as needed
@@ -273,9 +273,10 @@ const generateLabelPDF = (data, numCon) => {
                       },
                       {},
                     ],
+                    // ------------------------------------------------------------
                     [
                       {
-                        text: "Inland and Supplier Information",
+                        text: "WAYBILL NUMBER",
                         margin: [0, 0, 0, 0],
                         bold: true,
                         fillColor: `#CCCCCC`,
@@ -288,7 +289,28 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
-                        text: `Carrier Name`,
+                        text: "WAYBILL NUMBER",
+                        margin: [0, 0, 0, 0],
+                        bold: true,
+                        fillColor: `#CCCCCC`,
+                        colSpan: 4,
+                        alignment: "center"
+                      },
+                    ],
+                    //-------------------------------------------------------------
+                    [
+                      {
+
+                        
+
+                      },
+                      {},
+                      {},
+                      {}
+                    ],
+                    [
+                      {
+                        text: `Declared value`,
                         margin: [0, 0, 0, 0],
                       },
                       {
