@@ -34,6 +34,7 @@ const Receipt = () => {
   const StatusDelivered = 9;
   const StatusOnHold = 12;  
   const StatusPending = 2;
+  const StatusLoaded = 1;
   //------------
   const columns = [
     "Status",
@@ -253,6 +254,19 @@ const Receipt = () => {
     }
   }
 
+  const setLoaded = async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusLoaded};
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
 
   const contextMenuOptions = [
     {
@@ -274,6 +288,10 @@ const Receipt = () => {
     {
       label: "Pending",
       handler: setPending,
+    },
+    {
+      label: "Loaded",
+      handler: setLoaded,
     }
   ];
 
