@@ -384,7 +384,7 @@ const Table = ({
   }
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-    console.log("SelectR = ", selectedRow.commodities.length)
+    // console.log("SelectR = ", selectedRow.commodities.length)
     const numCon = selectedRow.commodities.length;
     for (let i = 0; i < numCon; i++) {
       generateLabelPDF(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 

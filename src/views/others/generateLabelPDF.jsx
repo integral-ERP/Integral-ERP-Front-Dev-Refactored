@@ -330,7 +330,7 @@ const generateLabelPDF = (data, numCon) => {
 
                       },
                       {
-                        text: totalPieces + '/',
+                        text: numCon + '/' + totalPieces,
                         margin: [0, 0, 0, 30],
                         bold: true,
                         alignment: `center`,
