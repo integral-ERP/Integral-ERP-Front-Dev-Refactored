@@ -1080,7 +1080,7 @@ const ReceiptCreationForm = ({
       dialogClassName="bmodal-width"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Pick-up Order Creation Form</Modal.Title>
+        <Modal.Title>Warehouse Receipt Creation Form</Modal.Title>
       </Modal.Header>
       <div>
         <div className="company-form receipt">

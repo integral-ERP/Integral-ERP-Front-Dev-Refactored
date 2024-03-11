@@ -7,7 +7,7 @@ pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-const generateLabelPDF = (data, numCon) => {
+const generateLabelPDF = (data, numCon, descrip) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
 
@@ -36,12 +36,12 @@ const generateLabelPDF = (data, numCon) => {
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
+    let fourthRowText ="";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
       let firstRowText = "";
       let thirdRowText = "";
-      let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
@@ -58,7 +58,7 @@ const generateLabelPDF = (data, numCon) => {
           commodity.internalCommodities.forEach((internalCommodity) => {
 
             thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fourthRowText += `${internalCommodity.description} \n`;
+            // fourthRowText += `${internalCommodity.description} \n`;
             sixthRowText += `${internalCommodity.weight} lbs \n`;
             seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
             totalWeight += parseFloat(internalCommodity.weight);
@@ -78,7 +78,7 @@ const generateLabelPDF = (data, numCon) => {
           text: thirdRowText,
         },
         {
-          text: fourthRowText,
+          text: fourthRowText + "HOLA MUNDO",
           colSpan: 2,
           margin: [0, 0, 0, 40],
         },
@@ -255,7 +255,8 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
-                        text: "Here description",
+                        text: `${descrip}`,
+                        // text: ` ${commodity.description} `,
                         margin: [0, 0, 0, 200],
                         colSpan: 4,
                         alignment: "left",
@@ -321,7 +322,8 @@ const generateLabelPDF = (data, numCon) => {
 
                       },
                       {
-                        text: `PESO` + '  ' + 'LB',
+                        // text: `PESO` + '  ' + 'LB',
+                        text: `${(totalWeight / 2.205).toFixed(2)} LB`,
                         bold: true,
                         alignment: `center`,
                         fontSize: 25,
