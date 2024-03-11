@@ -725,7 +725,7 @@ const Table = ({
                               <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button type="button" onClick={onEdit} className="custom-button">
+                              <button type="button" onClick={onEdit} className="custom-button" style={{ display: "none" }}>
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>

@@ -246,7 +246,7 @@ const Repacking = () => {
                       : 0}
                   </p>
                   <p>
-                    Repacked?:{" "}
+                    Repacked:{" "}
                     {selectedCommodity?.containsCommodities ? "Yes" : "No"}
                   </p>
                   {selectedCommodity?.internalCommodities.map((com) => {
@@ -259,9 +259,7 @@ const Repacking = () => {
                         <p>Length: {com.length}</p>
                         <p>Volumetric Weight: {com.volumetricWeight}</p>
                         <p>Chargeable Weight: {com.chargedWeight}</p>
-                        <p>
-                          Repacked?: {com.containsCommodities ? "Yes" : "No"}
-                        </p>
+
                       </div>
                     );
                   })}
