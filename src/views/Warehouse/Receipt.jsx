@@ -10,6 +10,7 @@ import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 import PickupService from "../../services/PickupService";
 
+
 const Receipt = () => {
   const { hideShowSlider } = useContext(GlobalContext);
   const [receipts, setreceipts] = useState([]);
@@ -29,9 +30,9 @@ const Receipt = () => {
     y: 0,
   });
   const StatusOnHand = 4;
-  const StatusInTransit = 6;
+  const StatusInTransit= 6;
   const StatusDelivered = 9;
-  const StatusOnHold = 12;
+  const StatusOnHold = 12;  
   const StatusPending = 2;
   //------------
   const columns = [
@@ -116,8 +117,8 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    console.log("receipts", receipts[0]);
-    console.log("Pieces", receipts[0].commodities.length);
+    console.log("receipts", receipts[0])
+    console.log("Pieces", receipts[0].commodities.length)
   };
 
   const handleEditreceipts = () => {
@@ -141,29 +142,25 @@ const Receipt = () => {
         // Obtener todas las pickups
         const response = await PickupService.getPickups();
         const resultsArray = response.data.results;
-
+        
         for (let i = 0; i < resultsArray.length; i++) {
           const pickUpLocationObj = resultsArray[i].number;
           const getpickupOrderId = resultsArray[i].id;
 
           if (pickUpLocationObj === selectedPickupOrder.number) {
-            const getpickupforId = await PickupService.getPickupById(
-              getpickupOrderId
-            );
+            const getpickupforId = await PickupService.getPickupById(getpickupOrderId);
             const newPickup = { ...getpickupforId, status: 14 };
             // Actualizar la pickup con el nuevo estado de empty
             await PickupService.updatePickup(getpickupOrderId, newPickup);
             //console.log("Actualizado correctamente");
 
-            // Después de la actualización, proceder con ReceiptService para eliminarlo
+            // Después de la actualización, proceder con ReceiptService para eliminarlo 
             try {
               await ReceiptService.deleteReceipt(selectedPickupOrder.id);
               //console.log("Eliminado correctamente");
 
               // Actualizar el estado de receipts eliminando la orden
-              const newreceipts = receipts.filter(
-                (order) => order.id !== selectedPickupOrder.id
-              );
+              const newreceipts = receipts.filter((order) => order.id !== selectedPickupOrder.id);
               setreceipts(newreceipts);
 
               setShowSuccessAlert(true);
@@ -192,16 +189,11 @@ const Receipt = () => {
 
   //added context menu
 
-  const setOnHold = async () => {
+  const setOnHold= async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = {
-        ...selectedPickupOrder,
-        status: StatusOnHold,
-      };
-      const response = await ReceiptService.updateReceipt(
-        selectedPickupOrder.id,
-        updatedPickuporder
-      );
+      
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHold };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
       }
@@ -212,14 +204,8 @@ const Receipt = () => {
 
   const setInTransit = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = {
-        ...selectedPickupOrder,
-        status: StatusInTransit,
-      };
-      const response = await ReceiptService.updateReceipt(
-        selectedPickupOrder.id,
-        updatedPickuporder
-      );
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusInTransit };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
       }
@@ -230,62 +216,48 @@ const Receipt = () => {
 
   const setDelivered = async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = {
-        ...selectedPickupOrder,
-        status: StatusDelivered,
-      };
-      const response = await ReceiptService.updateReceipt(
-        selectedPickupOrder.id,
-        updatedPickuporder
-      );
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusDelivered };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
-      }
-    } else {
-      alert("Please select a pickup order to continue.");
-    }
-  };
 
-  const setOnHand = async () => {
-    if (selectedPickupOrder) {
-      const updatedPickuporder = {
-        ...selectedPickupOrder,
-        status: StatusOnHand,
-      };
-      const response = await ReceiptService.updateReceipt(
-        selectedPickupOrder.id,
-        updatedPickuporder
-      );
-      if (response.status === 200) {
-        window.location.reload(true);
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  };
+  }
 
-  const setPending = async () => {
+  const setOnHand= async () => {
     if (selectedPickupOrder) {
-      const updatedPickuporder = {
-        ...selectedPickupOrder,
-        status: StatusPending,
-      };
-      const response = await ReceiptService.updateReceipt(
-        selectedPickupOrder.id,
-        updatedPickuporder
-      );
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusOnHand };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
       if (response.status === 200) {
         window.location.reload(true);
+
       }
     } else {
       alert("Please select a pickup order to continue.");
     }
-  };
+  }
+
+  const setPending= async () => {
+    if (selectedPickupOrder) {
+      const updatedPickuporder = { ...selectedPickupOrder, status: StatusPending };
+      const response = (await ReceiptService.updateReceipt(selectedPickupOrder.id, updatedPickuporder));
+      if (response.status === 200) {
+        window.location.reload(true);
+
+      }
+    } else {
+      alert("Please select a pickup order to continue.");
+    }
+  }
+
 
   const contextMenuOptions = [
     {
       label: "On Hold",
-      handler: setOnHold,
+      handler: setOnHold
     },
     {
       label: "In Transit",
@@ -302,10 +274,11 @@ const Receipt = () => {
     {
       label: "Pending",
       handler: setPending,
-    },
+    }
   ];
 
   const handleContextMenu = (e) => {
+    
     if (selectedPickupOrder) {
       //console.log("selectedPickupOrder", selectedPickupOrder);
       e.preventDefault(); // Prevent the browser's default context menu
@@ -313,11 +286,13 @@ const Receipt = () => {
       const clickY = e.clientY;
       setContextMenuPosition({ x: clickX, y: clickY });
       setShowContextMenu(true);
+      
     }
   };
 
+
   // Add the event listener for context menu
-  useEffect(() => {
+ useEffect(() => {
     const handleDocumentClick = (e) => {
       const contextMenu = document.querySelector(".context-menu");
       if (contextMenu && !contextMenu.contains(e.target)) {
@@ -402,6 +377,7 @@ const Receipt = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromReceipt={true}
+                  showBModal={true}
                 />
               )}
 
@@ -413,6 +389,7 @@ const Receipt = () => {
                   onpickupOrderDataChange={handlereceiptsDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>

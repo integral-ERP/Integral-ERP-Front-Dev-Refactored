@@ -40,7 +40,7 @@ const Pickup = () => {
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
   //added status for update context menu
-  /*  const StatusOnHand = 4;
+ /*  const StatusOnHand = 4;
   const StatusInTransit= 6;
   const StatusDelivered = 9;
   const StatusOnHold = 12;  
@@ -78,6 +78,7 @@ const Pickup = () => {
       if (selectedPickupOrder.status != StatusEmpty) {
         setShowContextMenu(false);
       }
+      
     }
   };
 
@@ -353,7 +354,7 @@ const Pickup = () => {
       handler: setOnHand,
     }
   ] */
-
+  
   return (
     <>
       <div className="dashboard__layout">
@@ -397,6 +398,7 @@ const Pickup = () => {
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
 
@@ -408,6 +410,7 @@ const Pickup = () => {
                   onpickupOrderDataChange={handlePickupOrdersDataChange}
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
+                  showBModal={true}
                 />
               )}
             </Table>
@@ -458,6 +461,7 @@ const Pickup = () => {
                   currentPickUpNumber={currentPickupNumber}
                   setcurrentPickUpNumber={setcurrentPickupNumber}
                   fromPickUp={true}
+                  showBModal={true}
                 />
               </div>
             )}
