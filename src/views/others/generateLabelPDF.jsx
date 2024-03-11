@@ -7,11 +7,9 @@ pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-
 const generateLabelPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -47,7 +45,7 @@ const generateLabelPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n`;
+        firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
         sixthRowText += `${commodity.weight} lbs \n`;
@@ -73,7 +71,7 @@ const generateLabelPDF = (data, numCon) => {
 
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 200],
+          margin: [0, 0, 0, 200], //Cuadro largo
         },
         {},
         {
@@ -102,7 +100,6 @@ const generateLabelPDF = (data, numCon) => {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
 
-
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -118,13 +115,11 @@ const generateLabelPDF = (data, numCon) => {
             },
           ];
 
-
           chargeRows.push(chargeRow);
         }
       });
 
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -134,7 +129,6 @@ const generateLabelPDF = (data, numCon) => {
         reader.onload = (event) => {
           const imgUrl = event.target.result;
 
-
           const pdf = {
             content: [
               {
@@ -143,39 +137,26 @@ const generateLabelPDF = (data, numCon) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [100, 100],
+                        fit: [150, 150],
                       },
                       {
-                        text: "Warehouse Receipt",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
                       }
-                    ],
-                  },
-                  {
-                    text: [
-                      `Issued By \n`,
-                      `${data.issued_byObj?.name || ``} \n`,
-                      `${data.issued_byObj?.phone
-                        ? `Tel: ${data.issued_byObj.phone}, `
-                        : ``
-                      }${data.issued_byObj?.fax
-                        ? `Fax: ${data.issued_byObj.fax}`
-                        : ``
-                      }\n`,
-                      `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}
-                       ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``}`,
-                      `${data.issued_byObj?.country || ``}`,
                     ],
                   },
                   {
                     stack: [
                       {
+                        text: ` WAYBILL NUMBER\n `,
+                        fontSize: 10,
+                        bold: true,
+                        fillColor: `red`,
+                        margin: [0, 10, 0, 0], // Adjust margin as needed
+                      },
+                      {
                         image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
+                        fit: [250, 250],
+                        fillColor: `#CCCCCC`,
+                        alignment: `center`,
                       },
                     ],
                   },
@@ -187,18 +168,6 @@ const generateLabelPDF = (data, numCon) => {
                     {}, // Empty cell for the logo image (rowspan: 2)
                   ],
                   {},
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [`Receipt Number`, `${data.number || ``}`],
-                        [`Received Date/Time`, `${data.creation_date || ``}`],
-                        [`Received By`, `${data.employeeObj?.name || ``}`]
-                      ],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
                 ],
               },
               {
@@ -210,7 +179,7 @@ const generateLabelPDF = (data, numCon) => {
                         text: `Shipper Information`,
                         bold: true,
                         fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        margin: [0, 0, 0, 10],
                         colSpan: 2
                       },
                       {},
@@ -250,10 +219,7 @@ const generateLabelPDF = (data, numCon) => {
                       {},
                       {
                         text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj
-                            ?.street_and_number || ``
+                          `${data.consigneeObj?.data?.obj?.name || ``} \n`, `${data.consigneeObj?.data?.obj?.street_and_number || ``
                           } \n`,
                           `${data.consigneeObj?.data?.obj?.city || ``
                           }, ${data.consigneeObj?.data?.obj?.state || ``
@@ -273,14 +239,15 @@ const generateLabelPDF = (data, numCon) => {
                       },
                       {},
                     ],
+                    // ------------------------------------------------------------
                     [
                       {
-                        text: "Inland and Supplier Information",
-                        margin: [0, 0, 0, 0],
+                        text: "DESCRIPTION",
+                        margin: [0, 0, 0, 10],
                         bold: true,
                         fillColor: `#CCCCCC`,
                         colSpan: 4,
-                        alignment: "center"
+                        alignment: "left"
                       },
                       {},
                       {},
@@ -288,61 +255,19 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
-                        text: `Carrier Name`,
-                        margin: [0, 0, 0, 0],
+                        text: "Here description",
+                        margin: [0, 0, 0, 200],
+                        colSpan: 4,
+                        alignment: "left",
                       },
-                      {
-                        text: `${data.mainCarrierObj?.name || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Suppliers Name`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.mainCarrierObj?.name || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
+                      {},
+                      {},
+                      {}
                     ],
+
                     [
                       {
-                        text: `PRO Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.pro_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Tracking Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.tracking_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
-                        text: `Invoice Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.invoice_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `P.O Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.pro_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
-                        text: `Notes`,
+                        text: [`TRACKING \n`, `  Here Tracking`],
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
@@ -350,174 +275,69 @@ const generateLabelPDF = (data, numCon) => {
                       },
                       {},
                       {
-                        text: `Applicable Charges`,
+                        text: `LOCATION \n Here location`,
                         bold: true,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
                         colSpan: 2
                       },
-                      {},
-                    ],
-                    [
-                      {
-                        text: `${data.notes || ``}`,
-                        rowSpan: 2,
-                        colSpan: 2
-                      },
-                      {},
-                      {
-                        style: `tableExampleLeft`,
-                        table: {
-                          widths: ["28%", "40%", "32%"],
-                          body: [
-                            ["Type", `Description`, `Price`],
-                            ...chargeRows,
-                          ],
-                        },
-                        rowSpan: 2,
-                        colSpan: 2
-                      },
-                      {},
-                    ],
-                    [
-                      {},
-                      {},
-                      {},
-                      {},
+                      // {},
                     ],
                   ],
                 },
               },
               {
                 table: {
-                  widths: [`5%`, `10%`, `20%`, `30%`, `10%`, `10%`, `15%`],
+                  widths: [`33%`, `34%`, `33%`],
                   body: [
                     [
                       {
-                        text: `Pcs`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: `COLLECT COD`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['top', '', 'top', '']
+
                       },
                       {
-                        text: `Package`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: `TOTAL WEIGHT`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['top', '', 'top', '']
+
                       },
                       {
-                        text: `Dimensions`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Description`,
-                        fillColor: `#CCCCCC`,
-                        colSpan: 2,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {},
-                      {
-                        text: `Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        rowSpan: 3,
-                        alignment: "center"
-                      },
-                      {
-                        text: `Volume`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        rowSpan: 3,
-                        alignment: "center"
+                        text: `PIECES`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['top', '', 'top', '']
+
                       },
                     ],
                     [
                       {
-                        text: `Location`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {
-                        text: `Invoice Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: ``,
+                        margin: [0, 0, 0, 30],
+                        border: ['top', '', 'top', 'top']
+
                       },
                       {
-                        text: `Notes`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
+                        text: `PESO` + '  ' + 'LB',
+                        bold: true,
+                        alignment: `center`,
+                        fontSize: 25,
+                        margin: [0, 0, 0, 30],
+                        border: ['top', '', 'top', 'top']
+
                       },
-                      {},
-                      {},
-                      {
-                      },
-                    ],
-                    [
-                      {
-                        text: `Quantity`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {
-                        text: `PO Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Part Number / Model / Serial Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {},
-                      {
-                      },
-                    ],
-                    ...commodityRows,
-                    [
-                      {
-                        text: `Signature:`,
-                        colSpan: 4,
-                        rowSpan: 2,
-                      },
-                      {},
-                      {},
-                      {},
-                      {
-                        text: `Pieces`,
-                      },
-                      {
-                        text: `Weight`,
-                      },
-                      {
-                        text: [`volume`],
-                      },
-                    ],
-                    [
-                      {},
-                      {},
-                      {},
-                      {},
                       {
                         text: numCon + '/' + totalPieces,
+                        margin: [0, 0, 0, 30],
+                        bold: true,
+                        alignment: `center`,
+                        fontSize: 40,
+                        border: ['top', '', 'top', 'top']
                       },
-                      {
-                        text: [
-                          `${totalWeight} kg\n`,
-                          `${(totalWeight / 2.205).toFixed(2)} lb`,
-                        ],
-                      },
-                      {
-                        text: [
-                          `${totalVolume} ft3\n`,
-                          `${(totalVolume / 35.315).toFixed(2)} m3`,
-                        ],
-                      },
+
                     ],
                   ],
                 },
@@ -554,7 +374,6 @@ const generateLabelPDF = (data, numCon) => {
               fontSize: 10, // Set the desired font size here (e.g., 10)
             },
           };
-
 
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {

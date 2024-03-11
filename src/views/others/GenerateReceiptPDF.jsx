@@ -44,7 +44,8 @@ const GenerateReceiptPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n`;
+        // firstRowText += `1; Pallet \n`;
+        firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
         sixthRowText += `${commodity.weight} lbs \n`;
