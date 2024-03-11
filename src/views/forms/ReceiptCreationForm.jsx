@@ -1500,6 +1500,8 @@ const ReceiptCreationForm = ({
                   }}
                   onAdd={() => {}}
                   showOptions={false}
+                  //added no double click 
+                  Nodoubleclick={true}
                   /* deleted variable hiden button trash */
                 />
                 {/* added view commodities */}

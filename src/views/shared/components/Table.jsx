@@ -45,6 +45,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
+  Nodoubleclick,
 
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -661,9 +662,11 @@ const Table = ({
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
-                      columnOrder.includes("Repack Options")
-                        ? onInspect
-                        : handleEdit
+                      !Nodoubleclick
+                        ? columnOrder.includes("Repack Options")
+                          ? onInspect
+                          : handleEdit
+                        : null // Corregido aquí bug de doble click for table receiptcreationform
                     }
                   >
                     {columnOrder.map((columnName) =>
