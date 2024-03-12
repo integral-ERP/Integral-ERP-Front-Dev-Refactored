@@ -43,7 +43,7 @@ const Release = () => {
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
       const pickUpsOrders = (await PickupService.getPickups()).data.results;
       const pickUpsWithReceipt = pickUpsOrders.filter((pickUp) => {
-        return pickUp.status === "4";
+        return pickUp.status === "4" || pickUp.status === "1";
       });
       let filteredData = [];
       for (let i = 0; i < receiptOrders.length; i++) {
