@@ -6,11 +6,13 @@ import ModalForm from "../shared/components/ModalForm";
 import ReleaseOrderCreationForm from "../forms/ReleaseOrderCreationForm";
 import { useModal } from "../../hooks/useModal"; // Import the useModal hook
 import ReleaseService from "../../services/ReleaseService";
+import ReceiptService from "../../services/ReceiptService";
+import PickupService from "../../services/PickupService";
 import Sidebar from "../shared/components/SideBar";
-import { GlobalContext } from "../../context/global"
+import { GlobalContext } from "../../context/global";
 
 const Release = () => {
-  const { hideShowSlider } = useContext(GlobalContext)
+  const { hideShowSlider } = useContext(GlobalContext);
   const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
   const [selectedReleaseOrder, setSelectedReleaseOrder] = useState(null);
@@ -36,14 +38,54 @@ const Release = () => {
     "View Release PDF",
   ];
 
+  const fetchData = async () => {
+    try {
+      const receiptOrders = (await ReceiptService.getReceipts()).data.results;
+      const pickUpsOrders = (await PickupService.getPickups()).data.results;
+      const pickUpsWithReceipt = pickUpsOrders.filter((pickUp) => {
+        return pickUp.status === "4" || pickUp.status === "1";
+      });
+      let filteredData = [];
+      for (let i = 0; i < receiptOrders.length; i++) {
+        for (let j = 0; j < pickUpsWithReceipt.length; j++) {
+          if (receiptOrders[i].number === pickUpsWithReceipt[j].number) {
+            let weight = 0;
+            for (let n = 0; n < receiptOrders[i].commodities.length; n++) {
+              const e = receiptOrders[i].commodities[n];
+              weight += parseInt(e.weight);
+            }
+            let temp = {
+              ...receiptOrders[i],
+              release_date: pickUpsWithReceipt[j].delivery_date,
+              releasedToObj: pickUpsWithReceipt[j].deliveryLocationObj,
+              weight,
+            };
+            filteredData.push(temp);
+          }
+        }
+      }
+      console.log(filteredData);
+      setReleaseOrders(filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    console.log(releaseOrders);
+  }, []);
+
   const updateReleaseOrders = (url = null) => {
     ReleaseService.getReleases(url)
       .then((response) => {
         const newreleises = response.data.results.filter((release) => {
           const pickupOrderId = release.id;
-          return !releaseOrders.some((existingPickupOrder) => existingPickupOrder.id === pickupOrderId);
+          return !releaseOrders.some(
+            (existingPickupOrder) => existingPickupOrder.id === pickupOrderId
+          );
         });
-        
+
         setReleaseOrders([...releaseOrders, ...newreleises].reverse());
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -81,7 +123,6 @@ const Release = () => {
     }
 
     return () => {
-
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -92,7 +133,6 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
-    
   };
 
   const handleEditreceipts = () => {
@@ -115,13 +155,14 @@ const Release = () => {
       ReleaseService.deleteReceipt(selectedReleaseOrder.id)
         .then((response) => {
           if (response.status == 204) {
-            const newreceipts = releaseOrders.filter((order) => order.id !== selectedReleaseOrder.id);
+            const newreceipts = releaseOrders.filter(
+              (order) => order.id !== selectedReleaseOrder.id
+            );
             setReleaseOrders(newreceipts);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 3000);
-
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
@@ -129,9 +170,7 @@ const Release = () => {
             }, 3000);
           }
         })
-        .catch((error) => {
-          
-        });
+        .catch((error) => {});
     } else {
       alert("Please select a Release Order to delete.");
     }
@@ -139,14 +178,19 @@ const Release = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       const clickedElement = event.target;
       const isreceiptsButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
       const isSelectMenu = event.target.id.includes("react-select");
 
-      if (!isreceiptsButton && !isTableRow && !isEdit && !isInsideCompanyFormPickup && !isSelectMenu ) {
+      if (
+        !isreceiptsButton &&
+        !isTableRow &&
+        !isEdit &&
+        !isInsideCompanyFormPickup &&
+        !isSelectMenu
+      ) {
         setSelectedReleaseOrder(null);
       }
     };
@@ -154,44 +198,41 @@ const Release = () => {
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-
       window.removeEventListener("click", handleWindowClick);
     };
-  }, []);
+  });
 
   const setInTransit = async () => {
-    
-    if(selectedReleaseOrder){
-      const updatedPickuporder = {...selectedReleaseOrder, status: 6};
-      const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
-      
-      if (response.status === 200){
-        
-        window.location.reload(true);
+    if (selectedReleaseOrder) {
+      const updatedPickuporder = { ...selectedReleaseOrder, status: 6 };
+      const response = await ReleaseService.updateRelease(
+        selectedReleaseOrder.id,
+        updatedPickuporder
+      );
 
+      if (response.status === 200) {
+        window.location.reload(true);
       }
-      
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
   const setDelivered = async () => {
-    
-    if(selectedReleaseOrder){
-      const updatedPickuporder = {...selectedReleaseOrder, status: 9};
-      const response = (await ReleaseService.updateRelease(selectedReleaseOrder.id, updatedPickuporder));
-      
-      if (response.status === 200){
-        
-        window.location.reload(true);
+    if (selectedReleaseOrder) {
+      const updatedPickuporder = { ...selectedReleaseOrder, status: 9 };
+      const response = await ReleaseService.updateRelease(
+        selectedReleaseOrder.id,
+        updatedPickuporder
+      );
 
+      if (response.status === 200) {
+        window.location.reload(true);
       }
-      
-    }else{
+    } else {
       alert("Please select a pickup order to continue.");
     }
-  }
+  };
 
   const contextMenuOptions = [
     {
@@ -214,14 +255,21 @@ const Release = () => {
 
   const handleCancel = () => {
     window.location.reload();
-  }
-  
+  };
+
   return (
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
-          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
             <Table
               data={releaseOrders}
               columns={columns}
@@ -240,8 +288,7 @@ const Release = () => {
               contextService={ReleaseService}
               importEnabled={false}
             >
-               {selectedReleaseOrder !== null && (
-           
+              {selectedReleaseOrder !== null && (
                 <ReleaseOrderCreationForm
                   releaseOrder={selectedReleaseOrder}
                   closeModal={handleCancel}
@@ -250,11 +297,9 @@ const Release = () => {
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
-           
-            )}
+              )}
 
-            {selectedReleaseOrder === null && (
-           
+              {selectedReleaseOrder === null && (
                 <ReleaseOrderCreationForm
                   releaseOrder={null}
                   closeModal={handleCancel}
@@ -263,9 +308,8 @@ const Release = () => {
                   currentReleaseNumber={currentReleaseNumber}
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
-         
-            )}
-                  </Table>
+              )}
+            </Table>
 
             {showSuccessAlert && (
               <Alert
