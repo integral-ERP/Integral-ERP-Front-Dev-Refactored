@@ -385,10 +385,14 @@ const Table = ({
   }
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-    // console.log("SelectR = ", selectedRow.commodities.length)
+    const Comodities = selectedRow.commodities;
     const numCon = selectedRow.commodities.length;
+    console.log("Comodities = ", Comodities)
     for (let i = 0; i < numCon; i++) {
-      generateLabelPDF(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+      const descrip = selectedRow.commodities[i].description;
+      console.log("descrip = ", descrip)
+      generateLabelPDF(selectedRow, i + 1, numCon, descrip) // Incrementamos i en 1 para comenzar desde 
+
         .then((pdfUrl) => {
           window.open(pdfUrl);
         })

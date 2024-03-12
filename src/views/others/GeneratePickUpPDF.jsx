@@ -191,10 +191,47 @@ const GeneratePickUpPDF = (data) => {
                     {}, // Empty cell for the logo image (rowspan: 2)
                   ],
                   {
+                    // style: `tableExample`,
+                    // table: {
+                    //   width: `*`,
+                    //   body: [
+                    //     [`Received By:`, `${data.employeeObj?.name || ``}`],
+                    //   ],
+                    // },
+                  },
+                  {
+                    // style: `tableExample`,
+                    // table: {
+                    //   width: `*`,
+                    //   body: [[`Received Date`, `${data.creation_date || ``}`]],
+                    //   margin: [5, 0, 5, 0],
+                    // },
+                  },
+                ],
+              },
+              {
+                columns: [
+                  {
+                    // style: `tableExample`,
+                    table: {
+                      // width: `*`,
+                      body: [
+                            [`Pickup Date`, `${data.pick_up_date || ``}`],
+                            [`Received Date`, `${data.creation_date || ``}`],
+                    ],
+                    },
+                    // table:{
+                    //   text: [`Pickup Date`, `${data.pick_up_date || ``}`],
+                    //   margin: [0, 0, 0, 0],
+                    // },
+                    
+                  },
+                  {
                     style: `tableExample`,
                     table: {
                       width: `*`,
                       body: [
+                        [`Delivery Date`, `${data.delivery_date || ``}`],
                         [`Received By:`, `${data.employeeObj?.name || ``}`],
                       ],
                     },
@@ -202,33 +239,8 @@ const GeneratePickUpPDF = (data) => {
                   {
                     style: `tableExample`,
                     table: {
-                      width: `*`,
-                      body: [[`Received Date`, `${data.creation_date || ``}`]],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
-                ],
-              },
-              {
-                columns: [
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Pickup Date`, `${data.pick_up_date || ``}`]],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [[`Delivery Date`, `${data.delivery_date || ``}`]],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
+                      // width: ['100%'],
+                      margin: [50, 50, 50, 50],
                       body: [
                         [`Carrier`, `${data.main_carrierObj?.name || ``}`],
                       ],
@@ -238,7 +250,7 @@ const GeneratePickUpPDF = (data) => {
               },
               {
                 table: {
-                  widths: [`33%`, `33%`, `33%`],
+                  widths: [`33%`, `34%`, `33%`],
                   body: [
                     [
                       {
