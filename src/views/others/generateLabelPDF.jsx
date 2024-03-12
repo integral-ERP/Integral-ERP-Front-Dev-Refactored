@@ -1,17 +1,15 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
-import logo from "../../img/logo.png";
+import logo from "../../img/logotextcolor.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-
-const generateLabelPDF = (data, numCon) => {
+const generateLabelPDF = (data, numCon, descrip) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -27,6 +25,7 @@ const generateLabelPDF = (data, numCon) => {
       bold: true,
     };
     barcodeOptions.text = barcodeOptions.text.toUpperCase();
+    console.log("BANDERA=", barcodeOptions.text)
     try {
 
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
@@ -38,16 +37,16 @@ const generateLabelPDF = (data, numCon) => {
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
+    let fourthRowText = "";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
       let firstRowText = "";
       let thirdRowText = "";
-      let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n`;
+        firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
         sixthRowText += `${commodity.weight} lbs \n`;
@@ -60,7 +59,7 @@ const generateLabelPDF = (data, numCon) => {
           commodity.internalCommodities.forEach((internalCommodity) => {
 
             thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fourthRowText += `${internalCommodity.description} \n`;
+            // fourthRowText += `${internalCommodity.description} \n`;
             sixthRowText += `${internalCommodity.weight} lbs \n`;
             seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
             totalWeight += parseFloat(internalCommodity.weight);
@@ -73,25 +72,25 @@ const generateLabelPDF = (data, numCon) => {
 
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 200],
+          margin: [0, 0, 0, 0], //Cuadro largo
         },
         {},
         {
           text: thirdRowText,
         },
         {
-          text: fourthRowText,
+          text: fourthRowText + "",
           colSpan: 2,
-          margin: [0, 0, 0, 40],
+          margin: [0, 0, 0, 0],
         },
         {},
         {
           text: sixthRowText,
-          margin: [0, 0, 0, 40],
+          margin: [0, 0, 0, 0],
         },
         {
           text: seventhRowText,
-          margin: [0, 0, 0, 40],
+          margin: [0, 0, 0, 0],
         },
       ];
       commodityRows.push(commodityRow);
@@ -101,7 +100,6 @@ const generateLabelPDF = (data, numCon) => {
     if (data.charges) {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
-
 
           const chargeRow = [
             {
@@ -118,13 +116,11 @@ const generateLabelPDF = (data, numCon) => {
             },
           ];
 
-
           chargeRows.push(chargeRow);
         }
       });
 
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -134,7 +130,6 @@ const generateLabelPDF = (data, numCon) => {
         reader.onload = (event) => {
           const imgUrl = event.target.result;
 
-
           const pdf = {
             content: [
               {
@@ -143,40 +138,18 @@ const generateLabelPDF = (data, numCon) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [100, 100],
+                        fit: [500, 500],
+                        colSpan: 2,
+                        alignment: "right",
+                        margin: [0, -20, 0, 20],
                       },
-                      {
-                        text: "Warehouse Receipt",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      }
-                    ],
-                  },
-                  {
-                    text: [
-                      `Issued By \n`,
-                      `${data.issued_byObj?.name || ``} \n`,
-                      `${data.issued_byObj?.phone
-                        ? `Tel: ${data.issued_byObj.phone}, `
-                        : ``
-                      }${data.issued_byObj?.fax
-                        ? `Fax: ${data.issued_byObj.fax}`
-                        : ``
-                      }\n`,
-                      `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}
-                       ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``}`,
-                      `${data.issued_byObj?.country || ``}`,
+                      {                      }
                     ],
                   },
                   {
                     stack: [
-                      {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
-                      },
+                      {},
+                      {},
                     ],
                   },
                 ],
@@ -187,43 +160,24 @@ const generateLabelPDF = (data, numCon) => {
                     {}, // Empty cell for the logo image (rowspan: 2)
                   ],
                   {},
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [`Receipt Number`, `${data.number || ``}`],
-                        [`Received Date/Time`, `${data.creation_date || ``}`],
-                        [`Received By`, `${data.employeeObj?.name || ``}`]
-                      ],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
                 ],
               },
               {
                 table: {
-                  widths: [`15%`, `35%`, `15%`, '35%'],
+                  widths: [`0%`, `35%`, `35%`, '35%'],
                   body: [
                     [
                       {
-                        text: `Shipper Information`,
+                        text: `SHIPPER`,
                         bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2
+                        // fillColor: `#CCCCCC`,
+                        margin: [-10, 0, 0, 0],
+                        colSpan: 1,
+                        fontSize: 15,
+                        alignment: `left`,
+                        border: ['', 'top', 'top', 'top']
+
                       },
-                      {},
-                      {
-                        text: `Consignee Information`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2
-                      },
-                      {},
-                    ],
-                    [
                       {
                         text: [
                           `${data.shipperObj?.data?.obj?.name || ``
@@ -245,42 +199,93 @@ const generateLabelPDF = (data, numCon) => {
                             : ``
                           }\n`,
                         ],
-                        colSpan: 2
+                        fontSize: 15,
+                        colSpan: 3,
+                        border: ['top', 'top', '', 'top']
                       },
                       {},
-                      {
-                        text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj
-                            ?.street_and_number || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.city || ``
-                          }, ${data.consigneeObj?.data?.obj?.state || ``
-                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.country || ``
-                          }`,
-                          `${data.consigneeObj?.phone
-                            ? `Tel: ${data.consigneeObj.phone}, `
-                            : ``
-                          }${data.consigneeObj?.fax
-                            ? `Fax: ${data.consigneeObj.fax}`
-                            : ``
-                          }\n`,
-                        ],
-                        colSpan: 2
-                      },
+
                       {},
                     ],
                     [
                       {
-                        text: "Inland and Supplier Information",
-                        margin: [0, 0, 0, 0],
+                        text: `CONSIGNEE`,
+                        margin: [-10, 0, 0, 0],
                         bold: true,
-                        fillColor: `#CCCCCC`,
+                        colSpan: 1,
+                        rowSpan: 2,                      
+                        fontSize: 15,
+                        border: ['', 'top', 'top', 'top']
+                      },
+
+                      {
+                        text: [
+                          `${data.consigneeObj?.data?.obj?.name || ``} \n`, 
+                          `${data.consigneeObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone}, `: ``}
+                           ${data.consigneeObj?.fax? `Fax: ${data.consigneeObj.fax}`: ``}\n`,
+                        ],
+                        colSpan: 3,
+                        fontSize: 15,
+                        border: ['top', 'top', '', 'top']
+                      },
+                      {
+                      },
+                      
+                    ],
+                    [
+                      {
+                      },
+
+                      {
+                        text: [
+                          `${data.consigneeObj?.data?.obj?.city || ``}, 
+                           ${data.consigneeObj?.data?.obj?.state || ``}`,,
+                        ],
+                        colSpan: 2,
+                        fontSize: 20,
+                        bold: true,
+                      },
+                      {
+                      },
+                      {
+                        text: [
+                              `${data.consigneeObj?.data?.obj?.country || ``
+                          }`],
+                        fontSize: 20,
+                        bold: true,
+                      },
+                      
+                    ],
+                     [
+                      {
+                        text: `WATBILL NUMBER`,
+                        alignment: `left`,
                         colSpan: 4,
-                        alignment: "center"
+                        border: ['', 'top', '', '']
+                      },
+                      {},
+                      {}
+                    ],
+                    [
+                      {
+                        image: barcodeImage,
+                        // fit: [300, 150],
+                        alignment: `center`,
+                        colSpan: 4,
+                        border: ['', '', '', 'top']
+                      },
+                      {},
+                      {}
+                    ],
+                    [
+                      {
+                        text: `DESCRIPTION`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 4,
+                        alignment: "left",
+                        border: ['', '', '', '']
                       },
                       {},
                       {},
@@ -288,236 +293,94 @@ const generateLabelPDF = (data, numCon) => {
                     ],
                     [
                       {
-                        text: `Carrier Name`,
-                        margin: [0, 0, 0, 0],
+                        text: `${descrip}`,
+                        margin: [0, 0, 0, 80],
+                        colSpan: 4,
+                        alignment: "left",
+                        border: ['', '', '', '']
                       },
-                      {
-                        text: `${data.mainCarrierObj?.name || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Suppliers Name`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.mainCarrierObj?.name || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
+                      {},
+                      {},
+                      {}
                     ],
+
                     [
                       {
-                        text: `PRO Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.pro_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Tracking Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.tracking_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
-                        text: `Invoice Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.invoice_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `P.O Number`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `${data.pro_number || ``}`,
-                        margin: [0, 0, 0, 0],
-                      }
-                    ],
-                    [
-                      {
-                        text: `Notes`,
+                        text: [`TRACKING \n`, `  Here Tracking`],
                         bold: true,
-                        fillColor: `#CCCCCC`,
+                        alignment: `center`,
                         margin: [0, 0, 0, 0],
-                        colSpan: 2
+                        colSpan: 2,
+                        border: ['', '', '', 'top'],
                       },
                       {},
                       {
-                        text: `Applicable Charges`,
+                        text: `LOCATION \n Here location`,
                         bold: true,
-                        fillColor: `#CCCCCC`,
+                        // fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
-                        colSpan: 2
+                        alignment: `center`,
+                        colSpan: 2,
+                        border: ['', '', '', 'top'],
                       },
-                      {},
-                    ],
-                    [
-                      {
-                        text: `${data.notes || ``}`,
-                        rowSpan: 2,
-                        colSpan: 2
-                      },
-                      {},
-                      {
-                        style: `tableExampleLeft`,
-                        table: {
-                          widths: ["28%", "40%", "32%"],
-                          body: [
-                            ["Type", `Description`, `Price`],
-                            ...chargeRows,
-                          ],
-                        },
-                        rowSpan: 2,
-                        colSpan: 2
-                      },
-                      {},
-                    ],
-                    [
-                      {},
-                      {},
-                      {},
-                      {},
+                      // {},
                     ],
                   ],
                 },
               },
               {
                 table: {
-                  widths: [`5%`, `10%`, `20%`, `30%`, `10%`, `10%`, `15%`],
+                  widths: [`33%`, `34%`, `33%`],
                   body: [
                     [
                       {
-                        text: `Pcs`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: `COLLECT COD`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['', '', 'top', '']
+
                       },
                       {
-                        text: `Package`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: `TOTAL WEIGHT`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['top', '', 'top', '']
+
                       },
                       {
-                        text: `Dimensions`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Description`,
-                        fillColor: `#CCCCCC`,
-                        colSpan: 2,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {},
-                      {
-                        text: `Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        rowSpan: 3,
-                        alignment: "center"
-                      },
-                      {
-                        text: `Volume`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        rowSpan: 3,
-                        alignment: "center"
+                        text: `PIECES`,
+                        bold: true,
+                        // margin: [0, 0, 0, 0],
+                        border: ['top', '', '', '']
+
                       },
                     ],
                     [
                       {
-                        text: `Location`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {
-                        text: `Invoice Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        text: ``,
+                        margin: [0, 0, 0, 30],
+                        border: ['', '', 'top', '']
+
                       },
                       {
-                        text: `Notes`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
+                        // text: `PESO` + '  ' + 'LB',
+                        text: `${(totalWeight / 2.205).toFixed(2)} LB`,
+                        bold: true,
+                        alignment: `center`,
+                        fontSize: 25,
+                        margin: [0, 0, 0, 20],
+                        border: ['top', '', 'top', '']
+
                       },
-                      {},
-                      {},
-                      {
-                      },
-                    ],
-                    [
-                      {
-                        text: `Quantity`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {
-                        text: `PO Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Part Number / Model / Serial Number`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        colSpan: 2,
-                      },
-                      {},
-                      {},
-                      {
-                      },
-                    ],
-                    ...commodityRows,
-                    [
-                      {
-                        text: `Signature:`,
-                        colSpan: 4,
-                        rowSpan: 2,
-                      },
-                      {},
-                      {},
-                      {},
-                      {
-                        text: `Pieces`,
-                      },
-                      {
-                        text: `Weight`,
-                      },
-                      {
-                        text: [`volume`],
-                      },
-                    ],
-                    [
-                      {},
-                      {},
-                      {},
-                      {},
                       {
                         text: numCon + '/' + totalPieces,
+                        margin: [0, 0, 0, 20],
+                        bold: true,
+                        alignment: `center`,
+                        fontSize: 40,
+                        border: ['top', '', '', '']
                       },
-                      {
-                        text: [
-                          `${totalWeight} kg\n`,
-                          `${(totalWeight / 2.205).toFixed(2)} lb`,
-                        ],
-                      },
-                      {
-                        text: [
-                          `${totalVolume} ft3\n`,
-                          `${(totalVolume / 35.315).toFixed(2)} m3`,
-                        ],
-                      },
+
                     ],
                   ],
                 },
@@ -527,17 +390,17 @@ const generateLabelPDF = (data, numCon) => {
               header: {
                 fontSize: 18,
                 bold: true,
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, 0],
               },
               subheader: {
                 fontSize: 16,
                 bold: true,
-                margin: [0, 10, 0, 5],
+                margin: [0, 0, 0, 0],
               },
               tableExample: {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, 0],
                 alignment: `right`,
-                width: `100%`,
+                width: `150%`,
               },
               tableExampleLeft: {
                 margin: [0, 0, 0, 5],
@@ -554,7 +417,6 @@ const generateLabelPDF = (data, numCon) => {
               fontSize: 10, // Set the desired font size here (e.g., 10)
             },
           };
-
 
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {
