@@ -1056,16 +1056,7 @@ const ReceiptCreationForm = ({
   };
 
   return (
-    <Modal
-      show={showBM}
-      onHide={handleCloseBM}
-      animation={false}
-      backdrop="static"
-      dialogClassName="bmodal-width"
-    >
-      <Modal.Header closeButton>
-        <Modal.Title>Warehouse Receipt Creation Form</Modal.Title>
-      </Modal.Header>
+    <div>
       <div>
         <div className="company-form receipt">
           <div className="row w-100">
