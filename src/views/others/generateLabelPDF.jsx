@@ -211,6 +211,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: `CONSIGNEE`,
                         margin: [-10, 0, 0, 0],
+                        bold: true,
                         colSpan: 1,
                         rowSpan: 2,                      
                         fontSize: 15,
