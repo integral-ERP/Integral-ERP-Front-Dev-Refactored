@@ -1919,17 +1919,6 @@ const ReceiptCreationForm = ({
         )}
       </div>
 
-      {/* button duplicado */}
-      {/* <button
-                  type="button"
-                  onClick={() => {
-                    setshowRepackingForm(!showRepackingForm);
-                  }}
-                  className="button-save"
-                >
-                  Repacking
-                </button> */}
-
       <input type="checkbox" id="toggleBoton"></input>
       <label className="button-charge" for="toggleBoton"></label>
 
@@ -2169,18 +2158,6 @@ const ReceiptCreationForm = ({
           Cancel
         </button>
       </div>
-      {/* {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Warehouse Receipt {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
-      )} */}
       {showSuccessAlert && (
         <Alert
           severity="success"
@@ -2226,7 +2203,7 @@ const ReceiptCreationForm = ({
           </strong>
         </Alert>
       )}
-    </div>
+    </Modal>
   );
 };
 
