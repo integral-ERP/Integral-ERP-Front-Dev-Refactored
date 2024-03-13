@@ -23,10 +23,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
       pais = "BRA";
       break;
     case "BRAZIL":
-      pais = "BR";
-      break
-    case "BRASIL":
-      pais = "BR";
+      pais = "BRA";
       break
     case "CHINA":
       pais = "CHN";
