@@ -333,29 +333,44 @@ const ReceiptCreationForm = ({
     console.log("selected commodity ", commodity);
   };
 
-  const handleCommodityDelete = () => {
-    if (
-      selectedCommodity.internalCommodities &&
-      selectedCommodity.internalCommodities.length > 0
-    ) {
-      // Realizar desempaque (unpack)
-      const remainingCommodities = commodities.filter(
-        (commodity) => commodity.id !== selectedCommodity.id
-      );
-
-      const unpackedCommodities = [...selectedCommodity.internalCommodities];
-      // Actualizar el estado con la información más reciente
-      setcommodities([...remainingCommodities, ...unpackedCommodities]);
-      setSelectedRepackId(null);
-    } else {
-      // Elimina el commodity si no contiene commodities internos
-      const newCommodities = commodities.filter(
-        (com) => com.id !== selectedCommodity.id
-      );
-
-      setcommodities(newCommodities);
+  const handleCommodityDelete = async () => {
+    if (!selectedCommodity) {
+      alert("Please select a commodity before deleting it.");
+      return;
+    }
+  
+    try {
+      if (
+        selectedCommodity.internalCommodities &&
+        selectedCommodity.internalCommodities.length > 0
+      ) {
+        // Realizar desempaque (unpack)
+        const remainingCommodities = commodities.filter(
+          (commodity) => commodity.id !== selectedCommodity.id
+        );
+  
+        const unpackedCommodities = [...selectedCommodity.internalCommodities];
+        // Actualizar el estado con la información más reciente
+        setcommodities([...remainingCommodities, ...unpackedCommodities]);
+        setSelectedRepackId(null);
+      } else {
+        // Elimina el commodity si no contiene commodities internos
+        const newCommodities = commodities.filter(
+          (com) => com.id !== selectedCommodity.id
+        );
+  
+        setcommodities(newCommodities);
+      }
+  
+      // Esperar selectedCommodity como null
+      setTimeout(() => {
+        setselectedCommodity(null);
+      }, 100); 
+    } catch (error) {
+      console.error("Error when deleting the commodity:", error);
     }
   };
+  
 
   //added edit commodities
   const handleCommodityEdit = () => {
