@@ -224,7 +224,7 @@ const CarrierCreationForm = ({
        <div className="row w-100">
         <div className="col-6">
       <div className="creation creation-container w-100">
-      <div className="form-label_name"><h3>General</h3><span></span></div>
+      <div className="form-label_name"><h2>General</h2><span></span></div>
       <div className="row w-100">
       <div className="col-6">
           <div className="company-form__section">
@@ -398,7 +398,7 @@ const CarrierCreationForm = ({
 
       <div className="col-6">
       <div className="creation creation-container w-100">
-      <div className="form-label_name"><h3>Address</h3><span></span></div>
+      <div className="form-label_name"><h2>Address</h2><span></span></div>
         <div className="company-form__section">
           <Input
             type="textarea"
@@ -492,7 +492,7 @@ const CarrierCreationForm = ({
       <div className="row w-100">
         <div className="col-4">
       <div className="creation creation-container w-100">
-      <div className="form-label_name"><h3>Land</h3><span></span></div>
+      <div className="form-label_name"><h2>Land</h2><span></span></div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -558,7 +558,7 @@ const CarrierCreationForm = ({
 
       <div className="col-4">
       <div className="creation creation-container w-100">
-      <div className="form-label_name"><h3>Airline</h3><span></span></div>
+      <div className="form-label_name"><h2>Airline</h2><span></span></div>
         <div className="company-form__section">
           <Input
             type="text"
@@ -575,7 +575,7 @@ const CarrierCreationForm = ({
 
       <div className="col-4">
       <div className="creation creation-container w-100">
-      <div className="form-label_name"><h3>Ocean</h3><span></span></div>
+      <div className="form-label_name"><h2>Ocean</h2><span></span></div>
         <div className="company-form__section">
           <Input
             type="text"

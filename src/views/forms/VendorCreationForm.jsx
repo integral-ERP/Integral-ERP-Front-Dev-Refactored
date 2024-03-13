@@ -154,7 +154,7 @@ const VendorsCreationForm = ({
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h3>General</h3><span></span></div>
+          <div className="form-label_name"><h2>General</h2><span></span></div>
             <div className="row w-100">
               <div className="col-6 text-start">
                 <div className="company-form__section">
@@ -263,7 +263,7 @@ const VendorsCreationForm = ({
 
         <div className="col-6 text-start">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h3>Address</h3><span></span></div>
+          <div className="form-label_name"><h2>Address</h2><span></span></div>
             <div>
               <div className="company-form__section">
                 <Input

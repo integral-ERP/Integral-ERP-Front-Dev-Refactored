@@ -1088,7 +1088,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>General</h3>
+                  <h2>General</h2>
                   <span></span>
                 </div>
                 <div className="row mb-3">
@@ -1220,7 +1220,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>Shipper/Consignee</h3>
+                  <h2>Shipper/Consignee</h2>
                   <span></span>
                 </div>
                 <div className="row mb-3">
@@ -1321,7 +1321,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>Supplier</h3>
+                  <h2>Supplier</h2>
                   <span></span>
                 </div>
                 <div className="row align-items-center mb-3">
@@ -1399,7 +1399,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>Carrier Information</h3>
+                  <h2>Carrier Information</h2>
                   <span></span>
                 </div>
                 <div className="row">
@@ -1460,7 +1460,7 @@ const ReceiptCreationForm = ({
               {editingComodity ? (
                 <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
               ) : (
-                <h3>Commodities</h3>
+                <h2>Commodities</h2>
               )}
               <span></span>
             </div>
@@ -1592,7 +1592,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>Charges</h3>
+                  <h2>Charges</h2>
                   <span></span>
                 </div>
                 {true && (
@@ -1645,7 +1645,7 @@ const ReceiptCreationForm = ({
             <div className="col-6">
               <div className="creation creation-container w-100">
                 <div className="form-label_name">
-                  <h3>Charges</h3>
+                  <h2>Charges</h2>
                   <span></span>
                 </div>
                 {true && (
@@ -1698,7 +1698,7 @@ const ReceiptCreationForm = ({
 
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Events</h3>
+              <h2>Events</h2>
               <span></span>
             </div>
             <div className="row">
@@ -1741,7 +1741,7 @@ const ReceiptCreationForm = ({
 
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Attachments</h3>
+              <h2>Attachments</h2>
               <span></span>
             </div>
             <div className="row">
@@ -1758,7 +1758,7 @@ const ReceiptCreationForm = ({
 
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Notes</h3>
+              <h2>Notes</h2>
               <span></span>
             </div>
 

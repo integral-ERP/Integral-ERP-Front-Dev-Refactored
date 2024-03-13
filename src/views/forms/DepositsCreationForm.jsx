@@ -134,7 +134,7 @@ const DepositsCreationForm = ({
       <div className="creation creation-container w-100">
         <div className="row w-100">
           <div className="col-12 text-start">
-            <div className="form-label_name"><h3>Deposit</h3><span></span> </div>
+            <div className="form-label_name"><h2>Deposit</h2><span></span> </div>
 
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
