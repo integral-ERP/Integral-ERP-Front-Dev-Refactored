@@ -176,7 +176,7 @@ const Receipt = () => {
               setShowErrorAlert(true);
               setTimeout(() => {
                 setShowErrorAlert(false);
-              }, 3000);
+              }, 1500);
             }
 
             // Salir del bucle después de la actualización

@@ -18,8 +18,8 @@ const generateLabelPDF = (data, numCon, descrip) => {
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128),
       text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + numCon,
-      scale: 2, // Scale factor for the barcode size
-      height: 20, // Height of the barcode
+      scale: 4, // Scale factor for the barcode size
+      height: 10, // Height of the barcode
       includetext: true, // Include human-readable text below the barcode
       textxalign: "center",
       bold: true,
@@ -138,12 +138,12 @@ const generateLabelPDF = (data, numCon, descrip) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [500, 500],
+                        fit: [400, 200],
                         colSpan: 2,
                         alignment: "right",
                         margin: [0, -20, 0, 20],
                       },
-                      {                      }
+                      {}
                     ],
                   },
                   {
@@ -170,18 +170,15 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: `SHIPPER`,
                         bold: true,
-                        // fillColor: `#CCCCCC`,
                         margin: [-10, 0, 0, 0],
                         colSpan: 1,
-                        fontSize: 15,
-                        alignment: `left`,
-                        border: ['', 'top', 'top', 'top']
-
+                        fontSize: 12,
+                        border: ['', 'top', 'top', 'top'],
                       },
                       {
                         text: [
                           `${data.shipperObj?.data?.obj?.name || ``
-                          } \n`,
+                          } \n \n`,
                           `${data.shipperObj?.data?.obj
                             ?.street_and_number || ``
                           } \n`,
@@ -201,7 +198,8 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         ],
                         fontSize: 15,
                         colSpan: 3,
-                        border: ['top', 'top', '', 'top']
+                        border: ['top', 'top', '', 'top'],
+                        // lineWidth: 19,
                       },
                       {},
 
@@ -213,18 +211,18 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         margin: [-10, 0, 0, 0],
                         bold: true,
                         colSpan: 1,
-                        rowSpan: 2,                      
+                        rowSpan: 2,
                         fontSize: 15,
                         border: ['', 'top', 'top', 'top']
                       },
 
                       {
                         text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``} \n`, 
+                          `${data.consigneeObj?.data?.obj?.name || ``} \n`,
                           `${data.consigneeObj?.data?.obj?.street_and_number || ``} \n`,
                           `${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
-                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone}, `: ``}
-                           ${data.consigneeObj?.fax? `Fax: ${data.consigneeObj.fax}`: ``}\n`,
+                          `${data.consigneeObj?.phone ? `Tel: ${data.consigneeObj.phone}, ` : ``}
+                           ${data.consigneeObj?.fax ? `Fax: ${data.consigneeObj.fax}` : ``}\n`,
                         ],
                         colSpan: 3,
                         fontSize: 15,
@@ -232,7 +230,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                       },
-                      
+
                     ],
                     [
                       {
@@ -241,7 +239,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: [
                           `${data.consigneeObj?.data?.obj?.city || ``}, 
-                           ${data.consigneeObj?.data?.obj?.state || ``}`,,
+                           ${data.consigneeObj?.data?.obj?.state || ``}`, ,
                         ],
                         colSpan: 2,
                         fontSize: 20,
@@ -251,19 +249,22 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                         text: [
-                              `${data.consigneeObj?.data?.obj?.country || ``
+                          `${data.consigneeObj?.data?.obj?.country || ``
                           }`],
                         fontSize: 20,
                         bold: true,
+                        border: ['top', 'top', '', 'top'],
                       },
-                      
+
                     ],
-                     [
+                    [
                       {
                         text: `WATBILL NUMBER`,
                         alignment: `left`,
                         colSpan: 4,
-                        border: ['', 'top', '', '']
+                        bold: true,
+                        border: ['', 'top', '', ''],
+                        fontSize: 12,
                       },
                       {},
                       {}
@@ -271,7 +272,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                     [
                       {
                         image: barcodeImage,
-                        // fit: [300, 150],
+                        // fit: [200, 200],
                         alignment: `center`,
                         colSpan: 4,
                         border: ['', '', '', 'top']
@@ -285,7 +286,9 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         margin: [0, 0, 0, 0],
                         colSpan: 4,
                         alignment: "left",
-                        border: ['', '', '', '']
+                        border: ['', '', '', ''],
+                        bold: true,
+                        fontSize: 12,
                       },
                       {},
                       {},
@@ -294,10 +297,12 @@ const generateLabelPDF = (data, numCon, descrip) => {
                     [
                       {
                         text: `${descrip}`,
-                        margin: [0, 0, 0, 80],
+                        margin: [20, 0, 0, 70],
                         colSpan: 4,
                         alignment: "left",
-                        border: ['', '', '', '']
+                        border: ['', '', '', ''],
+                        // bold: true,
+                        fontSize: 16,
                       },
                       {},
                       {},
@@ -306,24 +311,46 @@ const generateLabelPDF = (data, numCon, descrip) => {
 
                     [
                       {
-                        text: [`TRACKING \n`, `  Here Tracking`],
+                        text: [`TRACKING`],
                         bold: true,
-                        alignment: `center`,
+                        alignment: `left`,
                         margin: [0, 0, 0, 0],
                         colSpan: 2,
+                        fontSize: 12,
+                        border: ['', '', '', ''],
+                      },
+                      {},
+                      {
+                        text: `LOCATION`,
+                        bold: true,
+                        margin: [190, 0, 0, 0],
+                        alignment: `left`,
+                        colSpan: 2,
+                        fontSize: 12,
+                        border: ['', '', '', ''],
+                      },
+                      // {},
+                    ],
+                    [
+                      {
+                        text: [`HERE TRACKING`],
+                        bold: true,
+                        alignment: `left`,
+                        margin: [0, 0, 0, 0],
+                        colSpan: 2,
+                        fontSize: 15,
                         border: ['', '', '', 'top'],
                       },
                       {},
                       {
-                        text: `LOCATION \n Here location`,
+                        text: `HERE LOCATION`,
                         bold: true,
-                        // fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: `center`,
+                        margin: [200, 0, 0, 0],
+                        alignment: `left`,
                         colSpan: 2,
+                        fontSize: 15,
                         border: ['', '', '', 'top'],
                       },
-                      // {},
                     ],
                   ],
                 },
@@ -336,22 +363,26 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: `COLLECT COD`,
                         bold: true,
-                        // margin: [0, 0, 0, 0],
-                        border: ['', '', 'top', '']
+                        margin: [25, 25, 0, -25],
+                        border: ['', '', 'top', ''],
+                        bold: true,
+                        fontSize: 15,
 
                       },
                       {
                         text: `TOTAL WEIGHT`,
                         bold: true,
-                        // margin: [0, 0, 0, 0],
-                        border: ['top', '', 'top', '']
+                        border: ['top', '', 'top', ''],
+                        bold: true,
+                        fontSize: 15,
 
                       },
                       {
                         text: `PIECES`,
                         bold: true,
-                        // margin: [0, 0, 0, 0],
-                        border: ['top', '', '', '']
+                        border: ['top', '', '', ''],
+                        bold: true,
+                        fontSize: 15,
 
                       },
                     ],
