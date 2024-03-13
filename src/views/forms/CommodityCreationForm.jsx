@@ -59,8 +59,17 @@ const CommodityCreationForm = ({
       alert("Please fill in all required fields.");
       return;
     }
-    // Find the maximum internalID in the existing commodities
-    const maxInternalID = Math.max(...commodities.map((c) => c.id), 0);
+    // Find the maximum internalID in the existing commodities and also in the internalCommodities
+    const maxInternalID = Math.max(
+      ...commodities.map((c) => {
+          return c.internalCommodities && c.internalCommodities.length > 0 ?
+              Math.max(...c.internalCommodities.map((obj) => obj.id), 0) :
+              c.id;
+      }),
+      0
+   );
+  
+  
     const body = {
       id: maxInternalID + 1,
       length: formData.length,
