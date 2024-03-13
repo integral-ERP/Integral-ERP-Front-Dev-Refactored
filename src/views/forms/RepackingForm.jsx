@@ -5,6 +5,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
   const [internalCommodities, setinternalCommodities] = useState([]);
   const [id, setId] = useState(0);
+  
   const formFormat = {
     package_type_id: "",
     package_type_description: "",
@@ -121,17 +122,34 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     const filteredCommodities = commodities.filter((commodity) => {
       return !selectedCommodityIds.includes(String(commodity.id));
     });
+    
 
+   // Encontrar el máximo ID de repack existente en commodities repacked
+    const maxRepackID = commodities.reduce((max, item) => {
+      if (item.id && typeof item.id === 'string') {
+        const match = item.id.match(/^repacked-(\d+)$/);
+        if (match) {
+          const repackNumber = parseInt(match[1], 10);
+          return Math.max(max, repackNumber);
+        }
+      }
+      return max;
+    }, 0);
+
+   
+    // Calcular el nuevo ID sumando 1 al máximo ID encontrado
+    const newCommodityID = `repacked-${maxRepackID + 1}`;
+        
     const newCommodity = {
       ...formData,
-      id: `repacked-${id}`,
+      id: newCommodityID,
       weight: internalWeight,
       containsCommodities: true,
       internalCommodities: internalCommodities,
     };
 
     setCommodities([...filteredCommodities, newCommodity]);
-    setId(id + 1);
+    //setId(id + 1);
 
     setformData(formFormat);
     setinternalCommodities([]);
