@@ -10,6 +10,54 @@ pdfMake.vfs = pdfFonts;
 const generateLabelPDF = (data, numCon, descrip) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
+  // const country = data.consigneeObj?.data?.obj?.country;
+  const country = data.consigneeObj?.data?.obj?.country?.toUpperCase();
+
+  var pais = "";
+
+  switch (country) {
+    case "UNITED STATES":
+      pais = "USA";
+      break;
+    case "BRASIL":
+      pais = "BRA";
+      break;
+    case "BRAZIL":
+      pais = "BR";
+      break
+    case "BRASIL":
+      pais = "BR";
+      break
+    case "CHINA":
+      pais = "CHN";
+      break
+    case "COLOMBIA":
+      pais = "COL";
+      break
+    case "DOMINICAN REPUBLIC":
+      pais = "Rep. Dom";
+      break
+    case "COSTA RICA":
+      pais = "CRI";
+      break
+    case "CHILE":
+      pais = "CHL";
+      break
+    case "PERU":
+      pais = "PER";
+      break
+    case "PANAMA":
+      pais = "PAN"; 
+      break
+      case "ARGENTINA":
+        pais = "ARG"; 
+        break
+    default:
+      pais = country;
+  }
+
+  console.log("country = ", country)
+
 
   return new Promise((resolve, reject) => {
     let canvas = null;
@@ -248,12 +296,12 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                       },
                       {
-                        text: [
-                          `${data.consigneeObj?.data?.obj?.country || ``
-                          }`],
+                        text: pais,
                         fontSize: 20,
                         bold: true,
                         border: ['top', 'top', '', 'top'],
+                        alignment: 'center',
+                        margin: [0, 20, 0, 0],
                       },
 
                     ],
@@ -301,7 +349,6 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         colSpan: 4,
                         alignment: "left",
                         border: ['', '', '', ''],
-                        // bold: true,
                         fontSize: 16,
                       },
                       {},
@@ -365,7 +412,6 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         bold: true,
                         margin: [25, 25, 0, -25],
                         border: ['', '', 'top', ''],
-                        bold: true,
                         fontSize: 15,
 
                       },
@@ -373,7 +419,6 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         text: `TOTAL WEIGHT`,
                         bold: true,
                         border: ['top', '', 'top', ''],
-                        bold: true,
                         fontSize: 15,
 
                       },
@@ -381,7 +426,6 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         text: `PIECES`,
                         bold: true,
                         border: ['top', '', '', ''],
-                        bold: true,
                         fontSize: 15,
 
                       },
