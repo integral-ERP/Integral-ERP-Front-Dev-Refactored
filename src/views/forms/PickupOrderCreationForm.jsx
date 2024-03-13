@@ -1078,7 +1078,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>General</h3>
+              <h2>General</h2>
               <span></span>
             </div>
             <div className="row align-items-center mb-3">
@@ -1246,7 +1246,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Pickup Information</h3>
+              <h2>Pickup Information</h2>
               <span></span>
             </div>
 
@@ -1362,7 +1362,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Delivery Information</h3>
+              <h2>Delivery Information</h2>
               <span></span>
             </div>
             <div className="row align-items-center mb-3">
@@ -1518,7 +1518,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Carrier Information</h3>
+              <h2>Carrier Information</h2>
               <span></span>
             </div>
             <div className="row align-items-center mb-3">
@@ -1730,7 +1730,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Charges Income </h3>
+              <h2>Charges Income </h2>
               <span></span>
             </div>
             {true && (
@@ -1770,7 +1770,7 @@ const PickupOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Charges Expense </h3>
+              <h2>Charges Expense </h2>
               <span></span>
             </div>
             {true && (

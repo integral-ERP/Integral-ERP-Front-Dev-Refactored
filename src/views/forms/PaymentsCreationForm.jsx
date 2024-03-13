@@ -223,7 +223,7 @@ const PaymentsCreationForm = ({
     <div className="company-form">
 
       <div className="creation creation-container w-100">
-        <div className="form-label_name"><h3>Accounting Transaction</h3><span></span></div>
+        <div className="form-label_name"><h2>Accounting Transaction</h2><span></span></div>
         <div className="row w-100">
           <div className="col-6 text-start">
 

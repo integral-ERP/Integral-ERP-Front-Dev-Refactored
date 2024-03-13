@@ -98,7 +98,7 @@ const LocationsCreationForm = ({
 
       {/* <div className="col-12"> */}
         <div className="creation creation-container w-100">
-        <div className="form-label_name"><h3>General</h3><span></span></div>
+        <div className="form-label_name"><h2>General</h2><span></span></div>
         <div className="row w-100">
 
           <div className="col-6 text-start">

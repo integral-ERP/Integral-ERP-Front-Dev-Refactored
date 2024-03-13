@@ -110,7 +110,7 @@ const PaymentTermsCreationForms = ({
 
       <div className="creation creation-container w-100">
         <div className="row w-100">
-          <div className="form-label_name"><h3>Payment Terms</h3><span></span></div>
+          <div className="form-label_name"><h2>Payment Terms</h2><span></span></div>
 
           <div className="col-6 text-start">
           <div className="company-form__section">
