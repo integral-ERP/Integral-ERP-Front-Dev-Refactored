@@ -45,6 +45,7 @@ const Table = ({
   children,
   importEnabled,
   createWarehouseReceipt,
+  Nodoubleclick,
 
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -389,8 +390,8 @@ const Table = ({
     console.log("Comodities = ", Comodities)
     for (let i = 0; i < numCon; i++) {
       const descrip = selectedRow.commodities[i].description;
-      console.log("descrip = ", descrip)
-      generateLabelPDF(selectedRow, i + 1, numCon, descrip) // Incrementamos i en 1 para comenzar desde 
+      console.log("DESCRIPTION = ", descrip)
+      generateLabelPDF(selectedRow, numCon, descrip) // Incrementamos i en 1 para comenzar desde 
 
         .then((pdfUrl) => {
           window.open(pdfUrl);
@@ -665,9 +666,11 @@ const Table = ({
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
-                      columnOrder.includes("Repack Options")
-                        ? onInspect
-                        : handleEdit
+                      !Nodoubleclick
+                        ? columnOrder.includes("Repack Options")
+                          ? onInspect
+                          : handleEdit
+                        : null // Corregido aquí bug de doble click for table receiptcreationform
                     }
                   >
                     {columnOrder.map((columnName) =>
@@ -729,7 +732,7 @@ const Table = ({
                               <button type="button" onClick={onInspect} className="custom-button">
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button type="button" onClick={onEdit} className="custom-button">
+                              <button type="button" onClick={onEdit} className="custom-button" style={{ display: "none" }}>
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>

@@ -23,9 +23,6 @@ import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 
-import Modal from "react-bootstrap/Modal";
-import "../../styles/components/BModalWidth.scss";
-
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -87,18 +84,6 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
-  //Bootstrap Modal
-  const [showBM, setShowBM] = useState(false);
-
-  const handleCloseBM = () => {
-    setShowBM(false);
-    window.location.reload();
-  };
-
-  useEffect(() => {
-    showBModal ? setShowBM(true) : setShowBM(false);
-  }, [showBModal]);
-  //--
 
   useEffect(() => {
     if (!isButtonDisabled) {
@@ -348,29 +333,44 @@ const ReceiptCreationForm = ({
     console.log("selected commodity ", commodity);
   };
 
-  const handleCommodityDelete = () => {
-    if (
-      selectedCommodity.internalCommodities &&
-      selectedCommodity.internalCommodities.length > 0
-    ) {
-      // Realizar desempaque (unpack)
-      const remainingCommodities = commodities.filter(
-        (commodity) => commodity.id !== selectedCommodity.id
-      );
-
-      const unpackedCommodities = [...selectedCommodity.internalCommodities];
-      // Actualizar el estado con la información más reciente
-      setcommodities([...remainingCommodities, ...unpackedCommodities]);
-      setSelectedRepackId(null);
-    } else {
-      // Elimina el commodity si no contiene commodities internos
-      const newCommodities = commodities.filter(
-        (com) => com.id !== selectedCommodity.id
-      );
-
-      setcommodities(newCommodities);
+  const handleCommodityDelete = async () => {
+    if (!selectedCommodity) {
+      alert("Please select a commodity before deleting it.");
+      return;
+    }
+  
+    try {
+      if (
+        selectedCommodity.internalCommodities &&
+        selectedCommodity.internalCommodities.length > 0
+      ) {
+        // Realizar desempaque (unpack)
+        const remainingCommodities = commodities.filter(
+          (commodity) => commodity.id !== selectedCommodity.id
+        );
+  
+        const unpackedCommodities = [...selectedCommodity.internalCommodities];
+        // Actualizar el estado con la información más reciente
+        setcommodities([...remainingCommodities, ...unpackedCommodities]);
+        setSelectedRepackId(null);
+      } else {
+        // Elimina el commodity si no contiene commodities internos
+        const newCommodities = commodities.filter(
+          (com) => com.id !== selectedCommodity.id
+        );
+  
+        setcommodities(newCommodities);
+      }
+  
+      // Esperar selectedCommodity como null
+      setTimeout(() => {
+        setselectedCommodity(null);
+      }, 100); 
+    } catch (error) {
+      console.error("Error when deleting the commodity:", error);
     }
   };
+  
 
   //added edit commodities
   const handleCommodityEdit = () => {
@@ -1103,119 +1103,118 @@ const ReceiptCreationForm = ({
                     />
                   </div>
 
-                  <div className="col-4 text-start">
-                    <label htmlFor="employee" className="form-label">
-                      Employee:
-                    </label>
+              <div className="col-4 text-start">
+                <label htmlFor="employee" className="form-label">
+                  Employee:
+                </label>
+                <AsyncSelect
+                  id="employee"
+                  value={employeeOptions.find(
+                    (option) => option.id === formData.employeeId
+                  )}
+                  onChange={(e) => {
+                    handleEmployeeSelection(e);
+                  }}
+                  isClearable={true}
+                  defaultOptions={employeeOptions}
+                  loadOptions={loadEmployeeSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                  placeholder="Search and select..."
+                />
+              </div>
+
+              <div className="col-4 text-start">
+                <label htmlFor="destinationAgent" className="form-label">
+                  Destination Agent:
+                </label>
+                {!creating ? (
+                  canRender && (
                     <AsyncSelect
-                      id="employee"
-                      value={employeeOptions.find(
-                        (option) => option.id === formData.employeeId
-                      )}
+                      id="destinationAgent"
                       onChange={(e) => {
-                        handleEmployeeSelection(e);
+                        handleDestinationAgentSelection(e);
                       }}
+                      value={destinationAgentOptions.find(
+                        (option) => option.id === formData.destinationAgentId
+                      )}
                       isClearable={true}
-                      defaultOptions={employeeOptions}
-                      loadOptions={loadEmployeeSelectOptions}
+                      defaultOptions={destinationAgentOptions}
+                      loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                      placeholder="Search and select..."
                     />
-                  </div>
-
-                  <div className="col-4 text-start">
-                    <label htmlFor="destinationAgent" className="form-label">
-                      Destination Agent:
-                    </label>
-                    {!creating ? (
-                      canRender && (
-                        <AsyncSelect
-                          id="destinationAgent"
-                          onChange={(e) => {
-                            handleDestinationAgentSelection(e);
-                          }}
-                          value={destinationAgentOptions.find(
-                            (option) =>
-                              option.id === formData.destinationAgentId
-                          )}
-                          isClearable={true}
-                          defaultOptions={destinationAgentOptions}
-                          loadOptions={loadDestinationAgentsSelectOptions}
-                          getOptionLabel={(option) => option.name}
-                          getOptionValue={(option) => option.id}
-                        />
-                      )
-                    ) : (
-                      <AsyncSelect
-                        id="destinationAgent"
-                        onChange={(e) => {
-                          handleDestinationAgentSelection(e);
-                        }}
-                        value={destinationAgentOptions.find(
-                          (option) => option.id === formData.destinationAgentId
-                        )}
-                        isClearable={true}
-                        defaultOptions={destinationAgentOptions}
-                        loadOptions={loadDestinationAgentsSelectOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                        placeholder="Search and select..."
-                      />
+                  )
+                ) : (
+                  <AsyncSelect
+                    id="destinationAgent"
+                    onChange={(e) => {
+                      handleDestinationAgentSelection(e);
+                    }}
+                    value={destinationAgentOptions.find(
+                      (option) => option.id === formData.destinationAgentId
                     )}
-                  </div>
-                </div>
-
-                <div className="row align-items-center">
-                  <div className="col-4 text-start">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <p className="text-date">Entry Date and Time</p>
-                      <DateTimePicker
-                        // label="Entry Date and Time"
-                        className="font-right"
-                        value={dayjs(formData.createdDateAndTime)}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                          })
-                        }
-                      />
-                    </LocalizationProvider>
-                  </div>
-
-                  <div className="col-4 text-start">
-                    <label htmlFor="issuedBy" className="form-label">
-                      Issued By:
-                    </label>
-                    <AsyncSelect
-                      id="issuedBy"
-                      value={issuedByOptions.find(
-                        (option) => option.id === formData.issuedById
-                      )}
-                      onChange={(e) => {
-                        handleIssuedBySelection(e);
-                      }}
-                      isClearable={true}
-                      placeholder="Search and select..."
-                      defaultOptions={issuedByOptions}
-                      loadOptions={loadIssuedBySelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
-                  <div className="col-4 text-start">
-                    <Input
-                      type="number"
-                      inputName="entryNumber"
-                      placeholder="Entry Number..."
-                      value={formData.entryNumber}
-                      label="Entry Number"
-                    />
-                  </div>
-                </div>
+                    isClearable={true}
+                    defaultOptions={destinationAgentOptions}
+                    loadOptions={loadDestinationAgentsSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                    placeholder="Search and select..."
+                  />
+                )}
               </div>
             </div>
+
+            <div className="row align-items-center">
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <p className="text-date">Entry Date and Time</p>
+                  <DateTimePicker
+                    // label="Entry Date and Time"
+                    className="font-right"
+                    value={dayjs(formData.createdDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
+              </div>
+
+              <div className="col-4 text-start">
+                <label htmlFor="issuedBy" className="form-label">
+                  Issued By:
+                </label>
+                <AsyncSelect
+                  id="issuedBy"
+                  value={issuedByOptions.find(
+                    (option) => option.id === formData.issuedById
+                  )}
+                  onChange={(e) => {
+                    handleIssuedBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={issuedByOptions}
+                  loadOptions={loadIssuedBySelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-4 text-start">
+                <Input
+                  type="number"
+                  inputName="entryNumber"
+                  placeholder="Entry Number..."
+                  value={formData.entryNumber}
+                  label="Entry Number"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
             <div className="col-6">
               <div className="creation creation-container w-100">
@@ -1270,52 +1269,52 @@ const ReceiptCreationForm = ({
                   </div>
                 </div>
 
-                <div className="row align-items-center mb-3">
-                  <div className="col-6 text-start">
-                    <Input
-                      type="textarea"
-                      inputName="shipperinfo"
-                      placeholder="Shipper Location..."
-                      value={formData.shipperInfo}
-                      readonly={true}
-                    />
-                  </div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <Input
+                  type="textarea"
+                  inputName="shipperinfo"
+                  placeholder="Shipper Location..."
+                  value={formData.shipperInfo}
+                  readonly={true}
+                />
+              </div>
 
-                  <div className="col-6 text-start">
-                    <Input
-                      type="textarea"
-                      inputName="consigneeInfo"
-                      placeholder="Consignee Info..."
-                      value={formData.consigneeInfo}
-                      readonly={true}
-                      label=""
-                    />
-                  </div>
-                </div>
+              <div className="col-6 text-start">
+                <Input
+                  type="textarea"
+                  inputName="consigneeInfo"
+                  placeholder="Consignee Info..."
+                  value={formData.consigneeInfo}
+                  readonly={true}
+                  label=""
+                />
+              </div>
+            </div>
 
-                <div className="row">
-                  <div className="col-6 text-start">
-                    <label htmlFor="clientToBill" className="form-label">
-                      Client to Bill:
-                    </label>
-                    <select
-                      value={formData.clientToBillType}
-                      name="clientToBill"
-                      id="clientToBill"
-                      onChange={(e) => handleClientToBillSelection(e)}
-                    >
-                      <option value="">Select an option</option>
-                      <option value="consignee">Consignee</option>
-                      <option value="shipper">Shipper</option>
-                    </select>
-                    {/* <p style={{ color: "red" }}>
+            <div className="row">
+              <div className="col-6 text-start">
+                <label htmlFor="clientToBill" className="form-label">
+                  Client to Bill:
+                </label>
+                <select
+                  value={formData.clientToBillType}
+                  name="clientToBill"
+                  id="clientToBill"
+                  onChange={(e) => handleClientToBillSelection(e)}
+                >
+                  <option value="">Select an option</option>
+                  <option value="consignee">Consignee</option>
+                  <option value="shipper">Shipper</option>
+                </select>
+                {/* <p style={{ color: "red" }}>
                         Note: Always select a client to bill when editing
                       </p> */}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
           <div className="row w-100">
             <div className="col-6">
@@ -1346,55 +1345,52 @@ const ReceiptCreationForm = ({
                     />
                   </div>
 
-                  <div className="col-6 text-start">
-                    <Input
-                      type="text"
-                      inputName="invoiceNumber"
-                      placeholder="Invoice Number..."
-                      value={formData.invoiceNumber}
-                      changeHandler={(e) =>
-                        setFormData({
-                          ...formData,
-                          invoiceNumber: e.target.value,
-                        })
-                      }
-                      label="Invoice Number"
-                    />
-                  </div>
-                </div>
-
-                <div className="row alig-items-center">
-                  <div className="col-6 text-start">
-                    <Input
-                      type="textarea"
-                      inputName="shipperinfo"
-                      placeholder="Shipper Location..."
-                      value={formData.supplierInfo}
-                      readonly={true}
-                    />
-                  </div>
-
-                  <div
-                    className="col-6 text-start"
-                    style={{ marginTop: "-5px" }}
-                  >
-                    <Input
-                      type="text"
-                      inputName="purchaseOrderNumber"
-                      placeholder="Purchase Order Number..."
-                      value={formData.purchaseOrderNumber}
-                      changeHandler={(e) =>
-                        setFormData({
-                          ...formData,
-                          purchaseOrderNumber: e.target.value,
-                        })
-                      }
-                      label="Purchase Order Number"
-                    />
-                  </div>
-                </div>
+              <div className="col-6 text-start">
+                <Input
+                  type="text"
+                  inputName="invoiceNumber"
+                  placeholder="Invoice Number..."
+                  value={formData.invoiceNumber}
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      invoiceNumber: e.target.value,
+                    })
+                  }
+                  label="Invoice Number"
+                />
               </div>
             </div>
+
+            <div className="row alig-items-center">
+              <div className="col-6 text-start">
+                <Input
+                  type="textarea"
+                  inputName="shipperinfo"
+                  placeholder="Shipper Location..."
+                  value={formData.supplierInfo}
+                  readonly={true}
+                />
+              </div>
+
+              <div className="col-6 text-start" style={{ marginTop: "-5px" }}>
+                <Input
+                  type="text"
+                  inputName="purchaseOrderNumber"
+                  placeholder="Purchase Order Number..."
+                  value={formData.purchaseOrderNumber}
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      purchaseOrderNumber: e.target.value,
+                    })
+                  }
+                  label="Purchase Order Number"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
             <div className="col-6">
               <div className="creation creation-container w-100">
@@ -1476,106 +1472,104 @@ const ReceiptCreationForm = ({
             />
             <br />
 
-            {showCommodityCreationForm && (
-              <div className="text-center">
-                <Table
-                  data={commodities}
-                  columns={[
-                    "Description",
-                    " Length",
-                    " Height",
-                    " Width",
-                    " Weight",
-                    // "Location",
-                    " Volumetric Weight",
-                    " Chargeable Weight",
-                    "Options",
-                  ]}
-                  onSelect={handleSelectCommodity} // Make sure this line is correct
-                  selectedRow={selectedCommodity}
-                  onDelete={handleCommodityDelete}
-                  onEdit={handleCommodityEdit}
-                  onInspect={() => {
-                    setshowCommodityInspect(!showCommodityInspect);
-                  }}
-                  onAdd={() => {}}
-                  showOptions={false}
-                  //added no double click 
-                  Nodoubleclick={true}
-                  /* deleted variable hiden button trash */
-                />
-                {/* added view commodities */}
-                {showCommodityInspect && (
-                  <div className="repacking-container">
-                    <div className="main-commodity">
-                      <p className="item-description">
-                        {selectedCommodity.description}
+        {showCommodityCreationForm && (
+          <div className="text-center">
+            <Table
+              data={commodities}
+              columns={[
+                "Description",
+                " Length",
+                " Height",
+                " Width",
+                " Weight",
+                // "Location",
+                " Volumetric Weight",
+                " Chargeable Weight",
+                "Options",
+              ]}
+              onSelect={handleSelectCommodity} // Make sure this line is correct
+              selectedRow={selectedCommodity}
+              onDelete={handleCommodityDelete}
+              onEdit={handleCommodityEdit}
+              onInspect={() => {
+                setshowCommodityInspect(!showCommodityInspect);
+              }}
+              onAdd={() => {}}
+              showOptions={false}
+              //added no double click
+              Nodoubleclick={true}
+              /* deleted variable hiden button trash */
+            />
+            {/* added view commodities */}
+            {showCommodityInspect && (
+              <div className="repacking-container">
+                <div className="main-commodity">
+                  <p className="item-description">
+                    {selectedCommodity.description}
+                  </p>
+                  <p className="item-info">
+                    Weight: {selectedCommodity.weight}
+                  </p>
+                  <p className="item-info">
+                    Height: {selectedCommodity.height}
+                  </p>
+                  <p className="item-info">Width: {selectedCommodity.width}</p>
+                  <p className="item-info">
+                    Length: {selectedCommodity.length}
+                  </p>
+                  <p className="item-info">
+                    Volumetric Weight: {selectedCommodity.volumetricWeight}
+                  </p>
+                  <p className="item-info">
+                    Chargeable Weight: {selectedCommodity.chargedWeight}
+                  </p>
+                  {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                </div>
+                {/*  fix the repacking show internalCommodities for edition */}
+                {selectedCommodity.internalCommodities &&
+                  selectedCommodity.internalCommodities.map((com) => (
+                    <div key={com.id} className="card">
+                      <p className="item-description">{com.description}</p>
+                      <p className="item-info">Weight: {com.weight}</p>
+                      <p className="item-info">Height: {com.height}</p>
+                      <p className="item-info">Width: {com.width}</p>
+                      <p className="item-info">Length: {com.length}</p>
+                      <p className="item-info">
+                        Volumetric Weight: {com.volumetricWeight}
                       </p>
                       <p className="item-info">
-                        Weight: {selectedCommodity.weight}
+                        Chargeable Weight: {com.chargedWeight}
                       </p>
-                      <p className="item-info">
-                        Height: {selectedCommodity.height}
-                      </p>
-                      <p className="item-info">
-                        Width: {selectedCommodity.width}
-                      </p>
-                      <p className="item-info">
-                        Length: {selectedCommodity.length}
-                      </p>
-                      <p className="item-info">
-                        Volumetric Weight: {selectedCommodity.volumetricWeight}
-                      </p>
-                      <p className="item-info">
-                        Chargeable Weight: {selectedCommodity.chargedWeight}
-                      </p>
-                      {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                      {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                     </div>
-                    {/*  fix the repacking show internalCommodities for edition */}
-                    {selectedCommodity.internalCommodities &&
-                      selectedCommodity.internalCommodities.map((com) => (
-                        <div key={com.id} className="card">
-                          <p className="item-description">{com.description}</p>
-                          <p className="item-info">Weight: {com.weight}</p>
-                          <p className="item-info">Height: {com.height}</p>
-                          <p className="item-info">Width: {com.width}</p>
-                          <p className="item-info">Length: {com.length}</p>
-                          <p className="item-info">
-                            Volumetric Weight: {com.volumetricWeight}
-                          </p>
-                          <p className="item-info">
-                            Chargeable Weight: {com.chargedWeight}
-                          </p>
-                          {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                        </div>
-                      ))}
-                  </div>
-                )}
-                <button
-                  className="button-save"
-                  type="button"
-                  onClick={() => {
-                    setshowRepackingForm(!showRepackingForm);
-                  }}
-                >
-                  Repack
-                </button>
-                <br />
-                <br />
-                <br />
-
-                {showRepackingForm && (
-                  <RepackingForm
-                    commodities={commodities}
-                    setCommodities={setcommodities}
-                  />
-                )}
+                  ))}
               </div>
             )}
-          </div>
+            <button
+              className="button-save"
+              type="button"
+              onClick={() => {
+                setshowRepackingForm(!showRepackingForm);
+              }}
+            >
+              Repack
+            </button>
+            <br />
+            <br />
+            <br />
 
-          {/* button duplicado */}
-          {/* <button
+            {showRepackingForm && (
+              <RepackingForm
+                commodities={commodities}
+                setCommodities={setcommodities}
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* button duplicado */}
+      {/* <button
                   type="button"
                   onClick={() => {
                     setshowRepackingForm(!showRepackingForm);
@@ -1585,8 +1579,8 @@ const ReceiptCreationForm = ({
                   Repacking
                 </button> */}
 
-          <input type="checkbox" id="toggleBoton"></input>
-          <label className="button-charge" for="toggleBoton"></label>
+      <input type="checkbox" id="toggleBoton"></input>
+      <label className="button-charge" for="toggleBoton"></label>
 
           <div className="row w-100" id="miDiv">
             <div className="col-6">
@@ -1607,40 +1601,40 @@ const ReceiptCreationForm = ({
                   />
                 )}
 
-                {showIncomeForm && (
-                  <Table
-                    data={charges}
-                    columns={[
-                      "Status",
-                      "Type",
-                      "Description",
-                      "Quantity",
-                      "Price",
-                      "Currency",
-                    ]}
-                    onSelect={() => {}} // Make sure this line is correct
-                    selectedRow={{}}
-                    onDelete={() => {}}
-                    onEdit={() => {}}
-                    onAdd={() => {}}
-                    showOptions={false}
-                  />
-                )}
-                {showIncomeChargeEditForm && (
-                  <IncomeChargeForm
-                    onCancel={setshowIncomeChargeEditForm}
-                    charges={charges}
-                    setcharges={setcharges}
-                    commodities={commodities}
-                    agent={agent}
-                    consignee={consignee}
-                    shipper={shipper}
-                    editing={true}
-                    charge={selectedIncomeCharge}
-                  />
-                )}
-              </div>
-            </div>
+            {showIncomeForm && (
+              <Table
+                data={charges}
+                columns={[
+                  "Status",
+                  "Type",
+                  "Description",
+                  "Quantity",
+                  "Price",
+                  "Currency",
+                ]}
+                onSelect={() => {}} // Make sure this line is correct
+                selectedRow={{}}
+                onDelete={() => {}}
+                onEdit={() => {}}
+                onAdd={() => {}}
+                showOptions={false}
+              />
+            )}
+            {showIncomeChargeEditForm && (
+              <IncomeChargeForm
+                onCancel={setshowIncomeChargeEditForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+                editing={true}
+                charge={selectedIncomeCharge}
+              />
+            )}
+          </div>
+        </div>
 
             <div className="col-6">
               <div className="creation creation-container w-100">
@@ -1660,41 +1654,41 @@ const ReceiptCreationForm = ({
                   />
                 )}
 
-                {showExpenseForm && (
-                  <Table
-                    data={charges}
-                    columns={[
-                      "Status",
-                      "Type",
-                      "Description",
-                      "Quantity",
-                      "Price",
-                      "Currency",
-                    ]}
-                    onSelect={() => {}} // Make sure this line is correct
-                    selectedRow={{}}
-                    onDelete={() => {}}
-                    onEdit={() => {}}
-                    onAdd={() => {}}
-                    showOptions={false}
-                  />
-                )}
-                {showExpenseEditForm && (
-                  <ExpenseChargeForm
-                    onCancel={setshowIncomeChargeEditForm}
-                    charges={charges}
-                    setcharges={setcharges}
-                    commodities={commodities}
-                    agent={agent}
-                    consignee={consignee}
-                    shipper={shipper}
-                    editing={true}
-                    charge={selectedIncomeCharge}
-                  />
-                )}
-              </div>
-            </div>
+            {showExpenseForm && (
+              <Table
+                data={charges}
+                columns={[
+                  "Status",
+                  "Type",
+                  "Description",
+                  "Quantity",
+                  "Price",
+                  "Currency",
+                ]}
+                onSelect={() => {}} // Make sure this line is correct
+                selectedRow={{}}
+                onDelete={() => {}}
+                onEdit={() => {}}
+                onAdd={() => {}}
+                showOptions={false}
+              />
+            )}
+            {showExpenseEditForm && (
+              <ExpenseChargeForm
+                onCancel={setshowIncomeChargeEditForm}
+                charges={charges}
+                setcharges={setcharges}
+                commodities={commodities}
+                agent={agent}
+                consignee={consignee}
+                shipper={shipper}
+                editing={true}
+                charge={selectedIncomeCharge}
+              />
+            )}
           </div>
+        </div>
+      </div>
 
           <div className="creation creation-container w-100">
             <div className="form-label_name">
@@ -1762,69 +1756,69 @@ const ReceiptCreationForm = ({
               <span></span>
             </div>
 
-            <div className="row align-items-center">
-              <div className="col-10 text-start">
-                <label htmlFor="notes" className="form-label">
-                  Notes
-                </label>
-                <input
-                  name="notes"
-                  type="text"
-                  className="form-input"
-                  placeholder="Notes..."
-                  onChange={(e) => setNote(e.target.value)}
-                  style={{ width: "99%" }}
-                />
-              </div>
+        <div className="row align-items-center">
+          <div className="col-10 text-start">
+            <label htmlFor="notes" className="form-label">
+              Notes
+            </label>
+            <input
+              name="notes"
+              type="text"
+              className="form-input"
+              placeholder="Notes..."
+              onChange={(e) => setNote(e.target.value)}
+              style={{ width: "99%" }}
+            />
+          </div>
 
-              <div className="col">
-                <button
-                  type="button"
-                  onClick={addNotes}
-                  style={{
-                    backgroundColor: "#153A61",
-                    color: "white",
-                    fontSize: "16px",
-                    width: "90%",
-                  }}
-                >
-                  Add
-                </button>
-              </div>
-              <div className="row">
-                <div className="col-10 text-start">
-                  <textarea
-                    name="notes"
-                    className="form-input w-100"
-                    placeholder=""
-                    value={formData.notes?.toString()}
-                    style={{
-                      width: "100%",
-                      marginTop: "10px",
-                      height: "100px",
-                      wordWrap: "break-word",
-                    }}
-                    readOnly
-                  />
-                </div>
-              </div>
+          <div className="col">
+            <button
+              type="button"
+              onClick={addNotes}
+              style={{
+                backgroundColor: "#153A61",
+                color: "white",
+                fontSize: "16px",
+                width: "90%",
+              }}
+            >
+              Add
+            </button>
+          </div>
+          <div className="row">
+            <div className="col-10 text-start">
+              <textarea
+                name="notes"
+                className="form-input w-100"
+                placeholder=""
+                value={formData.notes?.toString()}
+                style={{
+                  width: "100%",
+                  marginTop: "10px",
+                  height: "100px",
+                  wordWrap: "break-word",
+                }}
+                readOnly
+              />
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="company-form__options-container">
-            <button
-              disabled={changeStateSave}
-              className="button-save"
-              onClick={sendData}
-            >
-              Save
-            </button>
+      <div className="company-form__options-container">
+        <button
+          disabled={changeStateSave}
+          className="button-save"
+          onClick={sendData}
+        >
+          Save
+        </button>
 
-            <button className="button-cancel" onClick={handleCancel}>
-              Cancel
-            </button>
-          </div>
-          {/* {showSuccessAlert && (
+        <button className="button-cancel" onClick={handleCancel}>
+          Cancel
+        </button>
+      </div>
+      {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1836,53 +1830,52 @@ const ReceiptCreationForm = ({
           </strong>
         </Alert>
       )} */}
-          {showSuccessAlert && (
-            <Alert
-              severity="success"
-              onClose={() => setShowSuccessAlert(false)}
-              className="alert-notification"
-            >
-              <p className="succes"> Success </p>
-              <p className=" created">
-                {" "}
-                Warehouse Receipt {creating ? "created" : "updated"}{" "}
-                successfully!{" "}
-              </p>
-            </Alert>
-          )}
+      {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <p className="succes"> Success </p>
+          <p className=" created">
+            {" "}
+            Warehouse Receipt {creating
+              ? "created"
+              : "updated"} successfully!{" "}
+          </p>
+        </Alert>
+      )}
 
-          {/* added change estate for warning alert */}
-          {showWarningAlert && (
-            <Alert
-              severity="warning"
-              onClose={() => setShowWarningAlert(false)}
-              className="alert-notification-warning"
-            >
-              <p className="succes">
-                {" "}
-                Please fill in data in the commodities section, do not leave
-                empty spaces.
-              </p>
-              <p className="succes"> Don't leave empty fields.</p>
-            </Alert>
-          )}
+      {/* added change estate for warning alert */}
+      {showWarningAlert && (
+        <Alert
+          severity="warning"
+          onClose={() => setShowWarningAlert(false)}
+          className="alert-notification-warning"
+        >
+          <p className="succes">
+            {" "}
+            Please fill in data in the commodities section, do not leave empty
+            spaces.
+          </p>
+          <p className="succes"> Don't leave empty fields.</p>
+        </Alert>
+      )}
 
-          {showErrorAlert && (
-            <Alert
-              severity="error"
-              onClose={() => setShowErrorAlert(false)}
-              className="alert-notification"
-            >
-              <AlertTitle>Error</AlertTitle>
-              <strong>
-                Error {creating ? "creating" : "updating"} Warehouse Receipt.
-                Please try again
-              </strong>
-            </Alert>
-          )}
-        </div>
-      </div>
-    </Modal>
+      {showErrorAlert && (
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
+          <AlertTitle>Error</AlertTitle>
+          <strong>
+            Error {creating ? "creating" : "updating"} Warehouse Receipt. Please
+            try again
+          </strong>
+        </Alert>
+      )}
+    </div>
   );
 };
 

@@ -29,6 +29,7 @@ const PickupOrderCreationForm = ({
   onpickupOrderDataChange,
   currentPickUpNumber,
   setcurrentPickUpNumber,
+  showBModal,
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
