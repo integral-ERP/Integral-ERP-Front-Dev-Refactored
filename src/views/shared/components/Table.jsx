@@ -22,7 +22,7 @@ import { useModal } from "../../../hooks/useModal";
 
 import Receipt from "../../Warehouse/Receipt";
 
-
+import { PDFDocument, PDFName } from 'pdf-lib';
 
 const Table = ({
   data,
@@ -387,11 +387,11 @@ const Table = ({
   const generatePDFLabel = () => {
     const Comodities = selectedRow.commodities;
     const numCon = selectedRow.commodities.length;
-    console.log("Comodities = ", Comodities)
+
     for (let i = 0; i < numCon; i++) {
       const descrip = selectedRow.commodities[i].description;
-      console.log("DESCRIPTION = ", descrip)
-      generateLabelPDF(selectedRow, (i+1), descrip) // Incrementamos i en 1 para comenzar desde 
+      const pESO = selectedRow.commodities[i].weight;
+      generateLabelPDF(selectedRow, (i+1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
 
         .then((pdfUrl) => {
           window.open(pdfUrl);
@@ -401,6 +401,8 @@ const Table = ({
         });
     }
   }
+
+
   //-------------------------------------------------------------------------------------------------------
 
 
@@ -810,7 +812,7 @@ const Table = ({
 
   return (
     <>
-      <div className="container-fluid" style={{ paddingLeft: "inherit" }}>
+      <div className="container-fluid">
         {showOptions && (
           <div className="layout-fluid">
             <div className="d-flex justify-content-start align-items-center">

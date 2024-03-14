@@ -7,47 +7,71 @@ pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-const generateLabelPDF = (data, numCon, descrip) => {
+const generateLabelPDF = (data, numCon, descrip, pESO) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   // const country = data.consigneeObj?.data?.obj?.country;
   const country = data.consigneeObj?.data?.obj?.country?.toUpperCase();
 
   var pais = "";
+  var margPais = 20;
+  var fontPais = 20;
 
   switch (country) {
     case "UNITED STATES":
       pais = "USA";
+      fontPais = 40;
+      margPais = 10;
       break;
     case "BRASIL":
       pais = "BRA";
+      fontPais = 40;
+      margPais = 10;
       break;
     case "BRAZIL":
       pais = "BRA";
+      fontPais = 40;
+      margPais = 10;
       break
     case "CHINA":
       pais = "CHN";
+      fontPais = 40;
+      margPais = 10;
       break
     case "COLOMBIA":
       pais = "COL";
+      fontPais = 40;
+      margPais = 10;
       break
     case "DOMINICAN REPUBLIC":
       pais = "Rep. Dom";
+      fontPais = 40;
+      margPais = 10;
       break
     case "COSTA RICA":
       pais = "CRI";
+      fontPais = 40;
+      margPais = 10;
       break
     case "CHILE":
       pais = "CHL";
+      fontPais = 40;
+      margPais = 10;
       break
     case "PERU":
       pais = "PER";
+      fontPais = 40;
+      margPais = 10;
       break
     case "PANAMA":
       pais = "PAN";
+      fontPais = 40;
+      margPais = 10;
       break
     case "ARGENTINA":
       pais = "ARG";
+      fontPais = 40;
+      margPais = 10;
       break
     default:
       pais = country;
@@ -99,6 +123,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
           `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
+        // console.log("BANDERA1=", totalWeight);
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
@@ -108,10 +133,17 @@ const generateLabelPDF = (data, numCon, descrip) => {
             sixthRowText += `${internalCommodity.weight} lbs \n`;
             seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
             totalWeight += parseFloat(internalCommodity.weight);
+            // console.log("BANDERA2=", totalWeight);
             totalVolume += parseFloat(internalCommodity.volumetricWeight);
           });
         }
       });
+
+      let PESO1 = (totalWeight / 2.205).toFixed(2);
+      let PESO2 = (totalWeight);
+      // console.log("BANDERA3=", PESO1);
+      // console.log("BANDERA4=", PESO2);
+
       const commodityRow = [
         {
 
@@ -294,11 +326,11 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                         text: pais,
-                        fontSize: 20,
+                        fontSize: fontPais,
                         bold: true,
                         border: ['top', 'top', '', 'top'],
                         alignment: 'center',
-                        margin: [0, 20, 0, 0],
+                        margin: [0, margPais, 0, 0],
                       },
 
                     ],
@@ -437,7 +469,8 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                         // text: `PESO` + '  ' + 'LB',
-                        text: `${(totalWeight / 2.205).toFixed(2)} LB`,
+                        // text: `${(pESO  / 2.205).toFixed(2)} LB`,
+                        text : pESO,
                         bold: true,
                         alignment: `center`,
                         fontSize: 25,

@@ -75,7 +75,7 @@ const Sidebar = () => {
 
             <ul className="sub-menu blank">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Home</Link>
+                <Link className="link_name">Home</Link>
               </li>
             </ul>
           </li>
@@ -93,7 +93,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}} >Warehouse</Link>
+              <Link className="link_name" style={{ textAlign: 'left' }}>Warehouse</Link>
               </li>
               <li>
                 <Link to={"/warehouse/pickup"}>Pick-up Orders</Link>
@@ -122,7 +122,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Shipments</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Shipments</Link>
               </li>
               <li>
                 <Link to={"/shipments"}>Shipment list</Link>
@@ -147,7 +147,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Rates</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Rates</Link>
               </li>
               <li>
                 <Link to={"/rates/standard"}>Standard Rates</Link>
@@ -174,7 +174,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Customs</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Customs</Link>
               </li>
               <li>
                 <Link to={"/customs/1166xml"}>1166 XML Import</Link>
@@ -220,7 +220,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Accounting</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Accounting</Link>
               </li>
               <li>
                 <Link to={"/accounting/chartofaccounts"}> Chart of Accounts </Link>
@@ -263,7 +263,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Online Customer</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Online Customer</Link>
               </li>
               <li>
                 <Link to={"/accounting/itemsandservices"}>
@@ -295,7 +295,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Agent</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Agent</Link>
               </li>
               <li>
                 <Link to={"/agent/search"}>Search</Link>
@@ -324,7 +324,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-              <Link className="link_name" style={{display: 'flex'}}>Maintenance</Link>
+              <Link className="link_name" style={{ textAlign: 'left' }}>Maintenance</Link>
 
               </li>
               <li>
@@ -379,7 +379,7 @@ const Sidebar = () => {
             </div>
             <ul className="sub-menu">
               <li>
-                <Link className="link_name" style={{display: 'flex'}}>Configuration</Link>
+                <Link className="link_name" style={{ textAlign: 'left' }}>Configuration</Link>
               </li>
               <li>
                 <Link onClick={openCompanyForm}>

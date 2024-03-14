@@ -9,8 +9,8 @@
 @media screen and (max-width: 580px){
   .sidebar {
     -webkit-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
-    -moz-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
-    box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
+    -moz-box-shadow: -3px 2px 5px 7px rgba(0,0,0,0.46);
+    box-shadow: -3px 2px 5px 7px rgba(0,0,0,0.46);
     position: fixed;
     top: 0;
     left: 0;
@@ -442,9 +442,9 @@
 @media screen and (min-width: 581px){
   
   .sidebar {
-    -webkit-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
-    -moz-box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
-    box-shadow: -1px 2px 5px 7px rgba(0,0,0,0.46);
+    -webkit-box-shadow: -5px 2px 5px 7px rgba(0,0,0,0.46);
+    -moz-box-shadow: -5px 2px 5px 7px rgba(0,0,0,0.46);
+    box-shadow: -5px 2px 5px 7px rgba(0,0,0,0.46);
     position: fixed;
     top: 0;
     left: 0;
@@ -490,6 +490,7 @@
     background-size: cover;
     overflow-y: auto;
     overflow-x: hidden;
+    // margin-left: 21rem !important;
   }
   
   .sidebar .logo-details {
@@ -866,8 +867,8 @@
   }
   
   .sidebar.close~.content-page {
-    padding-left: 1%;
-    margin: 5vh 0 0 2%;
+    // padding-left: 1%;
+    // margin: 5vh 0 0 2%;
     width: 99%;
   }
 }

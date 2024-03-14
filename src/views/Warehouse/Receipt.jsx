@@ -319,13 +319,13 @@ const Receipt = () => {
       handler: setOnHand,
     },
     {
-      label: "On Hold",
+      label: "",
       handler: setOnHold,
     },
     {
       label: "Pending",
       handler: setPending,
-    },   
+    },
   ];
 
   const handleContextMenu = (e) => {
@@ -394,7 +394,7 @@ const Receipt = () => {
             className="content-page"
             style={
               !hideShowSlider
-                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                ? { marginLeft: "21rem", width: "calc(100vw - 250px)" }
                 : { marginInline: "auto" }
             }
           >
