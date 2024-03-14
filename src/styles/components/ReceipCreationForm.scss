@@ -30,11 +30,15 @@
 }
 
 .main-commodity {
+  display: flex;
+  justify-content: space-around;
   background-color: #f7f7f7;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  font-size: 15px;
+
+  // margin-bottom: 15px;
+  // border-radius: 5px;
 }
 
 .card {
@@ -46,8 +50,10 @@
 
 .item-description {
   font-weight: bold;
+  margin: 5px 0;
 }
 
 .item-info {
   margin: 5px 0;
+  font-weight: bold;
 }
