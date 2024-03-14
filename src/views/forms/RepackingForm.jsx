@@ -63,7 +63,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     return commodities.find((item) => item.id === commodityId);
   };
   //added unrepack
-  const handleUNRepack = () => {
+  /* const handleUNRepack = () => {
     if (selectedRepackId) {
       const remainingRepackedItems = repackedItems.filter(
         (item) => item.id !== selectedRepackId
@@ -88,7 +88,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         setSelectedRepackId(null);
       }
     }
-  };
+  }; */
 
   const handleRepack = () => {
     //added validation of the form 
@@ -284,7 +284,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         />
       </div>
       <div className="useinter">
-        <p style={{ margin: "1rem", fontSize: "15px" }}>Select items to be repacked or unpacked</p>
+        <p style={{ margin: "1rem", fontSize: "15px" }}>Select items to be repacked</p>
         <table
           id="tableware"
           style={{ width: "60%", border: "2px solid black" }}
@@ -345,11 +345,11 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         {/* ----------------------------------------------------------------------------------------------------------------------------------------- */}
         <div>
           <button type="button" className="button-save" onClick={handleRepack}>
-            Repack
+            Repacking
           </button>
         </div>
-        {/* added unrepack button */}
-        <div>
+        {/* hiden unrepack button */}
+        {/* <div>
           <button
             type="button"
             className="button-save"
@@ -357,7 +357,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
           >
             UnRepack
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
