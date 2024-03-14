@@ -391,7 +391,7 @@ const Table = ({
     for (let i = 0; i < numCon; i++) {
       const descrip = selectedRow.commodities[i].description;
       console.log("DESCRIPTION = ", descrip)
-      generateLabelPDF(selectedRow, numCon, descrip) // Incrementamos i en 1 para comenzar desde 
+      generateLabelPDF(selectedRow, (i+1), descrip) // Incrementamos i en 1 para comenzar desde 
 
         .then((pdfUrl) => {
           window.open(pdfUrl);

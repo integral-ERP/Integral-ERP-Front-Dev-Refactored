@@ -44,11 +44,11 @@ const generateLabelPDF = (data, numCon, descrip) => {
       pais = "PER";
       break
     case "PANAMA":
-      pais = "PAN"; 
+      pais = "PAN";
       break
-      case "ARGENTINA":
-        pais = "ARG"; 
-        break
+    case "ARGENTINA":
+      pais = "ARG";
+      break
     default:
       pais = country;
   }
@@ -389,7 +389,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: `HERE LOCATION`,
                         bold: true,
-                        margin: [200, 0, 0, 0],
+                        margin: [190, 0, 0, 0],
                         alignment: `left`,
                         colSpan: 2,
                         fontSize: 15,
@@ -417,6 +417,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         bold: true,
                         border: ['top', '', 'top', ''],
                         fontSize: 15,
+                        alignment: `center`,
 
                       },
                       {
@@ -424,7 +425,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         bold: true,
                         border: ['top', '', '', ''],
                         fontSize: 15,
-
+                        alignment: `center`,
                       },
                     ],
                     [

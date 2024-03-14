@@ -303,29 +303,29 @@ const Receipt = () => {
 
   const contextMenuOptions = [
     {
-      label: "On Hold",
-      handler: setOnHold,
+      label: "Delivered",
+      handler: setDelivered,
     },
     {
       label: "In Transit",
       handler: setInTransit,
     },
     {
-      label: "Delivered",
-      handler: setDelivered,
+      label: "Loaded",
+      handler: setLoaded,
     },
     {
       label: "On Hand",
       handler: setOnHand,
     },
     {
-      label: "Pending",
-      handler: setPending,
+      label: "On Hold",
+      handler: setOnHold,
     },
     {
-      label: "Loaded",
-      handler: setLoaded,
-    },
+      label: "Pending",
+      handler: setPending,
+    },   
   ];
 
   const handleContextMenu = (e) => {
