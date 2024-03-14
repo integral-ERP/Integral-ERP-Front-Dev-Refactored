@@ -338,7 +338,11 @@ const ReceiptCreationForm = ({
       alert("Please select a commodity before deleting it.");
       return;
     }
-  
+    //added alert message if editing
+    if (editingComodity){
+      alert("Please finish editing the commodity before deleting it.");
+      return;
+    }
     try {
       if (
         selectedCommodity.internalCommodities &&
