@@ -53,7 +53,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
       pais = country;
   }
 
-  console.log("country = ", country)
+  // console.log("country = ", country)
 
 
   return new Promise((resolve, reject) => {
