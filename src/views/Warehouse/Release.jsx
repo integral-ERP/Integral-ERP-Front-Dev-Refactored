@@ -37,13 +37,14 @@ const Release = () => {
     "Weight",
     "View Release PDF",
   ];
-
+  //added status
+  const StatusDelivered = 9;
+  const StatusLoaded = 1;
   const fetchData = async () => {
     try {
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
-      const pickUpsOrders = (await PickupService.getPickups()).data.results;
-      const pickUpsWithReceipt = pickUpsOrders.filter((pickUp) => {
-        return pickUp.status === "4" || pickUp.status === "1";
+      const pickUpsWithReceipt = receiptOrders.filter((pickUp) => {
+        return pickUp.status == StatusDelivered || pickUp.status == StatusLoaded;
       });
       let filteredData = [];
       for (let i = 0; i < receiptOrders.length; i++) {
