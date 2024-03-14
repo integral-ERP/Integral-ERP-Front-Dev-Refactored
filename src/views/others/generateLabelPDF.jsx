@@ -14,41 +14,65 @@ const generateLabelPDF = (data, numCon, descrip) => {
   const country = data.consigneeObj?.data?.obj?.country?.toUpperCase();
 
   var pais = "";
+  var margPais = 20;
+  var fontPais = 20;
 
   switch (country) {
     case "UNITED STATES":
       pais = "USA";
+      fontPais = 40;
+      margPais = 10;
       break;
     case "BRASIL":
       pais = "BRA";
+      fontPais = 40;
+      margPais = 10;
       break;
     case "BRAZIL":
       pais = "BRA";
+      fontPais = 40;
+      margPais = 10;
       break
     case "CHINA":
       pais = "CHN";
+      fontPais = 40;
+      margPais = 10;
       break
     case "COLOMBIA":
       pais = "COL";
+      fontPais = 40;
+      margPais = 10;
       break
     case "DOMINICAN REPUBLIC":
       pais = "Rep. Dom";
+      fontPais = 40;
+      margPais = 10;
       break
     case "COSTA RICA":
       pais = "CRI";
+      fontPais = 40;
+      margPais = 10;
       break
     case "CHILE":
       pais = "CHL";
+      fontPais = 40;
+      margPais = 10;
       break
     case "PERU":
       pais = "PER";
+      fontPais = 40;
+      margPais = 10;
       break
     case "PANAMA":
       pais = "PAN"; 
+      fontPais = 40;
+      margPais = 10;
       break
-      case "ARGENTINA":
-        pais = "ARG"; 
-        break
+    case "ARGENTINA":
+      pais = "ARG"; 
+      fontPais = 40;
+      margPais = 10;
+      break
     default:
       pais = country;
   }
@@ -294,11 +318,11 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                         text: pais,
-                        fontSize: 20,
+                        fontSize: fontPais,
                         bold: true,
                         border: ['top', 'top', '', 'top'],
                         alignment: 'center',
-                        margin: [0, 20, 0, 0],
+                        margin: [0, margPais, 0, 0],
                       },
 
                     ],
