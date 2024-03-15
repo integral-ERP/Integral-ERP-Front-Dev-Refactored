@@ -1529,7 +1529,7 @@ const ReceiptCreationForm = ({
                 {/*  fix the repacking show internalCommodities for edition */}
                 {selectedCommodity.internalCommodities &&
                   selectedCommodity.internalCommodities.map((com) => (
-                    <div key={com.id} className="card">
+                    <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '15px' }}>
                       <p className="item-description">{com.description}</p>
                       <p className="item-info">Weight: {com.weight}</p>
                       <p className="item-info">Height: {com.height}</p>
