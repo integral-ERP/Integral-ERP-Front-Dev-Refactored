@@ -7,7 +7,7 @@ pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
 
-const generateLabelPDF = (data, numCon, descrip) => {
+const generateLabelPDF = (data, numCon, descrip, pESO) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   // const country = data.consigneeObj?.data?.obj?.country;
@@ -64,12 +64,12 @@ const generateLabelPDF = (data, numCon, descrip) => {
       margPais = 10;
       break
     case "PANAMA":
-      pais = "PAN"; 
+      pais = "PAN";
       fontPais = 40;
       margPais = 10;
       break
     case "ARGENTINA":
-      pais = "ARG"; 
+      pais = "ARG";
       fontPais = 40;
       margPais = 10;
       break
@@ -77,7 +77,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
       pais = country;
   }
 
-  console.log("country = ", country)
+  // console.log("country = ", country)
 
 
   return new Promise((resolve, reject) => {
@@ -123,6 +123,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
           `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
+        // console.log("BANDERA1=", totalWeight);
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
@@ -132,10 +133,17 @@ const generateLabelPDF = (data, numCon, descrip) => {
             sixthRowText += `${internalCommodity.weight} lbs \n`;
             seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
             totalWeight += parseFloat(internalCommodity.weight);
+            // console.log("BANDERA2=", totalWeight);
             totalVolume += parseFloat(internalCommodity.volumetricWeight);
           });
         }
       });
+
+      let PESO1 = (totalWeight / 2.205).toFixed(2);
+      let PESO2 = (totalWeight);
+      // console.log("BANDERA3=", PESO1);
+      // console.log("BANDERA4=", PESO2);
+
       const commodityRow = [
         {
 
@@ -413,7 +421,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       {
                         text: `HERE LOCATION`,
                         bold: true,
-                        margin: [200, 0, 0, 0],
+                        margin: [190, 0, 0, 0],
                         alignment: `left`,
                         colSpan: 2,
                         fontSize: 15,
@@ -441,6 +449,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         bold: true,
                         border: ['top', '', 'top', ''],
                         fontSize: 15,
+                        alignment: `center`,
 
                       },
                       {
@@ -448,7 +457,7 @@ const generateLabelPDF = (data, numCon, descrip) => {
                         bold: true,
                         border: ['top', '', '', ''],
                         fontSize: 15,
-
+                        alignment: `center`,
                       },
                     ],
                     [
@@ -460,7 +469,8 @@ const generateLabelPDF = (data, numCon, descrip) => {
                       },
                       {
                         // text: `PESO` + '  ' + 'LB',
-                        text: `${(totalWeight / 2.205).toFixed(2)} LB`,
+                        // text: `${(pESO  / 2.205).toFixed(2)} LB`,
+                        text : pESO,
                         bold: true,
                         alignment: `center`,
                         fontSize: 25,
