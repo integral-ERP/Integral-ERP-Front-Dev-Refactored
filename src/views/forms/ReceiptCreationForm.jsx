@@ -338,34 +338,46 @@ const ReceiptCreationForm = ({
       alert("Please select a commodity before deleting it.");
       return;
     }
-  
+    //added alert message if editing
+    if (editingComodity){
+      alert("Please finish editing the commodity before deleting it.");
+      return;
+    }
     try {
-      if (
-        selectedCommodity.internalCommodities &&
-        selectedCommodity.internalCommodities.length > 0
-      ) {
-        // Realizar desempaque (unpack)
-        const remainingCommodities = commodities.filter(
-          (commodity) => commodity.id !== selectedCommodity.id
-        );
-  
-        const unpackedCommodities = [...selectedCommodity.internalCommodities];
-        // Actualizar el estado con la información más reciente
-        setcommodities([...remainingCommodities, ...unpackedCommodities]);
-        setSelectedRepackId(null);
+      // Mostrar un cuadro de diálogo de confirmación
+      const confirmDelete = window.confirm(`Are you sure you want to delete this commodity "${selectedCommodity.description}" or do "${selectedCommodity.description}" unpacking?`);
+        // Si el usuario hace clic en "Aceptar" en el cuadro de diálogo
+      if (confirmDelete) {
+          if (
+            selectedCommodity.internalCommodities &&
+            selectedCommodity.internalCommodities.length > 0
+          ) {
+            // Realizar desempaque (unpack)
+            const remainingCommodities = commodities.filter(
+              (commodity) => commodity.id !== selectedCommodity.id
+            );
+      
+            const unpackedCommodities = [...selectedCommodity.internalCommodities];
+            // Actualizar el estado con la información más reciente
+            setcommodities([...remainingCommodities, ...unpackedCommodities]);
+            setSelectedRepackId(null);
+          } else {
+            // Elimina el commodity si no contiene commodities internos
+            const newCommodities = commodities.filter(
+              (com) => com.id !== selectedCommodity.id
+            );
+      
+            setcommodities(newCommodities);
+          }
+      
+          // Esperar selectedCommodity como null
+          setTimeout(() => {
+            setselectedCommodity(null);
+          }, 100); 
       } else {
-        // Elimina el commodity si no contiene commodities internos
-        const newCommodities = commodities.filter(
-          (com) => com.id !== selectedCommodity.id
-        );
-  
-        setcommodities(newCommodities);
+          return;
       }
-  
-      // Esperar selectedCommodity como null
-      setTimeout(() => {
-        setselectedCommodity(null);
-      }, 100); 
+      
     } catch (error) {
       console.error("Error when deleting the commodity:", error);
     }
@@ -1517,7 +1529,7 @@ const ReceiptCreationForm = ({
                 {/*  fix the repacking show internalCommodities for edition */}
                 {selectedCommodity.internalCommodities &&
                   selectedCommodity.internalCommodities.map((com) => (
-                    <div key={com.id} className="card">
+                    <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '15px' }}>
                       <p className="item-description">{com.description}</p>
                       <p className="item-info">Weight: {com.weight}</p>
                       <p className="item-info">Height: {com.height}</p>
