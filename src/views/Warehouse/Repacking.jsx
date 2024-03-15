@@ -207,64 +207,50 @@ const Repacking = () => {
             />
 
             {selectedCommodity !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <div
-                  className="repacking-container"
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  <p>
-                    {selectedCommodity?.description
-                      ? selectedCommodity.description
-                      : ""}
-                  </p>
-                  <p>
-                    Weight:{" "}
-                    {selectedCommodity?.weight ? selectedCommodity.weight : 0}
-                  </p>
-                  <p>
-                    Height:{" "}
-                    {selectedCommodity?.height ? selectedCommodity.height : 0}
-                  </p>
-                  <p>
-                    Width:{" "}
-                    {selectedCommodity?.width ? selectedCommodity.width : 0}
-                  </p>
-                  <p>
-                    Length:{" "}
-                    {selectedCommodity?.length ? selectedCommodity.length : 0}
-                  </p>
-                  <p>
-                    Volumetric Weight:{" "}
-                    {selectedCommodity?.volumetricWeigth
-                      ? selectedCommodity.volumetricWeigth
-                      : 0}
-                  </p>
-                  <p>
-                    Chargeable Weight:{" "}
-                    {selectedCommodity?.chargeableWeight
-                      ? selectedCommodity.chargeableWeight
-                      : 0}
-                  </p>
-                  <p>
-                    Repacked:{" "}
-                    {selectedCommodity?.containsCommodities ? "Yes" : "No"}
-                  </p>
-                  {selectedCommodity?.internalCommodities.map((com) => {
-                    return (
-                      <div key={com.id} className="card">
-                        <p>{com.description}</p>
-                        <p>Weight: {com.weight}</p>
-                        <p>Height: {com.height}</p>
-                        <p>Width: {com.width}</p>
-                        <p>Length: {com.length}</p>
-                        <p>Volumetric Weight: {com.volumetricWeight}</p>
-                        <p>Chargeable Weight: {com.chargedWeight}</p>
-
-                      </div>
-                    );
-                  })}
-                </div>
-              </ModalForm>
+             
+             <div className="repacking-container">
+             <div className="main-commodity">
+               <p className="item-description">
+                 {selectedCommodity.description}
+               </p>
+               <p className="item-info">
+                 Weight: {selectedCommodity.weight}
+               </p>
+               <p className="item-info">
+                 Height: {selectedCommodity.height}
+               </p>
+               <p className="item-info">Width: {selectedCommodity.width}</p>
+               <p className="item-info">
+                 Length: {selectedCommodity.length}
+               </p>
+               <p className="item-info">
+                 Volumetric Weight: {selectedCommodity.volumetricWeight}
+               </p>
+               <p className="item-info">
+                 Chargeable Weight: {selectedCommodity.chargedWeight}
+               </p>
+               {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+             </div>
+             {/*  fix the repacking show internalCommodities for edition */}
+             {selectedCommodity.internalCommodities &&
+               selectedCommodity.internalCommodities.map((com) => (
+                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '15px' }}>
+                   <p className="item-description">{com.description}</p>
+                   <p className="item-info">Weight: {com.weight}</p>
+                   <p className="item-info">Height: {com.height}</p>
+                   <p className="item-info">Width: {com.width}</p>
+                   <p className="item-info">Length: {com.length}</p>
+                   <p className="item-info">
+                     Volumetric Weight: {com.volumetricWeight}
+                   </p>
+                   <p className="item-info">
+                     Chargeable Weight: {com.chargedWeight}
+                   </p>
+                   {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                 </div>
+               ))}
+           </div>
+              
             )}
           </div>
         </div>
@@ -274,3 +260,4 @@ const Repacking = () => {
 };
 
 export default Repacking;
+
