@@ -990,6 +990,7 @@
   .context-menu {
     position: absolute;
     background-color: #fff;
+    
     /* Background color */
     border: 1px solid #ccc;
     /* Border */
@@ -999,28 +1000,32 @@
     /* Ensure it appears above other content */
     padding: 8px;
     /* Padding */
-    min-width: 150px;
+    min-width: 100px;
     /* Minimum width */
     height: max-content;
+    display: grid;
+    justify-content: left;
   }
   
   .context-menu ul {
+    font-weight: bold;
     list-style: none;
     padding: 0;
     margin: 0;
     height: auto;
     font-size: 14px;
+    text-align: left;
   }
   
   .context-menu li {
-    margin: 5px 20px;
+    margin: 5px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
     /* Smooth background color transition on hover */
   }
   
   .context-menu li:hover {
-    background-color: #f0f0f0;
+    background-color: #a19999;
     /* Background color on hover */
   }
   
