@@ -386,94 +386,16 @@ const Table = ({
   }
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-    //   const Comodities = selectedRow.commodities;
-    //   const numCon = selectedRow.commodities.length;
+      const Comodities = selectedRow.commodities;
+      const numCon = selectedRow.commodities.length;
 
-<<<<<<< HEAD
-    //   for (let i = 0; i < numCon; i++) {
-    //     const descrip = selectedRow.commodities[i].description;
-    //     const pESO = selectedRow.commodities[i].weight;
-    //     generateLabelPDF(selectedRow, (i+1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
-=======
-    for (let i = 0; i < numCon; i++) {
+    for (let i = 0; i < Comodities; i++) {
       const descrip = selectedRow.commodities[i].description;
       const pESO = selectedRow.commodities[i].weight;
       generateLabelPDF(selectedRow, (i + 1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
->>>>>>> f38981b8377bb524712e0eacfbbb915f3a7ca980
 
-    //       .then((pdfUrl) => {
-    //         window.open(pdfUrl);
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error generating PDF:", error);
-    //       });
-    //   }
-
-
-
-    async function generarPDF(contenido) {
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage();
-
-      page.drawText(contenido, {
-        x: 50,
-        y: 500,
-        size: 30,
-      });
-
-      return pdfDoc;
     }
-
-    // Función para combinar varios PDFs en uno solo
-    async function combinarPDFs(pdfs) {
-      const pdfFinal = await PDFDocument.create();
-
-      for (const pdf of pdfs) {
-        const pdfBytes = await pdf.save();
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-
-        const copiedPages = await pdfFinal.copyPages(pdfDoc, pdfDoc.getPageIndices());
-        copiedPages.forEach((page) => {
-          pdfFinal.addPage(page);
-        });
-      }
-
-      return pdfFinal;
-    }
-
-    // Ejemplo de uso
-    async function main() {
-      const contenidoPDF1 = 'Contenido del segundo PDF';
-      const contenidoPDF2 = 'Contenido del segundo PDF';
-      const contenidoPDF3 = 'Contenido del tercer PDF';
-
-      console.log("BANDERA-1");
-      var pdf1 = await generateLabelPDF(1, 5, "descrip", 2);
-      console.log("PDF1 = ", pdf1);
-      var pdf2 = await generarPDF(contenidoPDF2);
-      var pdf3 = await generarPDF(contenidoPDF3);
-
-      const pdfs = [pdf1, pdf2, pdf3];
-
-      const pdfFinal = await combinarPDFs(pdfs);
-
-      // Guarda el PDF combinado
-      const pdfBytesFinal = await pdfFinal.save();
-      // Crea un enlace de descarga en el navegador
-      const blob = new Blob([pdfBytesFinal], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      // link.download = 'pdf_combinado.pdf';
-      link.click();
-    }
-
-    // Ejecuta el programa principal
-    main();
-
-
-  };
-
-
+  }
   //-------------------------------------------------------------------------------------------------------
 
 
