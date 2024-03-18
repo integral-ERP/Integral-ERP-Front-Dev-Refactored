@@ -1392,10 +1392,51 @@ const PickupOrderCreationForm = ({
                 className="col-6 text-start"
                 style={{ marginBlockEnd: "auto" }}
               >
-                <label htmlFor="delivery" className="form-label">
-                  Delivery Location:
+                <div className="text-start">
+                <label
+                  htmlFor="language"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                    color: "#565656",
+                    marginRight: "10px",
+                  }}
+                >
+                  Client to Bill:
                 </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
+                  className="form-input"
+                  value={formData.client_to_bill_type}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an option</option>
+                  <option value="shipper">Shipper</option>
+                  <option value="consignee">Ultimate Consignee</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="text-start">
                 <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.client_to_bill_type !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                  value={getAsyncSelectValue()}
+                  isClearable={true}
+                  defaultOptions={releasedToOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+                {/* <label htmlFor="delivery" className="form-label">
+                  Delivery Location:
+                </label> */}
+                {/* <AsyncSelect
                   id="deliveryLocation"
                   onChange={(e) => {
                     handleDeliveryLocationSelection(e);
@@ -1411,7 +1452,7 @@ const PickupOrderCreationForm = ({
                   loadOptions={loadDeliveryLocationSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
-                />
+                /> */}
               </div>
             </div>
             <div
@@ -1440,7 +1481,7 @@ const PickupOrderCreationForm = ({
               />
             </div>
             <div className="row align-items-center">
-              <div className="col-6 text-start">
+              {/* <div className="col-6 text-start">
                 <div className="company-form__section">
                   <Input
                     id="TextConsignee"
@@ -1452,7 +1493,7 @@ const PickupOrderCreationForm = ({
                     label="Address"
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="col-6 text-start">
                 <div className="company-form__section">
                   <Input
@@ -1468,7 +1509,7 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-6 text-start">
+              {/* <div className="col-6 text-start">
                 <label
                   htmlFor="language"
                   style={{
@@ -1494,9 +1535,6 @@ const PickupOrderCreationForm = ({
                   <option value="consignee">Ultimate Consignee</option>
                   <option value="other">Other</option>
                 </select>
-                {/* <p style={{ color: "red" }}>
-                      Note: Always select a client to bill when editing
-                    </p> */}
               </div>
               <div className="col-6 text-start">
                 <AsyncSelect
@@ -1511,7 +1549,7 @@ const PickupOrderCreationForm = ({
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

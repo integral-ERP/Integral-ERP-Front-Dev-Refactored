@@ -42,6 +42,8 @@ const Table = ({
   contextService,
   children,
   importEnabled,
+  importLabel,
+  
   createWarehouseReceipt,
   Nodoubleclick,
 
@@ -328,6 +330,7 @@ const Table = ({
     }
   };
 
+
   const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const handleOpenCloseSlider = () => {
@@ -386,10 +389,17 @@ const Table = ({
     //   const Comodities = selectedRow.commodities;
     //   const numCon = selectedRow.commodities.length;
 
+<<<<<<< HEAD
     //   for (let i = 0; i < numCon; i++) {
     //     const descrip = selectedRow.commodities[i].description;
     //     const pESO = selectedRow.commodities[i].weight;
     //     generateLabelPDF(selectedRow, (i+1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
+=======
+    for (let i = 0; i < numCon; i++) {
+      const descrip = selectedRow.commodities[i].description;
+      const pESO = selectedRow.commodities[i].weight;
+      generateLabelPDF(selectedRow, (i + 1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
+>>>>>>> f38981b8377bb524712e0eacfbbb915f3a7ca980
 
     //       .then((pdfUrl) => {
     //         window.open(pdfUrl);
@@ -760,7 +770,7 @@ const Table = ({
                               <button type="button" onClick={generatePDFLabel} className="custom-button">
                                 <i className="fas fa-file-pdf"></i>
                               </button> */}
-                              <div className="pdf-content">
+                              <div className="hideLab">
                                 <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
                                   <option value="">Select format </option>
                                   <option value="receipt">PDF Receipt</option>
@@ -871,6 +881,8 @@ const Table = ({
     setSelectedDateFilter(value);
   };
 
+
+
   return (
     <>
       <div className="container-fluid">
@@ -921,6 +933,24 @@ const Table = ({
                           >
                             <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
                           </button>
+
+                          
+
+                          {/* ------------------------ */}
+                          {importLabel && (
+                            <button
+                              className="generic-button ne"
+                            >
+                              <div className="hideLab">
+                                <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
+                                  <option value="">Select format </option>
+                                  <option value="receipt">PDF Receipt</option>
+                                  <option value="label">PDF Label</option>
+                                </select>
+                              </div>
+                            </button>
+                          )}
+                          {/* ------------------------ */}
 
                           <input
                             type="file"
@@ -1240,6 +1270,7 @@ Table.defaultProps = {
   title: "Table",
   showOptions: true,
   importEnabled: true,
+  importLabel:true,
 };
 
 export default Table;
