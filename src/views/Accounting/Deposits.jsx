@@ -153,6 +153,7 @@ const Deposits = () => {
               onAdd={handleAddDeposits}
               title="Deposits"
               importEnabled={false}
+              importLabel={false}
             >
               {selectedDeposits === null && (
 

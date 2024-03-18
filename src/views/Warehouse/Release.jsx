@@ -288,6 +288,7 @@ const Release = () => {
               contextMenuOptions={contextMenuOptions}
               contextService={ReleaseService}
               importEnabled={false}
+              importLabel={false}
             >
               {selectedReleaseOrder !== null && (
                 <ReleaseOrderCreationForm

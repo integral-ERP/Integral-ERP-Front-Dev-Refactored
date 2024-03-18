@@ -387,6 +387,7 @@ const Pickup = () => {
               contextMenuOptions={contextMenuOptions}
               contextService={PickupService}
               importEnabled={false}
+              importLabel={false}
               createWarehouseReceipt={createWarehouseReceipt}
             >
               {selectedPickupOrder !== null && (

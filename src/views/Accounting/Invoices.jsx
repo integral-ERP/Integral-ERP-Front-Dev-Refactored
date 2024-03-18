@@ -176,6 +176,7 @@ const Invoices = () => {
               onAdd={handleAddInvoices}
               importEnabled={false}
               title="Invoices"
+              importLabel={false}
             >
               {selectedInvoices === null && (
                 <InvoicesCreationForm

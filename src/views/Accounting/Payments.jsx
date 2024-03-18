@@ -174,6 +174,7 @@ const Payments = () => {
               onEdit={handleEditPayments}
               onAdd={handleAddPayments}
               importEnabled={false}
+              importLabel={false}
               title="Payments"
             >
               {selectedPayments !== null && (

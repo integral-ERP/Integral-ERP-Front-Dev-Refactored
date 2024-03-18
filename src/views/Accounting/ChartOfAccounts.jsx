@@ -181,6 +181,8 @@ const ChartOfAccounts = () => {
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
               importEnabled={false}
+              importLabel={false}
+              
             >
               {selectedChartOfAccounts === null && (
                 <ChartOfAccountsCreationForm

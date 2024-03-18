@@ -184,6 +184,7 @@ const ItemsAndServices = () => {
               showContextMenu={showContextMenu}
               setShowContextMenu={setShowContextMenu}
               importEnabled={false}
+              importLabel={false}
             >
               {selectedeItemAndService === null && (
                 <ItemAndServiceCreationForm

@@ -204,6 +204,7 @@ const Repacking = () => {
               title="Repacked Commodities"
               setData={setRepackedCommodities}
               importEnabled={false}
+              importLabel={false}
             />
 
             {selectedCommodity !== null && (
