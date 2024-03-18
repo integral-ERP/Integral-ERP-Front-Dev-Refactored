@@ -200,7 +200,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
+  /* const handleSupplierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
     const info = `${result.data?.street_and_number || ""} - ${
@@ -209,7 +209,7 @@ const ReceiptCreationForm = ({
       result.data.zip_code || ""
     }`;
     setFormData({ ...formData, supplierId: id, supplierInfo: info });
-  };
+  }; */
 
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
@@ -283,6 +283,7 @@ const ReceiptCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      supplierId: id, supplierInfo: info
     });
   };
 
@@ -1331,16 +1332,14 @@ const ReceiptCreationForm = ({
                 </label>
                 <AsyncSelect
                   id="shipper"
-                  value={supplierOptions.find(
-                    (option) => option.id === formData.supplierId
-                  )}
                   onChange={(e) => {
-                    handleSupplierSelection(e);
+                    handleShipperSelection(e);
                   }}
                   isClearable={true}
                   placeholder="Search and select..."
-                  defaultOptions={supplierOptions}
-                  loadOptions={loadCarrierSelectOptions}
+                  defaultOptions={shipperOptions}
+                  loadOptions={loadShipperSelectOptions}
+                  value={shipper}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
