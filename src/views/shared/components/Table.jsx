@@ -386,13 +386,19 @@ const Table = ({
   }
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-      const Comodities = selectedRow.commodities;
-      const numCon = selectedRow.commodities.length;
+    const Comodities = selectedRow;
+    const numCon = selectedRow.commodities.length;
 
-    for (let i = 0; i < Comodities; i++) {
+    for (let i = 0; i < numCon; i++) {
       const descrip = selectedRow.commodities[i].description;
       const pESO = selectedRow.commodities[i].weight;
-      generateLabelPDF(selectedRow, (i + 1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
+      generateLabelPDF(Comodities, (i+1), descrip, pESO)
+      .then((pdfUrl) => {
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
 
     }
   }

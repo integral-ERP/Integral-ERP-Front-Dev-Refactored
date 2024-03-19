@@ -10,6 +10,7 @@ pdfMake.vfs = pdfFonts;
 const generateLabelPDF = (data, numCon, descrip, pESO) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
+  console.log("NUMERO = ", numCon);
   // const country = data.consigneeObj?.data?.obj?.country;
   const country = data.consigneeObj?.data?.obj?.country?.toUpperCase();
 
@@ -110,6 +111,7 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
+      console.log("PIEZAS = ",totalPieces);
       let firstRowText = "";
       let thirdRowText = "";
       let sixthRowText = "";
@@ -203,9 +205,12 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
       .then((response) => response.blob())
       .then((imageBlob) => {
 
+      
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
+
+          const pdfconten = []
 
           const pdf = {
             content: [
@@ -215,7 +220,7 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [400, 200],
+                        fit: [230, 200],
                         colSpan: 2,
                         alignment: "right",
                         margin: [0, -20, 0, 20],
@@ -491,7 +496,8 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                   ],
                 },
               },
-            ],
+              //Page 2
+            ], 
             styles: {
               header: {
                 fontSize: 18,
@@ -524,13 +530,18 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
             },
           };
 
+          for (let index = 0; index < 5; index++) {
+            console.log("INDEX = ", index)
           const pdfGenerator = pdfMake.createPdf(pdf);
           pdfGenerator.getBlob((blob) => {
-            const pdfUrl = URL.createObjectURL(blob);
-            resolve(pdfUrl);
-          });
-        };
-        reader.readAsDataURL(imageBlob); // Read the logo image
+          const pdfUrl = URL.createObjectURL(blob);
+          resolve(pdfUrl);
+            });
+          }
+          
+          };
+          
+          reader.readAsDataURL(imageBlob); // Read the logo image
       })
       .catch((error) => {
         reject(error);
