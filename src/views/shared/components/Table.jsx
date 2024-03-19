@@ -382,17 +382,12 @@ const Table = ({
   };
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-<<<<<<< HEAD
     const Comodities = selectedRow;
-=======
-    const Comodities = selectedRow.commodities;
->>>>>>> e121a37fe27ce5110060d13c465a491cdc761046
     const numCon = selectedRow.commodities.length;
 
     for (let i = 0; i < numCon; i++) {
       const descrip = selectedRow.commodities[i].description;
       const pESO = selectedRow.commodities[i].weight;
-<<<<<<< HEAD
       generateLabelPDF(Comodities, (i+1), descrip, pESO)
       .then((pdfUrl) => {
         window.open(pdfUrl, "_blank");
@@ -401,9 +396,6 @@ const Table = ({
         console.error("Error generating PDF:", error);
       });
 
-=======
-      generateLabelPDF(selectedRow, i + 1, descrip, pESO); // Incrementamos i en 1 para comenzar desde
->>>>>>> e121a37fe27ce5110060d13c465a491cdc761046
     }
   };
   //-------------------------------------------------------------------------------------------------------
