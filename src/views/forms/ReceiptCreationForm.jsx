@@ -200,7 +200,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
+  /* const handleSupplierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
     const info = `${result.data?.street_and_number || ""} - ${
@@ -209,7 +209,7 @@ const ReceiptCreationForm = ({
       result.data.zip_code || ""
     }`;
     setFormData({ ...formData, supplierId: id, supplierInfo: info });
-  };
+  }; */
 
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
@@ -283,6 +283,7 @@ const ReceiptCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      supplierId: id, supplierInfo: info
     });
   };
 
@@ -1331,16 +1332,14 @@ const ReceiptCreationForm = ({
                 </label>
                 <AsyncSelect
                   id="shipper"
-                  value={supplierOptions.find(
-                    (option) => option.id === formData.supplierId
-                  )}
                   onChange={(e) => {
-                    handleSupplierSelection(e);
+                    handleShipperSelection(e);
                   }}
                   isClearable={true}
                   placeholder="Search and select..."
-                  defaultOptions={supplierOptions}
-                  loadOptions={loadCarrierSelectOptions}
+                  defaultOptions={shipperOptions}
+                  loadOptions={loadShipperSelectOptions}
+                  value={shipper}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -1470,6 +1469,7 @@ const ReceiptCreationForm = ({
           editing={editingComodity}
           commodity={selectedCommodity}
           setEditingComodity={setEditingComodity}
+          locationEnabled={true}
         />
         <br />
 
@@ -1483,7 +1483,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                // "Location",
+                 "Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1524,6 +1524,7 @@ const ReceiptCreationForm = ({
                   <p className="item-info">
                     Chargeable Weight: {selectedCommodity.chargedWeight}
                   </p>
+                  <p className="item-info">Location: {selectedCommodity.locationCode}</p>
                   {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
                 </div>
                 {/*  fix the repacking show internalCommodities for edition */}
@@ -1541,6 +1542,7 @@ const ReceiptCreationForm = ({
                       <p className="item-info">
                         Chargeable Weight: {com.chargedWeight}
                       </p>
+                      <p className="item-info">Location: {com.locationCode}</p>
                       {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                     </div>
                   ))}

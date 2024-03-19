@@ -20,8 +20,6 @@ import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
-import { PDFDocument } from 'pdf-lib';
-
 const Table = ({
   data,
   columns,
@@ -43,10 +41,9 @@ const Table = ({
   children,
   importEnabled,
   importLabel,
-  
+
   createWarehouseReceipt,
   Nodoubleclick,
-
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("");
@@ -132,7 +129,7 @@ const Table = ({
     Status: "status",
     Type: "type",
     Number: "number",
-    "Date": "creation_date",
+    Date: "creation_date",
     "Ship Date": "pick_up_date",
     "Delivery Date": "delivery_date",
     "Pickup Name": "pickUpLocationObj.data.obj.name",
@@ -207,7 +204,7 @@ const Table = ({
     "Amt Due": "division",
     //---------------
     // " Date": "date",
-    "Entity": "entity",
+    Entity: "entity",
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
@@ -330,7 +327,6 @@ const Table = ({
     }
   };
 
-
   const { setHideShowSlider, setcontrolSlider } = useContext(GlobalContext);
 
   const handleOpenCloseSlider = () => {
@@ -372,10 +368,10 @@ const Table = ({
   };
   //-------------------------------------------------------------------------------------------------------
   const generatePDFReceipt = () => {
-    console.log("SelectR = ", selectedRow.commodities.length)
+    console.log("SelectR = ", selectedRow.commodities.length);
     const numCon = selectedRow.commodities.length;
     for (let i = 0; i < 1; i++) {
-      GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde 
+      GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde
         .then((pdfUrl) => {
           window.open(pdfUrl);
         })
@@ -383,21 +379,19 @@ const Table = ({
           console.error("Error generating PDF:", error);
         });
     }
-  }
+  };
   //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
-      const Comodities = selectedRow.commodities;
-      const numCon = selectedRow.commodities.length;
+    const Comodities = selectedRow.commodities;
+    const numCon = selectedRow.commodities.length;
 
     for (let i = 0; i < Comodities; i++) {
       const descrip = selectedRow.commodities[i].description;
       const pESO = selectedRow.commodities[i].weight;
-      generateLabelPDF(selectedRow, (i + 1), descrip, pESO) // Incrementamos i en 1 para comenzar desde 
-
+      generateLabelPDF(selectedRow, i + 1, descrip, pESO); // Incrementamos i en 1 para comenzar desde
     }
-  }
+  };
   //-------------------------------------------------------------------------------------------------------
-
 
   const generatePDFRelease = () => {
     generatePickUpPDF(selectedRow)
@@ -654,10 +648,11 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                      ? "table-primary"
-                      : ""
-                      }`}
+                    className={`table-row  tr-margen${
+                      selectedRow && selectedRow.id === row.id
+                        ? "table-primary"
+                        : ""
+                    }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -681,7 +676,11 @@ const Table = ({
                           }}
                         >
                           {columnName === "View PDF" ? (
-                            <button type="button" onClick={generatePDF} className="custom-button-pdf">
+                            <button
+                              type="button"
+                              onClick={generatePDF}
+                              className="custom-button-pdf"
+                            >
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
@@ -693,7 +692,13 @@ const Table = ({
                                 <i className="fas fa-file-pdf"></i>
                               </button> */}
                               <div className="hideLab">
-                                <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
+                                <select
+                                  onChange={(e) =>
+                                    e.target.value === "receipt"
+                                      ? generatePDFReceipt()
+                                      : generatePDFLabel()
+                                  }
+                                >
                                   <option value="">Select format </option>
                                   <option value="receipt">PDF Receipt</option>
                                   <option value="label">PDF Label</option>
@@ -701,38 +706,73 @@ const Table = ({
                               </div>
                             </>
                           ) : columnName === "Invoice PDF" ? (
-                            <button type="button" onClick={generatePDFInvoice} className="custom-button-pdf">
+                            <button
+                              type="button"
+                              onClick={generatePDFInvoice}
+                              className="custom-button-pdf"
+                            >
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Bill PDF" ? (
-                            <button type="button" onClick={generateBillPDF} className="custom-button-pdf">
+                            <button
+                              type="button"
+                              onClick={generateBillPDF}
+                              className="custom-button-pdf"
+                            >
                               <i className="fas fa-file-pdf"></i>
                             </button>
                           ) : columnName === "Status" ? (
                             getStatus(row[columnNameToProperty[columnName]])
                           ) : columnName === "Options" ? (
-                            <> {/* added hiden button trash for table commodity creation form */}
-                              <button type="button" onClick={onDelete} className="custom-button">
+                            <>
+                              {" "}
+                              {/* added hiden button trash for table commodity creation form */}
+                              <button
+                                type="button"
+                                onClick={onDelete}
+                                className="custom-button"
+                              >
                                 <i className="fas fa-trash"></i>
                               </button>
-                              <button type="button" onClick={onEdit} className="custom-button">
+                              <button
+                                type="button"
+                                onClick={onEdit}
+                                className="custom-button"
+                              >
                                 <i className="fas fa-pencil-alt"></i>
                               </button>
-                              <button type="button" onClick={onInspect} className="custom-button">
+                              <button
+                                type="button"
+                                onClick={onInspect}
+                                className="custom-button"
+                              >
                                 <i className="fas fa-eye"></i>
                               </button>
                             </>
                           ) : columnName === "Repack Options" ? (
                             <>
-                              <button type="button" onClick={onInspect} className="custom-button">
+                              <button
+                                type="button"
+                                onClick={onInspect}
+                                className="custom-button"
+                              >
                                 <i className="fas fa-eye"></i>
                               </button>
-                              <button type="button" onClick={onEdit} className="custom-button" style={{ display: "none" }}>
+                              <button
+                                type="button"
+                                onClick={onEdit}
+                                className="custom-button"
+                                style={{ display: "none" }}
+                              >
                                 <i className="fas fa-box-open"></i>
                               </button>
                             </>
                           ) : columnName === "Delete" ? (
-                            <button type="button" onClick={onDelete} className="custom-button">
+                            <button
+                              type="button"
+                              onClick={onDelete}
+                              className="custom-button"
+                            >
                               <i className="fas fa-trash"></i>
                             </button>
                           ) : typeof columnNameToProperty[columnName] ===
@@ -743,15 +783,15 @@ const Table = ({
                               <i className="fas fa-times"></i>
                             )
                           ) : columnNameToProperty[columnName]?.includes(
-                            "."
-                          ) ? (
+                              "."
+                            ) ? (
                             getPropertyValue(
                               row,
                               columnNameToProperty[columnName]
                             )
                           ) : Array.isArray(
-                            row[columnNameToProperty[columnName]]
-                          ) ? (
+                              row[columnNameToProperty[columnName]]
+                            ) ? (
                             row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
                           ) : (
                             row[columnNameToProperty[columnName]]
@@ -802,8 +842,6 @@ const Table = ({
   const handleDateFilterChange = (value) => {
     setSelectedDateFilter(value);
   };
-
-
 
   return (
     <>
@@ -856,15 +894,17 @@ const Table = ({
                             <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
                           </button>
 
-                          
-
                           {/* ------------------------ */}
                           {importLabel && (
-                            <button
-                              className="generic-button ne"
-                            >
+                            <button className="generic-button ne">
                               <div className="hideLab">
-                                <select onChange={(e) => e.target.value === 'receipt' ? generatePDFReceipt() : generatePDFLabel()}>
+                                <select
+                                  onChange={(e) =>
+                                    e.target.value === "receipt"
+                                      ? generatePDFReceipt()
+                                      : generatePDFLabel()
+                                  }
+                                >
                                   <option value="">Select format </option>
                                   <option value="receipt">PDF Receipt</option>
                                   <option value="label">PDF Label</option>
@@ -1097,12 +1137,18 @@ const Table = ({
                       )}
                     </div>
                   </div>
-                  <div className="col-6 d-flex justify-content-end" id="input-container--second">
+                  <div
+                    className="col-6 d-flex justify-content-end"
+                    id="input-container--second"
+                  >
                     <div className="button-container">
                       <div className="export-box">
                         <div className="row mx-0">
                           <div className="col-10">
-                            <div className="export-dropdown">
+                            <div
+                              style={{ display: "none" }}
+                              className="export-dropdown"
+                            >
                               <label className="laver-export">
                                 <span className="text-export">
                                   Export Format:
@@ -1192,7 +1238,7 @@ Table.defaultProps = {
   title: "Table",
   showOptions: true,
   importEnabled: true,
-  importLabel:true,
+  importLabel: true,
 };
 
 export default Table;
