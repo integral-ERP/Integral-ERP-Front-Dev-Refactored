@@ -54,7 +54,8 @@ const CommodityCreationForm = ({
       !formData.height ||
       !formData.width ||
       !formData.weight ||
-      !formData.description
+      !formData.description ||
+      (!formData.locationId && !(editing && commodity.containsCommodities))
     ) {
       // Show an alert or handle the validation error as needed
       alert("Please fill in all required fields.");
@@ -123,6 +124,8 @@ const CommodityCreationForm = ({
       //deleted this ->setinternalID(internalID + 1);
     }
     setformData(formFormat);
+    // Reset the select element to its initial state
+    document.getElementById("location").selectedIndex = 0;
   };
 
   const handleKeyDown = (event, nextInputRef) => {
@@ -299,6 +302,7 @@ const CommodityCreationForm = ({
             <select
               name="location"
               id="location"
+              value={formData.locationId}
               onChange={(e) => {
                 setformData({
                   ...formData,
@@ -309,6 +313,7 @@ const CommodityCreationForm = ({
                     ),
                 });
               }}
+              disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
             >
               <option value="">Select an option</option>
               {locations.map((location) => {

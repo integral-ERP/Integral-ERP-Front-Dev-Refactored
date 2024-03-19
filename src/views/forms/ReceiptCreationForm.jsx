@@ -1469,6 +1469,7 @@ const ReceiptCreationForm = ({
           editing={editingComodity}
           commodity={selectedCommodity}
           setEditingComodity={setEditingComodity}
+          locationEnabled={true}
         />
         <br />
 
@@ -1482,7 +1483,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                // "Location",
+                 "Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1523,6 +1524,7 @@ const ReceiptCreationForm = ({
                   <p className="item-info">
                     Chargeable Weight: {selectedCommodity.chargedWeight}
                   </p>
+                  <p className="item-info">Location: {selectedCommodity.locationCode}</p>
                   {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
                 </div>
                 {/*  fix the repacking show internalCommodities for edition */}
@@ -1540,6 +1542,7 @@ const ReceiptCreationForm = ({
                       <p className="item-info">
                         Chargeable Weight: {com.chargedWeight}
                       </p>
+                      <p className="item-info">Location: {com.locationCode}</p>
                       {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                     </div>
                   ))}
