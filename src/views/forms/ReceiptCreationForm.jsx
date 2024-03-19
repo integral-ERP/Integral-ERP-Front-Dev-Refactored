@@ -1729,7 +1729,7 @@ const ReceiptCreationForm = ({
                   onEdit={() => {}}
                   onAdd={() => {}}
                   showOptions={false}
-                  importLabel={true}
+                  importLabel={false}
                 />
               )}
             </div>
