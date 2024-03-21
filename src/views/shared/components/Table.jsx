@@ -871,7 +871,7 @@ const Table = ({
                 <div className="row w-100 align-items-center">
                   {/* <div className="movile"> */}
                   {/* Search menu */}
-                  <div className="col-6" id="input-container--first">
+                  <div className="col-12" id="input-container--first">
                     <div className="position-search mt-3">
                       <div className="search">
                         <div className="search-container">
@@ -904,11 +904,27 @@ const Table = ({
                             <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
                           </button>
 
+                          <div className="col-2 d-flex">
+                            <button
+                              className="generic-button-eye"
+                              onClick={() => setShowColumnMenu(!showColumnMenu)}
+                            >
+                              <i className="fas fa-eye menu-icon fa-3x ne"></i>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setShowFilterMenu(!showFilterMenu)}
+                              className="generic-button-filter"
+                            >
+                              <i className="fas fa-filter menu-icon fa-3x ne"></i>
+                            </button>
+                          </div>
+
                           {/* ------------------------ */}
                           {
                             showPage !== 'initial' && importLabel && ( 
                               
-                               <button className="generic-button ne" style={{ display: 'flex', width: '70px'  }}>
+                               <button className="generic-button ne" style={{ display: 'flex', width: '70px', marginLeft: '3vw'}}>
                                   <i className="fa fa-print menu-icon fa-3x"></i>
                                   <div className="select_print">
                                     <select
@@ -1153,12 +1169,7 @@ const Table = ({
                           </div>
                         </div>
                       )}
-                    </div>
-                  </div>
-                  <div
-                    className="col-6 d-flex justify-content-end"
-                    id="input-container--second"
-                  >
+                       <div className="col-6 d-flex justify-content-end" id="input-container--second">
                     <div className="button-container">
                       <div className="export-box">
                         <div className="row mx-0">
@@ -1190,25 +1201,14 @@ const Table = ({
                               </button>
                             </div>
                           </div>
-                          <div className="col-2 d-flex">
-                            <button
-                              className="generic-button-eye"
-                              onClick={() => setShowColumnMenu(!showColumnMenu)}
-                            >
-                              <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setShowFilterMenu(!showFilterMenu)}
-                              className="generic-button-filter"
-                            >
-                              <i className="fas fa-filter menu-icon fa-3x ne"></i>
-                            </button>
-                          </div>
+                          
                         </div>
                       </div>
                     </div>
                   </div>
+                    </div>
+                  </div>
+                 
                 </div>
                 // </div>
               )}
