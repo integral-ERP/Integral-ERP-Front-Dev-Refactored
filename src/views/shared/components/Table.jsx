@@ -1156,7 +1156,10 @@ const Table = ({
                       <div className="export-box">
                         <div className="row mx-0">
                           <div className="col-10">
-                            <div className="export-dropdown">
+                            <div
+                              style={{ display: "none" }}
+                              className="export-dropdown"
+                            >
                               <label className="laver-export">
                                 <span className="text-export">
                                   Export Format:
