@@ -255,7 +255,7 @@ const BillsCreationForm = ({
     <div className="company-form">
       <div className="creation creation-container w-100">
         <div className="row w-100">
-          <div className="form-label_name"><h3>Bill</h3><span></span>
+          <div className="form-label_name"><h2>Bill</h2><span></span>
           </div>
 
           <div className="col-6 text-start">

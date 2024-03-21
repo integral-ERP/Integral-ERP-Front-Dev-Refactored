@@ -1293,5 +1293,15 @@
   // display: none; /* Oculta el div por defecto */
   margin: 0 9% 0 10%;
   height: 3rem;
-  width: 70%;
+  width: 100% !important;
+}
+
+.select_print{
+  margin: 0 9% 0 10%;
+  height: 3rem;
+  width: 18%;
+}
+
+.creation-container{
+  width: 99% !important;
 }

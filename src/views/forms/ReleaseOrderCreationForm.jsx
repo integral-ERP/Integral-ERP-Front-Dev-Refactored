@@ -522,7 +522,7 @@ const ReleaseOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>General</h3>
+              <h2>General</h2>
               <span></span>
             </div>
             <div className="row mb-2">
@@ -704,7 +704,7 @@ const ReleaseOrderCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>Carrier</h3>
+              <h2>Carrier</h2>
               <span></span>
             </div>
             <div className="row align-items-center mb-3">
@@ -777,7 +777,7 @@ const ReleaseOrderCreationForm = ({
 
       <div className="creation creation-container w-100">
         <div className="form-label_name">
-          <h3>Cargo</h3>
+          <h2>Cargo</h2>
           <span></span>
         </div>
         <Table

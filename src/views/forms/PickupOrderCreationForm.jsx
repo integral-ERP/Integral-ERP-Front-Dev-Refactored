@@ -1389,9 +1389,37 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
               <div
-                className="col-6 text-start"
-                style={{ marginBlockEnd: "auto" }}
-              >
+              className="col-6 text-start"
+              style={{ marginBlockEnd: "auto" }}
+            >
+              <label htmlFor="delivery" className="form-label">
+                Delivery Location:
+              </label>
+              <AsyncSelect
+                id="deliveryLocation"
+                onChange={(e) => {
+                  handleDeliveryLocationSelection(e);
+                }}
+                value={deliveryLocationOptions.find(
+                  (option) =>
+                    option.id === formData.deliveryLocationId &&
+                    option.type === formData.deliveryLocationType
+                )}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={deliveryLocationOptions}
+                loadOptions={loadDeliveryLocationSelectOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+
+            </div>
+          
+            <div className="row align-items-center">
+
+
+            <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
                 <div className="text-start">
                 <label
                   htmlFor="language"
@@ -1454,35 +1482,8 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 /> */}
               </div>
-            </div>
-            <div
-              className="col-6 text-start"
-              style={{ marginBlockEnd: "auto" }}
-            >
-              <label htmlFor="delivery" className="form-label">
-                Delivery Location:
-              </label>
-              <AsyncSelect
-                id="deliveryLocation"
-                onChange={(e) => {
-                  handleDeliveryLocationSelection(e);
-                }}
-                value={deliveryLocationOptions.find(
-                  (option) =>
-                    option.id === formData.deliveryLocationId &&
-                    option.type === formData.deliveryLocationType
-                )}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={deliveryLocationOptions}
-                loadOptions={loadDeliveryLocationSelectOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
-            </div>
-            <div className="row align-items-center">
-              {/* <div className="col-6 text-start">
-                <div className="company-form__section">
+              {/* { <div className="col-6 text-start"> */}
+                {/* <div className="company-form__section">
                   <Input
                     id="TextConsignee"
                     type="textarea"
@@ -1492,8 +1493,8 @@ const PickupOrderCreationForm = ({
                     readonly={true}
                     label="Address"
                   />
-                </div>
-              </div> */}
+                </div> */}
+              {/* </div>} */}
               <div className="col-6 text-start">
                 <div className="company-form__section">
                   <Input
