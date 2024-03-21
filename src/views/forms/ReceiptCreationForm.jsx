@@ -1451,7 +1451,7 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
-      <div className="creation creation-container w-100">
+      <div className="creation creation-container">
         <div className="form-label_name">
           {editingComodity ? (
             <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
@@ -1693,7 +1693,7 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
-      <div className="creation creation-container w-100">
+      <div className="creation creation-container">
         <div className="form-label_name">
           <h3>Events</h3>
           <span></span>
@@ -1737,7 +1737,7 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
-      <div className="creation creation-container w-100">
+      <div className="creation creation-container">
         <div className="form-label_name">
           <h3>Attachments</h3>
           <span></span>
@@ -1754,7 +1754,7 @@ const ReceiptCreationForm = ({
         </div>
       </div>
 
-      <div className="creation creation-container w-100">
+      <div className="creation creation-container">
         <div className="form-label_name">
           <h3>Notes</h3>
           <span></span>

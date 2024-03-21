@@ -142,7 +142,7 @@ const PreAlertCreationForm = ({
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
-              <h3>General</h3>
+              <h2>General</h2>
               <span></span>
             </div>
             <div className="row align-items-center">
