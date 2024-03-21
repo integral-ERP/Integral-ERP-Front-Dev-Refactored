@@ -20,6 +20,8 @@ import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
+import { PDFDocument } from "pdf-lib";
+
 const Table = ({
   data,
   columns,
@@ -671,6 +673,7 @@ const Table = ({
                           className="generic-table__td"
                           style={{
                             // minWidth: columnWidthsCalculated[columnName],
+                            
                             width: `${100 / visibleColumnOrder.length}%`, // Calcula el ancho dinámicamentewidth: {`${columnOrder.length / 100}%`},
                             whiteSpace: "nowrap",
                           }}
@@ -895,23 +898,30 @@ const Table = ({
                           </button>
 
                           {/* ------------------------ */}
-                          {importLabel && (
-                            <button className="generic-button ne">
-                              <div className="hideLab">
-                                <select
-                                  onChange={(e) =>
-                                    e.target.value === "receipt"
-                                      ? generatePDFReceipt()
-                                      : generatePDFLabel()
-                                  }
-                                >
-                                  <option value="">Select format </option>
-                                  <option value="receipt">PDF Receipt</option>
-                                  <option value="label">PDF Label</option>
-                                </select>
-                              </div>
-                            </button>
-                          )}
+                          {
+                            showPage !== 'initial' && importLabel && ( 
+                              
+                               <button className="generic-button ne" style={{ display: 'flex', width: '70px'  }}>
+                                  <i className="fa fa-print menu-icon fa-3x"></i>
+                                  <div className="select_print">
+                                    <select
+                                      onChange={(e) =>
+                                        e.target.value === "receipt"
+                                          ? generatePDFReceipt()
+                                          : generatePDFLabel()
+                                      }
+                                    >
+                                      <option value=""> </option>
+                                      <option value="receipt">PDF Receipt</option>
+                                      <option value="label">PDF Label</option>
+                                    </select>
+                                  </div>
+                                </button>
+                           
+
+                            )
+                          }
+
                           {/* ------------------------ */}
 
                           <input
@@ -937,6 +947,7 @@ const Table = ({
                             </button>
                           )}
                         </div>
+
                         {showFilterMenu && (
                           <div
                             className="modal-filter"

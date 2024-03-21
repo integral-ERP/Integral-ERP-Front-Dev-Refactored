@@ -143,11 +143,12 @@
 
   .form-input{
     width: 100%;
+    font-size: 15px;
     background: white;
-    color: black;
+    color: #818080;
     height: 3rem;
     padding: 0 0 0 1rem;
-    font-size: initial;
+    // font-size: initial;
 
     &__exten{
       width: 20rem;
