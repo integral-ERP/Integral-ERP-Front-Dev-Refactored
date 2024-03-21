@@ -273,7 +273,7 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
+        <div className="row w-100" style={{ padding: "0 0 0 1.5rem" }}>
           <label htmlFor="description" className="text-comm description-form">
             Charge Description:
           </label>
@@ -289,13 +289,13 @@ const CommodityCreationForm = ({
             }
           />
         </div>
-
+        <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
         {locationEnabled && (
           <>
             <label
               htmlFor="location"
               className="text-comm"
-              style={{ marginTop: "10px" }}
+              style={{ marginLeft: "-5px" }}
             >
               Location:
             </label>
@@ -314,6 +314,7 @@ const CommodityCreationForm = ({
                 });
               }}
               disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
+              style={{ fontSize: '14px', color: 'gray' }}
             >
               <option value="">Select an option</option>
               {locations.map((location) => {
@@ -330,6 +331,7 @@ const CommodityCreationForm = ({
             </select>
           </>
         )}
+         </div>
 
         <div className="table-hover charge-buttons">
           <button
