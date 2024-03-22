@@ -44,7 +44,9 @@ const Release = () => {
     try {
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
       const pickUpsWithReceipt = receiptOrders.filter((pickUp) => {
-        return pickUp.status == StatusDelivered || pickUp.status == StatusLoaded;
+        return (
+          pickUp.status == StatusDelivered || pickUp.status == StatusLoaded
+        );
       });
       let filteredData = [];
       for (let i = 0; i < receiptOrders.length; i++) {
@@ -74,7 +76,6 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
-    console.log(releaseOrders);
   }, []);
 
   const updateReleaseOrders = (url = null) => {
