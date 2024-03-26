@@ -71,7 +71,7 @@ const GenerateReceiptPDF = (data, numCon) => {
 
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 200],
+          margin: [0, 0, 0, 190],
         },
         {},
         {
