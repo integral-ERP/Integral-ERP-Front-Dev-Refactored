@@ -1,17 +1,22 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
-import logo from "../../img/logotextcolor.png";
+import logotextcolor from "../../img/logotextcolor.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
-
-const generateLabelPDF = (data, numCon, descrip, pESO) => {
+const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
-  // const country = data.consigneeObj?.data?.obj?.country;
-  const country = data.consigneeObj?.data?.obj?.country?.toUpperCase();
+
+  const country  =  data.consigneeObj?.data?.obj?.country?.toUpperCase();
+  const cantidadPaquete = data.commodities.length;
+  const location =  data.commodities[0].locationCode;
+  const serialID =  data.commodities[0].id;
+
+  console.log("location = ", location);
+  console.log("cantidadPaquete = ", cantidadPaquete);
 
   var pais = "";
   var margPais = 20;
@@ -77,44 +82,42 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
       pais = country;
   }
 
-  // console.log("country = ", country)
-
-
   return new Promise((resolve, reject) => {
-    let canvas = null;
-    let barcodeImage = null;
-    canvas = document.createElement('canvas');
-    const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128),
-      text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + numCon,
-      scale: 4, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
-      includetext: true, // Include human-readable text below the barcode
-      textxalign: "center",
-      bold: true,
-    };
-    barcodeOptions.text = barcodeOptions.text.toUpperCase();
-    console.log("BANDERA=", barcodeOptions.text)
-    try {
-
-      canvas = bwipjs.toCanvas(canvas, barcodeOptions);
-      barcodeImage = canvas.toDataURL();
-    } catch (error) {
-      reject(error);
-    }
+    // let canvas = null;
+    // let barcodeImage = null;
+    // canvas = document.createElement("canvas");
+    // const barcodeOptions = {
+    //   bcid: "code128", // Barcode type (e.g., code128),
+    //   text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + serialID,
+    //   scale: 2, // Scale factor for the barcode size
+    //   height: 20, // Height of the barcode
+    //   includetext: true, // Include human-readable text below the barcode
+    //   textxalign: "center",
+    //   bold: true,
+    // };
+    // barcodeOptions.text = barcodeOptions.text.toUpperCase();
+    // try {
+    //   canvas = bwipjs.toCanvas(canvas, barcodeOptions);
+    //   barcodeImage = canvas.toDataURL();
+    // } catch (error) {
+    //   reject(error);
+    // }
+    
     const commodityRows = [];
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
-    let fourthRowText = "";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
       let firstRowText = "";
       let thirdRowText = "";
+      let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
+      let locatione = "";
       data.commodities?.forEach((commodity) => {
+        // firstRowText += `1; Pallet \n`;
         firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
@@ -123,17 +126,16 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
           `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
-        // console.log("BANDERA1=", totalWeight);
+        // locatione += `${commodity.description} \n`;
+        // console.log("totalWeight =", locatione);
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
-
             thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            // fourthRowText += `${internalCommodity.description} \n`;
+            fourthRowText += `${internalCommodity.description} \n`;
             sixthRowText += `${internalCommodity.weight} lbs \n`;
             seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
             totalWeight += parseFloat(internalCommodity.weight);
-            // console.log("BANDERA2=", totalWeight);
             totalVolume += parseFloat(internalCommodity.volumetricWeight);
           });
         }
@@ -141,33 +143,30 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
 
       let PESO1 = (totalWeight / 2.205).toFixed(2);
       let PESO2 = (totalWeight);
-      // console.log("BANDERA3=", PESO1);
-      // console.log("BANDERA4=", PESO2);
 
       const commodityRow = [
         {
-
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 0], //Cuadro largo
+          margin: [0, 0, 0, 200],
         },
         {},
         {
           text: thirdRowText,
         },
         {
-          text: fourthRowText + "",
+          text: fourthRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 0],
+          margin: [0, 0, 0, 40],
         },
         {},
         {
           text: sixthRowText,
-          margin: [0, 0, 0, 0],
+          margin: [0, 0, 0, 40],
         },
         {
           text: seventhRowText,
-          margin: [0, 0, 0, 0],
+          margin: [0, 0, 0, 40],
         },
       ];
       commodityRows.push(commodityRow);
@@ -177,7 +176,6 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
     if (data.charges) {
       data.charges.forEach((charge) => {
         if (charge.show && charge.type !== "expense") {
-
           const chargeRow = [
             {
               text: charge.type, // Display the charge type
@@ -196,26 +194,32 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
           chargeRows.push(chargeRow);
         }
       });
-
     }
 
-    fetch(logo)
+    fetch(logotextcolor)
       .then((response) => response.blob())
       .then((imageBlob) => {
-
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
 
-          const pdf = {
-            content: [
+          for (let index = 0; index < (cantidadPaquete+1); index++) {
+            var numPages = index; 
+            
+          }
+
+          // const numPages = 5; // Número de veces que quieres repetir la página
+
+          const generatePageContent = (peso, description, numPage, location, barcodeImage) => {
+            return [
+
               {
                 columns: [
                   {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [400, 200],
+                        fit: [400, 400],
                         colSpan: 2,
                         alignment: "right",
                         margin: [0, -20, 0, 20],
@@ -239,6 +243,7 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                   {},
                 ],
               },
+              
               {
                 table: {
                   widths: [`0%`, `35%`, `35%`, '35%'],
@@ -279,9 +284,9 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                         // lineWidth: 19,
                       },
                       {},
-
                       {},
                     ],
+                    
                     [
                       {
                         text: `CONSIGNEE`,
@@ -290,27 +295,43 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                         colSpan: 1,
                         rowSpan: 2,
                         fontSize: 15,
-                        border: ['', 'top', 'top', 'top']
+                        border: ['', 'top', 'top', 'top'],
                       },
-
                       {
                         text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``} \n`,
-                          `${data.consigneeObj?.data?.obj?.street_and_number || ``} \n`,
-                          `${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
-                          `${data.consigneeObj?.phone ? `Tel: ${data.consigneeObj.phone}, ` : ``}
-                           ${data.consigneeObj?.fax ? `Fax: ${data.consigneeObj.fax}` : ``}\n`,
+                          `${data.shipperObj?.data?.obj?.name || ``
+                          } \n \n`,
+                          `${data.shipperObj?.data?.obj
+                            ?.street_and_number || ``
+                          } \n`,
+                          `${data.shipperObj?.data?.obj?.city || ``
+                          }, ${data.shipperObj?.data?.obj?.state || ``
+                          } ${data.shipperObj?.data?.obj?.zip_code || ``
+                          } \n`,
+                          `${data.shipperObj?.data?.obj?.country || ``
+                          }`,
+                          `${data.shipperObj?.phone
+                            ? `Tel: ${data.shipperObj.phone}, `
+                            : ``
+                          }${data.shipperObj?.fax
+                            ? `Fax: ${data.shipperObj.fax}`
+                            : ``
+                          }\n`,
                         ],
-                        colSpan: 3,
                         fontSize: 15,
-                        border: ['top', 'top', '', 'top']
+                        colSpan: 3,
+                        // rowSpan: 2,
+                        border: ['top', 'top', '', 'top'],
+                        // lineWidth: 19,
                       },
-                      {
-                      },
-
+                      {},
+                      {},
                     ],
+
                     [
                       {
+                        text: '',
+                        border: ['', '', '', ''],
                       },
 
                       {
@@ -330,10 +351,11 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                         bold: true,
                         border: ['top', 'top', '', 'top'],
                         alignment: 'center',
-                        margin: [0, margPais, 0, 0],
+                        margin: [0, 10, 0, 0],
                       },
 
                     ],
+// ------------------------------------------------------------------}
                     [
                       {
                         text: `WATBILL NUMBER`,
@@ -346,17 +368,19 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                       {},
                       {}
                     ],
+
                     [
                       {
                         image: barcodeImage,
-                        // fit: [200, 200],
+                        // fit: [550, 700],
                         alignment: `center`,
                         colSpan: 4,
                         border: ['', '', '', 'top']
                       },
                       {},
                       {}
-                    ],
+                    ],  
+
                     [
                       {
                         text: `DESCRIPTION`,
@@ -371,10 +395,12 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                       {},
                       {}
                     ],
+
                     [
                       {
-                        text: `${descrip}`,
-                        margin: [20, 0, 0, 70],
+                        // text: `${descrip}`, MIRAR
+                        text: description,
+                        margin: [20, 0, 0, 50],
                         colSpan: 4,
                         alignment: "left",
                         border: ['', '', '', ''],
@@ -407,6 +433,7 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                       },
                       // {},
                     ],
+
                     [
                       {
                         text: [`HERE TRACKING`],
@@ -419,7 +446,7 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                       },
                       {},
                       {
-                        text: `HERE LOCATION`,
+                        text: location,
                         bold: true,
                         margin: [190, 0, 0, 0],
                         alignment: `left`,
@@ -428,103 +455,125 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
                         border: ['', '', '', 'top'],
                       },
                     ],
-                  ],
-                },
-              },
-              {
-                table: {
-                  widths: [`33%`, `34%`, `33%`],
-                  body: [
                     [
+                      {
+                        text: '',
+                        border: ['', '', '', ''],
+                      },
                       {
                         text: `COLLECT COD`,
                         bold: true,
-                        margin: [25, 25, 0, -25],
-                        border: ['', '', 'top', ''],
+                        margin: [0, 40, 0, 0],
+                        alignment: `center`,
+                        colSpan: 1,
+                        rowSpan: 2,
                         fontSize: 15,
-
+                        border: ['', '', '', ''],
                       },
                       {
-                        text: `TOTAL WEIGHT`,
+                        text: 'TOTAL WEIGHT',
                         bold: true,
-                        border: ['top', '', 'top', ''],
-                        fontSize: 15,
+                        margin: [0, 0, 0, 0],
                         alignment: `center`,
-
+                        colSpan: 1,
+                        fontSize: 15,
+                        border: ['top', 'top', 'top', ''],
                       },
                       {
-                        text: `PIECES`,
+                        text: 'PIECES',
                         bold: true,
-                        border: ['top', '', '', ''],
-                        fontSize: 15,
+                        margin: [0, 0, 0, 0],
                         alignment: `center`,
+                        colSpan: 1,
+                        fontSize: 15,
+                        border: ['top', 'top', '', ''],
                       },
                     ],
+
                     [
                       {
-                        text: ``,
-                        margin: [0, 0, 0, 30],
-                        border: ['', '', 'top', '']
-
+                        text: '',
+                        border: ['', '', '', ''],
                       },
                       {
-                        // text: `PESO` + '  ' + 'LB',
-                        // text: `${(pESO  / 2.205).toFixed(2)} LB`,
-                        text : pESO,
+                        text: '',
+                        border: ['', '', 'top', ''],
+                      },
+                      {
+                        text : peso + ' LB',
                         bold: true,
                         alignment: `center`,
                         fontSize: 25,
-                        margin: [0, 0, 0, 20],
+                        margin: [0, 10, 0, 25],
                         border: ['top', '', 'top', '']
-
                       },
                       {
-                        text: numCon + '/' + totalPieces,
+                        text: numPage + '/' + numCon,
+                        // text : "#Numero",
                         margin: [0, 0, 0, 20],
                         bold: true,
                         alignment: `center`,
                         fontSize: 40,
                         border: ['top', '', '', '']
                       },
-
                     ],
+                       
+                    
+                    // -------------------------------------------------------------------
                   ],
                 },
               },
-            ],
-            styles: {
-              header: {
-                fontSize: 18,
-                bold: true,
-                margin: [0, 0, 0, 0],
-              },
-              subheader: {
-                fontSize: 16,
-                bold: true,
-                margin: [0, 0, 0, 0],
-              },
-              tableExample: {
-                margin: [0, 0, 0, 0],
-                alignment: `right`,
-                width: `150%`,
-              },
-              tableExampleLeft: {
-                margin: [0, 0, 0, 5],
-                alignment: `left`,
-                width: `100%`,
-              },
-              tableHeader: {
-                bold: true,
-                fontSize: 13,
-                color: `black`,
-              },
-            },
-            defaultStyle: {
-              fontSize: 10, // Set the desired font size here (e.g., 10)
-            },
+// ----------------------------------------------------------------------------------------
+            ];
+          };
+        
+          const pdfContent = [];
+
+          
+          var contador = 0 ;
+          data.commodities?.forEach((commodity) => {
+            //------------------------------------------------
+            contador++;
+            console.log("contador = ", contador);
+            //------------------------------------------------
+            let canvas = null;
+            let barcodeImage = null;
+            canvas = document.createElement("canvas");
+            var barra = data.commodities[0].id;
+            console.log("barra = ",barra)
+            const barcodeOptions = {
+              bcid: "code128", // Barcode type (e.g., code128),
+              text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + contador,
+              height: 20, // Height of the barcode
+              includetext: true, // Include human-readable text below the barcode
+              textxalign: "center",
+              bold: true,
+            };
+            barcodeOptions.text = barcodeOptions.text.toUpperCase();
+            try {
+              canvas = bwipjs.toCanvas(canvas, barcodeOptions);
+              barcodeImage = canvas.toDataURL();
+            } catch (error) {
+              reject(error);
+            }
+
+            const currentPageContent = generatePageContent(commodity.weight, commodity.description, contador, commodity.locationCode, barcodeImage);
+            console.log("currentPageContent = ", currentPageContent);
+
+            pdfContent.push(...currentPageContent);
+        
+              if (pdfContent.length / 3 < numPages) {
+                pdfContent.push({ text: "", pageBreak: "after" });
+            }
+          });
+        
+          const pdfDefinition = {
+            content: pdfContent,
+            
+            // Otros ajustes del PDF...
           };
 
-          const pdfGenerator = pdfMake.createPdf(pdf);
+          const pdfGenerator = pdfMake.createPdf(pdfDefinition);
           pdfGenerator.getBlob((blob) => {
             const pdfUrl = URL.createObjectURL(blob);
             resolve(pdfUrl);
@@ -538,4 +587,4 @@ const generateLabelPDF = (data, numCon, descrip, pESO) => {
   });
 };
 
-export default generateLabelPDF;
+export default GenerateReceiptPDF;
