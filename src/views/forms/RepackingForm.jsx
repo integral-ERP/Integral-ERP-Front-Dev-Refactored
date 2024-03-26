@@ -5,7 +5,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
   const [internalCommodities, setinternalCommodities] = useState([]);
   const [id, setId] = useState(0);
-  
+
   const formFormat = {
     package_type_id: "",
     package_type_description: "",
@@ -91,7 +91,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
   }; */
 
   const handleRepack = () => {
-    //added validation of the form 
+    //added validation of the form
     if (
       !formData.package_type_description ||
       !formData.length ||
@@ -122,11 +122,10 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     const filteredCommodities = commodities.filter((commodity) => {
       return !selectedCommodityIds.includes(String(commodity.id));
     });
-    
 
-   // Encontrar el máximo ID de repack existente en commodities repacked
+    // Encontrar el máximo ID de repack existente en commodities repacked
     const maxRepackID = commodities.reduce((max, item) => {
-      if (item.id && typeof item.id === 'string') {
+      if (item.id && typeof item.id === "string") {
         const match = item.id.match(/^repacked-(\d+)$/);
         if (match) {
           const repackNumber = parseInt(match[1], 10);
@@ -136,10 +135,9 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       return max;
     }, 0);
 
-   
     // Calcular el nuevo ID sumando 1 al máximo ID encontrado
     const newCommodityID = `repacked-${maxRepackID + 1}`;
-        
+
     const newCommodity = {
       ...formData,
       id: newCommodityID,
@@ -161,14 +159,22 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       ...prevRepackedItems,
       { ...newCommodity },
     ]);
-
   };
 
   return (
     <div className="income-charge-form">
       <h3>Repacking Form</h3>
       <div>
-        <label htmlFor="containerType">Container Type:</label>
+        <label
+          htmlFor="containerType"
+          style={{
+            fontSize: "16px",
+            display: "flex",
+            fontWeight: "bold",
+          }}
+        >
+          Container Type:
+        </label>{" "}
         <select
           name="containerType"
           id="containerType"
@@ -284,7 +290,9 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         />
       </div>
       <div className="useinter">
-        <p style={{ margin: "1rem", fontSize: "15px" }}>Select items to be repacked</p>
+        <p style={{ margin: "1rem", fontSize: "15px" }}>
+          Select items to be repacked
+        </p>
         <table
           id="tableware"
           style={{ width: "60%", border: "2px solid black" }}
@@ -340,7 +348,12 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         ))}
       </div>
       <div
-        style={{ display: "flex", justifyContent: "center", margin: "1rem" ,gap: "4rem", }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: "1rem",
+          gap: "4rem",
+        }}
       >
         {/* ----------------------------------------------------------------------------------------------------------------------------------------- */}
         <div>
