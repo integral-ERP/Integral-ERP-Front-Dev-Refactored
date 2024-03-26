@@ -110,6 +110,8 @@ const CommodityCreationForm = ({
                 internalCommodities: prevCommodity.internalCommodities,
                 chargedWeight: prevCommodity.chargedWeight,
                 containsCommodities: true,
+                locationId: formData.locationId,
+                locationCode: formData.locationCode,
               };
             }
           } else {
@@ -313,7 +315,7 @@ const CommodityCreationForm = ({
                     ),
                 });
               }}
-              disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
+              //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
               style={{ fontSize: '14px', color: 'gray' }}
             >
               <option value="">Select an option</option>

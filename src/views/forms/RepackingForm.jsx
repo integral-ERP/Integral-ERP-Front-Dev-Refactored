@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PackageTypeService from "../../services/PackageTypeService";
-
+import LocationService from "../../services/LocationService";
 const RepackingForm = ({ commodities, setCommodities }) => {
   const [packTypes, setpackTypes] = useState([]);
   const [internalCommodities, setinternalCommodities] = useState([]);
@@ -17,11 +17,14 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     chargedWeight: "",
     description: "",
     useInternalWeight: false,
+    locationId: "",
+    locationCode: "",
   };
   const [formData, setformData] = useState(formFormat);
   //added unrepack
   const [repackedItems, setRepackedItems] = useState([]);
   const [selectedRepackId, setSelectedRepackId] = useState(null);
+  const [locations, setlocations] = useState([]);
 
   useEffect(() => {
     PackageTypeService.getPackageTypes()
@@ -29,6 +32,12 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         setpackTypes(response.data.results);
       })
       .catch((error) => {});
+  }, []);
+
+  useEffect(() => {
+    LocationService.getLocations().then((response) => {
+      setlocations(response.data.results);
+    });
   }, []);
 
   useEffect(() => {
@@ -98,7 +107,8 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       !formData.height ||
       !formData.width ||
       !formData.weight ||
-      !formData.description
+      !formData.description ||
+      !formData.locationId
     ) {
       // Show an alert or handle the validation error as needed
       alert("Please fill in all required fields in the form repack.");
@@ -282,6 +292,44 @@ const RepackingForm = ({ commodities, setCommodities }) => {
           }
           style={{ width: "100%" }}
         />
+      <div className="form-column-create">
+          <label htmlFor="location" className="text-comm">
+            Location:
+          </label>
+          <select
+            name="location"
+            id="location"
+            value={formData.locationId}
+            onChange={(e) => {
+              setformData({
+                ...formData,
+                locationId: e.target.value,
+                locationCode:
+                  e.target.options[e.target.selectedIndex].getAttribute(
+                    "data-key"
+                  ),
+              });
+            }}
+            style={{ fontSize: '14px', color: 'gray' }}
+          >
+            <option value="">Select an option</option>
+            {locations.map((location) => {
+              return (
+                <option
+                  key={location.id}
+                  value={location.id}
+                  data-key={location.code}
+                >
+                  {location.code}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+
+
+
+
       </div>
       <div className="useinter">
         <p style={{ margin: "1rem", fontSize: "15px" }}>Select items to be repacked</p>
