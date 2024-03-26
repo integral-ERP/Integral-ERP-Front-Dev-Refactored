@@ -347,7 +347,7 @@ const Table = ({
       const newData = (await contextService.search(searchQuery)).data;
       setFilteredData(newData.results);
     } else {
-      return data; // Return the original data if searchQuery is empty
+      return data; 
     }
   };
 
@@ -622,30 +622,12 @@ const Table = ({
         return (
           <div className="generic-table">
             <table className="table-hover ">
-              <thead className="text-head">
+              {/* <thead className="text-head"> */}
                 <tr>
-                  {/* {columnOrder.map(
-                    (columnName, columnIndex) =>
-                      visibleColumns[columnName] && (
-                        <th
-                          className="th-separate"
-                          key={columnName}
-                          style={{
-                            width: `${100 / Object.keys(visibleColumns).length}%`, // Corregido aquí
-                          }}
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, columnIndex)}
-                          onDragOver={(e) => handleDragOver(e, columnIndex)}
-                          onDrop={(e) => handleDrop(e, columnIndex)}
-                        >
-                          {columnName}
-                        </th>
-                      )
-                  )} */}
-
+                  
                   {handleMapWithThead()}
                 </tr>
-              </thead>
+              {/* </thead> */}
               <tbody>
                 {filteredData.map((row) => (
                   <tr
@@ -673,7 +655,7 @@ const Table = ({
                           className="generic-table__td"
                           style={{
                             // minWidth: columnWidthsCalculated[columnName],
-                            
+
                             width: `${100 / visibleColumnOrder.length}%`, // Calcula el ancho dinámicamentewidth: {`${columnOrder.length / 100}%`},
                             whiteSpace: "nowrap",
                           }}
@@ -900,13 +882,20 @@ const Table = ({
                           <div className="col-2 d-flex">
                             <button
                               className="generic-button-eye"
-                              onClick={() => setShowColumnMenu(!showColumnMenu)}
+                              onClick={() => {
+                                setShowColumnMenu(!showColumnMenu); // Abre o cierra el modal de columnas
+                                setShowFilterMenu(false); // Cierra el modal de filtro si está abierto
+                              }}
                             >
                               <i className="fas fa-eye menu-icon fa-3x ne"></i>
                             </button>
+
                             <button
                               type="button"
-                              onClick={() => setShowFilterMenu(!showFilterMenu)}
+                              onClick={() => {
+                                setShowFilterMenu(!showFilterMenu);
+                                setShowColumnMenu(false); 
+                              }}
                               className="generic-button-filter"
                             >
                               <i className="fas fa-filter menu-icon fa-3x ne"></i>
@@ -914,29 +903,31 @@ const Table = ({
                           </div>
 
                           {/* ------------------------ */}
-                          {
-                            showPage !== 'initial' && importLabel && ( 
-                              
-                               <button className="generic-button ne" style={{ display: 'flex', width: '70px', marginLeft: '3vw'}}>
-                                  <i className="fa fa-print menu-icon fa-3x"></i>
-                                  <div className="select_print">
-                                    <select
-                                      onChange={(e) =>
-                                        e.target.value === "receipt"
-                                          ? generatePDFReceipt()
-                                          : generatePDFLabel()
-                                      }
-                                    >
-                                      <option value=""> </option>
-                                      <option value="receipt">PDF Receipt</option>
-                                      <option value="label">PDF Label</option>
-                                    </select>
-                                  </div>
-                                </button>
-                           
-
-                            )
-                          }
+                          {showPage !== "initial" && importLabel && (
+                            <button
+                              className="generic-button ne"
+                              style={{
+                                display: "flex",
+                                width: "70px",
+                                marginLeft: "3vw",
+                              }}
+                            >
+                              <i className="fa fa-print menu-icon fa-3x"></i>
+                              <div className="select_print">
+                                <select
+                                  onChange={(e) =>
+                                    e.target.value === "receipt"
+                                      ? generatePDFReceipt()
+                                      : generatePDFLabel()
+                                  }
+                                >
+                                  <option value=""> </option>
+                                  <option value="receipt">PDF Receipt</option>
+                                  <option value="label">PDF Label</option>
+                                </select>
+                              </div>
+                            </button>
+                          )}
 
                           {/* ------------------------ */}
 
@@ -1151,9 +1142,9 @@ const Table = ({
                                   type="button"
                                   className="btn btn-secondary"
                                   data-bs-dismiss="modal"
-                                  onClick={() =>
-                                    setShowColumnMenu(!showColumnMenu)
-                                  }
+                                  onClick={() => {
+                                    setShowColumnMenu(false); // Cierra el modal de columnas
+                                  }}
                                 >
                                   Close
                                 </button>
@@ -1162,46 +1153,48 @@ const Table = ({
                           </div>
                         </div>
                       )}
-                       <div className="col-6 d-flex justify-content-end" id="input-container--second">
-                    <div className="button-container">
-                      <div className="export-box">
-                        <div className="row mx-0">
-                          <div className="col-10">
-                            <div
-                              style={{ display: "none" }}
-                              className="export-dropdown"
-                            >
-                              <label className="laver-export">
-                                <span className="text-export">
-                                  Export Format:
-                                </span>
-                                <select
-                                  value={selectedFormat}
-                                  onChange={handleFormatChange}
+
+                      <div
+                        className="col-6 d-flex justify-content-end"
+                        id="input-container--second"
+                      >
+                        <div className="button-container">
+                          <div className="export-box">
+                            <div className="row mx-0">
+                              <div className="col-10">
+                                <div
+                                  style={{ display: "none" }}
+                                  className="export-dropdown"
                                 >
-                                  <option value="">Select</option>
-                                  <option value="json">JSON</option>
-                                  <option value="csv">CSV</option>
-                                  <option value="pdf">PDF</option>
-                                  <option value="xml">XML</option>
-                                </select>
-                              </label>
-                              <button
-                                className="generic-button-export generic-button"
-                                onClick={handleExport}
-                              >
-                                <i className="fas fa-file-export menu-icon fa-3x"></i>
-                              </button>
+                                  <label className="laver-export">
+                                    <span className="text-export">
+                                      Export Format:
+                                    </span>
+                                    <select
+                                      value={selectedFormat}
+                                      onChange={handleFormatChange}
+                                    >
+                                      <option value="">Select</option>
+                                      <option value="json">JSON</option>
+                                      <option value="csv">CSV</option>
+                                      <option value="pdf">PDF</option>
+                                      <option value="xml">XML</option>
+                                    </select>
+                                  </label>
+                                  <button
+                                    className="generic-button-export generic-button"
+                                    onClick={handleExport}
+                                  >
+                                    <i className="fas fa-file-export menu-icon fa-3x"></i>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          
                         </div>
                       </div>
                     </div>
                   </div>
-                    </div>
-                  </div>
-                 
                 </div>
                 // </div>
               )}
