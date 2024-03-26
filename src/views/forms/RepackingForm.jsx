@@ -299,7 +299,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
           style={{ width: "100%" }}
         />
       <div className="form-column-create" style={{ width: "100%" }}> 
-          <label htmlFor="location" className="text-comm" style={{marginLeft: "-5px"}}> 
+          <label htmlFor="location" className="text-comm" > 
             Location:
           </label>
           <select
