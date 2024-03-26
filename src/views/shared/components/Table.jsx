@@ -20,7 +20,6 @@ import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
-import { PDFDocument } from "pdf-lib";
 
 const Table = ({
   data,
@@ -371,9 +370,9 @@ const Table = ({
   //-------------------------------------------------------------------------------------------------------
   const generatePDFReceipt = () => {
     console.log("SelectR = ", selectedRow.commodities.length);
-    const numCon = selectedRow.commodities.length;
+    // const numCon = selectedRow.commodities.length;
     for (let i = 0; i < 1; i++) {
-      GenerateReceiptPdf(selectedRow, i + 1, numCon) // Incrementamos i en 1 para comenzar desde
+      GenerateReceiptPdf(selectedRow, i ) // Incrementamos i en 1 para comenzar desde
         .then((pdfUrl) => {
           window.open(pdfUrl);
         })
@@ -383,15 +382,21 @@ const Table = ({
     }
   };
   //-------------------------------------------------------------------------------------------------------
-  const generatePDFLabel = () => {
-    const Comodities = selectedRow.commodities;
-    const numCon = selectedRow.commodities.length;
+  
 
-    for (let i = 0; i < Comodities; i++) {
-      const descrip = selectedRow.commodities[i].description;
-      const pESO = selectedRow.commodities[i].weight;
-      generateLabelPDF(selectedRow, i + 1, descrip, pESO); // Incrementamos i en 1 para comenzar desde
-    }
+  const generatePDFLabel = () => {
+    const Comodities = selectedRow;
+    const numCom = selectedRow.commodities.length;
+    console.log("numCom", numCom);
+
+    generateLabelPDF(Comodities, numCom)
+    .then((pdfUrl) => {
+      window.open(pdfUrl, "_blank");
+    })
+    .catch((error) => {
+      console.error("Error generating PDF:", error);
+    });
+
   };
   //-------------------------------------------------------------------------------------------------------
 
