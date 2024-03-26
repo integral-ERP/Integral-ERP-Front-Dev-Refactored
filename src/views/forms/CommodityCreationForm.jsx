@@ -297,9 +297,9 @@ const CommodityCreationForm = ({
             <label
               htmlFor="location"
               className="text-comm"
-              style={{ marginLeft: "-5px" }}
+              style={{ marginLeft: "-8px" }}
             >
-              Location:
+              Locationn:
             </label>
             <select
               name="location"
@@ -316,7 +316,7 @@ const CommodityCreationForm = ({
                 });
               }}
               //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-              style={{ fontSize: '14px', color: 'gray' }}
+              style={{ fontSize: '14px', color: 'gray', padding: "9px" }}
             >
               <option value="">Select an option</option>
               {locations.map((location) => {

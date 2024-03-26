@@ -198,6 +198,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
                 e.target.options[e.target.selectedIndex].text,
             });
           }}
+          style={{ fontSize: '14px', color: 'gray', padding: "3px" }}
         >
           <option value="">Select an option</option>
           {packTypes.map((type) => {
@@ -316,7 +317,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
                   ),
               });
             }}
-            style={{ fontSize: '14px', color: 'gray' }}
+            style={{ fontSize: '14px', color: 'gray',padding: "3px"  }}
           >
             <option value="">Select an option</option>
             {locations.map((location) => {
