@@ -915,6 +915,7 @@ const Table = ({
                               <i className="fa fa-print menu-icon fa-3x"></i>
                               <div className="select_print">
                                 <select
+                                className="label_pdf_select"
                                   onChange={(e) =>
                                     e.target.value === "receipt"
                                       ? generatePDFReceipt()
@@ -922,8 +923,8 @@ const Table = ({
                                   }
                                 >
                                   <option value=""> </option>
-                                  <option value="receipt">PDF Receipt</option>
-                                  <option value="label">PDF Label</option>
+                                  <option value="receipt" style={{ fontSize: '15px', marginRight: '10px' }}>PDF Receipt</option>
+                                  <option value="label" style={{ fontSize: '15px' }}>PDF Label</option>
                                 </select>
                               </div>
                             </button>
