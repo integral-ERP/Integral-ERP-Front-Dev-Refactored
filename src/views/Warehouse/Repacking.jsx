@@ -230,6 +230,9 @@ const Repacking = () => {
                <p className="item-info">
                  Chargeable Weight: {selectedCommodity.chargedWeight}
                </p>
+               <p className="item-info">
+                 Location: {selectedCommodity.locationCode}
+               </p>
                {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
              </div>
              {/*  fix the repacking show internalCommodities for edition */}
@@ -246,6 +249,9 @@ const Repacking = () => {
                    </p>
                    <p className="item-info">
                      Chargeable Weight: {com.chargedWeight}
+                   </p>
+                   <p className="item-info">
+                     Location: {com.locationCode}
                    </p>
                    {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                  </div>
