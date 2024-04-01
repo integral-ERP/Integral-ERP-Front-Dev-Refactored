@@ -316,7 +316,7 @@ const CommodityCreationForm = ({
                 });
               }}
               //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-              style={{ fontSize: '14px', color: 'gray', padding: "9px" }}
+              style={{ fontSize: '14px', color: 'gray', padding: "4px" }}
             >
               <option value="">Select an option</option>
               {locations.map((location) => {

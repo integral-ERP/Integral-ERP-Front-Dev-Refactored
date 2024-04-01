@@ -317,7 +317,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
                   ),
               });
             }}
-            style={{ fontSize: '14px', color: 'gray',padding: "3px"  }}
+            style={{ fontSize: '14px', color: 'gray',padding: "4px"  }}
           >
             <option value="">Select an option</option>
             {locations.map((location) => {
