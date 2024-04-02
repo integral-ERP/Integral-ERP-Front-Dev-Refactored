@@ -143,7 +143,7 @@
 
   .form-input{
     width: 100%;
-    font-size: 15px;
+    font-size: 14px;
     background: white;
     color: #818080;
     height: 3rem;
@@ -172,7 +172,7 @@
     // width: 70%;
     white-space: nowrap;
     text-align: left;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 0rem;
     &__change{
@@ -185,8 +185,8 @@
   .form-textarea{
     width: 100%;
     background: white;
-    color: black;
-    font-size: initial;
+    color: #818080;
+    font-size: 14px;
     border-color: #bbb0b0;
   }
 
