@@ -35,7 +35,6 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
-    
   };
 
   return (
@@ -44,10 +43,8 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <p className="text-date">Entry Date and Time</p>
-
+              <p className="text-date">Entry Date and Time</p>
               <DateTimePicker
-                // label="Entry Date and Time"
                 className="font-right"
                 value={dayjs(formData.dateTime)}
                 onChange={(e) =>
@@ -56,6 +53,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
                     dateTime: dayjs(e).format("YYYY-MM-DDTHH:mm:ss"),
                   })
                 }
+
               />
             </LocalizationProvider>
           </div>
@@ -65,7 +63,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           <div className="form-column-create">
             <label className="text-comm">Event Type:</label>
 
-            <select name="eventType" id="eventType" style={{ height: '3rem' }}>
+            <select name="eventType" id="eventType" style={{ height: "4rem" }}>
               <option value="arrivedDestination">Arrived at Destination</option>
               <option value="arrivedWarehouse">Arrived at Warehouse</option>
               <option value="arrivedWarehouseMIA">
@@ -75,10 +73,16 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               <option value="cargoScannedIn">Cargo scanned in</option>
               <option value="cargoScannedOut">Cargo scanned out</option>
               <option value="cargoStatusUpdate">Cargo status update</option>
-              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
+              <option value="customsEntry">
+                Customs Entry / Inicio Aduana
+              </option>
               <option value="customsOnHold">Customs On-Hold</option>
-              <option value="customsRelease">Customs Release / Liberación</option>
-              <option value="deliveredToConsignee">Delivered to Consignee</option>
+              <option value="customsRelease">
+                Customs Release / Liberación
+              </option>
+              <option value="deliveredToConsignee">
+                Delivered to Consignee
+              </option>
               <option value="entryStatusUpdate">Entry Status Update</option>
               <option value="externalTrackingUpdate">
                 External Tracking Update
@@ -105,14 +109,16 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             className="form-input"
             placeholder="Details..."
             value={formData.details}
-            onChange={(e) => setformData({ ...formData, details: e.target.value })}
-            style={{ width: "100%" }}
+            onChange={(e) =>
+              setformData({ ...formData, details: e.target.value })
+            }
+            style={{ width: "100%", height: "4rem" }}
           />
         </div>
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Location:</label>
-            <select name="eventType" id="eventType" style={{ height: '3rem' }}>
+            <select name="eventType" id="eventType" style={{ height: "4rem" }}>
               <option value="arrivedDestination">Arrived at Destination</option>
               <option value="arrivedWarehouse">Arrived at Warehouse</option>
               <option value="arrivedWarehouseMIA">
@@ -122,10 +128,16 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               <option value="cargoScannedIn">Cargo scanned in</option>
               <option value="cargoScannedOut">Cargo scanned out</option>
               <option value="cargoStatusUpdate">Cargo status update</option>
-              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
+              <option value="customsEntry">
+                Customs Entry / Inicio Aduana
+              </option>
               <option value="customsOnHold">Customs On-Hold</option>
-              <option value="customsRelease">Customs Release / Liberación</option>
-              <option value="deliveredToConsignee">Delivered to Consignee</option>
+              <option value="customsRelease">
+                Customs Release / Liberación
+              </option>
+              <option value="deliveredToConsignee">
+                Delivered to Consignee
+              </option>
               <option value="entryStatusUpdate">Entry Status Update</option>
               <option value="externalTrackingUpdate">
                 External Tracking Update
@@ -147,29 +159,32 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             <Input
               inputName="includeTracking"
               changeHandler={(e) =>
-                setformData({ ...formData, includeInTracking: e.target.checked })
+                setformData({
+                  ...formData,
+                  includeInTracking: e.target.checked,
+                })
               }
               label="Include in Tracking"
               name="includeTracking"
               type="checkbox"
             ></Input>
-                    <div className="table-hover charge-buttons">
-          <button
-            className="button-save pick "
-            style={{ marginRight: "10px" }}
-            type="button"
-            onClick={addEvent}
-          >
-            <i className="fas fa-check-circle"></i>
-          </button>
-          <button
-            className="button-cancel pick "
-            type="button"
-            onClick={() => onCancel(false)}
-          >
-            <i className="fas fa-times-circle"></i>
-          </button>
-        </div>
+            <div className="table-hover charge-buttons">
+              <button
+                className="button-save pick "
+                style={{ marginRight: "10px" }}
+                type="button"
+                onClick={addEvent}
+              >
+                <i className="fas fa-check-circle"></i>
+              </button>
+              <button
+                className="button-cancel pick "
+                type="button"
+                onClick={() => onCancel(false)}
+              >
+                <i className="fas fa-times-circle"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

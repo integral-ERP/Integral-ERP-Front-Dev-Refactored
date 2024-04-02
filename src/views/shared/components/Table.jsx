@@ -20,7 +20,6 @@ import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
-
 const Table = ({
   data,
   columns,
@@ -346,7 +345,7 @@ const Table = ({
       const newData = (await contextService.search(searchQuery)).data;
       setFilteredData(newData.results);
     } else {
-      return data; 
+      return data;
     }
   };
 
@@ -372,7 +371,7 @@ const Table = ({
     console.log("SelectR = ", selectedRow.commodities.length);
     // const numCon = selectedRow.commodities.length;
     for (let i = 0; i < 1; i++) {
-      GenerateReceiptPdf(selectedRow, i ) // Incrementamos i en 1 para comenzar desde
+      GenerateReceiptPdf(selectedRow, i) // Incrementamos i en 1 para comenzar desde
         .then((pdfUrl) => {
           window.open(pdfUrl);
         })
@@ -382,7 +381,6 @@ const Table = ({
     }
   };
   //-------------------------------------------------------------------------------------------------------
-  
 
   const generatePDFLabel = () => {
     const Comodities = selectedRow;
@@ -390,13 +388,12 @@ const Table = ({
     console.log("numCom", numCom);
 
     generateLabelPDF(Comodities, numCom)
-    .then((pdfUrl) => {
-      window.open(pdfUrl, "_blank");
-    })
-    .catch((error) => {
-      console.error("Error generating PDF:", error);
-    });
-
+      .then((pdfUrl) => {
+        window.open(pdfUrl, "_blank");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
   };
   //-------------------------------------------------------------------------------------------------------
 
@@ -627,12 +624,9 @@ const Table = ({
         return (
           <div className="generic-table">
             <table className="table-hover ">
-              {/* <thead className="text-head"> */}
-                <tr>
-                  
-                  {handleMapWithThead()}
-                </tr>
-              {/* </thead> */}
+              <thead className="text-head">
+                <tr>{handleMapWithThead()}</tr>
+              </thead>
               <tbody>
                 {filteredData.map((row) => (
                   <tr
@@ -681,19 +675,41 @@ const Table = ({
                               <button type="button" onClick={generatePDFLabel} className="custom-button">
                                 <i className="fas fa-file-pdf"></i>
                               </button> */}
-                              <div className="hideLab">
+                             <button
+                              className="generic-button ne"
+                              style={{
+                                display: "flex",
+                                width: "70px",
+                                marginLeft: "3vw",
+                              }}
+                            >
+                              <i className="fa fa-print menu-icon fa-3x"></i>
+                              <div className="select_print">
                                 <select
+                                  className="label_pdf_select"
+                                  style={{ border: "0px solid white", height: "3rem"}}
                                   onChange={(e) =>
                                     e.target.value === "receipt"
                                       ? generatePDFReceipt()
                                       : generatePDFLabel()
                                   }
                                 >
-                                  <option value="">Select format </option>
-                                  <option value="receipt">PDF Receipt</option>
-                                  <option value="label">PDF Label</option>
+                                  {/* <option value=""> </option> */}
+                                  <option
+                                    value="receipt"
+                                    style={{ fontSize: "14px", color: "#818080", fontFamily: "poppins"}}
+                                  >
+                                    PDF Receipt
+                                  </option>
+                                  <option
+                                    value="label"
+                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                  >
+                                    PDF Label
+                                  </option>
                                 </select>
                               </div>
+                            </button>
                             </>
                           ) : columnName === "Invoice PDF" ? (
                             <button
@@ -835,7 +851,7 @@ const Table = ({
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid" style={{ padding: "0" }}>
         {showOptions && (
           <div className="layout-fluid">
             <div className="d-flex justify-content-start align-items-center">
@@ -899,7 +915,7 @@ const Table = ({
                               type="button"
                               onClick={() => {
                                 setShowFilterMenu(!showFilterMenu);
-                                setShowColumnMenu(false); 
+                                setShowColumnMenu(false);
                               }}
                               className="generic-button-filter"
                             >
@@ -920,16 +936,27 @@ const Table = ({
                               <i className="fa fa-print menu-icon fa-3x"></i>
                               <div className="select_print">
                                 <select
-                                className="label_pdf_select"
+                                  className="label_pdf_select"
+                                  style={{ border: "0px solid white" }}
                                   onChange={(e) =>
                                     e.target.value === "receipt"
                                       ? generatePDFReceipt()
                                       : generatePDFLabel()
                                   }
                                 >
-                                  <option value=""> </option>
-                                  <option value="receipt" style={{ fontSize: '15px', marginRight: '10px' }}>PDF Receipt</option>
-                                  <option value="label" style={{ fontSize: '15px' }}>PDF Label</option>
+                                  {/* <option value=""> </option> */}
+                                  <option
+                                    value="receipt"
+                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                  >
+                                    PDF Receipt
+                                  </option>
+                                  <option
+                                    value="label"
+                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                  >
+                                    PDF Label
+                                  </option>
                                 </select>
                               </div>
                             </button>

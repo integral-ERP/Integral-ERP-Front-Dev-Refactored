@@ -1590,7 +1590,8 @@ const ReceiptCreationForm = ({
                 </button> */}
 
       <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton"></label>
+      <label className="button-charge" for="toggleBoton">
+      </label>
 
       <div className="row w-100" id="miDiv">
         <div className="col-6">
@@ -1751,7 +1752,16 @@ const ReceiptCreationForm = ({
         </div>
         <div className="row">
           <div className="col-12">
-            <input type="file" multiple onChange={handleFileUpload} />
+            <label htmlFor="fileInput" className="custom-file-input">
+              <span className="button-text">Seleccionar archivos</span>
+              <input
+                type="file"
+                id="fileInput"
+                multiple
+                onChange={handleFileUpload}
+                style={{ display: "none" }}
+              />
+            </label>
             <ul>
               {attachments.map((attachment) => (
                 <li key={attachment.name}>{attachment.name}</li>
@@ -1787,10 +1797,11 @@ const ReceiptCreationForm = ({
               type="button"
               onClick={addNotes}
               style={{
-                backgroundColor: "#153A61",
+                backgroundColor: "#006BAD",
                 color: "white",
-                fontSize: "16px",
+                fontSize: "15px",
                 width: "90%",
+                borderRadius: "5px",
               }}
             >
               Add

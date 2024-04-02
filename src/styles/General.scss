@@ -303,7 +303,7 @@
   }
 
   .company-form__input {
-    font-size: initial;
+    font-family: 'poppins';
     padding: 0 !important;
   }
 
@@ -685,7 +685,7 @@
   .generic-table {
 
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: scroll;
     border-collapse: collapse;
     // border: 1px solid rgb(111, 105, 105);
     background: white;
@@ -715,6 +715,7 @@
     border-collapse: collapse;
     width: 100%;
     text-align: center;
+    margin-right: 3vw;
     // margin: 8px 0;
   }
 
@@ -833,16 +834,19 @@
 
   .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
     margin: 2rem 0 1rem 0rem !important;
+   
     font-size: 1.5rem !important;
   }
 
   div.col-4.text-start .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
     border: 1px solid rgba(240, 8, 8, 0) !important;
     font-size: small !important;
+  
   }
 
   .css-i4bv87-MuiSvgIcon-root {
     height: 2.5rem !important;
+    margin-right: 10px;
   }
 
   .css-13cymwt-control {
@@ -868,6 +872,8 @@
     height: 1rem !important;
     text-align: center;
     margin: 10px !important;
+  
+   
   }
 
   .css-art2ul-ValueContainer2 {
@@ -906,8 +912,8 @@
   .css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root {
     color: rgb(0, 0, 0) !important;
     text-align: left !important;
-
   }
+
 
   #issuedby,
   #destinationAgent,
@@ -931,6 +937,7 @@
 
   .css-1jqq78o-placeholder {
     width: 100% !important;
+    font-size: 14px;
     color: rgb(146, 146, 146) !important;
     white-space: nowrap;
   }
@@ -943,12 +950,15 @@
     font-weight: bold !important;
   }
 
+  .input-group{
+    width: 28vw !important;
+  }
 
 
   .text-comm {
     width: 100%;
     text-align: left;
-    font-size: 1.3rem;
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 0rem;
 
@@ -1063,9 +1073,11 @@
 
   .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
     padding-right: 0% !important;
+    height: 4rem;
 
     input {
       margin: 0 !important;
+      color: #818080;
     }
   }
 
@@ -1161,7 +1173,7 @@
   width: 98%;
   display: inline-block;
   // padding-left: inherit;
-  padding-right: inherit
+  padding-right: 1.5vw;
 }
 
 .main-container {
@@ -1220,7 +1232,7 @@
 
 .text-date {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 13px;
   margin: 0;
 }
 
@@ -1264,12 +1276,20 @@
 
 #toggleBoton:checked+label::after {
   content: "Close Charge";
+  height: 3rem;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
 }
 
-/* Cambia el texto del label cuando el checkbox no está seleccionado */
-#toggleBoton:not(:checked)+label::after {
+#toggleBoton:not(:checked) + label::after {
   content: "Open Charge";
+  height: 3rem;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
 }
+
 
 .button-charge {
   width: 12rem;
@@ -1277,7 +1297,6 @@
   border-radius: 1rem;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 1.6rem;
   margin: 0;
   padding: 0;
@@ -1305,4 +1324,39 @@
 
 .creation-container{
   width: 99% !important;
+}
+
+.custom-file-input {
+  display: inline-block;
+  padding: 5px 13px;
+  background-color: #006BAD;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.custom-file-input .button-text {
+  font-size: 13px;
+}
+
+#eventType{
+    font-family: 'Poppins';
+    font-size: 14px;
+    color: #818080;
+}
+
+#clientToBill{
+  font-family: 'Poppins';
+  font-size: 14px;
+  color: #818080;
+}
+
+.css-1dimb5e-singleValue{
+  font-family: 'Poppins';
+  color: #818080 !important;
+  font-size: 14px !important;
+}
+
+.text-center{
+  overflow-x: hidden;
 }

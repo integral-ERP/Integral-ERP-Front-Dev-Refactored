@@ -411,7 +411,7 @@ const ExpenseChargeForm = ({
 
           
         <div className="row w-100" style={{paddingRight: "0px"}}>
-          <div className="col-6">
+          <div className="col-6" style={{padding: "0px"}}>
             <label htmlFor="applyBy" className="text-comm">
               Apply By
             </label>
@@ -452,7 +452,7 @@ const ExpenseChargeForm = ({
           </div>
 
           <div className="row w-100 mb-3" style={{paddingRight: "0px"}}>
-          <div className="col-6">
+          <div className="col-6" style={{padding: "0px"}}>
             <label htmlFor="rateCharge" className="text-comm">
               Rate Charge
             </label>
