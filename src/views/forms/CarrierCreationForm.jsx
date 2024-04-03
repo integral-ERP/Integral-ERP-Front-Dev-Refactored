@@ -220,7 +220,10 @@ const CarrierCreationForm = ({
   }
 
   return (
-    <div className="company-form carrier">
+    <div style={{ maxWidth: "100%", maxHeight: "100%", overflowX: "auto", overflowY: "auto" }}>
+          <div className="form-container">
+
+<div className="company-form carrier">
        <div className="row w-100">
         <div className="col-6">
       <div className="creation creation-container w-100">
@@ -600,8 +603,12 @@ const CarrierCreationForm = ({
             label="SCAC number"
           />
         </div>
+        </div>
+
       </div>
       </div>
+      </div>
+
       </div>
 
     
