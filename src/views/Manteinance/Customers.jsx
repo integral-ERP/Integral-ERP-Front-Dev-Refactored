@@ -166,6 +166,22 @@ const Customers = () => {
               creating={false}
               onCustomerDataChange={handleWarehouseProviderDataChange}
             />
+              {selectedCustomer !== null && (
+            <CustomersCreationForm
+              customer={selectedCustomer}
+              closeModal={closeModal}
+              creating={false}
+              onCustomerDataChange={handleWarehouseProviderDataChange}
+            />
+        )}
+        {selectedCustomer === null && (
+            <CustomersCreationForm
+              customer={null}
+              closeModal={closeModal}
+              creating={true}
+              onCustomerDataChange={handleWarehouseProviderDataChange}
+            />
+        )}
             </Table>
 
         {showSuccessAlert && (
@@ -188,26 +204,7 @@ const Customers = () => {
             <strong>Error deleting Customer. Please try again</strong>
           </Alert>
         )}
-        {selectedCustomer !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CustomersCreationForm
-              customer={selectedCustomer}
-              closeModal={closeModal}
-              creating={false}
-              onCustomerDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedCustomer === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CustomersCreationForm
-              customer={null}
-              closeModal={closeModal}
-              creating={true}
-              onCustomerDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
+      
         </div>
       </div>
       </div>

@@ -182,6 +182,22 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           creating={false}
           onEmployeeDataChange={handleEmployeesDataChange}
         />
+         {selectedEmployee !== null && (
+        <EmployeeCreationForm
+          employee={selectedEmployee}
+          closeModal={closeModal}
+          creating={false}
+          onEmployeeDataChange={handleEmployeesDataChange}
+        />
+    )}
+    {selectedEmployee === null && (
+        <EmployeeCreationForm
+          employee={null}
+          closeModal={closeModal}
+          creating={true}
+          onEmployeeDataChange={handleEmployeesDataChange}
+        />
+    )}
         </Table>
 
       {showSuccessAlert && (
@@ -200,26 +216,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           </strong>
         </Alert>
       )}
-      {selectedEmployee !== null && (
-      <ModalForm isOpen={isOpen} closeModal={closeModal}>
-        <EmployeeCreationForm
-          employee={selectedEmployee}
-          closeModal={closeModal}
-          creating={false}
-          onEmployeeDataChange={handleEmployeesDataChange}
-        />
-      </ModalForm>
-    )}
-    {selectedEmployee === null && (
-      <ModalForm isOpen={isOpen} closeModal={closeModal}>
-        <EmployeeCreationForm
-          employee={null}
-          closeModal={closeModal}
-          creating={true}
-          onEmployeeDataChange={handleEmployeesDataChange}
-        />
-      </ModalForm>
-    )}
+     
     </div>
     </div>
     </div>

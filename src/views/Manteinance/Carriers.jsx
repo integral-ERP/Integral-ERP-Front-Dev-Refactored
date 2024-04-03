@@ -181,6 +181,23 @@ const Carrier = () => {
               creating={false}
               onCarrierDataChange={handleCarrierDataChange}
             />
+             {selectedCarrier !== null && (
+            <CarrierCreationForm
+              carrier={selectedCarrier}
+              closeModal={closeModal}
+              creating={false}
+              onCarrierDataChange={handleCarrierDataChange}
+            />
+        )}
+
+        {selectedCarrier === null && (
+            <CarrierCreationForm
+              carrier={null}
+              closeModal={closeModal}
+              creating={true}
+              onCarrierDataChange={handleCarrierDataChange}
+            />
+        )}
             </Table>
 
         {showSuccessAlert && (
@@ -204,27 +221,7 @@ const Carrier = () => {
           </Alert>
         )}
 
-        {selectedCarrier !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={selectedCarrier}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
-
-        {selectedCarrier === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={null}
-              closeModal={closeModal}
-              creating={true}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
+       
         </div>
       </div>
     </div>
