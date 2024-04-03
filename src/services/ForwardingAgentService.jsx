@@ -36,5 +36,4 @@ class ForwardingAgentService{
         return response;
       }
 }
-
 export default new ForwardingAgentService();

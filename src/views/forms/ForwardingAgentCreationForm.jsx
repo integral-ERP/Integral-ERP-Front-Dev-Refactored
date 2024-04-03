@@ -9,7 +9,7 @@ const ForwardingAgentsCreationForm = ({
   forwardingAgent,
   closeModal,
   creating,
-  onForwardingAgentDataChange,
+  // onForwardingAgentDataChange,
 }) => {
 
   const [activeTab, setActiveTab] = useState("general");
@@ -24,24 +24,29 @@ const ForwardingAgentsCreationForm = ({
   const [cities, setCities] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [formData, setFormData] = useState({
+
+  
+  // const [formData, setFormData] = useState({
+    const formFormat = {
     name: "",
     phone: "",
-    mobilePhone: "",
+    mobile_phone : "",
     email: "",
     fax: "",
     webSide: "",
-    referentNumber: "",
-    firstNameContac: "",
-    lasNameContac: "",
-    numIdentification: "",
+    reference_number: "",
+    contact_first_name: "",
+    contact_last_name: "",
+    identification_number: "",
     typeIdentificacion: "",
-    streetNumber: "",
+    street_and_number: "",
     city: "",
     state: "",
     country: "",
-    zipCode: "",
-  });
+    zip_code: "",
+  };
+
+  const [formData, setFormData] = useState({ formFormat });
 
   const handleCountryChange = (event) => {
     setFormData({ ...formData, country: event.target.value });
@@ -71,20 +76,20 @@ const ForwardingAgentsCreationForm = ({
       setFormData({
         name: forwardingAgent.name || "",
         phone: forwardingAgent.phone || "",
-        mobilePhone: forwardingAgent.mobilePhone || "",
+        mobile_phone : forwardingAgent.mobile_phone  || "",
         email: forwardingAgent.email || "",
         fax: forwardingAgent.fax || "",
-        webSide: forwardingAgent.webSide || "",
-        firstNameContac: forwardingAgent.firstNameContac || "",
-        lasNameContac: forwardingAgent.lasNameContac || "",
-        numIdentification: forwardingAgent.numIdentification || "",
+        website: forwardingAgent.website || "",
+        contact_first_name: forwardingAgent.contact_first_name || "",
+        contact_last_name: forwardingAgent.contact_last_name || "",
+        identification_number: forwardingAgent.identification_number || "",
         typeIdentificacion: forwardingAgent.typeIdentificacion || "",
-        streetNumber: forwardingAgent.streetNumber || "",
+        street_and_number: forwardingAgent.street_and_number || "",
         city: forwardingAgent.city || "",
         state: forwardingAgent.state || "",
         country: forwardingAgent.country || "",
-        zipCode: forwardingAgent.zipCode || "",
-        referentNumber: forwardingAgent.referentNumber || "",
+        zip_code: forwardingAgent.zip_code || "",
+        reference_number: forwardingAgent.reference_number || "",
       });
     }
   }, [creating, forwardingAgent]);
@@ -119,41 +124,46 @@ const ForwardingAgentsCreationForm = ({
   }, [selectedCountry, selectedState]);
 
   const sendData = async () => {
-    
     let rawData = {
-      name: formData.name,
-      phone: parseInt(formData.phone),
-      movelPhone: parseInt(formData.mobilePhone),
-      email: formData.email,
-      fax: parseInt(formData.fax),
-      webSide: formData.webSide,
-      referentNumber: parseInt(formData.referentNumber),
-      firstNameContac: formData.firstNameContac,
-      lasNameContac: formData.lasNameContac,
-      numIdentification: formData.numIdentification,
+      name: formData.name || "",
+      phone: formData.phone || "",
+      movelPhone: formData.mobile_phone  || "",
+      email: formData.email || "",
+      fax: formData.fax || "",
+      website: formData.website || "",
+      referentNumber: formData.reference_number || "",
+      contact_first_name: formData.contact_first_name || "",
+      contact_last_name: formData.contact_last_name || "",
+      identification_number: formData.identification_number || "",
       typeIdentificacion: formData.typeIdentificacion || "CC",
-      streetNumber: formData.streetNumber,
-      city: formData.city,
-      state: formData.state,
-      country: formData.country,
-      zipCode: parseInt(formData.zipCode),
+      street_and_number: formData.street_and_number || "",
+      city: formData.city || "",
+      state: formData.state || "",
+      country: formData.country || "",
+      zip_code: formData.zip_code || "",
     };
-
+    // const forwardingAgent="";
+    console.log("DATA: = ", formData);
+    console.log("forwardingAgent =", forwardingAgent);
+    // const id = forwardingAgent.id;
     const response = await (creating
       ? ForwardingAgentService.createForwardingAgent(rawData)
-      : ForwardingAgentService.updateForwardingAgent(forwardingAgent.id, rawData));
+      : ForwardingAgentService.updateForwardingAgent(
+        forwardingAgent.id, 
+        rawData
+      ));
 
     if (response.status >= 200 && response.status <= 300) {
-      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        onForwardingAgentDataChange();
+        // onForwardingAgentDataChange();
         setShowSuccessAlert(false);
+        setFormData(formFormat)
         window.location.reload();
-      }, 1000);
+      }, 10000);
     } else {
-      
+      console.log("Something went wrong:", response);
       setShowErrorAlert(true);
     }
   };
@@ -169,141 +179,141 @@ const ForwardingAgentsCreationForm = ({
           <div className="creation creation-container w-100">
             <div className="form-label_name"><h2>General</h2><span></span></div>
             <div className="row w-100">
-            <div className="col-6 text-start">
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="name"
-                placeholder="Name"
-                value={formData.name}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                label="Name"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="mphone"
-                placeholder="Mobile Phone"
-                value={formData.mobilePhone}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, mobilePhone: e.target.value })
-                }
-                label="Mobile Phone"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="email"
-                inputName="email"
-                placeholder="email"
-                value={formData.email}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                label="Email"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="rnumber"
-                placeholder="rnumber"
-                value={formData.referentNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, referentNumber: e.target.value })
-                }
-                label="Reference Number"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="contactLN"
-                placeholder="contactLN"
-                value={formData.lasNameContac}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, lasNameContac: e.target.value })
-                }
-                label="Contact Last Name"
-              />
-            </div>
-            </div>
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    label="Name"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="mphone"
+                    placeholder="Mobile Phone"
+                    value={formData.mobile_phone }
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, mobile_phone : e.target.value })
+                    }
+                    label="Mobile Phone"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="email"
+                    inputName="email"
+                    placeholder="email"
+                    value={formData.email}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    label="Email"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="rnumber"
+                    placeholder="rnumber"
+                    value={formData.reference_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, reference_number: e.target.value })
+                    }
+                    label="Reference Number"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="contactLN"
+                    placeholder="contactLN"
+                    value={formData.contact_last_name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, contact_last_name: e.target.value })
+                    }
+                    label="Contact Last Name"
+                  />
+                </div>
+              </div>
 
-            <div className="col-6 text-start">
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="phone"
-                  placeholder="Phone"
-                  value={formData.phone}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  label="Phone"
-                />
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="phone"
+                    placeholder="Phone"
+                    value={formData.phone}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    label="Phone"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="fax"
+                    placeholder="fax"
+                    value={formData.fax}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, fax: e.target.value })
+                    }
+                    label="Fax"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="website"
+                    placeholder="website"
+                    value={formData.website}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, website: e.target.value })
+                    }
+                    label="Web Site"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="contactFN"
+                    placeholder="contactFN"
+                    value={formData.contact_first_name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, contact_first_name: e.target.value })
+                    }
+                    label="Contact First Name"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="idNumber"
+                    placeholder="idNumber"
+                    value={formData.identification_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, identification_number: e.target.value })
+                    }
+                    label="Identification Number"
+                  />
+                </div>
+                <p className="textId">Tipo de documento</p>
+                <select
+                  name="identificacionNumber"
+                  id="identificacionNumber"
+                  className="form-input"
+                >
+                  <option value="CC">CC</option>
+                  <option value="CE">CE</option>
+                  <option value="NIT">NIT</option>
+                </select>
               </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="fax"
-                  placeholder="fax"
-                  value={formData.fax}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, fax: e.target.value })
-                  }
-                  label="Fax"
-                />
-              </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="website"
-                  placeholder="website"
-                  value={formData.webSide}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, webSide: e.target.value })
-                  }
-                  label="Website"
-                />
-              </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="contactFN"
-                  placeholder="contactFN"
-                  value={formData.firstNameContac}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, firstNameContac: e.target.value })
-                  }
-                  label="Contact First Name"
-                />
-              </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="idNumber"
-                  placeholder="idNumber"
-                  value={formData.numIdentification}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, numIdentification: e.target.value })
-                  }
-                  label="Identification Number"
-                />
-              </div>
-              <p className="textId">Tipo de documento</p>
-              <select
-                name="identificacionNumber"
-                id="identificacionNumber"
-                className="form-input"
-              >
-                <option value="CC">CC</option>
-                <option value="CE">CE</option>
-                <option value="NIT">NIT</option>
-              </select>
-            </div>
             </div>
 
           </div>
@@ -318,9 +328,9 @@ const ForwardingAgentsCreationForm = ({
                 type="textarea"
                 inputName="street"
                 placeholder="Street & Address..."
-                value={formData.streetNumber}
+                value={formData.street_and_number}
                 changeHandler={(e) =>
-                  setFormData({ ...formData, streetNumber: e.target.value })
+                  setFormData({ ...formData, street_and_number: e.target.value })
                 }
                 label="Street & Address"
               />
@@ -362,7 +372,11 @@ const ForwardingAgentsCreationForm = ({
               >
                 <option value="">Select a state</option>
                 {states.map((state) => (
-                  <option key={state.iso2} value={state.name} data-key={state.iso2}>
+                  <option 
+                    key={state.iso2} 
+                    value={state.name} 
+                    data-key={state.iso2}
+                  >
                     {state.name}
                   </option>
                 ))}
@@ -378,6 +392,7 @@ const ForwardingAgentsCreationForm = ({
                 className="form-input"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                // onChange={(e) => handleCountryChange(e)}
               >
                 <option value="">Select a city</option>
                 {cities.map((city) => (
@@ -390,11 +405,11 @@ const ForwardingAgentsCreationForm = ({
             <div className="company-form__section">
               <Input
                 type="text"
-                inputName="zipcode"
+                inputName="zip_code"
                 placeholder="Zip Code..."
-                value={formData.zipCode}
+                value={formData.zip_code}
                 changeHandler={(e) =>
-                  setFormData({ ...formData, zipCode: e.target.value })
+                  setFormData({ ...formData, zip_code: e.target.value })
                 }
                 label="Zip Code"
               />
@@ -436,14 +451,14 @@ ForwardingAgentsCreationForm.propTypes = {
   forwardingAgent: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  onForwardingAgentDataChange: propTypes.func,
+  // onForwardingAgentDataChange: propTypes.func,
 };
 
 ForwardingAgentsCreationForm.defaultProps = {
   forwardingAgent: {},
   closeModal: null,
   creating: false,
-  onForwardingAgentDataChange: null,
+  // onForwardingAgentDataChange: null,
 };
 
 export default ForwardingAgentsCreationForm;
