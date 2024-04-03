@@ -1473,6 +1473,7 @@ const ReceiptCreationForm = ({
         {showCommodityCreationForm && (
           <div className="text-center">
             <Table
+            noScroll
               data={commodities}
               columns={[
                 "Description",
@@ -1614,6 +1615,7 @@ const ReceiptCreationForm = ({
 
             {showIncomeForm && (
               <Table
+              noScroll
                 data={charges}
                 columns={[
                   "Status",
@@ -1667,6 +1669,7 @@ const ReceiptCreationForm = ({
 
             {showExpenseForm && (
               <Table
+              noScroll
                 data={charges}
                 columns={[
                   "Status",
@@ -1718,6 +1721,7 @@ const ReceiptCreationForm = ({
               </div>
               {events && events.length > 0 && (
                 <Table
+                
                   data={events}
                   columns={[
                     "Date",

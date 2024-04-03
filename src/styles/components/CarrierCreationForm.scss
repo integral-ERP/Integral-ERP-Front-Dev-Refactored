@@ -1,6 +1,4 @@
 .company-form {
-  /* display: inline-block;
-  width: 100%; */
   color: #565656;
   display: flex;
   flex-direction: column;
@@ -253,4 +251,10 @@
 
 .nav-link:focus, .nav-link:hover {
   color: #575757;
+}
+
+.form-container {
+  width: 100%; /* O el ancho deseado */
+  height: 500px; /* O la altura deseada */
+  overflow: auto;
 }

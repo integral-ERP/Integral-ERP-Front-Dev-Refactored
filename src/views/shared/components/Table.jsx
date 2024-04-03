@@ -41,6 +41,7 @@ const Table = ({
   children,
   importEnabled,
   importLabel,
+  noScroll,
 
   createWarehouseReceipt,
   Nodoubleclick,
@@ -65,6 +66,16 @@ const Table = ({
     currentDate.getMonth(),
     currentDate.getDate() - currentDate.getDay()
   );
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!noScroll) return;
+      const table = document.querySelector(".generic-table");
+      if (!table) return;
+      table.style.overflowX = "hidden";
+    };
+    handleScroll();
+  }, [noScroll]);
+
   const endOfWeek = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -675,16 +686,16 @@ const Table = ({
                               <button type="button" onClick={generatePDFLabel} className="custom-button">
                                 <i className="fas fa-file-pdf"></i>
                               </button> */}
-                             <button
-                              className="generic-button ne"
-                              style={{
-                                display: "flex",
-                                width: "70px",
-                                marginLeft: "3vw",
-                              }}
-                            >
-                              <i className="fa fa-print menu-icon fa-3x"></i>
-                              <div className="select_print">
+                              <button
+                                className="generic-button ne"
+                                style={{
+                                  display: "flex",
+                                  width: "70px",
+                                  marginLeft: "3vw",
+                                }}
+                              >
+                                <i className="fa fa-print menu-icon fa-3x"></i>
+                                <div className="select_print">
                                 <select
                                   className="label_pdf_select"
                                   style={{ border: "0px solid white", height: "3rem"}}
@@ -695,21 +706,35 @@ const Table = ({
                                   }
                                 >
                                   {/* <option value=""> </option> */}
+
                                   <option
                                     value="receipt"
-                                    style={{ fontSize: "14px", color: "#818080", fontFamily: "poppins"}}
+                                    style={{
+                                      borderRadius: "0px",
+                                      fontSize: "14px",
+                                      width: "20vw",
+                                      color: "#818080",
+                                      fontFamily: "poppins",
+                                    }}
                                   >
-                                    PDF Receipt
+                                    PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
                                   </option>
+
                                   <option
                                     value="label"
-                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                    style={{
+                                      borderRadius: "0px",
+                                      fontSize: "14px",
+                                      width: "20vw",
+                                      color: "#818080",
+                                      fontFamily: "poppins",
+                                    }}
                                   >
                                     PDF Label
                                   </option>
                                 </select>
-                              </div>
-                            </button>
+                                </div>
+                              </button>
                             </>
                           ) : columnName === "Invoice PDF" ? (
                             <button
@@ -937,7 +962,7 @@ const Table = ({
                               <div className="select_print">
                                 <select
                                   className="label_pdf_select"
-                                  style={{ border: "0px solid white" }}
+                                  style={{ border: "0px solid white", height: "3rem"}}
                                   onChange={(e) =>
                                     e.target.value === "receipt"
                                       ? generatePDFReceipt()
@@ -945,15 +970,29 @@ const Table = ({
                                   }
                                 >
                                   {/* <option value=""> </option> */}
+
                                   <option
                                     value="receipt"
-                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                    style={{
+                                      borderRadius: "0px",
+                                      fontSize: "14px",
+                                      width: "20vw",
+                                      color: "#818080",
+                                      fontFamily: "poppins",
+                                    }}
                                   >
-                                    PDF Receipt
+                                    PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
                                   </option>
+
                                   <option
                                     value="label"
-                                    style={{ fontSize: "14px", width: "20vw", color: "#818080", fontFamily: "poppins"}}
+                                    style={{
+                                      borderRadius: "0px",
+                                      fontSize: "14px",
+                                      width: "20vw",
+                                      color: "#818080",
+                                      fontFamily: "poppins",
+                                    }}
                                   >
                                     PDF Label
                                   </option>
@@ -975,6 +1014,8 @@ const Table = ({
                             <button
                               className="generic-button ne"
                               onClick={onDelete}
+                              style={{ display: "flex", width: "40px", marginLeft: "3vw"}}
+
                             >
                               <i
                                 className="fas fa-upload menu-icon fa-3x"
