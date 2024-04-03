@@ -174,6 +174,22 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
               creating={false}
               onForwardingAgentDataChange={handleWarehouseProviderDataChange}
             />
+             {selectedForwardingAgent !== null && (
+            <ForwardingAgentsCreationForm
+              forwardingAgent={selectedForwardingAgent}
+              closeModal={closeModal}
+              creating={false}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
+            />
+        )}
+        {selectedForwardingAgent === null && (
+            <ForwardingAgentsCreationForm
+              forwardingAgent={null}
+              closeModal={closeModal}
+              creating={true}
+              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
+            />
+        )}
             </Table>
 
         {showSuccessAlert && (
@@ -196,26 +212,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             <strong>Error deleting Forwarding Agent. Please try again</strong>
           </Alert>
         )}
-        {selectedForwardingAgent !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ForwardingAgentsCreationForm
-              forwardingAgent={selectedForwardingAgent}
-              closeModal={closeModal}
-              creating={false}
-              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedForwardingAgent === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <ForwardingAgentsCreationForm
-              forwardingAgent={null}
-              closeModal={closeModal}
-              creating={true}
-              onForwardingAgentDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
+       
         </div>
         </div>
       </div>

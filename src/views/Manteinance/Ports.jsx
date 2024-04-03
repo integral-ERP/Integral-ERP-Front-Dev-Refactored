@@ -162,6 +162,22 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             creating={false}
             onPortDataChange={handleportsDataChange}
           />
+           {selectedPort !== null && (
+          <PortsCreationForm
+            port={selectedPort}
+            closeModal={closeModal}
+            creating={false}
+            onPortDataChange={handleportsDataChange}
+          />
+      )}
+      {selectedPort === null && (
+          <PortsCreationForm
+            port={null}
+            closeModal={closeModal}
+            creating={true}
+            onPortDataChange={handleportsDataChange}
+          />
+      )}
           </Table>
 
       {showSuccessAlert && (
@@ -176,26 +192,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           <strong>Error deleting Port. Please try again</strong>
         </Alert>
       )}
-      {selectedPort !== null && (
-        <ModalForm isOpen={isOpen} closeModal={closeModal}>
-          <PortsCreationForm
-            port={selectedPort}
-            closeModal={closeModal}
-            creating={false}
-            onPortDataChange={handleportsDataChange}
-          />
-        </ModalForm>
-      )}
-      {selectedPort === null && (
-        <ModalForm isOpen={isOpen} closeModal={closeModal}>
-          <PortsCreationForm
-            port={null}
-            closeModal={closeModal}
-            creating={true}
-            onPortDataChange={handleportsDataChange}
-          />
-        </ModalForm>
-      )}
+     
       </div>
     </div>
   </div>

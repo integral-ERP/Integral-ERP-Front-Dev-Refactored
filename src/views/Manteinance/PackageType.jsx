@@ -161,6 +161,22 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
               creating={false}
               onpackageTypeDataChange={handlepackageTypesDataChange}
             />
+             {selectedPackageType !== null && (
+            <PackageTypesCreationForm
+              packageType={selectedPackageType}
+              closeModal={closeModal}
+              creating={false}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
+            />
+        )}
+        {selectedPackageType === null && (
+            <PackageTypesCreationForm
+              packageType={null}
+              closeModal={closeModal}
+              creating={true}
+              onpackageTypeDataChange={handlepackageTypesDataChange}
+            />
+        )}
             </Table>
 
         {showSuccessAlert && (
@@ -183,26 +199,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             <strong>Error deleting Package Type. Please try again</strong>
           </Alert>
         )}
-        {selectedPackageType !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PackageTypesCreationForm
-              packageType={selectedPackageType}
-              closeModal={closeModal}
-              creating={false}
-              onpackageTypeDataChange={handlepackageTypesDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedPackageType === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <PackageTypesCreationForm
-              packageType={null}
-              closeModal={closeModal}
-              creating={true}
-              onpackageTypeDataChange={handlepackageTypesDataChange}
-            />
-          </ModalForm>
-        )}
+       
         </div>
       </div>
     </div>
