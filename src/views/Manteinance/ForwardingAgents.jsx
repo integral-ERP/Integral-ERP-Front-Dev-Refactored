@@ -22,28 +22,28 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Mobile Phone",
     "Email",
     "Fax",
-    "Website",
+    "Web Site",
     "Reference Number",
     "Contact First Name",
     "Contact Last Name",
     "ID",
-    "Type ID",
-    "System ID",
+    // "Type ID",
+    // "System ID",
     "Street & Number",
     "City",
     "State",
     "Country",
     "Zip-Code",
-    "Parent Account",
-    "Carrier Type",
-    "Method Code",
-    "Carrier Code",
-    "SCAC Number",
-    "IATA Code",
-    "Airline Code",
-    "Airline Prefix",
-    "Airway Bill Numbers",
-    "Passenger Only Airline",
+    // "Parent Account",
+    // "Carrier Type",
+    // "Method Code",
+    // "Carrier Code",
+    // "SCAC Number",
+    // "IATA Code",
+    // "Airline Code",
+    // "Airline Prefix",
+    // "Airway Bill Numbers",
+    // "Passenger Only Airline",
   ];
   const [selectedForwardingAgent, setselectedForwardingAgent] = useState(null);
   const {hideShowSlider} = useContext(GlobalContext);
@@ -168,12 +168,12 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           contextService={ForwardingAgentService}
           title="Forwarding Agents"
         >
-          <ForwardingAgentsCreationForm
+          {/* <ForwardingAgentsCreationForm
               forwardingAgent={selectedForwardingAgent}
               closeModal={closeModal}
               creating={false}
               onForwardingAgentDataChange={handleWarehouseProviderDataChange}
-            />
+            /> */}
              {selectedForwardingAgent !== null && (
             <ForwardingAgentsCreationForm
               forwardingAgent={selectedForwardingAgent}

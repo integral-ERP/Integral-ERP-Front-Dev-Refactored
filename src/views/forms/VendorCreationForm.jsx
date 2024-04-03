@@ -27,15 +27,15 @@ const VendorsCreationForm = ({
     phone: "",
     email: "",
     fax: "",
-    webSide: "",
-    referentNumber: "",
-    firstNameContac: "",
-    lasNameContac: "",
-    streetNumber: "",
+    website: "",
+    reference_number: "",
+    contact_first_name: "",
+    contact_last_name: "",
+    street_and_number: "",
     city: "",
     state: "",
     country: "",
-    zipCode: "",
+    zip_code: "",
   });
 
   const handleCountryChange = (event) => {
@@ -66,15 +66,15 @@ const VendorsCreationForm = ({
         phone: vendor.phone || "",
         email: vendor.email || "",
         fax: vendor.fax || "",
-        webSide: vendor.webSide || "",
-        firstNameContac: vendor.firstNameContac || "",
-        lasNameContac: vendor.lasNameContac || "",
-        streetNumber: vendor.streetNumber || "",
+        website: vendor.website || "",
+        contact_first_name: vendor.contact_first_name || "",
+        contact_last_name: vendor.contact_last_name || "",
+        street_and_number: vendor.street_and_number || "",
         city: vendor.city || "",
         state: vendor.state || "",
         country: vendor.country || "",
-        zipCode: vendor.zipCode || "",
-        referentNumber: vendor.referentNumber || "",
+        zip_code: vendor.zip_code || "",
+        reference_number: vendor.reference_number || "",
       });
     }
   }, [creating, vendor]);
@@ -111,18 +111,18 @@ const VendorsCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      phone: parseInt(formData.phone),
+      phone: formData.phone,
       email: formData.email,
-      fax: parseInt(formData.fax),
-      webSide: formData.webSide,
-      referentNumber: parseInt(formData.referentNumber),
-      firstNameContac: formData.firstNameContac,
-      lasNameContac: formData.lasNameContac,
-      streetNumber: formData.streetNumber,
+      fax: formData.fax,
+      website: formData.website,
+      reference_number: formData.reference_number,
+      contact_first_name: formData.contact_first_name,
+      contact_last_name: formData.contact_last_name,
+      street_and_number: formData.street_and_number,
       city: formData.city,
       state: formData.state,
       country: formData.country,
-      zipCode: parseInt(formData.zipCode),
+      zip_code: formData.zip_code,
     };
     
     const response = await (creating
@@ -186,9 +186,9 @@ const VendorsCreationForm = ({
                     type="text"
                     inputName="website"
                     placeholder="website"
-                    value={formData.webSide}
+                    value={formData.website}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, webSide: e.target.value })
+                      setFormData({ ...formData, website: e.target.value })
                     }
                     label="Website"
                   />
@@ -196,11 +196,11 @@ const VendorsCreationForm = ({
                 <div className="company-form__section">
                   <Input
                     type="text"
-                    inputName="contactFN"
-                    placeholder="contactFN"
-                    value={formData.firstNameContac}
+                    inputName="contact_first_name"
+                    placeholder="Contact First Name"
+                    value={formData.contact_first_name}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, firstNameContac: e.target.value })
+                      setFormData({ ...formData, contact_first_name: e.target.value })
                     }
                     label="Contact First Name"
                   />
@@ -224,7 +224,7 @@ const VendorsCreationForm = ({
                 <Input
                   type="email"
                   inputName="email"
-                  placeholder="email"
+                  placeholder="Email"
                   value={formData.email}
                   changeHandler={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -235,11 +235,11 @@ const VendorsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="text"
-                  inputName="rnumber"
-                  placeholder="rnumber"
-                  value={formData.referentNumber}
+                  inputName="reference_number"
+                  placeholder="Reference Number"
+                  value={formData.reference_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, referentNumber: e.target.value })
+                    setFormData({ ...formData, reference_number: e.target.value })
                   }
                   label="Reference Number"
                 />
@@ -249,9 +249,9 @@ const VendorsCreationForm = ({
                   type="text"
                   inputName="contactLN"
                   placeholder="contactLN"
-                  value={formData.lasNameContac}
+                  value={formData.contact_last_name}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, lasNameContac: e.target.value })
+                    setFormData({ ...formData, contact_last_name: e.target.value })
                   }
                   label="Contact Last Name"
                 />
@@ -268,41 +268,28 @@ const VendorsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="textarea"
-                  inputName="street"
+                  inputName="street_and_number"
                   placeholder="Street & Address..."
-                  value={formData.streetNumber}
+                  value={formData.street_and_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, streetNumber: e.target.value })
+                    setFormData({ ...formData, street_and_number: e.target.value })
                   }
                   label="Street & Address"
                 />
               </div>
               <div className="company-form__section">
-                <label htmlFor="wp-country" className="form-label">
-                  Country
-                </label>
-                <select
-                  name="wp-country"
-                  id="wp-country"
-                  className="form-input"
-                  value={formData.country}
-                  onChange={(e) => handleCountryChange(e)}
-                >
-                  <option value="">Select a country</option>
-                  {formData.country &&
-                    countries
-                      .filter((country) => country.name === formData.country)
-                      .map((country) => (
-                        <option
-                          key={country.iso2}
-                          value={country.name}
-                          data-key={country.iso2}
-                        >
-                          {country.name}
-                        </option>
-                      ))}
-                  {!formData.city &&
-                    countries.map((country) => (
+                  <label htmlFor="country" className="form-label">
+                    Country:
+                  </label>
+                  <select
+                    name="country"
+                    id="country"
+                    className="form-input"
+                    value={formData.country}
+                    onChange={(e) => handleCountryChange(e)}
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map((country) => (
                       <option
                         key={country.iso2}
                         value={country.name}
@@ -311,8 +298,8 @@ const VendorsCreationForm = ({
                         {country.name}
                       </option>
                     ))}
-                </select>
-              </div>
+                  </select>
+                </div>
               <div className="company-form__section">
                 <label htmlFor="wp-state" className="form-label">
                   State:
@@ -384,11 +371,11 @@ const VendorsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="text"
-                  inputName="zipcode"
+                  inputName="zip_code"
                   placeholder="Zip Code..."
-                  value={formData.zipCode}
+                  value={formData.zip_code}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, zipCode: e.target.value })
+                    setFormData({ ...formData, zip_code: e.target.value })
                   }
                   label="Zip Code"
                 />
