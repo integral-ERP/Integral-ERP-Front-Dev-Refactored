@@ -21,17 +21,17 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Code",
     "Name",
-    "Method",
+    // "Method",
     "Country",
     "Subdivision",
     "Used",
     "Remarks",
-    "Maritime",
+    // "Maritime",
     "Rail",
     "Road",
     "Air",
-    "Mail",
-    "Border Crossing Point",
+    // "Mail",
+    // "Border Crossing Point",
     "US Customs Code",
   ];
   const {hideShowSlider} = useContext(GlobalContext);
@@ -108,7 +108,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {
@@ -122,11 +122,13 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const handleWindowClick = (event) => {
 
-      const clickedElement = event.target;
-      const isWPButton = clickedElement.classList.contains("ne");
-      const isTableRow = clickedElement.closest(".table-row");
+      // const clickedElement = event.target;
+      // const isWPButton = clickedElement.classList.contains("ne");
+      // const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isWPButton && !isTableRow) {
+      // if (!isWPButton && !isTableRow) {
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
         setselectedPort(null);
       }
     };
@@ -156,12 +158,12 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         contextService={PortServices}
         title="Ports"
       >
-        <PortsCreationForm
+        {/* <PortsCreationForm
             port={selectedPort}
             closeModal={closeModal}
             creating={false}
             onPortDataChange={handleportsDataChange}
-          />
+          /> */}
            {selectedPort !== null && (
           <PortsCreationForm
             port={selectedPort}

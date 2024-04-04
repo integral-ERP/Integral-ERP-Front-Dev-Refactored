@@ -18,11 +18,11 @@ const PortsCreationForm = ({
   const [formData, setFormData] = useState({
     code: "",
     name: "",
-    method: "",
+    maritime: "",
     country: "",
-    subdivision: "",
+    sub_division: "",
     used: false,
-    usCustomsCode: "",
+    us_customs_code: "",
     rail: false,
     road: false,
     maritime: false,
@@ -46,11 +46,11 @@ const PortsCreationForm = ({
       setFormData({
         name: port.name || "",
         code: port.code || "",
-        method: port.method || "",
+        maritime: port.maritime || "",
         country: port.country || "",
-        subdivision: port.subdivision || "",
+        sub_division: port.sub_division || "",
         used: port.used || "",
-        usCustomsCode: port.usCustomsCode || "",
+        us_customs_code: port.us_customs_code || "",
         rail: port.rail || false,
         road: port.road || false,
         maritime: port.maritime || false,
@@ -74,11 +74,11 @@ const PortsCreationForm = ({
     let rawData = {
       name: formData.name,
       code: formData.code,
-      method: formData.method,
+      maritime: formData.maritime,
       country: formData.country,
-      subdivision: formData.subdivision,
+      sub_division: formData.sub_division,
       used: formData.used,
-      usCustomsCode: formData.usCustomsCode,
+      us_customs_code: formData.us_customs_code,
       rail: formData.rail,
       road: formData.road,
       maritime: formData.maritime,
@@ -86,7 +86,9 @@ const PortsCreationForm = ({
       mail: formData.mail,
       borderCrossing: formData.borderCrossing,
     };
-
+    console.log("FORMDATA = ", formData);
+    console.log("PORT  =", port);
+    console.log("PORT  =", port);
     const response = await (creating
       ? PortServices.createPort(rawData)
       : PortServices.updatePort(port.id, rawData));
@@ -99,7 +101,7 @@ const PortsCreationForm = ({
         onPortDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 1000);
+      }, 100000);
     } else {
       
       setShowErrorAlert(true);
@@ -180,11 +182,11 @@ const PortsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="text"
-                  inputName="subdivision"
+                  inputName="sub_division"
                   placeholder="Subdivision..."
-                  value={formData.subdivision}
+                  value={formData.sub_division}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, subdivision: e.target.value })
+                    setFormData({ ...formData, sub_division: e.target.value })
                   }
                   label="Subdivision"
                 />
@@ -272,11 +274,11 @@ const PortsCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="textarea"
-                  inputName="uscustomcodes"
+                  inputName="us_customs_code"
                   placeholder="US Custom Codes..."
-                  value={formData.usCustomsCode}
+                  value={formData.us_customs_code}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, usCustomsCode: e.target.value })
+                    setFormData({ ...formData, us_customs_code: e.target.value })
                   }
                   label="US Custom Codes"
                 />

@@ -452,71 +452,40 @@ const CarrierCreationForm = ({
                 </div>
 
                 <div className="company-form__section">
-                  <label htmlFor="country" className="form-label">
-                    Country:
-                  </label>
-                  <select
-                    name="country"
-                    id="country"
-                    className="form-input"
+                  <Input
+                    type="text"
+                    inputName="country"
+                    placeholder="Country"
                     value={formData.country}
-                    onChange={(e) => handleCountryChange(e)}
-                  >
-                    <option value="">Select a country</option>
-                    {countries.map((country) => (
-                      <option
-                        key={country.iso2}
-                        value={country.name}
-                        data-key={country.iso2}
-                      >
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, country: e.target.value })
+                    }
+                    label="Country"
+                  />
                 </div>
                 <div className="company-form__section">
-                  <label htmlFor="state" className="form-label">
-                    State:
-                  </label>
-                  <select
-                    name="state"
-                    id="state"
-                    className="form-input"
+                  <Input
+                    type="text"
+                    inputName="state"
+                    placeholder="State"
                     value={formData.state}
-                    onChange={(e) => handleStateChange(e)}
-                  >
-                    <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option
-                        key={state.iso2}
-                        value={state.name}
-                        data-key={state.iso2}
-                      >
-                        {state.name}
-                      </option>
-                    ))}
-                  </select>
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, state: e.target.value })
+                    }
+                    label="State"
+                  />
                 </div>
                 <div className="company-form__section">
-                  <label htmlFor="city" className="form-label">
-                    City:
-                  </label>
-                  <select
-                    name="city"
-                    id="carrier-info-city"
-                    className="form-input"
+                  <Input
+                    type="text"
+                    inputName="city"
+                    placeholder="City"
                     value={formData.city}
-                    onChange={(e) =>
+                    changeHandler={(e) =>
                       setFormData({ ...formData, city: e.target.value })
                     }
-                  >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
+                    label="City"
+                  />
                 </div>
                 <div className="company-form__section">
                   <Input

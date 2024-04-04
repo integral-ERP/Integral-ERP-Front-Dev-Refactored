@@ -125,11 +125,13 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const handleWindowClick = (event) => {
 
-      const clickedElement = event.target;
-      const isWPButton = clickedElement.classList.contains("ne");
-      const isTableRow = clickedElement.closest(".table-row");
+      // const clickedElement = event.target;
+      // const isWPButton = clickedElement.classList.contains("ne");
+      // const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isWPButton && !isTableRow) {
+      // if (!isWPButton && !isTableRow) {
+      const contextMenu = document.querySelector(".context-menu");
+        if (contextMenu && !contextMenu.contains(e.target)) {
         setselectedVendor(null);
       }
     };

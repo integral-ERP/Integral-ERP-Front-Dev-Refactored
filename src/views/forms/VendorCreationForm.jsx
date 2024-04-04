@@ -278,6 +278,42 @@ const VendorsCreationForm = ({
                 />
               </div>
               <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="country"
+                placeholder="Country"
+                value={formData.country}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+                label="Country"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="state"
+                placeholder="State"
+                value={formData.state}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                label="State"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="city"
+                placeholder="City"
+                value={formData.city}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                label="City"
+              />
+            </div>
+              {/* <div className="company-form__section">
                   <label htmlFor="country" className="form-label">
                     Country:
                   </label>
@@ -298,9 +334,9 @@ const VendorsCreationForm = ({
                         {country.name}
                       </option>
                     ))}
-                  </select>
-                </div>
-              <div className="company-form__section">
+                  </select> 
+                </div>*/}
+              {/* <div className="company-form__section">
                 <label htmlFor="wp-state" className="form-label">
                   State:
                 </label>
@@ -335,8 +371,8 @@ const VendorsCreationForm = ({
                       </option>
                     ))}
                 </select>
-              </div>
-              <div className="company-form__section">
+              </div> */}
+              {/* <div className="company-form__section">
                 <label htmlFor="wp-city" className="form-label">
                   City:
                 </label>
@@ -367,7 +403,7 @@ const VendorsCreationForm = ({
                       </option>
                     ))}
                 </select>
-              </div>
+              </div> */}
               <div className="company-form__section">
                 <Input
                   type="text"
