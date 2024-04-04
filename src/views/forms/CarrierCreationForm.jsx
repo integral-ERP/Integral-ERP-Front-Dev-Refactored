@@ -29,7 +29,7 @@ const CarrierCreationForm = ({
     email: "",
     fax: "",
     website: "",
-    reference_number:"",
+    reference_number: "",
     reference_number: "",
     contact_first_name: "",
     contact_last_name: "",
@@ -79,7 +79,6 @@ const CarrierCreationForm = ({
 
   useEffect(() => {
     if (!creating && carrier) {
-
       let updatedFormData = {
         name: carrier.name || "",
         phone: carrier.phone || "",
@@ -110,7 +109,8 @@ const CarrierCreationForm = ({
         updatedFormData.airline_code = carrier.airline_code || "";
         updatedFormData.airline_prefix = carrier.airline_prefix || "";
         updatedFormData.airway_bill_number = carrier.airway_bill_number || "";
-        updatedFormData.passengersOnlyAirline = carrier.passengersOnlyAirline || "";
+        updatedFormData.passengersOnlyAirline =
+          carrier.passengersOnlyAirline || "";
       }
       if (carrier.carrierType === "Ocean") {
         updatedFormData.scac_number = carrier.scac_number || "";
@@ -123,7 +123,6 @@ const CarrierCreationForm = ({
       }
       setFormData(updatedFormData); // Update formData once with all the changes
     }
-
   }, [creating, carrier]);
 
   useEffect(() => {
@@ -148,7 +147,10 @@ const CarrierCreationForm = ({
   useEffect(() => {
     if (selectedCountry && selectedState) {
       const fetchData = async () => {
-        const citiesData = await CountriesService.fetchCities(selectedCountry, selectedState);
+        const citiesData = await CountriesService.fetchCities(
+          selectedCountry,
+          selectedState
+        );
         setCities(citiesData.data);
       };
       fetchData();
@@ -191,7 +193,6 @@ const CarrierCreationForm = ({
       : CarrierService.updateCarrier(carrier.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -201,7 +202,6 @@ const CarrierCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-
       setShowErrorAlert(true);
     }
   };
@@ -218,17 +218,26 @@ const CarrierCreationForm = ({
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
-    <div style={{ maxWidth: "100%", maxHeight: "100%", overflowX: "auto", overflowY: "auto" }}>
+    <div
+      style={{
+        maxWidth: "100%",
+        maxHeight: "100%",
+        overflowX: "auto",
+        overflowY: "auto",
+      }}
+    >
       <div className="form-container">
-
         <div className="company-form carrier">
           <div className="row w-100">
             <div className="col-6">
               <div className="creation creation-container w-100">
-                <div className="form-label_name"><h2>General</h2><span></span></div>
+                <div className="form-label_name">
+                  <h2>General</h2>
+                  <span></span>
+                </div>
                 <div className="row w-100">
                   <div className="col-6">
                     <div className="company-form__section">
@@ -266,7 +275,10 @@ const CarrierCreationForm = ({
                         placeholder="Carrier Code"
                         value={formData.carrier_code}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, carrier_code: e.target.value })
+                          setFormData({
+                            ...formData,
+                            carrier_code: e.target.value,
+                          })
                         }
                         label="Carrier Code"
                       />
@@ -290,7 +302,10 @@ const CarrierCreationForm = ({
                         placeholder="Mobile Phone"
                         value={formData.mobile_phone}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, mobile_phone: e.target.value })
+                          setFormData({
+                            ...formData,
+                            mobile_phone: e.target.value,
+                          })
                         }
                         label="Mobile Phone"
                       />
@@ -307,6 +322,18 @@ const CarrierCreationForm = ({
                         label="Fax"
                       />
                     </div>
+                    <div className="company-form__section">
+                      <p className="form-label">Tipo de documento</p>
+                      <select
+                        name="identificacionNumber"
+                        id="identificacionNumber"
+                        className="form-input"
+                      >
+                        <option value="CC">CC</option>
+                        <option value="CE">CE</option>
+                        <option value="NIT">NIT</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div className="col-6">
@@ -322,7 +349,7 @@ const CarrierCreationForm = ({
                         label="Email"
                       />
                     </div>
-                    
+
                     <div className="company-form__section">
                       <Input
                         type="text"
@@ -342,7 +369,10 @@ const CarrierCreationForm = ({
                         placeholder="Referent Number"
                         value={formData.reference_number}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, reference_number: e.target.value })
+                          setFormData({
+                            ...formData,
+                            reference_number: e.target.value,
+                          })
                         }
                         label="Reference Number"
                       />
@@ -354,7 +384,10 @@ const CarrierCreationForm = ({
                         placeholder="Contact First Name"
                         value={formData.contact_first_name}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, contact_first_name: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contact_first_name: e.target.value,
+                          })
                         }
                         label="Contact First Name"
                       />
@@ -366,44 +399,42 @@ const CarrierCreationForm = ({
                         placeholder="Contact Last Name"
                         value={formData.contact_last_name}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, contact_last_name: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contact_last_name: e.target.value,
+                          })
                         }
                         label="Contact Last Name"
                       />
                     </div>
                     <div className="company-form__section">
-
                       <Input
                         type="text"
                         inputName="identification_number"
                         placeholder="ID Number"
                         value={formData.identification_number}
                         changeHandler={(e) =>
-                          setFormData({ ...formData, identification_number: e.target.value })
+                          setFormData({
+                            ...formData,
+                            identification_number: e.target.value,
+                          })
                         }
                         label="Identification Number"
                       />
-
                     </div>
-                    <p className="textId">Tipo de documento</p>
-                    <select
-                      name="identificacionNumber"
-                      id="identificacionNumber"
-                      className="form-input"
-                    >
-                      <option value="CC">CC</option>
-                      <option value="CE">CE</option>
-                      <option value="NIT">NIT</option>
-                    </select>
-                  </div>{/* ----------------------------END TWO---------------------------------- */}
-
+                   
+                  </div>
+                  {/* ----------------------------END TWO---------------------------------- */}
                 </div>
               </div>
             </div>
 
             <div className="col-6">
               <div className="creation creation-container w-100">
-                <div className="form-label_name"><h2>Address</h2><span></span></div>
+                <div className="form-label_name">
+                  <h2>Address</h2>
+                  <span></span>
+                </div>
                 <div className="company-form__section">
                   <Input
                     type="textarea"
@@ -411,7 +442,10 @@ const CarrierCreationForm = ({
                     placeholder="Street & Address..."
                     value={formData.street_and_number}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, street_and_number: e.target.value })
+                      setFormData({
+                        ...formData,
+                        street_and_number: e.target.value,
+                      })
                     }
                     label="Street & Address"
                   />
@@ -435,11 +469,27 @@ const CarrierCreationForm = ({
                     inputName="state"
                     placeholder="State"
                     value={formData.state}
+<<<<<<< HEAD
                     changeHandler={(e) =>
                       setFormData({ ...formData, state: e.target.value })
                     }
                     label="State"
                   />
+=======
+                    onChange={(e) => handleStateChange(e)}
+                  >
+                    <option value="">Select a state</option>
+                    {states.map((state) => (
+                      <option
+                        key={state.iso2}
+                        value={state.name}
+                        data-key={state.iso2}
+                      >
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+>>>>>>> aebbab9fdd196dc549673e9261a6d8e8a6a5248a
                 </div>
                 <div className="company-form__section">
                   <Input
@@ -447,11 +497,25 @@ const CarrierCreationForm = ({
                     inputName="city"
                     placeholder="City"
                     value={formData.city}
+<<<<<<< HEAD
                     changeHandler={(e) =>
                       setFormData({ ...formData, city: e.target.value })
                     }
                     label="City"
                   />
+=======
+                    onChange={(e) =>
+                      setFormData({ ...formData, city: e.target.value })
+                    }
+                  >
+                    <option value="">Select a city</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+>>>>>>> aebbab9fdd196dc549673e9261a6d8e8a6a5248a
                 </div>
                 <div className="company-form__section">
                   <Input
@@ -472,7 +536,10 @@ const CarrierCreationForm = ({
           <div className="row w-100">
             <div className="col-4">
               <div className="creation creation-container w-100">
-                <div className="form-label_name"><h2>Land</h2><span></span></div>
+                <div className="form-label_name">
+                  <h2>Land</h2>
+                  <span></span>
+                </div>
                 <div className="company-form__section">
                   <Input
                     type="text"
@@ -504,7 +571,10 @@ const CarrierCreationForm = ({
                     placeholder="Airline Prefix..."
                     value={formData.airline_prefix}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, airline_prefix: e.target.value })
+                      setFormData({
+                        ...formData,
+                        airline_prefix: e.target.value,
+                      })
                     }
                     label="Airline Prefix"
                   />
@@ -516,7 +586,10 @@ const CarrierCreationForm = ({
                     placeholder="Airline Bill Numbers..."
                     value={formData.airway_bill_number}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, airway_bill_number: e.target.value })
+                      setFormData({
+                        ...formData,
+                        airway_bill_number: e.target.value,
+                      })
                     }
                     label="IATA account number"
                   />
@@ -528,7 +601,10 @@ const CarrierCreationForm = ({
                     inputName="passengerOnly"
                     value={formData.passengersOnlyAirline}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, passengersOnlyAirline: e.target.value.checked })
+                      setFormData({
+                        ...formData,
+                        passengersOnlyAirline: e.target.value.checked,
+                      })
                     }
                     label="This is a passengers only airline"
                   />
@@ -538,7 +614,10 @@ const CarrierCreationForm = ({
 
             <div className="col-4">
               <div className="creation creation-container w-100">
-                <div className="form-label_name"><h2>Airline</h2><span></span></div>
+                <div className="form-label_name">
+                  <h2>Airline</h2>
+                  <span></span>
+                </div>
                 <div className="company-form__section">
                   <Input
                     type="text"
@@ -546,7 +625,10 @@ const CarrierCreationForm = ({
                     value={formData.scac_number}
                     placeholder="SCAC Number..."
                     changeHandler={(e) =>
-                      setFormData({ ...formData, scac_number: e.target.value.checked })
+                      setFormData({
+                        ...formData,
+                        scac_number: e.target.value.checked,
+                      })
                     }
                     label="SCAC Number"
                   />
@@ -556,7 +638,10 @@ const CarrierCreationForm = ({
 
             <div className="col-4">
               <div className="creation creation-container w-100">
-                <div className="form-label_name"><h2>Ocean</h2><span></span></div>
+                <div className="form-label_name">
+                  <h2>Ocean</h2>
+                  <span></span>
+                </div>
                 <div className="company-form__section">
                   <Input
                     type="text"
@@ -582,14 +667,10 @@ const CarrierCreationForm = ({
                   />
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
       </div>
-
-
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
@@ -601,7 +682,11 @@ const CarrierCreationForm = ({
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Success</AlertTitle>
           <strong>
             Carrier {creating ? "created" : "updated"} successfully!
@@ -609,7 +694,11 @@ const CarrierCreationForm = ({
         </Alert>
       )}
       {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Error</AlertTitle>
           <strong>
             Error {creating ? "creating" : "updating"} Carrier. Please try again

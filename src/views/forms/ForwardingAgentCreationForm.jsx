@@ -12,10 +12,10 @@ const ForwardingAgentsCreationForm = ({
   onForwardingAgentDataChange,
 }) => {
 
-  // const [activeTab, setActiveTab] = useState("general");
-  // const handleTabClick = (tab) => {
-  //   setActiveTab(tab);
-  // };
+  const [activeTab, setActiveTab] = useState("general");
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
 
   const [countries, setCountries] = useState([]);
   const [selectedcountry, setSelectedcountry] = useState("");
@@ -115,7 +115,10 @@ const ForwardingAgentsCreationForm = ({
   useEffect(() => {
     if (selectedcountry && selectedState) {
       const fetchData = async () => {
-        const citiesData = await CountriesService.fetchCities(selectedcountry, selectedState);
+        const citiesData = await CountriesService.fetchCities(
+          selectedcountry,
+          selectedState
+        );
         setCities(citiesData.data);
       };
       fetchData();
@@ -123,7 +126,6 @@ const ForwardingAgentsCreationForm = ({
   }, [selectedcountry, selectedState]);
 
   const sendData = async () => {
-
     let rawData = {
       name: formData.name,
       phone: parseInt(formData.phone),
@@ -145,10 +147,12 @@ const ForwardingAgentsCreationForm = ({
 
     const response = await (creating
       ? ForwardingAgentService.createForwardingAgent(rawData)
-      : ForwardingAgentService.updateForwardingAgent(forwardingAgent.id, rawData));
+      : ForwardingAgentService.updateForwardingAgent(
+          forwardingAgent.id,
+          rawData
+        ));
 
     if (response.status >= 200 && response.status <= 300) {
-
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -157,21 +161,23 @@ const ForwardingAgentsCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-
       setShowErrorAlert(true);
     }
   };
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
-            <div className="form-label_name"><h2>General</h2><span></span></div>
+            <div className="form-label_name">
+              <h2>General</h2>
+              <span></span>
+            </div>
             <div className="row w-100">
               <div className="col-6 text-start">
                 <div className="company-form__section">
@@ -217,7 +223,10 @@ const ForwardingAgentsCreationForm = ({
                     placeholder="rnumber"
                     value={formData.reference_number}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, reference_number: e.target.value })
+                      setFormData({
+                        ...formData,
+                        reference_number: e.target.value,
+                      })
                     }
                     label="Reference Number"
                   />
@@ -229,10 +238,25 @@ const ForwardingAgentsCreationForm = ({
                     placeholder="contactLN"
                     value={formData.contact_last_name}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, contact_last_name: e.target.value })
+                      setFormData({
+                        ...formData,
+                        contact_last_name: e.target.value,
+                      })
                     }
                     label="Contact Last Name"
                   />
+                </div>
+                <div className="company-form__section">
+                  <p className="form-label">Tipo de documento:</p>
+                  <select
+                    name="identificacionNumber"
+                    id="identificacionNumber"
+                    className="form-input"
+                  >
+                    <option value="CC">CC</option>
+                    <option value="CE">CE</option>
+                    <option value="NIT">NIT</option>
+                  </select>
                 </div>
               </div>
 
@@ -280,7 +304,10 @@ const ForwardingAgentsCreationForm = ({
                     placeholder="contactFN"
                     value={formData.contact_first_name}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, contact_first_name: e.target.value })
+                      setFormData({
+                        ...formData,
+                        contact_first_name: e.target.value,
+                      })
                     }
                     label="Contact First Name"
                   />
@@ -292,31 +319,26 @@ const ForwardingAgentsCreationForm = ({
                     placeholder="idNumber"
                     value={formData.identification_number}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, identification_number: e.target.value })
+                      setFormData({
+                        ...formData,
+                        identification_number: e.target.value,
+                      })
                     }
                     label="Identification Number"
                   />
                 </div>
-                <p className="textId">Tipo de documento:</p>
-                <select
-                  name="identificacionNumber"
-                  id="identificacionNumber"
-                  className="form-input"
-                >
-                  <option value="CC">CC</option>
-                  <option value="CE">CE</option>
-                  <option value="NIT">NIT</option>
-                </select>
+             
               </div>
             </div>
-
           </div>
         </div>
 
-
         <div className="col-6 text-start">
           <div className="creation creation-container w-100">
-            <div className="form-label_name"><h2>Address</h2><span></span></div>
+            <div className="form-label_name">
+              <h2>Address</h2>
+              <span></span>
+            </div>
             <div className="company-form__section">
               <Input
                 type="textarea"
@@ -324,7 +346,10 @@ const ForwardingAgentsCreationForm = ({
                 placeholder="Street & Address..."
                 value={formData.street_and_number}
                 changeHandler={(e) =>
-                  setFormData({ ...formData, street_and_number: e.target.value })
+                  setFormData({
+                    ...formData,
+                    street_and_number: e.target.value,
+                  })
                 }
                 label="Street & Address"
               />
@@ -405,11 +430,7 @@ const ForwardingAgentsCreationForm = ({
               >
                 <option value="">Select a state</option>
                 {states.map((state) => (
-                <option 
-                  key={state.iso2} 
-                  value={state.name} 
-                  data-key={state.iso2}
-                >
+                  <option key={state.iso2} value={state.name} data-key={state.iso2}>
                     {state.name}
                   </option>
                 ))}
@@ -424,7 +445,9 @@ const ForwardingAgentsCreationForm = ({
                 id="carrier-info-city"
                 className="form-input"
                 value={formData.city}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
               >
                 <option value="">Select a city</option>
                 {cities.map((city) => (
@@ -460,18 +483,27 @@ const ForwardingAgentsCreationForm = ({
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-          <AlertTitle>Success</AlertTitle>
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
+          <AlertTitle >Succes</AlertTitle>
           <strong>
             Forwarding Agent {creating ? "created" : "updated"} successfully!
           </strong>
         </Alert>
       )}
       {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Forwarding Agent. Please try again
+            Error {creating ? "creating" : "updating"} Forwarding Agent. Please
+            try again
           </strong>
         </Alert>
       )}
