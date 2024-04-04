@@ -25,31 +25,32 @@ const CarrierCreationForm = ({
   const formFormat = {
     name: "",
     phone: "",
-    mobilePhone: "",
+    mobile_phone: "",
     email: "",
     fax: "",
     website: "",
-    entityId: "",
-    contactFirstName: "",
-    contactLastName: "",
-    streetNumber: "",
+    reference_number:"",
+    reference_number: "",
+    contact_first_name: "",
+    contact_last_name: "",
+    street_and_number: "",
     city: "",
     state: "",
     country: "",
-    zipCode: "",
+    zip_code: "",
     carrierType: "Land",
     methodCode: "Land",
-    carrierCode: "",
-    idNumber: "",
+    carrier_code: "",
+    identification_number: "",
     typeIdentificacion: "",
 
-    iataCode: "",
-    airlineCode: "",
-    airlinePrefix: "",
-    airwayBillNumbers: "",
+    iata_code: "",
+    airline_code: "",
+    airline_prefix: "",
+    airway_bill_number: "",
     passengersOnlyAirline: false,
 
-    scacNumber: "",
+    scac_number: "",
 
     fmcNumber: "",
   };
@@ -78,42 +79,42 @@ const CarrierCreationForm = ({
 
   useEffect(() => {
     if (!creating && carrier) {
-      
+
       let updatedFormData = {
         name: carrier.name || "",
         phone: carrier.phone || "",
-        mobilePhone: carrier.movelPhone || "",
+        mobile_phone: carrier.mobile_phone || "",
         email: carrier.email || "",
         fax: carrier.fax || "",
-        website: carrier.webSide || "",
-        entityId: carrier.referentNumber || "",
-        contactFirstName: carrier.firstNameContac || "",
-        contactLastName: carrier.lasNameContac || "",
-        streetNumber: carrier.streetNumber || "",
+        website: carrier.website || "",
+        reference_number: carrier.reference_number || "",
+        contact_first_name: carrier.contact_first_name || "",
+        contact_last_name: carrier.contact_last_name || "",
+        street_and_number: carrier.street_and_number || "",
         city: carrier.city || "",
         state: carrier.state || "",
         country: carrier.country || "",
-        zipCode: carrier.zipCode || "",
+        zip_code: carrier.zip_code || "",
         carrierType: carrier.carrierType || "",
         methodCode: carrier.methodCode || "",
-        carrierCode: carrier.carrierCode || "",
-        idNumber: carrier.numIdentification || "",
+        carrier_code: carrier.carrier_code || "",
+        identification_number: carrier.identification_number || "",
         typeIdentificacion: carrier.typeIdentificacion || "",
       }; // Create a copy of the existing formData
 
       if (carrier.carrierType === "Land") {
-        updatedFormData.scacNumber = carrier.scacNumber;
+        updatedFormData.scac_number = carrier.scac_number;
       }
       if (carrier.carrierType === "Air") {
-        updatedFormData.iataCode = carrier.iataCode;
-        updatedFormData.airlineCode = carrier.airlineCode;
-        updatedFormData.airlinePrefix = carrier.airlinePrefix;
-        updatedFormData.airwayBillNumbers = carrier.airwayBillNumbers;
-        updatedFormData.passengersOnlyAirline = carrier.passengersOnlyAirline;
+        updatedFormData.iata_code = carrier.iata_code || "";
+        updatedFormData.airline_code = carrier.airline_code || "";
+        updatedFormData.airline_prefix = carrier.airline_prefix || "";
+        updatedFormData.airway_bill_number = carrier.airway_bill_number || "";
+        updatedFormData.passengersOnlyAirline = carrier.passengersOnlyAirline || "";
       }
       if (carrier.carrierType === "Ocean") {
-        updatedFormData.scacNumber = carrier.scacNumber;
-        updatedFormData.fmcNumber = carrier.fmcNumber;
+        updatedFormData.scac_number = carrier.scac_number || "";
+        updatedFormData.fmcNumber = carrier.fmcNumber || "";
       }
       for (let property in updatedFormData) {
         if (updatedFormData[property] === null) {
@@ -122,7 +123,7 @@ const CarrierCreationForm = ({
       }
       setFormData(updatedFormData); // Update formData once with all the changes
     }
-    
+
   }, [creating, carrier]);
 
   useEffect(() => {
@@ -157,31 +158,31 @@ const CarrierCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      phone: parseInt(formData.mobilePhone),
-      movelPhone: parseInt(formData.mobilePhone),
+      phone: formData.mobile_phone,
+      mobile_phone: formData.mobile_phone,
       email: formData.email,
-      fax: parseInt(formData.fax),
-      webSide: formData.website,
-      referentNumber: parseInt(formData.entityId),
-      firstNameContac: formData.contactFirstName,
-      lasNameContac: formData.contactLastName,
-      numIdentification: parseInt(formData.idNumber),
+      fax: formData.fax,
+      website: formData.website,
+      reference_number: formData.reference_number,
+      contact_first_name: formData.contact_first_name,
+      contact_last_name: formData.contact_last_name,
+      identification_number: formData.identification_number,
       typeIdentificacion: formData.typeIdentificacion,
       sistenID: "",
-      streetNumber: formData.streetNumber,
+      street_and_number: formData.street_and_number,
       city: formData.city,
       state: formData.state,
       country: formData.country,
-      zipCode: parseInt(formData.zipCode),
+      zip_code: formData.zip_code,
       parentAccount: "",
       carrierType: formData.carrierType,
       methodCode: formData.carrierType,
-      carrierCode: formData.carrierCode,
-      scacNumber: formData.scacNumber,
-      iataCode: formData.iataCode,
-      airlineCode: formData.airlineCode,
-      airlinePrefix: formData.airlinePrefix,
-      airwayBillNumbers: formData.airwayBillNumbers,
+      carrier_code: formData.carrier_code,
+      scac_number: formData.scac_number,
+      iata_code: formData.iata_code,
+      airline_code: formData.airline_code,
+      airline_prefix: formData.airline_prefix,
+      airway_bill_number: formData.airway_bill_number,
       passengersOnlyAirline: formData.passengersOnlyAirline,
     };
 
@@ -190,7 +191,7 @@ const CarrierCreationForm = ({
       : CarrierService.updateCarrier(carrier.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      
+
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -200,7 +201,7 @@ const CarrierCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      
+
       setShowErrorAlert(true);
     }
   };
@@ -221,397 +222,399 @@ const CarrierCreationForm = ({
 
   return (
     <div style={{ maxWidth: "100%", maxHeight: "100%", overflowX: "auto", overflowY: "auto" }}>
-          <div className="form-container">
+      <div className="form-container">
 
-<div className="company-form carrier">
-       <div className="row w-100">
-        <div className="col-6">
-      <div className="creation creation-container w-100">
-      <div className="form-label_name"><h2>General</h2><span></span></div>
-      <div className="row w-100">
-      <div className="col-6">
-          <div className="company-form__section">
-            <label htmlFor="carrierType" className="form-label">
-              Carrier Type:
-            </label>
-            <select
-              id="carrierType"
-              className="form-input"
-              value={formData.carrierType}
-              onChange={(e) => handleTypeChange(e)}
-            >
-              <option value="Land">Land</option>
-              <option value="Air">Air</option>
-              <option value="Ocean">Ocean</option>
-            </select>
-          </div>
+        <div className="company-form carrier">
+          <div className="row w-100">
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name"><h2>General</h2><span></span></div>
+                <div className="row w-100">
+                  <div className="col-6">
+                    <div className="company-form__section">
+                      <label htmlFor="carrierType" className="form-label">
+                        Carrier Type:
+                      </label>
+                      <select
+                        id="carrierType"
+                        className="form-input"
+                        value={formData.carrierType}
+                        onChange={(e) => handleTypeChange(e)}
+                      >
+                        <option value="Land">Land</option>
+                        <option value="Air">Air</option>
+                        <option value="Ocean">Ocean</option>
+                      </select>
+                    </div>
 
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="name"
-              placeholder="Name"
-              value={formData.name}
-              changeHandler={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              label="Name"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="ccode"
-              placeholder="Carrier Code"
-              value={formData.carrierCode}
-              changeHandler={(e) =>
-                setFormData({ ...formData, carrierCode: e.target.value })
-              }
-              label="Carrier Code"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="phone"
-              placeholder="Phone"
-              value={formData.phone}
-              changeHandler={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              label="Phone"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="mphone"
-              placeholder="Mobile Phone"
-              value={formData.mobilePhone}
-              changeHandler={(e) =>
-                setFormData({ ...formData, mobilePhone: e.target.value })
-              }
-              label="Mobile Phone"
-            />
-          </div>
-          <div className="company-form__section">
-            <Input
-              type="text"
-              inputName="fax"
-              placeholder="fax"
-              value={formData.fax}
-              changeHandler={(e) =>
-                setFormData({ ...formData, fax: e.target.value })
-              }
-              label="Fax"
-            />
-          </div>
-          </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="name"
+                        placeholder="Name"
+                        value={formData.name}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        label="Name"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="ccode"
+                        placeholder="Carrier Code"
+                        value={formData.carrier_code}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, carrier_code: e.target.value })
+                        }
+                        label="Carrier Code"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="phone"
+                        placeholder="Phone"
+                        value={formData.phone}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
+                        }
+                        label="Phone"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="mphone"
+                        placeholder="Mobile Phone"
+                        value={formData.mobile_phone}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, mobile_phone: e.target.value })
+                        }
+                        label="Mobile Phone"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="fax"
+                        placeholder="fax"
+                        value={formData.fax}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, fax: e.target.value })
+                        }
+                        label="Fax"
+                      />
+                    </div>
+                  </div>
 
-          <div className="col-6">
-            <div className="company-form__section">
-              <Input
-                type="email"
-                inputName="email"
-                placeholder="email"
-                value={formData.email}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                label="Email"
-              />
+                  <div className="col-6">
+                    <div className="company-form__section">
+                      <Input
+                        type="email"
+                        inputName="email"
+                        placeholder="email"
+                        value={formData.email}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        label="Email"
+                      />
+                    </div>
+                    
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="website"
+                        placeholder="website"
+                        value={formData.website}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, website: e.target.value })
+                        }
+                        label="Web Site"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="reference_number"
+                        placeholder="Referent Number"
+                        value={formData.reference_number}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, reference_number: e.target.value })
+                        }
+                        label="Reference Number"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="contactFN"
+                        placeholder="Contact First Name"
+                        value={formData.contact_first_name}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, contact_first_name: e.target.value })
+                        }
+                        label="Contact First Name"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="contact_last_name"
+                        placeholder="Contact Last Name"
+                        value={formData.contact_last_name}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, contact_last_name: e.target.value })
+                        }
+                        label="Contact Last Name"
+                      />
+                    </div>
+                    <div className="company-form__section">
+
+                      <Input
+                        type="text"
+                        inputName="identification_number"
+                        placeholder="ID Number"
+                        value={formData.identification_number}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, identification_number: e.target.value })
+                        }
+                        label="Identification Number"
+                      />
+
+                    </div>
+                    <p className="textId">Tipo de documento</p>
+                    <select
+                      name="identificacionNumber"
+                      id="identificacionNumber"
+                      className="form-input"
+                    >
+                      <option value="CC">CC</option>
+                      <option value="CE">CE</option>
+                      <option value="NIT">NIT</option>
+                    </select>
+                  </div>{/* ----------------------------END TWO---------------------------------- */}
+
+                </div>
+              </div>
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="website"
-                placeholder="website"
-                value={formData.website}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, website: e.target.value })
-                }
-                label="Website"
-              />
+
+            <div className="col-6">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name"><h2>Address</h2><span></span></div>
+                <div className="company-form__section">
+                  <Input
+                    type="textarea"
+                    inputName="street"
+                    placeholder="Street & Address..."
+                    value={formData.street_and_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, street_and_number: e.target.value })
+                    }
+                    label="Street & Address"
+                  />
+                </div>
+
+                <div className="company-form__section">
+                  <label htmlFor="country" className="form-label">
+                    Country:
+                  </label>
+                  <select
+                    name="country"
+                    id="country"
+                    className="form-input"
+                    value={formData.country}
+                    onChange={(e) => handleCountryChange(e)}
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map((country) => (
+                      <option
+                        key={country.iso2}
+                        value={country.name}
+                        data-key={country.iso2}
+                      >
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="company-form__section">
+                  <label htmlFor="state" className="form-label">
+                    State:
+                  </label>
+                  <select
+                    name="state"
+                    id="state"
+                    className="form-input"
+                    value={formData.state}
+                    onChange={(e) => handleStateChange(e)}
+                  >
+                    <option value="">Select a state</option>
+                    {states.map((state) => (
+                      <option key={state.iso2} value={state.name} data-key={state.iso2}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="company-form__section">
+                  <label htmlFor="city" className="form-label">
+                    City:
+                  </label>
+                  <select
+                    name="city"
+                    id="carrier-info-city"
+                    className="form-input"
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  >
+                    <option value="">Select a city</option>
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="zip_code"
+                    placeholder="Zip Code..."
+                    value={formData.zip_code}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, zip_code: e.target.value })
+                    }
+                    label="Zip Code"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="rnumber"
-                placeholder="rnumber"
-                value={formData.referentNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, referentNumber: e.target.value })
-                }
-                label="Reference Number"
-              />
+          </div>
+
+          <div className="row w-100">
+            <div className="col-4">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name"><h2>Land</h2><span></span></div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="iata_code"
+                    placeholder="IATA code..."
+                    value={formData.iata_code}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, iata_code: e.target.value })
+                    }
+                    label="IATA account number"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="airline_code"
+                    placeholder="Airline code..."
+                    value={formData.airline_code}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, airline_code: e.target.value })
+                    }
+                    label="Airline Code"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="airline_prefix"
+                    placeholder="Airline Prefix..."
+                    value={formData.airline_prefix}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, airline_prefix: e.target.value })
+                    }
+                    label="Airline Prefix"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="textarea"
+                    inputName="airway_bill_number"
+                    placeholder="Airline Bill Numbers..."
+                    value={formData.airway_bill_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, airway_bill_number: e.target.value })
+                    }
+                    label="IATA account number"
+                  />
+                </div>
+                <hr />
+                <div className="company-form__section">
+                  <Input
+                    type="checkbox"
+                    inputName="passengerOnly"
+                    value={formData.passengersOnlyAirline}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, passengersOnlyAirline: e.target.value.checked })
+                    }
+                    label="This is a passengers only airline"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="contactFN"
-                placeholder="contactFN"
-                value={formData.contactFirstName}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, contactFirstName: e.target.value })
-                }
-                label="Contact First Name"
-              />
+
+            <div className="col-4">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name"><h2>Airline</h2><span></span></div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="scac_number"
+                    value={formData.scac_number}
+                    placeholder="SCAC Number..."
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, scac_number: e.target.value.checked })
+                    }
+                    label="SCAC Number"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="contactLN"
-                placeholder="contactLN"
-                value={formData.contactLastName}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, contactLastName: e.target.value })
-                }
-                label="Contact Last Name"
-              />
+
+            <div className="col-4">
+              <div className="creation creation-container w-100">
+                <div className="form-label_name"><h2>Ocean</h2><span></span></div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="fmcnumber"
+                    placeholder="FMC Number..."
+                    value={formData.fmcNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, fmcNumber: e.target.value })
+                    }
+                    label="FMC number"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="scac_number"
+                    placeholder="SCAC Number..."
+                    value={formData.scac_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, scac_number: e.target.value })
+                    }
+                    label="SCAC number"
+                  />
+                </div>
+              </div>
+
             </div>
-            <div className="company-form__section">
-
-              <Input
-                type="text"
-                inputName="idNumber"
-                placeholder="idNumber"
-                value={formData.idNumber}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, idNumber: e.target.value })
-                }
-                label="Identification Number"
-              />
-
-            </div>
-            <p className="textId">Tipo de documento</p>
-            <select
-              name="identificacionNumber"
-              id="identificacionNumber"
-              className="form-input"
-            >
-              <option value="CC">CC</option>
-              <option value="CE">CE</option>
-              <option value="NIT">NIT</option>
-            </select>
-          </div>{/* ----------------------------END TWO---------------------------------- */}
-        
-      </div>
-      </div>
-      </div>
-
-      <div className="col-6">
-      <div className="creation creation-container w-100">
-      <div className="form-label_name"><h2>Address</h2><span></span></div>
-        <div className="company-form__section">
-          <Input
-            type="textarea"
-            inputName="street"
-            placeholder="Street & Address..."
-            value={formData.streetNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, streetNumber: e.target.value })
-            }
-            label="Street & Address"
-          />
-        </div>
-
-        <div className="company-form__section">
-          <label htmlFor="country" className="form-label">
-            Country:
-          </label>
-          <select
-            name="country"
-            id="country"
-            className="form-input"
-            value={formData.country}
-            onChange={(e) => handleCountryChange(e)}
-          >
-            <option value="">Select a country</option>
-            {countries.map((country) => (
-              <option
-                key={country.iso2}
-                value={country.name}
-                data-key={country.iso2}
-              >
-                {country.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="state" className="form-label">
-            State:
-          </label>
-          <select
-            name="state"
-            id="state"
-            className="form-input"
-            value={formData.state}
-            onChange={(e) => handleStateChange(e)}
-          >
-            <option value="">Select a state</option>
-            {states.map((state) => (
-              <option key={state.iso2} value={state.name} data-key={state.iso2}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-          <label htmlFor="city" className="form-label">
-            City:
-          </label>
-          <select
-            name="city"
-            id="carrier-info-city"
-            className="form-input"
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          >
-            <option value="">Select a city</option>
-            {cities.map((city) => (
-              <option key={city.id} value={city.name}>
-                {city.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="zipcode"
-            placeholder="Zip Code..."
-            value={formData.zipCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, zipCode: e.target.value })
-            }
-            label="Zip Code"
-          />
-        </div>
-      </div>
-      </div>
-      </div>
-
-      <div className="row w-100">
-        <div className="col-4">
-      <div className="creation creation-container w-100">
-      <div className="form-label_name"><h2>Land</h2><span></span></div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="iata"
-            placeholder="IATA code..."
-            value={formData.iataCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, iataCode: e.target.value })
-            }
-            label="IATA account number"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="airlinecode"
-            placeholder="Airline code..."
-            value={formData.airlineCode}
-            changeHandler={(e) =>
-              setFormData({ ...formData, airlineCode: e.target.value })
-            }
-            label="Airline Code"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="airlineprefix"
-            placeholder="Airline Prefix..."
-            value={formData.airlinePrefix}
-            changeHandler={(e) =>
-              setFormData({ ...formData, airlinePrefix: e.target.value })
-            }
-            label="Airline Prefix"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="textarea"
-            inputName="airlinebillnumbers"
-            placeholder="Airline Bill Numbers..."
-            value={formData.airwayBillNumbers}
-            changeHandler={(e) =>
-              setFormData({ ...formData, airwayBillNumbers: e.target.value })
-            }
-            label="IATA account number"
-          />
-        </div>
-        <hr />
-        <div className="company-form__section">
-          <Input
-            type="checkbox"
-            inputName="passengerOnly"
-            value={formData.passengersOnlyAirline}
-            changeHandler={(e) =>
-              setFormData({ ...formData, passengersOnlyAirline: e.target.value.checked })
-            }
-            label="This is a passengers only airline"
-          />
-        </div>
-      </div>
-      </div>
-
-      <div className="col-4">
-      <div className="creation creation-container w-100">
-      <div className="form-label_name"><h2>Airline</h2><span></span></div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="scacNumber"
-            value={formData.scacNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, scacNumber: e.target.value.checked })
-            }
-            label="SCAC Number"
-          />
-        </div>
-      </div>
-      </div>
-
-      <div className="col-4">
-      <div className="creation creation-container w-100">
-      <div className="form-label_name"><h2>Ocean</h2><span></span></div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="fmcnumber"
-            placeholder="FMC Number..."
-            value={formData.fmcNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, fmcNumber: e.target.value })
-            }
-            label="FMC number"
-          />
-        </div>
-        <div className="company-form__section">
-          <Input
-            type="text"
-            inputName="scacnumber"
-            placeholder="SCAC Number..."
-            value={formData.scacNumber}
-            changeHandler={(e) =>
-              setFormData({ ...formData, scacNumber: e.target.value })
-            }
-            label="SCAC number"
-          />
-        </div>
+          </div>
         </div>
 
       </div>
-      </div>
-      </div>
 
-      </div>
 
-    
 
       <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>

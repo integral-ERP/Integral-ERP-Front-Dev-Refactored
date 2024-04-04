@@ -23,24 +23,24 @@ const Customers = () => {
     "Mobile Phone",
     "Email",
     "Fax",
-    "Website",
+    "Web Site",
     "Reference Number",
     "Contact First Name",
     "Contact Last Name",
     "ID",
-    "Type ID",
-    "System ID",
+    // "Type ID",
+    // "System ID",
     "Street & Number",
     "City",
     "State",
     "Country",
     "Zip-Code",
   ];
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
   const fetchCustomersData = (url = null) => {
     CustomerService.getCustomers(url)
       .then((response) => {
-        if(customers !== response.data.results){
+        if (customers !== response.data.results) {
           setcustomers([...customers, ...response.data.results].reverse());
         }
         if (response.data.next) {
@@ -62,7 +62,7 @@ const Customers = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextPageURL) {
-        
+
         fetchCustomersData(nextPageURL);
       }
     });
@@ -103,7 +103,7 @@ const Customers = () => {
             setShowSuccessAlert(false);
           }, 3000);
           const newreceipts = customers.filter((order) => order.id !== selectedCustomer.id);
-            setcustomers(newreceipts);
+          setcustomers(newreceipts);
         } else {
           setShowErrorAlert(true);
           setTimeout(() => {
@@ -111,9 +111,9 @@ const Customers = () => {
           }, 3000);
         }
       })
-      .catch((error) => {
-        
-      });
+        .catch((error) => {
+
+        });
     } else {
       alert("Please select a Employee to delete.");
     }
@@ -145,71 +145,68 @@ const Customers = () => {
 
   return (
     <>
-    <div className="dashboard__layout">
-      <div className="dashboard__sidebar">
-        <Sidebar />
-      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
-        <Table
-          data={customers}
-          columns={columns}
-          onSelect={handleSelectCustomer} // Make sure this line is correct
-          selectedRow={selectedCustomer}
-          onDelete={handleDeleteCustomer}
-          onEdit={handleEditCustomer}
-          onAdd={handleAddCustomer}
-          contextService={CustomerService}
-          title="Customers"
-        >
-          <CustomersCreationForm
+      <div className="dashboard__layout">
+        <div className="dashboard__sidebar">
+          <Sidebar />
+          <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
+            <Table
+              data={customers}
+              columns={columns}
+              onSelect={handleSelectCustomer} // Make sure this line is correct
+              selectedRow={selectedCustomer}
+              onDelete={handleDeleteCustomer}
+              onEdit={handleEditCustomer}
+              onAdd={handleAddCustomer}
+              contextService={CustomerService}
+              title="Customers"
+            >
+              {/* <CustomersCreationForm
               customer={selectedCustomer}
               closeModal={closeModal}
               creating={false}
               onCustomerDataChange={handleWarehouseProviderDataChange}
-            />
+            /> */}
+              {selectedCustomer !== null && (
+                <CustomersCreationForm
+                  customer={selectedCustomer}
+                  closeModal={closeModal}
+                  creating={false}
+                  onCustomerDataChange={handleWarehouseProviderDataChange}
+                />
+              )}
+              {selectedCustomer === null && (
+                <CustomersCreationForm
+                  customer={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onCustomerDataChange={handleWarehouseProviderDataChange}
+                />
+              )}
             </Table>
 
-        {showSuccessAlert && (
-          <Alert
-            severity="success"
-            onClose={() => setShowSuccessAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Success</AlertTitle>
-            <strong>Customer deleted successfully!</strong>
-          </Alert>
-        )}
-        {showErrorAlert && (
-          <Alert
-            severity="error"
-            onClose={() => setShowErrorAlert(false)}
-            className="alert-notification"
-          >
-            <AlertTitle>Error</AlertTitle>
-            <strong>Error deleting Customer. Please try again</strong>
-          </Alert>
-        )}
-        {selectedCustomer !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CustomersCreationForm
-              customer={selectedCustomer}
-              closeModal={closeModal}
-              creating={false}
-              onCustomerDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedCustomer === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CustomersCreationForm
-              customer={null}
-              closeModal={closeModal}
-              creating={true}
-              onCustomerDataChange={handleWarehouseProviderDataChange}
-            />
-          </ModalForm>
-        )}
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Customer deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Customer. Please try again</strong>
+              </Alert>
+            )}
+
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

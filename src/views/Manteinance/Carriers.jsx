@@ -23,28 +23,28 @@ const Carrier = () => {
     "Mobile Phone",
     "Email",
     "Fax",
-    "Website",
+    "Web Site",
     "Reference Number",
     "Contact First Name",
     "Contact Last Name",
     "ID",
-    "Type ID",
-    "System ID",
+    // "Type ID",
+    // "System ID",
     "Street & Number",
     "City",
     "State",
     "Country",
     "Zip-Code",
-    "Parent Account",
-    "Carrier Type",
-    "Method Code",
-    "Carrier Code",
-    "SCAC Number",
-    "IATA Code",
-    "Airline Code",
-    "Airline Prefix",
-    "Airway Bill Numbers",
-    "Passenger Only Airline",
+    // "Parent Account",
+    // "Carrier Type",
+    // "Method Code",
+    // "Carrier Code",
+    // "SCAC Number",
+    // "IATA Code",
+    // "Airline Code",
+    // "Airline Prefix",
+    // "Airway Bill Numbers",
+    // "Passenger Only Airline",
   ];
 
   const {hideShowSlider} = useContext(GlobalContext);
@@ -175,12 +175,29 @@ const Carrier = () => {
           title="Carriers"
           contextService={CarrierService}
         >
-           <CarrierCreationForm
+           {/* <CarrierCreationForm
+              carrier={selectedCarrier}
+              closeModal={closeModal}
+              creating={false}
+              onCarrierDataChange={handleCarrierDataChange}
+            /> */}
+             {selectedCarrier !== null && (
+            <CarrierCreationForm
               carrier={selectedCarrier}
               closeModal={closeModal}
               creating={false}
               onCarrierDataChange={handleCarrierDataChange}
             />
+        )}
+
+        {selectedCarrier === null && (
+            <CarrierCreationForm
+              carrier={null}
+              closeModal={closeModal}
+              creating={true}
+              onCarrierDataChange={handleCarrierDataChange}
+            />
+        )}
             </Table>
 
         {showSuccessAlert && (
@@ -204,27 +221,7 @@ const Carrier = () => {
           </Alert>
         )}
 
-        {selectedCarrier !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={selectedCarrier}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
-
-        {selectedCarrier === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <CarrierCreationForm
-              carrier={null}
-              closeModal={closeModal}
-              creating={true}
-              onCarrierDataChange={handleCarrierDataChange}
-            />
-          </ModalForm>
-        )}
+       
         </div>
       </div>
     </div>

@@ -24,15 +24,15 @@ const CustomerCreationForm = ({
     phone: "",
     email: "",
     fax: "",
-    webSide: "",
-    referentNumber: "",
-    firstNameContac: "",
-    lasNameContac: "",
-    streetNumber: "",
+    website: "",
+    reference_number: "",
+    contact_first_name: "",
+    contact_last_name: "",
+    street_and_number: "",
     city: "",
     state: "",
     country: "",
-    zipCode: "",
+    zip_code: "",
   });
 
   const handleCountryChange = (event) => {
@@ -63,15 +63,15 @@ const CustomerCreationForm = ({
         phone: customer.phone || "",
         email: customer.email || "",
         fax: customer.fax || "",
-        webSide: customer.webSide || "",
-        firstNameContac: customer.firstNameContac || "",
-        lasNameContac: customer.lasNameContac || "",
-        streetNumber: customer.streetNumber || "",
+        website: customer.website || "",
+        contact_first_name: customer.contact_first_name || "",
+        contact_last_name: customer.contact_last_name || "",
+        street_and_number: customer.street_and_number || "",
         city: customer.city || "",
         state: customer.state || "",
         country: customer.country || "",
-        zipCode: customer.zipCode || "",
-        referentNumber: customer.referentNumber || "",
+        zip_code: customer.zip_code || "",
+        reference_number: customer.reference_number || "",
       });
     }
   }, [creating, customer]);
@@ -114,15 +114,15 @@ const CustomerCreationForm = ({
       phone: parseInt(formData.phone),
       email: formData.email,
       fax: parseInt(formData.fax),
-      webSide: formData.webSide,
-      referentNumber: parseInt(formData.referentNumber),
-      firstNameContac: formData.firstNameContac,
-      lasNameContac: formData.lasNameContac,
-      streetNumber: formData.streetNumber,
+      website: formData.website,
+      reference_number: parseInt(formData.reference_number),
+      contact_first_name: formData.contact_first_name,
+      contact_last_name: formData.contact_last_name,
+      street_and_number: formData.street_and_number,
       city: formData.city,
       state: formData.state,
       country: formData.country,
-      zipCode: parseInt(formData.zipCode),
+      zip_code: parseInt(formData.zip_code),
     };
 
     const response = await (creating
@@ -185,22 +185,22 @@ const CustomerCreationForm = ({
                     <Input
                       type="text"
                       inputName="website"
-                      placeholder="Website"
-                      value={formData.webSide}
+                      placeholder="website"
+                      value={formData.website}
                       changeHandler={(e) =>
-                        setFormData({ ...formData, webSide: e.target.value })
+                        setFormData({ ...formData, website: e.target.value })
                       }
-                      label="Website"
+                      label="Web Site"
                     />
                   </div>
                   <div className="company-form__section">
                     <Input
                       type="text"
-                      inputName="referenceNumber"
-                      placeholder="Reference Number"
-                      value={formData.referentNumber}
+                      inputName="reference_number"
+                      placeholder="Referent Number"
+                      value={formData.reference_number}
                       changeHandler={(e) =>
-                        setFormData({ ...formData, referentNumber: e.target.value })
+                        setFormData({ ...formData, reference_number: e.target.value })
                       }
                       label="Reference Number"
                     />
@@ -232,29 +232,29 @@ const CustomerCreationForm = ({
                     />
                   </div>
                   <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="contactFirstName"
-                      placeholder="Contact First Name"
-                      value={formData.firstNameContac}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, firstNameContac: e.target.value })
-                      }
-                      label="Contact First Name"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="contactLastName"
-                      placeholder="Contact Last Name"
-                      value={formData.lasNameContac}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, lasNameContac: e.target.value })
-                      }
-                      label="Contact Last Name"
-                    />
-                  </div>
+                      <Input
+                        type="text"
+                        inputName="contactFN"
+                        placeholder="Contact First Name"
+                        value={formData.contact_first_name}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, contact_first_name: e.target.value })
+                        }
+                        label="Contact First Name"
+                      />
+                    </div>
+                    <div className="company-form__section">
+                      <Input
+                        type="text"
+                        inputName="contact_last_name"
+                        placeholder="Contact Last Name"
+                        value={formData.contact_last_name}
+                        changeHandler={(e) =>
+                          setFormData({ ...formData, contact_last_name: e.target.value })
+                        }
+                        label="Contact Last Name"
+                      />
+                    </div>
                 </div>{/* ----------------------------END TWO---------------------------------- */}
             
             </div>
@@ -270,9 +270,9 @@ const CustomerCreationForm = ({
                   type="textarea"
                   inputName="street"
                   placeholder="Street & Address..."
-                  value={formData.streetNumber}
+                  value={formData.street_and_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, streetNumber: e.target.value })
+                    setFormData({ ...formData, street_and_number: e.target.value })
                   }
                   label="Street & Address"
                 />
@@ -340,17 +340,17 @@ const CustomerCreationForm = ({
                 </select>
               </div>
               <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="zipcode"
-                  placeholder="Zip Code..."
-                  value={formData.zipCode}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, zipCode: e.target.value })
-                  }
-                  label="Zip Code"
-                />
-              </div>
+                  <Input
+                    type="text"
+                    inputName="zip_code"
+                    placeholder="Zip Code..."
+                    value={formData.zip_code}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, zip_code: e.target.value })
+                    }
+                    label="Zip Code"
+                  />
+                </div>
             </div>
           </div>
         </div>

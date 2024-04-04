@@ -23,7 +23,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Mobile Phone",
     "Email",
     "Fax",
-    "Website",
+    "Web Site",
     "Reference Number",
     "Contact First Name",
     "Contact Last Name",
@@ -159,12 +159,28 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           contextService={VendorService}
           title="Vendors"
         >
-           <VendorsCreationForm
+           {/* <VendorsCreationForm
+              vendor={selectedVendor}
+              closeModal={closeModal}
+              creating={false}
+              onvendorDataChange={handleVendorsDataChange}
+            /> */}
+              {selectedVendor !== null && (
+            <VendorsCreationForm
               vendor={selectedVendor}
               closeModal={closeModal}
               creating={false}
               onvendorDataChange={handleVendorsDataChange}
             />
+        )}
+        {selectedVendor === null && (
+            <VendorsCreationForm
+              vendor={null}
+              closeModal={closeModal}
+              creating={true}
+              onvendorDataChange={handleVendorsDataChange}
+            />
+        )}
             </Table>
 
 
@@ -188,26 +204,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             <strong>Error deleting Vendor. Please try again</strong>
           </Alert>
         )}
-        {selectedVendor !== null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <VendorsCreationForm
-              vendor={selectedVendor}
-              closeModal={closeModal}
-              creating={false}
-              onvendorDataChange={handleVendorsDataChange}
-            />
-          </ModalForm>
-        )}
-        {selectedVendor === null && (
-          <ModalForm isOpen={isOpen} closeModal={closeModal}>
-            <VendorsCreationForm
-              vendor={null}
-              closeModal={closeModal}
-              creating={true}
-              onvendorDataChange={handleVendorsDataChange}
-            />
-          </ModalForm>
-        )}
+      
         </div>
       </div>
     </div>
