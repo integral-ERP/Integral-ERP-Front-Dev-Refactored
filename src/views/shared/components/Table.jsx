@@ -681,12 +681,6 @@ const Table = ({
                             </button>
                           ) : columnName === "View Receipt PDF" ? (
                             <>
-                              {/* <button type="button" onClick={generatePDFReceipt} className="custom-button">
-                                <i className="fas fa-file-pdf"></i>
-                              </button>
-                              <button type="button" onClick={generatePDFLabel} className="custom-button">
-                                <i className="fas fa-file-pdf"></i>
-                              </button> */}
                               <button
                                 className="generic-button ne"
                                 style={{
