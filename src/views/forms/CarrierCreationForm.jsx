@@ -469,27 +469,11 @@ const CarrierCreationForm = ({
                     inputName="state"
                     placeholder="State"
                     value={formData.state}
-<<<<<<< HEAD
                     changeHandler={(e) =>
                       setFormData({ ...formData, state: e.target.value })
                     }
                     label="State"
                   />
-=======
-                    onChange={(e) => handleStateChange(e)}
-                  >
-                    <option value="">Select a state</option>
-                    {states.map((state) => (
-                      <option
-                        key={state.iso2}
-                        value={state.name}
-                        data-key={state.iso2}
-                      >
-                        {state.name}
-                      </option>
-                    ))}
-                  </select>
->>>>>>> aebbab9fdd196dc549673e9261a6d8e8a6a5248a
                 </div>
                 <div className="company-form__section">
                   <Input
@@ -497,25 +481,11 @@ const CarrierCreationForm = ({
                     inputName="city"
                     placeholder="City"
                     value={formData.city}
-<<<<<<< HEAD
                     changeHandler={(e) =>
                       setFormData({ ...formData, city: e.target.value })
                     }
                     label="City"
                   />
-=======
-                    onChange={(e) =>
-                      setFormData({ ...formData, city: e.target.value })
-                    }
-                  >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.name}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
->>>>>>> aebbab9fdd196dc549673e9261a6d8e8a6a5248a
                 </div>
                 <div className="company-form__section">
                   <Input
