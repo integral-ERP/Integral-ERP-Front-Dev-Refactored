@@ -16,8 +16,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
+// import PortsCreationForm from "../../others/PortsCreationForm";
 import _, { set } from "lodash";
-import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
+import PortService from "../../../services/PortServices";
 import { useModal } from "../../../hooks/useModal";
 
 const Table = ({
@@ -67,6 +68,9 @@ const Table = ({
     currentDate.getDate() - currentDate.getDay()
   );
   useEffect(() => {
+    // console.log("PORT-1  =", port.air);
+    // console.log("PortsCreationForm  =", );
+    // console.log("PortsCreationForm.air  =", PortService.updatePort);
     const handleScroll = () => {
       if (!noScroll) return;
       const table = document.querySelector(".generic-table");
@@ -116,29 +120,24 @@ const Table = ({
     "Mobile Phone": "mobile_phone",
     Email: "email",
     Fax: "fax",
-<<<<<<< HEAD
-    Website: "website",
-    "Reference Number": "reference_number",
-    "Contact First Name": "contact_first_name",
-    "Contact Last Name": "contact_last_name",
-    "ID": "identification_number",
-=======
     Website: "webSide",
     "Web Site": "website",
     "Reference Number": "reference_number",
     "Contact First Name": "contact_first_name",
     "Contact Last Name": "contact_last_name",
     ID: "identification_number",
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
     "Type ID": "typeIdentificacion",
     "Street & Number": "street_and_number",
+    "US Customs Code": "us_customs_code",
     City: "city",
     State: "state",
     Country: "country",
     "Zip-Code": "zip_code",
+    "Rail": "rail",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
-    "Method Code": "methodCode",
+    "Method": "maritime",
+    "Subdivision": "sub_division",
     "Carrier Code": "carrierCode",
     "SCAC Number": "scac_number",
     "IATA Code": "iata_code",
@@ -651,11 +650,10 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
-                        ? "table-primary"
-                        : ""
-                    }`}
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                      ? "table-primary"
+                      : ""
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -705,137 +703,158 @@ const Table = ({
                               >
                                 <i className="fa fa-print menu-icon fa-3x"></i>
                                 <div className="select_print">
-                                <select
-                                  className="label_pdf_select"
-                                  style={{ border: "0px solid white", height: "3rem"}}
-                                  onChange={(e) =>
-                                    e.target.value === "receipt"
-                                      ? generatePDFReceipt()
-                                      : generatePDFLabel()
-                                  }
-                                >
-                                  {/* <option value=""> </option> */}
-
-                                  <option
-                                    value="receipt"
-                                    style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
-                                    }}
+                                  <select
+                                    className="label_pdf_select"
+                                    style={{ border: "0px solid white", height: "3rem" }}
+                                    onChange={(e) =>
+                                      e.target.value === "receipt"
+                                        ? generatePDFReceipt()
+                                        : generatePDFLabel()
+                                    }
                                   >
-                                    PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
-                                  </option>
+                                    {/* <option value=""> </option> */}
 
-                                  <option
-                                    value="label"
-                                    style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
-                                    }}
-                                  >
-                                    PDF Label
-                                  </option>
-                                </select>
+                                    <option
+                                      value="receipt"
+                                      style={{
+                                        borderRadius: "0px",
+                                        fontSize: "14px",
+                                        width: "20vw",
+                                        color: "#818080",
+                                        fontFamily: "poppins",
+                                      }}
+                                    >
+                                      PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
+                                    </option>
+
+                                    <option
+                                      value="label"
+                                      style={{
+                                        borderRadius: "0px",
+                                        fontSize: "14px",
+                                        width: "20vw",
+                                        color: "#818080",
+                                        fontFamily: "poppins",
+                                      }}
+                                    >
+                                      PDF Label
+                                    </option>
+                                  </select>
                                 </div>
                               </button>
                             </>
-                          ) : columnName === "Invoice PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generatePDFInvoice}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Bill PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generateBillPDF}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Status" ? (
-                            getStatus(row[columnNameToProperty[columnName]])
-                          ) : columnName === "Options" ? (
-                            <>
-                              {" "}
-                              {/* added hiden button trash for table commodity creation form */}
-                              <button
-                                type="button"
-                                onClick={onDelete}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-trash"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-pencil-alt"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Repack Options" ? (
-                            <>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                                style={{ display: "none" }}
-                              >
-                                <i className="fas fa-box-open"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Delete" ? (
-                            <button
-                              type="button"
-                              onClick={onDelete}
-                              className="custom-button"
-                            >
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          ) : typeof columnNameToProperty[columnName] ===
-                            "boolean" ? (
-                            row[columnNameToProperty[columnName]] ? (
-                              <i className="fas fa-check"></i>
-                            ) : (
-                              <i className="fas fa-times"></i>
-                            )
-                          ) : columnNameToProperty[columnName]?.includes(
-                              "."
-                            ) ? (
-                            getPropertyValue(
-                              row,
-                              columnNameToProperty[columnName]
-                            )
-                          ) : Array.isArray(
-                              row[columnNameToProperty[columnName]]
-                            ) ? (
-                            row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                          ) : (
-                            row[columnNameToProperty[columnName]]
-                          )}
+                          ) 
+                          // columnName === "Rail" ? (
+                          //   <button type="button" className="custom-button-pdf">
+                          //     {/* <i className="fas ">asdfasdf</i> */}
+                          //     <span>{PortService.rail ? <i className="fas fa-check"></i> : "X"}</span>
+                          //   </button>
+                          // )
+                          //   : 
+                          //   columnName === "Air" ? (
+                          //     <button type="button" className="custom-button-pdf">
+                          //       {/* <i className="fas ">asdfasdf</i> */}
+                          //       <span>{PortService.air ? <i className="fas fa-check"></i> : "X"}</span>
+                          //     </button>
+                          //   )
+                              // : 
+                              // columnName === "Road" ? (
+                              //   <button type="button" className="custom-button-pdf">
+                              //     {/* <i className="fas ">asdfasdf</i> */}
+                              //     <span>{PortService.road ? <i className="fas fa-check"></i> : "X"}</span>
+                              //   </button>
+                              // )
+                                : columnName === "Invoice PDF" ? (
+                                  <button
+                                    type="button"
+                                    onClick={generatePDFInvoice}
+                                    className="custom-button-pdf"
+                                  >
+                                    <i className="fas fa-file-pdf"></i>
+                                  </button>
+                                ) : columnName === "Bill PDF" ? (
+                                  <button
+                                    type="button"
+                                    onClick={generateBillPDF}
+                                    className="custom-button-pdf"
+                                  >
+                                    <i className="fas fa-file-pdf"></i>
+                                  </button>
+                                ) : columnName === "Status" ? (
+                                  getStatus(row[columnNameToProperty[columnName]])
+                                ) : columnName === "Options" ? (
+                                  <>
+                                    {" "}
+                                    {/* added hiden button trash for table commodity creation form */}
+                                    <button
+                                      type="button"
+                                      onClick={onDelete}
+                                      className="custom-button"
+                                    >
+                                      <i className="fas fa-trash"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={onEdit}
+                                      className="custom-button"
+                                    >
+                                      <i className="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={onInspect}
+                                      className="custom-button"
+                                    >
+                                      <i className="fas fa-eye"></i>
+                                    </button>
+                                  </>
+                                ) : columnName === "Repack Options" ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      onClick={onInspect}
+                                      className="custom-button"
+                                    >
+                                      <i className="fas fa-eye"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={onEdit}
+                                      className="custom-button"
+                                      style={{ display: "none" }}
+                                    >
+                                      <i className="fas fa-box-open"></i>
+                                    </button>
+                                  </>
+                                ) : columnName === "Delete" ? (
+                                  <button
+                                    type="button"
+                                    onClick={onDelete}
+                                    className="custom-button"
+                                  >
+                                    <i className="fas fa-trash"></i>
+                                  </button>
+                                ) : typeof columnNameToProperty[columnName] ===
+                                  "boolean" ? (
+                                  row[columnNameToProperty[columnName]] ? (
+                                    <i className="fas fa-check"></i>
+                                  ) : (
+                                    <i className="fas fa-times"></i>
+                                  )
+                                ) : columnNameToProperty[columnName]?.includes(
+                                  "."
+                                ) ? (
+                                  getPropertyValue(
+                                    row,
+                                    columnNameToProperty[columnName]
+                                  )
+                                ) : Array.isArray(
+                                  row[columnNameToProperty[columnName]]
+                                ) ? (
+                                  row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                                ) : (
+                                  row[columnNameToProperty[columnName]]
+                                )}
                         </td>
                       ) : null
                     )}
@@ -971,7 +990,7 @@ const Table = ({
                               <div className="select_print">
                                 <select
                                   className="label_pdf_select"
-                                  style={{ border: "0px solid white", height: "3rem"}}
+                                  style={{ border: "0px solid white", height: "3rem" }}
                                   onChange={(e) =>
                                     e.target.value === "receipt"
                                       ? generatePDFReceipt()
@@ -1023,7 +1042,7 @@ const Table = ({
                             <button
                               className="generic-button ne"
                               onClick={onDelete}
-                              style={{ display: "flex", width: "40px", marginLeft: "3vw"}}
+                              style={{ display: "flex", width: "40px", marginLeft: "3vw" }}
 
                             >
                               <i

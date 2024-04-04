@@ -26,12 +26,12 @@ const EmployeeCreationForm = ({
     phone: "",
     email: "",
     fax: "",
-    streetNumber: "",
+    street_and_number: "",
     city: "",
     state: "",
     country: "",
-    zipCode: "",
-    numIdentification: "",
+    zip_code: "",
+    identification_number: "",
     typeIdentificacion: "CC",
   });
 
@@ -63,13 +63,13 @@ const EmployeeCreationForm = ({
         phone: employee.phone || "",
         email: employee.email || "",
         fax: employee.fax || "",
-        streetNumber: employee.streetNumber || "",
+        street_and_number: employee.street_and_number || "",
         city: employee.city || "",
         state: employee.state || "",
         country: employee.country || "",
-        zipCode: employee.zipCode || "",
+        zip_code: employee.zip_code || "",
         referentNumber: employee.referentNumber || "",
-        numIdentification: employee.numIdentification || "",
+        identification_number: employee.identification_number || "",
         typeIdentificacion: employee.typeIdentificacion || "CC",
       });
     }
@@ -110,15 +110,15 @@ const EmployeeCreationForm = ({
   const sendData = async () => {
     let rawData = {
       name: formData.name,
-      phone: parseInt(formData.phone),
+      phone: formData.phone,
       email: formData.email,
-      fax: parseInt(formData.fax),
-      streetNumber: formData.streetNumber,
+      fax: formData.fax,
+      street_and_number: formData.street_and_number,
       city: formData.city,
       state: formData.state,
       country: formData.country,
-      zipCode: parseInt(formData.zipCode),
-      numIdentification: parseInt(formData.numIdentification),
+      zip_code: formData.zip_code,
+      identification_number: formData.identification_number,
       typeIdentificacion: formData.typeIdentificacion,
     };
 
@@ -205,9 +205,9 @@ const EmployeeCreationForm = ({
                   type="text"
                   inputName="identification"
                   placeholder="Identification"
-                  value={formData.numIdentification}
+                  value={formData.identification_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, numIdentification: e.target.value })
+                    setFormData({ ...formData, identification_number: e.target.value })
                   }
                   label="Identification"
                 />
@@ -249,17 +249,52 @@ const EmployeeCreationForm = ({
               <div className="company-form__section">
                 <Input
                   type="textarea"
-                  inputName="street"
+                  inputName="street_and_number"
                   placeholder="Street & Address..."
-                  value={formData.streetNumber}
+                  value={formData.street_and_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, streetNumber: e.target.value })
+                    setFormData({ ...formData, street_and_number: e.target.value })
                   }
                   label="Street & Address"
                 />
               </div>
-
               <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="country"
+                placeholder="Country"
+                value={formData.country}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+                label="Country"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="state"
+                placeholder="State"
+                value={formData.state}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                label="State"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="city"
+                placeholder="City"
+                value={formData.city}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                label="City"
+              />
+            </div>
+              {/* <div className="company-form__section">
                 <label htmlFor="country" className="form-label">
                   Country:
                 </label>
@@ -281,8 +316,8 @@ const EmployeeCreationForm = ({
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="company-form__section">
+              </div> */}
+              {/* <div className="company-form__section">
                 <label htmlFor="state" className="form-label">
                   State:
                 </label>
@@ -300,8 +335,8 @@ const EmployeeCreationForm = ({
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="company-form__section">
+              </div> */}
+              {/* <div className="company-form__section">
                 <label htmlFor="city" className="form-label">
                   City:
                 </label>
@@ -319,15 +354,15 @@ const EmployeeCreationForm = ({
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className="company-form__section">
                 <Input
                   type="text"
-                  inputName="zipcode"
+                  inputName="zip_code"
                   placeholder="Zip Code..."
-                  value={formData.zipCode}
+                  value={formData.zip_code}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, zipCode: e.target.value })
+                    setFormData({ ...formData, zip_code: e.target.value })
                   }
                   label="Zip Code"
                 />

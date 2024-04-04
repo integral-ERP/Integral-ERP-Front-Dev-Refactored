@@ -9,13 +9,13 @@ const ForwardingAgentsCreationForm = ({
   forwardingAgent,
   closeModal,
   creating,
-  // onForwardingAgentDataChange,
+  onForwardingAgentDataChange,
 }) => {
 
-  const [activeTab, setActiveTab] = useState("general");
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  // const [activeTab, setActiveTab] = useState("general");
+  // const handleTabClick = (tab) => {
+  //   setActiveTab(tab);
+  // };
 
   const [countries, setCountries] = useState([]);
   const [selectedcountry, setSelectedcountry] = useState("");
@@ -24,23 +24,13 @@ const ForwardingAgentsCreationForm = ({
   const [cities, setCities] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-
-  
-  // const [formData, setFormData] = useState({
-    const formFormat = {
+  const [formData, setFormData] = useState({
     name: "",
     phone: "",
-<<<<<<< HEAD
-    mobile_phone : "",
-    email: "",
-    fax: "",
-    webSide: "",
-=======
     mobile_phone: "",
     email: "",
     fax: "",
     website: "",
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
     reference_number: "",
     contact_first_name: "",
     contact_last_name: "",
@@ -51,13 +41,7 @@ const ForwardingAgentsCreationForm = ({
     state: "",
     country: "",
     zip_code: "",
-<<<<<<< HEAD
-  };
-
-  const [formData, setFormData] = useState({ formFormat });
-=======
   });
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
 
   const handlecountryChange = (event) => {
     setFormData({ ...formData, country: event.target.value });
@@ -79,7 +63,11 @@ const ForwardingAgentsCreationForm = ({
     setSelectedState(
       event.target.options[event.target.selectedIndex].getAttribute("data-key")
     );
-    setFormData({ ...formData, state: event.target.value, city: "" });
+    setFormData({ 
+      ...formData, 
+      country: "",
+      state: event.target.value, 
+      city: "" });
   };
 
   useEffect(() => {
@@ -87,11 +75,7 @@ const ForwardingAgentsCreationForm = ({
       setFormData({
         name: forwardingAgent.name || "",
         phone: forwardingAgent.phone || "",
-<<<<<<< HEAD
-        mobile_phone : forwardingAgent.mobile_phone  || "",
-=======
         mobile_phone: forwardingAgent.mobile_phone || "",
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
         email: forwardingAgent.email || "",
         fax: forwardingAgent.fax || "",
         website: forwardingAgent.website || "",
@@ -139,25 +123,6 @@ const ForwardingAgentsCreationForm = ({
   }, [selectedcountry, selectedState]);
 
   const sendData = async () => {
-<<<<<<< HEAD
-    let rawData = {
-      name: formData.name || "",
-      phone: formData.phone || "",
-      movelPhone: formData.mobile_phone  || "",
-      email: formData.email || "",
-      fax: formData.fax || "",
-      website: formData.website || "",
-      referentNumber: formData.reference_number || "",
-      contact_first_name: formData.contact_first_name || "",
-      contact_last_name: formData.contact_last_name || "",
-      identification_number: formData.identification_number || "",
-      typeIdentificacion: formData.typeIdentificacion || "CC",
-      street_and_number: formData.street_and_number || "",
-      city: formData.city || "",
-      state: formData.state || "",
-      country: formData.country || "",
-      zip_code: formData.zip_code || "",
-=======
 
     let rawData = {
       name: formData.name,
@@ -176,38 +141,23 @@ const ForwardingAgentsCreationForm = ({
       state: formData.state,
       country: formData.country,
       zip_code: parseInt(formData.zip_code),
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
     };
-    // const forwardingAgent="";
-    console.log("DATA: = ", formData);
-    console.log("forwardingAgent =", forwardingAgent);
-    // const id = forwardingAgent.id;
+
     const response = await (creating
       ? ForwardingAgentService.createForwardingAgent(rawData)
-      : ForwardingAgentService.updateForwardingAgent(
-        forwardingAgent.id, 
-        rawData
-      ));
+      : ForwardingAgentService.updateForwardingAgent(forwardingAgent.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-<<<<<<< HEAD
-=======
 
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
-        // onForwardingAgentDataChange();
+        onForwardingAgentDataChange();
         setShowSuccessAlert(false);
-        setFormData(formFormat)
         window.location.reload();
-      }, 10000);
+      }, 1000);
     } else {
-<<<<<<< HEAD
-      console.log("Something went wrong:", response);
-=======
 
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
       setShowErrorAlert(true);
     }
   };
@@ -241,15 +191,9 @@ const ForwardingAgentsCreationForm = ({
                     type="text"
                     inputName="mphone"
                     placeholder="Mobile Phone"
-<<<<<<< HEAD
-                    value={formData.mobile_phone }
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, mobile_phone : e.target.value })
-=======
                     value={formData.mobile_phone}
                     changeHandler={(e) =>
                       setFormData({ ...formData, mobile_phone: e.target.value })
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
                     }
                     label="Mobile Phone"
                   />
@@ -326,11 +270,7 @@ const ForwardingAgentsCreationForm = ({
                     changeHandler={(e) =>
                       setFormData({ ...formData, website: e.target.value })
                     }
-<<<<<<< HEAD
-                    label="Web Site"
-=======
                     label="Website"
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
                   />
                 </div>
                 <div className="company-form__section">
@@ -357,11 +297,7 @@ const ForwardingAgentsCreationForm = ({
                     label="Identification Number"
                   />
                 </div>
-<<<<<<< HEAD
-                <p className="textId">Tipo de documento</p>
-=======
                 <p className="textId">Tipo de documento:</p>
->>>>>>> 4db64df1c20c3a3e2f991a4049c888124c4c02a1
                 <select
                   name="identificacionNumber"
                   id="identificacionNumber"
@@ -393,8 +329,47 @@ const ForwardingAgentsCreationForm = ({
                 label="Street & Address"
               />
             </div>
+            {/* ------------------------------------------------------- */}
 
             <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="country"
+                placeholder="Country"
+                value={formData.country}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+                label="Country"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="state"
+                placeholder="State"
+                value={formData.state}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                label="State"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="city"
+                placeholder="City"
+                value={formData.city}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                label="City"
+              />
+            </div>
+            
+
+            {/* <div className="company-form__section">
               <label htmlFor="country" className="form-label">
                 Country:
               </label>
@@ -416,8 +391,8 @@ const ForwardingAgentsCreationForm = ({
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="company-form__section">
+            </div> */}
+            {/* <div className="company-form__section">
               <label htmlFor="state" className="form-label">
                 State:
               </label>
@@ -425,22 +400,22 @@ const ForwardingAgentsCreationForm = ({
                 name="state"
                 id="state"
                 className="form-input"
-                value={formData.state}
+                value="{formData.state}"
                 onChange={(e) => handleStateChange(e)}
               >
                 <option value="">Select a state</option>
                 {states.map((state) => (
-                  <option 
-                    key={state.iso2} 
-                    value={state.name} 
-                    data-key={state.iso2}
-                  >
+                <option 
+                  key={state.iso2} 
+                  value={state.name} 
+                  data-key={state.iso2}
+                >
                     {state.name}
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="company-form__section">
+            </div> */}
+            {/* <div className="company-form__section">
               <label htmlFor="city" className="form-label">
                 City:
               </label>
@@ -450,7 +425,6 @@ const ForwardingAgentsCreationForm = ({
                 className="form-input"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                // onChange={(e) => handleCountryChange(e)}
               >
                 <option value="">Select a city</option>
                 {cities.map((city) => (
@@ -459,11 +433,11 @@ const ForwardingAgentsCreationForm = ({
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div className="company-form__section">
               <Input
                 type="text"
-                inputName="zip_code"
+                inputName="zipcode"
                 placeholder="Zip Code..."
                 value={formData.zip_code}
                 changeHandler={(e) =>
@@ -509,14 +483,14 @@ ForwardingAgentsCreationForm.propTypes = {
   forwardingAgent: propTypes.object,
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
-  // onForwardingAgentDataChange: propTypes.func,
+  onForwardingAgentDataChange: propTypes.func,
 };
 
 ForwardingAgentsCreationForm.defaultProps = {
   forwardingAgent: {},
   closeModal: null,
   creating: false,
-  // onForwardingAgentDataChange: null,
+  onForwardingAgentDataChange: null,
 };
 
 export default ForwardingAgentsCreationForm;
