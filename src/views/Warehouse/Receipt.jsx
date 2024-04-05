@@ -170,7 +170,10 @@ const Receipt = () => {
               setShowSuccessAlert(true);
               setTimeout(() => {
                 setShowSuccessAlert(false);
-              }, 3000);
+              },
+              window.location.reload(),3000
+              
+              );
             } catch (error) {
               console.error("Error al eliminar el recibo:", error);
               setShowErrorAlert(true);
@@ -450,6 +453,7 @@ const Receipt = () => {
                 <AlertTitle>Success</AlertTitle>
                 <strong>Receipt Order deleted successfully!</strong>
               </Alert>
+              
             )}
             {showErrorAlert && (
               <Alert
