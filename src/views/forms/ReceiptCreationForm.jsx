@@ -75,6 +75,9 @@ const ReceiptCreationForm = ({
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
+//-------------------------------------------------------
+  const [SelectEvent, setSelectEvent] = useState(null);
+
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -84,6 +87,10 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+
+
+  
+  
 
   useEffect(() => {
     if (!isButtonDisabled) {
@@ -169,6 +176,20 @@ const ReceiptCreationForm = ({
     const result = await ForwardingAgentService.getForwardingAgentById(id);
     setagent(result.data);
   };
+
+  //------------------------------------------------
+  const handleSelectEvent = (events) => {
+    setSelectEvent(events);
+    console.log("selected events ", events);
+  };
+
+  const handleDeleteEvent= () => {
+    if (SelectEvent) {
+    }
+  };
+  
+
+  //------------------------------------------------
 
   const handleSelectIncomeCharge = (commodity) => {
     setSelectedIncomeCarge(commodity);
@@ -1490,9 +1511,7 @@ const ReceiptCreationForm = ({
               selectedRow={selectedCommodity}
               onDelete={handleCommodityDelete}
               onEdit={handleCommodityEdit}
-              onInspect={() => {
-                setshowCommodityInspect(!showCommodityInspect);
-              }}
+              onInspect={() => {setshowCommodityInspect(!showCommodityInspect);}}
               onAdd={() => {}}
               showOptions={false}
               //added no double click
@@ -1729,16 +1748,16 @@ const ReceiptCreationForm = ({
                     "Event Type",
                     "Details",
                     "Location",
-                    "Include In Tracking",
+                    // "Include In Tracking",
                     "Created In",
                     // "Created By",
                     "Created On",
                     // "Last Modified By",
-                    "Last Modified On",
-                    // "Options"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                    // "Last Modified On",
+                    // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                   ]}
-                  onSelect={() => {}}
-                  selectedRow={{}}
+                  onSelect={handleSelectEvent}
+                  selectedRow={SelectEvent}
                   onDelete={() => {}}
                   onEdit={() => {}}
                   onAdd={() => {}}

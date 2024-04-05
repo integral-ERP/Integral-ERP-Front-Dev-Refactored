@@ -35,7 +35,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
       details: formData.details,
       location: formData.location,
       createIn: formData.createIn,
-      createOn : formData.createOn,
+      createOn: formData.createOn,
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
@@ -77,35 +77,35 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           <div className="form-column-create">
             <label className="text-comm">Event Type:</label>
 
-            <select 
-              name="eventType" 
-              id="eventType" 
+            <select
+              name="eventType"
+              id="eventType"
               style={{ height: "4rem" }}
               value={formData.eventType}
-                  onChange={(e) =>
-                    handleeventType(e.target.value)}
+              onChange={(e) =>
+                handleeventType(e.target.value)}
             >
               <option value="">Select Event Type ...</option>
-              <option value="arrivedDestination">Arrived at Destination</option>
-              <option value="arrivedWarehouse">Arrived at Warehouse</option>
-              <option value="arrivedWarehouseMIA">Arrived at Warehouse MIA</option>
-              <option value="cargoPicked">Cargo has been picked</option>
-              <option value="cargoScannedIn">Cargo scanned in</option>
-              <option value="cargoScannedOut">Cargo scanned out</option>
-              <option value="cargoStatusUpdate">Cargo status update</option>
-              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
-              <option value="customsOnHold">Customs On-Hold</option>
-              <option value="customsRelease">Customs Release / Liberación</option>
-              <option value="deliveredToConsignee">Delivered to Consignee</option>
-              <option value="entryStatusUpdate">Entry Status Update</option>
-              <option value="externalTrackingUpdate">External Tracking Update</option>
-              <option value="inTransit">In Transit</option>
-              <option value="inBond">In Bond (7512)</option>
-              <option value="originDocument">Origin Document</option>
-              <option value="availablePickup">Package Available for Pickup</option>
-              <option value="cancelled">Package Cancelled</option>
-              <option value="delivered">Package Delivered</option>
-              <option value="error">Package Error</option>
+              <option value="Arrived at Destination">Arrived at Destination</option>
+              <option value="Arrived at Warehouse">Arrived at Warehouse</option>
+              <option value="Arrived at Warehouse MIA">Arrived at Warehouse MIA</option>
+              <option value="Cargo has been picked">Cargo has been picked</option>
+              <option value="Cargo scanned in">Cargo scanned in</option>
+              <option value="Cargo scanned out">Cargo scanned out</option>
+              <option value="Cargo status update">Cargo status update</option>
+              <option value="Customs Entry / Inicio Aduana">Customs Entry / Inicio Aduana</option>
+              <option value="Customs On-Hold">Customs On-Hold</option>
+              <option value="Customs Release / Liberación">Customs Release / Liberación</option>
+              <option value="Delivered to Consignee">Delivered to Consignee</option>
+              <option value="Entry Status Update">Entry Status Update</option>
+              <option value="External Tracking Update">External Tracking Update</option>
+              <option value="In Transit">In Transit</option>
+              <option value="In Bond (7512)">In Bond (7512)</option>
+              <option value="Origin Document">Origin Document</option>
+              <option value="Package Available for Pickup">Package Available for Pickup</option>
+              <option value="Package Cancelled">Package Cancelled</option>
+              <option value="Package Delivered">Package Delivered</option>
+              <option value="Package Error">Package Error</option>
             </select>
           </div>
         </div>
@@ -128,13 +128,13 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Location:</label>
-            <select name="location" 
-                    id="eventType" 
-                    style={{ height: "4rem" }}
-                    value={formData.location}
-                    onChange={(e) =>
-                      handlelocation(e.target.value)}  
-                  >
+            <select name="location"
+              id="eventType"
+              style={{ height: "4rem" }}
+              value={formData.location}
+              onChange={(e) =>
+                handlelocation(e.target.value)}
+            >
               <option value="">Select Location ...</option>
               <option value="Acajutla">Acajutla</option><option value="Alajuela">Alajuela</option>
               <option value="Ambarli">Ambarli</option> <option value="Arica">Arica</option>
