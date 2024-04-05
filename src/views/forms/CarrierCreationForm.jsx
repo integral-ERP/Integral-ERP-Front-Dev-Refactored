@@ -30,7 +30,6 @@ const CarrierCreationForm = ({
     fax: "",
     website: "",
     reference_number: "",
-    reference_number: "",
     contact_first_name: "",
     contact_last_name: "",
     street_and_number: "",

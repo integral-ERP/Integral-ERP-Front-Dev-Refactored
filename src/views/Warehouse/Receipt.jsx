@@ -117,7 +117,7 @@ const Receipt = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    console.log("receipts", receipts[0]);
+    console.log("receipts-1", receipts[0]);
     console.log("Pieces", receipts[0].commodities.length);
   };
 

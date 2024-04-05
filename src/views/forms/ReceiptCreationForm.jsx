@@ -1725,15 +1725,17 @@ const ReceiptCreationForm = ({
                   data={events}
                   columns={[
                     "Date",
-                    "Name",
-                    "Location",
+                    // "Name",
+                    "Event Type",
                     "Details",
+                    "Location",
                     "Include In Tracking",
                     "Created In",
-                    "Created By",
+                    // "Created By",
                     "Created On",
-                    "Last Modified By",
+                    // "Last Modified By",
                     "Last Modified On",
+                    // "Options"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                   ]}
                   onSelect={() => {}}
                   selectedRow={{}}

@@ -227,6 +227,12 @@ const Table = ({
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
+    //---------EVENT
+    "Event Type":"eventType",
+    "Details":"details",
+    "Location":"location",
+    "Created In": "createIn",
+    "Created On": "createOn",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {

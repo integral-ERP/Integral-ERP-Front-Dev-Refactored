@@ -13,12 +13,14 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
   const today = dayjs().format("YYYY-MM-DD");
   const formFormat = {
     dateTime: today,
-    type: 0,
-    details: 0,
-    location: 0,
-    includeInTracking: false,
+    eventType: "",
+    details: "",
+    location: "",
+    createIn: "WareHouse Receipt",
+    createOn: today,
+    includeInTracking: "",
   };
-
+  const [Eventype, setEventype] = useState("");
   const [formData, setformData] = useState(formFormat);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -29,13 +31,25 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
     const body = {
       id: internalID,
       creation_date: formData.dateTime,
-      type: formData.type,
+      eventType: formData.eventType,
       details: formData.details,
       location: formData.location,
+      createIn: formData.createIn,
+      createOn : formData.createOn,
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
   };
+
+  const handleeventType = (type) => {
+    setEventype(type)
+    setformData({ ...formData, eventType: type })
+  }
+
+  const handlelocation = (type) => {
+    setEventype(type)
+    setformData({ ...formData, location: type })
+  }
 
   return (
     <div className="income-charge-form">
@@ -63,36 +77,32 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           <div className="form-column-create">
             <label className="text-comm">Event Type:</label>
 
-            <select name="eventType" id="eventType" style={{ height: "4rem" }}>
+            <select 
+              name="eventType" 
+              id="eventType" 
+              style={{ height: "4rem" }}
+              value={formData.eventType}
+                  onChange={(e) =>
+                    handleeventType(e.target.value)}
+            >
+              <option value="">Select Event Type ...</option>
               <option value="arrivedDestination">Arrived at Destination</option>
               <option value="arrivedWarehouse">Arrived at Warehouse</option>
-              <option value="arrivedWarehouseMIA">
-                Arrived at Warehouse MIA
-              </option>
+              <option value="arrivedWarehouseMIA">Arrived at Warehouse MIA</option>
               <option value="cargoPicked">Cargo has been picked</option>
               <option value="cargoScannedIn">Cargo scanned in</option>
               <option value="cargoScannedOut">Cargo scanned out</option>
               <option value="cargoStatusUpdate">Cargo status update</option>
-              <option value="customsEntry">
-                Customs Entry / Inicio Aduana
-              </option>
+              <option value="customsEntry">Customs Entry / Inicio Aduana</option>
               <option value="customsOnHold">Customs On-Hold</option>
-              <option value="customsRelease">
-                Customs Release / Liberación
-              </option>
-              <option value="deliveredToConsignee">
-                Delivered to Consignee
-              </option>
+              <option value="customsRelease">Customs Release / Liberación</option>
+              <option value="deliveredToConsignee">Delivered to Consignee</option>
               <option value="entryStatusUpdate">Entry Status Update</option>
-              <option value="externalTrackingUpdate">
-                External Tracking Update
-              </option>
+              <option value="externalTrackingUpdate">External Tracking Update</option>
               <option value="inTransit">In Transit</option>
               <option value="inBond">In Bond (7512)</option>
               <option value="originDocument">Origin Document</option>
-              <option value="availablePickup">
-                Package Available for Pickup
-              </option>
+              <option value="availablePickup">Package Available for Pickup</option>
               <option value="cancelled">Package Cancelled</option>
               <option value="delivered">Package Delivered</option>
               <option value="error">Package Error</option>
@@ -118,39 +128,43 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Location:</label>
-            <select name="eventType" id="eventType" style={{ height: "4rem" }}>
-              <option value="arrivedDestination">Arrived at Destination</option>
-              <option value="arrivedWarehouse">Arrived at Warehouse</option>
-              <option value="arrivedWarehouseMIA">
-                Arrived at Warehouse MIA
-              </option>
-              <option value="cargoPicked">Cargo has been picked</option>
-              <option value="cargoScannedIn">Cargo scanned in</option>
-              <option value="cargoScannedOut">Cargo scanned out</option>
-              <option value="cargoStatusUpdate">Cargo status update</option>
-              <option value="customsEntry">
-                Customs Entry / Inicio Aduana
-              </option>
-              <option value="customsOnHold">Customs On-Hold</option>
-              <option value="customsRelease">
-                Customs Release / Liberación
-              </option>
-              <option value="deliveredToConsignee">
-                Delivered to Consignee
-              </option>
-              <option value="entryStatusUpdate">Entry Status Update</option>
-              <option value="externalTrackingUpdate">
-                External Tracking Update
-              </option>
-              <option value="inTransit">In Transit</option>
-              <option value="inBond">In Bond (7512)</option>
-              <option value="originDocument">Origin Document</option>
-              <option value="availablePickup">
-                Package Available for Pickup
-              </option>
-              <option value="cancelled">Package Cancelled</option>
-              <option value="delivered">Package Delivered</option>
-              <option value="error">Package Error</option>
+            <select name="location" 
+                    id="eventType" 
+                    style={{ height: "4rem" }}
+                    value={formData.location}
+                    onChange={(e) =>
+                      handlelocation(e.target.value)}  
+                  >
+              <option value="">Select Location ...</option>
+              <option value="Acajutla">Acajutla</option><option value="Alajuela">Alajuela</option>
+              <option value="Ambarli">Ambarli</option> <option value="Arica">Arica</option>
+              <option value="ATLANTA">Atlanta</option> <option value="Balboa">Balboa</option>
+              <option value="Baltimore">Baltimore</option> <option value="Barranquilla">Barranquilla</option>
+              <option value="Bogota">Bogota</option> <option value="Bridgeport">Bridgeport</option>
+              <option value="Brooklyn">Brooklyn</option> <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Cali">Cali</option> <option value="Cambria">Cambria</option>
+              <option value="Caracas">Caracas</option> <option value="Carson">Carson</option>
+              <option value="Cartagena">Cartagena</option> <option value="Centerville">Centerville</option>
+              <option value="Chester">Chester</option> <option value="Charleston">Charleston</option>
+              <option value="Chicago">Chicago</option> <option value="Columbus">Columbus</option>
+              <option value="Detroit">Detroit</option> <option value="Douglassville">Douglassville</option>
+              <option value="Guayaquil">Guayaquil</option> <option value="Guayaquil">Guayaquil</option>
+              <option value="Hilliard">Hilliard</option> <option value="Houston">Houston</option>
+              <option value="Kingston">Kingston</option> <option value="Las Vegas">Las Vegas</option>
+              <option value="Lima">Lima</option> <option value="Lisboa">Lisboa</option>
+              <option value="London">London</option> <option value="Madrid">Madrid</option>
+              <option value="Maracaibo">Maracaibo</option> <option value="Marlboro">Marlboro</option>
+              <option value="Miami">Miami</option> <option value="Middleton">Middleton</option>
+              <option value="Montevideo">Montevideo</option> <option value="Mulberry">Mulberry</option>
+              <option value="New York">New York</option> <option value="Norfolk">Norfolk</option>
+              <option value="OAKLAND">Oakland</option> <option value="Orlando">Orlando</option>
+              <option value="Pasadena">Pasadena</option><option value="Philadelphia">Philadel</option>
+              <option value="Quito">Quito</option><option value="Reedsburg">Reedsburg</option>
+              <option value="Santiago">Santiago</option><option value="Savannah">Savannah</option>
+              <option value="Summerville">Summerville</option><option value="Tampa">Tampa</option>
+              <option value="Washington">Washington</option><option value="Wilmington"></option>
+
+
             </select>
           </div>
         </div>
