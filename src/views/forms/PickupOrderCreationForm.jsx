@@ -1062,19 +1062,9 @@ const PickupOrderCreationForm = ({
     return selectedOption;
   };
 
-  /* useEffect(() => {
-    console.log(pickupOrder);
-    console.log(formData);
-    console.log(CTBType);
-    console.log(releasedToOptions);
-    let selectedOption = releasedToOptions.find((option) => option.id === formData.client_to_bill && option.type === CTBType);
-    console.log(selectedOption);
-  }, [CTBType, formData]) */
-
   return (
     <form className="company-form pickup">
       <div className="row w-100">
-        {/* General Form */}
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
@@ -1082,7 +1072,7 @@ const PickupOrderCreationForm = ({
               <span></span>
             </div>
             <div className="row align-items-center mb-3">
-              <div className="col-4 text-start text-start">
+              <div className="col-6 text-start text-start">
                 <Input
                   id="pickupnumber"
                   type="number"
@@ -1093,7 +1083,7 @@ const PickupOrderCreationForm = ({
                   label="Number"
                 />
               </div>
-              <div className="col-4 text-start">
+              <div className="col-6 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <p className="text-date">Creation Date and Time</p>
                   <DateTimePicker
@@ -1108,7 +1098,49 @@ const PickupOrderCreationForm = ({
                   />
                 </LocalizationProvider>
               </div>
-              <div className="col-4 text-start">
+             
+            </div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="employee" className="form-label">
+                  Employee:
+                </label>
+                <AsyncSelect
+                  id="employeeId"
+                  defaultValue={formData.employeeId}
+                  onChange={(e) => {
+                    handleEmployeeSelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={employeeOptions}
+                  value={employeeOptions.find(
+                    (employee) => employee.id === formData.employeeId
+                  )}
+                  loadOptions={loadEmployeeSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-6 text-start" id="dates">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <p className="text-date">Pick-up Date and Time</p>
+                  <DateTimePicker
+                    // label="Pick-up Date and Time"
+                    value={dayjs(formData.pickupDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                    className="creation creation-label"
+                  />
+                </LocalizationProvider>
+              </div>
+            </div>
+            <div className="row mb-3">
+            <div className="col-6 text-start">
                 <label htmlFor="destinationAgent" className="form-label">
                   Destination Agent:
                 </label>
@@ -1148,48 +1180,27 @@ const PickupOrderCreationForm = ({
                   />
                 )}
               </div>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-4 text-start">
-                <label htmlFor="employee" className="form-label">
-                  Employee:
-                </label>
-                <AsyncSelect
-                  id="employeeId"
-                  defaultValue={formData.employeeId}
-                  onChange={(e) => {
-                    handleEmployeeSelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={employeeOptions}
-                  value={employeeOptions.find(
-                    (employee) => employee.id === formData.employeeId
-                  )}
-                  loadOptions={loadEmployeeSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              <div className="col-4 text-start" id="dates">
+
+              <div className="col-6 text-start" id="dates">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Pick-up Date and Time</p>
+                  <p className="text-date">Delivery Date and Time</p>
                   <DateTimePicker
-                    // label="Pick-up Date and Time"
-                    value={dayjs(formData.pickupDateAndTime)}
+                    // label="Delivery Date and Time"
+                    value={dayjs(formData.deliveryDateAndTime)}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
                       })
                     }
-                    className="creation creation-label"
                   />
                 </LocalizationProvider>
               </div>
             </div>
+
             <div className="row mb-3">
-              <div className="col-4 text-start">
+             
+              <div className="col-6 text-start">
                 <label htmlFor="issuedby" className="form-label issuedBy">
                   Issued By:
                 </label>
@@ -1209,26 +1220,7 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
-
-              <div className="col-4 text-start" id="dates">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Delivery Date and Time</p>
-                  <DateTimePicker
-                    // label="Delivery Date and Time"
-                    value={dayjs(formData.deliveryDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-12 text-start">
+              <div className="col-6 text-start" style={{ marginTop: '20px' }}>
                 <div className="company-form__section">
                   <Input
                     type="textarea"
@@ -1236,13 +1228,15 @@ const PickupOrderCreationForm = ({
                     placeholder="Apply to..."
                     value={formData.issuedByInfo}
                     readonly={true}
+                   
                   />
                 </div>
               </div>
+            
             </div>
           </div>
         </div>
-        {/* Pickup Form */}
+
         <div className="col-6">
           <div className="creation creation-container w-100">
             <div className="form-label_name">
@@ -1358,6 +1352,7 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
       </div>
+
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -1459,40 +1454,7 @@ const PickupOrderCreationForm = ({
                   getOptionValue={(option) => option.id}
                 />
               </div>
-                {/* <label htmlFor="delivery" className="form-label">
-                  Delivery Location:
-                </label> */}
-                {/* <AsyncSelect
-                  id="deliveryLocation"
-                  onChange={(e) => {
-                    handleDeliveryLocationSelection(e);
-                  }}
-                  value={deliveryLocationOptions.find(
-                    (option) =>
-                      option.id === formData.deliveryLocationId &&
-                      option.type === formData.deliveryLocationType
-                  )}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={deliveryLocationOptions}
-                  loadOptions={loadDeliveryLocationSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                /> */}
               </div>
-              {/* { <div className="col-6 text-start"> */}
-                {/* <div className="company-form__section">
-                  <Input
-                    id="TextConsignee"
-                    type="textarea"
-                    inputName="consigneeInfo"
-                    placeholder="Consignee Info..."
-                    value={formData.consigneeInfo}
-                    readonly={true}
-                    label="Address"
-                  />
-                </div> */}
-              {/* </div>} */}
               <div className="col-6 text-start">
                 <div className="company-form__section">
                   <Input
@@ -1508,47 +1470,6 @@ const PickupOrderCreationForm = ({
               </div>
             </div>
             <div className="row align-items-center">
-              {/* <div className="col-6 text-start">
-                <label
-                  htmlFor="language"
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                    color: "#565656",
-                    marginRight: "10px",
-                  }}
-                >
-                  Client to Bill:
-                </label>
-                <select
-                  name="clientToBill"
-                  id="clientToBill"
-                  className="form-input"
-                  value={formData.client_to_bill_type}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an option</option>
-                  <option value="shipper">Shipper</option>
-                  <option value="consignee">Ultimate Consignee</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div className="col-6 text-start">
-                <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.client_to_bill_type !== "other"}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                  value={getAsyncSelectValue()}
-                  isClearable={true}
-                  defaultOptions={releasedToOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div> */}
             </div>
           </div>
         </div>
@@ -1622,144 +1543,6 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
       </div>
-      {/*<div className="col-12"><div className="creation creation-container w-100"><div className="form-label_name"><h3>Commodities</h3><span></span></div>
-          <CommodityCreationForm
-            onCancel={setshowCommodityCreationForm}
-            commodities={commodities}
-            setCommodities={setcommodities}
-            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-            locationEnabled={false}
-          ></CommodityCreationForm>
-          {showCommodityCreationForm && (
-            <>
-              <Table
-                data={commodities}
-                columns={[
-                  "Description",
-                  " Length",
-                  " Height",
-                  " Width",
-                  " Weight",
-                  "Location",
-                  " Volumetric Weight",
-                  " Chargeable Weight",
-                  "Options",
-                ]}
-                onSelect={handleSelectCommodity} // Make sure this line is correct
-                selectedRow={selectedCommodity}
-                onDelete={handleCommodityDelete}
-                onEdit={() => {
-                  setshowCommodityEditForm(!showCommodityEditForm);
-                }}
-                onInspect={() => {
-                  setshowCommodityInspect(!showCommodityInspect);
-                }}
-                onAdd={() => { }}
-                showOptions={false}
-              />
-              <button
-                type="button"
-                className="button-save"
-                onClick={() => {
-                  setshowRepackingForm(!showRepackingForm);
-                }}
-              >
-                Repack
-              </button>
-            </>
-          )}
-
-          {showRepackingForm && (
-            <RepackingForm
-              commodities={commodities}
-              setCommodities={setcommodities}
-            ></RepackingForm>
-          )}
-          {showCommodityEditForm && (
-            <CommodityCreationForm
-              onCancel={setshowCommodityEditForm}
-              commodities={commodities}
-              setCommodities={setcommodities}
-              commodity={selectedCommodity}
-              editing={true}
-              locationEnabled={false}
-            ></CommodityCreationForm>
-          )}
-          {showCommodityEditForm &&
-            selectedCommodity?.containsCommodities &&
-            selectedCommodity.internalCommodities.map(
-              (internalCommodity, index) => (
-                <CommodityCreationForm
-                  key={index}
-                  onCancel={() => { }}
-                  commodities={selectedCommodity.internalCommodities}
-                  setCommodities={updateSelectedCommodity}
-                  commodity={internalCommodity}
-                  editing={true}
-                  locationEnabled={false}
-                ></CommodityCreationForm>
-              )
-            )}
-
-          {showCommodityInspect && (
-            <div
-              className="repacking-container"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <p>
-                {selectedCommodity?.description
-                  ? selectedCommodity.description
-                  : ""}
-              </p>
-              <p>
-                Weight:{" "}
-                {selectedCommodity?.weight ? selectedCommodity.weight : 0}
-              </p>
-              <p>
-                Height:{" "}
-                {selectedCommodity?.height ? selectedCommodity.height : 0}
-              </p>
-              <p>
-                Width: {selectedCommodity?.width ? selectedCommodity.width : 0}
-              </p>
-              <p>
-                Length:{" "}
-                {selectedCommodity?.length ? selectedCommodity.length : 0}
-              </p>
-              <p>
-                Volumetric Weight:{" "}
-                {selectedCommodity?.volumetricWeigth
-                  ? selectedCommodity.volumetricWeigth
-                  : 0}
-              </p>
-              <p>
-                Chargeable Weight:{" "}
-                {selectedCommodity?.chargeableWeight
-                  ? selectedCommodity.chargeableWeight
-                  : 0}
-              </p>
-              <p>
-                Repacked?:{" "}
-                {selectedCommodity?.containsCommodities ? "Yes" : "No"}
-              </p>
-              {selectedCommodity?.internalCommodities.map((com) => {
-                return (
-                  <div key={com.id} className="card">
-                    <p>{com.description}</p>
-                    <p>Weight: {com.weight}</p>
-                    <p>Height: {com.height}</p>
-                    <p>Width: {com.width}</p>
-                    <p>Length: {com.length}</p>
-                    <p>Volumetric Weight: {com.volumetricWeight}</p>
-                    <p>Chargeable Weight: {com.chargedWeight}</p>
-                    <p>Repacked?: {com.containsCommodities ? "Yes" : "No"}</p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div> */}
       <input type="checkbox" id="toggleBoton"></input>
       <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
 
@@ -1843,6 +1626,7 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
       </div>
+    
 
       <div className="company-form__options-container">
         <button
