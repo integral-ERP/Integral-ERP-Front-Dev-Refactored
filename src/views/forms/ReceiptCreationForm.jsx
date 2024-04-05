@@ -1253,14 +1253,17 @@ const ReceiptCreationForm = ({
                 </label>
                 <AsyncSelect
                   id="shipper"
-                  onChange={(e) => {
-                    handleShipperSelection(e);
-                  }}
+                  value={consigneeOptions.find(
+                    (option) =>
+                      option.id === formData.shipperId &&
+                      option.type_person === formData.shipperType
+                  )}
+                  onChange={(e) => {handleShipperSelection(e);}}
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={shipperOptions}
                   loadOptions={loadShipperSelectOptions}
-                  value={shipper}
+                  // value={shipper}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
