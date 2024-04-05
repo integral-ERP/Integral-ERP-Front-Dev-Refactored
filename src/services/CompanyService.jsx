@@ -178,7 +178,7 @@ class CompanyService {
   ) {
     const requests = [
       axios.put(`${this.BASE_URL}companyType/${id}`, companyType),
-      axios.put(`${this.BASE_URL}companyInfo/${id}`, companyInfo),
+      // axios.put(`${this.BASE_URL}companyInfo/${id}`, companyInfo),
       axios.put(`${this.BASE_URL}addressInfo/${id}`, companyAddress),
       axios.put(`${this.BASE_URL}companyLogo/${id}`, companyLogo),
       axios.put(`${this.BASE_URL}companyRegisCode/${id}`, companyRegisCode),
@@ -222,7 +222,7 @@ class CompanyService {
   ) {
     const requests = [
       axios.post(`${this.BASE_URL}companyType/`, companyType),
-      axios.post(`${this.BASE_URL}companyInfo/`, companyInfo),
+      // axios.post(`${this.BASE_URL}companyInfo/`, companyInfo),
       axios.post(`${this.BASE_URL}addressInfo/`, companyAddress),
       axios.post(`${this.BASE_URL}companyLogo/`, companyLogo),
       axios.post(`${this.BASE_URL}companyRegisCode/`, companyRegisCode),

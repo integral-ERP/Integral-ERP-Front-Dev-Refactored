@@ -11,6 +11,7 @@ const ForwardingAgentsCreationForm = ({
   creating,
   onForwardingAgentDataChange,
 }) => {
+
   const [activeTab, setActiveTab] = useState("general");
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -62,7 +63,11 @@ const ForwardingAgentsCreationForm = ({
     setSelectedState(
       event.target.options[event.target.selectedIndex].getAttribute("data-key")
     );
-    setFormData({ ...formData, state: event.target.value, city: "" });
+    setFormData({ 
+      ...formData, 
+      country: "",
+      state: event.target.value, 
+      city: "" });
   };
 
   useEffect(() => {
@@ -349,8 +354,47 @@ const ForwardingAgentsCreationForm = ({
                 label="Street & Address"
               />
             </div>
+            {/* ------------------------------------------------------- */}
 
             <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="country"
+                placeholder="Country"
+                value={formData.country}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+                label="Country"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="state"
+                placeholder="State"
+                value={formData.state}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                label="State"
+              />
+            </div>
+            <div className="company-form__section">
+              <Input
+                type="text"
+                inputName="city"
+                placeholder="City"
+                value={formData.city}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                label="City"
+              />
+            </div>
+            
+
+            {/* <div className="company-form__section">
               <label htmlFor="country" className="form-label">
                 Country:
               </label>
@@ -372,8 +416,8 @@ const ForwardingAgentsCreationForm = ({
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="company-form__section">
+            </div> */}
+            {/* <div className="company-form__section">
               <label htmlFor="state" className="form-label">
                 State:
               </label>
@@ -381,22 +425,18 @@ const ForwardingAgentsCreationForm = ({
                 name="state"
                 id="state"
                 className="form-input"
-                value={formData.state}
+                value="{formData.state}"
                 onChange={(e) => handleStateChange(e)}
               >
                 <option value="">Select a state</option>
                 {states.map((state) => (
-                  <option
-                    key={state.iso2}
-                    value={state.name}
-                    data-key={state.iso2}
-                  >
+                  <option key={state.iso2} value={state.name} data-key={state.iso2}>
                     {state.name}
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="company-form__section">
+            </div> */}
+            {/* <div className="company-form__section">
               <label htmlFor="city" className="form-label">
                 City:
               </label>
@@ -416,7 +456,7 @@ const ForwardingAgentsCreationForm = ({
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div className="company-form__section">
               <Input
                 type="text"
