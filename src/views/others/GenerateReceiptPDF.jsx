@@ -54,17 +54,17 @@ const GenerateReceiptPDF = (data, numCon) => {
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
-        if (commodity.containsCommodities && commodity.internalCommodities) {
-          commodity.internalCommodities.forEach((internalCommodity) => {
+        // if (commodity.containsCommodities && commodity.internalCommodities) {
+        //   commodity.internalCommodities.forEach((internalCommodity) => {
 
-            thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fourthRowText += `${internalCommodity.description} \n`;
-            sixthRowText += `${internalCommodity.weight} lbs \n`;
-            seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-            totalWeight += parseFloat(internalCommodity.weight);
-            totalVolume += parseFloat(internalCommodity.volumetricWeight);
-          });
-        }
+        //     thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+        //     fourthRowText += `${internalCommodity.description} \n`;
+        //     sixthRowText += `${internalCommodity.weight} lbs \n`;
+        //     seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+        //     totalWeight += parseFloat(internalCommodity.weight);
+        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
+        //   });
+        // }
       });
       const commodityRow = [
         {
@@ -169,13 +169,13 @@ const GenerateReceiptPDF = (data, numCon) => {
                     ],
                   },
                   {
-                    stack: [
-                      {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
-                      },
-                    ],
+                    // stack: [
+                    //   {
+                    //     image: "",
+                    //     fit: [100, 200],
+                    //     alignment: `right`,
+                    //   },
+                    // ],
                   },
                 ],
               },
