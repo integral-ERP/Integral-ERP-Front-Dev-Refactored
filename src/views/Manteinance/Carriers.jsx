@@ -175,12 +175,7 @@ const Carrier = () => {
           title="Carriers"
           contextService={CarrierService}
         >
-           {/* <CarrierCreationForm
-              carrier={selectedCarrier}
-              closeModal={closeModal}
-              creating={false}
-              onCarrierDataChange={handleCarrierDataChange}
-            /> */}
+
              {selectedCarrier !== null && (
             <CarrierCreationForm
               carrier={selectedCarrier}

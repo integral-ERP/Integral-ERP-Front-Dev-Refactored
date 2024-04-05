@@ -194,13 +194,13 @@ const CarrierCreationForm = ({
 
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
-      setTimeout(() => {
-        closeModal();
+      // setTimeout(() => {
+        // closeModal();
         onCarrierDataChange();
-        setShowSuccessAlert(false);
+        // setShowSuccessAlert(false);
         setFormData(formFormat);
-        window.location.reload();
-      }, 1000);
+        // window.location.reload();
+      // }, 1000);
     } else {
       setShowErrorAlert(true);
     }
