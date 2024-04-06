@@ -190,7 +190,7 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    Location: "locationCode",
+    " Location": "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
     "Consignee Name": "consigneeObj.data.obj.name",

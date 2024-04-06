@@ -1509,7 +1509,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                " Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
