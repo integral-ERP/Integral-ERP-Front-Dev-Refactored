@@ -1761,7 +1761,7 @@ const PickupOrderCreationForm = ({
         </div>
       </div> */}
       <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
+      <label className="button-charge" htmlFor="toggleBoton"  style={{ display: 'none'}}></label>
 
       <div className="row w-100" id="miDiv">
         <div className="col-6">
