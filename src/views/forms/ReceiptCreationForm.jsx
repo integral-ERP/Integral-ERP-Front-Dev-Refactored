@@ -310,9 +310,9 @@ const ReceiptCreationForm = ({
       };
 
         reader.readAsDataURL(file);
-      }
-    }
-  };
+      });
+    };
+  
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(attachment => attachment.name !== name);
