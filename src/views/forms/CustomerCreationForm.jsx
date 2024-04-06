@@ -130,7 +130,6 @@ const CustomerCreationForm = ({
       : CustomerService.updateCustomer(customer.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -139,254 +138,227 @@ const CustomerCreationForm = ({
         window.location.reload();
       }, 1000);
     } else {
-      
       setShowErrorAlert(true);
     }
-
   };
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h2>General</h2><span></span></div>
-          <div className="row w-100">
-                <div className="col-6 text-start">
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="name"
-                      placeholder="Name"
-                      value={formData.name}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      label="Name"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="fax"
-                      placeholder="Fax"
-                      value={formData.fax}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, fax: e.target.value })
-                      }
-                      label="Fax"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="website"
-                      placeholder="website"
-                      value={formData.website}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, website: e.target.value })
-                      }
-                      label="Web Site"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="reference_number"
-                      placeholder="Referent Number"
-                      value={formData.reference_number}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, reference_number: e.target.value })
-                      }
-                      label="Reference Number"
-                    />
-                  </div>
+            <div className="form-label_name">
+              <h2>General</h2>
+              <span></span>
+            </div>
+            <div className="row w-100">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="name"
+                    placeholder="Name"
+                    value={formData.name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    label="Name"
+                  />
                 </div>
-                <div className="col-6 text-start">
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="phone"
-                      placeholder="Phone"
-                      value={formData.phone}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
-                      }
-                      label="Phone"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                    <Input
-                      type="text"
-                      inputName="email"
-                      placeholder="Email"
-                      value={formData.email}
-                      changeHandler={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      label="Email"
-                    />
-                  </div>
-                  <div className="company-form__section">
-                      <Input
-                        type="text"
-                        inputName="contactFN"
-                        placeholder="Contact First Name"
-                        value={formData.contact_first_name}
-                        changeHandler={(e) =>
-                          setFormData({ ...formData, contact_first_name: e.target.value })
-                        }
-                        label="Contact First Name"
-                      />
-                    </div>
-                    <div className="company-form__section">
-                      <Input
-                        type="text"
-                        inputName="contact_last_name"
-                        placeholder="Contact Last Name"
-                        value={formData.contact_last_name}
-                        changeHandler={(e) =>
-                          setFormData({ ...formData, contact_last_name: e.target.value })
-                        }
-                        label="Contact Last Name"
-                      />
-                    </div>
-                </div>{/* ----------------------------END TWO---------------------------------- */}
-            
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="fax"
+                    placeholder="Fax"
+                    value={formData.fax}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, fax: e.target.value })
+                    }
+                    label="Fax"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="website"
+                    placeholder="website"
+                    value={formData.website}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, website: e.target.value })
+                    }
+                    label="Web Site"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="reference_number"
+                    placeholder="Referent Number"
+                    value={formData.reference_number}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        reference_number: e.target.value,
+                      })
+                    }
+                    label="Reference Number"
+                  />
+                </div>
+              </div>
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="phone"
+                    placeholder="Phone"
+                    value={formData.phone}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    label="Phone"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    label="Email"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="contactFN"
+                    placeholder="Contact First Name"
+                    value={formData.contact_first_name}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        contact_first_name: e.target.value,
+                      })
+                    }
+                    label="Contact First Name"
+                  />
+                </div>
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="contact_last_name"
+                    placeholder="Contact Last Name"
+                    value={formData.contact_last_name}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        contact_last_name: e.target.value,
+                      })
+                    }
+                    label="Contact Last Name"
+                  />
+                </div>
+              </div>
+              {/* ----------------------------END TWO---------------------------------- */}
             </div>
           </div>
         </div>
 
         <div className="col-6 text-start">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h2>Address</h2><span></span></div>
-            <div>
+            <div className="form-label_name">
+              <h2>Address</h2>
+              <span></span>
+            </div>
+            <div className="row mb-3">
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <Input
-                  type="textarea"
-                  inputName="street"
-                  placeholder="Street & Address..."
-                  value={formData.street_and_number}
+                  type="text"
+                  inputName="country"
+                  placeholder="Country"
+                  value={formData.country}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, street_and_number: e.target.value })
+                    setFormData({ ...formData, country: e.target.value })
                   }
-                  label="Street & Address"
+                  label="Country"
                 />
               </div>
+              </div>
+              
+              <div className="col-6 text-start">
               <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="country"
-                placeholder="Country"
-                value={formData.country}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
-                label="Country"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="state"
-                placeholder="State"
-                value={formData.state}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, state: e.target.value })
-                }
-                label="State"
-              />
-            </div>
-            <div className="company-form__section">
-              <Input
-                type="text"
-                inputName="city"
-                placeholder="City"
-                value={formData.city}
-                changeHandler={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                label="City"
-              />
-            </div>
-              {/* <div className="company-form__section">
-                <label htmlFor="country" className="form-label">
-                  Country:
-                </label>
-                <select
-                  name="country"
-                  id="country"
-                  className="form-input"
-                  value={formData.country}
-                  onChange={(e) => handleCountryChange(e)}
-                >
-                  <option value="">Select a country</option>
-                  {countries.map((country) => (
-                    <option
-                      key={country.iso2}
-                      value={country.name}
-                      data-key={country.iso2}
-                    >
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
-              {/* <div className="company-form__section">
-                <label htmlFor="state" className="form-label">
-                  State:
-                </label>
-                <select
-                  name="state"
-                  id="state"
-                  className="form-input"
+                <Input
+                  type="text"
+                  inputName="state"
+                  placeholder="State"
                   value={formData.state}
-                  onChange={(e) => handleStateChange(e)}
-                >
-                  <option value="">Select a state</option>
-                  {states.map((state) => (
-                    <option key={state.iso2} value={state.name} data-key={state.iso2}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
-              {/* <div className="company-form__section">
-                <label htmlFor="city" className="form-label">
-                  City:
-                </label>
-                <select
-                  name="city"
-                  id="carrier-info-city"
-                  className="form-input"
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                >
-                  <option value="">Select a city</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.name}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, state: e.target.value })
+                  }
+                  label="State"
+                />
+              </div>
+              </div>
+              </div>
+
+              <div className="row mb-3">
+              <div className="col-6 text-start">
               <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="city"
+                  placeholder="City"
+                  value={formData.city}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
+                  label="City"
+                />
+              </div>
+              </div>
+
+              <div className="col-6 text-start">
+              <div className="company-form__section">
+                <Input
+                  type="text"
+                  inputName="zip_code"
+                  placeholder="Zip Code..."
+                  value={formData.zip_code}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, zip_code: e.target.value })
+                  }
+                  label="Zip Code"
+                />
+              </div>
+              </div>
+              </div>
+              <div className="row mb-3">
+              <div className="col-12 text-start">
+                <div className="company-form__section">
                   <Input
-                    type="text"
-                    inputName="zip_code"
-                    placeholder="Zip Code..."
-                    value={formData.zip_code}
+                    type="textarea"
+                    inputName="street"
+                    placeholder="Street & Address..."
+                    value={formData.street_and_number}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, zip_code: e.target.value })
+                      setFormData({
+                        ...formData,
+                        street_and_number: e.target.value,
+                      })
                     }
-                    label="Zip Code"
+                    label="Street & Address"
                   />
                 </div>
-            </div>
+                </div>
+              </div>
+           
           </div>
         </div>
       </div>
@@ -400,7 +372,11 @@ const CustomerCreationForm = ({
         </button>
       </div>
       {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Success</AlertTitle>
           <strong>
             Customer {creating ? "created" : "updated"} successfully!
@@ -408,10 +384,15 @@ const CustomerCreationForm = ({
         </Alert>
       )}
       {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Error</AlertTitle>
           <strong>
-            Error {creating ? "creating" : "updating"} Customer. Please try again
+            Error {creating ? "creating" : "updating"} Customer. Please try
+            again
           </strong>
         </Alert>
       )}

@@ -94,7 +94,6 @@ const PortsCreationForm = ({
       : PortServices.updatePort(port.id, rawData));
 
     if (response.status >= 200 && response.status <= 300) {
-      
       setShowSuccessAlert(true);
       setTimeout(() => {
         closeModal();
@@ -103,38 +102,52 @@ const PortsCreationForm = ({
         window.location.reload();
       }, 100000);
     } else {
-      
       setShowErrorAlert(true);
     }
   };
 
   const handleCancel = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6 text-start">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h2>General</h2><span></span></div>
-            <div>
-              <div className="company-form__section">
-                <label htmlFor="wp-country" className="form-label">
-                  Country
-                </label>
-                <select
-                  name="wp-country"
-                  id="wp-country"
-                  className="form-input"
-                  value={formData.country}
-                  onChange={(e) => handleCountryChange(e)}
-                >
-                  <option value="">Select a country</option>
-                  {formData.country &&
-                    countries
-                      .filter((country) => country.name === formData.country)
-                      .map((country) => (
+            <div className="form-label_name">
+              <h2>General</h2>
+              <span></span>
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <label htmlFor="wp-country" className="form-label">
+                    Country
+                  </label>
+                  <select
+                    name="wp-country"
+                    id="wp-country"
+                    className="form-input"
+                    value={formData.country}
+                    onChange={(e) => handleCountryChange(e)}
+                  >
+                    <option value="">Select a country</option>
+                    {formData.country &&
+                      countries
+                        .filter((country) => country.name === formData.country)
+                        .map((country) => (
+                          <option
+                            key={country.iso2}
+                            value={country.name}
+                            data-key={country.iso2}
+                          >
+                            {country.name}
+                          </option>
+                        ))}
+                    {!formData.city &&
+                      countries.map((country) => (
                         <option
                           key={country.iso2}
                           value={country.name}
@@ -143,134 +156,143 @@ const PortsCreationForm = ({
                           {country.name}
                         </option>
                       ))}
-                  {!formData.city &&
-                    countries.map((country) => (
-                      <option
-                        key={country.iso2}
-                        value={country.name}
-                        data-key={country.iso2}
-                      >
-                        {country.name}
-                      </option>
-                    ))}
-                </select>
+                  </select>
+                </div>
               </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="portid"
-                  placeholder="Port ID..."
-                  value={formData.code}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, code: e.target.value })
-                  }
-                  label="Port ID"
-                />
-              </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="portname"
-                  placeholder="Port Name..."
-                  value={formData.name}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  label="Port Name"
-                />
-              </div>
-              <div className="company-form__section">
-                <Input
-                  type="text"
-                  inputName="sub_division"
-                  placeholder="Subdivision..."
-                  value={formData.sub_division}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, sub_division: e.target.value })
-                  }
-                  label="Subdivision"
-                />
-              </div>
-              <label className="form-label">Transportation method</label>
-              <div className="method">
-                <div className="checkbox_container">
+
+              <div className="col-6 text-start">
+                <div className="company-form__section">
                   <Input
-                    type="checkbox"
-                    inputName="maritime"
-                    value={formData.maritime}
+                    type="text"
+                    inputName="portid"
+                    placeholder="Port ID..."
+                    value={formData.code}
                     changeHandler={(e) =>
-                      setFormData({ ...formData, maritime: e.target.checked })
+                      setFormData({ ...formData, code: e.target.value })
                     }
-                    label="Maritime"
-                  />
-                  <Input
-                    type="checkbox"
-                    inputName="rail"
-                    value={formData.rail}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, rail: e.target.checked })
-                    }
-                    label="Rail"
-                  />
-                  <Input
-                    type="checkbox"
-                    inputName="road"
-                    value={formData.road}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, road: e.target.value })
-                    }
-                    label="Road"
-                  />
-                  <Input
-                    type="checkbox"
-                    inputName="air"
-                    value={formData.air}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, air: e.target.value })
-                    }
-                    label="Air"
-                  />
-                  <Input
-                    type="checkbox"
-                    inputName="mail"
-                    value={formData.mail}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, mail: e.target.value })
-                    }
-                    label="Mail"
-                  />
-                  <Input
-                    type="checkbox"
-                    inputName="borderCrossing"
-                    value={formData.borderCrossing}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, borderCrossing: e.target.value })
-                    }
-                    label="Border Crossing Point"
+                    label="Port ID"
                   />
                 </div>
+              </div>
+            </div>
 
+            <div className="row mb-3">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="portname"
+                    placeholder="Port Name..."
+                    value={formData.name}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    label="Port Name"
+                  />
+                </div>
               </div>
 
-              <div className="check-port">
+              <div className="col-6 text-start">
+                <div className="company-form__section">
+                  <Input
+                    type="text"
+                    inputName="sub_division"
+                    placeholder="Subdivision..."
+                    value={formData.sub_division}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, sub_division: e.target.value })
+                    }
+                    label="Subdivision"
+                  />
+                </div>
+              </div>
+            </div>
+
+
+            <label className="form-label">Transportation method</label>
+            <div className="method">
+              <div className="checkbox_container">
                 <Input
                   type="checkbox"
-                  inputName="usedbycompany"
-                  value={formData.used}
+                  inputName="maritime"
+                  value={formData.maritime}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, used: e.target.checked })
+                    setFormData({ ...formData, maritime: e.target.checked })
                   }
-                  label="This port is used by my company"
+                  label="Maritime"
+                />
+                <Input
+                  type="checkbox"
+                  inputName="rail"
+                  value={formData.rail}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, rail: e.target.checked })
+                  }
+                  label="Rail"
+                />
+                <Input
+                  type="checkbox"
+                  inputName="road"
+                  value={formData.road}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, road: e.target.value })
+                  }
+                  label="Road"
+                />
+                <Input
+                  type="checkbox"
+                  inputName="air"
+                  value={formData.air}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, air: e.target.value })
+                  }
+                  label="Air"
+                />
+                <Input
+                  type="checkbox"
+                  inputName="mail"
+                  value={formData.mail}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, mail: e.target.value })
+                  }
+                  label="Mail"
+                />
+                <Input
+                  type="checkbox"
+                  inputName="borderCrossing"
+                  value={formData.borderCrossing}
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      borderCrossing: e.target.value,
+                    })
+                  }
+                  label="Border Crossing Point"
                 />
               </div>
+            </div>
+
+            <div className="check-port">
+              <Input
+                type="checkbox"
+                inputName="usedbycompany"
+                value={formData.used}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, used: e.target.checked })
+                }
+                label="This port is used by my company"
+              />
             </div>
           </div>
         </div>
 
         <div className="col-6 text-start">
           <div className="creation creation-container w-100">
-          <div className="form-label_name"><h2>Address</h2><span></span></div>
-            <div >
+            <div className="form-label_name">
+              <h2>Address</h2>
+              <span></span>
+            </div>
+            <div>
               <div className="company-form__section">
                 <Input
                   type="textarea"
@@ -278,7 +300,10 @@ const PortsCreationForm = ({
                   placeholder="US Custom Codes..."
                   value={formData.us_customs_code}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, us_customs_code: e.target.value })
+                    setFormData({
+                      ...formData,
+                      us_customs_code: e.target.value,
+                    })
                   }
                   label="US Custom Codes"
                 />
@@ -289,30 +314,30 @@ const PortsCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-        <button
-          className="button-save"
-          onClick={sendData}
-        >
+        <button className="button-save" onClick={sendData}>
           Save
         </button>
-        <button
-          className="button-cancel"
-          onClick={handleCancel}
-        >
+        <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Success</AlertTitle>
-          <strong>
-            Port {creating ? "created" : "updated"} successfully!
-          </strong>
+          <strong>Port {creating ? "created" : "updated"} successfully!</strong>
         </Alert>
       )}
       {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
+        <Alert
+          severity="error"
+          onClose={() => setShowErrorAlert(false)}
+          className="alert-notification"
+        >
           <AlertTitle>Error</AlertTitle>
           <strong>
             Error {creating ? "creating" : "updating"} Port. Please try again
