@@ -301,6 +301,50 @@ const ReceiptCreationForm = ({
       shipperInfo: info,
     });
   };
+//---------------------------------CHARGE IMG---------------------------------------------------------
+const [showLargeImage, setShowLargeImage] = useState(false);
+const [largeImageSrc, setLargeImageSrc] = useState('');
+
+const handleShowLargeImage = (src) => {
+  setLargeImageSrc(src);
+  setShowLargeImage(true);
+};
+
+const handleCloseLargeImage = () => {
+  setShowLargeImage(false);
+};
+
+
+const handleDownloadAttachment = (base64Data, fileName) => {
+  // Convertir la base64 a un Blob
+  const byteCharacters = atob(base64Data.split(',')[1]);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+
+  // Crear un enlace temporal y descargar el Blob
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};
+
 
   const handleFileUpload = (event) => {
     const files = event.target.files;
@@ -327,6 +371,7 @@ const ReceiptCreationForm = ({
       }
     }
   };
+  //------------------------------------------------------------------------------------------
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(attachment => attachment.name !== name);
@@ -1751,16 +1796,41 @@ const ReceiptCreationForm = ({
               />
             </label>
             <div className="image-container">
-              {attachments.map((attachment) => (
-                <div key={attachment.name} className="image-wrapper">
-                  <img src={attachment.base64} alt={attachment.name} />
-                  <button className="delete-button"
-                    onClick={() => handleDeleteAttachment(attachment.name)}>
-                    <i className="fas fa-trash-alt"></i>
-                  </button>
-                </div>
-              ))}
-            </div>
+      {attachments.map((attachment) => (
+        <div key={attachment.name} className="image-wrapper">
+          <img
+            src={attachment.base64}
+            alt={attachment.name}
+            onClick={() => handleShowLargeImage(attachment.base64)}
+          />
+          <div className="image-buttons">
+            <button
+              className="delete-button"
+              onClick={() => handleDeleteAttachment(attachment.name)}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </button>
+            <button
+              className="download-button"
+              onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
+            >
+              <i className="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+      ))}
+      {showLargeImage && (
+        <div className="large-image-overlay" onClick={handleCloseLargeImage}>
+          <div className="large-image-container">
+            <button className="close-button" onClick={handleCloseLargeImage}>
+              <i className="fas fa-times"></i>
+            </button>
+            <img src={largeImageSrc} alt="Large Image" />
+          </div>
+        </div>
+      )}
+    </div>
+  
           </div>
         </div>
       </div>
