@@ -301,6 +301,50 @@ const ReceiptCreationForm = ({
       shipperInfo: info,
     });
   };
+//---------------------------------CHARGE IMG---------------------------------------------------------
+const [showLargeImage, setShowLargeImage] = useState(false);
+const [largeImageSrc, setLargeImageSrc] = useState('');
+
+const handleShowLargeImage = (src) => {
+  setLargeImageSrc(src);
+  setShowLargeImage(true);
+};
+
+const handleCloseLargeImage = () => {
+  setShowLargeImage(false);
+};
+
+
+const handleDownloadAttachment = (base64Data, fileName) => {
+  // Convertir la base64 a un Blob
+  const byteCharacters = atob(base64Data.split(',')[1]);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+
+  // Crear un enlace temporal y descargar el Blob
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};
+
 
   const handleFileUpload = (event) => {
     const files = event.target.files;
@@ -327,56 +371,12 @@ const ReceiptCreationForm = ({
       }
     }
   };
+  //------------------------------------------------------------------------------------------
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(attachment => attachment.name !== name);
     setattachments(updateAttachments);
   };
-
-  //-------------------------------------------------------------------------------------------------------------
-  const [showLargeImage, setShowLargeImage] = useState(false);
-  const [largeImageSrc, setLargeImageSrc] = useState('');
-
-  const handleShowLargeImage = (src) => {
-    setLargeImageSrc(src);
-    setShowLargeImage(true);
-  };
-
-  const handleCloseLargeImage = () => {
-    setShowLargeImage(false);
-  };
-
-
-  const handleDownloadAttachment = (base64Data, fileName) => {
-    // Convertir la base64 a un Blob
-    const byteCharacters = atob(base64Data.split(',')[1]);
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays, { type: 'image/jpeg' });
-
-    // Crear un enlace temporal y descargar el Blob
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  };
-  //-------------------------------------------------------------------------------------------------------------
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
@@ -1111,6 +1111,7 @@ const ReceiptCreationForm = ({
   };
 
   return (
+    <div className="form-container">
     <div className="company-form receipt">
       <div className="row w-100">
         <div className="col-6">
@@ -1509,7 +1510,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                " Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1747,7 +1748,7 @@ const ReceiptCreationForm = ({
               </div>
               {events && events.length > 0 && (
                 <Table
-
+                noScroll
                   data={events}
                   columns={[
                     "Date",
@@ -1786,7 +1787,7 @@ const ReceiptCreationForm = ({
         <div className="row">
           <div className="col-12">
             <label htmlFor="fileInput" className="custom-file-input">
-              <span className="button-text">Select Document</span>
+              <span className="button-text">Seleccionar archivos</span>
               <input
                 type="file"
                 id="fileInput"
@@ -1805,13 +1806,13 @@ const ReceiptCreationForm = ({
           />
           <div className="image-buttons">
             <button
-              className="delete-button"
+              className="custom-button"
               onClick={() => handleDeleteAttachment(attachment.name)}
             >
               <i className="fas fa-trash-alt"></i>
             </button>
             <button
-              className="download-button"
+              className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
@@ -1830,6 +1831,7 @@ const ReceiptCreationForm = ({
         </div>
       )}
     </div>
+  
           </div>
         </div>
       </div>
@@ -1961,6 +1963,7 @@ const ReceiptCreationForm = ({
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };
