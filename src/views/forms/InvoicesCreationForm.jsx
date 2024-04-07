@@ -364,6 +364,7 @@ const InvoicesCreationForm = ({
       setcommodities(commoditiesCopy);
     }
   };
+  
   useEffect(() => {
     let totall = 0;
     for (const valor of commodities) {
