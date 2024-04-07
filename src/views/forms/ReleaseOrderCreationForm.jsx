@@ -517,6 +517,7 @@ const ReleaseOrderCreationForm = ({
   };
 
   return (
+    <div className="form-container">
     <div className="company-form release-order">
       <div className="row w-100">
         <div className="col-6">
@@ -885,6 +886,7 @@ const ReleaseOrderCreationForm = ({
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };

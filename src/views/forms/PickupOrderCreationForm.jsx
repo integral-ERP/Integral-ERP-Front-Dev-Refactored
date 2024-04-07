@@ -1063,7 +1063,8 @@ const PickupOrderCreationForm = ({
   };
 
   return (
-    <form className="company-form pickup">
+    <div className="form-container">
+     <form className="company-form pickup">
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -1672,6 +1673,7 @@ const PickupOrderCreationForm = ({
         </Alert>
       )}
     </form>
+    </div>
   );
 };
 

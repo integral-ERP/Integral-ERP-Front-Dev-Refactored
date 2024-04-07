@@ -1111,6 +1111,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
   };
 
   return (
+    <div className="form-container">
     <div className="company-form receipt">
       <div className="row w-100">
         <div className="col-6">
@@ -1747,7 +1748,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               </div>
               {events && events.length > 0 && (
                 <Table
-
+                noScroll
                   data={events}
                   columns={[
                     "Date",
@@ -1805,13 +1806,13 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           />
           <div className="image-buttons">
             <button
-              className="delete-button"
+              className="custom-button"
               onClick={() => handleDeleteAttachment(attachment.name)}
             >
               <i className="fas fa-trash-alt"></i>
             </button>
             <button
-              className="download-button"
+              className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
@@ -1962,6 +1963,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };
