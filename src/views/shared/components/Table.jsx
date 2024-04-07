@@ -124,13 +124,16 @@ const Table = ({
     ID: "identification_number",
     "Type ID": "typeIdentificacion",
     "Street & Number": "street_and_number",
+    "US Customs Code": "us_customs_code",
     City: "city",
     State: "state",
     Country: "country",
     "Zip-Code": "zip_code",
+    "Rail": "rail",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
-    "Method Code": "methodCode",
+    "Method": "maritime",
+    "Subdivision": "sub_division",
     "Carrier Code": "carrierCode",
     "SCAC Number": "scac_number",
     "IATA Code": "iata_code",
@@ -220,6 +223,12 @@ const Table = ({
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
+    //---------EVENT
+    "Event Type": "eventType",
+    "Details": "details",
+    "Location": "location",
+    "Created In": "createIn",
+    "Created On": "createOn",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -704,7 +713,7 @@ const Table = ({
                                     }
                                   >
                                     {/* <option value=""> </option> */}
-                                    <option value=""></option>
+                                    <option value="">Select Option</option>
                                     <option
                                       value="receipt"
                                       style={{
@@ -1220,7 +1229,7 @@ const Table = ({
                                   }
                                 >
                                   {/* <option value=""> </option> */}
-                                  <option value=""></option>
+                                  <option value="">Select Option</option>
 
                                   <option
                                     value="receipt"
