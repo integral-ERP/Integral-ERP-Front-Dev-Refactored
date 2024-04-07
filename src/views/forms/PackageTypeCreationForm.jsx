@@ -127,6 +127,7 @@ const PackageTypesCreationForm = ({
   }
 
   return (
+    <div className="form-container">
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6 text-start">
@@ -407,6 +408,7 @@ const PackageTypesCreationForm = ({
         </Alert>
       )}
     </div>
+  </div>
   );
 };
 

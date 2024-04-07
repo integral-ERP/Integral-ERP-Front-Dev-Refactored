@@ -170,6 +170,7 @@ const ForwardingAgentsCreationForm = ({
   };
 
   return (
+    <div className="form-container">
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6">
@@ -508,6 +509,7 @@ const ForwardingAgentsCreationForm = ({
         </Alert>
       )}
     </div>
+  </div>
   );
 };
 

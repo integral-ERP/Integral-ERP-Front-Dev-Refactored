@@ -148,6 +148,7 @@ const VendorsCreationForm = ({
   };
 
   return (
+    <div className="form-container">
     <div className="company-form vendor">
       <div className="row w-100">
         <div className="col-6">
@@ -395,6 +396,8 @@ const VendorsCreationForm = ({
         </Alert>
       )}
     </div>
+  </div>
+
   );
 };
 
