@@ -16,9 +16,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
-// import PortsCreationForm from "../../others/PortsCreationForm";
 import _, { set } from "lodash";
-import PortService from "../../../services/PortServices";
+import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
 
 const Table = ({
@@ -68,9 +67,6 @@ const Table = ({
     currentDate.getDate() - currentDate.getDay()
   );
   useEffect(() => {
-    // console.log("PORT-1  =", port.air);
-    // console.log("PortsCreationForm  =", );
-    // console.log("PortsCreationForm.air  =", PortService.updatePort);
     const handleScroll = () => {
       if (!noScroll) return;
       const table = document.querySelector(".generic-table");
@@ -128,16 +124,13 @@ const Table = ({
     ID: "identification_number",
     "Type ID": "typeIdentificacion",
     "Street & Number": "street_and_number",
-    "US Customs Code": "us_customs_code",
     City: "city",
     State: "state",
     Country: "country",
     "Zip-Code": "zip_code",
-    "Rail": "rail",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
-    "Method": "maritime",
-    "Subdivision": "sub_division",
+    "Method Code": "methodCode",
     "Carrier Code": "carrierCode",
     "SCAC Number": "scac_number",
     "IATA Code": "iata_code",
@@ -227,12 +220,6 @@ const Table = ({
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
-    //---------EVENT
-    "Event Type": "eventType",
-    "Details": "details",
-    "Location": "location",
-    "Created In": "createIn",
-    "Created On": "createOn",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -656,10 +643,11 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
-                      ? "table-primary"
-                      : ""
-                      }`}
+                    className={`table-row  tr-margen${
+                      selectedRow && selectedRow.id === row.id
+                        ? "table-primary"
+                        : ""
+                    }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -830,17 +818,17 @@ const Table = ({
                             ) : columnNameToProperty[columnName]?.includes(
                               "."
                             ) ? (
-                              getPropertyValue(
-                                row,
-                                columnNameToProperty[columnName]
-                              )
-                            ) : Array.isArray(
+                            getPropertyValue(
+                              row,
+                              columnNameToProperty[columnName]
+                            )
+                          ) : Array.isArray(
                               row[columnNameToProperty[columnName]]
                             ) ? (
-                              row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                            ) : (
-                              row[columnNameToProperty[columnName]]
-                            )}
+                            row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                          ) : (
+                            row[columnNameToProperty[columnName]]
+                          )}
                         </td>
                       ) : null
                     )}
