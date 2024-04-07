@@ -686,7 +686,7 @@ const Table = ({
                                 style={{
                                   display: "flex",
                                   width: "70px",
-                                  marginLeft: "3vw",
+                                
                                 }}
                               >
                                 <i className="fa fa-print menu-icon fa-3x"></i>
@@ -839,9 +839,9 @@ const Table = ({
           </div>
         );
       case "add":
-        return <div className="layout-fluid">{children}</div>;
+        return <div className="layout-fluid_form">{children}</div>;
       case "edit":
-        return <div className="layout-fluid">{children}</div>;
+        return <div className="layout-fluid_form">{children}</div>;
     }
   };
 
