@@ -71,6 +71,7 @@ const ChartOfAccountsCreationForm = ({
       currency: formData.currency,
       note: formData.note,
     };
+    
     console.log("DATA:", formData);
     const response = await (creating
       ? ChartOfAccountsService.createChartOfAccounts(rawData)
@@ -87,7 +88,7 @@ const ChartOfAccountsCreationForm = ({
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
-      }, 1500);
+      }, 15000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);

@@ -9,97 +9,97 @@ const MyCompanyForm = () => {
   };
   const [companyData, setCompanyData] = useState({});
   const apiKey = import.meta.env.VITE_COUNTRIES_API_KEY;
-const countriesUrl = import.meta.env.VITE_COUNTRIES_API_URL;
+  const countriesUrl = import.meta.env.VITE_COUNTRIES_API_URL;
 
-const [countries, setCountries] = useState([]);
-const [selectedCountry, setSelectedCountry] = useState("");
-const [states, setStates] = useState([]);
-const [selectedState, setSelectedState] = useState("");
-const [cities, setCities] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [states, setStates] = useState([]);
+  const [selectedState, setSelectedState] = useState("");
+  const [cities, setCities] = useState([]);
 
 
-const handleCountryChange = (event) => {
-  setSelectedCountry(
-    event.target.options[event.target.selectedIndex].getAttribute("data-key")
-  );
-};
-
-const handleStateChange = (event) => {
-  setSelectedState(
-    event.target.options[event.target.selectedIndex].getAttribute("data-key")
-  );
-};
-
-useEffect(() => {
-  const headers = {
-    "X-CSCAPI-KEY": apiKey,
+  const handleCountryChange = (event) => {
+    setSelectedCountry(
+      event.target.options[event.target.selectedIndex].getAttribute("data-key")
+    );
   };
 
-  axios
-    .get(countriesUrl, { headers })
-    .then((response) => {
-      setCountries(response.data);
-    })
-    .catch((error) => {
-      
-      
-    });
-}, [countriesUrl, apiKey]);
+  const handleStateChange = (event) => {
+    setSelectedState(
+      event.target.options[event.target.selectedIndex].getAttribute("data-key")
+    );
+  };
 
-useEffect(() => {
-  if (selectedCountry) {
+  useEffect(() => {
     const headers = {
       "X-CSCAPI-KEY": apiKey,
     };
 
     axios
-      .get(countriesUrl + selectedCountry + "/states", { headers })
+      .get(countriesUrl, { headers })
       .then((response) => {
-        setStates(response.data);
+        setCountries(response.data);
       })
       .catch((error) => {
-        
-      });
-  }
-}, [selectedCountry, countriesUrl, apiKey]);
 
-useEffect(() => {
-  if (selectedCountry && selectedState) {
-    const headers = {
-      "X-CSCAPI-KEY": apiKey,
-    };
 
-    axios
-      .get(
-        countriesUrl + selectedCountry + "/states/" + selectedState + "/cities",
-        { headers }
-      )
-      .then((response) => {
-        setCities(response.data);
-      })
-      .catch((error) => {
-        
       });
-  }
-}, [selectedCountry, selectedState, countriesUrl, apiKey]);
+  }, [countriesUrl, apiKey]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const headers = {
+        "X-CSCAPI-KEY": apiKey,
+      };
+
+      axios
+        .get(countriesUrl + selectedCountry + "/states", { headers })
+        .then((response) => {
+          setStates(response.data);
+        })
+        .catch((error) => {
+
+        });
+    }
+  }, [selectedCountry, countriesUrl, apiKey]);
+
+  useEffect(() => {
+    if (selectedCountry && selectedState) {
+      const headers = {
+        "X-CSCAPI-KEY": apiKey,
+      };
+
+      axios
+        .get(
+          countriesUrl + selectedCountry + "/states/" + selectedState + "/cities",
+          { headers }
+        )
+        .then((response) => {
+          setCities(response.data);
+        })
+        .catch((error) => {
+
+        });
+    }
+  }, [selectedCountry, selectedState, countriesUrl, apiKey]);
 
   useEffect(() => {
     const fetchData = async () => {
       let data = {};
 
       try {
-        let response = await axios.get(`${BASE_URL}companyInfo`);
-        data = { ...data, companyData: response.data.pop() };
+        // let response = await axios.get(`${BASE_URL}companyInfo`);
+        // data = { ...data, companyData: response.data.pop() };
 
-        response = await axios.get(`${BASE_URL}addressInfo`);
-        data = { ...data, addressData: response.data.pop() };
+        // response = await axios.get(`${BASE_URL}addressInfo`);
+        // data = { ...data, addressData: response.data.pop() };
 
         response = await axios.get(`${BASE_URL}agent`);
         data = { ...data, agentData: response.data.pop() };
         setCompanyData(data);
-        
+
       } catch (error) {
-        
+
       }
     };
 
@@ -116,7 +116,7 @@ useEffect(() => {
       zipCode: parseInt(document.getElementById("zipCode").value),
       port: parseInt(document.getElementById("port").value),
     };
-    
+
     try {
       const response = await axios.post(
         `${BASE_URL}address/`,
@@ -125,10 +125,10 @@ useEffect(() => {
           withCredentials: true,
         }
       );
-      
+
 
     } catch (error) {
-      
+
 
     }
   };
@@ -137,50 +137,44 @@ useEffect(() => {
     <div className="company-form">
       <div className="company-form__tabs-button-container">
         <button
-          className={`company-form__tabs-button ${
-            activeTab === "general" ? "active" : "unactive"
-          }`}
+          className={`company-form__tabs-button ${activeTab === "general" ? "active" : "unactive"
+            }`}
           onClick={() => handleTabClick("general")}
         >
           General
         </button>
         <button
-          className={`company-form__tabs-button ${
-            activeTab === "address" ? "active" : ""
-          }`}
+          className={`company-form__tabs-button ${activeTab === "address" ? "active" : ""
+            }`}
           onClick={() => handleTabClick("address")}
         >
           Address
         </button>
         <button
-          className={`company-form__tabs-button ${
-            activeTab === "billing" ? "active" : ""
-          }`}
+          className={`company-form__tabs-button ${activeTab === "billing" ? "active" : ""
+            }`}
           onClick={() => handleTabClick("billing")}
         >
           Billing Address
         </button>
         <button
-          className={`company-form__tabs-button ${
-            activeTab === "otherAddresses" ? "active" : ""
-          }`}
+          className={`company-form__tabs-button ${activeTab === "otherAddresses" ? "active" : ""
+            }`}
           onClick={() => handleTabClick("otherAddresses")}
         >
           Other Addresses
         </button>
         <button
-          className={`company-form__tabs-button ${
-            activeTab === "agent" ? "active" : ""
-          }`}
+          className={`company-form__tabs-button ${activeTab === "agent" ? "active" : ""
+            }`}
           onClick={() => handleTabClick("agent")}
         >
           Agent
         </button>
       </div>
       <form
-        className={`company-form__general-form ${
-          activeTab === "general" ? "active" : "hidden"
-        }`}
+        className={`company-form__general-form ${activeTab === "general" ? "active" : "hidden"
+          }`}
       >
         <div className="company-form__section">
           <label htmlFor="name" className="company-form__label">
@@ -355,9 +349,8 @@ useEffect(() => {
         </div>
       </form>
       <form
-        className={`company-form__address-form ${
-          activeTab === "address" ? "active" : "hidden"
-        }`}
+        className={`company-form__address-form ${activeTab === "address" ? "active" : "hidden"
+          }`}
       >
         <div className="company-form__section">
           <label htmlFor="street&number" className="company-form__label">
@@ -368,7 +361,7 @@ useEffect(() => {
             name="street&number"
             id="street&number"
             className="company-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.streetNumber : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.streetNumber : ""}
           />
         </div>
         <div className="company-form__section">
@@ -380,7 +373,7 @@ useEffect(() => {
             name="city"
             id="city"
             className="company-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.city : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.city : ""}
           />
         </div>
         <div className="company-form__section">
@@ -391,12 +384,12 @@ useEffect(() => {
             name="country"
             id="country"
             className="company-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.country : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.country : ""}
           >
             <option
-              value={ companyData.addressData ? companyData.addressData.country : "" }
+              value={companyData.addressData ? companyData.addressData.country : ""}
             >
-             { companyData.addressData ? companyData.addressData.country : "" }
+              {companyData.addressData ? companyData.addressData.country : ""}
             </option>
           </select>
         </div>
@@ -408,12 +401,12 @@ useEffect(() => {
             name="state"
             id="state"
             className="company-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.state : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.state : ""}
           >
             <option
-              value={ companyData.addressData ? companyData.addressData.state : "" }
+              value={companyData.addressData ? companyData.addressData.state : ""}
             >
-              { companyData.addressData ? companyData.addressData.state : "" }
+              {companyData.addressData ? companyData.addressData.state : ""}
             </option>
           </select>
         </div>
@@ -426,7 +419,7 @@ useEffect(() => {
             name="zipCode"
             id="zipCode"
             className="company-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.zipCode : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.zipCode : ""}
           />
         </div>
         <div className="company-form__section">
@@ -446,9 +439,8 @@ useEffect(() => {
         <button onClick={addAddress}>Add</button>
       </form>
       <form
-        className={`company-form__billing-address-form ${
-          activeTab === "billing" ? "active" : "hidden"
-        }`}
+        className={`company-form__billing-address-form ${activeTab === "billing" ? "active" : "hidden"
+          }`}
       >
         <div className="startup-wizard-form__section">
           <label htmlFor="street&number" className="startup-wizard-form__label">
@@ -459,7 +451,7 @@ useEffect(() => {
             name="address-info_street&number"
             id="address-info_street&number"
             className="startup-wizard-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.streetNumber : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.streetNumber : ""}
           />
         </div>
         <div className="startup-wizard-form__section">
@@ -471,7 +463,7 @@ useEffect(() => {
             id="address-info_country"
             className="startup-wizard-form__input"
             onChange={handleCountryChange}
-            defaultValue={ companyData.addressData ? companyData.addressData.country : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.country : ""}
           >
             {countries.map((country) => (
               <option
@@ -493,7 +485,7 @@ useEffect(() => {
             id="address-info_state"
             className="startup-wizard-form__input"
             onChange={handleStateChange}
-            defaultValue={ companyData.addressData ? companyData.addressData.state : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.state : ""}
           >
             {states.map((state) => (
               <option key={state.iso2} value={state.name} data-key={state.iso2}>
@@ -510,7 +502,7 @@ useEffect(() => {
             name="city"
             id="city-select"
             className="startup-wizard-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.city : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.city : ""}
           >
             <option value="">Select a city</option>
             {cities.map((city) => (
@@ -529,7 +521,7 @@ useEffect(() => {
             name="address-info_zipCode"
             id="address-info_zipCode"
             className="startup-wizard-form__input"
-            defaultValue={ companyData.addressData ? companyData.addressData.zipCode : "" }
+            defaultValue={companyData.addressData ? companyData.addressData.zipCode : ""}
           />
         </div>
         <div className="company-form__section">
@@ -540,20 +532,19 @@ useEffect(() => {
             name="b-port"
             id="port"
             className="company-form__input"
-            
+
           >
             <option
-              
+
             >
-              
+
             </option>
           </select>
         </div>
       </form>
       <form
-        className={`company-form__other-addresses-form ${
-          activeTab === "otherAddresses" ? "active" : "hidden"
-        }`}
+        className={`company-form__other-addresses-form ${activeTab === "otherAddresses" ? "active" : "hidden"
+          }`}
       >
         <table className="company-form__table">
           <thead>
@@ -590,9 +581,8 @@ useEffect(() => {
         </div>
       </form>
       <form
-        className={`company-form__agent-form ${
-          activeTab === "agent" ? "active" : "hidden"
-        }`}
+        className={`company-form__agent-form ${activeTab === "agent" ? "active" : "hidden"
+          }`}
       >
         <div className="company-form__section">
           <label htmlFor="mobilePhone" className="company-form__label">
@@ -603,7 +593,7 @@ useEffect(() => {
             name="iataCode"
             id="iataCode"
             className="company-form__input input-number"
-            defaultValue={ companyData.agentData ? companyData.agentData.iataCode : "" }
+            defaultValue={companyData.agentData ? companyData.agentData.iataCode : ""}
           />
         </div>
         <div className="company-form__section">
@@ -615,7 +605,7 @@ useEffect(() => {
             name="fmc"
             id="fmc"
             className="company-form__input input-number"
-            defaultValue={ companyData.agentData ? companyData.agentData.fmc : "" }
+            defaultValue={companyData.agentData ? companyData.agentData.fmc : ""}
           />
         </div>
         <div className="company-form__section">
@@ -627,7 +617,7 @@ useEffect(() => {
             name="customsCode"
             id="customsCode"
             className="company-form__input"
-            defaultValue={ companyData.agentData ? companyData.agentData.scacCodeUs : "" }
+            defaultValue={companyData.agentData ? companyData.agentData.scacCodeUs : ""}
           />
         </div>
         <div className="company-form__section">
@@ -639,7 +629,7 @@ useEffect(() => {
             name="tsaNumber"
             id="tsaNumber"
             className="company-form__input"
-            defaultValue={ companyData.agentData ? companyData.agentData.tsaNumber : "" }
+            defaultValue={companyData.agentData ? companyData.agentData.tsaNumber : ""}
           />
         </div>
       </form>

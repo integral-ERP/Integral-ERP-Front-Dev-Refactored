@@ -29,23 +29,23 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
       "Contact First Name",
       "Contact Last Name",
       "ID",
-      "Type ID",
-      "System ID",
+      // "Type ID",
+      // "System ID",
       "Street & Number",
       "City",
       "State",
       "Country",
       "Zip-Code",
-      "Parent Account",
-      "Carrier Type",
-      "Method Code",
-      "Carrier Code",
-      "SCAC Number",
-      "IATA Code",
-      "Airline Code",
-      "Airline Prefix",
-      "Airway Bill Numbers",
-      "Passenger Only Airline",
+      // "Parent Account",
+      // "Carrier Type",
+      // "Method Code",
+      // "Carrier Code",
+      // "SCAC Number",
+      // "IATA Code",
+      // "Airline Code",
+      // "Airline Prefix",
+      // "Airway Bill Numbers",
+      // "Passenger Only Airline",
     ];
     const {hideShowSlider} = useContext(GlobalContext);
     const fetchEmployeesData = (url = null) => {
@@ -140,13 +140,13 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   useEffect(() => {
     const handleWindowClick = (event) => {
 
-      const clickedElement = event.target;
-      const isWPButton = clickedElement.classList.contains("ne");
-      const isTableRow = clickedElement.closest(
-        ".table-row"
-      );
+      // const clickedElement = event.target;
+      // const isWPButton = clickedElement.classList.contains("ne");
+      // const isTableRow = clickedElement.closest(".table-row");
 
-      if (!isWPButton && !isTableRow) {
+      // if (!isWPButton && !isTableRow) {
+      const contextMenu = document.querySelector(".context-menu");
+      if (contextMenu && !contextMenu.contains(e.target)) {
         setselectedEmployee(null);
       }
     };
@@ -176,12 +176,12 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
         title="Employees"
         contextService={EmployeeService}
       >
-         <EmployeeCreationForm
+         {/* <EmployeeCreationForm
           employee={selectedEmployee}
           closeModal={closeModal}
           creating={false}
           onEmployeeDataChange={handleEmployeesDataChange}
-        />
+        /> */}
          {selectedEmployee !== null && (
         <EmployeeCreationForm
           employee={selectedEmployee}

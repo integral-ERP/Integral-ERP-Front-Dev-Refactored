@@ -16,8 +16,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import GenerateInvoicePDF from "../../others/GenerateInvoicePDF";
 import GenerateBillPDF from "../../others/GenerateBillPDF";
+// import PortsCreationForm from "../../others/PortsCreationForm";
 import _, { set } from "lodash";
-import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
+import PortService from "../../../services/PortServices";
 import { useModal } from "../../../hooks/useModal";
 
 const Table = ({
@@ -67,6 +68,9 @@ const Table = ({
     currentDate.getDate() - currentDate.getDay()
   );
   useEffect(() => {
+    // console.log("PORT-1  =", port.air);
+    // console.log("PortsCreationForm  =", );
+    // console.log("PortsCreationForm.air  =", PortService.updatePort);
     const handleScroll = () => {
       if (!noScroll) return;
       const table = document.querySelector(".generic-table");
@@ -124,13 +128,16 @@ const Table = ({
     ID: "identification_number",
     "Type ID": "typeIdentificacion",
     "Street & Number": "street_and_number",
+    "US Customs Code": "us_customs_code",
     City: "city",
     State: "state",
     Country: "country",
     "Zip-Code": "zip_code",
+    "Rail": "rail",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
-    "Method Code": "methodCode",
+    "Method": "maritime",
+    "Subdivision": "sub_division",
     "Carrier Code": "carrierCode",
     "SCAC Number": "scac_number",
     "IATA Code": "iata_code",
@@ -183,7 +190,7 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    Location: "locationCode",
+    " Location": "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
     "Consignee Name": "consigneeObj.data.obj.name",
@@ -220,6 +227,12 @@ const Table = ({
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
+    //---------EVENT
+    "Event Type": "eventType",
+    "Details": "details",
+    "Location": "location",
+    "Created In": "createIn",
+    "Created On": "createOn",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -643,11 +656,10 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
-                        ? "table-primary"
-                        : ""
-                    }`}
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
+                      ? "table-primary"
+                      : ""
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -731,31 +743,76 @@ const Table = ({
                                       PDF Label
                                     </option>
                                   </select>
+
+                                
                                 </div>
                               </button>
                             </>
-                          ) : columnName === "Invoice PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generatePDFInvoice}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Bill PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generateBillPDF}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Status" ? (
-                            getStatus(row[columnNameToProperty[columnName]])
-                          ) : columnName === "Options" ? (
-                            <>
-                              {" "}
-                              {/* added hiden button trash for table commodity creation form */}
+                          )
+                          
+                            : columnName === "Invoice PDF" ? (
+                              <button
+                                type="button"
+                                onClick={generatePDFInvoice}
+                                className="custom-button-pdf"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                            ) : columnName === "Bill PDF" ? (
+                              <button
+                                type="button"
+                                onClick={generateBillPDF}
+                                className="custom-button-pdf"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                            ) : columnName === "Status" ? (
+                              getStatus(row[columnNameToProperty[columnName]])
+                            ) : columnName === "Options" ? (
+                              <>
+                                {" "}
+                                {/* added hiden button trash for table commodity creation form */}
+                                <button
+                                  type="button"
+                                  onClick={onDelete}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onEdit}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-pencil-alt"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onInspect}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-eye"></i>
+                                </button>
+                              </>
+                            ) : columnName === "Repack Options" ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={onInspect}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-eye"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onEdit}
+                                  className="custom-button"
+                                  style={{ display: "none" }}
+                                >
+                                  <i className="fas fa-box-open"></i>
+                                </button>
+                              </>
+                            ) : columnName === "Delete" ? (
                               <button
                                 type="button"
                                 onClick={onDelete}
@@ -763,68 +820,27 @@ const Table = ({
                               >
                                 <i className="fas fa-trash"></i>
                               </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-pencil-alt"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Repack Options" ? (
-                            <>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                                style={{ display: "none" }}
-                              >
-                                <i className="fas fa-box-open"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Delete" ? (
-                            <button
-                              type="button"
-                              onClick={onDelete}
-                              className="custom-button"
-                            >
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          ) : typeof columnNameToProperty[columnName] ===
-                            "boolean" ? (
-                            row[columnNameToProperty[columnName]] ? (
-                              <i className="fas fa-check"></i>
-                            ) : (
-                              <i className="fas fa-times"></i>
-                            )
-                          ) : columnNameToProperty[columnName]?.includes(
+                            ) : typeof columnNameToProperty[columnName] ===
+                              "boolean" ? (
+                              row[columnNameToProperty[columnName]] ? (
+                                <i className="fas fa-check"></i>
+                              ) : (
+                                <i className="fas fa-times"></i>
+                              )
+                            ) : columnNameToProperty[columnName]?.includes(
                               "."
                             ) ? (
-                            getPropertyValue(
-                              row,
-                              columnNameToProperty[columnName]
-                            )
-                          ) : Array.isArray(
+                              getPropertyValue(
+                                row,
+                                columnNameToProperty[columnName]
+                              )
+                            ) : Array.isArray(
                               row[columnNameToProperty[columnName]]
                             ) ? (
-                            row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                          ) : (
-                            row[columnNameToProperty[columnName]]
-                          )}
+                              row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                            ) : (
+                              row[columnNameToProperty[columnName]]
+                            )}
                         </td>
                       ) : null
                     )}

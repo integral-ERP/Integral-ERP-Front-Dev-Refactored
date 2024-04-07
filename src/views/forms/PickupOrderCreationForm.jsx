@@ -1368,7 +1368,7 @@ const PickupOrderCreationForm = ({
                 <div className="custom-select">
                   <AsyncSelect
                     id="consignee"
-                    onChange={(e) => handleConsigneeSelection(e)}
+                    onChange={(e) => {handleConsigneeSelection(e);}}
                     value={consigneeOptions.find(
                       (option) =>
                         option.id === formData.consigneeId &&
@@ -1392,9 +1392,7 @@ const PickupOrderCreationForm = ({
               </label>
               <AsyncSelect
                 id="deliveryLocation"
-                onChange={(e) => {
-                  handleDeliveryLocationSelection(e);
-                }}
+                onChange={(e) => {handleDeliveryLocationSelection(e);}}
                 value={deliveryLocationOptions.find(
                   (option) =>
                     option.id === formData.deliveryLocationId &&

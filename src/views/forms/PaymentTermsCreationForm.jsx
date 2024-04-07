@@ -50,12 +50,15 @@ const PaymentTermsCreationForms = ({
     
     //-------------------------------------
     console.log("DATA:", formData);
+    console.log("paymentTerms =", paymentTerms);
     const response = await (creating
       ? PaymentTermsService.createPaymentTerm(rawData)
       : PaymentTermsService.updatePaymentTerm(
         paymentTerms.id,
         rawData
       ));
+      // console.log("paymentTerms =", paymentTerms);
+      // console.log("paymentTerms ID =", paymentTerms.id);
 
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
@@ -65,7 +68,7 @@ const PaymentTermsCreationForms = ({
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
-      }, 1000);
+      }, 19000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
