@@ -1786,7 +1786,7 @@ const ReceiptCreationForm = ({
         <div className="row">
           <div className="col-12">
             <label htmlFor="fileInput" className="custom-file-input">
-              <span className="button-text">Seleccionar archivos</span>
+              <span className="button-text">Select Document</span>
               <input
                 type="file"
                 id="fileInput"
