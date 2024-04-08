@@ -1197,7 +1197,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             <div className="row align-items-center">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Entry Date and Time</p>
+                <p id="creation-date" className="text-date">Entry Date and Time</p>
                   <DateTimePicker
                     // label="Entry Date and Time"
                     className="font-right"
