@@ -888,7 +888,7 @@ const Table = ({
   const handleLocated = () => {
     if (showPage === "initial") {
       // goToBeginning()
-      navigate(-window.history.length + 1);
+      window.location.href = window.location.origin;
       // navigate(-1)
     } else {
       // window.location.reload()
