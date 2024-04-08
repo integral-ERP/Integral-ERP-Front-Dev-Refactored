@@ -254,11 +254,27 @@
 }
 
 .form-container {
-  width: 100%; /* O el ancho deseado */
-  height: 500px; /* O la altura deseada */
-  overflow: auto;
+  width: 98%; /* O el ancho deseado */
+  height: 80%; /* O la altura deseada */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .MuiPaper-root{
-  color: red !important;
+  color: white !important;
+  font-size: 20px !important;
 }
+
+.css-yslrua-MuiTypography-root-MuiAlertTitle-root{
+  font-size: 20px !important;
+  font-weight: bold !important;
+}
+
+.css-1ytlwq5-MuiAlert-icon {
+  padding: 24px 0;
+  font-size: 35px;
+}
+
+// ::-webkit-scrollbar {
+//   width: 15px; /* Ancho del scrollbar */
+// }

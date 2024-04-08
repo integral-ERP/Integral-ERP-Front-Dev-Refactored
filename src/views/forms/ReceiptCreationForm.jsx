@@ -75,6 +75,9 @@ const ReceiptCreationForm = ({
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
+//-------------------------------------------------------
+  const [SelectEvent, setSelectEvent] = useState(null);
+
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -84,6 +87,10 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+
+
+  
+  
 
   useEffect(() => {
     if (!isButtonDisabled) {
@@ -147,11 +154,9 @@ const ReceiptCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -169,6 +174,20 @@ const ReceiptCreationForm = ({
     const result = await ForwardingAgentService.getForwardingAgentById(id);
     setagent(result.data);
   };
+
+  //------------------------------------------------
+  const handleSelectEvent = (events) => {
+    setSelectEvent(events);
+    console.log("selected events ", events);
+  };
+
+  const handleDeleteEvent= () => {
+    if (SelectEvent) {
+    }
+  };
+  
+
+  //------------------------------------------------
 
   const handleSelectIncomeCharge = (commodity) => {
     setSelectedIncomeCarge(commodity);
@@ -229,11 +248,9 @@ const ReceiptCreationForm = ({
       result = await CarrierService.getCarrierById(id);
     }
 
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setconsignee(result.data);
     setFormData({
       ...formData,
@@ -273,9 +290,8 @@ const ReceiptCreationForm = ({
       result = await VendorService.getVendorByID(id);
     }
     const info = result?.data
-      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${
-          result.data.state || ""
-        } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
+      } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
       : formData.shipperInfo;
     setshipper(result?.data || shipper);
     setFormData({
@@ -285,93 +301,95 @@ const ReceiptCreationForm = ({
       shipperInfo: info,
     });
   };
+//---------------------------------CHARGE IMG---------------------------------------------------------
+const [showLargeImage, setShowLargeImage] = useState(false);
+const [largeImageSrc, setLargeImageSrc] = useState('');
+
+const handleShowLargeImage = (src) => {
+  setLargeImageSrc(src);
+  setShowLargeImage(true);
+};
+
+const handleCloseLargeImage = () => {
+  setShowLargeImage(false);
+};
+
+
+const handleDownloadAttachment = (base64Data, fileName) => {
+  // Convertir la base64 a un Blob
+  const byteCharacters = atob(base64Data.split(',')[1]);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+
+  // Crear un enlace temporal y descargar el Blob
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+};
+
 
   const handleFileUpload = (event) => {
     const files = event.target.files;
 
-    setattachments([...attachments, ...files]);
+    if (files && files.length > 0) {
+      const newAttachments = [];
 
-    files.forEach((file) => {
-      const reader = new FileReader();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
 
-      reader.onload = () => {
-        setattachments((prevAttachments) => {
-          return prevAttachments.map((prevAttachment) => {
-            if (prevAttachment.name === file.name) {
-              return {
-                ...prevAttachment,
-                base64: reader.result,
-              };
-            } else {
-              return prevAttachment;
-            }
+        reader.onload = () => {
+          newAttachments.push({
+            name: file.name,
+            base64: reader.result,
           });
-        });
-      };
+
+          if (newAttachments.length === files.length) {
+            setattachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+          }
+        };
 
         reader.readAsDataURL(file);
+<<<<<<< HEAD
       });
     };
   
+=======
+      }
+    }
+  };
+  //------------------------------------------------------------------------------------------
+>>>>>>> b98aa8956e08dee95cf06acb86c2e7d426f4d79a
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(attachment => attachment.name !== name);
     setattachments(updateAttachments);
   };
 
-  //-------------------------------------------------------------------------------------------------------------
-  const [showLargeImage, setShowLargeImage] = useState(false);
-  const [largeImageSrc, setLargeImageSrc] = useState('');
-
-  const handleShowLargeImage = (src) => {
-    setLargeImageSrc(src);
-    setShowLargeImage(true);
-  };
-
-  const handleCloseLargeImage = () => {
-    setShowLargeImage(false);
-  };
-
-
-  const handleDownloadAttachment = (base64Data, fileName) => {
-    // Convertir la base64 a un Blob
-    const byteCharacters = atob(base64Data.split(',')[1]);
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays, { type: 'image/jpeg' });
-
-    // Crear un enlace temporal y descargar el Blob
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  };
-  //-------------------------------------------------------------------------------------------------------------
-
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -572,69 +590,50 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
         shipper: pickupOrder.shipper,
         shipperId: pickupOrder.shipperObj.data?.obj?.id, //pickupOrder.shipper
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consignee: pickupOrder.consignee,
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
+          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
+          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
@@ -643,8 +642,8 @@ const ReceiptCreationForm = ({
           CTBID === pickupOrder.shipperObj.data?.obj?.id
             ? "shipper"
             : CTBID === pickupOrder.consigneeObj.data?.obj?.id
-            ? "consignee"
-            : "",
+              ? "consignee"
+              : "",
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
@@ -830,11 +829,9 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
@@ -842,60 +839,43 @@ const ReceiptCreationForm = ({
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
 
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
+          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
+          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -905,8 +885,8 @@ const ReceiptCreationForm = ({
           CTBID === pickupOrder.consigneeObj.data?.obj?.id
             ? "consignee"
             : CTBID === pickupOrder.shipperObj.data?.obj?.id
-            ? "shipper"
-            : "",
+              ? "shipper"
+              : "",
 
         commodities: pickupOrder.commodities,
         notes: [],
@@ -1010,8 +990,8 @@ const ReceiptCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipper
-            : formData.consignee,
+            ? formData.shipperId  //CAMBIO
+            : formData.consigneeId, //CAMBIO
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1137,6 +1117,7 @@ const ReceiptCreationForm = ({
   };
 
   return (
+    <div className="form-container">
     <div className="company-form receipt">
       <div className="row w-100">
         <div className="col-6">
@@ -1146,7 +1127,7 @@ const ReceiptCreationForm = ({
               <span></span>
             </div>
             <div className="row mb-3">
-              <div className="col-6 text-start">
+              <div className="col-4 text-start">
                 <Input
                   type="number"
                   inputName="number"
@@ -1157,7 +1138,7 @@ const ReceiptCreationForm = ({
                 />
               </div>
 
-              <div className="col-6 text-start">
+              <div className="col-4 text-start">
                 <label htmlFor="employee" className="form-label">
                   Employee:
                 </label>
@@ -1177,50 +1158,8 @@ const ReceiptCreationForm = ({
                   placeholder="Search and select..."
                 />
               </div>
-            </div>
 
-            <div className="row mb-5">
-              <div className="col-6 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Entry Date and Time</p>
-                  <DateTimePicker
-                    // label="Entry Date and Time"
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
-                  />
-                </LocalizationProvider>
-              </div>
-
-              <div className="col-6 text-start">
-                <label htmlFor="issuedBy" className="form-label">
-                  Issued By:
-                </label>
-                <AsyncSelect
-                  id="issuedBy"
-                  value={issuedByOptions.find(
-                    (option) => option.id === formData.issuedById
-                  )}
-                  onChange={(e) => {
-                    handleIssuedBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={issuedByOptions}
-                  loadOptions={loadIssuedBySelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-            </div>
-
-            <div className="row mb-3">
-            <div className="col-6 text-start">
+              <div className="col-4 text-start">
                 <label htmlFor="destinationAgent" className="form-label">
                   Destination Agent:
                 </label>
@@ -1259,8 +1198,47 @@ const ReceiptCreationForm = ({
                   />
                 )}
               </div>
+            </div>
 
-              <div className="col-6 text-start">
+            <div className="row align-items-center">
+              <div className="col-4 text-start">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <p id="creation-date" className="text-date">Entry Date and Time</p>
+                  <DateTimePicker
+                    // label="Entry Date and Time"
+                    className="font-right"
+                    value={dayjs(formData.createdDateAndTime)}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                      })
+                    }
+                  />
+                </LocalizationProvider>
+              </div>
+
+              <div className="col-4 text-start">
+                <label htmlFor="issuedBy" className="form-label">
+                  Issued By:
+                </label>
+                <AsyncSelect
+                  id="issuedBy"
+                  value={issuedByOptions.find(
+                    (option) => option.id === formData.issuedById
+                  )}
+                  onChange={(e) => {
+                    handleIssuedBySelection(e);
+                  }}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={issuedByOptions}
+                  loadOptions={loadIssuedBySelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-4 text-start">
                 <Input
                   type="number"
                   inputName="entryNumber"
@@ -1269,7 +1247,6 @@ const ReceiptCreationForm = ({
                   label="Entry Number"
                 />
               </div>
-              
             </div>
           </div>
         </div>
@@ -1287,14 +1264,17 @@ const ReceiptCreationForm = ({
                 </label>
                 <AsyncSelect
                   id="shipper"
-                  onChange={(e) => {
-                    handleShipperSelection(e);
-                  }}
+                  value={consigneeOptions.find(
+                    (option) =>
+                      option.id === formData.shipperId &&
+                      option.type_person === formData.shipperType
+                  )}
+                  onChange={(e) => {handleShipperSelection(e);}}
                   isClearable={true}
                   placeholder="Search and select..."
                   defaultOptions={shipperOptions}
                   loadOptions={loadShipperSelectOptions}
-                  value={shipper}
+                  // value={shipper}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -1536,7 +1516,7 @@ const ReceiptCreationForm = ({
                 " Height",
                 " Width",
                 " Weight",
-                "Location",
+                " Location",
                 " Volumetric Weight",
                 " Chargeable Weight",
                 "Options",
@@ -1545,14 +1525,12 @@ const ReceiptCreationForm = ({
               selectedRow={selectedCommodity}
               onDelete={handleCommodityDelete}
               onEdit={handleCommodityEdit}
-              onInspect={() => {
-                setshowCommodityInspect(!showCommodityInspect);
-              }}
+              onInspect={() => {setshowCommodityInspect(!showCommodityInspect);}}
               onAdd={() => {}}
               showOptions={false}
               //added no double click
               Nodoubleclick={true}
-              /* deleted variable hiden button trash */
+            /* deleted variable hiden button trash */
             />
             {/* added view commodities */}
             {showCommodityInspect && (
@@ -1646,7 +1624,8 @@ const ReceiptCreationForm = ({
                 </button> */}
 
       <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton"></label>
+      <label className="button-charge" htmlFor="toggleBoton">
+      </label>
 
       <div className="row w-100" id="miDiv">
         <div className="col-6">
@@ -1679,11 +1658,11 @@ const ReceiptCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}
@@ -1733,11 +1712,11 @@ const ReceiptCreationForm = ({
                   "Price",
                   "Currency",
                 ]}
-                onSelect={() => {}} // Make sure this line is correct
+                onSelect={() => { }} // Make sure this line is correct
                 selectedRow={{}}
-                onDelete={() => {}}
-                onEdit={() => {}}
-                onAdd={() => {}}
+                onDelete={() => { }}
+                onEdit={() => { }}
+                onAdd={() => { }}
                 showOptions={false}
               />
             )}
@@ -1775,21 +1754,25 @@ const ReceiptCreationForm = ({
               </div>
               {events && events.length > 0 && (
                 <Table
+                noScroll
                   data={events}
                   columns={[
                     "Date",
-                    "Name",
-                    "Location",
+                    // "Name",
+                    "Event Type",
                     "Details",
-                    "Include In Tracking",
+                    "Location",
+                    // "Include In Tracking",
                     "Created In",
-                    "Created By",
+                    // "Created By",
                     "Created On",
-                    "Last Modified By",
-                    "Last Modified On",
+                    // "Last Modified By",
+                    // "Last Modified On",
+                    // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                   ]}
-                  onSelect={() => {}}
-                  selectedRow={{}}
+
+                  onSelect={handleSelectEvent}
+                  selectedRow={SelectEvent}
                   onDelete={() => {}}
                   onEdit={() => {}}
                   onAdd={() => {}}
@@ -1829,34 +1812,36 @@ const ReceiptCreationForm = ({
           />
           <div className="image-buttons">
             <button
-              className="delete-button"
+              className="custom-button"
               onClick={() => handleDeleteAttachment(attachment.name)}
             >
-              <i className="fas fa-trash-alt"></i>
+              <i className="fas fa-trash"></i>
             </button>
-            <button
-              className="download-button"
+            {/* <button
+              className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
-            </button>
+            </button> */}
           </div>
         </div>
       ))}
       {showLargeImage && (
         <div className="large-image-overlay" onClick={handleCloseLargeImage}>
           <div className="large-image-container">
-            <button className="close-button" onClick={handleCloseLargeImage}>
-              <i className="fas fa-times"></i>
+            <button className="button-cancel pick " onClick={handleCloseLargeImage}>
+              <i className="fas fa-times-circle"></i>
             </button>
-            <img src={largeImageSrc} alt="Large Image" />
+            <img src={largeImageSrc} style={{ width:"60rem" }} alt="Large Image" />
           </div>
         </div>
       )}
     </div>
+  
           </div>
         </div>
       </div>
+
 
       <div className="creation creation-container">
         <div className="form-label_name">
@@ -1984,6 +1969,7 @@ const ReceiptCreationForm = ({
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };

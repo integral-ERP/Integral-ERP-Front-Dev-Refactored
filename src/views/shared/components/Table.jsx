@@ -124,13 +124,16 @@ const Table = ({
     ID: "identification_number",
     "Type ID": "typeIdentificacion",
     "Street & Number": "street_and_number",
+    "US Customs Code": "us_customs_code",
     City: "city",
     State: "state",
     Country: "country",
     "Zip-Code": "zip_code",
+    "Rail": "rail",
     "Parent Account": "parentAccount",
     "Carrier Type": "carrierType",
-    "Method Code": "methodCode",
+    "Method": "maritime",
+    "Subdivision": "sub_division",
     "Carrier Code": "carrierCode",
     "SCAC Number": "scac_number",
     "IATA Code": "iata_code",
@@ -183,7 +186,7 @@ const Table = ({
     Code: "code",
     "Release Date": "release_date",
     "Released to": "releasedToObj.data.obj.name",
-    Location: "locationCode",
+    " Location": "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
     "Consignee Name": "consigneeObj.data.obj.name",
@@ -220,6 +223,12 @@ const Table = ({
     "AR Amount": "amountReceived",
     Memo: "memo",
     nombre: "nombre",
+    //---------EVENT
+    "Event Type": "eventType",
+    "Details": "details",
+    "Location": "location",
+    "Created In": "createIn",
+    "Created On": "createOn",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -686,7 +695,7 @@ const Table = ({
                                 style={{
                                   display: "flex",
                                   width: "70px",
-                                  marginLeft: "3vw",
+                                
                                 }}
                               >
                                 <i className="fa fa-print menu-icon fa-3x"></i>
@@ -704,7 +713,7 @@ const Table = ({
                                     }
                                   >
                                     {/* <option value=""> </option> */}
-                                    <option value=""></option>
+                                    <option value="">Select Option</option>
                                     <option
                                       value="receipt"
                                       style={{
@@ -731,31 +740,76 @@ const Table = ({
                                       PDF Label
                                     </option>
                                   </select>
+
+                                
                                 </div>
                               </button>
                             </>
-                          ) : columnName === "Invoice PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generatePDFInvoice}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Bill PDF" ? (
-                            <button
-                              type="button"
-                              onClick={generateBillPDF}
-                              className="custom-button-pdf"
-                            >
-                              <i className="fas fa-file-pdf"></i>
-                            </button>
-                          ) : columnName === "Status" ? (
-                            getStatus(row[columnNameToProperty[columnName]])
-                          ) : columnName === "Options" ? (
-                            <>
-                              {" "}
-                              {/* added hiden button trash for table commodity creation form */}
+                          )
+                          
+                            : columnName === "Invoice PDF" ? (
+                              <button
+                                type="button"
+                                onClick={generatePDFInvoice}
+                                className="custom-button-pdf"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                            ) : columnName === "Bill PDF" ? (
+                              <button
+                                type="button"
+                                onClick={generateBillPDF}
+                                className="custom-button-pdf"
+                              >
+                                <i className="fas fa-file-pdf"></i>
+                              </button>
+                            ) : columnName === "Status" ? (
+                              getStatus(row[columnNameToProperty[columnName]])
+                            ) : columnName === "Options" ? (
+                              <>
+                                {" "}
+                                {/* added hiden button trash for table commodity creation form */}
+                                <button
+                                  type="button"
+                                  onClick={onDelete}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onEdit}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-pencil-alt"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onInspect}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-eye"></i>
+                                </button>
+                              </>
+                            ) : columnName === "Repack Options" ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={onInspect}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-eye"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={onEdit}
+                                  className="custom-button"
+                                  style={{ display: "none" }}
+                                >
+                                  <i className="fas fa-box-open"></i>
+                                </button>
+                              </>
+                            ) : columnName === "Delete" ? (
                               <button
                                 type="button"
                                 onClick={onDelete}
@@ -763,55 +817,14 @@ const Table = ({
                               >
                                 <i className="fas fa-trash"></i>
                               </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-pencil-alt"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Repack Options" ? (
-                            <>
-                              <button
-                                type="button"
-                                onClick={onInspect}
-                                className="custom-button"
-                              >
-                                <i className="fas fa-eye"></i>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={onEdit}
-                                className="custom-button"
-                                style={{ display: "none" }}
-                              >
-                                <i className="fas fa-box-open"></i>
-                              </button>
-                            </>
-                          ) : columnName === "Delete" ? (
-                            <button
-                              type="button"
-                              onClick={onDelete}
-                              className="custom-button"
-                            >
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          ) : typeof columnNameToProperty[columnName] ===
-                            "boolean" ? (
-                            row[columnNameToProperty[columnName]] ? (
-                              <i className="fas fa-check"></i>
-                            ) : (
-                              <i className="fas fa-times"></i>
-                            )
-                          ) : columnNameToProperty[columnName]?.includes(
+                            ) : typeof columnNameToProperty[columnName] ===
+                              "boolean" ? (
+                              row[columnNameToProperty[columnName]] ? (
+                                <i className="fas fa-check"></i>
+                              ) : (
+                                <i className="fas fa-times"></i>
+                              )
+                            ) : columnNameToProperty[columnName]?.includes(
                               "."
                             ) ? (
                             getPropertyValue(
@@ -835,9 +848,9 @@ const Table = ({
           </div>
         );
       case "add":
-        return <div className="layout-fluid">{children}</div>;
+        return <div className="layout-fluid_form">{children}</div>;
       case "edit":
-        return <div className="layout-fluid">{children}</div>;
+        return <div className="layout-fluid_form">{children}</div>;
     }
   };
 
@@ -875,7 +888,7 @@ const Table = ({
   const handleLocated = () => {
     if (showPage === "initial") {
       // goToBeginning()
-      navigate(-window.history.length + 1);
+      window.location.href = window.location.origin;
       // navigate(-1)
     } else {
       // window.location.reload()
@@ -1216,7 +1229,7 @@ const Table = ({
                                   }
                                 >
                                   {/* <option value=""> </option> */}
-                                  <option value=""></option>
+                                  <option value="">Select Option</option>
 
                                   <option
                                     value="receipt"

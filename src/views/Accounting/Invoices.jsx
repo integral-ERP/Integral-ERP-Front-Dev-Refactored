@@ -22,7 +22,6 @@ const Invoices = () => {
   const columns = [
     "Number",
     "Account Type",
-
     "Transaction Date",
     "Due Date",
     "Apply",
@@ -50,8 +49,6 @@ const Invoices = () => {
         });
 
         setInvoices([...response.data.results].reverse());
-
-
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -142,7 +139,6 @@ const Invoices = () => {
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       const clickedElement = event.target;
       const isPickupOrdersButton = clickedElement.classList.contains("ne");
       const isTableRow = clickedElement.closest(".table-row");

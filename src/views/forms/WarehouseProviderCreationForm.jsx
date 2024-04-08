@@ -150,8 +150,8 @@ const WarehouseProviderCreationForm = ({
   }
 
   return (
+    <div className="form-container">
     <div className="company-form">
-
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -450,6 +450,7 @@ const WarehouseProviderCreationForm = ({
           </Alert>
         )}
       </div>
+    </div>
       );
 };
 

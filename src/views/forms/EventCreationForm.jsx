@@ -57,7 +57,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <p className="text-date">Entry Date and Time</p>
+            <p id="creation-date" className="text-date">Entry Date and Time</p>
               <DateTimePicker
                 className="font-right"
                 value={dayjs(formData.dateTime)}
@@ -76,7 +76,6 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <label className="text-comm">Event Type:</label>
-
             <select
               name="eventType"
               id="eventType"
@@ -110,6 +109,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           </div>
         </div>
         <div className="form-row">
+        <div className="form-column-create">
           <label htmlFor="details" className="text-comm">
             Details:
           </label>
@@ -124,6 +124,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             }
             style={{ width: "100%", height: "4rem" }}
           />
+        </div>
         </div>
         <div className="form-row">
           <div className="form-column-create">

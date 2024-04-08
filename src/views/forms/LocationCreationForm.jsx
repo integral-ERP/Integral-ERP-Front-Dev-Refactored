@@ -93,6 +93,7 @@ const LocationsCreationForm = ({
   }
 
   return (
+    <div className="form-container">
     <div className="company-form">
 
 
@@ -251,6 +252,7 @@ const LocationsCreationForm = ({
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };
