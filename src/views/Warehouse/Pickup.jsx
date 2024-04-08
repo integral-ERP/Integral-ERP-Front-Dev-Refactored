@@ -157,10 +157,12 @@ const Pickup = () => {
 
   const handlePickupOrdersDataChange = () => {
     updatePickupOrders();
+    console.log("updatePickupOrders",updatePickupOrders());
   };
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
+    console.log("PickupOrder",PickupOrder);
   };
 
   const handleEditPickupOrders = () => {
