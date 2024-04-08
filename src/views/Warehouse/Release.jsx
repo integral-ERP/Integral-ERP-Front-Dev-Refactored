@@ -22,10 +22,10 @@ const Release = () => {
   const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
+  // const [contextMenuPosition, setContextMenuPosition] = useState({
+  //   x: 0,
+  //   y: 0,
+  // });
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [createReleaseOrder, setCreateReleaseOrder] = useState(true);
   const columns = [
@@ -37,6 +37,15 @@ const Release = () => {
     "Weight",
     "View Release PDF",
   ];
+
+ const handleContextMenu = (e) => {
+    e.preventDefault(); // Prevent the browser's default context menu
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    setContextMenuPosition({ x: clickX, y: clickY });
+    setShowContextMenu(true);
+  };
+
   //added status
   const StatusDelivered = 9;
   const StatusLoaded = 1;
@@ -67,7 +76,8 @@ const Release = () => {
           }
         }
       }
-      console.log(filteredData);
+      // console.log("Aqui-1 = ",filteredData);
+      // console.log("Aqui-2 = ",filteredData);
       setReleaseOrders(filteredData);
     } catch (error) {
       console.log(error);
@@ -76,6 +86,8 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
+    console.log("Aqui -1 = ",fetchData());
+    console.log("Aqui-2 = ",fetchData());
   }, []);
 
   const updateReleaseOrders = (url = null) => {
@@ -88,7 +100,9 @@ const Release = () => {
           );
         });
 
-        setReleaseOrders([...releaseOrders, ...newreleises].reverse());
+        // setReleaseOrders([...releaseOrders, ...newreleises].reverse());
+        setReleaseOrders([...response.data.results].reverse());
+
         if (response.data.next) {
           setNextPageURL(response.data.next);
         }
@@ -247,13 +261,7 @@ const Release = () => {
     },
   ];
 
-  const handleContextMenu = (e) => {
-    e.preventDefault(); // Prevent the browser's default context menu
-    const clickX = e.clientX;
-    const clickY = e.clientY;
-    setContextMenuPosition({ x: clickX, y: clickY });
-    setShowContextMenu(true);
-  };
+ 
 
   const handleCancel = () => {
     window.location.reload();
@@ -284,24 +292,13 @@ const Release = () => {
               setData={setReleaseOrders}
               handleContextMenu={handleContextMenu}
               showContextMenu={showContextMenu}
-              contextMenuPosition={contextMenuPosition}
+              // contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
               contextService={ReleaseService}
               importEnabled={false}
               importLabel={false}
             >
-              {selectedReleaseOrder !== null && (
-                <ReleaseOrderCreationForm
-                  releaseOrder={selectedReleaseOrder}
-                  closeModal={handleCancel}
-                  creating={false}
-                  onReleaseOrderDataChange={handlereceiptsDataChange}
-                  currentReleaseNumber={currentReleaseNumber}
-                  setcurrentReleaseNumber={setcurrentReleaseNumber}
-                />
-              )}
-
               {selectedReleaseOrder === null && (
                 <ReleaseOrderCreationForm
                   releaseOrder={null}
@@ -312,6 +309,17 @@ const Release = () => {
                   setcurrentReleaseNumber={setcurrentReleaseNumber}
                 />
               )}
+
+              {selectedReleaseOrder !== null && (
+                <ReleaseOrderCreationForm
+                  releaseOrder={selectedReleaseOrder}
+                  closeModal={handleCancel}
+                  creating={false}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentReleaseNumber}
+                  setcurrentReleaseNumber={setcurrentReleaseNumber}
+                />
+              )}    
             </Table>
 
             {showSuccessAlert && (

@@ -266,8 +266,8 @@ const ReceiptCreationForm = ({
       type === "shipper"
         ? formData.shipperId
         : type === "consignee"
-          ? formData.consigneeId
-          : "";
+        ? formData.consigneeId
+        : "";
     setFormData({
       ...formData,
       clientToBillId: id,
@@ -984,8 +984,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipper
-            : formData.consignee,
+            ? formData.shipperId  //CAMBIO
+            : formData.consigneeId, //CAMBIO
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1111,6 +1111,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
   };
 
   return (
+    <div className="form-container">
     <div className="company-form receipt">
       <div className="row w-100">
         <div className="col-6">
@@ -1747,7 +1748,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               </div>
               {events && events.length > 0 && (
                 <Table
-
+                noScroll
                   data={events}
                   columns={[
                     "Date",
@@ -1805,27 +1806,27 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           />
           <div className="image-buttons">
             <button
-              className="delete-button"
+              className="custom-button"
               onClick={() => handleDeleteAttachment(attachment.name)}
             >
-              <i className="fas fa-trash-alt"></i>
+              <i className="fas fa-trash"></i>
             </button>
-            <button
-              className="download-button"
+            {/* <button
+              className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
-            </button>
+            </button> */}
           </div>
         </div>
       ))}
       {showLargeImage && (
         <div className="large-image-overlay" onClick={handleCloseLargeImage}>
           <div className="large-image-container">
-            <button className="close-button" onClick={handleCloseLargeImage}>
-              <i className="fas fa-times"></i>
+            <button className="button-cancel pick " onClick={handleCloseLargeImage}>
+              <i className="fas fa-times-circle"></i>
             </button>
-            <img src={largeImageSrc} alt="Large Image" />
+            <img src={largeImageSrc} style={{ width:"60rem" }} alt="Large Image" />
           </div>
         </div>
       )}
@@ -1962,6 +1963,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           </strong>
         </Alert>
       )}
+    </div>
     </div>
   );
 };

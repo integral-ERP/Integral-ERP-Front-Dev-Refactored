@@ -150,8 +150,8 @@ const WarehouseProviderCreationForm = ({
   }
 
   return (
+    <div className="form-container">
     <div className="company-form">
-
       <div className="row w-100">
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -278,18 +278,24 @@ const WarehouseProviderCreationForm = ({
           <div className="col-6 text-start">
           <div className="creation creation-container w-100">
           <div className="form-label_name"><h2>Address</h2><span></span></div>
+
+          <div className="row mb-3">
+          <div className="col-6 text-start">
               <div className="company-form__section">
                 <Input
-                  type="textarea"
-                  inputName="street"
-                  placeholder="Street & Address..."
-                  value={formData.streetNumber}
+                  type="text"
+                  inputName="zipcode"
+                  placeholder="Zip Code..."
+                  value={formData.zipCode}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, streetNumber: e.target.value })
+                    setFormData({ ...formData, zipCode: e.target.value })
                   }
-                  label="Street & Address"
+                  label="Zip Code"
                 />
               </div>
+              </div>
+
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="wp-country" className="form-label">
                   Country
@@ -322,6 +328,11 @@ const WarehouseProviderCreationForm = ({
                     ))}
                 </select>
               </div>
+              </div>
+              </div>
+
+              <div className="row mb-3">
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="wp-state" className="form-label">
                   State:
@@ -354,6 +365,9 @@ const WarehouseProviderCreationForm = ({
                     ))}
                 </select>
               </div>
+              </div>
+
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="wp-city" className="form-label">
                   City:
@@ -386,17 +400,25 @@ const WarehouseProviderCreationForm = ({
                     ))}
                 </select>
               </div>
+              </div>
+              </div>
+
+              <div className="row mb-3">
+              <div className="col-12 text-start">
               <div className="company-form__section">
                 <Input
-                  type="text"
-                  inputName="zipcode"
-                  placeholder="Zip Code..."
-                  value={formData.zipCode}
+                  type="textarea"
+                  inputName="street"
+                  placeholder="Street & Address..."
+                  value={formData.streetNumber}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, zipCode: e.target.value })
+                    setFormData({ ...formData, streetNumber: e.target.value })
                   }
-                  label="Zip Code"
+                  label="Street & Address"
                 />
+              </div>
+              </div>
+             
               </div>
             </div>
           </div>
@@ -428,6 +450,7 @@ const WarehouseProviderCreationForm = ({
           </Alert>
         )}
       </div>
+    </div>
       );
 };
 

@@ -193,13 +193,13 @@ const CarrierCreationForm = ({
 
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
-      setTimeout(() => {
-        closeModal();
+      // setTimeout(() => {
+        // closeModal();
         onCarrierDataChange();
-        setShowSuccessAlert(false);
+        // setShowSuccessAlert(false);
         setFormData(formFormat);
-        window.location.reload();
-      }, 1000);
+        // window.location.reload();
+      // }, 1000);
     } else {
       setShowErrorAlert(true);
     }
@@ -641,7 +641,7 @@ const CarrierCreationForm = ({
         </div>
       </div>
 
-      <div className="company-form__options-container">
+      <div className="company-form__options-container" style={{marginLeft:"27vw"}}>
         <button className="button-save" onClick={sendData}>
           Save
         </button>

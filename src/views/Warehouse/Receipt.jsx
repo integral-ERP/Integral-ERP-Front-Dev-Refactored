@@ -402,7 +402,6 @@ const Receipt = () => {
             }
           >
             <Table
-            noScroll
               data={receipts}
               columns={columns}
               onSelect={handleSelectPickupOrder} // Make sure this line is correct

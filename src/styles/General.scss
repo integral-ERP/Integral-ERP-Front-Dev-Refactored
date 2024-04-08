@@ -686,7 +686,7 @@
     margin-inline: auto;
     margin-bottom: 30px;
     margin-top: 30px;
-    margin-left: 1vw;
+    // margin-left: 1vw;
 
 
   }
@@ -728,6 +728,7 @@
     top: 50%;
     background-color: #3498db !important;
     border: 2px solid #006BAD;
+    margin-left: 35vw;
   }
 
   .alert-notification{
@@ -907,7 +908,7 @@
   .css-t3ipsp-control {
     margin: 0 0 0 0rem !important;
     min-height: 3rem !important;
-    width: 80% !important;
+    width: 100% !important;
     background: whitesmoke !important;
 
     height: 0rem !important;
@@ -957,7 +958,7 @@
   }
 
   .input-group{
-    width: 28vw !important;
+    width: 30vw !important;
   }
 
 
@@ -1078,12 +1079,16 @@
 
 
   .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-    padding-right: 0% !important;
-    height: 4rem;
+    // padding-right: 0% !important;
+    border: 1px solid #818080;;
+    height: 3rem;
+    width: 100% !important;
 
     input {
       margin: 0 !important;
       color: #818080;
+      border-color: white;
+
     }
   }
 
@@ -1175,11 +1180,13 @@
   border-radius: 8px;
 }
 
-.layout-fluid {
-  width: 98%;
+.layout-fluid_form {
+  width: 99%;
+  padding-left: 10px;
+  // overflow: scroll;
   display: inline-block;
   // padding-left: inherit;
-  padding-right: 1.5vw;
+  // padding-right: 0.5vw;
 }
 
 .main-container {
@@ -1365,4 +1372,20 @@
 
 .text-center{
   overflow-x: hidden;
+}
+
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+  width: 100% !important;
+}
+
+.form-column-create{
+  width: 19vw;
+}
+
+.large-image-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+
 }

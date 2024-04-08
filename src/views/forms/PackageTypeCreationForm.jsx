@@ -127,6 +127,7 @@ const PackageTypesCreationForm = ({
   }
 
   return (
+    <div className="form-container">
     <div className="company-form">
       <div className="row w-100">
         <div className="col-6 text-start">
@@ -163,6 +164,9 @@ const PackageTypesCreationForm = ({
                   label="Description"
                 />
               </div>
+
+              <div className="row mb-3">
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="wp-mobilePhone" className="form-label">
                   Container Code:
@@ -182,6 +186,9 @@ const PackageTypesCreationForm = ({
                   ))}
                 </select>
               </div>
+              </div>
+
+              <div className="col-6 text-start">
               <div className="company-form__section">
                 <label htmlFor="wp-equip" className="form-label">
                   Container Equip. Type:
@@ -200,6 +207,8 @@ const PackageTypesCreationForm = ({
                     </option>
                   ))}
                 </select>
+              </div>
+              </div>
               </div>
               {formData.type === 'Container' && (
                 <div className="startup-wizard-form__section">
@@ -242,6 +251,8 @@ const PackageTypesCreationForm = ({
                       Ground
                     </label>
                   </div>
+                  
+
                 </div>
               )}
             </div>
@@ -254,6 +265,8 @@ const PackageTypesCreationForm = ({
             <div>
               <div className="containerr">
                 <div className="cont-one">
+                <div className="row mb-3">
+                <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -269,6 +282,8 @@ const PackageTypesCreationForm = ({
                       in
                     </label>
                   </div>
+                  </div>
+                  <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -284,6 +299,8 @@ const PackageTypesCreationForm = ({
                       in
                     </label>
                   </div>
+                  </div>
+                  <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -299,8 +316,15 @@ const PackageTypesCreationForm = ({
                       lb
                     </label>
                   </div>
-                </div>{/* ----------------------------END ONE---------------------------------- */}
+                  </div>
+                </div>
+                </div>
+
+             
                 <div className="cont-two">
+                <div className="row mb-3">
+
+                <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -316,6 +340,8 @@ const PackageTypesCreationForm = ({
                       in
                     </label>
                   </div>
+                  </div>
+                  <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -331,6 +357,8 @@ const PackageTypesCreationForm = ({
                       ft<sup>3</sup>
                     </label>
                   </div>
+                  </div>
+                  <div className="col-4 text-start">
                   <div className="company-form__section">
                     <Input
                       type="number"
@@ -346,6 +374,8 @@ const PackageTypesCreationForm = ({
                       lb
                     </label>
                   </div>
+                  </div>
+                </div>
                 </div>{/* ----------------------------END TWO---------------------------------- */}
               </div>
             </div>
@@ -378,6 +408,7 @@ const PackageTypesCreationForm = ({
         </Alert>
       )}
     </div>
+  </div>
   );
 };
 
