@@ -368,16 +368,10 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         };
 
         reader.readAsDataURL(file);
-<<<<<<< HEAD
-      });
-    };
-  
-=======
       }
     }
   };
   //------------------------------------------------------------------------------------------
->>>>>>> b98aa8956e08dee95cf06acb86c2e7d426f4d79a
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(attachment => attachment.name !== name);
@@ -1517,8 +1511,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Width",
                 " Weight",
                 " Location",
-                " Volumetric Weight",
-                " Chargeable Weight",
+                " Volumetric",
+                // " Chargeable Weight",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct
