@@ -590,7 +590,7 @@ const ReleaseOrderCreationForm = ({
             <div className="row mb-3">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Creation Date and Time</p>
+                <p id="creation-date" className="text-date">Creation Date and Time</p>
                   <DateTimePicker
                     // label="Creation Date and Time"
                     className="font-right"
@@ -606,7 +606,7 @@ const ReleaseOrderCreationForm = ({
               </div>
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p className="text-date">Release Date and Time</p>
+                <p id="creation-date" className="text-date">Release Date and Time</p>
                   <DateTimePicker
                     // label="Release Date and Time"
                     className="font-right"
