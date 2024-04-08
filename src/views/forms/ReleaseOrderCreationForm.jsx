@@ -61,6 +61,7 @@ const ReleaseOrderCreationForm = ({
     pro_number: "",
     tracking_number: "",
     purchase_order_number: "",
+    main_carrierObj: "",
     warehouseReceiptId: "",
     commodities: [],
   };
@@ -114,10 +115,13 @@ const ReleaseOrderCreationForm = ({
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
+    console.log("carrierId",id);
     setFormData({
       ...formData,
       carrierId: id,
+      
     });
+    console.log("carrierId",carrierId)
   };
 
   useEffect(() => {
@@ -201,10 +205,11 @@ const ReleaseOrderCreationForm = ({
         }`,
         clientToBillId: releaseOrder.client_to_bill,
         clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
-        carrierId: releaseOrder.carrier,
+        carrierId: releaseOrder.carrier_by,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
+        main_carrierObj: releaseOrder.main_carrierObj,
         warehouseReceiptId: releaseOrder.warehouseReceiptId,
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
@@ -455,10 +460,11 @@ const ReleaseOrderCreationForm = ({
           releasodToType: formData.releasedToType,
           client_to_bill: clientToBill,
           client_to_bill_type: formData.clientToBillType,
-          carrier: formData.carrierId,
+          carrier_by: formData.carrierId,
           pro_number: formData.pro_number,
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
+          main_carrierObj : formData.main_carrierObj,
           warehouse_receipt: formData.warehouseReceiptId,
           commodities: commodities,
         };
@@ -661,14 +667,15 @@ const ReleaseOrderCreationForm = ({
               </div>
             </div>
 
-            <div className="row align-items-center mb-3">
+            {/* <div className="row align-items-center mb-3">
               <div className="col-6 text-start">
                 <label htmlFor="clientToBill" className="form-label">
                   Client to Bill:
                 </label>
-                <select
+                <Input
                   name="clientToBill"
                   id="clientToBill"
+                  value={formData.client_to_bill_type}
                   onChange={(e) => {
                     handleClientToBillSelection(e);
                   }}
@@ -676,7 +683,7 @@ const ReleaseOrderCreationForm = ({
                   <option value="">Select an Option</option>
                   <option value="releasedTo">Released To</option>
                   <option value="other">Other</option>
-                </select>
+                </Input>
                 <p style={{ color: "red" }}>
                   Note: Always select a client to bill when editing
                 </p>
@@ -695,12 +702,10 @@ const ReleaseOrderCreationForm = ({
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-                </div>
-              
-            
-            </div>
+              </div> 
+            </div>*/}
           </div>
-        </div>
+        </div> 
 
         <div className="col-6">
           <div className="creation creation-container w-100">
@@ -713,7 +718,14 @@ const ReleaseOrderCreationForm = ({
                 <label htmlFor="mainCarrier" className="form-label">
                   Carrier:
                 </label>
-                <AsyncSelect
+                <Input
+                  type="text"
+                  inputName="purchaseOrderNumber"
+                  placeholder="Carrier . . . "
+                  value={formData.main_carrierObj.name}
+                  
+                />
+                {/* <AsyncSelect
                   id="mainCarrier"
                   value={carrierOptions.find(
                     (option) => option.id === formData.carrierId
@@ -727,16 +739,16 @@ const ReleaseOrderCreationForm = ({
                   loadOptions={loadCarrierSelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
-                />
+                /> */}
               </div>
               <div className="col-6 text-start">
                 <Input
                   type="text"
                   inputName="trackingNumber"
                   placeholder="Tracking Number..."
-                  value={formData.trackingNumber}
+                  value={formData.tracking_number}
                   changeHandler={(e) =>
-                    setFormData({ ...formData, trackingNumber: e.target.value })
+                    setFormData({ ...formData, tracking_number: e.target.value })
                   }
                   label="Tracking Number"
                 />
@@ -762,12 +774,12 @@ const ReleaseOrderCreationForm = ({
                   inputName="purchaseOrderNumber"
                   placeholder="Purchase Order Number..."
                   value={formData.purchase_order_number}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      purchase_order_number: e.target.value,
-                    })
-                  }
+                  // changeHandler={(e) =>
+                  //   setFormData({
+                  //     ...formData,
+                  //     purchase_order_number: e.target.value,
+                  //   })
+                  // }
                   label="Purchase Order Number"
                 />
               </div>
@@ -778,7 +790,7 @@ const ReleaseOrderCreationForm = ({
 
       <div className="creation creation-container w-100">
         <div className="form-label_name">
-          <h2>Cargo</h2>
+          <h2>Commodities</h2>
           <span></span>
         </div>
         <Table
@@ -798,7 +810,7 @@ const ReleaseOrderCreationForm = ({
         />
       </div>
 
-      <div className="creation creation-container w-100">
+      {/* <div className="creation creation-container w-100">
         <div className="row align-items-center">
           <div
             className="col-6 text-start"
@@ -841,14 +853,14 @@ const ReleaseOrderCreationForm = ({
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="company-form__options-container">
-        <button className="button-save" onClick={sendData}>
+        {/* <button className="button-save" onClick={sendData}>
           Save
-        </button>
+        </button> */}
         <button className="button-cancel" onClick={closeModal}>
-          Cancel
+          Accept
         </button>
       </div>
       {/* {showSuccessAlert && (
