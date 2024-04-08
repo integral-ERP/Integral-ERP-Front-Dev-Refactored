@@ -1511,8 +1511,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Width",
                 " Weight",
                 " Location",
-                " Volumetric Weight",
-                " Chargeable Weight",
+                " Volumetric",
+                // " Chargeable Weight",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct

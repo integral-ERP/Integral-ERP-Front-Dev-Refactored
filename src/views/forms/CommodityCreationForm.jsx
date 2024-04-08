@@ -207,17 +207,17 @@ const CommodityCreationForm = ({
         </div>
 
         <div className="col-3">
-          <label className="text-comm">Height:</label>
+          <label className="text-comm">Width:</label>
           <div className="input-group ">
             <input
               type="number"
               className="form-comm"
+              ref={input3Ref}
               aria-label=""
-              ref={input2Ref}
-              onKeyDown={(e) => handleKeyDown(e, input3Ref)}
-              value={formData.height}
+              value={formData.width}
+              onKeyDown={(e) => handleKeyDown(e, input4Ref)}
               onChange={(e) =>
-                setformData({ ...formData, height: e.target.value })
+                setformData({ ...formData, width: e.target.value })
               }
               /* added style for validation commodities */
               style={{
@@ -230,17 +230,17 @@ const CommodityCreationForm = ({
         </div>
 
         <div className="col-3">
-          <label className="text-comm">Width:</label>
+          <label className="text-comm">Height:</label>
           <div className="input-group ">
             <input
               type="number"
               className="form-comm"
-              ref={input3Ref}
               aria-label=""
-              value={formData.width}
-              onKeyDown={(e) => handleKeyDown(e, input4Ref)}
+              ref={input2Ref}
+              onKeyDown={(e) => handleKeyDown(e, input3Ref)}
+              value={formData.height}
               onChange={(e) =>
-                setformData({ ...formData, width: e.target.value })
+                setformData({ ...formData, height: e.target.value })
               }
               /* added style for validation commodities */
               style={{
