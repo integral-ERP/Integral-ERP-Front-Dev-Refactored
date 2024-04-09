@@ -219,16 +219,32 @@ const ReceiptCreationForm = ({
     });
   };
 
-  /* const handleSupplierSelection = async (event) => {
-    const id = event.id;
-    const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setFormData({ ...formData, supplierId: id, supplierInfo: info });
-  }; */
+  const handleSupplierSelection = async (event) => {
+    const id = event.id || formData.supplierId;
+    const type = event.type || formData.supplierType;
+
+    let result;
+    if (type === "forwarding-agent") {
+      result = await ForwardingAgentService.getForwardingAgentById(id);
+    } else if (type === "customer") {
+      result = await CustomerService.getCustomerById(id);
+    } else if (type === "vendor") {
+      result = await VendorService.getVendorByID(id);
+    }
+
+    const info = result?.data
+    ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
+    } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+    : formData.supplierInfo;
+
+  setSupplierOptions(result?.data);
+  setFormData({
+    ...formData,
+    supplierId: id,
+    supplierType: type,
+    supplierInfo: info,
+  })
+  }
 
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
@@ -276,29 +292,41 @@ const ReceiptCreationForm = ({
   };
 
   const handleShipperSelection = async (event) => {
-    const id = event.id || formData.shipperId;
-    const type = event.type || formData.shipperType;
+    if (event && event.id) {
+        const id = event.id || formData.shipperId;
+        const type = event.type || formData.shipperType;
 
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
+        let result;
+        if (type === "forwarding-agent") {
+            result = await ForwardingAgentService.getForwardingAgentById(id);
+        } else if (type === "customer") {
+            result = await CustomerService.getCustomerById(id);
+        } else if (type === "vendor") {
+            result = await VendorService.getVendorByID(id);
+        }
+
+        const info = result?.data
+            ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+            : formData.shipperInfo;
+        setshipper(result?.data || shipper);
+        setFormData({
+            ...formData,
+            shipperId: id,
+            shipperType: type,
+            shipperInfo: info,
+        });
+    } else {
+        console.error("El objeto de selección de shipper es nulo o no tiene una propiedad 'id'");
     }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = result?.data
-      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
-      } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
-      : formData.shipperInfo;
-    setshipper(result?.data || shipper);
+};
+
+
+  const handleClearShipperSelection = () => {
     setFormData({
       ...formData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
+      shipperId: null, 
+      shipperType: null, 
+      shipperInfo: "", 
     });
   };
 //---------------------------------CHARGE IMG---------------------------------------------------------
@@ -1257,21 +1285,21 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   Shipper:
                 </label>
                 <AsyncSelect
-                  id="shipper"
-                  value={consigneeOptions.find(
-                    (option) =>
-                      option.id === formData.shipperId &&
-                      option.type_person === formData.shipperType
-                  )}
-                  onChange={(e) => {handleShipperSelection(e);}}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={shipperOptions}
-                  loadOptions={loadShipperSelectOptions}
-                  // value={shipper}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
+                id="shipper"
+                onChange={(e) => {
+                  handleShipperSelection(e);
+                }}
+                onClear={() => {
+                  handleClearShipperSelection()
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions = {shipperOptions}
+                loadOptions = {loadShipperSelectOptions}
+                value={shipperOptions.find((option) => option.id === formData.shipperId)}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
               </div>
               <div className="col-6 text-start">
                 <label htmlFor="consignee" className="form-label">
@@ -1359,13 +1387,13 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 <AsyncSelect
                   id="shipper"
                   onChange={(e) => {
-                    handleShipperSelection(e);
+                    handleSupplierSelection(e);
                   }}
                   isClearable={true}
                   placeholder="Search and select..."
-                  defaultOptions={shipperOptions}
+                  defaultOptions={supplierOptions}
                   loadOptions={loadShipperSelectOptions}
-                  value={shipper}
+                  value={shipperOptions.find((option) => option.id === formData.supplierId)}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -1394,7 +1422,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   type="textarea"
                   inputName="shipperinfo"
                   placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
+                  value={formData.supplierInfo}
                   readonly={true}
                 />
               </div>
