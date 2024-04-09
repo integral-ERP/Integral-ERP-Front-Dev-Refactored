@@ -1422,7 +1422,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   type="textarea"
                   inputName="shipperinfo"
                   placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
+                  value={formData.supplierInfo}
                   readonly={true}
                 />
               </div>
