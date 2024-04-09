@@ -57,7 +57,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <p className="text-date">Entry Date and Time</p>
+            <p id="creation-date" className="text-date">Entry Date and Time</p>
               <DateTimePicker
                 className="font-right"
                 value={dayjs(formData.dateTime)}

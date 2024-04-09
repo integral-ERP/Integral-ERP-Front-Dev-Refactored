@@ -255,8 +255,9 @@
 
 .form-container {
   width: 98%; /* O el ancho deseado */
-  height: 80vw; /* O la altura deseada */
-  overflow: auto;
+  height: 80%; /* O la altura deseada */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .MuiPaper-root{
@@ -274,6 +275,6 @@
   font-size: 35px;
 }
 
-::-webkit-scrollbar {
-  width: 15px; /* Ancho del scrollbar */
-}
+// ::-webkit-scrollbar {
+//   width: 15px; /* Ancho del scrollbar */
+// }
