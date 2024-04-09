@@ -1438,6 +1438,9 @@ const PickupOrderCreationForm = ({
                   <option value="consignee">Ultimate Consignee</option>
                   <option value="other">Other</option>
                 </select>
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
               </div>
               <div className="text-start">
                 <AsyncSelect
@@ -1542,6 +1545,12 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
       </div>
+
+    {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
+    
+    {/* -------------------------------------------------------------------------------------------------------------- */}
+
+
       <input type="checkbox" id="toggleBoton"></input>
       <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
 

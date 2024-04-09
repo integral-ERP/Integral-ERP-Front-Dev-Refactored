@@ -1363,9 +1363,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
-                {/* <p style={{ color: "red" }}>
-                        Note: Always select a client to bill when editing
-                      </p> */}
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
               </div>
             </div>
           </div>
@@ -1511,6 +1511,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
           ) : (
             <h3>Commodities</h3>
+            
           )}
           <span></span>
         </div>
@@ -1539,8 +1540,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Width",
                 " Weight",
                 " Location",
-                " Volumetric",
-                // " Chargeable Weight",
+                " Volume (ft3)",
+                " Weight (lb)",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct
@@ -1872,7 +1873,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         </div>
 
         <div className="row align-items-center">
-          <div className="col-10 text-start">
+          {/* <div className="col-10 text-start">
             <label htmlFor="notes" className="form-label">
               Notes
             </label>
@@ -1884,9 +1885,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               onChange={(e) => setNote(e.target.value)}
               style={{ width: "99%" }}
             />
-          </div>
+          </div> */}
 
-          <div className="col">
+          {/* <div className="col">
             <button
               type="button"
               onClick={addNotes}
@@ -1900,21 +1901,16 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             >
               Add
             </button>
-          </div>
+          </div> */}
           <div className="row">
             <div className="col-10 text-start">
-              <textarea
+              <Input
                 name="notes"
                 className="form-input w-100"
-                placeholder=""
+                placeholder="PRO Number..."
                 value={formData.notes?.toString()}
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  height: "100px",
-                  wordWrap: "break-word",
-                }}
-                readOnly
+                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
+                // readOnly
               />
             </div>
           </div>
