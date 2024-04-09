@@ -209,33 +209,41 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    console.log('Este es el evento', event);
 
     let result;
     if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
+        result = await ForwardingAgentService.getForwardingAgentById(id);
     }
     if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
+        result = await CustomerService.getCustomerById(id);
     }
     if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
+        result = await VendorService.getVendorByID(id);
     }
     if (type === "Carrier") {
-      result = await CarrierService.getCarrierById(id);
+        result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    console.log('Resultado en consignee', result);
+    
+    const streetAndNumber = result?.data.street_and_number || "";
+    const city = result?.data.city || "";
+    const state = result?.data.state || "";
+    const country = result?.data.country || "";
+    const zipCode = result?.data.zip_code || "";
+
+    const info = `${streetAndNumber ? streetAndNumber + ' - ' : ''}${city ? city + ' - ' : ''}${state ? state + ' - ' : ''}${country ? country + ' - ' : ''}${zipCode || ""}`;
+    console.log('Cadena info:', info);
+
     setconsignee(result?.data);
     setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
     });
-  };
+};
+
 
   const handleShipperSelection = async (event) => {
     const id = event?.id || "";
@@ -582,12 +590,16 @@ const PickupOrderCreationForm = ({
   const loadConsigneeSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
       .results;
+      console.log('responseCustomers', responseCustomers);
     const responseVendors = (await VendorService.search(inputValue)).data
       .results;
+      console.log('responseVendors', responseVendors);
     const responseAgents = (await ForwardingAgentService.search(inputValue))
       .data.results;
+      console.log('responseAgents', responseAgents);
     const responseCarriers = (await CarrierService.search(inputValue)).data
       .results;
+      console.log('responseCarriers', responseCarriers);
 
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
@@ -595,6 +607,8 @@ const PickupOrderCreationForm = ({
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
       ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
+
+    console.log('ConsigneOptions', options);
 
     return options;
   };
