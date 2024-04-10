@@ -1352,205 +1352,207 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
 
-        <div className="row w-100">
-          <div className="col-6">
-            <div className="creation creation-container w-100">
-              <div className="form-label_name">
-                <h2>Delivery Information</h2>
-                <span></span>
-              </div>
-              <div className="row align-items-center mb-3">
-                <div className="col-6 text-start">
-                  <label htmlFor="consignee" className="form-label">
-                    Consignee:
-                  </label>
-                  <div className="custom-select">
-                    <AsyncSelect
-                      id="consignee"
-                      onChange={(e) => {
-                        handleConsigneeSelection(e);
-                      }}
-                      value={consigneeOptions.find(
-                        (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type === formData.consigneeType
-                      )}
-                      isClearable={true}
-                      placeholder="Search and select..."
-                      defaultOptions={consigneeOptions}
-                      loadOptions={loadConsigneeSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="col-6 text-start"
-                  style={{ marginBlockEnd: "auto" }}
-                >
-                  <label htmlFor="delivery" className="form-label">
-                    Delivery Location:
-                  </label>
-                  <AsyncSelect
-                    id="deliveryLocation"
-                    onChange={(e) => {
-                      handleDeliveryLocationSelection(e);
-                    }}
-                    value={deliveryLocationOptions.find(
-                      (option) =>
-                        option.id === formData.deliveryLocationId &&
-                        option.type === formData.deliveryLocationType
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={deliveryLocationOptions}
-                    loadOptions={loadDeliveryLocationSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                </div>
-              </div>
-
-              <div className="row align-items-center">
-                <div
-                  className="col-6 text-start"
-                  style={{ marginBlockEnd: "auto" }}
-                >
-                  <div className="text-start">
-                    <label
-                      htmlFor="language"
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: "15px",
-                        color: "#565656",
-                        marginRight: "10px",
-                      }}
-                    >
-                      Client to Bill:
-                    </label>
-                    <select
-                      name="clientToBill"
-                      id="clientToBill"
-                      className="form-input"
-                      value={formData.client_to_bill_type}
-                      onChange={(e) => {
-                        handleClientToBillSelection(e);
-                      }}
-                    >
-                      <option value="">Select an option</option>
-                      <option value="shipper">Shipper</option>
-                      <option value="consignee">Ultimate Consignee</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  <div className="text-start">
-                    <AsyncSelect
-                      id="releasedToOther"
-                      isDisabled={formData.client_to_bill_type !== "other"}
-                      onChange={(e) => {
-                        handleClientToBillSelection(e);
-                      }}
-                      value={getAsyncSelectValue()}
-                      isClearable={true}
-                      defaultOptions={releasedToOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
-                </div>
-                <div className="col-6 text-start">
-                  <div className="company-form__section">
-                    <Input
-                      id="TextDeliveryLocation"
-                      type="textarea"
-                      inputName="deliveryInfo"
-                      placeholder="Delivery Info..."
-                      value={formData.deliveryLocationInfo}
-                      readonly={true}
-                      label="Address"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row align-items-center"></div>
+      <div className="row w-100">
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h2>Delivery Information</h2>
+              <span></span>
             </div>
-          </div>
-          <div className="col-6">
-            <div className="creation creation-container w-100">
-              <div className="form-label_name">
-                <h2>Carrier Information</h2>
-                <span></span>
-              </div>
-              <div className="row align-items-center mb-3">
-                <div className="col-6 text-start">
-                  <label htmlFor="mainCarrier" className="form-label">
-                    Carrier:
-                  </label>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="consignee" className="form-label">
+                  Consignee:
+                </label>
+                <div className="custom-select">
                   <AsyncSelect
-                    id="mainCarrier"
-                    onChange={(e) => {
-                      handleMainCarrierSelection(e);
-                    }}
-                    value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
+                    id="consignee"
+                    onChange={(e) => {handleConsigneeSelection(e);}}
+                    value={consigneeOptions.find(
+                      (option) =>
+                        option.id === formData.consigneeId &&
+                        option.type === formData.consigneeType
                     )}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={carrierOptions}
-                    loadOptions={loadCarrierSelectOptions}
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-6 text-start">
-                  <Input
-                    id="trackingNumber"
-                    type="text"
-                    inputName="trackingNumber"
-                    value={formData.trackingNumber}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        trackingNumber: e.target.value,
-                      })
-                    }
-                    label="Tracking Number"
-                  />
-                </div>
               </div>
-              <div className="row ">
-                <div className="col-6 text-start">
+              <div
+              className="col-6 text-start"
+              style={{ marginBlockEnd: "auto" }}
+            >
+              <label htmlFor="delivery" className="form-label">
+                Delivery Location:
+              </label>
+              <AsyncSelect
+                id="deliveryLocation"
+                onChange={(e) => {handleDeliveryLocationSelection(e);}}
+                value={deliveryLocationOptions.find(
+                  (option) =>
+                    option.id === formData.deliveryLocationId &&
+                    option.type === formData.deliveryLocationType
+                )}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={deliveryLocationOptions}
+                loadOptions={loadDeliveryLocationSelectOptions}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+
+            </div>
+          
+            <div className="row align-items-center">
+
+
+            <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
+                <div className="text-start">
+                <label
+                  htmlFor="language"
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                    color: "#565656",
+                    marginRight: "10px",
+                  }}
+                >
+                  Client to Bill:
+                </label>
+                <select
+                  name="clientToBill"
+                  id="clientToBill"
+                  className="form-input"
+                  value={formData.client_to_bill_type}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                >
+                  <option value="">Select an option</option>
+                  <option value="shipper">Shipper</option>
+                  <option value="consignee">Ultimate Consignee</option>
+                  <option value="other">Other</option>
+                </select>
+                <p style={{ color: "red" }}>
+                  Note: Always select a client to bill when editing
+                </p>
+              </div>
+              <div className="text-start">
+                <AsyncSelect
+                  id="releasedToOther"
+                  isDisabled={formData.client_to_bill_type !== "other"}
+                  onChange={(e) => {
+                    handleClientToBillSelection(e);
+                  }}
+                  value={getAsyncSelectValue()}
+                  isClearable={true}
+                  defaultOptions={releasedToOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              </div>
+              <div className="col-6 text-start">
+                <div className="company-form__section">
                   <Input
-                    id="TextMainCarrier"
+                    id="TextDeliveryLocation"
                     type="textarea"
-                    inputName="issuedbydata"
-                    value={formData.mainCarrierInfo}
+                    inputName="deliveryInfo"
+                    placeholder="Delivery Info..."
+                    value={formData.deliveryLocationInfo}
                     readonly={true}
                     label="Address"
                   />
                 </div>
-                <div className="col-6 text-start">
-                  <Input
-                    id="proNumber"
-                    type="text"
-                    inputName="proNumber"
-                    value={formData.proNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, proNumber: e.target.value })
-                    }
-                    label="PRO Number"
-                  />
-                </div>
+              </div>
+            </div>
+            <div className="row align-items-center">
+            </div>
+          </div>
+        </div>
+        <div className="col-6">
+          <div className="creation creation-container w-100">
+            <div className="form-label_name">
+              <h2>Carrier Information</h2>
+              <span></span>
+            </div>
+            <div className="row align-items-center mb-3">
+              <div className="col-6 text-start">
+                <label htmlFor="mainCarrier" className="form-label">
+                  Carrier:
+                </label>
+                <AsyncSelect
+                  id="mainCarrier"
+                  onChange={(e) => {
+                    handleMainCarrierSelection(e);
+                  }}
+                  value={carrierOptions.find(
+                    (option) => option.id === formData.mainCarrierdId
+                  )}
+                  isClearable={true}
+                  placeholder="Search and select..."
+                  defaultOptions={carrierOptions}
+                  loadOptions={loadCarrierSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                />
+              </div>
+              <div className="col-6 text-start">
+                <Input
+                  id="trackingNumber"
+                  type="text"
+                  inputName="trackingNumber"
+                  value={formData.trackingNumber}
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      trackingNumber: e.target.value,
+                    })
+                  }
+                  label="Tracking Number"
+                />
+              </div>
+            </div>
+            <div className="row ">
+              <div className="col-6 text-start">
+                <Input
+                  id="TextMainCarrier"
+                  type="textarea"
+                  inputName="issuedbydata"
+                  value={formData.mainCarrierInfo}
+                  readonly={true}
+                  label="Address"
+                />
+              </div>
+              <div className="col-6 text-start">
+                <Input
+                  id="proNumber"
+                  type="text"
+                  inputName="proNumber"
+                  value={formData.proNumber}
+                  changeHandler={(e) =>
+                    setFormData({ ...formData, proNumber: e.target.value })
+                  }
+                  label="PRO Number"
+                />
               </div>
             </div>
           </div>
         </div>
-        <input type="checkbox" id="toggleBoton"></input>
-        <label
-          className="button-charge"
-          for="toggleBoton"
-          style={{ display: "none" }}
-        ></label>
+      </div>
+
+    {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
+    
+    {/* -------------------------------------------------------------------------------------------------------------- */}
+
+
+      <input type="checkbox" id="toggleBoton"></input>
+      <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
 
         <div className="row w-100" id="miDiv">
           <div className="col-6">

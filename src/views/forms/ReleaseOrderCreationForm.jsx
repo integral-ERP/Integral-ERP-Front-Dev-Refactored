@@ -533,34 +533,41 @@ const ReleaseOrderCreationForm = ({
               <span></span>
             </div>
             <div className="row mb-2">
+              <div className="space-release">
+              <p className="tex-p">Ware House Number : </p>
               <div className="col-4 text-start">
-                <Input
+                <input
+                  className="tex-release"
                   type="number"
                   inputName="number"
                   placeholder="Number..."
                   value={formData.number}
                   readonly={true}
-                  label="Release Number"
+                  label="Ware House Number"
                 />
               </div>
+              </div>
+             
 
               <div className="col-4 text-start">
                 <label htmlFor="employee" className="form-label">
                   Employee:
                 </label>
                 <AsyncSelect
+                  type="text"
                   id="employee"
-                  value={employeeOptions.find(
-                    (option) => option.id == formData.employeeId
-                  )}
-                  onChange={(e) => {
-                    handleEmployeeSelection(e);
-                  }}
-                  isClearable={true}
-                  defaultOptions={employeeOptions}
-                  loadOptions={loadEmployeeSelectOptions}
+                  // inputName="purchaseOrderNumber"
+                  value={employeeOptions.find((option) => option.id == formData.employeeId)}
+                    // value ={formData.employeeOptions.find(option)}
+                  // value={(option) => option.name}
+                  // onChange={(e) => {
+                  //   handleEmployeeSelection(e);
+                  // }}
+                  // isClearable={true}
+                  // defaultOptions={employeeOptions}
+                  // loadOptions={loadEmployeeSelectOptions}
                   getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
+                  // getOptionValue={(option) => option.id}
                 />
               </div>
 
@@ -573,15 +580,15 @@ const ReleaseOrderCreationForm = ({
                   value={issuedByOptions.find(
                     (option) => option.id === formData.issuedById
                   )}
-                  onChange={(e) => {
-                    handleIssuedBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={issuedByOptions}
-                  loadOptions={loadIssuedBySelectOptions}
+                  // onChange={(e) => {
+                  //   handleIssuedBySelection(e);
+                  // }}
+                  // isClearable={true}
+                  // placeholder="Search and select..."
+                  // defaultOptions={issuedByOptions}
+                  // loadOptions={loadIssuedBySelectOptions}
                   getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
+                  // getOptionValue={(option) => option.id}
                 />
               </div>
               
@@ -621,7 +628,7 @@ const ReleaseOrderCreationForm = ({
                 </LocalizationProvider>
               </div>
 
-              <div className="col-4 text-start">
+              {/* <div className="col-4 text-start">
                 <label htmlFor="releasedTo" className="form-label">
                   Released To:
                 </label>
@@ -664,7 +671,7 @@ const ReleaseOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 )}
-              </div>
+              </div> */}
             </div>
 
             {/* <div className="row align-items-center mb-3">
@@ -774,12 +781,12 @@ const ReleaseOrderCreationForm = ({
                   inputName="purchaseOrderNumber"
                   placeholder="Purchase Order Number..."
                   value={formData.purchase_order_number}
-                  // changeHandler={(e) =>
-                  //   setFormData({
-                  //     ...formData,
-                  //     purchase_order_number: e.target.value,
-                  //   })
-                  // }
+                  changeHandler={(e) =>
+                    setFormData({
+                      ...formData,
+                      purchase_order_number: e.target.value,
+                    })
+                  }
                   label="Purchase Order Number"
                 />
               </div>
@@ -801,9 +808,9 @@ const ReleaseOrderCreationForm = ({
             " Height",
             " Width",
             " Weight",
-            "Location",
-            " Volumetric Weight",
-            " Chargeable Weight",
+            " Location",
+            " Volume (ft3)",
+            " Weight (lb)",
           ]}
           onAdd={() => {}}
           showOptions={false}

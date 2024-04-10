@@ -180,8 +180,8 @@ const Table = ({
     " Height": "height",
     " Weight": "weight",
     " Width": "width",
-    " Volumetric Weight": "volumetricWeight",
-    " Chargeable Weight": "chargedWeight",
+    " Volume (ft3)": "volumetricWeight",
+    " Weight (lb)": "chargedWeight",
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
@@ -653,11 +653,10 @@ const Table = ({
                 {filteredData.map((row) => (
                   <tr
                     key={row.id}
-                    className={`table-row  tr-margen${
-                      selectedRow && selectedRow.id === row.id
+                    className={`table-row  tr-margen${selectedRow && selectedRow.id === row.id
                         ? "table-primary"
                         : ""
-                    }`}
+                      }`}
                     onClick={() => onSelect(row)}
                     onContextMenu={(e) => handleContextMenu(e, row)}
                     onDoubleClick={
@@ -697,7 +696,7 @@ const Table = ({
                                 style={{
                                   display: "flex",
                                   width: "70px",
-                                
+
                                 }}
                               >
                                 <i className="fa fa-print menu-icon fa-3x"></i>
@@ -743,12 +742,12 @@ const Table = ({
                                     </option>
                                   </select>
 
-                                
+
                                 </div>
                               </button>
                             </>
                           )
-                          
+
                             : columnName === "Invoice PDF" ? (
                               <button
                                 type="button"
@@ -785,13 +784,13 @@ const Table = ({
                                 >
                                   <i className="fas fa-pencil-alt"></i>
                                 </button>
-                                <button
+                                {/* <button
                                   type="button"
                                   onClick={onInspect}
                                   className="custom-button"
                                 >
                                   <i className="fas fa-eye"></i>
-                                </button>
+                                </button> */}
                               </>
                             ) : columnName === "Repack Options" ? (
                               <>
@@ -829,17 +828,17 @@ const Table = ({
                             ) : columnNameToProperty[columnName]?.includes(
                               "."
                             ) ? (
-                            getPropertyValue(
-                              row,
-                              columnNameToProperty[columnName]
-                            )
-                          ) : Array.isArray(
+                              getPropertyValue(
+                                row,
+                                columnNameToProperty[columnName]
+                              )
+                            ) : Array.isArray(
                               row[columnNameToProperty[columnName]]
                             ) ? (
-                            row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
-                          ) : (
-                            row[columnNameToProperty[columnName]]
-                          )}
+                              row[columnNameToProperty[columnName]].join(", ") // Convert array to comma-separated string
+                            ) : (
+                              row[columnNameToProperty[columnName]]
+                            )}
                         </td>
                       ) : null
                     )}
@@ -944,7 +943,7 @@ const Table = ({
                                   }
                                 >
                                   {/* <option value=""> </option> */}
-                                  {/* <option value=""></option>
+                      {/* <option value=""></option>
 
                                   <option
                                     value="receipt"
@@ -975,233 +974,233 @@ const Table = ({
                               </div>
                             </button>
                           </div>
-                        )} */} 
+                        )} */}
 
-                     
-                        <div className="search">
+
+                      <div className="search">
                         {showPage === "initial" ? (
                           <>
-                          <div className="search-container">
-                            <input
-                              type="text"
-                              value={searchQuery}
-                              onChange={handleSearchChange}
-                              placeholder="Search..."
-                              className="search-input"
-                            />
-                          </div>
-
-                          <div className="action-buttons">
-                            <button
-                              className="generic-button"
-                              onClick={handleOpenCloseSlider}
-                            >
-                              <i className="fas fa-plus menu-icon fa-3x"></i>
-                            </button>
-
-                            <button
-                              className="generic-button ne"
-                              onClick={handleEdit}
-                            >
-                              <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
-                            </button>
-                            <button
-                              className="generic-button ne"
-                              onClick={onDelete}
-                            >
-                              <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
-                            </button>
-
-                            <div className="col-2 d-flex">
-                              <button
-                                className="generic-button-eye"
-                                onClick={() => {
-                                  setShowColumnMenu(!showColumnMenu); // Abre o cierra el modal de columnas
-                                  setShowFilterMenu(false); // Cierra el modal de filtro si está abierto
-                                }}
-                              >
-                                <i className="fas fa-eye menu-icon fa-3x ne"></i>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setShowFilterMenu(!showFilterMenu);
-                                  setShowColumnMenu(false);
-                                }}
-                                className="generic-button-filter"
-                              >
-                                <i className="fas fa-filter menu-icon fa-3x ne"></i>
-                              </button>
+                            <div className="search-container">
+                              <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                placeholder="Search..."
+                                className="search-input"
+                              />
                             </div>
 
-                            {/* ------------------------ */}
+                            <div className="action-buttons">
+                              <button
+                                className="generic-button"
+                                onClick={handleOpenCloseSlider}
+                              >
+                                <i className="fas fa-plus menu-icon fa-3x"></i>
+                              </button>
 
-                            {/* ------------------------ */}
-
-                            <input
-                              type="file"
-                              accept=".json, .csv, .xml"
-                              onChange={handleImport}
-                              className="hidden-input"
-                              id="import-input"
-                            />
-                            {importEnabled && (
+                              <button
+                                className="generic-button ne"
+                                onClick={handleEdit}
+                              >
+                                <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
+                              </button>
                               <button
                                 className="generic-button ne"
                                 onClick={onDelete}
+                              >
+                                <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
+                              </button>
+
+                              <div className="col-2 d-flex">
+                                <button
+                                  className="generic-button-eye"
+                                  onClick={() => {
+                                    setShowColumnMenu(!showColumnMenu); // Abre o cierra el modal de columnas
+                                    setShowFilterMenu(false); // Cierra el modal de filtro si está abierto
+                                  }}
+                                >
+                                  <i className="fas fa-eye menu-icon fa-3x ne"></i>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShowFilterMenu(!showFilterMenu);
+                                    setShowColumnMenu(false);
+                                  }}
+                                  className="generic-button-filter"
+                                >
+                                  <i className="fas fa-filter menu-icon fa-3x ne"></i>
+                                </button>
+                              </div>
+
+                              {/* ------------------------ */}
+
+                              {/* ------------------------ */}
+
+                              <input
+                                type="file"
+                                accept=".json, .csv, .xml"
+                                onChange={handleImport}
+                                className="hidden-input"
+                                id="import-input"
+                              />
+                              {importEnabled && (
+                                <button
+                                  className="generic-button ne"
+                                  onClick={onDelete}
+                                  style={{
+                                    display: "flex",
+                                    width: "40px",
+                                    marginLeft: "3vw",
+                                  }}
+                                >
+                                  <i
+                                    className="fas fa-upload menu-icon fa-3x"
+                                    onClick={() =>
+                                      document
+                                        .getElementById("import-input")
+                                        .click()
+                                    }
+                                  ></i>
+                                </button>
+                              )}
+                            </div>
+
+                            {showFilterMenu && (
+                              <div
+                                className="modal-filter"
                                 style={{
-                                  display: "flex",
-                                  width: "40px",
-                                  marginLeft: "3vw",
+                                  display: showFilterMenu ? "block" : "none",
                                 }}
                               >
-                                <i
-                                  className="fas fa-upload menu-icon fa-3x"
-                                  onClick={() =>
-                                    document
-                                      .getElementById("import-input")
-                                      .click()
-                                  }
-                                ></i>
-                              </button>
-                            )}
-                          </div>
-
-                          {showFilterMenu && (
-                            <div
-                              className="modal-filter"
-                              style={{
-                                display: showFilterMenu ? "block" : "none",
-                              }}
-                            >
-                              <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                  <div className="modal-header">
-                                    <h5 className="modal-title">
-                                      Filter Dates
-                                    </h5>
-                                    <button
-                                      type="button"
-                                      className="btn-close"
-                                      data-bs-dismiss="modal"
-                                      aria-label="Close"
-                                      onClick={() =>
-                                        setShowFilterMenu(!showFilterMenu)
-                                      }
-                                    >
-                                      <span aria-hidden="true"></span>
-                                    </button>
-                                  </div>
-                                  <div className="modal-body">
-                                    <div className="date-filter">
-                                      <div className="date-range">
-                                        <div className="date-box">
-                                          <span className="date-label">
-                                            Start Date:
-                                          </span>
-                                          <DatePicker
-                                            selected={startDate}
-                                            onChange={(date) =>
-                                              setStartDate(date)
-                                            }
-                                            inline
-                                          />
-                                        </div>
-                                        <div className="date-box">
-                                          <span className="date-label">
-                                            End Date:
-                                          </span>
-                                          <DatePicker
-                                            selected={finishDate}
-                                            onChange={(date) =>
-                                              setFinishDate(date)
-                                            }
-                                            inline
-                                          />
-                                        </div>
-                                      </div>
-                                      <select
-                                        value={dateFilter}
-                                        onChange={(e) =>
-                                          handleDateFilter(e.target.value)
+                                <div className="modal-dialog" role="document">
+                                  <div className="modal-content">
+                                    <div className="modal-header">
+                                      <h5 className="modal-title">
+                                        Filter Dates
+                                      </h5>
+                                      <button
+                                        type="button"
+                                        className="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                        onClick={() =>
+                                          setShowFilterMenu(!showFilterMenu)
                                         }
-                                        style={{ margin: "5px" }}
                                       >
-                                        <option value="all">All</option>
-                                        <option value="today">Today</option>
-                                        <option value="this-week">
-                                          This Week
-                                        </option>
-                                        <option value="this-month">
-                                          This Month
-                                        </option>
-                                        <option value="this-year">
-                                          This Year
-                                        </option>
-                                      </select>
-                                      <div
-                                        className="radio-container"
-                                        style={{
-                                          display: "flex",
-                                          width: "250px",
-                                        }}
-                                      >
-                                        {columns.map(
-                                          (columnName) =>
-                                            columnName
-                                              .toLowerCase()
-                                              .includes("date") && (
-                                              <label key={columnName}>
-                                                <input
-                                                  type="radio"
-                                                  value={columnName}
-                                                  checked={
-                                                    selectedDateFilter ===
-                                                    columnName
-                                                  }
-                                                  onChange={(e) =>
-                                                    handleDateFilterChange(
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                />
-                                                {columnName}
-                                              </label>
-                                            )
-                                        )}
+                                        <span aria-hidden="true"></span>
+                                      </button>
+                                    </div>
+                                    <div className="modal-body">
+                                      <div className="date-filter">
+                                        <div className="date-range">
+                                          <div className="date-box">
+                                            <span className="date-label">
+                                              Start Date:
+                                            </span>
+                                            <DatePicker
+                                              selected={startDate}
+                                              onChange={(date) =>
+                                                setStartDate(date)
+                                              }
+                                              inline
+                                            />
+                                          </div>
+                                          <div className="date-box">
+                                            <span className="date-label">
+                                              End Date:
+                                            </span>
+                                            <DatePicker
+                                              selected={finishDate}
+                                              onChange={(date) =>
+                                                setFinishDate(date)
+                                              }
+                                              inline
+                                            />
+                                          </div>
+                                        </div>
+                                        <select
+                                          value={dateFilter}
+                                          onChange={(e) =>
+                                            handleDateFilter(e.target.value)
+                                          }
+                                          style={{ margin: "5px" }}
+                                        >
+                                          <option value="all">All</option>
+                                          <option value="today">Today</option>
+                                          <option value="this-week">
+                                            This Week
+                                          </option>
+                                          <option value="this-month">
+                                            This Month
+                                          </option>
+                                          <option value="this-year">
+                                            This Year
+                                          </option>
+                                        </select>
+                                        <div
+                                          className="radio-container"
+                                          style={{
+                                            display: "flex",
+                                            width: "250px",
+                                          }}
+                                        >
+                                          {columns.map(
+                                            (columnName) =>
+                                              columnName
+                                                .toLowerCase()
+                                                .includes("date") && (
+                                                <label key={columnName}>
+                                                  <input
+                                                    type="radio"
+                                                    value={columnName}
+                                                    checked={
+                                                      selectedDateFilter ===
+                                                      columnName
+                                                    }
+                                                    onChange={(e) =>
+                                                      handleDateFilterChange(
+                                                        e.target.value
+                                                      )
+                                                    }
+                                                  />
+                                                  {columnName}
+                                                </label>
+                                              )
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div className="modal-footer">
-                                    <button
-                                      type="button"
-                                      className="btn btn-primary"
-                                      onClick={() => {
-                                        setShowFilterMenu(!showFilterMenu);
-                                      }}
-                                    >
-                                      Save Changes
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="btn btn-secondary"
-                                      data-bs-dismiss="modal"
-                                      onClick={() =>
-                                        setShowFilterMenu(!showFilterMenu)
-                                      }
-                                    >
-                                      Close
-                                    </button>
+                                    <div className="modal-footer">
+                                      <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() => {
+                                          setShowFilterMenu(!showFilterMenu);
+                                        }}
+                                      >
+                                        Save Changes
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                        onClick={() =>
+                                          setShowFilterMenu(!showFilterMenu)
+                                        }
+                                      >
+                                        Close
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                           </>
-                        ): (
+                        ) : (
                           <>
-                          <button
+                            <button
                               className="generic-button ne"
                               onClick={onDelete}
                             >
@@ -1209,64 +1208,64 @@ const Table = ({
                             </button>
                             {importLabel && title === "Warehouse Receipts" && (
 
-                            <button
-                              className="generic-button ne"
-                              style={{
-                                display: "flex",
-                                width: "70px",
-                              }}
-                            >
-                              <i className="fa fa-print menu-icon fa-3x"></i>
-                              <div className="select_print">
-                                <select
-                                  className="label_pdf_select"
-                                  style={{
-                                    border: "0px solid white",
-                                    height: "3rem",
-                                  }}
-                                  onChange={(e) =>
-                                    e.target.value === "receipt"
-                                      ? generatePDFReceipt()
-                                      : generatePDFLabel()
-                                  }
-                                >
-                                  {/* <option value=""> </option> */}
-                                  <option value="">Select Option</option>
-
-                                  <option
-                                    value="receipt"
+                              <button
+                                className="generic-button ne"
+                                style={{
+                                  display: "flex",
+                                  width: "70px",
+                                }}
+                              >
+                                <i className="fa fa-print menu-icon fa-3x"></i>
+                                <div className="select_print">
+                                  <select
+                                    className="label_pdf_select"
                                     style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
+                                      border: "0px solid white",
+                                      height: "3rem",
                                     }}
+                                    onChange={(e) =>
+                                      e.target.value === "receipt"
+                                        ? generatePDFReceipt()
+                                        : generatePDFLabel()
+                                    }
                                   >
-                                    PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
-                                  </option>
+                                    {/* <option value=""> </option> */}
+                                    <option value="">Select Option</option>
 
-                                  <option
-                                    value="label"
-                                    style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
-                                    }}
-                                  >
-                                    PDF Label
-                                  </option>
-                                </select>
-                              </div>
-                            </button>
+                                    <option
+                                      value="receipt"
+                                      style={{
+                                        borderRadius: "0px",
+                                        fontSize: "14px",
+                                        width: "20vw",
+                                        color: "#818080",
+                                        fontFamily: "poppins",
+                                      }}
+                                    >
+                                      PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
+                                    </option>
 
-                        )}
+                                    <option
+                                      value="label"
+                                      style={{
+                                        borderRadius: "0px",
+                                        fontSize: "14px",
+                                        width: "20vw",
+                                        color: "#818080",
+                                        fontFamily: "poppins",
+                                      }}
+                                    >
+                                      PDF Label
+                                    </option>
+                                  </select>
+                                </div>
+                              </button>
+
+                            )}
                           </>
-                          )}
-                        </div>
-                      
+                        )}
+                      </div>
+
                       {showColumnMenu && (
                         <div
                           className="modal-view"
