@@ -1394,3 +1394,29 @@
   font-size: 13px !important;
   color: #5d5d5d !important;
 }
+
+.tex-release{
+  // color: blue !important;
+  width: 2rem !important;
+  margin: 0 !important;
+  border: 0!important;
+  text-align: left !important;
+  font-size: large !important;
+  font-weight: bold !important;
+  padding: 0;
+}
+
+.tex-p{
+  // color: rgb(255, 115, 0) !important;
+  width: 22rem !important;
+  margin: 0 !important;
+  border: 0 !important;
+  text-align: left !important;
+  font-size: large !important;
+  font-weight: bold !important;
+}
+
+.space-release{
+  display: flex;
+  margin: 0 0 1rem 0;
+}
