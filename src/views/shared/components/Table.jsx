@@ -19,6 +19,7 @@ import GenerateBillPDF from "../../others/GenerateBillPDF";
 import _, { set } from "lodash";
 import PickupOrderCreationForm from "../../forms/PickupOrderCreationForm";
 import { useModal } from "../../../hooks/useModal";
+import iconoPdf from "../../../img/pdf.png"
 
 const Table = ({
   data,
@@ -686,8 +687,9 @@ const Table = ({
                               onClick={generatePDF}
                               className="custom-button-pdf"
                             >
-                              <i className="fas fa-file-pdf"></i>
+                             <img src={iconoPdf} alt="Ícono personalizado" />
                             </button>
+                            
                           ) : columnName === "View Receipt PDF" ? (
                             <>
                               <button
