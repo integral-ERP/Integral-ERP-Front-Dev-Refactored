@@ -36,7 +36,7 @@ const PickupOrderCreationForm = ({
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [showExpenseForm, setshowExpenseForm] = useState(false);
-  const [consignee, setconsignee] = useState(null);
+  const [consignee, setConsignee] = useState(null);
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
   const [pickuplocation, setpickuplocation] = useState(null);
@@ -210,6 +210,8 @@ const PickupOrderCreationForm = ({
     const id = event?.id || "";
     const type = event?.type || "";
     console.log('Este es el evento', event);
+    console.log('ID del consignatario:', id);
+    console.log('Tipo de consignatario:', type);
 
     let result;
     if (type === "forwarding-agent") {
@@ -225,23 +227,28 @@ const PickupOrderCreationForm = ({
         result = await CarrierService.getCarrierById(id);
     }
     console.log('Resultado en consignee', result);
-    
+
     const streetAndNumber = result?.data.street_and_number || "";
     const city = result?.data.city || "";
     const state = result?.data.state || "";
     const country = result?.data.country || "";
     const zipCode = result?.data.zip_code || "";
 
+    console.log('Dirección:', streetAndNumber, city, state, country, zipCode);
+
     const info = `${streetAndNumber ? streetAndNumber + ' - ' : ''}${city ? city + ' - ' : ''}${state ? state + ' - ' : ''}${country ? country + ' - ' : ''}${zipCode || ""}`;
     console.log('Cadena info:', info);
 
-    setconsignee(result?.data);
+    setConsignee(result?.data);
+    console.log('Consignatario actualizado en el estado:', result?.data);
+
     setFormData({
         ...formData,
         consigneeId: id,
         consigneeType: type,
         consigneeInfo: info,
     });
+    console.log('Estado del formulario actualizado:', formData);
 };
 
 
@@ -475,6 +482,7 @@ const PickupOrderCreationForm = ({
     ).data.results;
     const customers = (await CustomerService.getCustomers()).data.results;
     const vendors = (await VendorService.getVendors()).data.results;
+    console.log('AQUI SE ESTA CARGANDO VENDORS', vendors);
     const employees = (await EmployeeService.getEmployees()).data.results;
     const carriers = (await CarrierService.getCarriers()).data.results;
 
@@ -748,6 +756,7 @@ const PickupOrderCreationForm = ({
 
   const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
+    console.log('Form data enviado', formData);
     for (const inputs of listId) {
       const inputSelected = document.querySelector(inputs.selectedId);
       const inputAsociated = document.querySelector(inputs.asociatedId);
@@ -1557,7 +1566,7 @@ const PickupOrderCreationForm = ({
         </div>
       </div>
       <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
+      <label className="button-charge" htmlFor="toggleBoton"  style={{ display: 'none'}}></label>
 
         <div className="row w-100" id="miDiv">
           <div className="col-6">
