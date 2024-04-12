@@ -461,7 +461,8 @@ const GenerateReceiptPDF = (data, numCon) => {
                         border: ['', '', '', ''],
                       },
                       {
-                        text: `COLLECT COD`,
+                        // text: `COLLECT COD`,
+                        text: ``,
                         bold: true,
                         margin: [0, 40, 0, 0],
                         alignment: `center`,
