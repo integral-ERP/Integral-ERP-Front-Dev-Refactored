@@ -1562,7 +1562,7 @@ const PickupOrderCreationForm = ({
           {editingComodity ? (
             <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
           ) : (
-            <h3>Commodities Pick</h3>
+            <h3>Commodities</h3>
             
           )}
           <span></span>

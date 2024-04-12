@@ -54,8 +54,9 @@ const CommodityCreationForm = ({
       !formData.height ||
       !formData.width ||
       !formData.weight ||
-      !formData.description ||
-      (!formData.locationId && !(editing && commodity.containsCommodities))
+      !formData.description 
+      // ||
+      // (!formData.locationId && !(editing && commodity.containsCommodities))
     ) {
       // Show an alert or handle the validation error as needed
       alert("Please fill in all required fields.");
@@ -179,6 +180,13 @@ const CommodityCreationForm = ({
 
   useEffect(() => {}, [formData.weight]);
 
+  //------------------------------------------------------------------
+  // Obtener la URL actual
+const currentUrl = window.location.href;
+
+// Verificar si la URL contiene cierto texto
+const isLocationEnabled = currentUrl.includes('http://localhost:5173/warehouse/receipt');
+
   return (
     <div className="income-charge-form">
       {/* <h3>Commodity Creation Form</h3> */}
@@ -291,7 +299,56 @@ const CommodityCreationForm = ({
             }
           />
         </div>
-        <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
+{/* ---------------------------------------------------------------------------------------------------------------------------------- */}
+
+
+{/* // Renderizar el código basado en la condición */}
+<div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
+  {isLocationEnabled && (
+    <>
+      <label
+        htmlFor="location"
+        className="text-comm"
+        style={{ marginLeft: "-8px" }}
+      >
+        Locationn:
+      </label>
+      <select
+        name="location"
+        id="location"
+        value={formData.locationId}
+        onChange={(e) => {
+          setformData({
+            ...formData,
+            locationId: e.target.value,
+            locationCode:
+              e.target.options[e.target.selectedIndex].getAttribute(
+                "data-key"
+              ),
+          });
+        }}
+        //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
+        style={{ fontSize: '14px', color: 'gray', padding: "4px" }}
+      >
+        <option value="">Select an option</option>
+        {locations.map((location) => {
+          return (
+            <option
+              key={location.id}
+              value={location.id}
+              data-key={location.code}
+            >
+              {location.code}
+            </option>
+          );
+        })}
+      </select>
+    </>
+  )}
+</div>;
+
+
+        {/* <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
         {locationEnabled && (
           <>
             <label
@@ -333,7 +390,7 @@ const CommodityCreationForm = ({
             </select>
           </>
         )}
-         </div>
+         </div> */}
 
         <div className="table-hover charge-buttons">
           <button
