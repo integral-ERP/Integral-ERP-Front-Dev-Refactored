@@ -185,7 +185,9 @@ const CommodityCreationForm = ({
 const currentUrl = window.location.href;
 
 // Verificar si la URL contiene cierto texto
-const isLocationEnabled = currentUrl.includes('http://localhost:5173/warehouse/receipt');
+// const isLocationEnabled = currentUrl.includes('http://localhost:5173/warehouse/receipt');
+const isLocationEnabled = currentUrl.includes('https://erp-integral.com/warehouse/receipt');
+
 
   return (
     <div className="income-charge-form">
