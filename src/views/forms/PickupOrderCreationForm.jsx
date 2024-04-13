@@ -21,6 +21,7 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
+import { fetchFormData } from "./DataFetcher";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -110,6 +111,19 @@ const PickupOrderCreationForm = ({
     commodities: [],
     weight: 0,
   };
+
+  useEffect(() => {
+    fetchFormData()
+      .then((data) => {
+        
+        console.log('Datos obtenidos:', data);
+      })
+      .catch((error) => {
+        
+        console.error('Error al obtener los datos:', error);
+      });
+  }, []); 
+
   const [formData, setFormData] = useState(formFormat);
 
   const handleIssuedBySelection = async (event) => {
@@ -479,133 +493,6 @@ const PickupOrderCreationForm = ({
     return new Intl.Collator("es").compare(x.name, y.name);
   };
 
-  const fetchFormData = async () => {
-    try {
-      let forwardingAgentsResults = [];
-      let customersResults = [];
-      let vendorsResults = [];
-      let employeesResults = [];
-      let carriersResults = [];
-  
-      let nextForwardingAgentUrl = null;
-      do {
-        const response = await ForwardingAgentService.getForwardingAgents(nextForwardingAgentUrl);
-        forwardingAgentsResults = [...forwardingAgentsResults, ...response.data.results];
-        nextForwardingAgentUrl = response.data.next;
-      } while (nextForwardingAgentUrl);
-  
-      console.log('Forwarding Agents Results:', forwardingAgentsResults);
-  
-      let nextCustomerUrl = null;
-      do {
-        const response = await CustomerService.getCustomers(nextCustomerUrl);
-        customersResults = [...customersResults, ...response.data.results];
-        nextCustomerUrl = response.data.next;
-      } while (nextCustomerUrl);
-  
-      console.log('Customers Results:', customersResults);
-  
-      
-      let nextVendorUrl = null;
-      do {
-        const response = await VendorService.getVendors(nextVendorUrl);
-        vendorsResults = [...vendorsResults, ...response.data.results];
-        nextVendorUrl = response.data.next;
-      } while (nextVendorUrl);
-  
-      console.log('Vendors Results:', vendorsResults);
-  
-      
-      let nextEmployeeUrl = null;
-      do {
-        const response = await EmployeeService.getEmployees(nextEmployeeUrl);
-        employeesResults = [...employeesResults, ...response.data.results];
-        nextEmployeeUrl = response.data.next;
-      } while (nextEmployeeUrl);
-  
-      console.log('Employees Results:', employeesResults);
-  
-      
-      let nextCarrierUrl = null;
-      do {
-        const response = await CarrierService.getCarriers(nextCarrierUrl);
-        carriersResults = [...carriersResults, ...response.data.results];
-        nextCarrierUrl = response.data.next;
-      } while (nextCarrierUrl);
-  
-      console.log('Carriers Results:', carriersResults);
-      
-  
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  
-  
-
- /*  const fetchFormData = async () => {
-    const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
-    const customers = (await CustomerService.getCustomers()).data.results;
-    const vendors = (await VendorService.getVendors()).data.results;
-    console.log('AQUI SE ESTA CARGANDO VENDORS', vendors);
-    const employees = (await EmployeeService.getEmployees()).data.results;
-    const carriers = (await CarrierService.getCarriers()).data.results;
-
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
-
-    const forwardingAgentsWithType = addTypeToObjects(
-      forwardingAgents,
-      "forwarding-agent"
-    );
-    const customersWithType = addTypeToObjects(customers, "customer");
-    const vendorsWithType = addTypeToObjects(vendors, "vendor");
-    const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "Carrier");
-
-    const issuedByOptions = [...forwardingAgentsWithType];
-    const destinationAgentOptions = [...forwardingAgentsWithType];
-    const employeeOptions = [...employeesWithType];
-    const shipperOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
-    const pickupLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
-    const consigneeOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-    const deliveryLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-
-    const carrierOptions = [...carriersWithType];
-
-    const clientToBillOptions = [
-      ...customersWithType,
-      ...forwardingAgentsWithType,
-    ];
-
-    setIssuedByOptions(issuedByOptions.sort(SortArray));
-    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
-    setEmployeeOptions(employeeOptions.sort(SortArray));
-    setShipperOptions(shipperOptions.sort(SortArray));
-    setPickupLocationOptions(pickupLocationOptions.sort(SortArray));
-    setConsigneeOptions(consigneeOptions.sort(SortArray));
-    setDeliveryLocationOptions(deliveryLocationOptions.sort(SortArray));
-    setCarrierOptions(carrierOptions.sort(SortArray));
-    setReleasedToOptions(clientToBillOptions.sort(SortArray));
-  }; */
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 

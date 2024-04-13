@@ -1,9 +1,8 @@
-import ForwardingAgentService from './services/ForwardingAgentService';
-import CustomerService from './services/CustomerService';
-import VendorService from './services/VendorService';
-import EmployeeService from './services/EmployeeService';
-import CarrierService from './services/CarrierService';
-
+import ForwardingAgentService from '../../services/ForwardingAgentService';
+import CustomerService from '../../services/CustomerService';
+import VendorService from '../../services/VendorService';
+import EmployeeService from '../../services/EmployeeService';
+import CarrierService from '../../services/CarrierService';
 
 export const fetchFormData = async () => {
     try {
