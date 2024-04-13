@@ -35,7 +35,7 @@ const ReceiptCreationForm = ({
   showBModal,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
-  const [note, setNote] = useState("");
+  // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
   //added warning alert for commodities
@@ -137,7 +137,7 @@ const ReceiptCreationForm = ({
     clientToBillType: "",
 
     commodities: [],
-    notes: [],
+    notes: "",
     charges: [],
     events: [],
     pro_number: "",
@@ -522,11 +522,11 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     };
   }, []);
 
-  const addNotes = () => {
-    const updatedNotes = [...formData.notes, note];
+  // const addNotes = () => {
+  //   const updatedNotes = [...formData.notes, note];
 
-    setFormData({ ...formData, notes: updatedNotes });
-  };
+  //   setFormData({ ...formData, notes: updatedNotes });
+  // };
 
   const loadShipperOption = async (id, type) => {
     let option = null;
@@ -844,6 +844,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
       }
       let updatedFormData = {
         status: 4,
+        // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
@@ -911,7 +912,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               : "",
 
         commodities: pickupOrder.commodities,
-        notes: [],
+        // notes: [],
       };
       setFormData(updatedFormData);
       setFormDataUpdated(true);
@@ -1051,7 +1052,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          status: 2,
+          status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           issued_by: formData.issuedById,
@@ -1363,6 +1364,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
+                {/* <p style={{ color: "red" }}>
+                        Note: Always select a client to bill when editing
+                      </p> */}
               </div>
             </div>
           </div>
@@ -1508,6 +1512,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
           ) : (
             <h3>Commodities</h3>
+            
           )}
           <span></span>
         </div>
@@ -1536,8 +1541,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Width",
                 " Weight",
                 " Location",
-                " Volumetric",
-                // " Chargeable Weight",
+                " Volume (ft3)",
+                " Weight (lb)",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct
@@ -1869,21 +1874,28 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         </div>
 
         <div className="row align-items-center">
-          <div className="col-10 text-start">
-            <label htmlFor="notes" className="form-label">
-              Notes
-            </label>
-            <input
+          <div className="col-10 text-start" style={{width: "100%" }}>
+            <Input
+                type="textarea"
+                inputName="notes"
+                placeholder="Nota here..."
+                label="Note"
+                value={formData.notes}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, notes: e.target.value })
+                }
+              />
+            {/* <input
               name="notes"
               type="text"
               className="form-input"
               placeholder="Notes..."
               onChange={(e) => setNote(e.target.value)}
               style={{ width: "99%" }}
-            />
+            /> */}
           </div>
 
-          <div className="col">
+          {/* <div className="col">
             <button
               type="button"
               onClick={addNotes}
@@ -1897,24 +1909,19 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             >
               Add
             </button>
-          </div>
-          <div className="row">
+          </div> */}
+          {/* <div className="row">
             <div className="col-10 text-start">
-              <textarea
+              <Input
                 name="notes"
                 className="form-input w-100"
-                placeholder=""
+                placeholder="PRO Number..."
                 value={formData.notes?.toString()}
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  height: "100px",
-                  wordWrap: "break-word",
-                }}
-                readOnly
+                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
+                // readOnly
               />
-            </div>
-          </div>
+            </div> 
+          </div>*/}
         </div>
       </div>
 
