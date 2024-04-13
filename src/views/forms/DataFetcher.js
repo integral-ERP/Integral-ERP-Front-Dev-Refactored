@@ -71,8 +71,6 @@ const vendorsWithType = addTypeToObjects(vendorsResults, "vendor");
 const employeesWithType = addTypeToObjects(employeesResults, "employee");
 const carriersWithType = addTypeToObjects(carriersResults, "Carrier");
 
-// Aquí puedes hacer cualquier otro procesamiento necesario con los datos combinados
-// Por ejemplo, podrías fusionarlos en una sola lista
 const allData = [
   ...forwardingAgentsWithType,
   ...customersWithType,
