@@ -124,6 +124,127 @@ const PickupOrderCreationForm = ({
       });
   }, []);
 
+  useEffect(() => {
+    if (!creating && pickupOrder != null) {
+      setcommodities(pickupOrder.commodities);
+      setcharges(pickupOrder.charges);
+      setshowCommodityCreationForm(true);
+      loadShipperOption(
+        pickupOrder.shipperObj?.data?.obj?.id,
+        pickupOrder.shipperObj?.data?.obj?.type_person
+      );
+      loadConsigneeOption(
+        pickupOrder.consigneeObj?.data?.obj?.id,
+        pickupOrder.consigneeObj?.data?.obj?.type_person
+      );
+      let updatedFormData = {
+        status: pickupOrder.status,
+        number: pickupOrder.number,
+        createdDateAndTime: pickupOrder.creation_date,
+        pickupDateAndTime: pickupOrder.pick_up_date,
+        deliveryDateAndTime: pickupOrder.delivery_date,
+        issuedById: pickupOrder.issued_by,
+        issuedByType: pickupOrder.issued_byObj?.type,
+        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
+          } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
+          } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
+        destinationAgentId: pickupOrder.destination_agent,
+        employeeId: pickupOrder.employee,
+        employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
+        weight: pickupOrder.weight,
+
+        shipperId: pickupOrder.shipperObj?.data?.obj?.id,
+        shipperType:
+          pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
+            ? pickupOrder.shipperObj?.data?.obj?.type_person
+            : "forwarding-agent",
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
+
+        pickupLocationId: pickupOrder.pickUpLocationObj?.data?.obj?.id,
+        pickupLocationInfo: `${pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
+          }`,
+        pickupLocationType:
+          pickupOrder.pickUpLocationObj?.data?.obj?.type_person !== "agent"
+            ? pickupOrder.pickUpLocationObj?.data?.obj?.type_person
+            : "forwarding-agent",
+
+        consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
+        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
+        deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
+        deliveryLocationType:
+          pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
+            ? pickupOrder.deliveryLocationObj?.data?.obj?.type_person
+            : "forwarding-agent",
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
+
+        proNumber: pickupOrder.pro_number,
+        trackingNumber: pickupOrder.tracking_number,
+        mainCarrierdId: pickupOrder.main_carrier,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
+
+        invoiceNumber: pickupOrder.invoice_number,
+        purchaseOrderNumber: pickupOrder.purchase_order_number,
+
+        commodities: pickupOrder.commodities,
+        charges: pickupOrder.charges,
+        client_to_billById: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
+          ?.id
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.client_to_billObj?.data?.obj?.id,
+        client_to_bill: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.client_to_billObj?.data?.obj?.id,
+        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
+          ?.type_person
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
+            pickupOrder.shipperObj?.data?.obj?.id
+            ? "shipper"
+            : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
+              pickupOrder.consigneeObj?.data?.obj?.id
+              ? "consignee"
+              : "other"
+          : "other",
+      };
+      let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
+        ?.type_person
+        ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
+        : pickupOrder.client_to_billObj?.data?.obj?.type_person;
+      setCTBType(temp !== "agent" ? temp : "forwarding-agent");
+      handleClientToBillSelection({
+        id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.client_to_billObj?.data?.obj?.id,
+        type: temp !== "agent" ? temp : "forwarding-agent",
+      });
+      setFormData(updatedFormData);
+      setcanRender(true);
+    }
+  }, [creating, pickupOrder]);
+
+  useEffect(() => {
+    if (charges.length > 0) {
+      setshowExpenseForm(true);
+      setshowIncomeForm(true);
+    }
+  }, [charges.length]);
+
+  
+
 
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
@@ -342,124 +463,7 @@ const PickupOrderCreationForm = ({
     }
   };
 
-  useEffect(() => {
-    if (!creating && pickupOrder != null) {
-      setcommodities(pickupOrder.commodities);
-      setcharges(pickupOrder.charges);
-      setshowCommodityCreationForm(true);
-      loadShipperOption(
-        pickupOrder.shipperObj?.data?.obj?.id,
-        pickupOrder.shipperObj?.data?.obj?.type_person
-      );
-      loadConsigneeOption(
-        pickupOrder.consigneeObj?.data?.obj?.id,
-        pickupOrder.consigneeObj?.data?.obj?.type_person
-      );
-      let updatedFormData = {
-        status: pickupOrder.status,
-        number: pickupOrder.number,
-        createdDateAndTime: pickupOrder.creation_date,
-        pickupDateAndTime: pickupOrder.pick_up_date,
-        deliveryDateAndTime: pickupOrder.delivery_date,
-        issuedById: pickupOrder.issued_by,
-        issuedByType: pickupOrder.issued_byObj?.type,
-        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
-          } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
-          } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
-        destinationAgentId: pickupOrder.destination_agent,
-        employeeId: pickupOrder.employee,
-        employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
-        weight: pickupOrder.weight,
-
-        shipperId: pickupOrder.shipperObj?.data?.obj?.id,
-        shipperType:
-          pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
-            ? pickupOrder.shipperObj?.data?.obj?.type_person
-            : "forwarding-agent",
-        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-          }`,
-
-        pickupLocationId: pickupOrder.pickUpLocationObj?.data?.obj?.id,
-        pickupLocationInfo: `${pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
-          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
-          }`,
-        pickupLocationType:
-          pickupOrder.pickUpLocationObj?.data?.obj?.type_person !== "agent"
-            ? pickupOrder.pickUpLocationObj?.data?.obj?.type_person
-            : "forwarding-agent",
-
-        consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
-        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-          }`,
-        consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
-        deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
-        deliveryLocationType:
-          pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
-            ? pickupOrder.deliveryLocationObj?.data?.obj?.type_person
-            : "forwarding-agent",
-        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-          }`,
-
-        proNumber: pickupOrder.pro_number,
-        trackingNumber: pickupOrder.tracking_number,
-        mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
-          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
-          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
-          }`,
-
-        invoiceNumber: pickupOrder.invoice_number,
-        purchaseOrderNumber: pickupOrder.purchase_order_number,
-
-        commodities: pickupOrder.commodities,
-        charges: pickupOrder.charges,
-        client_to_billById: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-          ?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        client_to_bill: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-          ?.type_person
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
-            pickupOrder.shipperObj?.data?.obj?.id
-            ? "shipper"
-            : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
-              pickupOrder.consigneeObj?.data?.obj?.id
-              ? "consignee"
-              : "other"
-          : "other",
-      };
-      let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-        ?.type_person
-        ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
-        : pickupOrder.client_to_billObj?.data?.obj?.type_person;
-      setCTBType(temp !== "agent" ? temp : "forwarding-agent");
-      handleClientToBillSelection({
-        id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        type: temp !== "agent" ? temp : "forwarding-agent",
-      });
-      setFormData(updatedFormData);
-      setcanRender(true);
-    }
-  }, [creating, pickupOrder]);
-
-  useEffect(() => {
-    if (charges.length > 0) {
-      setshowExpenseForm(true);
-      setshowIncomeForm(true);
-    }
-  }, [charges.length]);
+  
 
   const SortArray = (x, y) => {
     return new Intl.Collator("es").compare(x.name, y.name);
