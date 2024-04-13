@@ -69,10 +69,6 @@ const PickupOrderCreationForm = ({
   const [selectedCommodity, setselectedCommodity] = useState(null);
   const [CTBType, setCTBType] = useState("");
   const [editingComodity, setEditingComodity] = useState(false);
-  const [formData, setFormData] = useState(formFormat);
-
-
-
   const formFormat = {
     status: 14,
     number: pickupNumber,
@@ -100,18 +96,19 @@ const PickupOrderCreationForm = ({
     deliveryLocationInfo: "",
     client_to_bill: "",
     client_to_bill_type: "",
-
+    
     proNumber: "",
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
     invoiceNumber: "",
     purchaseOrderNumber: "",
-
+    
     commodities: [],
     weight: 0,
   };
 
+  const [formData, setFormData] = useState(formFormat);
   useEffect(() => {
     fetchFormData()
       .then((data) => {
