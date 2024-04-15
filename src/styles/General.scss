@@ -678,9 +678,10 @@
   }
 
   .generic-table {
-    height: 50%;
+    height: 90%;
     width: 98%;
-    // overflow-x: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     border-collapse: collapse;
     // border: 1px solid rgb(111, 105, 105);
     background: white;
@@ -1385,17 +1386,6 @@
 
 #creation-date {
   font-family: 'Poppins' !important;
-<<<<<<< HEAD
-  font-size: 14px !important;
-  color: #5d5d5d !important;
-}
-
-
-.css-1bn53lx{
-  font-family: 'Poppins' !important;
-  font-size: 14px !important;
-  color: #5d5d5d !important;
-=======
   font-size: 13px !important;
   color: #5d5d5d !important;
 }
@@ -1430,5 +1420,4 @@
 .space-release{
   display: flex;
   margin: 0 0 1rem 0;
->>>>>>> 31b3728e7a032833be8abfb1e1fcc7cc40ae0151
 }
