@@ -678,9 +678,10 @@
   }
 
   .generic-table {
-    height: 50%;
+    height: 90%;
     width: 98%;
-    // overflow-x: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     border-collapse: collapse;
     // border: 1px solid rgb(111, 105, 105);
     background: white;
