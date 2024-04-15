@@ -1364,9 +1364,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
-                <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p>
+                {/* <p style={{ color: "red" }}>
+                        Note: Always select a client to bill when editing
+                      </p> */}
               </div>
             </div>
           </div>
@@ -1394,7 +1394,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   placeholder="Search and select..."
                   defaultOptions={supplierOptions}
                   loadOptions={loadShipperSelectOptions}
-                  value={shipperOptions.find((option) => option.id === formData.supplierId)}
+                  value={supplierOptions.find((option) => option.id === formData.supplierId)}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />

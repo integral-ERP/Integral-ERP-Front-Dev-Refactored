@@ -21,6 +21,7 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
+import { fetchFormData } from "./DataFetcher";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -112,15 +113,42 @@ const PickupOrderCreationForm = ({
   };
   const [formData, setFormData] = useState(formFormat);
 
+  useEffect(() => {
+    fetchFormData()
+      .then((data) => {
+        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
+        const customers = data.filter(item => item.type === 'customer');
+        const vendors = data.filter(item => item.type === 'vendor');
+        const employees = data.filter(item => item.type === 'employee');
+        const carriers = data.filter(item => item.type === 'carrier');
+
+        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
+        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
+        setEmployeeOptions([...employees].sort(SortArray));
+        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+        setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
+        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
+        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
+        setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+
+  }, [employeeOptions, formData.employeeId]);
+
+
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -143,11 +171,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
@@ -178,11 +204,9 @@ const PickupOrderCreationForm = ({
     if (type === "Carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       deliveryLocationId: id,
@@ -226,11 +250,9 @@ const PickupOrderCreationForm = ({
     if (type === "Carrier") {
       result = await CarrierService.getCarrierById(id);
     }
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setconsignee(result?.data);
     setFormData({
       ...formData,
@@ -254,11 +276,9 @@ const PickupOrderCreationForm = ({
     if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
     }
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setshipper(result?.data);
     setFormData({
       ...formData,
@@ -278,11 +298,9 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event?.id || "";
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -300,8 +318,8 @@ const PickupOrderCreationForm = ({
         type === "shipper"
           ? formData.shipperId
           : type === "consignee"
-          ? formData.consigneeId
-          : "";
+            ? formData.consigneeId
+            : "";
       setFormData({
         ...formData,
         client_to_bill_type: type,
@@ -313,8 +331,8 @@ const PickupOrderCreationForm = ({
         event?.type === "shipper"
           ? "shipper"
           : event?.type === "consignee"
-          ? "consignee"
-          : "other";
+            ? "consignee"
+            : "other";
 
       setFormData({
         ...formData,
@@ -345,11 +363,9 @@ const PickupOrderCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
-        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${
-          pickupOrder.issued_byObj?.city || ""
-        } - ${pickupOrder.issued_byObj?.state || ""} - ${
-          pickupOrder.issued_byObj?.country || ""
-        } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
+          } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
+          } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
@@ -360,59 +376,44 @@ const PickupOrderCreationForm = ({
           pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.shipperObj?.data?.obj?.type_person
             : "forwarding-agent",
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
 
         pickupLocationId: pickupOrder.pickUpLocationObj?.data?.obj?.id,
-        pickupLocationInfo: `${
-          pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pickUpLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.city || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.pickUpLocationObj?.data?.obj?.country || ""} - ${pickupOrder.pickUpLocationObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationType:
           pickupOrder.pickUpLocationObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.pickUpLocationObj?.data?.obj?.type_person
             : "forwarding-agent",
 
         consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         consigneeType: pickupOrder.consigneeObj?.data?.obj?.type_person,
         deliveryLocationId: pickupOrder.deliveryLocationObj?.data?.obj?.id,
         deliveryLocationType:
           pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.deliveryLocationObj?.data?.obj?.type_person
             : "forwarding-agent",
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -433,8 +434,8 @@ const PickupOrderCreationForm = ({
             ? "shipper"
             : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
               pickupOrder.consigneeObj?.data?.obj?.id
-            ? "consignee"
-            : "other"
+              ? "consignee"
+              : "other"
           : "other",
       };
       let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
@@ -464,70 +465,6 @@ const PickupOrderCreationForm = ({
     return new Intl.Collator("es").compare(x.name, y.name);
   };
 
-  const fetchFormData = async () => {
-    const forwardingAgents = (
-      await ForwardingAgentService.getForwardingAgents()
-    ).data.results;
-    const customers = (await CustomerService.getCustomers()).data.results;
-    const vendors = (await VendorService.getVendors()).data.results;
-    const employees = (await EmployeeService.getEmployees()).data.results;
-    const carriers = (await CarrierService.getCarriers()).data.results;
-
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
-
-    const forwardingAgentsWithType = addTypeToObjects(
-      forwardingAgents,
-      "forwarding-agent"
-    );
-    const customersWithType = addTypeToObjects(customers, "customer");
-    const vendorsWithType = addTypeToObjects(vendors, "vendor");
-    const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "Carrier");
-
-    const issuedByOptions = [...forwardingAgentsWithType];
-    const destinationAgentOptions = [...forwardingAgentsWithType];
-    const employeeOptions = [...employeesWithType];
-    const shipperOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
-    const pickupLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
-    const consigneeOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-    const deliveryLocationOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-
-    const carrierOptions = [...carriersWithType];
-
-    const clientToBillOptions = [
-      ...customersWithType,
-      ...forwardingAgentsWithType,
-    ];
-
-    setIssuedByOptions(issuedByOptions.sort(SortArray));
-    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
-    setEmployeeOptions(employeeOptions.sort(SortArray));
-    setShipperOptions(shipperOptions.sort(SortArray));
-    setPickupLocationOptions(pickupLocationOptions.sort(SortArray));
-    setConsigneeOptions(consigneeOptions.sort(SortArray));
-    setDeliveryLocationOptions(deliveryLocationOptions.sort(SortArray));
-    setCarrierOptions(carrierOptions.sort(SortArray));
-    setReleasedToOptions(clientToBillOptions.sort(SortArray));
-  };
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
@@ -698,7 +635,7 @@ const PickupOrderCreationForm = ({
     fetchFormData();
   }, []);
 
-  useEffect(() => {}, [formData.pickupLocationId]);
+  useEffect(() => { }, [formData.pickupLocationId]);
 
   useEffect(() => {
     if (creating) {
@@ -896,7 +833,7 @@ const PickupOrderCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           formData.client_to_bill_type === "shipper" ||
-          formData.client_to_bill_type === "consignee"
+            formData.client_to_bill_type === "consignee"
             ? auxVar
             : formData.client_to_bill,
       };
@@ -1065,8 +1002,8 @@ const PickupOrderCreationForm = ({
     return selectedOption;
   };
   //--------------------------------------------------
-   //added edit commodities
-   const handleCommodityEdit = () => {
+  //added edit commodities
+  const handleCommodityEdit = () => {
     console.log("commodities description ", selectedCommodity.description);
     setEditingComodity(true);
     console.log("commodities description ", selectedCommodity);
@@ -1136,7 +1073,7 @@ const PickupOrderCreationForm = ({
                 </div>
                 <div className="col-6 text-start" id="dates">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p id="creation-date" className="text-date">Pick-up Date and Time</p>
+                    <p id="creation-date" className="text-date">Pick-up Date and Time</p>
                     <DateTimePicker
                       // label="Pick-up Date and Time"
                       value={dayjs(formData.pickupDateAndTime)}
@@ -1195,7 +1132,7 @@ const PickupOrderCreationForm = ({
 
                 <div className="col-6 text-start" id="dates">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p id="creation-date" className="text-date">Delivery Date and Time</p>
+                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
                     <DateTimePicker
                       // label="Delivery Date and Time"
                       value={dayjs(formData.deliveryDateAndTime)}
@@ -1362,335 +1299,335 @@ const PickupOrderCreationForm = ({
           </div>
         </div>
 
-      <div className="row w-100">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h2>Delivery Information</h2>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="consignee" className="form-label">
-                  Consignee:
-                </label>
-                <div className="custom-select">
+        <div className="row w-100">
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h2>Delivery Information</h2>
+                <span></span>
+              </div>
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="consignee" className="form-label">
+                    Consignee:
+                  </label>
+                  <div className="custom-select">
+                    <AsyncSelect
+                      id="consignee"
+                      onChange={(e) => { handleConsigneeSelection(e); }}
+                      value={consigneeOptions.find(
+                        (option) =>
+                          option.id === formData.consigneeId &&
+                          option.type === formData.consigneeType
+                      )}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={consigneeOptions}
+                      loadOptions={loadConsigneeSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+                </div>
+                <div
+                  className="col-6 text-start"
+                  style={{ marginBlockEnd: "auto" }}
+                >
+                  <label htmlFor="delivery" className="form-label">
+                    Delivery Location:
+                  </label>
                   <AsyncSelect
-                    id="consignee"
-                    onChange={(e) => {handleConsigneeSelection(e);}}
-                    value={consigneeOptions.find(
+                    id="deliveryLocation"
+                    onChange={(e) => { handleDeliveryLocationSelection(e); }}
+                    value={deliveryLocationOptions.find(
                       (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type === formData.consigneeType
+                        option.id === formData.deliveryLocationId &&
+                        option.type === formData.deliveryLocationType
                     )}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
+                    defaultOptions={deliveryLocationOptions}
+                    loadOptions={loadDeliveryLocationSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
                 </div>
+
               </div>
-              <div
-              className="col-6 text-start"
-              style={{ marginBlockEnd: "auto" }}
-            >
-              <label htmlFor="delivery" className="form-label">
-                Delivery Location:
-              </label>
-              <AsyncSelect
-                id="deliveryLocation"
-                onChange={(e) => {handleDeliveryLocationSelection(e);}}
-                value={deliveryLocationOptions.find(
-                  (option) =>
-                    option.id === formData.deliveryLocationId &&
-                    option.type === formData.deliveryLocationType
-                )}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={deliveryLocationOptions}
-                loadOptions={loadDeliveryLocationSelectOptions}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+
+              <div className="row align-items-center">
+
+
+                <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
+                  <div className="text-start">
+                    <label
+                      htmlFor="language"
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "15px",
+                        color: "#565656",
+                        marginRight: "10px",
+                      }}
+                    >
+                      Client to Bill:
+                    </label>
+                    <select
+                      name="clientToBill"
+                      id="clientToBill"
+                      className="form-input"
+                      value={formData.client_to_bill_type}
+                      onChange={(e) => {
+                        handleClientToBillSelection(e);
+                      }}
+                    >
+                      <option value="">Select an option</option>
+                      <option value="shipper">Shipper</option>
+                      <option value="consignee">Ultimate Consignee</option>
+                      <option value="other">Other</option>
+                    </select>
+                    <p style={{ color: "red" }}>
+                      Note: Always select a client to bill when editing
+                    </p>
+                  </div>
+                  <div className="text-start">
+                    <AsyncSelect
+                      id="releasedToOther"
+                      isDisabled={formData.client_to_bill_type !== "other"}
+                      onChange={(e) => {
+                        handleClientToBillSelection(e);
+                      }}
+                      value={getAsyncSelectValue()}
+                      isClearable={true}
+                      defaultOptions={releasedToOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+                </div>
+                <div className="col-6 text-start">
+                  <div className="company-form__section">
+                    <Input
+                      id="TextDeliveryLocation"
+                      type="textarea"
+                      inputName="deliveryInfo"
+                      placeholder="Delivery Info..."
+                      value={formData.deliveryLocationInfo}
+                      readonly={true}
+                      label="Address"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row align-items-center">
+              </div>
             </div>
-
-            </div>
-          
-            <div className="row align-items-center">
-
-
-            <div className="col-6 text-start" style={{ marginBlockEnd: "auto" }}>
-                <div className="text-start">
-                <label
-                  htmlFor="language"
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "15px",
-                    color: "#565656",
-                    marginRight: "10px",
-                  }}
-                >
-                  Client to Bill:
-                </label>
-                <select
-                  name="clientToBill"
-                  id="clientToBill"
-                  className="form-input"
-                  value={formData.client_to_bill_type}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an option</option>
-                  <option value="shipper">Shipper</option>
-                  <option value="consignee">Ultimate Consignee</option>
-                  <option value="other">Other</option>
-                </select>
-                <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p>
+          </div>
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h2>Carrier Information</h2>
+                <span></span>
               </div>
-              <div className="text-start">
-                <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.client_to_bill_type !== "other"}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                  value={getAsyncSelectValue()}
-                  isClearable={true}
-                  defaultOptions={releasedToOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              </div>
-              <div className="col-6 text-start">
-                <div className="company-form__section">
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="mainCarrier" className="form-label">
+                    Carrier:
+                  </label>
+                  <AsyncSelect
+                    id="mainCarrier"
+                    onChange={(e) => {
+                      handleMainCarrierSelection(e);
+                    }}
+                    value={carrierOptions.find(
+                      (option) => option.id === formData.mainCarrierdId
+                    )}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={carrierOptions}
+                    loadOptions={loadCarrierSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+                <div className="col-6 text-start">
                   <Input
-                    id="TextDeliveryLocation"
+                    id="trackingNumber"
+                    type="text"
+                    inputName="trackingNumber"
+                    value={formData.trackingNumber}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        trackingNumber: e.target.value,
+                      })
+                    }
+                    label="Tracking Number"
+                  />
+                </div>
+              </div>
+              <div className="row ">
+                <div className="col-6 text-start">
+                  <Input
+                    id="TextMainCarrier"
                     type="textarea"
-                    inputName="deliveryInfo"
-                    placeholder="Delivery Info..."
-                    value={formData.deliveryLocationInfo}
+                    inputName="issuedbydata"
+                    value={formData.mainCarrierInfo}
                     readonly={true}
                     label="Address"
                   />
                 </div>
-              </div>
-            </div>
-            <div className="row align-items-center">
-            </div>
-          </div>
-        </div>
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h2>Carrier Information</h2>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="mainCarrier" className="form-label">
-                  Carrier:
-                </label>
-                <AsyncSelect
-                  id="mainCarrier"
-                  onChange={(e) => {
-                    handleMainCarrierSelection(e);
-                  }}
-                  value={carrierOptions.find(
-                    (option) => option.id === formData.mainCarrierdId
-                  )}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={carrierOptions}
-                  loadOptions={loadCarrierSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              <div className="col-6 text-start">
-                <Input
-                  id="trackingNumber"
-                  type="text"
-                  inputName="trackingNumber"
-                  value={formData.trackingNumber}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      trackingNumber: e.target.value,
-                    })
-                  }
-                  label="Tracking Number"
-                />
-              </div>
-            </div>
-            <div className="row ">
-              <div className="col-6 text-start">
-                <Input
-                  id="TextMainCarrier"
-                  type="textarea"
-                  inputName="issuedbydata"
-                  value={formData.mainCarrierInfo}
-                  readonly={true}
-                  label="Address"
-                />
-              </div>
-              <div className="col-6 text-start">
-                <Input
-                  id="proNumber"
-                  type="text"
-                  inputName="proNumber"
-                  value={formData.proNumber}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, proNumber: e.target.value })
-                  }
-                  label="PRO Number"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
-    <div className="creation creation-container">
-        <div className="form-label_name">
-          {editingComodity ? (
-            <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
-          ) : (
-            <h3>Commodities</h3>
-            
-          )}
-          <span></span>
-        </div>
-        <CommodityCreationForm
-          onCancel={setshowCommodityCreationForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-          setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-          /* added tres parametros */
-          editing={editingComodity}
-          commodity={selectedCommodity}
-          setEditingComodity={setEditingComodity}
-          locationEnabled={true}
-        />
-        <br />
-
-        {showCommodityCreationForm && (
-          <div className="text-center">
-            <Table
-              noScroll
-              data={commodities}
-              columns={[
-                "Description",
-                " Length",
-                " Height",
-                " Width",
-                " Weight",
-                " Location",
-                " Volume (ft3)",
-                " Weight (lb)",
-                "Options",
-              ]}
-              onSelect={handleSelectCommodity} // Make sure this line is correct
-              selectedRow={selectedCommodity}
-              onDelete={handleCommodityDelete}
-              onEdit={handleCommodityEdit}
-              onInspect={() => {setshowCommodityInspect(!showCommodityInspect);}}
-              onAdd={() => {}}
-              showOptions={false}
-              //added no double click
-              Nodoubleclick={true}
-            /* deleted variable hiden button trash */
-            />
-            {/* added view commodities */}
-            {showCommodityInspect && (
-              <div className="repacking-container">
-                <div className="main-commodity">
-                  <p className="item-description">
-                    {selectedCommodity.description}
-                  </p>
-                  <p className="item-info">
-                    Weight: {selectedCommodity.weight}
-                  </p>
-                  <p className="item-info">
-                    Height: {selectedCommodity.height}
-                  </p>
-                  <p className="item-info">Width: {selectedCommodity.width}</p>
-                  <p className="item-info">
-                    Length: {selectedCommodity.length}
-                  </p>
-                  <p className="item-info">
-                    Volumetric Weight: {selectedCommodity.volumetricWeight}
-                  </p>
-                  <p className="item-info">
-                    Chargeable Weight: {selectedCommodity.chargedWeight}
-                  </p>
-                  <p className="item-info">
-                    Location: {selectedCommodity.locationCode}
-                  </p>
-                  {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                <div className="col-6 text-start">
+                  <Input
+                    id="proNumber"
+                    type="text"
+                    inputName="proNumber"
+                    value={formData.proNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, proNumber: e.target.value })
+                    }
+                    label="PRO Number"
+                  />
                 </div>
-                {/*  fix the repacking show internalCommodities for edition */}
-                {selectedCommodity.internalCommodities &&
-                  selectedCommodity.internalCommodities.map((com) => (
-                    <div
-                      key={com.id}
-                      className="card"
-                      style={{
-                        display: "flex",
-                        textAlign: "left",
-                        fontSize: "15px",
-                      }}
-                    >
-                      <p className="item-description">{com.description}</p>
-                      <p className="item-info">Weight: {com.weight}</p>
-                      <p className="item-info">Height: {com.height}</p>
-                      <p className="item-info">Width: {com.width}</p>
-                      <p className="item-info">Length: {com.length}</p>
-                      <p className="item-info">
-                        Volumetric Weight: {com.volumetricWeight}
-                      </p>
-                      <p className="item-info">
-                        Chargeable Weight: {com.chargedWeight}
-                      </p>
-                      <p className="item-info">Location: {com.locationCode}</p>
-                      {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                    </div>
-                  ))}
               </div>
-            )}
-            <button
-              className="button-save"
-              type="button"
-              onClick={() => {
-                setshowRepackingForm(!showRepackingForm);
-              }}
-            >
-              Repack
-            </button>
-            <br />
-            <br />
-            <br />
-
-            {showRepackingForm && (
-              <RepackingForm
-                commodities={commodities}
-                setCommodities={setcommodities}
-              />
-            )}
+            </div>
           </div>
-        )}
-      </div>
-    {/* -------------------------------------------------------------------------------------------------------------- */}
+        </div>
+
+        {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            {editingComodity ? (
+              <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
+            ) : (
+              <h3>Commodities</h3>
+
+            )}
+            <span></span>
+          </div>
+          <CommodityCreationForm
+            onCancel={setshowCommodityCreationForm}
+            commodities={commodities}
+            setCommodities={setcommodities}
+            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+            /* added tres parametros */
+            editing={editingComodity}
+            commodity={selectedCommodity}
+            setEditingComodity={setEditingComodity}
+            locationEnabled={true}
+          />
+          <br />
+
+          {showCommodityCreationForm && (
+            <div className="text-center">
+              <Table
+                noScroll
+                data={commodities}
+                columns={[
+                  "Description",
+                  " Length",
+                  " Height",
+                  " Width",
+                  " Weight",
+                  " Location",
+                  " Volume (ft3)",
+                  " Weight (lb)",
+                  "Options",
+                ]}
+                onSelect={handleSelectCommodity} // Make sure this line is correct
+                selectedRow={selectedCommodity}
+                onDelete={handleCommodityDelete}
+                onEdit={handleCommodityEdit}
+                onInspect={() => { setshowCommodityInspect(!showCommodityInspect); }}
+                onAdd={() => { }}
+                showOptions={false}
+                //added no double click
+                Nodoubleclick={true}
+              /* deleted variable hiden button trash */
+              />
+              {/* added view commodities */}
+              {showCommodityInspect && (
+                <div className="repacking-container">
+                  <div className="main-commodity">
+                    <p className="item-description">
+                      {selectedCommodity.description}
+                    </p>
+                    <p className="item-info">
+                      Weight: {selectedCommodity.weight}
+                    </p>
+                    <p className="item-info">
+                      Height: {selectedCommodity.height}
+                    </p>
+                    <p className="item-info">Width: {selectedCommodity.width}</p>
+                    <p className="item-info">
+                      Length: {selectedCommodity.length}
+                    </p>
+                    <p className="item-info">
+                      Volumetric Weight: {selectedCommodity.volumetricWeight}
+                    </p>
+                    <p className="item-info">
+                      Chargeable Weight: {selectedCommodity.chargedWeight}
+                    </p>
+                    <p className="item-info">
+                      Location: {selectedCommodity.locationCode}
+                    </p>
+                    {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                  </div>
+                  {/*  fix the repacking show internalCommodities for edition */}
+                  {selectedCommodity.internalCommodities &&
+                    selectedCommodity.internalCommodities.map((com) => (
+                      <div
+                        key={com.id}
+                        className="card"
+                        style={{
+                          display: "flex",
+                          textAlign: "left",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <p className="item-description">{com.description}</p>
+                        <p className="item-info">Weight: {com.weight}</p>
+                        <p className="item-info">Height: {com.height}</p>
+                        <p className="item-info">Width: {com.width}</p>
+                        <p className="item-info">Length: {com.length}</p>
+                        <p className="item-info">
+                          Volumetric Weight: {com.volumetricWeight}
+                        </p>
+                        <p className="item-info">
+                          Chargeable Weight: {com.chargedWeight}
+                        </p>
+                        <p className="item-info">Location: {com.locationCode}</p>
+                        {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                      </div>
+                    ))}
+                </div>
+              )}
+              <button
+                className="button-save"
+                type="button"
+                onClick={() => {
+                  setshowRepackingForm(!showRepackingForm);
+                }}
+              >
+                Repack
+              </button>
+              <br />
+              <br />
+              <br />
+
+              {showRepackingForm && (
+                <RepackingForm
+                  commodities={commodities}
+                  setCommodities={setcommodities}
+                />
+              )}
+            </div>
+          )}
+        </div>
+        {/* -------------------------------------------------------------------------------------------------------------- */}
 
 
-      <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" for="toggleBoton"  style={{ display: 'none'}}></label>
+        <input type="checkbox" id="toggleBoton"></input>
+        <label className="button-charge" htmlFor="toggleBoton" style={{ display: 'none' }}></label>
 
         <div className="row w-100" id="miDiv">
           <div className="col-6">
@@ -1722,11 +1659,11 @@ const PickupOrderCreationForm = ({
                     "Price",
                     "Currency",
                   ]}
-                  onSelect={() => {}} // Make sure this line is correct
+                  onSelect={() => { }} // Make sure this line is correct
                   selectedRow={{}}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
-                  onAdd={() => {}}
+                  onDelete={() => { }}
+                  onEdit={() => { }}
+                  onAdd={() => { }}
                   showOptions={false}
                 />
               )}
@@ -1761,11 +1698,11 @@ const PickupOrderCreationForm = ({
                     "Price",
                     "Currency",
                   ]}
-                  onSelect={() => {}} // Make sure this line is correct
+                  onSelect={() => { }} // Make sure this line is correct
                   selectedRow={{}}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
-                  onAdd={() => {}}
+                  onDelete={() => { }}
+                  onEdit={() => { }}
+                  onAdd={() => { }}
                   showOptions={false}
                 />
               )}
