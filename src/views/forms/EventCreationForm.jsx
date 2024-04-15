@@ -57,7 +57,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <p className="text-date">Entry Date and Time</p>
+            <p id="creation-date" className="text-date">Entry Date and Time</p>
               <DateTimePicker
                 className="font-right"
                 value={dayjs(formData.dateTime)}
@@ -183,7 +183,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               name="includeTracking"
               type="checkbox"
             ></Input>
-            <div className="table-hover charge-buttons">
+            <div className="table-hover charge-buttons" style={{ textAlign: "left" }}>
               <button
                 className="button-save pick "
                 style={{ marginRight: "10px" }}

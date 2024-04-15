@@ -35,7 +35,7 @@ const ReceiptCreationForm = ({
   showBModal,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
-  const [note, setNote] = useState("");
+  // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
   //added warning alert for commodities
@@ -137,7 +137,7 @@ const ReceiptCreationForm = ({
     clientToBillType: "",
 
     commodities: [],
-    notes: [],
+    notes: "",
     charges: [],
     events: [],
     pro_number: "",
@@ -219,16 +219,32 @@ const ReceiptCreationForm = ({
     });
   };
 
-  /* const handleSupplierSelection = async (event) => {
-    const id = event.id;
-    const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data?.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setFormData({ ...formData, supplierId: id, supplierInfo: info });
-  }; */
+  const handleSupplierSelection = async (event) => {
+    const id = event.id || formData.supplierId;
+    const type = event.type || formData.supplierType;
+
+    let result;
+    if (type === "forwarding-agent") {
+      result = await ForwardingAgentService.getForwardingAgentById(id);
+    } else if (type === "customer") {
+      result = await CustomerService.getCustomerById(id);
+    } else if (type === "vendor") {
+      result = await VendorService.getVendorByID(id);
+    }
+
+    const info = result?.data
+    ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
+    } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+    : formData.supplierInfo;
+
+  setSupplierOptions(result?.data);
+  setFormData({
+    ...formData,
+    supplierId: id,
+    supplierType: type,
+    supplierInfo: info,
+  })
+  }
 
   const handleConsigneeSelection = async (event) => {
     const id = event.id;
@@ -276,29 +292,41 @@ const ReceiptCreationForm = ({
   };
 
   const handleShipperSelection = async (event) => {
-    const id = event.id || formData.shipperId;
-    const type = event.type || formData.shipperType;
+    if (event && event.id) {
+        const id = event.id || formData.shipperId;
+        const type = event.type || formData.shipperType;
 
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
+        let result;
+        if (type === "forwarding-agent") {
+            result = await ForwardingAgentService.getForwardingAgentById(id);
+        } else if (type === "customer") {
+            result = await CustomerService.getCustomerById(id);
+        } else if (type === "vendor") {
+            result = await VendorService.getVendorByID(id);
+        }
+
+        const info = result?.data
+            ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""}`
+            : formData.shipperInfo;
+        setshipper(result?.data || shipper);
+        setFormData({
+            ...formData,
+            shipperId: id,
+            shipperType: type,
+            shipperInfo: info,
+        });
+    } else {
+        console.error("El objeto de selección de shipper es nulo o no tiene una propiedad 'id'");
     }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = result?.data
-      ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
-      } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
-      : formData.shipperInfo;
-    setshipper(result?.data || shipper);
+};
+
+
+  const handleClearShipperSelection = () => {
     setFormData({
       ...formData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
+      shipperId: null, 
+      shipperType: null, 
+      shipperInfo: "", 
     });
   };
 //---------------------------------CHARGE IMG---------------------------------------------------------
@@ -494,11 +522,11 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     };
   }, []);
 
-  const addNotes = () => {
-    const updatedNotes = [...formData.notes, note];
+  // const addNotes = () => {
+  //   const updatedNotes = [...formData.notes, note];
 
-    setFormData({ ...formData, notes: updatedNotes });
-  };
+  //   setFormData({ ...formData, notes: updatedNotes });
+  // };
 
   const loadShipperOption = async (id, type) => {
     let option = null;
@@ -816,6 +844,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
       }
       let updatedFormData = {
         status: 4,
+        // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
@@ -883,7 +912,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               : "",
 
         commodities: pickupOrder.commodities,
-        notes: [],
+        // notes: [],
       };
       setFormData(updatedFormData);
       setFormDataUpdated(true);
@@ -1023,7 +1052,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          status: 2,
+          status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           issued_by: formData.issuedById,
@@ -1197,7 +1226,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             <div className="row align-items-center">
               <div className="col-4 text-start">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <p className="text-date">Entry Date and Time</p>
+                <p id="creation-date" className="text-date">Entry Date and Time</p>
                   <DateTimePicker
                     // label="Entry Date and Time"
                     className="font-right"
@@ -1257,21 +1286,21 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   Shipper:
                 </label>
                 <AsyncSelect
-                  id="shipper"
-                  value={consigneeOptions.find(
-                    (option) =>
-                      option.id === formData.shipperId &&
-                      option.type_person === formData.shipperType
-                  )}
-                  onChange={(e) => {handleShipperSelection(e);}}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={shipperOptions}
-                  loadOptions={loadShipperSelectOptions}
-                  // value={shipper}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
+                id="shipper"
+                onChange={(e) => {
+                  handleShipperSelection(e);
+                }}
+                onClear={() => {
+                  handleClearShipperSelection()
+                }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions = {shipperOptions}
+                loadOptions = {loadShipperSelectOptions}
+                value={shipperOptions.find((option) => option.id === formData.shipperId)}
+                getOptionLabel={(option) => option.name}
+                getOptionValue={(option) => option.id}
+              />
               </div>
               <div className="col-6 text-start">
                 <label htmlFor="consignee" className="form-label">
@@ -1359,13 +1388,13 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 <AsyncSelect
                   id="shipper"
                   onChange={(e) => {
-                    handleShipperSelection(e);
+                    handleSupplierSelection(e);
                   }}
                   isClearable={true}
                   placeholder="Search and select..."
-                  defaultOptions={shipperOptions}
+                  defaultOptions={supplierOptions}
                   loadOptions={loadShipperSelectOptions}
-                  value={shipper}
+                  value={supplierOptions.find((option) => option.id === formData.supplierId)}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
@@ -1394,7 +1423,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   type="textarea"
                   inputName="shipperinfo"
                   placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
+                  value={formData.supplierInfo}
                   readonly={true}
                 />
               </div>
@@ -1483,6 +1512,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
           ) : (
             <h3>Commodities</h3>
+            
           )}
           <span></span>
         </div>
@@ -1511,8 +1541,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 " Width",
                 " Weight",
                 " Location",
-                " Volumetric Weight",
-                " Chargeable Weight",
+                " Volume (ft3)",
+                " Weight (lb)",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct
@@ -1844,21 +1874,28 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         </div>
 
         <div className="row align-items-center">
-          <div className="col-10 text-start">
-            <label htmlFor="notes" className="form-label">
-              Notes
-            </label>
-            <input
+          <div className="col-10 text-start" style={{width: "100%" }}>
+            <Input
+                type="textarea"
+                inputName="notes"
+                placeholder="Nota here..."
+                label="Note"
+                value={formData.notes}
+                changeHandler={(e) =>
+                  setFormData({ ...formData, notes: e.target.value })
+                }
+              />
+            {/* <input
               name="notes"
               type="text"
               className="form-input"
               placeholder="Notes..."
               onChange={(e) => setNote(e.target.value)}
               style={{ width: "99%" }}
-            />
+            /> */}
           </div>
 
-          <div className="col">
+          {/* <div className="col">
             <button
               type="button"
               onClick={addNotes}
@@ -1872,24 +1909,19 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             >
               Add
             </button>
-          </div>
-          <div className="row">
+          </div> */}
+          {/* <div className="row">
             <div className="col-10 text-start">
-              <textarea
+              <Input
                 name="notes"
                 className="form-input w-100"
-                placeholder=""
+                placeholder="PRO Number..."
                 value={formData.notes?.toString()}
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  height: "100px",
-                  wordWrap: "break-word",
-                }}
-                readOnly
+                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
+                // readOnly
               />
-            </div>
-          </div>
+            </div> 
+          </div>*/}
         </div>
       </div>
 
