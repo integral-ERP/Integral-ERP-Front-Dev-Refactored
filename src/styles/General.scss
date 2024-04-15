@@ -1251,7 +1251,7 @@
   margin: 0;
 }
 
-//---------------------------------------------------------------
+//-------------------------Boton ocultar--------------------------------------
 #toggleBoton {
   display: none;
   /* Oculta el checkbox */
@@ -1281,13 +1281,6 @@
   opacity: 0;
 }
 
-//---------------------------------------------------------------
-
-.pdf-content {
-  margin: 0 9% 0 10%;
-  height: 3rem;
-  width: 70%;
-}
 
 #toggleBoton:checked+label::after {
   content: "Close Charge";
@@ -1305,7 +1298,6 @@
   align-items: center; 
 }
 
-
 .button-charge {
   width: 12rem;
   height: 3rem;
@@ -1322,6 +1314,12 @@
   transition: background-color 9.7s ease;
 }
 
+//---------------------------------------------------------------
+.pdf-content {
+  margin: 0 9% 0 10%;
+  height: 3rem;
+  width: 70%;
+}
 
 .hideLab {
   // display: none; /* Oculta el div por defecto */

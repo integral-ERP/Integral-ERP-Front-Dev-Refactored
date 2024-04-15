@@ -1364,9 +1364,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   <option value="consignee">Consignee</option>
                   <option value="shipper">Shipper</option>
                 </select>
-                {/* <p style={{ color: "red" }}>
+                <p style={{ color: "red" }}>
                         Note: Always select a client to bill when editing
-                      </p> */}
+                      </p>
               </div>
             </div>
           </div>

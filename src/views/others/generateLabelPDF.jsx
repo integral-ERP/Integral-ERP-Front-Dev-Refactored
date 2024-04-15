@@ -299,22 +299,22 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {
                         text: [
-                          `${data.shipperObj?.data?.obj?.name || ``
+                          `${data.consigneeObj?.data?.obj?.name || ``
                           } \n \n`,
-                          `${data.shipperObj?.data?.obj
+                          `${data.consigneeObj?.data?.obj
                             ?.street_and_number || ``
                           } \n`,
-                          `${data.shipperObj?.data?.obj?.city || ``
-                          }, ${data.shipperObj?.data?.obj?.state || ``
-                          } ${data.shipperObj?.data?.obj?.zip_code || ``
+                          `${data.consigneeObj?.data?.obj?.city || ``
+                          }, ${data.consigneeObj?.data?.obj?.state || ``
+                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
                           } \n`,
-                          `${data.shipperObj?.data?.obj?.country || ``
+                          `${data.consigneeObj?.data?.obj?.country || ``
                           }`,
-                          `${data.shipperObj?.phone
-                            ? `Tel: ${data.shipperObj.phone}, `
+                          `${data.consigneeObj?.phone
+                            ? `Tel: ${data.consigneeObj.phone}, `
                             : ``
-                          }${data.shipperObj?.fax
-                            ? `Fax: ${data.shipperObj.fax}`
+                          }${data.consigneeObj?.fax
+                            ? `Fax: ${data.consigneeObj.fax}`
                             : ``
                           }\n`,
                         ],
