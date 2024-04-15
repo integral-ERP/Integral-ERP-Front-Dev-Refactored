@@ -37,7 +37,6 @@ const PickupOrderCreationForm = ({
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [showExpenseForm, setshowExpenseForm] = useState(false);
-  const [consignee, setconsignee] = useState(null);
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
   const [pickuplocation, setpickuplocation] = useState(null);
@@ -136,6 +135,9 @@ const PickupOrderCreationForm = ({
         console.error('Error al obtener los datos:', error);
       });
   }, []);
+
+  const [consignee, setconsignee] = useState(shipper);
+
 
   useEffect(() => {
 
@@ -236,32 +238,47 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-
+  
     let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
+    let info = "";
+    try {
+      switch (type) {
+        case "forwarding-agent":
+          result = await ForwardingAgentService.getForwardingAgentById(id);
+          break;
+        case "customer":
+          result = await CustomerService.getCustomerById(id);
+          break;
+        case "vendor":
+          result = await VendorService.getVendorByID(id);
+          break;
+        case "Carrier":
+          result = await CarrierService.getCarrierById(id);
+          break;
+        default:
+          throw new Error(`Unsupported consignee type: ${type}`);
+      }
+    
+      if (result) {
+        info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+          } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+          }`;
+      }
+    
+      setconsignee(result?.data || null);
+      setFormData({
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
+      });
+  
+      setshipper(result?.data || null);
+    } catch (error) {
+      console.error("Error handling consignee selection:", error);
     }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    if (type === "Carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-      }`;
-    setconsignee(result?.data);
-    setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    });
   };
-
+  
   const handleShipperSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
@@ -280,11 +297,15 @@ const PickupOrderCreationForm = ({
       } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setshipper(result?.data);
+    setconsignee(result?.data);
     setFormData({
       ...formData,
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
     });
   };
 
@@ -1326,6 +1347,7 @@ const PickupOrderCreationForm = ({
                       loadOptions={loadConsigneeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
+                      defaultValue={shipper}
                     />
                   </div>
                 </div>
