@@ -226,70 +226,67 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleConsigneeSelection = async (event) => {
+  const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
-
+    const selectedObject = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+  
     if (!selectedObject) {
-        console.error(`Unsupported consignee type: ${type}`);
-        return;
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
     }
-
-    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-        } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
-        }`;
-
-    if (!shipper) {
-        setconsignee(selectedObject);
-        setdefaultValueConsignee(selectedObject); 
-    }
-
+  
+    const info = `${selectedObject?.street_and_number || ""} - ${
+      selectedObject?.city || ""
+    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
+      selectedObject?.zip_code || ""
+    }`;
+  
+    setconsignee(selectedObject);
+    setdefaultValueConsignee(selectedObject);
+  
     setFormData({
-        ...formData,
-        consigneeId: id,
-        consigneeType: type,
-        consigneeInfo: info,
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
     });
-};
-
-const handleShipperSelection = async (event) => {
+  };
+  
+  const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = shipperOptions.find(option => option.id === id && option.type === type);
-
+    const selectedObject = shipperOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+  
     if (!selectedObject) {
-        console.error(`Unsupported shipper type: ${type}`);
-        return;
+      console.error(`Unsupported shipper type: ${type}`);
+      return;
     }
-
-    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-        } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
-        }`;
-
-    if (!consignee) {
-        setshipper(selectedObject);
-        setdefaultValueShipper(selectedObject); 
-    }
-
+  
+    const info = `${selectedObject?.street_and_number || ""} - ${
+      selectedObject?.city || ""
+    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
+      selectedObject?.zip_code || ""
+    }`;
+  
+    setshipper(selectedObject);
+    setdefaultValueShipper(selectedObject);
+    setdefaultValueConsignee(selectedObject); 
+  
     setFormData({
-        ...formData,
-        shipperId: id,
-        shipperType: type,
-        shipperInfo: info,
-        ...(formData.consigneeId ? {} : {
-            consigneeId: id,
-            consigneeType: type,
-            consigneeInfo: info,
-        })
+      ...formData,
+      shipperId: id,
+      shipperType: type,
+      shipperInfo: info,
+      consigneeId: id, 
+      consigneeType: type,
+      consigneeInfo: info,
     });
-
-    if (!consignee) {
-        handleConsigneeSelection(event);
-    }
-};
-
-
+  };
 
 
 
