@@ -256,7 +256,7 @@ const PickupOrderCreationForm = ({
 const handleShipperSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
+    const selectedObject = shipperOptions.find(option => option.id === id && option.type === type);
 
     if (!selectedObject) {
         console.error(`Unsupported shipper type: ${type}`);
