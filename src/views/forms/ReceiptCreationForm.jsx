@@ -46,20 +46,20 @@ const ReceiptCreationForm = ({
   const [showExpenseForm, setshowExpenseForm] = useState(false);
   const [showEventForm, setshowEventForm] = useState(false);
   const [consignee, setconsignee] = useState(null);
+  const [supplier, setSupplier] = useState(null);
+  const [defaultValueSupplier, setDefaultValueSupplier] = useState(null);
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
   const [attachments, setattachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
-  console.log("consigneeOptions", consigneeOptions);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
   const [shipperOptions, setShipperOptions] = useState([]);
@@ -104,6 +104,7 @@ const ReceiptCreationForm = ({
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
         setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
         setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
+        setSupplierOptions([...forwardingAgents, ...carriers, ...vendors])
       })
       .catch((error) => {
         console.error('Error al obtener los datos:', error);
@@ -238,33 +239,6 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
-    const id = event.id || formData.supplierId;
-    const type = event.type || formData.supplierType;
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    } else if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    } else if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-
-    const info = result?.data
-    ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""
-    } - ${result.data.country || ""} - ${result.data.zip_code || ""}`
-    : formData.supplierInfo;
-
-  setSupplierOptions(result?.data);
-  setFormData({
-    ...formData,
-    supplierId: id,
-    supplierType: type,
-    supplierInfo: info,
-  })
-  }
-
   const handleClientToBillSelection = async (event) => {
     const type = event.target.value;
     const id =
@@ -307,6 +281,34 @@ const ReceiptCreationForm = ({
       consigneeId: id,
       consigneeType: type,
       consigneeInfo: info,
+    });
+  };
+
+  const handleSupplierSelection = async (event) => {
+    const id = event.id || formData.supplierId;
+    const type = event.type || formData.supplierType;
+    const selectedObject = shipperOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+  
+    if (!selectedObject) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+  
+    const info = `${selectedObject?.street_and_number || ""} - ${
+      selectedObject?.city || ""
+    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
+      selectedObject?.zip_code || ""
+    }`;
+  
+    setSupplier(info, selectedObject)
+  
+    setFormData({
+      ...formData,
+      supplierId: id,
+      supplierType: type,
+      supplierInfo: info,
     });
   };
 
