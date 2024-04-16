@@ -229,8 +229,6 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-
-    // Encontrar el objeto correspondiente en los datos obtenidos de fetchFormData
     const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
 
     if (!selectedObject) {
@@ -238,19 +236,15 @@ const PickupOrderCreationForm = ({
         return;
     }
 
-    // Construir la información necesaria
     const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
         } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
         }`;
 
-    // Actualizar el estado del formulario solo si no hay un shipper seleccionado previamente
     if (!shipper) {
         setconsignee(selectedObject);
-    } else if (consignee?.id !== selectedObject.id) {
-        setconsignee(selectedObject);
+        setdefaultValueConsignee(selectedObject); 
     }
 
-    // Actualizar el estado del formulario
     setFormData({
         ...formData,
         consigneeId: id,
@@ -259,47 +253,43 @@ const PickupOrderCreationForm = ({
     });
 };
 
-
 const handleShipperSelection = async (event) => {
-  const id = event?.id || "";
-  const type = event?.type || "";
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
 
-  // Encontrar el objeto correspondiente en los datos obtenidos de fetchFormData
-  const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
+    if (!selectedObject) {
+        console.error(`Unsupported shipper type: ${type}`);
+        return;
+    }
 
-  if (!selectedObject) {
-      console.error(`Unsupported shipper type: ${type}`);
-      return;
-  }
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+        } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
+        }`;
 
-  // Construir la información necesaria
-  const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
-      }`;
+    if (!consignee) {
+        setshipper(selectedObject);
+        setdefaultValueShipper(selectedObject); 
+    }
 
-  // Actualizar el estado del shipper solo si no hay un consignee seleccionado previamente
-  if (!consignee) {
-      setshipper(selectedObject);
-  }
+    setFormData({
+        ...formData,
+        shipperId: id,
+        shipperType: type,
+        shipperInfo: info,
+        ...(formData.consigneeId ? {} : {
+            consigneeId: id,
+            consigneeType: type,
+            consigneeInfo: info,
+        })
+    });
 
-  // Actualizar el estado del formulario
-  setFormData({
-      ...formData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
-      ...(formData.consigneeId ? {} : {
-          consigneeId: id,
-          consigneeType: type,
-          consigneeInfo: info,
-      })
-  });
-
-  // Si consigneeId no está definido, llamar handleConsigneeSelection
-  if (!consignee) {
-      handleConsigneeSelection(event);
-  }
+    if (!consignee) {
+        handleConsigneeSelection(event);
+    }
 };
+
+
 
 
   const handleCommodityDelete = () => {
@@ -516,40 +506,24 @@ const handleShipperSelection = async (event) => {
     return options;
   };
 
-  const loadShipperSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
+  const loadShipperSelectOptions = async () => {
+    const options = shipperOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+    }));
     return options;
-  };
+};
 
-  const loadConsigneeSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent")
-    ];
-    console.log('OPCIONES QUE ESTAN LLEGANDO EN CONSIGNEE');
-
+const loadConsigneeSelectOptions = async () => {
+    const options = consigneeOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+    }));
     return options;
-  };
+};
+
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -620,14 +594,16 @@ const handleShipperSelection = async (event) => {
       option = await VendorService.getVendorByID(id);
     }
     if (type === "agent") {
+      console.log('Fetching shipper data for id:', id);
       option = await ForwardingAgentService.getForwardingAgentById(id);
+      console.log('Fetched shipper data:', option?.data);
     }
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option?.data);
   };
-
+  
   const loadConsigneeOption = async (id, type) => {
     let option = null;
     if (type === "customer") {
@@ -637,11 +613,13 @@ const handleShipperSelection = async (event) => {
       option = await VendorService.getVendorByID(id);
     }
     if (type === "agent") {
+      console.log('Fetching consignee data for id:', id);
       option = await ForwardingAgentService.getForwardingAgentById(id);
+      console.log('Fetched consignee data:', option?.data);
     }
-
     setdefaultValueShipper(option?.data);
   };
+  
 
   useEffect(() => {
     fetchFormData();
@@ -1212,11 +1190,7 @@ const handleShipperSelection = async (event) => {
                     onChange={(e) => {
                       handleShipperSelection(e);
                     }}
-                    value={shipperOptions.find(
-                      (option) =>
-                        option.id === formData.shipperId &&
-                        option.type === formData.shipperType
-                    )}
+                    value={defaultValueShipper}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
@@ -1327,11 +1301,7 @@ const handleShipperSelection = async (event) => {
                     <AsyncSelect
                       id="consignee"
                       onChange={(e) => { handleConsigneeSelection(e); }}
-                      value={consigneeOptions.find(
-                        (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type === formData.consigneeType
-                      )}
+                      value={defaultValueConsignee}
                       isClearable={true}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
