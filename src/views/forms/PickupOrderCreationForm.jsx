@@ -312,18 +312,23 @@ const handleShipperSelection = async (event) => {
   if (!formData.consigneeId) { 
       setconsignee(result?.data);
   }
+  
   setFormData({
     ...formData,
     shipperId: id,
     shipperType: type,
     shipperInfo: info,
+    ...(formData.consigneeId ? {} : {
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
+    })
   });
 
   if (!formData.consigneeId) {
     handleConsigneeSelection(event);
   }
 };
-
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
