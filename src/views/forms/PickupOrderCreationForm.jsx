@@ -246,6 +246,7 @@ const PickupOrderCreationForm = ({
   
     setconsignee(selectedObject);
     setdefaultValueConsignee(selectedObject);
+
   
     setFormData({
       ...formData,
@@ -275,7 +276,8 @@ const PickupOrderCreationForm = ({
   
     setshipper(selectedObject);
     setdefaultValueShipper(selectedObject);
-    setdefaultValueConsignee(selectedObject); 
+    setdefaultValueConsignee(selectedObject);
+
   
     setFormData({
       ...formData,
@@ -599,7 +601,7 @@ const loadConsigneeSelectOptions = async () => {
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
-    setdefaultValueConsignee(option?.data);
+    setdefaultValueShipper(option?.data);
   };
   
   const loadConsigneeOption = async (id, type) => {
@@ -615,7 +617,7 @@ const loadConsigneeSelectOptions = async () => {
       option = await ForwardingAgentService.getForwardingAgentById(id);
       console.log('Fetched consignee data:', option?.data);
     }
-    setdefaultValueShipper(option?.data);
+    setdefaultValueConsignee(option?.data);
   };
   
 
