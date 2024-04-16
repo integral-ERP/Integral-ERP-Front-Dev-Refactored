@@ -898,7 +898,7 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (commodities.length > 0) {
-      setFormData({ ...formData, status: 5 });
+      setFormData({ ...formData, status: 4 });
     }
   }, [commodities]);
 

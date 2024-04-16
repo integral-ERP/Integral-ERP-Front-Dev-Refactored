@@ -39,11 +39,12 @@ const Pickup = () => {
   //added warning alert for delete pickup order
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
+  const StatusOnHand = 4;  
   //added status for update context menu
   /*  const StatusOnHand = 4;
   const StatusInTransit= 6;
   const StatusDelivered = 9;
-  const StatusOnHold = 12;  
+  
   const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false); */
 
   const columns = [
@@ -75,7 +76,7 @@ const Pickup = () => {
       setContextMenuPosition({ x: clickX, y: clickY });
       setShowContextMenu(true);
       //added context menu for status onhand
-      if (selectedPickupOrder.status != StatusEmpty) {
+      if (selectedPickupOrder.status != StatusEmpty && StatusOnHold) {
         setShowContextMenu(false);
       }
     }
@@ -203,7 +204,7 @@ const Pickup = () => {
               });
               setTimeout(() => {
                 setShowSuccessAlert(false);
-              }, 3000);
+              }, 1000);
             } else {
               setShowErrorAlert(true);
               setTimeout(() => {
