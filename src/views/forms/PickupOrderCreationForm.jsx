@@ -272,9 +272,8 @@ const PickupOrderCreationForm = ({
         console.log('Result:', result);
         console.log('Info:', info);
 
-        // Verifica si el consignee actual es diferente del result obtenido
         if (consignee?.id !== result?.data.id) {
-            setconsignee(result?.data || null); // Actualiza el consignee solo si es diferente
+            setconsignee(result?.data || null); 
         }
 
         setFormData({
@@ -310,7 +309,7 @@ const handleShipperSelection = async (event) => {
     } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
     }`;
   setshipper(result?.data);
-  if (!formData.consigneeId) { // Solo establece el consignee si no está seleccionado aún
+  if (!formData.consigneeId) { 
       setconsignee(result?.data);
   }
   setFormData({
@@ -318,13 +317,8 @@ const handleShipperSelection = async (event) => {
     shipperId: id,
     shipperType: type,
     shipperInfo: info,
-    // No cambies los datos del consignee aquí
   });
 };
-
-
-
-
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
