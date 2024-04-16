@@ -292,6 +292,7 @@ const handleShipperSelection = async (event) => {
 
 
 
+
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
