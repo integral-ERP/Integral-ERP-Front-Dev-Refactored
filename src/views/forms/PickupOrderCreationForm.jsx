@@ -272,15 +272,17 @@ const PickupOrderCreationForm = ({
         console.log('Result:', result);
         console.log('Info:', info);
 
-        if (!formData.consigneeId && !formData.consigneeType && !formData.consigneeInfo) {
-            setconsignee(result?.data || null);
-            setFormData({
-                ...formData,
-                consigneeId: id,
-                consigneeType: type,
-                consigneeInfo: info,
-            });
+        // Verifica si el consignee actual es diferente del result obtenido
+        if (consignee?.id !== result?.data.id) {
+            setconsignee(result?.data || null); // Actualiza el consignee solo si es diferente
         }
+
+        setFormData({
+            ...formData,
+            consigneeId: id,
+            consigneeType: type,
+            consigneeInfo: info,
+        });
         console.log('Consignee state:', consignee);
         console.log('FormData state:', formData);
 
@@ -290,36 +292,39 @@ const PickupOrderCreationForm = ({
     }
 };
 
-  
-  const handleShipperSelection = async (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
+const handleShipperSelection = async (event) => {
+  const id = event?.id || "";
+  const type = event?.type || "";
 
-    let result;
-    if (type === "forwarding-agent") {
+  let result;
+  if (type === "forwarding-agent") {
       result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
+  }
+  if (type === "customer") {
       result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
+  }
+  if (type === "vendor") {
       result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-      }`;
-    setshipper(result?.data);
-    setconsignee(result?.data);
-    setFormData({
-      ...formData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    });
-  };
+  }
+  const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    }`;
+  setshipper(result?.data);
+  if (!formData.consigneeId) { // Solo establece el consignee si no está seleccionado aún
+      setconsignee(result?.data);
+  }
+  setFormData({
+    ...formData,
+    shipperId: id,
+    shipperType: type,
+    shipperInfo: info,
+    // No cambies los datos del consignee aquí
+  });
+};
+
+
+
+
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
