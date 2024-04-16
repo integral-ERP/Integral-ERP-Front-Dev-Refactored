@@ -22,7 +22,7 @@ import EventCreationForm from "./EventCreationForm";
 import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
-
+import { fetchFormData } from "./DataFetcher";
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -59,6 +59,7 @@ const ReceiptCreationForm = ({
   const [events, setEvents] = useState([]);
   const [attachments, setattachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
+  console.log("consigneeOptions", consigneeOptions);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
   const [shipperOptions, setShipperOptions] = useState([]);
@@ -88,8 +89,26 @@ const ReceiptCreationForm = ({
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
 
+  useEffect(() => {
+    fetchFormData()
+      .then((data) => {
+        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
+        const customers = data.filter(item => item.type === 'customer');
+        const vendors = data.filter(item => item.type === 'vendor');
+        const employees = data.filter(item => item.type === 'employee');
+        const carriers = data.filter(item => item.type === 'carrier');
 
-  
+        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
+        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
+        setEmployeeOptions([...employees].sort(SortArray));
+        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
+        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+      });
+  }, []);
   
 
   useEffect(() => {
@@ -246,36 +265,6 @@ const ReceiptCreationForm = ({
   })
   }
 
-  const handleConsigneeSelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    if (type === "Carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-
-    const info = `${result.data?.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
-    setconsignee(result.data);
-    setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    });
-  };
-
   const handleClientToBillSelection = async (event) => {
     const type = event.target.value;
     const id =
@@ -288,6 +277,36 @@ const ReceiptCreationForm = ({
       ...formData,
       clientToBillId: id,
       clientToBillType: type,
+    });
+  };
+
+  const handleConsigneeSelection = (event) => {
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const selectedObject = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+  
+    if (!selectedObject) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+  
+    const info = `${selectedObject?.street_and_number || ""} - ${
+      selectedObject?.city || ""
+    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
+      selectedObject?.zip_code || ""
+    }`;
+  
+    setconsignee(selectedObject);
+    setdefaultValueConsignee(selectedObject);
+
+  
+    setFormData({
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
     });
   };
 
@@ -677,53 +696,6 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     }
   }, [creating, pickupOrder]);
 
-  const fetchFormData = async () => {
-    const forwardingAgents = (
-      await ForwardingAgentService.getForwardingAgents()
-    ).data.results;
-    const customers = (await CustomerService.getCustomers()).data.results;
-    const vendors = (await VendorService.getVendors()).data.results;
-    const employees = (await EmployeeService.getEmployees()).data.results;
-    const carriers = (await CarrierService.getCarriers()).data.results;
-
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
-
-    const forwardingAgentsWithType = addTypeToObjects(
-      forwardingAgents,
-      "forwarding-agent"
-    );
-    const customersWithType = addTypeToObjects(customers, "customer");
-    const vendorsWithType = addTypeToObjects(vendors, "vendor");
-    const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "Carrier");
-
-    const issuedByOptions = [...forwardingAgentsWithType];
-    const destinationAgentOptions = [...forwardingAgentsWithType];
-    const employeeOptions = [...employeesWithType];
-    const shipperOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-    ];
-
-    const consigneeOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-
-    const carrierOptions = [...carriersWithType];
-
-    setIssuedByOptions(issuedByOptions.sort(SortArray));
-    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
-    setEmployeeOptions(employeeOptions.sort(SortArray));
-    setShipperOptions(shipperOptions.sort(SortArray));
-    setConsigneeOptions(consigneeOptions.sort(SortArray));
-    setCarrierOptions(carrierOptions.sort(SortArray));
-    setSupplierOptions(carrierOptions.sort(SortArray));
-  };
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
