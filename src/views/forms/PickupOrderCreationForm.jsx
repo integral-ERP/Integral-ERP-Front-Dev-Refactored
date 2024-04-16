@@ -276,7 +276,6 @@ const PickupOrderCreationForm = ({
   
     setshipper(selectedObject);
     setdefaultValueShipper(selectedObject);
-    setdefaultValueConsignee(selectedObject);
 
   
     setFormData({
