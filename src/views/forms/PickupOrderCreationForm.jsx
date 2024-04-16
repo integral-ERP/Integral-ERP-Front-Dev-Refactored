@@ -272,7 +272,7 @@ const PickupOrderCreationForm = ({
         console.log('Result:', result);
         console.log('Info:', info);
 
-        if (consignee?.id !== result?.data.id) {
+        if (consignee?.id == result?.data.id) {
             setconsignee(result?.data || null); 
         }
 
@@ -318,7 +318,12 @@ const handleShipperSelection = async (event) => {
     shipperType: type,
     shipperInfo: info,
   });
+
+  if (!formData.consigneeId) {
+    handleConsigneeSelection(event);
+  }
 };
+
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
