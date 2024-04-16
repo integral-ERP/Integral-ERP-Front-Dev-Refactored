@@ -1,10 +1,15 @@
+import React, { useState } from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
 import logotextcolor from "../../img/logotextcolor.png";
 import bwipjs from "bwip-js";
+import Alert from "@mui/material/Alert";
 
 pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
+
+
+
 
 const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
@@ -14,6 +19,8 @@ const GenerateReceiptPDF = (data, numCon) => {
   const cantidadPaquete = data.commodities.length;
   const location =  data.commodities[0].locationCode;
   const serialID =  data.commodities[0].id;
+
+  // const [showWarningAlert, setShowWarningAlert] = useState();
 
   console.log("location = ", location);
   console.log("cantidadPaquete = ", cantidadPaquete);
@@ -436,7 +443,7 @@ const GenerateReceiptPDF = (data, numCon) => {
 
                     [
                       {
-                        text: [`HERE TRACKING`],
+                        text: [` `],
                         bold: true,
                         alignment: `left`,
                         margin: [0, 0, 0, 0],
@@ -527,58 +534,67 @@ const GenerateReceiptPDF = (data, numCon) => {
 // ----------------------------------------------------------------------------------------
             ];
           };
-        
-          const pdfContent = [];
 
-          
-          var contador = 0 ;
-          data.commodities?.forEach((commodity) => {
-            //------------------------------------------------
-            contador++;
-            console.log("contador = ", contador);
-            //------------------------------------------------
-            let canvas = null;
-            let barcodeImage = null;
-            canvas = document.createElement("canvas");
-            var barra = data.commodities[0].id;
-            console.log("barra = ",barra)
-            const barcodeOptions = {
-              bcid: "code128", // Barcode type (e.g., code128),
-              text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + contador,
-              height: 20, // Height of the barcode
-              includetext: true, // Include human-readable text below the barcode
-              textxalign: "center",
-              bold: true,
-            };
-            barcodeOptions.text = barcodeOptions.text.toUpperCase();
-            try {
-              canvas = bwipjs.toCanvas(canvas, barcodeOptions);
-              barcodeImage = canvas.toDataURL();
-            } catch (error) {
-              reject(error);
-            }
-
-            const currentPageContent = generatePageContent(commodity.weight, commodity.description, contador, commodity.locationCode, barcodeImage);
-            console.log("currentPageContent = ", currentPageContent);
-
-            pdfContent.push(...currentPageContent);
-        
-              if (pdfContent.length / 3 < numPages) {
-                pdfContent.push({ text: "", pageBreak: "after" });
-            }
-          });
-        
-          const pdfDefinition = {
-            content: pdfContent,
+          if (!data.consigneeObj?.data?.obj?.city || data.number === undefined || data.number === null) {
+            // Verificar si algún campo está vacío o no definido
+            // console.log('Por favor completa todos los campos necesarios.');
+            window.alert("Please complete the sender and recipient information.\nDon't leave empty fields.");
             
-            // Otros ajustes del PDF...
-          };
+          } else {
+            const pdfContent = [];
+          
+            var contador = 0 ;
+            data.commodities?.forEach((commodity) => {
+              //------------------------------------------------
+              contador++;
+              console.log("contador = ", contador);
+              //------------------------------------------------
+              let canvas = null;
+              let barcodeImage = null;
+              canvas = document.createElement("canvas");
+              var barra = data.commodities[0].id;
+              console.log("barra = ",barra)
+              const barcodeOptions = {
+                bcid: "code128", // Barcode type (e.g., code128),
+                text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + contador,
+                height: 20, // Height of the barcode
+                includetext: true, // Include human-readable text below the barcode
+                textxalign: "center",
+                bold: true,
+              };
+              barcodeOptions.text = barcodeOptions.text.toUpperCase();
+              try {
+                canvas = bwipjs.toCanvas(canvas, barcodeOptions);
+                barcodeImage = canvas.toDataURL();
+              } catch (error) {
+                reject(error);
+              }
+  
+              const currentPageContent = generatePageContent(commodity.weight, commodity.description, contador, commodity.locationCode, barcodeImage);
+              console.log("currentPageContent = ", currentPageContent);
+  
+              pdfContent.push(...currentPageContent);
+          
+                if (pdfContent.length / 3 < numPages) {
+                  pdfContent.push({ text: "", pageBreak: "after" });
+              }
+            });
 
-          const pdfGenerator = pdfMake.createPdf(pdfDefinition);
-          pdfGenerator.getBlob((blob) => {
+            const pdfDefinition = {
+              content: pdfContent,
+              
+              // Otros ajustes del PDF...
+            };
+
+            const pdfGenerator = pdfMake.createPdf(pdfDefinition);
+            pdfGenerator.getBlob((blob) => {
             const pdfUrl = URL.createObjectURL(blob);
             resolve(pdfUrl);
           });
+
+          }
+        
+          
         };
         reader.readAsDataURL(imageBlob); // Read the logo image
       })
