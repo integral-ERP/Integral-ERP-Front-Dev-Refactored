@@ -149,9 +149,9 @@ const PickupOrderCreationForm = ({
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -160,33 +160,22 @@ const PickupOrderCreationForm = ({
       issuedByInfo: info,
     });
   };
-
+  
   const handlePickUpSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const selectedObject = pickupLocationOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
       }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
-      // pickupInfo: info,
       pickupLocationInfo: info,
       pickupLocationType: type,
     });
   };
-
+  
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
   };
@@ -242,93 +231,67 @@ const PickupOrderCreationForm = ({
     const type = event?.type || "";
     console.log('ID:', id);
     console.log('Type:', type);
+    const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
 
-    let result;
-    let info = "";
-    try {
-        switch (type) {
-            case "forwarding-agent":
-                result = await ForwardingAgentService.getForwardingAgentById(id);
-                break;
-            case "customer":
-                result = await CustomerService.getCustomerById(id);
-                break;
-            case "vendor":
-                result = await VendorService.getVendorByID(id);
-                break;
-            case "Carrier":
-                result = await CarrierService.getCarrierById(id);
-                break;
-            default:
-                throw new Error(`Unsupported consignee type: ${type}`);
-        }
-        console.log('Switch case type:', type);
-
-        if (result) {
-            info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-                } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-                }`;
-        }
-        console.log('Result:', result);
-        console.log('Info:', info);
-
-        if (consignee?.id == result?.data.id) {
-            setconsignee(result?.data || null); 
-        }
-
-        setFormData({
-            ...formData,
-            consigneeId: id,
-            consigneeType: type,
-            consigneeInfo: info,
-        });
-        console.log('Consignee state:', consignee);
-        console.log('FormData state:', formData);
-
-        console.log('Datos actualizados en form', formData)
-    } catch (error) {
-        console.error("Error handling consignee selection:", error);
+    if (!selectedObject) {
+        console.error(`Unsupported consignee type: ${type}`);
+        return;
     }
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+        } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
+        }`;
+    if (consignee?.id === selectedObject.id) {
+        setconsignee(selectedObject);
+    }
+
+    setFormData({
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
+    });
+    console.log('Consignee state:', consignee);
+    console.log('FormData state:', formData);
+
+    console.log('Datos actualizados en form', formData)
 };
 
 const handleShipperSelection = async (event) => {
-  const id = event?.id || "";
-  const type = event?.type || "";
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const selectedObject = consigneeOptions.find(option => option.id === id && option.type === type);
 
-  let result;
-  if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-  }
-  if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-  }
-  if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-  }
-  const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-    }`;
-  setshipper(result?.data);
-  if (!formData.consigneeId) { 
-      setconsignee(result?.data);
-  }
-  
-  setFormData({
-    ...formData,
-    shipperId: id,
-    shipperType: type,
-    shipperInfo: info,
-    ...(formData.consigneeId ? {} : {
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    })
-  });
+    if (!selectedObject) {
+        console.error(`Unsupported shipper type: ${type}`);
+        return;
+    }
 
-  if (!formData.consigneeId) {
-    handleConsigneeSelection(event);
-  }
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+        } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
+        }`;
+
+    setshipper(selectedObject);
+
+    if (!formData.consigneeId) {
+        setconsignee(selectedObject);
+    }
+
+    setFormData({
+        ...formData,
+        shipperId: id,
+        shipperType: type,
+        shipperInfo: info,
+        ...(formData.consigneeId ? {} : {
+            consigneeId: id,
+            consigneeType: type,
+            consigneeInfo: info,
+        })
+    });
+    if (!formData.consigneeId) {
+        handleConsigneeSelection(event);
+    }
 };
+
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
