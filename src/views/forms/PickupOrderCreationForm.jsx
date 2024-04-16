@@ -593,9 +593,7 @@ const loadConsigneeSelectOptions = async () => {
       option = await VendorService.getVendorByID(id);
     }
     if (type === "agent") {
-      console.log('Fetching shipper data for id:', id);
       option = await ForwardingAgentService.getForwardingAgentById(id);
-      console.log('Fetched shipper data:', option?.data);
     }
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
@@ -612,9 +610,7 @@ const loadConsigneeSelectOptions = async () => {
       option = await VendorService.getVendorByID(id);
     }
     if (type === "agent") {
-      console.log('Fetching consignee data for id:', id);
       option = await ForwardingAgentService.getForwardingAgentById(id);
-      console.log('Fetched consignee data:', option?.data);
     }
     setdefaultValueConsignee(option?.data);
   };
@@ -826,7 +822,6 @@ const loadConsigneeSelectOptions = async () => {
             ? auxVar
             : formData.client_to_bill,
       };
-      console.log(clientToBill);
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
