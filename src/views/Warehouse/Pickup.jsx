@@ -452,7 +452,7 @@ const Pickup = () => {
             )}
 
             {selectedPickupOrder !== null && createWarehouseReceipt && (
-              <div className="layout-fluid">
+              <div className="layout-fluid_form">
                 <ReceiptCreationForm
                   pickupOrder={selectedPickupOrder}
                   closeModal={closeModalReceiptCreation}
