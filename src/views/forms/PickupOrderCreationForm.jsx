@@ -38,6 +38,7 @@ const PickupOrderCreationForm = ({
   const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [showExpenseForm, setshowExpenseForm] = useState(false);
   const [agent, setagent] = useState(null);
+  const [consignee, setconsignee] = useState(null);
   const [shipper, setshipper] = useState(null);
   const [pickuplocation, setpickuplocation] = useState(null);
   const [deliverylocation, setdeliverylocation] = useState(null);
@@ -136,7 +137,6 @@ const PickupOrderCreationForm = ({
       });
   }, []);
 
-  const [consignee, setconsignee] = useState(null);
 
 
 
@@ -229,51 +229,49 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = consigneeOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-
-    if (!selectedObject) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+        console.error(`Unsupported consignee type: ${type}`);
+        return;
+    }
+    const selectedConsignee = consigneeOptions.find(option => option.id === id && option.type === type);
+    if (!selectedConsignee) {
+        console.error(`Consignee not found with ID ${id} and type ${type}`);
+        return;
     }
 
-    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
-      }`;
-
-    setconsignee(selectedObject);
-    setdefaultValueConsignee(selectedObject);
-
-
+    const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
+        } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
+        }`;
+    setconsignee(selectedConsignee);
+    setdefaultValueConsignee(selectedConsignee);
     setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
     });
-  };
+};
+
 
   const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = shipperOptions.find(
+    const selectedShipper = shipperOptions.find(
       (option) => option.id === id && option.type === type
     );
 
-    if (!selectedObject) {
+    if (!selectedShipper) {
       console.error(`Unsupported shipper type: ${type}`);
       return;
     }
 
-    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
+    const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
+      } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
       }`;
 
-    setshipper(selectedObject);
-    setdefaultValueShipper(selectedObject);
-
-
+    setshipper(selectedShipper);
+    setdefaultValueShipper(selectedShipper);
     setFormData({
       ...formData,
       shipperId: id,
@@ -706,10 +704,10 @@ const PickupOrderCreationForm = ({
 
       const response = await PickupService.createConsignee(consignee);
       if (response.status === 201) {
-        setconsigneeRequest(response.data.id);
         formData.client_to_bill_type === "consignee"
-          ? (auxVar = response.data.id)
-          : "";
+        ? (auxVar = response.data.id)
+        : "";
+        setconsigneeRequest(response.data.id);
       }
     }
 
