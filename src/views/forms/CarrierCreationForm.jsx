@@ -221,12 +221,7 @@ const CarrierCreationForm = ({
 
   return (
     <div
-      style={{
-        maxWidth: "100%",
-        maxHeight: "100%",
-        overflowX: "auto",
-        overflowY: "auto",
-      }}
+   
     >
       <div className="form-container">
         <div className="company-form carrier">
