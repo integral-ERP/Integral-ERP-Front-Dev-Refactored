@@ -38,6 +38,7 @@ const ReceiptCreationForm = ({
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
+  console.log('formdataupdated', formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -71,6 +72,7 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
+  const [supplierInfo, setsupplierInfo] = useState("");
 
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -138,6 +140,10 @@ const ReceiptCreationForm = ({
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
+
+    supplierId: "",
+    supplierType: "",
+    supplierInfo: "",
 
     consigneeId: "",
     consigneeType: "",
@@ -257,52 +263,50 @@ const ReceiptCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = consigneeOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-  
-    if (!selectedObject) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+        console.error(`Unsupported consignee type: ${type}`);
+        return;
     }
-  
-    const info = `${selectedObject?.street_and_number || ""} - ${
-      selectedObject?.city || ""
-    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""
-    }`;
-  
-    setconsignee(selectedObject);
-    setdefaultValueConsignee(selectedObject);
+    const selectedConsignee = consigneeOptions.find(option => option.id === id && option.type === type);
+    if (!selectedConsignee) {
+        console.error(`Consignee not found with ID ${id} and type ${type}`);
+        return;
+    }
 
-  
+    const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
+        } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
+        }`;
+    setconsignee(selectedConsignee);
+    setdefaultValueConsignee(selectedConsignee);
     setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
     });
-  };
+};
+  
 
   const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
     const type = event.type || formData.supplierType;
-    const selectedObject = shipperOptions.find(
+    const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
   
-    if (!selectedObject) {
+    if (!selectedSupplier) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
     }
   
-    const info = `${selectedObject?.street_and_number || ""} - ${
-      selectedObject?.city || ""
-    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""
+    const info = `${selectedSupplier?.street_and_number || ""} - ${
+      selectedSupplier?.city || ""
+    } - ${selectedSupplier?.state || ""} - ${selectedSupplier?.country || ""} - ${
+      selectedSupplier?.zip_code || ""
     }`;
   
-    setSupplier(info, selectedObject)
+    setSupplier(selectedSupplier)
   
     setFormData({
       ...formData,
@@ -563,7 +567,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
-    setdefaultValueConsignee(option.data);
+    setdefaultValueShipper(option.data);
   };
 
   const loadConsigneeOption = async (id, type) => {
@@ -580,7 +584,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
-    setdefaultValueShipper(option.data);
+    setdefaultValueConsignee(option.data);
   };
 
   const SortArray = (x, y) => {
@@ -692,6 +696,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
       };
+
+      console.log("updatedFormData", updatedFormData);
 
       setFormData(updatedFormData);
       setcanRender(true);
@@ -1395,8 +1401,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               <div className="col-6 text-start">
                 <Input
                   type="textarea"
-                  inputName="shipperinfo"
-                  placeholder="Shipper Location..."
+                  inputName="supplierInfo"
+                  placeholder="Supplier Location..."
                   value={formData.supplierInfo}
                   readonly={true}
                 />
