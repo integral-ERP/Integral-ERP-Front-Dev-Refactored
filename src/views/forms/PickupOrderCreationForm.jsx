@@ -39,8 +39,9 @@ const PickupOrderCreationForm = ({
   const [allStateUpdatesComplete, setAllStateUpdatesComplete] = useState(false);
   const [showIncomeForm, setshowIncomeForm] = useState(false);
   const [showExpenseForm, setshowExpenseForm] = useState(false);
-  const [consignee, setconsignee] = useState(null);
   const [agent, setagent] = useState(null);
+  const [consignee, setconsignee] = useState(null);
+  console.log('Este es el consignee', consignee);
   const [shipper, setshipper] = useState(null);
   const [pickuplocation, setpickuplocation] = useState(null);
   const [deliverylocation, setdeliverylocation] = useState(null);
@@ -142,6 +143,10 @@ const PickupOrderCreationForm = ({
       });
   }, []);
 
+
+
+
+
   useEffect(() => {
 
   }, [employeeOptions, formData.employeeId]);
@@ -150,9 +155,9 @@ const PickupOrderCreationForm = ({
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -165,24 +170,13 @@ const PickupOrderCreationForm = ({
   const handlePickUpSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const selectedObject = pickupLocationOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
       }`;
     setFormData({
       ...formData,
       pickupLocationId: id,
-      // pickupInfo: info,
       pickupLocationInfo: info,
       pickupLocationType: type,
     });
@@ -238,60 +232,65 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleConsigneeSelection = async (event) => {
+  const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+        console.error(`Unsupported consignee type: ${type}`);
+        return;
+    }
+    const selectedConsignee = consigneeOptions.find(option => option.id === id && option.type === type);
+    if (!selectedConsignee) {
+        console.error(`Consignee not found with ID ${id} and type ${type}`);
+        return;
+    }
 
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    if (type === "Carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-      }`;
-    setconsignee(result?.data);
+    const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
+        } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
+        }`;
+    setconsignee(selectedConsignee);
+    setdefaultValueConsignee(selectedConsignee);
     setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
+        ...formData,
+        consigneeId: id,
+        consigneeType: type,
+        consigneeInfo: info,
     });
-  };
+};
 
-  const handleShipperSelection = async (event) => {
+
+  const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+      const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
+      if (!selectedShipper) {
+          console.error(`Shipper not found with ID ${id} and type ${type}`);
+          return;
+      }
 
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
+      } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
       }`;
-    setshipper(result?.data);
+
+    setshipper(selectedShipper);
+    setdefaultValueShipper(selectedShipper);
     setFormData({
       ...formData,
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      consigneeId: id,
+      consigneeType: type,
     });
   };
+
+
 
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
@@ -328,6 +327,7 @@ const PickupOrderCreationForm = ({
       setFormData({
         ...formData,
         client_to_bill_type: type,
+        client_to_bill: id,
       });
     } else {
       setCTBType(event?.type);
@@ -507,42 +507,24 @@ const PickupOrderCreationForm = ({
     return options;
   };
 
-  const loadShipperSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
+  const loadShipperSelectOptions = async () => {
+    const options = shipperOptions.map(option => ({
+      ...option,
+      value: option.id,
+      label: option.name
+    }));
     return options;
   };
 
-  const loadConsigneeSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "Carrier"),
-    ];
-
+  const loadConsigneeSelectOptions = async () => {
+    const options = consigneeOptions.map(option => ({
+      ...option,
+      value: option.id,
+      label: option.name
+    }));
     return options;
   };
+
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -618,7 +600,7 @@ const PickupOrderCreationForm = ({
     if (type === "Carrier") {
       option = await CarrierService.getCarrierById(id);
     }
-    setdefaultValueConsignee(option.data);
+    setdefaultValueShipper(option?.data);
   };
 
   const loadConsigneeOption = async (id, type) => {
@@ -632,9 +614,9 @@ const PickupOrderCreationForm = ({
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
-
-    setdefaultValueShipper(option?.data);
+    setdefaultValueConsignee(option?.data);
   };
+
 
   useEffect(() => {
     fetchFormData();
@@ -728,11 +710,11 @@ const PickupOrderCreationForm = ({
       };
 
       const response = await PickupService.createConsignee(consignee);
-      if (response.status === 201) {
-        setconsigneeRequest(response.data.id);
+       if (response.status === 201) {
         formData.client_to_bill_type === "consignee"
-          ? (auxVar = response.data.id)
-          : "";
+        ? (auxVar = response.data.id)
+        : "";
+        setconsigneeRequest(response.data.id);
       }
     }
 
@@ -842,7 +824,6 @@ const PickupOrderCreationForm = ({
             ? auxVar
             : formData.client_to_bill,
       };
-      console.log(clientToBill);
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
@@ -1280,11 +1261,7 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleShipperSelection(e);
                     }}
-                    value={shipperOptions.find(
-                      (option) =>
-                        option.id === formData.shipperId &&
-                        option.type === formData.shipperType
-                    )}
+                    value={defaultValueShipper}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
@@ -1395,11 +1372,7 @@ const PickupOrderCreationForm = ({
                     <AsyncSelect
                       id="consignee"
                       onChange={(e) => { handleConsigneeSelection(e); }}
-                      value={consigneeOptions.find(
-                        (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type === formData.consigneeType
-                      )}
+                      value={defaultValueConsignee}
                       isClearable={true}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
@@ -1578,136 +1551,136 @@ const PickupOrderCreationForm = ({
         <label className="button-charge" htmlFor="toggleBoton">Commodities</label>
 
         <div className="row w-100" id="miDiv">
-        <div className="">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              {editingComodity ? (
-                <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
-              ) : (
-                <h3>Commodities</h3>
+          <div className="">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                {editingComodity ? (
+                  <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
+                ) : (
+                  <h3>Commodities</h3>
 
-              )}
-              <span></span>
-            </div>
-            <CommodityCreationForm
-              onCancel={setshowCommodityCreationForm}
-              commodities={commodities}
-              setCommodities={setcommodities}
-              setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-              /* added tres parametros */
-              editing={editingComodity}
-              commodity={selectedCommodity}
-              setEditingComodity={setEditingComodity}
-              locationEnabled={true}
-            />
-            <br />
-
-            {showCommodityCreationForm && (
-              <div className="text-center">
-                <Table
-                  noScroll
-                  data={commodities}
-                  columns={[
-                    "Description",
-                    " Length",
-                    " Height",
-                    " Width",
-                    " Weight",
-                    " Location",
-                    " Volume (ft3)",
-                    " Weight (lb)",
-                    "Options",
-                  ]}
-                  onSelect={handleSelectCommodity} // Make sure this line is correct
-                  selectedRow={selectedCommodity}
-                  onDelete={handleCommodityDelete}
-                  onEdit={handleCommodityEdit}
-                  onInspect={() => { setshowCommodityInspect(!showCommodityInspect); }}
-                  onAdd={() => { }}
-                  showOptions={false}
-                  //added no double click
-                  Nodoubleclick={true}
-                /* deleted variable hiden button trash */
-                />
-                {/* added view commodities */}
-                {showCommodityInspect && (
-                  <div className="repacking-container">
-                    <div className="main-commodity">
-                      <p className="item-description">
-                        {selectedCommodity.description}
-                      </p>
-                      <p className="item-info">
-                        Weight: {selectedCommodity.weight}
-                      </p>
-                      <p className="item-info">
-                        Height: {selectedCommodity.height}
-                      </p>
-                      <p className="item-info">Width: {selectedCommodity.width}</p>
-                      <p className="item-info">
-                        Length: {selectedCommodity.length}
-                      </p>
-                      <p className="item-info">
-                        Volumetric Weight: {selectedCommodity.volumetricWeight}
-                      </p>
-                      <p className="item-info">
-                        Chargeable Weight: {selectedCommodity.chargedWeight}
-                      </p>
-                      <p className="item-info">
-                        Location: {selectedCommodity.locationCode}
-                      </p>
-                      {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
-                    </div>
-                    {/*  fix the repacking show internalCommodities for edition */}
-                    {selectedCommodity.internalCommodities &&
-                      selectedCommodity.internalCommodities.map((com) => (
-                        <div
-                          key={com.id}
-                          className="card"
-                          style={{
-                            display: "flex",
-                            textAlign: "left",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <p className="item-description">{com.description}</p>
-                          <p className="item-info">Weight: {com.weight}</p>
-                          <p className="item-info">Height: {com.height}</p>
-                          <p className="item-info">Width: {com.width}</p>
-                          <p className="item-info">Length: {com.length}</p>
-                          <p className="item-info">
-                            Volumetric Weight: {com.volumetricWeight}
-                          </p>
-                          <p className="item-info">
-                            Chargeable Weight: {com.chargedWeight}
-                          </p>
-                          <p className="item-info">Location: {com.locationCode}</p>
-                          {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                        </div>
-                      ))}
-                  </div>
                 )}
-                <button
-                  className="button-save"
-                  type="button"
-                  onClick={() => {
-                    setshowRepackingForm(!showRepackingForm);
-                  }}
-                >
-                  Repack
-                </button>
-                <br />
-                <br />
-                <br />
-
-                {showRepackingForm && (
-                  <RepackingForm
-                    commodities={commodities}
-                    setCommodities={setcommodities}
-                  />
-                )}
+                <span></span>
               </div>
-            )}
-          </div>
+              <CommodityCreationForm
+                onCancel={setshowCommodityCreationForm}
+                commodities={commodities}
+                setCommodities={setcommodities}
+                setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+                /* added tres parametros */
+                editing={editingComodity}
+                commodity={selectedCommodity}
+                setEditingComodity={setEditingComodity}
+                locationEnabled={true}
+              />
+              <br />
+
+              {showCommodityCreationForm && (
+                <div className="text-center">
+                  <Table
+                    noScroll
+                    data={commodities}
+                    columns={[
+                      "Description",
+                      " Length",
+                      " Height",
+                      " Width",
+                      " Weight",
+                      " Location",
+                      " Volume (ft3)",
+                      " Weight (lb)",
+                      "Options",
+                    ]}
+                    onSelect={handleSelectCommodity} // Make sure this line is correct
+                    selectedRow={selectedCommodity}
+                    onDelete={handleCommodityDelete}
+                    onEdit={handleCommodityEdit}
+                    onInspect={() => { setshowCommodityInspect(!showCommodityInspect); }}
+                    onAdd={() => { }}
+                    showOptions={false}
+                    //added no double click
+                    Nodoubleclick={true}
+                  /* deleted variable hiden button trash */
+                  />
+                  {/* added view commodities */}
+                  {showCommodityInspect && (
+                    <div className="repacking-container">
+                      <div className="main-commodity">
+                        <p className="item-description">
+                          {selectedCommodity.description}
+                        </p>
+                        <p className="item-info">
+                          Weight: {selectedCommodity.weight}
+                        </p>
+                        <p className="item-info">
+                          Height: {selectedCommodity.height}
+                        </p>
+                        <p className="item-info">Width: {selectedCommodity.width}</p>
+                        <p className="item-info">
+                          Length: {selectedCommodity.length}
+                        </p>
+                        <p className="item-info">
+                          Volumetric Weight: {selectedCommodity.volumetricWeight}
+                        </p>
+                        <p className="item-info">
+                          Chargeable Weight: {selectedCommodity.chargedWeight}
+                        </p>
+                        <p className="item-info">
+                          Location: {selectedCommodity.locationCode}
+                        </p>
+                        {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                      </div>
+                      {/*  fix the repacking show internalCommodities for edition */}
+                      {selectedCommodity.internalCommodities &&
+                        selectedCommodity.internalCommodities.map((com) => (
+                          <div
+                            key={com.id}
+                            className="card"
+                            style={{
+                              display: "flex",
+                              textAlign: "left",
+                              fontSize: "15px",
+                            }}
+                          >
+                            <p className="item-description">{com.description}</p>
+                            <p className="item-info">Weight: {com.weight}</p>
+                            <p className="item-info">Height: {com.height}</p>
+                            <p className="item-info">Width: {com.width}</p>
+                            <p className="item-info">Length: {com.length}</p>
+                            <p className="item-info">
+                              Volumetric Weight: {com.volumetricWeight}
+                            </p>
+                            <p className="item-info">
+                              Chargeable Weight: {com.chargedWeight}
+                            </p>
+                            <p className="item-info">Location: {com.locationCode}</p>
+                            {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                  <button
+                    className="button-save"
+                    type="button"
+                    onClick={() => {
+                      setshowRepackingForm(!showRepackingForm);
+                    }}
+                  >
+                    Repack
+                  </button>
+                  <br />
+                  <br />
+                  <br />
+
+                  {showRepackingForm && (
+                    <RepackingForm
+                      commodities={commodities}
+                      setCommodities={setcommodities}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
