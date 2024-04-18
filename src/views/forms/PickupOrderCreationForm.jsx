@@ -22,6 +22,7 @@ import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
+import ReceiptService from "../../services/ReceiptService";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -31,6 +32,7 @@ const PickupOrderCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
   showBModal,
+  fromPickUp,//added fromPickUp para save commodities
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -71,6 +73,9 @@ const PickupOrderCreationForm = ({
   const [CTBType, setCTBType] = useState("");
 
   const [editingComodity, setEditingComodity] = useState(false);
+  //added events y attachments para save commodities
+  const [events, setEvents] = useState([]);
+  const [attachments, setattachments] = useState([]);
 
 
   const formFormat = {
@@ -979,6 +984,81 @@ const PickupOrderCreationForm = ({
     }
   }, []);
 
+  //added save commodities
+  useEffect(() => {
+    checkUpdatesComplete();
+    if (allStateUpdatesComplete) {
+      const createPickUp = async () => {
+        let rawData = {
+          status: 4, 
+          number: formData.number,
+          creation_date: formData.createdDateAndTime,
+          issued_by: formData.issuedById,
+          destination_agent: formData.destinationAgentId,
+          employee: formData.employeeId,
+          supplier: formData.supplierId,
+          shipper: shipperRequest,
+          consignee: consigneeRequest,
+          client_to_bill: clientToBillRequest,
+          main_carrier: formData.mainCarrierdId,
+          commodities: commodities,
+          charges: charges,
+          events: events,
+          attachments: attachments.map((attachment) => {
+            return {
+              name: attachment.name,
+              type: attachment.type,
+              base64: attachment.base64,
+            };
+          }),
+          notes: formData.notes,
+          pro_number: formData.proNumber,
+          tracking_number: formData.trackingNumber,
+          invoice_number: formData.invoiceNumber,
+          purchase_order_number: formData.purchaseOrderNumber,
+          weight: weightUpdated,
+        };
+        const response = await (creating
+          ? ReceiptService.createReceipt(rawData)
+          : ReceiptService.updateReceipt(pickupOrder.id, rawData));
+
+        if (response.status >= 200 && response.status <= 300) {
+          if (fromPickUp) {
+            console.log("BANDERA-1 = ", fromPickUp);
+            //added onhand status
+            const statusOnhand = 4;
+            const newPickup = { ...pickupOrder, status: statusOnhand };
+            PickupService.updatePickup(pickupOrder.id, newPickup);
+          }
+
+          if (!fromPickUp) {
+            //added onhand status
+            console.log("BANDERA-2 = ", fromPickUp);
+          }
+          setcurrentPickUpNumber(currentPickUpNumber + 1);
+          setShowSuccessAlert(true);
+          setTimeout(() => {
+            closeModal();
+            onpickupOrderDataChange();
+            setShowSuccessAlert(false);
+            setFormData(formFormat);
+            //added redirect to warehouse receipt
+            window.location.href = `/warehouse/receipt`;
+          }, 2000);
+        } else {
+          setShowErrorAlert(true);
+        }
+      };
+      createPickUp();
+    }
+  }, [
+    shipperRequest,
+    consigneeRequest,
+    allStateUpdatesComplete,
+    clientToBillRequest,
+  ]);
+
+  
   const getAsyncSelectValue = () => {
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
