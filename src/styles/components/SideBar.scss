@@ -474,6 +474,7 @@
   }
   
   .content-page {
+    // overflow-y: scroll;
     width: 99%;
     height: 90%;
     text-align: center;
@@ -487,7 +488,7 @@
     transition: all 0.5s ease;
     background-repeat: no-repeat;
     background-size: cover;
-    overflow-y: auto;
+    overflow-y: auto !important;
     overflow-x: hidden;
     // margin-left: 21rem !important;
   }
