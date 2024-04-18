@@ -39,7 +39,6 @@ const PickupOrderCreationForm = ({
   const [showExpenseForm, setshowExpenseForm] = useState(false);
   const [agent, setagent] = useState(null);
   const [consignee, setconsignee] = useState(null);
-  console.log('Este es el consignee', consignee);
   const [shipper, setshipper] = useState(null);
   const [pickuplocation, setpickuplocation] = useState(null);
   const [deliverylocation, setdeliverylocation] = useState(null);
@@ -47,8 +46,7 @@ const PickupOrderCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -70,7 +68,6 @@ const PickupOrderCreationForm = ({
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
   const [CTBType, setCTBType] = useState("");
-
   const [editingComodity, setEditingComodity] = useState(false);
 
 
@@ -184,30 +181,23 @@ const PickupOrderCreationForm = ({
   const handleDeliveryLocationSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-
-    let result;
-    if (type === "forwarding-agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
+    const deliveryLocation = deliveryLocationOptions.find(option => option.id === id && option.type === type); 
+    if (deliveryLocation) {
+      const info = `${deliveryLocation?.street_and_number || ""} - ${deliveryLocation?.city || ""
+        } - ${deliveryLocation?.state || ""} - ${deliveryLocation?.country || ""} - ${deliveryLocation?.zip_code || ""
+        }`;
+      setdeliverylocation(deliveryLocation);
+      setFormData({
+        ...formData,
+        deliveryLocationId: id,
+        deliveryLocationInfo: info,
+        deliveryLocationType: type,
+      });
+    } else {
+      console.error("Error: No se encontró la ubicación de entrega con el id y tipo especificados.");
     }
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
-    }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
-    }
-    if (type === "Carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
-      }`;
-    setFormData({
-      ...formData,
-      deliveryLocationId: id,
-      deliveryLocationInfo: info,
-      deliveryLocationType: type,
-    });
   };
+  
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
