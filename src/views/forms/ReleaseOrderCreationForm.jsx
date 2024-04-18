@@ -805,12 +805,12 @@ const ReleaseOrderCreationForm = ({
           columns={[
             "Description",
             " Length",
-            " Height",
-            " Width",
-            " Weight",
+            " Width (in)",
+            " Height (in)",
+            " Weight (lb)",
             " Location",
             " Volume (ft3)",
-            " Weight (lb)",
+            // " Weight (lb)",
           ]}
           onAdd={() => {}}
           showOptions={false}

@@ -938,7 +938,7 @@ const PickupOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 2000 /* 2147483647 */);
+          }, 500 /* 2147483647 */);
         } else {
           setShowErrorAlert(true);
         }
@@ -971,7 +971,7 @@ const PickupOrderCreationForm = ({
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          status: 4, 
+          status: 14, 
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           issued_by: formData.issuedById,
@@ -1582,13 +1582,13 @@ const PickupOrderCreationForm = ({
                     data={commodities}
                     columns={[
                       "Description",
-                      " Length",
-                      " Height",
-                      " Width",
-                      " Weight",
+                      " Length (in)",
+                      " Width (in)",
+                      " Height (in)",
+                      " Weight (lb)",
                       " Location",
                       " Volume (ft3)",
-                      " Weight (lb)",
+                      // " Weight (lb)",
                       "Options",
                     ]}
                     onSelect={handleSelectCommodity} // Make sure this line is correct

@@ -1516,13 +1516,13 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               data={commodities}
               columns={[
                 "Description",
-                " Length",
-                " Height",
-                " Width",
-                " Weight",
+                " Length (in)",
+                " Width (in)",
+                " Height (in)",
+                " Weight (lb)",
                 " Location",
                 " Volume (ft3)",
-                " Weight (lb)",
+                // " Weight (lb)",
                 "Options",
               ]}
               onSelect={handleSelectCommodity} // Make sure this line is correct
