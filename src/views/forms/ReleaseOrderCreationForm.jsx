@@ -93,7 +93,6 @@ const ReleaseOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    
     const type = event.target?.value;
     if (type) {
       if (type === "releasedTo") {
@@ -108,25 +107,22 @@ const ReleaseOrderCreationForm = ({
     } else {
       const id = event.id;
       const type = event.type;
-      
+
       setFormData({ ...formData, clientToBillType: type, clientToBillId: id });
     }
   };
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
-    console.log("carrierId",id);
+    console.log("carrierId", id);
     setFormData({
       ...formData,
       carrierId: id,
-      
     });
-    console.log("carrierId",carrierId)
+    console.log("carrierId", carrierId);
   };
 
-  useEffect(() => {
-    
-  }, [formData]);
+  useEffect(() => {}, [formData]);
 
   const handleReleasedToSelection = async (event) => {
     const id = event.id;
@@ -167,9 +163,7 @@ const ReleaseOrderCreationForm = ({
     }
   };
 
-
   const handleCommoditySelection = (receiptNumber, commodityID, id) => {
-
     const commodityList = [];
     const set = new Set(releaseIDs);
     set.add(id);
@@ -185,7 +179,7 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
     if (!creating && releaseOrder != null) {
       setcommodities(releaseOrder.commodities);
-      
+
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -214,7 +208,7 @@ const ReleaseOrderCreationForm = ({
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
       };
-      
+
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -287,7 +281,6 @@ const ReleaseOrderCreationForm = ({
 
     const options = addTypeToObjects(data, "employee");
 
-    
     return options;
   };
 
@@ -343,7 +336,6 @@ const ReleaseOrderCreationForm = ({
   }, [pickupNumber]);
 
   useEffect(() => {
-
     if (commodities.length > 0) {
       setFormData({ ...formData, status: 1 });
     }
@@ -371,7 +363,6 @@ const ReleaseOrderCreationForm = ({
 
       const response = await ReleaseService.createReleasedTo(releasedToC);
       if (response.status === 201) {
-        
         setReleasedTo(response.data.id);
       }
     }
@@ -414,7 +405,6 @@ const ReleaseOrderCreationForm = ({
 
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
-        
         setClientToBill(response.data.id);
       }
     }
@@ -424,7 +414,6 @@ const ReleaseOrderCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-      
 
       setWeightUpdated(totalWeight);
     }
@@ -446,7 +435,6 @@ const ReleaseOrderCreationForm = ({
         charges = [...charges, order.charges];
       });
 
-      
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
@@ -464,7 +452,7 @@ const ReleaseOrderCreationForm = ({
           pro_number: formData.pro_number,
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
-          main_carrierObj : formData.main_carrierObj,
+          main_carrierObj: formData.main_carrierObj,
           warehouse_receipt: formData.warehouseReceiptId,
           commodities: commodities,
         };
@@ -483,7 +471,6 @@ const ReleaseOrderCreationForm = ({
             window.location.reload();
           }, 2000);
         } else {
-          
           setShowErrorAlert(true);
         }
       };
@@ -510,7 +497,6 @@ const ReleaseOrderCreationForm = ({
           option.id === formData.releasedToId &&
           option.type === formData.releasedToType
       );
-      
     } else {
       selectedOption = releasedToOptions.find(
         (option) =>
@@ -524,111 +510,115 @@ const ReleaseOrderCreationForm = ({
 
   return (
     <div className="form-container">
-    <div className="company-form release-order">
-      <div className="row w-100">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h2>General</h2>
-              <span></span>
-            </div>
-            <div className="row mb-2">
-              <div className="space-release">
-              <p className="tex-p">Ware House Number : </p>
-              <div className="col-4 text-start">
-                <input
-                  className="tex-release"
-                  type="number"
-                  inputName="number"
-                  placeholder="Number..."
-                  value={formData.number}
-                  readonly={true}
-                  label="Ware House Number"
-                />
+      <div className="company-form release-order">
+        <div className="row w-100">
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h2>General</h2>
+                <span></span>
               </div>
-              </div>
-             
+              <div className="row mb-2">
+                <div className="space-release">
+                  <p className="tex-p">Ware House Number : </p>
+                  <div className="col-4 text-start">
+                    <input
+                      className="tex-release"
+                      type="number"
+                      inputName="number"
+                      placeholder="Number..."
+                      value={formData.number}
+                      readonly={true}
+                      label="Ware House Number"
+                    />
+                  </div>
+                </div>
 
-              <div className="col-4 text-start">
-                <label htmlFor="employee" className="form-label">
-                  Employee:
-                </label>
-                <AsyncSelect
-                  type="text"
-                  id="employee"
-                  // inputName="purchaseOrderNumber"
-                  value={employeeOptions.find((option) => option.id == formData.employeeId)}
+                <div className="col-4 text-start">
+                  <label htmlFor="employee" className="form-label">
+                    Employee:
+                  </label>
+                  <AsyncSelect
+                    type="text"
+                    id="employee"
+                    // inputName="purchaseOrderNumber"
+                    value={employeeOptions.find(
+                      (option) => option.id == formData.employeeId
+                    )}
                     // value ={formData.employeeOptions.find(option)}
-                  // value={(option) => option.name}
-                  // onChange={(e) => {
-                  //   handleEmployeeSelection(e);
-                  // }}
-                  // isClearable={true}
-                  // defaultOptions={employeeOptions}
-                  // loadOptions={loadEmployeeSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  // getOptionValue={(option) => option.id}
-                />
-              </div>
-
-              <div className="col-4 text-start">
-                <label htmlFor="issuedBy" className="form-label">
-                  Issued By:
-                </label>
-                <AsyncSelect
-                  id="issuedBy"
-                  value={issuedByOptions.find(
-                    (option) => option.id === formData.issuedById
-                  )}
-                  // onChange={(e) => {
-                  //   handleIssuedBySelection(e);
-                  // }}
-                  // isClearable={true}
-                  // placeholder="Search and select..."
-                  // defaultOptions={issuedByOptions}
-                  // loadOptions={loadIssuedBySelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  // getOptionValue={(option) => option.id}
-                />
-              </div>
-              
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-4 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p id="creation-date" className="text-date">Creation Date and Time</p>
-                  <DateTimePicker
-                    // label="Creation Date and Time"
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
+                    // value={(option) => option.name}
+                    // onChange={(e) => {
+                    //   handleEmployeeSelection(e);
+                    // }}
+                    // isClearable={true}
+                    // defaultOptions={employeeOptions}
+                    // loadOptions={loadEmployeeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    // getOptionValue={(option) => option.id}
                   />
-                </LocalizationProvider>
-              </div>
-              <div className="col-4 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p id="creation-date" className="text-date">Release Date and Time</p>
-                  <DateTimePicker
-                    // label="Release Date and Time"
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                      })
-                    }
+                </div>
+
+                <div className="col-4 text-start">
+                  <label htmlFor="issuedBy" className="form-label">
+                    Issued By:
+                  </label>
+                  <AsyncSelect
+                    id="issuedBy"
+                    value={issuedByOptions.find(
+                      (option) => option.id === formData.issuedById
+                    )}
+                    // onChange={(e) => {
+                    //   handleIssuedBySelection(e);
+                    // }}
+                    // isClearable={true}
+                    // placeholder="Search and select..."
+                    // defaultOptions={issuedByOptions}
+                    // loadOptions={loadIssuedBySelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    // getOptionValue={(option) => option.id}
                   />
-                </LocalizationProvider>
+                </div>
               </div>
 
-              {/* <div className="col-4 text-start">
+              <div className="row mb-3">
+                <div className="col-4 text-start">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Creation Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Creation Date and Time"
+                      className="font-right"
+                      value={dayjs(formData.createdDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+                <div className="col-4 text-start">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Release Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Release Date and Time"
+                      className="font-right"
+                      value={dayjs(formData.createdDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+
+                {/* <div className="col-4 text-start">
                 <label htmlFor="releasedTo" className="form-label">
                   Released To:
                 </label>
@@ -672,9 +662,9 @@ const ReleaseOrderCreationForm = ({
                   />
                 )}
               </div> */}
-            </div>
+              </div>
 
-            {/* <div className="row align-items-center mb-3">
+              {/* <div className="row align-items-center mb-3">
               <div className="col-6 text-start">
                 <label htmlFor="clientToBill" className="form-label">
                   Client to Bill:
@@ -711,113 +701,103 @@ const ReleaseOrderCreationForm = ({
                 />
               </div> 
             </div>*/}
+            </div>
           </div>
-        </div> 
 
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h2>Carrier</h2>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="mainCarrier" className="form-label">
-                  Carrier:
-                </label>
-                <Input
-                  type="text"
-                  inputName="purchaseOrderNumber"
-                  placeholder="Carrier . . . "
-                  value={formData.main_carrierObj.name}
-                  
-                />
-                {/* <AsyncSelect
-                  id="mainCarrier"
-                  value={carrierOptions.find(
-                    (option) => option.id === formData.carrierId
-                  )}
-                  onChange={(e) => {
-                    handleMainCarrierSelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={carrierOptions}
-                  loadOptions={loadCarrierSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                /> */}
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h2>Carrier</h2>
+                <span></span>
               </div>
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="trackingNumber"
-                  placeholder="Tracking Number..."
-                  value={formData.tracking_number}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, tracking_number: e.target.value })
-                  }
-                  label="Tracking Number"
-                />
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="mainCarrier" className="form-label">
+                    Carrier:
+                  </label>
+                  <Input
+                    type="text"
+                    inputName="purchaseOrderNumber"
+                    placeholder="Carrier . . . "
+                    value={formData.main_carrierObj.name}
+                  />
+                </div>
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="trackingNumber"
+                    placeholder="Tracking Number..."
+                    value={formData.tracking_number}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        tracking_number: e.target.value,
+                      })
+                    }
+                    label="Tracking Number"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="row align-items-center">
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="proNumber"
-                  placeholder="PRO Number..."
-                  value={formData.pro_number}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, pro_number: e.target.value })
-                  }
-                  label="PRO Number"
-                />
-              </div>
+              <div className="row align-items-center">
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="proNumber"
+                    placeholder="PRO Number..."
+                    value={formData.pro_number}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, pro_number: e.target.value })
+                    }
+                    label="PRO Number"
+                  />
+                </div>
 
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="purchaseOrderNumber"
-                  placeholder="Purchase Order Number..."
-                  value={formData.purchase_order_number}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      purchase_order_number: e.target.value,
-                    })
-                  }
-                  label="Purchase Order Number"
-                />
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="purchaseOrderNumber"
+                    placeholder="Purchase Order Number..."
+                    value={formData.purchase_order_number}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        purchase_order_number: e.target.value,
+                      })
+                    }
+                    label="Purchase Order Number"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="creation creation-container w-100">
-        <div className="form-label_name">
-          <h2>Commodities</h2>
-          <span></span>
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            <h2>Commodities</h2>
+            <span></span>
+          </div>
+
+          <Table
+          noScroll
+          noScrollY
+            data={commodities}
+            columns={[
+              "Description",
+              " Length",
+              " Width (in)",
+              " Height (in)",
+              " Weight (lb)",
+              " Location",
+              " Volume (ft3)",
+              // " Weight (lb)",
+            ]}
+            onAdd={() => {}}
+            showOptions={false}
+          />
         </div>
-        <Table
-          data={commodities}
-          columns={[
-            "Description",
-            " Length",
-            " Width (in)",
-            " Height (in)",
-            " Weight (lb)",
-            " Location",
-            " Volume (ft3)",
-            // " Weight (lb)",
-          ]}
-          onAdd={() => {}}
-          showOptions={false}
-        />
-      </div>
 
-      {/* <div className="creation creation-container w-100">
+        {/* <div className="creation creation-container w-100">
         <div className="row align-items-center">
           <div
             className="col-6 text-start"
@@ -862,15 +842,15 @@ const ReleaseOrderCreationForm = ({
         </div>
       </div> */}
 
-      <div className="company-form__options-container">
-        {/* <button className="button-save" onClick={sendData}>
+        <div className="company-form__options-container">
+          {/* <button className="button-save" onClick={sendData}>
           Save
         </button> */}
-        <button className="button-cancel" onClick={closeModal}>
-          Accept
-        </button>
-      </div>
-      {/* {showSuccessAlert && (
+          <button className="button-cancel" onClick={closeModal}>
+            Accept
+          </button>
+        </div>
+        {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -882,30 +862,33 @@ const ReleaseOrderCreationForm = ({
           </strong>
         </Alert>
       )} */}
-      {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <p className="succes"> Success </p>
-          <p className=" created"> Release Order {creating ? "created" : "updated"} successfully!</p>
-        </Alert>
-      )}
-      {showErrorAlert && (
-        <Alert
-          severity="error"
-          onClose={() => setShowErrorAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Error</AlertTitle>
-          <strong>
-            Error {creating ? "creating" : "updating"} Release Order. Please try
-            again
-          </strong>
-        </Alert>
-      )}
-    </div>
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <p className="succes"> Success </p>
+            <p className=" created">
+              {" "}
+              Release Order {creating ? "created" : "updated"} successfully!
+            </p>
+          </Alert>
+        )}
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>
+              Error {creating ? "creating" : "updating"} Release Order. Please
+              try again
+            </strong>
+          </Alert>
+        )}
+      </div>
     </div>
   );
 };

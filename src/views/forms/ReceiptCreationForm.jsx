@@ -1513,6 +1513,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           <div className="text-center">
             <Table
               noScroll
+              noScrollY
               data={commodities}
               columns={[
                 "Description",
@@ -1653,6 +1654,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             {showIncomeForm && (
               <Table
                 noScroll
+                noScrollY
                 data={charges}
                 columns={[
                   "Status",
@@ -1707,6 +1709,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
             {showExpenseForm && (
               <Table
                 noScroll
+                noScrollY
                 data={charges}
                 columns={[
                   "Status",
@@ -1758,7 +1761,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               </div>
               {events && events.length > 0 && (
                 <Table
-                noScroll
+                noScrollY
                   data={events}
                   columns={[
                     "Date",
