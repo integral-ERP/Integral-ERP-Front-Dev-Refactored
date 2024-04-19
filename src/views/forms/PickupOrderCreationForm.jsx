@@ -255,7 +255,7 @@ const PickupOrderCreationForm = ({
     const type = event?.type || "";
     const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
     if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
+      console.error(`Unsupported shipper type: ${type}`);
       return;
     }
     const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
