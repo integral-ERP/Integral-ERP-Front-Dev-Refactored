@@ -274,13 +274,8 @@ const PickupOrderCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      consigneeId: id,
-      consigneeType: type,
     });
   };
-
-
-
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
@@ -303,8 +298,6 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event?.target?.value || "";
-    console.log("TYPE", type);
-
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -328,7 +321,6 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
         client_to_bill: id,
       });
-      console.log('Este es form data despues de el else', formData);
     }
   };
 
@@ -428,7 +420,6 @@ const PickupOrderCreationForm = ({
               : "other"
           : "other",
       };
-      console.log("updatedFormData", updatedFormData);
       let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
         ?.type_person
         ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
