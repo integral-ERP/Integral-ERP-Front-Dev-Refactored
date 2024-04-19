@@ -17,13 +17,17 @@ const Repacking = () => {
     "Parent Order",
     "Piece Quantity",
     "Description",
-    " Length",
-    " Height",
-    " Width",
-    " Weight",
-    "Location",
-    " Volumetric Weight",
-    " Chargeable Weight",
+    // " Length",
+    // " Width",
+    // " Height",
+    // " Weight",
+    " Length (in)",
+    " Width (in)",
+    " Height (in)",
+    " Weight (lb)",
+    " Location",
+    // " Volumetric Weight",
+    " Volume (ft3)",
     "Repack Options",
   ];
 
@@ -211,28 +215,31 @@ const Repacking = () => {
              
              <div className="repacking-container">
              <div className="main-commodity">
-               <p className="item-description">
-                 {selectedCommodity.description}
-               </p>
-               <p className="item-info">
-                 Weight: {selectedCommodity.weight}
-               </p>
-               <p className="item-info">
-                 Height: {selectedCommodity.height}
-               </p>
-               <p className="item-info">Width: {selectedCommodity.width}</p>
-               <p className="item-info">
-                 Length: {selectedCommodity.length}
-               </p>
-               <p className="item-info">
-                 Volumetric Weight: {selectedCommodity.volumetricWeight}
-               </p>
-               <p className="item-info">
-                 Chargeable Weight: {selectedCommodity.chargedWeight}
-               </p>
-               <p className="item-info">
-                 Location: {selectedCommodity.locationCode}
-               </p>
+                <p className="item-description">
+                  {selectedCommodity.description}
+                </p>
+                <p className="item-info">
+                  Length(in): {selectedCommodity.length}
+                </p>
+                <p className="item-info">
+                  Width(in): {selectedCommodity.width}
+                </p>
+                <p className="item-info">
+                  Height(in): {selectedCommodity.height}
+                </p>
+                <p className="item-info">
+                  Weight(lb): {selectedCommodity.weight}
+                </p>
+                <p className="item-info">
+                  {/* Volumetric Weight: {selectedCommodity.volumetricWeight} */}
+                  Volume (ft3): {selectedCommodity.volumetricWeight} 
+                </p>
+                {/* <p className="item-info">
+                  Chargeable Weight: {selectedCommodity.chargedWeight}
+                </p> */}
+                <p className="item-info">
+                  Location: {selectedCommodity.locationCode}
+                </p>
                {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
              </div>
              {/*  fix the repacking show internalCommodities for edition */}
@@ -240,19 +247,23 @@ const Repacking = () => {
                selectedCommodity.internalCommodities.map((com) => (
                 <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '15px' }}>
                    <p className="item-description">{com.description}</p>
-                   <p className="item-info">Weight: {com.weight}</p>
-                   <p className="item-info">Height: {com.height}</p>
-                   <p className="item-info">Width: {com.width}</p>
-                   <p className="item-info">Length: {com.length}</p>
+                   <p className="item-info">Length (in): {com.length}</p>
+                   <p className="item-info">Width(in): {com.width}</p>
+                   <p className="item-info">Height (in): {com.height}</p>
+                   <p className="item-info">Weight (lb): {com.weight}</p>
+                   
+                   
+                   
                    <p className="item-info">
-                     Volumetric Weight: {com.volumetricWeight}
+                     {/* Volumetric-1 Weight: {com.volumetricWeight} */}
+                     Volume (ft3): {com.volumetricWeight}
                    </p>
-                   <p className="item-info">
+                   {/* <p className="item-info">
                      Chargeable Weight: {com.chargedWeight}
-                   </p>
-                   <p className="item-info">
+                   </p> */}
+                   {/* <p className="item-info">
                      Location: {com.locationCode}
-                   </p>
+                   </p> */}
                    {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                  </div>
                ))}
