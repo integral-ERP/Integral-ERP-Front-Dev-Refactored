@@ -31,14 +31,12 @@ const ReceiptCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
   fromPickUp,
-  fromReceipt,
-  showBModal,
+  fromReceipt
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
-  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -55,8 +53,7 @@ const ReceiptCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -305,7 +302,7 @@ const ReceiptCreationForm = ({
     );
 
     if (!selectedSupplier) {
-      console.error(`Unsupported consignee type: ${type}`);
+      console.error(`Unsupported supplier type: ${type}`);
       return;
     }
 
@@ -316,7 +313,7 @@ const ReceiptCreationForm = ({
     } - ${selectedSupplier?.zip_code || ""}`;
 
     setSupplier(selectedSupplier);
-
+    setDefaultValueSupplier(selectedSupplier);
     setFormData({
       ...formData,
       supplierId: id,
@@ -324,40 +321,31 @@ const ReceiptCreationForm = ({
       supplierInfo: info,
     });
   };
-
-  const handleShipperSelection = async (event) => {
-    if (event && event.id) {
-      const id = event.id || formData.shipperId;
-      const type = event.type || formData.shipperType;
-
-      let result;
-      if (type === "forwarding-agent") {
-        result = await ForwardingAgentService.getForwardingAgentById(id);
-      } else if (type === "customer") {
-        result = await CustomerService.getCustomerById(id);
-      } else if (type === "vendor") {
-        result = await VendorService.getVendorByID(id);
-      }
-
-      const info = result?.data
-        ? `${result.data.street_and_number || ""} - ${
-            result.data.city || ""
-          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-            result.data.zip_code || ""
-          }`
-        : formData.shipperInfo;
-      setshipper(result?.data || shipper);
-      setFormData({
-        ...formData,
-        shipperId: id,
-        shipperType: type,
-        shipperInfo: info,
-      });
-    } else {
-      console.error(
-        "El objeto de selección de shipper es nulo o no tiene una propiedad 'id'"
-      );
+  const handleShipperSelection = (event) => {
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
     }
+    const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
+    if (!selectedShipper) {
+      console.error(`Shipper not found with ID ${id} and type ${type}`);
+      return;
+    }
+    const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
+      } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
+      }`;
+
+    setshipper(selectedShipper);
+    setdefaultValueShipper(selectedShipper);
+    setFormData({
+      ...formData,
+      shipperId: id,
+      shipperType: type,
+      shipperInfo: info,
+    });
   };
 
   const handleClearShipperSelection = () => {
@@ -2064,6 +2052,12 @@ ReceiptCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool,
   onpickupOrderDataChange: propTypes.func,
+  currentPickUpNumber: propTypes.number,
+  setcurrentPickUpNumber : propTypes.func,
+  fromPickUp: propTypes.any,
+  fromReceipt: propTypes.any,
+  showBModal: propTypes.bool
+
 };
 
 ReceiptCreationForm.defaultProps = {
