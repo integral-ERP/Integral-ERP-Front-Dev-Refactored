@@ -462,13 +462,25 @@ const PickupOrderCreationForm = ({
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
   const loadEmployeeSelectOptions = async (inputValue) => {
-    const response = await EmployeeService.search(inputValue);
-    const data = response.data.results;
-
-    const options = addTypeToObjects(data, "employee");
-    return options;
-  };
-
+    if (inputValue) {
+      const filteredOptions = employeeOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      )
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    } else {
+      const options = employeeOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    }
+  }
   const loadIssuedBySelectOptions = async (inputValue) => {
     if (inputValue) {
       const filteredOptions = issuedByOptions.filter(option =>
