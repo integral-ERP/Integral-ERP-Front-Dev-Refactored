@@ -470,20 +470,23 @@ const PickupOrderCreationForm = ({
   };
 
   const loadIssuedBySelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
-    return options;
+    if (inputValue) {
+      const filteredOptions = issuedByOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase()));
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    } else {
+      const options = issuedByOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    }
   };
 
   const loadDestinationAgentsSelectOptions = async (inputValue) => {
@@ -504,7 +507,7 @@ const PickupOrderCreationForm = ({
         value: option.id,
         label: option.name
       }));
-  
+
       return options;
     } else {
       const options = shipperOptions.map(option => ({
@@ -515,7 +518,7 @@ const PickupOrderCreationForm = ({
       return options;
     }
   };
-  
+
   const loadConsigneeSelectOptions = async (inputValue) => {
     if (inputValue) {
       const filteredOptions = consigneeOptions.filter(option =>
@@ -526,7 +529,7 @@ const PickupOrderCreationForm = ({
         value: option.id,
         label: option.name
       }));
-  
+
       return options;
     } else {
       const options = consigneeOptions.map(option => ({
@@ -537,7 +540,7 @@ const PickupOrderCreationForm = ({
       return options;
     }
   };
-  
+
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -987,7 +990,7 @@ const PickupOrderCreationForm = ({
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          status: 14, 
+          status: 14,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           issued_by: formData.issuedById,
@@ -1055,7 +1058,7 @@ const PickupOrderCreationForm = ({
     clientToBillRequest,
   ]);
 
-  
+
   const getAsyncSelectValue = () => {
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
