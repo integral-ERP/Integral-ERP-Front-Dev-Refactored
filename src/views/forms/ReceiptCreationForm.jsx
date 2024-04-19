@@ -179,22 +179,19 @@ const ReceiptCreationForm = ({
   const [selectedRepackId, setSelectedRepackId] = useState(null);
 
   const handleIssuedBySelection = async (event) => {
-    const id = event.id;
-    const type = event.type;
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
+      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
       issuedByType: type,
       issuedByInfo: info,
-    });
-  };
-
+    })
+  }
   const handleDestinationAgentSelection = async (event) => {
     const id = event.id;
     setFormData({
@@ -1016,11 +1013,11 @@ const ReceiptCreationForm = ({
       shipperName = "carrierid";
     }
     if (shipperName !== "") {
-      const consignee = {
+      const shipper = {
         [shipperName]: formData.shipperId,
       };
 
-      const response = await ReceiptService.createShipper(consignee);
+      const response = await ReceiptService.createShipper(shipper);
       if (response.status === 201) {
         setshipperRequest(response.data.id);
       }
