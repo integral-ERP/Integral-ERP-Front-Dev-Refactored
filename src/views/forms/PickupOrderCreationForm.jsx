@@ -207,8 +207,6 @@ const PickupOrderCreationForm = ({
       ...formData,
       destinationAgentId: id,
     });
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    setagent(result?.data);
   };
 
   const handleEmployeeSelection = async (event) => {
@@ -285,9 +283,19 @@ const PickupOrderCreationForm = ({
 
   const handleMainCarrierSelection = async (event) => {
     const id = event?.id || "";
-    const result = await CarrierService.getCarrierById(id);
-    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
-      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
+    const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported shipper type: ${type}`);
+      return;
+    }
+    const selectedCarrier = carrierOptions.find(option => option.id === id && option.type === type);
+    if (!selectedCarrier) {
+      console.error(`Shipper not found with ID ${id} and type ${type}`);
+      return;
+    }
+    const info = `${selectedCarrier?.street_and_number || ""} - ${selectedCarrier?.city || ""
+      } - ${selectedCarrier?.state || ""} - ${selectedCarrier?.country || ""} - ${selectedCarrier?.zip_code || ""
       }`;
     setFormData({
       ...formData,
