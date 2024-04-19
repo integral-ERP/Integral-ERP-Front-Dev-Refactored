@@ -709,6 +709,7 @@ const Table = ({
                                 style={{
                                   display: "flex",
                                   width: "70px",
+                                  marginLeft: "3vw",
 
                                 }}
                               >

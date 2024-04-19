@@ -38,7 +38,7 @@ const ReceiptCreationForm = ({
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
-  console.log('formdataupdated', formDataUpdated);
+  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -55,7 +55,8 @@ const ReceiptCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] =
+    useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -78,9 +79,8 @@ const ReceiptCreationForm = ({
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
-//-------------------------------------------------------
+  //-------------------------------------------------------
   const [SelectEvent, setSelectEvent] = useState(null);
-
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -94,25 +94,30 @@ const ReceiptCreationForm = ({
   useEffect(() => {
     fetchFormData()
       .then((data) => {
-        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
-        const customers = data.filter(item => item.type === 'customer');
-        const vendors = data.filter(item => item.type === 'vendor');
-        const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'carrier');
+        const forwardingAgents = data.filter(
+          (item) => item.type === "forwarding-agent"
+        );
+        const customers = data.filter((item) => item.type === "customer");
+        const vendors = data.filter((item) => item.type === "vendor");
+        const employees = data.filter((item) => item.type === "employee");
+        const carriers = data.filter((item) => item.type === "carrier");
 
-        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
-        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
+        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors]);
+        setDestinationAgentOptions([
+          ...forwardingAgents,
+          ...customers,
+          ...vendors,
+        ]);
         setEmployeeOptions([...employees].sort(SortArray));
-        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
-        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
-        setSupplierOptions([...forwardingAgents, ...carriers, ...vendors])
+        setShipperOptions([...forwardingAgents, ...customers, ...vendors]);
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors]);
+        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors]);
+        setSupplierOptions([...forwardingAgents, ...carriers, ...vendors]);
       })
       .catch((error) => {
-        console.error('Error al obtener los datos:', error);
+        console.error("Error al obtener los datos:", error);
       });
   }, []);
-  
 
   useEffect(() => {
     if (!isButtonDisabled) {
@@ -180,9 +185,11 @@ const ReceiptCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -207,11 +214,10 @@ const ReceiptCreationForm = ({
     console.log("selected events ", events);
   };
 
-  const handleDeleteEvent= () => {
+  const handleDeleteEvent = () => {
     if (SelectEvent) {
     }
   };
-  
 
   //------------------------------------------------
 
@@ -263,30 +269,33 @@ const ReceiptCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
     if (!validTypes.includes(type)) {
-        console.error(`Unsupported consignee type: ${type}`);
-        return;
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
     }
-    const selectedConsignee = consigneeOptions.find(option => option.id === id && option.type === type);
+    const selectedConsignee = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
     if (!selectedConsignee) {
-        console.error(`Consignee not found with ID ${id} and type ${type}`);
-        return;
+      console.error(`Consignee not found with ID ${id} and type ${type}`);
+      return;
     }
 
-    const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
-        } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
-        }`;
+    const info = `${selectedConsignee.street_and_number || ""} - ${
+      selectedConsignee.city || ""
+    } - ${selectedConsignee.state || ""} - ${
+      selectedConsignee.country || ""
+    } - ${selectedConsignee.zip_code || ""}`;
     setconsignee(selectedConsignee);
     setdefaultValueConsignee(selectedConsignee);
     setFormData({
-        ...formData,
-        consigneeId: id,
-        consigneeType: type,
-        consigneeInfo: info,
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
     });
-};
-  
+  };
 
   const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
@@ -294,20 +303,20 @@ const ReceiptCreationForm = ({
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
-  
+
     if (!selectedSupplier) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
     }
-  
+
     const info = `${selectedSupplier?.street_and_number || ""} - ${
       selectedSupplier?.city || ""
-    } - ${selectedSupplier?.state || ""} - ${selectedSupplier?.country || ""} - ${
-      selectedSupplier?.zip_code || ""
-    }`;
-  
-    setSupplier(selectedSupplier)
-  
+    } - ${selectedSupplier?.state || ""} - ${
+      selectedSupplier?.country || ""
+    } - ${selectedSupplier?.zip_code || ""}`;
+
+    setSupplier(selectedSupplier);
+
     setFormData({
       ...formData,
       supplierId: id,
@@ -318,86 +327,89 @@ const ReceiptCreationForm = ({
 
   const handleShipperSelection = async (event) => {
     if (event && event.id) {
-        const id = event.id || formData.shipperId;
-        const type = event.type || formData.shipperType;
+      const id = event.id || formData.shipperId;
+      const type = event.type || formData.shipperType;
 
-        let result;
-        if (type === "forwarding-agent") {
-            result = await ForwardingAgentService.getForwardingAgentById(id);
-        } else if (type === "customer") {
-            result = await CustomerService.getCustomerById(id);
-        } else if (type === "vendor") {
-            result = await VendorService.getVendorByID(id);
-        }
+      let result;
+      if (type === "forwarding-agent") {
+        result = await ForwardingAgentService.getForwardingAgentById(id);
+      } else if (type === "customer") {
+        result = await CustomerService.getCustomerById(id);
+      } else if (type === "vendor") {
+        result = await VendorService.getVendorByID(id);
+      }
 
-        const info = result?.data
-            ? `${result.data.street_and_number || ""} - ${result.data.city || ""} - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""}`
-            : formData.shipperInfo;
-        setshipper(result?.data || shipper);
-        setFormData({
-            ...formData,
-            shipperId: id,
-            shipperType: type,
-            shipperInfo: info,
-        });
+      const info = result?.data
+        ? `${result.data.street_and_number || ""} - ${
+            result.data.city || ""
+          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+            result.data.zip_code || ""
+          }`
+        : formData.shipperInfo;
+      setshipper(result?.data || shipper);
+      setFormData({
+        ...formData,
+        shipperId: id,
+        shipperType: type,
+        shipperInfo: info,
+      });
     } else {
-        console.error("El objeto de selección de shipper es nulo o no tiene una propiedad 'id'");
+      console.error(
+        "El objeto de selección de shipper es nulo o no tiene una propiedad 'id'"
+      );
     }
-};
-
+  };
 
   const handleClearShipperSelection = () => {
     setFormData({
       ...formData,
-      shipperId: null, 
-      shipperType: null, 
-      shipperInfo: "", 
+      shipperId: null,
+      shipperType: null,
+      shipperInfo: "",
     });
   };
-//---------------------------------CHARGE IMG---------------------------------------------------------
-const [showLargeImage, setShowLargeImage] = useState(false);
-const [largeImageSrc, setLargeImageSrc] = useState('');
+  //---------------------------------CHARGE IMG---------------------------------------------------------
+  const [showLargeImage, setShowLargeImage] = useState(false);
+  const [largeImageSrc, setLargeImageSrc] = useState("");
 
-const handleShowLargeImage = (src) => {
-  setLargeImageSrc(src);
-  setShowLargeImage(true);
-};
+  const handleShowLargeImage = (src) => {
+    setLargeImageSrc(src);
+    setShowLargeImage(true);
+  };
 
-const handleCloseLargeImage = () => {
-  setShowLargeImage(false);
-};
+  const handleCloseLargeImage = () => {
+    setShowLargeImage(false);
+  };
 
+  const handleDownloadAttachment = (base64Data, fileName) => {
+    // Convertir la base64 a un Blob
+    const byteCharacters = atob(base64Data.split(",")[1]);
+    const byteArrays = [];
 
-const handleDownloadAttachment = (base64Data, fileName) => {
-  // Convertir la base64 a un Blob
-  const byteCharacters = atob(base64Data.split(',')[1]);
-  const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
 
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
 
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
     }
 
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
+    const blob = new Blob(byteArrays, { type: "image/jpeg" });
 
-  const blob = new Blob(byteArrays, { type: 'image/jpeg' });
-
-  // Crear un enlace temporal y descargar el Blob
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
-};
-
+    // Crear un enlace temporal y descargar el Blob
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
 
   const handleFileUpload = (event) => {
     const files = event.target.files;
@@ -416,7 +428,10 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           });
 
           if (newAttachments.length === files.length) {
-            setattachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+            setattachments((prevAttachments) => [
+              ...prevAttachments,
+              ...newAttachments,
+            ]);
           }
         };
 
@@ -427,16 +442,20 @@ const handleDownloadAttachment = (base64Data, fileName) => {
   //------------------------------------------------------------------------------------------
 
   const handleDeleteAttachment = (name) => {
-    const updateAttachments = attachments.filter(attachment => attachment.name !== name);
+    const updateAttachments = attachments.filter(
+      (attachment) => attachment.name !== name
+    );
     setattachments(updateAttachments);
   };
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
-      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
-      }`;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -637,50 +656,69 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
-          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
-          } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
+          pickupOrder.issuedBy?.city || ""
+        } - ${pickupOrder.issuedBy?.state || ""} - ${
+          pickupOrder.issuedBy?.country || ""
+        } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
         shipper: pickupOrder.shipper,
         shipperId: pickupOrder.shipperObj.data?.obj?.id, //pickupOrder.shipper
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
-        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-          }`,
+        shipperInfo: `${
+          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.state || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+        }`,
         pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-          }`,
+        pickupLocationInfo: `${
+          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
+          pickupOrder.pick_up_location?.data?.obj?.state || ""
+        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
+          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+        }`,
 
         consignee: pickupOrder.consignee,
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
-        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-          }`,
+        consigneeInfo: `${
+          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          pickupOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-          }`,
+        deliveryLocationInfo: `${
+          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
+          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
+          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+        }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
-          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
-          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
-          }`,
+        mainCarrierInfo: `${
+          pickupOrder.main_carrierObj?.street_and_number || ""
+        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
+          pickupOrder.main_carrierObj?.state || ""
+        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
+          pickupOrder.main_carrierObj?.zip_code || ""
+        }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
-          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
-          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
+          pickupOrder.supplierObj?.city || ""
+        } - ${pickupOrder.supplierObj?.state || ""} - ${
+          pickupOrder.supplierObj?.country || ""
+        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
@@ -689,8 +727,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           CTBID === pickupOrder.shipperObj.data?.obj?.id
             ? "shipper"
             : CTBID === pickupOrder.consigneeObj.data?.obj?.id
-              ? "consignee"
-              : "",
+            ? "consignee"
+            : "",
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
@@ -703,7 +741,6 @@ const handleDownloadAttachment = (base64Data, fileName) => {
       setcanRender(true);
     }
   }, [creating, pickupOrder]);
-
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
@@ -832,9 +869,11 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
-          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
-          } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
+          pickupOrder.issuedBy?.city || ""
+        } - ${pickupOrder.issuedBy?.state || ""} - ${
+          pickupOrder.issuedBy?.country || ""
+        } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
@@ -842,43 +881,60 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
-        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
-          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-          }`,
+        shipperInfo: `${
+          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.state || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+        }`,
         pickupLocationId: pickupOrder.pick_up_location,
 
-        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
-          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-          }`,
+        pickupLocationInfo: `${
+          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
+          pickupOrder.pick_up_location?.data?.obj?.state || ""
+        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
+          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+        }`,
 
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
-        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
-          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-          }`,
+        consigneeInfo: `${
+          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          pickupOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-          }`,
+        deliveryLocationInfo: `${
+          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
+          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
+          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+        }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
-          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
-          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
-          }`,
+        mainCarrierInfo: `${
+          pickupOrder.main_carrierObj?.street_and_number || ""
+        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
+          pickupOrder.main_carrierObj?.state || ""
+        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
+          pickupOrder.main_carrierObj?.zip_code || ""
+        }`,
 
         supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${pickupOrder.supplierObj?.city || ""
-          } - ${pickupOrder.supplierObj?.state || ""} - ${pickupOrder.supplierObj?.country || ""
-          } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
+          pickupOrder.supplierObj?.city || ""
+        } - ${pickupOrder.supplierObj?.state || ""} - ${
+          pickupOrder.supplierObj?.country || ""
+        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -888,8 +944,8 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           CTBID === pickupOrder.consigneeObj.data?.obj?.id
             ? "consignee"
             : CTBID === pickupOrder.shipperObj.data?.obj?.id
-              ? "shipper"
-              : "",
+            ? "shipper"
+            : "",
 
         commodities: pickupOrder.commodities,
         // notes: [],
@@ -993,7 +1049,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipperId  //CAMBIO
+            ? formData.shipperId //CAMBIO
             : formData.consigneeId, //CAMBIO
       };
 
@@ -1121,53 +1177,71 @@ const handleDownloadAttachment = (base64Data, fileName) => {
 
   return (
     <div className="form-container">
-    <div className="company-form receipt">
-      <div className="row w-100">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>General</h3>
-              <span></span>
-            </div>
-            <div className="row mb-3">
-              <div className="col-4 text-start">
-                <Input
-                  type="number"
-                  inputName="number"
-                  placeholder="Number..."
-                  value={formData.number}
-                  readonly={true}
-                  label="Number"
-                />
+      <div className="company-form receipt">
+        <div className="row w-100">
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>General</h3>
+                <span></span>
+              </div>
+              <div className="row mb-3">
+                <div className="col-6 text-start">
+                  <Input
+                    type="number"
+                    inputName="number"
+                    placeholder="Number..."
+                    value={formData.number}
+                    readonly={true}
+                    label="Number"
+                  />
+                </div>
+
+                <div className="col-6 text-start">
+                  <label htmlFor="employee" className="form-label">
+                    Employee:
+                  </label>
+                  <AsyncSelect
+                    id="employee"
+                    value={employeeOptions.find(
+                      (option) => option.id === formData.employeeId
+                    )}
+                    onChange={(e) => {
+                      handleEmployeeSelection(e);
+                    }}
+                    isClearable={true}
+                    defaultOptions={employeeOptions}
+                    loadOptions={loadEmployeeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                    placeholder="Search and select..."
+                  />
+                </div>
               </div>
 
-              <div className="col-4 text-start">
-                <label htmlFor="employee" className="form-label">
-                  Employee:
-                </label>
-                <AsyncSelect
-                  id="employee"
-                  value={employeeOptions.find(
-                    (option) => option.id === formData.employeeId
-                  )}
-                  onChange={(e) => {
-                    handleEmployeeSelection(e);
-                  }}
-                  isClearable={true}
-                  defaultOptions={employeeOptions}
-                  loadOptions={loadEmployeeSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                  placeholder="Search and select..."
-                />
-              </div>
-
-              <div className="col-4 text-start">
-                <label htmlFor="destinationAgent" className="form-label">
-                  Destination Agent:
-                </label>
-                {!creating ? (
-                  canRender && (
+              <div className="row mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="destinationAgent" className="form-label">
+                    Destination Agent:
+                  </label>
+                  {!creating ? (
+                    canRender && (
+                      <AsyncSelect
+                        id="destinationAgent"
+                        onChange={(e) => {
+                          handleDestinationAgentSelection(e);
+                        }}
+                        value={destinationAgentOptions.find(
+                          (option) => option.id === formData.destinationAgentId
+                        )}
+                        isClearable={true}
+                        defaultOptions={destinationAgentOptions}
+                        loadOptions={loadDestinationAgentsSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                      />
+                    )
+                  ) : (
                     <AsyncSelect
                       id="destinationAgent"
                       onChange={(e) => {
@@ -1181,444 +1255,440 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
+                      placeholder="Search and select..."
                     />
-                  )
-                ) : (
+                  )}
+                </div>
+                <div className="col-6 text-start">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Entry Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Entry Date and Time"
+                      className="font-right"
+                      value={dayjs(formData.createdDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
+                </div>
+                </div>
+
+                <div className="row mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="issuedBy" className="form-label">
+                    Issued By:
+                  </label>
                   <AsyncSelect
-                    id="destinationAgent"
-                    onChange={(e) => {
-                      handleDestinationAgentSelection(e);
-                    }}
-                    value={destinationAgentOptions.find(
-                      (option) => option.id === formData.destinationAgentId
+                    id="issuedBy"
+                    value={issuedByOptions.find(
+                      (option) => option.id === formData.issuedById
                     )}
+                    onChange={(e) => {
+                      handleIssuedBySelection(e);
+                    }}
                     isClearable={true}
-                    defaultOptions={destinationAgentOptions}
-                    loadOptions={loadDestinationAgentsSelectOptions}
+                    placeholder="Search and select..."
+                    defaultOptions={issuedByOptions}
+                    loadOptions={loadIssuedBySelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
-                    placeholder="Search and select..."
                   />
-                )}
+                </div>
+
+                <div className="col-6 text-start">
+                  <Input
+                    type="number"
+                    inputName="entryNumber"
+                    placeholder="Entry Number..."
+                    value={formData.entryNumber}
+                    label="Entry Number"
+                  />
+                </div>
+                </div>
+            
+            </div>
+          </div>
+
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>Shipper/Consignee</h3>
+                <span></span>
+              </div>
+              <div className="row mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="shipper" className="form-label">
+                    Shipper:
+                  </label>
+                  <AsyncSelect
+                    id="shipper"
+                    onChange={(e) => {
+                      handleShipperSelection(e);
+                    }}
+                    onClear={() => {
+                      handleClearShipperSelection();
+                    }}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={shipperOptions}
+                    loadOptions={loadShipperSelectOptions}
+                    value={shipperOptions.find(
+                      (option) => option.id === formData.shipperId
+                    )}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+                <div className="col-6 text-start">
+                  <label htmlFor="consignee" className="form-label">
+                    Consignee:
+                  </label>
+                  <div className="custom-select">
+                    <AsyncSelect
+                      id="consignee"
+                      value={consigneeOptions.find(
+                        (option) =>
+                          option.id === formData.consigneeId &&
+                          option.type_person === formData.consigneeType
+                      )}
+                      onChange={(e) => handleConsigneeSelection(e)}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={consigneeOptions}
+                      loadOptions={loadConsigneeSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
+                  <Input
+                    type="textarea"
+                    inputName="shipperinfo"
+                    placeholder="Shipper Location..."
+                    value={formData.shipperInfo}
+                    readonly={true}
+                  />
+                </div>
+
+                <div className="col-6 text-start">
+                  <Input
+                    type="textarea"
+                    inputName="consigneeInfo"
+                    placeholder="Consignee Info..."
+                    value={formData.consigneeInfo}
+                    readonly={true}
+                    label=""
+                  />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-6 text-start">
+                  <label htmlFor="clientToBill" className="form-label">
+                    Client to Bill:
+                  </label>
+                  <select
+                    value={formData.clientToBillType}
+                    name="clientToBill"
+                    id="clientToBill"
+                    onChange={(e) => handleClientToBillSelection(e)}
+                  >
+                    <option value="">Select an option</option>
+                    <option value="consignee">Consignee</option>
+                    <option value="shipper">Shipper</option>
+                  </select>
+                  <p style={{ color: "red" }}>
+                    Note: Always select a client to bill when editing
+                  </p>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="row align-items-center">
-              <div className="col-4 text-start">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <p id="creation-date" className="text-date">Entry Date and Time</p>
-                  <DateTimePicker
-                    // label="Entry Date and Time"
-                    className="font-right"
-                    value={dayjs(formData.createdDateAndTime)}
-                    onChange={(e) =>
+        <div className="row w-100">
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>Supplier</h3>
+                <span></span>
+              </div>
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
+                  <label htmlFor="shipper" className="form-label">
+                    Name:
+                  </label>
+                  <AsyncSelect
+                    id="shipper"
+                    onChange={(e) => {
+                      handleSupplierSelection(e);
+                    }}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={supplierOptions}
+                    loadOptions={loadShipperSelectOptions}
+                    value={supplierOptions.find(
+                      (option) => option.id === formData.supplierId
+                    )}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="invoiceNumber"
+                    placeholder="Invoice Number..."
+                    value={formData.invoiceNumber}
+                    changeHandler={(e) =>
                       setFormData({
                         ...formData,
-                        createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        invoiceNumber: e.target.value,
                       })
                     }
+                    label="Invoice Number"
                   />
-                </LocalizationProvider>
+                </div>
               </div>
 
-              <div className="col-4 text-start">
-                <label htmlFor="issuedBy" className="form-label">
-                  Issued By:
-                </label>
-                <AsyncSelect
-                  id="issuedBy"
-                  value={issuedByOptions.find(
-                    (option) => option.id === formData.issuedById
-                  )}
-                  onChange={(e) => {
-                    handleIssuedBySelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={issuedByOptions}
-                  loadOptions={loadIssuedBySelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              <div className="col-4 text-start">
-                <Input
-                  type="number"
-                  inputName="entryNumber"
-                  placeholder="Entry Number..."
-                  value={formData.entryNumber}
-                  label="Entry Number"
-                />
+              <div className="row alig-items-center">
+                <div className="col-6 text-start">
+                  <Input
+                    type="textarea"
+                    inputName="supplierInfo"
+                    placeholder="Supplier Location..."
+                    value={formData.supplierInfo}
+                    readonly={true}
+                  />
+                </div>
+
+                <div className="col-6 text-start" style={{ marginTop: "-5px" }}>
+                  <Input
+                    type="text"
+                    inputName="purchaseOrderNumber"
+                    placeholder="Purchase Order Number..."
+                    value={formData.purchaseOrderNumber}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        purchaseOrderNumber: e.target.value,
+                      })
+                    }
+                    label="Purchase Order Number"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Shipper/Consignee</h3>
-              <span></span>
-            </div>
-            <div className="row mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="shipper" className="form-label">
-                  Shipper:
-                </label>
-                <AsyncSelect
-                id="shipper"
-                onChange={(e) => {
-                  handleShipperSelection(e);
-                }}
-                onClear={() => {
-                  handleClearShipperSelection()
-                }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions = {shipperOptions}
-                loadOptions = {loadShipperSelectOptions}
-                value={shipperOptions.find((option) => option.id === formData.shipperId)}
-                getOptionLabel={(option) => option.name}
-                getOptionValue={(option) => option.id}
-              />
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>Carrier Information</h3>
+                <span></span>
               </div>
-              <div className="col-6 text-start">
-                <label htmlFor="consignee" className="form-label">
-                  Consignee:
-                </label>
-                <div className="custom-select">
+              <div className="row">
+                <div className="col-4 text-start">
+                  <label htmlFor="mainCarrier" className="form-label">
+                    Carrier:
+                  </label>
                   <AsyncSelect
-                    id="consignee"
-                    value={consigneeOptions.find(
-                      (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type_person === formData.consigneeType
+                    id="mainCarrier"
+                    value={carrierOptions.find(
+                      (option) => option.id === formData.mainCarrierdId
                     )}
-                    onChange={(e) => handleConsigneeSelection(e)}
+                    onChange={(e) => {
+                      handleMainCarrierSelection(e);
+                    }}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
+                    defaultOptions={carrierOptions}
+                    loadOptions={loadCarrierSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-              </div>
-            </div>
-
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <Input
-                  type="textarea"
-                  inputName="shipperinfo"
-                  placeholder="Shipper Location..."
-                  value={formData.shipperInfo}
-                  readonly={true}
-                />
-              </div>
-
-              <div className="col-6 text-start">
-                <Input
-                  type="textarea"
-                  inputName="consigneeInfo"
-                  placeholder="Consignee Info..."
-                  value={formData.consigneeInfo}
-                  readonly={true}
-                  label=""
-                />
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-6 text-start">
-                <label htmlFor="clientToBill" className="form-label">
-                  Client to Bill:
-                </label>
-                <select
-                  value={formData.clientToBillType}
-                  name="clientToBill"
-                  id="clientToBill"
-                  onChange={(e) => handleClientToBillSelection(e)}
-                >
-                  <option value="">Select an option</option>
-                  <option value="consignee">Consignee</option>
-                  <option value="shipper">Shipper</option>
-                </select>
-                <p style={{ color: "red" }}>
-                        Note: Always select a client to bill when editing
-                      </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="row w-100">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Supplier</h3>
-              <span></span>
-            </div>
-            <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="shipper" className="form-label">
-                  Name:
-                </label>
-                <AsyncSelect
-                  id="shipper"
-                  onChange={(e) => {
-                    handleSupplierSelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={supplierOptions}
-                  loadOptions={loadShipperSelectOptions}
-                  value={supplierOptions.find((option) => option.id === formData.supplierId)}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-
-              <div className="col-6 text-start">
-                <Input
-                  type="text"
-                  inputName="invoiceNumber"
-                  placeholder="Invoice Number..."
-                  value={formData.invoiceNumber}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      invoiceNumber: e.target.value,
-                    })
-                  }
-                  label="Invoice Number"
-                />
-              </div>
-            </div>
-
-            <div className="row alig-items-center">
-              <div className="col-6 text-start">
-                <Input
-                  type="textarea"
-                  inputName="supplierInfo"
-                  placeholder="Supplier Location..."
-                  value={formData.supplierInfo}
-                  readonly={true}
-                />
-              </div>
-
-              <div className="col-6 text-start" style={{ marginTop: "-5px" }}>
-                <Input
-                  type="text"
-                  inputName="purchaseOrderNumber"
-                  placeholder="Purchase Order Number..."
-                  value={formData.purchaseOrderNumber}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      purchaseOrderNumber: e.target.value,
-                    })
-                  }
-                  label="Purchase Order Number"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Carrier Information</h3>
-              <span></span>
-            </div>
-            <div className="row">
-              <div className="col-4 text-start">
-                <label htmlFor="mainCarrier" className="form-label">
-                  Carrier:
-                </label>
-                <AsyncSelect
-                  id="mainCarrier"
-                  value={carrierOptions.find(
-                    (option) => option.id === formData.mainCarrierdId
-                  )}
-                  onChange={(e) => {
-                    handleMainCarrierSelection(e);
-                  }}
-                  isClearable={true}
-                  placeholder="Search and select..."
-                  defaultOptions={carrierOptions}
-                  loadOptions={loadCarrierSelectOptions}
-                  getOptionLabel={(option) => option.name}
-                  getOptionValue={(option) => option.id}
-                />
-              </div>
-              <div className="col-4 text-start">
-                <Input
-                  type="text"
-                  inputName="proNumber"
-                  placeholder="PRO Number..."
-                  value={formData.proNumber}
-                  changeHandler={(e) =>
-                    setFormData({ ...formData, proNumber: e.target.value })
-                  }
-                  label="PRO Number"
-                />
-              </div>
-              <div className="col-4 text-start">
-                <Input
-                  type="text"
-                  inputName="trackingNumber"
-                  placeholder="Tracking Number..."
-                  value={formData.trackingNumber}
-                  changeHandler={(e) =>
-                    setFormData({
-                      ...formData,
-                      trackingNumber: e.target.value,
-                    })
-                  }
-                  label="Tracking Number"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="creation creation-container">
-        <div className="form-label_name">
-          {editingComodity ? (
-            <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
-          ) : (
-            <h3>Commodities</h3>
-            
-          )}
-          <span></span>
-        </div>
-        <CommodityCreationForm
-          onCancel={setshowCommodityCreationForm}
-          commodities={commodities}
-          setCommodities={setcommodities}
-          setShowCommoditiesCreationForm={setshowCommodityCreationForm}
-          /* added tres parametros */
-          editing={editingComodity}
-          commodity={selectedCommodity}
-          setEditingComodity={setEditingComodity}
-          locationEnabled={true}
-        />
-        <br />
-
-        {showCommodityCreationForm && (
-          <div className="text-center">
-            <Table
-              noScroll
-              noScrollY
-              data={commodities}
-              columns={[
-                "Description",
-                " Length (in)",
-                " Width (in)",
-                " Height (in)",
-                " Weight (lb)",
-                " Location",
-                " Volume (ft3)",
-                // " Weight (lb)",
-                "Options",
-              ]}
-              onSelect={handleSelectCommodity} // Make sure this line is correct
-              selectedRow={selectedCommodity}
-              onDelete={handleCommodityDelete}
-              onEdit={handleCommodityEdit}
-              onInspect={() => {setshowCommodityInspect(!showCommodityInspect);}}
-              onAdd={() => {}}
-              showOptions={false}
-              //added no double click
-              Nodoubleclick={true}
-            /* deleted variable hiden button trash */
-            />
-            {/* added view commodities */}
-            {showCommodityInspect && (
-              <div className="repacking-container">
-                <div className="main-commodity">
-                  <p className="item-description">
-                    {selectedCommodity.description}
-                  </p>
-                  <p className="item-info">
-                    Weight: {selectedCommodity.weight}
-                  </p>
-                  <p className="item-info">
-                    Height: {selectedCommodity.height}
-                  </p>
-                  <p className="item-info">Width: {selectedCommodity.width}</p>
-                  <p className="item-info">
-                    Length: {selectedCommodity.length}
-                  </p>
-                  <p className="item-info">
-                    Volumetric Weight: {selectedCommodity.volumetricWeight}
-                  </p>
-                  <p className="item-info">
-                    Chargeable Weight: {selectedCommodity.chargedWeight}
-                  </p>
-                  <p className="item-info">
-                    Location: {selectedCommodity.locationCode}
-                  </p>
-                  {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                <div className="col-4 text-start">
+                  <Input
+                    type="text"
+                    inputName="proNumber"
+                    placeholder="PRO Number..."
+                    value={formData.proNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, proNumber: e.target.value })
+                    }
+                    label="PRO Number"
+                  />
                 </div>
-                {/*  fix the repacking show internalCommodities for edition */}
-                {selectedCommodity.internalCommodities &&
-                  selectedCommodity.internalCommodities.map((com) => (
-                    <div
-                      key={com.id}
-                      className="card"
-                      style={{
-                        display: "flex",
-                        textAlign: "left",
-                        fontSize: "15px",
-                      }}
-                    >
-                      <p className="item-description">{com.description}</p>
-                      <p className="item-info">Weight: {com.weight}</p>
-                      <p className="item-info">Height: {com.height}</p>
-                      <p className="item-info">Width: {com.width}</p>
-                      <p className="item-info">Length: {com.length}</p>
-                      <p className="item-info">
-                        Volumetric Weight: {com.volumetricWeight}
-                      </p>
-                      <p className="item-info">
-                        Chargeable Weight: {com.chargedWeight}
-                      </p>
-                      <p className="item-info">Location: {com.locationCode}</p>
-                      {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                    </div>
-                  ))}
+                <div className="col-4 text-start">
+                  <Input
+                    type="text"
+                    inputName="trackingNumber"
+                    placeholder="Tracking Number..."
+                    value={formData.trackingNumber}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        trackingNumber: e.target.value,
+                      })
+                    }
+                    label="Tracking Number"
+                  />
+                </div>
               </div>
-            )}
-            <button
-              className="button-save"
-              type="button"
-              onClick={() => {
-                setshowRepackingForm(!showRepackingForm);
-              }}
-            >
-              Repack
-            </button>
-            <br />
-            <br />
-            <br />
-
-            {showRepackingForm && (
-              <RepackingForm
-                commodities={commodities}
-                setCommodities={setcommodities}
-              />
-            )}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* button duplicado */}
-      {/* <button
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            {editingComodity ? (
+              <h3 style={{ color: "blue", fontWeight: "bold" }}> Edition</h3>
+            ) : (
+              <h3>Commodities</h3>
+            )}
+            <span></span>
+          </div>
+          <CommodityCreationForm
+            onCancel={setshowCommodityCreationForm}
+            commodities={commodities}
+            setCommodities={setcommodities}
+            setShowCommoditiesCreationForm={setshowCommodityCreationForm}
+            /* added tres parametros */
+            editing={editingComodity}
+            commodity={selectedCommodity}
+            setEditingComodity={setEditingComodity}
+            locationEnabled={true}
+          />
+          <br />
+
+          {showCommodityCreationForm && (
+            <div className="text-center">
+              <Table
+                noScroll
+                noScrollY
+                data={commodities}
+                columns={[
+                  "Description",
+                  " Length (in)",
+                  " Width (in)",
+                  " Height (in)",
+                  " Weight (lb)",
+                  " Location",
+                  " Volume (ft3)",
+                  // " Weight (lb)",
+                  "Options",
+                ]}
+                onSelect={handleSelectCommodity} // Make sure this line is correct
+                selectedRow={selectedCommodity}
+                onDelete={handleCommodityDelete}
+                onEdit={handleCommodityEdit}
+                onInspect={() => {
+                  setshowCommodityInspect(!showCommodityInspect);
+                }}
+                onAdd={() => {}}
+                showOptions={false}
+                //added no double click
+                Nodoubleclick={true}
+                /* deleted variable hiden button trash */
+              />
+              {/* added view commodities */}
+              {showCommodityInspect && (
+                <div className="repacking-container">
+                  <div className="main-commodity">
+                    <p className="item-description">
+                      {selectedCommodity.description}
+                    </p>
+                    <p className="item-info">
+                      Weight: {selectedCommodity.weight}
+                    </p>
+                    <p className="item-info">
+                      Height: {selectedCommodity.height}
+                    </p>
+                    <p className="item-info">
+                      Width: {selectedCommodity.width}
+                    </p>
+                    <p className="item-info">
+                      Length: {selectedCommodity.length}
+                    </p>
+                    <p className="item-info">
+                      Volumetric Weight: {selectedCommodity.volumetricWeight}
+                    </p>
+                    <p className="item-info">
+                      Chargeable Weight: {selectedCommodity.chargedWeight}
+                    </p>
+                    <p className="item-info">
+                      Location: {selectedCommodity.locationCode}
+                    </p>
+                    {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
+                  </div>
+                  {/*  fix the repacking show internalCommodities for edition */}
+                  {selectedCommodity.internalCommodities &&
+                    selectedCommodity.internalCommodities.map((com) => (
+                      <div
+                        key={com.id}
+                        className="card"
+                        style={{
+                          display: "flex",
+                          textAlign: "left",
+                          fontSize: "15px",
+                        }}
+                      >
+                        <p className="item-description">{com.description}</p>
+                        <p className="item-info">Weight: {com.weight}</p>
+                        <p className="item-info">Height: {com.height}</p>
+                        <p className="item-info">Width: {com.width}</p>
+                        <p className="item-info">Length: {com.length}</p>
+                        <p className="item-info">
+                          Volumetric Weight: {com.volumetricWeight}
+                        </p>
+                        <p className="item-info">
+                          Chargeable Weight: {com.chargedWeight}
+                        </p>
+                        <p className="item-info">
+                          Location: {com.locationCode}
+                        </p>
+                        {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                      </div>
+                    ))}
+                </div>
+              )}
+              <button
+                className="button-save"
+                type="button"
+                onClick={() => {
+                  setshowRepackingForm(!showRepackingForm);
+                }}
+              >
+                Repack
+              </button>
+              <br />
+              <br />
+              <br />
+
+              {showRepackingForm && (
+                <RepackingForm
+                  commodities={commodities}
+                  setCommodities={setcommodities}
+                />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* button duplicado */}
+        {/* <button
                   type="button"
                   onClick={() => {
                     setshowRepackingForm(!showRepackingForm);
@@ -1628,237 +1698,243 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   Repacking
                 </button> */}
 
-      <input type="checkbox" id="toggleBoton"></input>
-      <label className="button-charge" htmlFor="toggleBoton">
-      </label>
+        <input type="checkbox" id="toggleBoton"></input>
+        <label className="button-charge" htmlFor="toggleBoton"></label>
 
-      <div className="row w-100" id="miDiv">
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Charges</h3>
-              <span></span>
-            </div>
-            {true && (
-              <IncomeChargeForm
-                onCancel={setshowIncomeForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-              />
-            )}
-
-            {showIncomeForm && (
-              <Table
-                noScroll
-                noScrollY
-                data={charges}
-                columns={[
-                  "Status",
-                  "Type",
-                  "Description",
-                  "Quantity",
-                  "Price",
-                  "Currency",
-                ]}
-                onSelect={() => { }} // Make sure this line is correct
-                selectedRow={{}}
-                onDelete={() => { }}
-                onEdit={() => { }}
-                onAdd={() => { }}
-                showOptions={false}
-              />
-            )}
-            {showIncomeChargeEditForm && (
-              <IncomeChargeForm
-                onCancel={setshowIncomeChargeEditForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-                editing={true}
-                charge={selectedIncomeCharge}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="col-6">
-          <div className="creation creation-container w-100">
-            <div className="form-label_name">
-              <h3>Charges</h3>
-              <span></span>
-            </div>
-            {true && (
-              <ExpenseChargeForm
-                onCancel={setshowIncomeForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-              />
-            )}
-
-            {showExpenseForm && (
-              <Table
-                noScroll
-                noScrollY
-                data={charges}
-                columns={[
-                  "Status",
-                  "Type",
-                  "Description",
-                  "Quantity",
-                  "Price",
-                  "Currency",
-                ]}
-                onSelect={() => { }} // Make sure this line is correct
-                selectedRow={{}}
-                onDelete={() => { }}
-                onEdit={() => { }}
-                onAdd={() => { }}
-                showOptions={false}
-              />
-            )}
-            {showExpenseEditForm && (
-              <ExpenseChargeForm
-                onCancel={setshowIncomeChargeEditForm}
-                charges={charges}
-                setcharges={setcharges}
-                commodities={commodities}
-                agent={agent}
-                consignee={consignee}
-                shipper={shipper}
-                editing={true}
-                charge={selectedIncomeCharge}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="creation creation-container">
-        <div className="form-label_name">
-          <h3>Events</h3>
-          <span></span>
-        </div>
-        <div className="row">
-          <div className="col-12 text-start">
-            <div className="container-box event-section">
-              <div className="box__event--form">
-                <EventCreationForm
-                  onCancel={setshowEventForm}
-                  events={events}
-                  setevents={setEvents}
-                />
+        <div className="row w-100" id="miDiv">
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>Charges</h3>
+                <span></span>
               </div>
-              {events && events.length > 0 && (
-                <Table
-                noScrollY
-                  data={events}
-                  columns={[
-                    "Date",
-                    // "Name",
-                    "Event Type",
-                    "Details",
-                    "Location",
-                    // "Include In Tracking",
-                    "Created In",
-                    // "Created By",
-                    "Created On",
-                    // "Last Modified By",
-                    // "Last Modified On",
-                    // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
-                  ]}
+              {true && (
+                <IncomeChargeForm
+                  onCancel={setshowIncomeForm}
+                  charges={charges}
+                  setcharges={setcharges}
+                  commodities={commodities}
+                  agent={agent}
+                  consignee={consignee}
+                  shipper={shipper}
+                />
+              )}
 
-                  onSelect={handleSelectEvent}
-                  selectedRow={SelectEvent}
+              {showIncomeForm && (
+                <Table
+                  noScroll
+                  noScrollY
+                  data={charges}
+                  columns={[
+                    "Status",
+                    "Type",
+                    "Description",
+                    "Quantity",
+                    "Price",
+                    "Currency",
+                  ]}
+                  onSelect={() => {}} // Make sure this line is correct
+                  selectedRow={{}}
                   onDelete={() => {}}
                   onEdit={() => {}}
                   onAdd={() => {}}
                   showOptions={false}
-                  importLabel={false}
+                />
+              )}
+              {showIncomeChargeEditForm && (
+                <IncomeChargeForm
+                  onCancel={setshowIncomeChargeEditForm}
+                  charges={charges}
+                  setcharges={setcharges}
+                  commodities={commodities}
+                  agent={agent}
+                  consignee={consignee}
+                  shipper={shipper}
+                  editing={true}
+                  charge={selectedIncomeCharge}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="col-6">
+            <div className="creation creation-container w-100">
+              <div className="form-label_name">
+                <h3>Charges</h3>
+                <span></span>
+              </div>
+              {true && (
+                <ExpenseChargeForm
+                  onCancel={setshowIncomeForm}
+                  charges={charges}
+                  setcharges={setcharges}
+                  commodities={commodities}
+                  agent={agent}
+                  consignee={consignee}
+                  shipper={shipper}
+                />
+              )}
+
+              {showExpenseForm && (
+                <Table
+                  noScroll
+                  noScrollY
+                  data={charges}
+                  columns={[
+                    "Status",
+                    "Type",
+                    "Description",
+                    "Quantity",
+                    "Price",
+                    "Currency",
+                  ]}
+                  onSelect={() => {}} // Make sure this line is correct
+                  selectedRow={{}}
+                  onDelete={() => {}}
+                  onEdit={() => {}}
+                  onAdd={() => {}}
+                  showOptions={false}
+                />
+              )}
+              {showExpenseEditForm && (
+                <ExpenseChargeForm
+                  onCancel={setshowIncomeChargeEditForm}
+                  charges={charges}
+                  setcharges={setcharges}
+                  commodities={commodities}
+                  agent={agent}
+                  consignee={consignee}
+                  shipper={shipper}
+                  editing={true}
+                  charge={selectedIncomeCharge}
                 />
               )}
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="creation creation-container">
-        <div className="form-label_name">
-          <h3>Attachments</h3>
-          <span></span>
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Events</h3>
+            <span></span>
+          </div>
+          <div className="row">
+            <div className="col-12 text-start">
+              <div className="container-box event-section">
+                <div className="box__event--form">
+                  <EventCreationForm
+                    onCancel={setshowEventForm}
+                    events={events}
+                    setevents={setEvents}
+                  />
+                </div>
+                {events && events.length > 0 && (
+                  <Table
+                    noScrollY
+                    data={events}
+                    columns={[
+                      "Date",
+                      // "Name",
+                      "Event Type",
+                      "Details",
+                      "Location",
+                      // "Include In Tracking",
+                      "Created In",
+                      // "Created By",
+                      "Created On",
+                      // "Last Modified By",
+                      // "Last Modified On",
+                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                    ]}
+                    onSelect={handleSelectEvent}
+                    selectedRow={SelectEvent}
+                    onDelete={() => {}}
+                    onEdit={() => {}}
+                    onAdd={() => {}}
+                    showOptions={false}
+                    importLabel={false}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="row">
-          <div className="col-12">
-            <label htmlFor="fileInput" className="custom-file-input">
-              <span className="button-text">Seleccionar archivos</span>
-              <input
-                type="file"
-                id="fileInput"
-                multiple
-                onChange={handleFileUpload}
-                style={{ display: "none" }}
-              />
-            </label>
-            <div className="image-container">
-      {attachments.map((attachment) => (
-        <div key={attachment.name} className="image-wrapper">
-          <img
-            src={attachment.base64}
-            alt={attachment.name}
-            onClick={() => handleShowLargeImage(attachment.base64)}
-          />
-          <div className="image-buttons">
-            <button
-              className="custom-button"
-              onClick={() => handleDeleteAttachment(attachment.name)}
-            >
-              <i className="fas fa-trash"></i>
-            </button>
-            {/* <button
+
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Attachments</h3>
+            <span></span>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <label htmlFor="fileInput" className="custom-file-input">
+                <span className="button-text">Seleccionar archivos</span>
+                <input
+                  type="file"
+                  id="fileInput"
+                  multiple
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+              </label>
+              <div className="image-container">
+                {attachments.map((attachment) => (
+                  <div key={attachment.name} className="image-wrapper">
+                    <img
+                      src={attachment.base64}
+                      alt={attachment.name}
+                      onClick={() => handleShowLargeImage(attachment.base64)}
+                    />
+                    <div className="image-buttons">
+                      <button
+                        className="custom-button"
+                        onClick={() => handleDeleteAttachment(attachment.name)}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                      {/* <button
               className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
             </button> */}
+                    </div>
+                  </div>
+                ))}
+                {showLargeImage && (
+                  <div
+                    className="large-image-overlay"
+                    onClick={handleCloseLargeImage}
+                  >
+                    <div className="large-image-container">
+                      <button
+                        className="button-cancel pick "
+                        onClick={handleCloseLargeImage}
+                      >
+                        <i className="fas fa-times-circle"></i>
+                      </button>
+                      <img
+                        src={largeImageSrc}
+                        style={{ width: "60rem" }}
+                        alt="Large Image"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      ))}
-      {showLargeImage && (
-        <div className="large-image-overlay" onClick={handleCloseLargeImage}>
-          <div className="large-image-container">
-            <button className="button-cancel pick " onClick={handleCloseLargeImage}>
-              <i className="fas fa-times-circle"></i>
-            </button>
-            <img src={largeImageSrc} style={{ width:"60rem" }} alt="Large Image" />
+
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Notes</h3>
+            <span></span>
           </div>
-        </div>
-      )}
-    </div>
-  
-          </div>
-        </div>
-      </div>
 
-
-      <div className="creation creation-container">
-        <div className="form-label_name">
-          <h3>Notes</h3>
-          <span></span>
-        </div>
-
-        <div className="row align-items-center">
-          <div className="col-10 text-start" style={{width: "100%" }}>
-            <Input
+          <div className="row align-items-center">
+            <div className="col-10 text-start" style={{ width: "100%" }}>
+              <Input
                 type="textarea"
                 inputName="notes"
                 placeholder="Nota here..."
@@ -1868,7 +1944,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                   setFormData({ ...formData, notes: e.target.value })
                 }
               />
-            {/* <input
+              {/* <input
               name="notes"
               type="text"
               className="form-input"
@@ -1876,9 +1952,9 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               onChange={(e) => setNote(e.target.value)}
               style={{ width: "99%" }}
             /> */}
-          </div>
+            </div>
 
-          {/* <div className="col">
+            {/* <div className="col">
             <button
               type="button"
               onClick={addNotes}
@@ -1893,7 +1969,7 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               Add
             </button>
           </div> */}
-          {/* <div className="row">
+            {/* <div className="row">
             <div className="col-10 text-start">
               <Input
                 name="notes"
@@ -1905,23 +1981,23 @@ const handleDownloadAttachment = (base64Data, fileName) => {
               />
             </div> 
           </div>*/}
+          </div>
         </div>
-      </div>
 
-      <div className="company-form__options-container">
-        <button
-          disabled={changeStateSave}
-          className="button-save"
-          onClick={sendData}
-        >
-          Save
-        </button>
+        <div className="company-form__options-container">
+          <button
+            disabled={changeStateSave}
+            className="button-save"
+            onClick={sendData}
+          >
+            Save
+          </button>
 
-        <button className="button-cancel" onClick={handleCancel}>
-          Cancel
-        </button>
-      </div>
-      {/* {showSuccessAlert && (
+          <button className="button-cancel" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
+        {/* {showSuccessAlert && (
         <Alert
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
@@ -1933,52 +2009,52 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           </strong>
         </Alert>
       )} */}
-      {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <p className="succes"> Success </p>
-          <p className=" created">
-            {" "}
-            Warehouse Receipt {creating
-              ? "created"
-              : "updated"} successfully!{" "}
-          </p>
-        </Alert>
-      )}
+        {showSuccessAlert && (
+          <Alert
+            severity="success"
+            onClose={() => setShowSuccessAlert(false)}
+            className="alert-notification"
+          >
+            <p className="succes"> Success </p>
+            <p className=" created">
+              {" "}
+              Warehouse Receipt {creating
+                ? "created"
+                : "updated"} successfully!{" "}
+            </p>
+          </Alert>
+        )}
 
-      {/* added change estate for warning alert */}
-      {showWarningAlert && (
-        <Alert
-          severity="warning"
-          onClose={() => setShowWarningAlert(false)}
-          className="alert-notification-warning"
-        >
-          <p className="succes">
-            {" "}
-            Please fill in data in the commodities section, do not leave empty
-            spaces.
-          </p>
-          <p className="succes"> Don't leave empty fields.</p>
-        </Alert>
-      )}
+        {/* added change estate for warning alert */}
+        {showWarningAlert && (
+          <Alert
+            severity="warning"
+            onClose={() => setShowWarningAlert(false)}
+            className="alert-notification-warning"
+          >
+            <p className="succes">
+              {" "}
+              Please fill in data in the commodities section, do not leave empty
+              spaces.
+            </p>
+            <p className="succes"> Don't leave empty fields.</p>
+          </Alert>
+        )}
 
-      {showErrorAlert && (
-        <Alert
-          severity="error"
-          onClose={() => setShowErrorAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Error</AlertTitle>
-          <strong>
-            Error {creating ? "creating" : "updating"} Warehouse Receipt. Please
-            try again
-          </strong>
-        </Alert>
-      )}
-    </div>
+        {showErrorAlert && (
+          <Alert
+            severity="error"
+            onClose={() => setShowErrorAlert(false)}
+            className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>
+              Error {creating ? "creating" : "updating"} Warehouse Receipt.
+              Please try again
+            </strong>
+          </Alert>
+        )}
+      </div>
     </div>
   );
 };

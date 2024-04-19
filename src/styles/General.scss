@@ -678,7 +678,7 @@
   }
 
   .generic-table {
-    height: 90%;
+    // height: 50v;
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -714,6 +714,7 @@
     width: 100%;
     text-align: center;
     margin-right: 3vw;
+    // margin-bottom: 8vw;
     // margin: 8px 0;
   }
 
@@ -1379,7 +1380,7 @@
 }
 
 .form-column-create{
-  width: 19vw;
+  width: 18vw;
 }
 
 #creation-date {
