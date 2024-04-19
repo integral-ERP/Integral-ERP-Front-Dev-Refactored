@@ -1099,7 +1099,27 @@ const handleDownloadAttachment = (base64Data, fileName) => {
           : ReceiptService.updateReceipt(pickupOrder.id, rawData));
 
         if (response.status >= 200 && response.status <= 300) {
-          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+        PickupService.updatePickup(pickupOrder.id, rawDatapick);
+        
+          
+          if (!creating) {
+            const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+            const buscarpickup = (await callPickupOrders(null)).data.results;
+
+            //console.log("BUSCARPICKUP", buscarpickup);
+            const numeroRecibo = buscarrecipt.data.number;
+            //console.log("numeroRecibo",numeroRecibo);
+            buscarpickup.forEach(pickup => {
+              if (pickup.number === numeroRecibo) {
+                //console.log("HECHO",pickup.number);
+                PickupService.updatePickup(pickup.id, rawDatapick);
+              }
+            }); 
+          } 
+          
+          
+          
+          //PickupService.updatePickup(pickupOrder.id, rawDatapick);
           if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
@@ -1135,6 +1155,15 @@ const handleDownloadAttachment = (base64Data, fileName) => {
     clientToBillRequest,
   ]);
 
+  const callPickupOrders = async (url = null) => {
+    try {
+      return await PickupService.getPickups(url);
+    } catch (error) {
+      console.error("Error al obtener pedidos de recogida:", error);
+      throw error;
+    }
+  };
+  
   
 
   /* useEffect(() => {

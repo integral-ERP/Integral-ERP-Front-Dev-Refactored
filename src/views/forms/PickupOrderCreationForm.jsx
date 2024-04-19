@@ -1002,14 +1002,50 @@ const PickupOrderCreationForm = ({
         const response = await (
           //added for create commdities 
           commodities.length === 0
-            ? Promise.resolve(null) // Retorna una promesa resuelta con null
+            ? Promise.resolve(null) 
             : creating 
               ? ReceiptService.createReceipt(rawData)
-              : ReceiptService.updateReceipt(pickupOrder.id, rawData)
+              : (async () => {
+                const buscapick = await PickupService.getPickupById(pickupOrder.id);
+                const buscarecip = (await callrecipt(null)).data.results;
+        
+                //console.log("BUSCARPICKUP", buscarecip);
+                const numeroRecibo = buscapick.data.number;
+                //console.log("numeroRecibo", numeroRecibo);
+        
+                // Verifica si buscapick se ha obtenido correctamente
+                if (buscapick.status >= 200 && buscapick.status <= 300) {
+                  // Realiza la lógica solo si buscapick se ha obtenido correctamente
+                  buscarecip.forEach((pickup) => {
+                    if (pickup.number === numeroRecibo) {
+                      //console.log("HECHO", pickup.number);
+                      ReceiptService.updateReceipt(pickup.id, rawData)
+                    }
+                  });
+                } else {
+                  
+                  console.error("Error al obtener buscapick");
+                }
+    
+              })()
         );
         
 
         if (response.status >= 200 && response.status <= 300) {
+          /* if (!creating) {
+            const buscapick = await PickupService.getPickupById(pickupOrder.id);
+            const buscarecip = (await callrecipt(null)).data.results;
+
+            console.log("BUSCARPICKUP", buscarecip);
+            const numeroRecibo = buscapick.data.number;
+            console.log("numeroRecibo",numeroRecibo);
+            buscarecip.forEach(pickup => {
+              if (pickup.number === numeroRecibo) {
+                console.log("HECHO",pickup.number);
+                //PickupService.updatePickup(pickup.id, rawData);
+              }
+            }); 
+          } */
           if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
@@ -1045,6 +1081,14 @@ const PickupOrderCreationForm = ({
     clientToBillRequest,
   ]);
 
+  const callrecipt = async (url = null) => {
+    try {
+      return await ReceiptService.getReceipts(url);
+    } catch (error) {
+      console.error("Error al obtener pedidos de recogida:", error);
+      throw error;
+    }
+  };
   
   const getAsyncSelectValue = () => {
     let selectedOption = null;
