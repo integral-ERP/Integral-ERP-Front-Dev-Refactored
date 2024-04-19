@@ -44,8 +44,8 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
-  const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
+  const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -181,7 +181,7 @@ const PickupOrderCreationForm = ({
   const handleDeliveryLocationSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const deliveryLocation = deliveryLocationOptions.find(option => option.id === id && option.type === type); 
+    const deliveryLocation = deliveryLocationOptions.find(option => option.id === id && option.type === type);
     if (deliveryLocation) {
       const info = `${deliveryLocation?.street_and_number || ""} - ${deliveryLocation?.city || ""
         } - ${deliveryLocation?.state || ""} - ${deliveryLocation?.country || ""} - ${deliveryLocation?.zip_code || ""
@@ -197,7 +197,7 @@ const PickupOrderCreationForm = ({
       console.error("Error: No se encontró la ubicación de entrega con el id y tipo especificados.");
     }
   };
-  
+
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
@@ -222,27 +222,27 @@ const PickupOrderCreationForm = ({
     const type = event?.type || "";
     const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
     if (!validTypes.includes(type)) {
-        console.error(`Unsupported consignee type: ${type}`);
-        return;
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
     }
     const selectedConsignee = consigneeOptions.find(option => option.id === id && option.type === type);
     if (!selectedConsignee) {
-        console.error(`Consignee not found with ID ${id} and type ${type}`);
-        return;
+      console.error(`Consignee not found with ID ${id} and type ${type}`);
+      return;
     }
 
     const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
-        } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
-        }`;
+      } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""} - ${selectedConsignee.zip_code || ""
+      }`;
     setconsignee(selectedConsignee);
     setdefaultValueConsignee(selectedConsignee);
     setFormData({
-        ...formData,
-        consigneeId: id,
-        consigneeType: type,
-        consigneeInfo: info,
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
     });
-};
+  };
 
 
   const handleShipperSelection = (event) => {
@@ -253,11 +253,11 @@ const PickupOrderCreationForm = ({
       console.error(`Unsupported consignee type: ${type}`);
       return;
     }
-      const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
-      if (!selectedShipper) {
-          console.error(`Shipper not found with ID ${id} and type ${type}`);
-          return;
-      }
+    const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
+    if (!selectedShipper) {
+      console.error(`Shipper not found with ID ${id} and type ${type}`);
+      return;
+    }
 
     const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
       } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
@@ -299,36 +299,32 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event?.target?.value || "";
+    console.log("TYPE", type);
 
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
-      const id =
-        type === "shipper"
-          ? formData.shipperId
-          : type === "consignee"
-            ? formData.consigneeId
-            : "";
-      setFormData({
-        ...formData,
-        client_to_bill_type: type,
-        client_to_bill: id,
-      });
+      if (formData.shipperId || formData.consigneeId) {
+        const id = type === "shipper" ? formData.shipperId : formData.consigneeId;
+        setFormData({
+          ...formData,
+          client_to_bill_type: type,
+          client_to_bill: id,
+        });
+      } else {
+        console.error("ShipperId or consigneeId is not available.");
+      }
     } else {
       setCTBType(event?.type);
       const id = event?.id;
-      const type =
-        event?.type === "shipper"
-          ? "shipper"
-          : event?.type === "consignee"
-            ? "consignee"
-            : "other";
+      const type = event?.type === "shipper" ? "shipper" : event?.type === "consignee" ? "consignee" : "other";
 
       setFormData({
         ...formData,
         client_to_bill_type: type,
         client_to_bill: id,
       });
+      console.log('Este es form data despues de el else', formData);
     }
   };
 
@@ -428,6 +424,7 @@ const PickupOrderCreationForm = ({
               : "other"
           : "other",
       };
+      console.log("updatedFormData", updatedFormData);
       let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
         ?.type_person
         ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
@@ -441,6 +438,7 @@ const PickupOrderCreationForm = ({
       });
       setFormData(updatedFormData);
       setcanRender(true);
+
     }
   }, [creating, pickupOrder]);
 
@@ -491,25 +489,50 @@ const PickupOrderCreationForm = ({
 
     return options;
   };
-
-  const loadShipperSelectOptions = async () => {
-    const options = shipperOptions.map(option => ({
-      ...option,
-      value: option.id,
-      label: option.name
-    }));
-    return options;
+  const loadShipperSelectOptions = async (inputValue) => {
+    if (inputValue) {
+      const filteredOptions = shipperOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+  
+      return options;
+    } else {
+      const options = shipperOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+      return options;
+    }
   };
-
-  const loadConsigneeSelectOptions = async () => {
-    const options = consigneeOptions.map(option => ({
-      ...option,
-      value: option.id,
-      label: option.name
-    }));
-    return options;
+  
+  const loadConsigneeSelectOptions = async (inputValue) => {
+    if (inputValue) {
+      const filteredOptions = consigneeOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+  
+      return options;
+    } else {
+      const options = consigneeOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+      return options;
+    }
   };
-
+  
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -598,6 +621,9 @@ const PickupOrderCreationForm = ({
     }
     if (type === "agent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
+    }
+    if (type === "Carrier") {
+      option = await CarrierService.getCarrierById(id);
     }
     setdefaultValueConsignee(option?.data);
   };
@@ -695,10 +721,10 @@ const PickupOrderCreationForm = ({
       };
 
       const response = await PickupService.createConsignee(consignee);
-       if (response.status === 201) {
+      if (response.status === 201) {
         formData.client_to_bill_type === "consignee"
-        ? (auxVar = response.data.id)
-        : "";
+          ? (auxVar = response.data.id)
+          : "";
         setconsigneeRequest(response.data.id);
       }
     }
