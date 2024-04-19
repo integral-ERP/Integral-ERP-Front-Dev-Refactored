@@ -140,15 +140,6 @@ const PickupOrderCreationForm = ({
       });
   }, []);
 
-
-
-
-
-  useEffect(() => {
-
-  }, [employeeOptions, formData.employeeId]);
-
-
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
