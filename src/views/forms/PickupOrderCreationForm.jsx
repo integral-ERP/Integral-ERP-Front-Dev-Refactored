@@ -263,7 +263,6 @@ const PickupOrderCreationForm = ({
       console.error(`Shipper not found with ID ${id} and type ${type}`);
       return;
     }
-
     const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
       } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
       }`;
@@ -459,171 +458,50 @@ const PickupOrderCreationForm = ({
   };
 
 
-  const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
+  const loadSelectOptions = async (options, inputValue) => {
+    let filteredOptions = options;
+    if (inputValue) {
+      filteredOptions = options.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+    }
+    const mappedOptions = filteredOptions.map(option => ({
+      ...option,
+      value: option.id,
+      label: option.name
+    }));
+
+    return mappedOptions;
+  };
 
   const loadEmployeeSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = employeeOptions.filter(option =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      )
-      const options = filteredOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    } else {
-      const options = employeeOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    }
+    return await loadSelectOptions(employeeOptions, inputValue)
   }
   const loadIssuedBySelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = issuedByOptions.filter(option =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase()));
-      const options = filteredOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    } else {
-      const options = issuedByOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    }
-  };
+    return await loadSelectOptions(issuedByOptions, inputValue)
+  }
 
   const loadDestinationAgentsSelectOptions = async (inputValue) => {
-    if (inputValue) {
-    const filteredOptions = destinationAgentOptions.filter(
-      option => option.name.toLowerCase().includes(inputValue.toLowerCase()))
-      const options = filteredOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    } else {
-      const options = destinationAgentOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }))
-      return options
-    }
-      
+    return await loadSelectOptions(destinationAgentOptions, inputValue)
   }
   const loadShipperSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = shipperOptions.filter(option =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      const options = filteredOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }));
-
-      return options;
-    } else {
-      const options = shipperOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }));
-      return options;
-    }
-  };
+    return await loadSelectOptions(shipperOptions, inputValue)
+  }
 
   const loadConsigneeSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = consigneeOptions.filter(option =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      const options = filteredOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }));
-
-      return options;
-    } else {
-      const options = consigneeOptions.map(option => ({
-        ...option,
-        value: option.id,
-        label: option.name
-      }));
-      return options;
-    }
-  };
-
+    return await loadSelectOptions(consigneeOptions, inputValue)
+  }
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
-    return options;
-  };
+    return await loadSelectOptions(pickupLocationOptions, inputValue)
+  }
 
   const loadDeliveryLocationSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "Carrier"),
-    ];
-
-    return options;
-  };
+    return await loadSelectOptions(deliveryLocationOptions, inputValue)
+  }
 
   const loadCarrierSelectOptions = async (inputValue) => {
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
-
-    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
-
-    return options;
-  };
-
-  const loadClientToBillSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
-    return options;
+    return await loadSelectOptions(carrierOptions, inputValue)
   };
 
   const loadShipperOption = async (id, type) => {
