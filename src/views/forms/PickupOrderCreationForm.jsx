@@ -91,6 +91,11 @@ const PickupOrderCreationForm = ({
     shipperId: "",
     shipperType: "",
     shipperInfo: "",
+
+    supplierId: "",
+    supplierType: "",
+    supplierInfo: "",
+
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
@@ -98,6 +103,7 @@ const PickupOrderCreationForm = ({
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
+
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
@@ -265,6 +271,9 @@ const PickupOrderCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      supplierId: id,
+      supplierType: type,
+      supplierInfo: info
     });
   };
   const handleCommodityDelete = () => {

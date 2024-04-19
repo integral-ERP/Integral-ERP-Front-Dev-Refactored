@@ -1424,10 +1424,12 @@ const ReceiptCreationForm = ({
                     }}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={supplierOptions}
+                    defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
                     value={supplierOptions.find(
-                      (option) => option.id === formData.supplierId
+                      (option) => 
+                      option.id === formData.supplierId &&
+                      option.type_person === formData.supplierType
                     )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
