@@ -502,13 +502,25 @@ const PickupOrderCreationForm = ({
   };
 
   const loadDestinationAgentsSelectOptions = async (inputValue) => {
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
-
-    return options;
-  };
+    if (inputValue) {
+    const filteredOptions = destinationAgentOptions.filter(
+      option => option.name.toLowerCase().includes(inputValue.toLowerCase()))
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    } else {
+      const options = destinationAgentOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }))
+      return options
+    }
+      
+  }
   const loadShipperSelectOptions = async (inputValue) => {
     if (inputValue) {
       const filteredOptions = shipperOptions.filter(option =>
