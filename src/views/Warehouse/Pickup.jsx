@@ -76,7 +76,7 @@ const Pickup = () => {
       setContextMenuPosition({ x: clickX, y: clickY });
       setShowContextMenu(true);
       //added context menu for status onhand
-      if (selectedPickupOrder.status != StatusEmpty && StatusOnHold) {
+      if (selectedPickupOrder.status != StatusEmpty) {
         setShowContextMenu(false);
       }
     }
@@ -163,7 +163,12 @@ const Pickup = () => {
 
   const handleSelectPickupOrder = (PickupOrder) => {
     setSelectedPickupOrder(PickupOrder);
-    console.log("PickupOrder",PickupOrder);
+    if (PickupOrder){
+      console.log("PickupOrder=1",PickupOrder);
+    }else{
+      console.log("PickupOrder=2",PickupOrder);
+      toggleLogin();
+    }
   };
 
   const handleEditPickupOrders = () => {
@@ -252,6 +257,7 @@ const Pickup = () => {
   const seteWarehouse = () => {
     if (selectedPickupOrder) {
       setCreateWarehouseReceipt(true);
+      toggleLogin();
     } else {
       alert("Please select a pickup order to continue.");
     }
@@ -357,6 +363,14 @@ const Pickup = () => {
     }
   ] */
 
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  // Función para cambiar el estado
+  const toggleLogin = () => {
+    // Cambiar el estado inverso del estado actual
+    setIsLoggedIn(!isLoggedIn);
+  };
+
   return (
     <>
       <div className="dashboard__layout">
@@ -381,7 +395,8 @@ const Pickup = () => {
               onDelete={handleDeletePickupOrder}
               onEdit={handleEditPickupOrders}
               onAdd={handleAddPickupOrder}
-              title="Pick-up Orders"
+              // title="Pick-up Orders"
+              title={isLoggedIn ? "Pick-up Orders" : "Warehouse Receipts"}
               setData={setpickupOrders}
               handleContextMenu={handleContextMenu}
               showContextMenu={showContextMenu}
