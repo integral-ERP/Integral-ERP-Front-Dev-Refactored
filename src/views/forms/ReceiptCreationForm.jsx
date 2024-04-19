@@ -45,10 +45,12 @@ const ReceiptCreationForm = ({
   const [showExpenseForm, setshowExpenseForm] = useState(false);
   const [showEventForm, setshowEventForm] = useState(false);
   const [consignee, setconsignee] = useState(null);
+  console.log('Este es el consgine que se renderiza', consignee);
   const [supplier, setSupplier] = useState(null);
   const [defaultValueSupplier, setDefaultValueSupplier] = useState(null);
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
+  console.log('se renderiza el shipper', shipper);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
@@ -1324,7 +1326,9 @@ const ReceiptCreationForm = ({
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
                     value={shipperOptions.find(
-                      (option) => option.id === formData.shipperId
+                      (option) =>
+                       option.id === formData.shipperId &&
+                       option.type === formData.shipperType
                     )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
