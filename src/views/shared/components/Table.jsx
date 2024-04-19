@@ -906,9 +906,9 @@ const Table = ({
       window.location.href = window.location.origin;
       // navigate(-1)
     } else {
-      // window.location.reload()
-      onSelect(null);
-      setShowPage("initial");
+      window.location.reload()
+      // onSelect(null);
+      // setShowPage("initial");
     }
   };
 
