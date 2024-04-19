@@ -76,7 +76,7 @@ const Pickup = () => {
       setContextMenuPosition({ x: clickX, y: clickY });
       setShowContextMenu(true);
       //added context menu for status onhand
-      if (selectedPickupOrder.status != StatusEmpty && StatusOnHold) {
+      if (selectedPickupOrder.status != StatusEmpty) {
         setShowContextMenu(false);
       }
     }

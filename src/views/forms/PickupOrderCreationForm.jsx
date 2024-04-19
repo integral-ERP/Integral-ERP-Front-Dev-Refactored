@@ -999,9 +999,15 @@ const PickupOrderCreationForm = ({
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
         };
-        const response = await (creating
-          ? ReceiptService.createReceipt(rawData)
-          : ReceiptService.updateReceipt(pickupOrder.id, rawData));
+        const response = await (
+          //added for create commdities 
+          commodities.length === 0
+            ? Promise.resolve(null) // Retorna una promesa resuelta con null
+            : creating 
+              ? ReceiptService.createReceipt(rawData)
+              : ReceiptService.updateReceipt(pickupOrder.id, rawData)
+        );
+        
 
         if (response.status >= 200 && response.status <= 300) {
           if (fromPickUp) {
