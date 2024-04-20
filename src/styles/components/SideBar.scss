@@ -475,20 +475,20 @@
   
   .content-page {
     // overflow-y: scroll;
-    width: 99%;
-    height: 90%;
+    width: 97%;
+    height: min-content;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: fixed;
+    position: absolute;
     top: 0;
     margin: 10vh 0 0 2rem;
     left: 40px;
     transition: all 0.5s ease;
     background-repeat: no-repeat;
     background-size: cover;
-    overflow-y: auto !important;
+    // overflow-y: auto !important;
     overflow-x: hidden;
     // margin-left: 21rem !important;
   }

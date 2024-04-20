@@ -210,7 +210,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             </select>
           </div>
         </div>
-        <div className="form-row" style={{ width: '9vw', alignItems: 'center', marginLeft: '13px'}}>
+        <div className="form-row" style={{ width: '12vw', alignItems: 'center', marginLeft: '13px'}}>
           <div className="form-column-create">
             <Input
               inputName="includeTracking"
@@ -227,7 +227,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           </div>
         </div>
 
-        <div className="form-row" style={{ width: '5vw', marginTop: '5px', marginLeft: '-11px'}}>
+        <div className="form-row" style={{ width: '8vw', marginTop: '5px', marginLeft: '-11px'}}>
           <div className="form-column-create">
             <div
               className="table-hover charge-buttons"
