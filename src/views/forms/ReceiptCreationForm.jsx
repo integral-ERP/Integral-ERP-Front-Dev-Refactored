@@ -1116,11 +1116,83 @@ const ReceiptCreationForm = ({
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
         };
+        //added para guardar comidities in pickup order
+        let rawDatapick = {
+          status: formData.status,
+          number: formData.number,
+          creation_date: formData.createdDateAndTime,
+          pick_up_date: formData.pickupDateAndTime,
+          delivery_date: formData.deliveryDateAndTime,
+          issued_by: formData.issuedById,
+          destination_agent: formData.destinationAgentId,
+          employee: formData.employeeId,
+
+          shipper: shipperRequest,
+          shipperType: "",
+          pick_up_location: formData.pickuplocation,
+
+          consignee: consigneeRequest,
+          delivery_location: formData.deliverylocation,
+          client_to_bill_type: formData.client_to_bill_type,
+          client_to_bill: formData.client_to_bill,
+
+          pro_number: formData.proNumber,
+          tracking_number: formData.trackingNumber,
+          inland_carrier: formData.mainCarrierdId,
+          main_carrier: formData.mainCarrierdId,
+
+          invoice_number: formData.invoiceNumber,
+          purchase_order_number: formData.purchaseOrderNumber,
+
+          commodities: commodities,
+          charges: charges,
+          supplier: formData.shipperId,
+          weight: weightUpdated,
+        };
+        
         const response = await (creating
           ? ReceiptService.createReceipt(rawData)
-          : ReceiptService.updateReceipt(pickupOrder.id, rawData));
+          : (async () => {
+              const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
+              const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+              const buscarpickup = (await callPickupOrders(null)).data.results;
+              const numeroRecibo = buscarrecipt.data.number;
+              
+              buscarpickup.forEach(pickup => {
+                if (pickup.number === numeroRecibo) {
+                  PickupService.updatePickup(pickup.id, rawDatapick);
+                }
+              });
+              
+              return result; // retornar el resultado de updateReceipt
+            })()
+        );
+        
+
+        /* if (!creating) {
+            const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+            const buscarpickup = (await callPickupOrders(null)).data.results;
+
+            //console.log("BUSCARPICKUP", buscarpickup);
+            const numeroRecibo = buscarrecipt.data.number;
+            //console.log("numeroRecibo",numeroRecibo);
+            buscarpickup.forEach(pickup => {
+              if (pickup.number === numeroRecibo) {
+                //console.log("HECHO",pickup.number);
+                PickupService.updatePickup(pickup.id, rawDatapick);
+              }
+            }); 
+          }  */
 
         if (response.status >= 200 && response.status <= 300) {
+          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+        
+          
+              
+          
+          
+          
+          //PickupService.updatePickup(pickupOrder.id, rawDatapick);
           if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
@@ -1155,6 +1227,17 @@ const ReceiptCreationForm = ({
     allStateUpdatesComplete,
     clientToBillRequest,
   ]);
+
+  const callPickupOrders = async (url = null) => {
+    try {
+      return await PickupService.getPickups(url);
+    } catch (error) {
+      console.error("Error al obtener pedidos de recogida:", error);
+      throw error;
+    }
+  };
+  
+  
 
   /* useEffect(() => {
     console.log(formData)
