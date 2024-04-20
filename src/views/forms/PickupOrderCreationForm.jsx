@@ -868,7 +868,7 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          supplier: formData.shipperId,
+         /*  supplier: formData.shipperId, */
           weight: weightUpdated,
         };
 
