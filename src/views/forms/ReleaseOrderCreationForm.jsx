@@ -524,9 +524,9 @@ const ReleaseOrderCreationForm = ({
                   <div className="col-4 text-start">
                     <input
                       className="tex-release"
-                      type="number"
-                      inputName="number"
-                      placeholder="Number..."
+                      // type="text"
+                      // inputName="number"
+                      // placeholder="Number..."
                       value={formData.number}
                       readonly={true}
                       label="Ware House Number"
