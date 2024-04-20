@@ -1595,6 +1595,7 @@ const PickupOrderCreationForm = ({
                 <div className="text-center">
                   <Table
                     noScroll
+                    noScrollY
                     data={commodities}
                     columns={[
                       "Description",
