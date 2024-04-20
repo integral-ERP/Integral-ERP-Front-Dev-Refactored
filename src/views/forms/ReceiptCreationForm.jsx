@@ -775,23 +775,6 @@ const ReceiptCreationForm = ({
     return options;
   };
 
-  const loadSupplierSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-
-    const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
-      ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
-    ];
-
-    return options;
-  };
-
   const loadConsigneeSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
       .results;
@@ -1526,11 +1509,11 @@ const ReceiptCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={supplierOptions}
-                    loadOptions={loadSupplierSelectOptions}
-                    value={supplierOptions.find(
+                    loadOptions={loadShipperSelectOptions}
+                    value={shipperOptions.find(
                       (option) => 
-                      option.id === formData.supplierId &&
-                      option.type_person === formData.supplierType
+                      option.id === formData.shipperId &&
+                      option.type_person === formData.shipperType
                     )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
