@@ -1096,13 +1096,24 @@ const handleDownloadAttachment = (base64Data, fileName) => {
         
         const response = await (creating
           ? ReceiptService.createReceipt(rawData)
-          : ReceiptService.updateReceipt(pickupOrder.id, rawData));
-
-        if (response.status >= 200 && response.status <= 300) {
-        PickupService.updatePickup(pickupOrder.id, rawDatapick);
+          : (async () => {
+              const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
+              const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+              const buscarpickup = (await callPickupOrders(null)).data.results;
+              const numeroRecibo = buscarrecipt.data.number;
+              
+              buscarpickup.forEach(pickup => {
+                if (pickup.number === numeroRecibo) {
+                  PickupService.updatePickup(pickup.id, rawDatapick);
+                }
+              });
+              
+              return result; // retornar el resultado de updateReceipt
+            })()
+        );
         
-          
-          if (!creating) {
+
+        /* if (!creating) {
             const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
             const buscarpickup = (await callPickupOrders(null)).data.results;
 
@@ -1115,7 +1126,13 @@ const handleDownloadAttachment = (base64Data, fileName) => {
                 PickupService.updatePickup(pickup.id, rawDatapick);
               }
             }); 
-          } 
+          }  */
+
+        if (response.status >= 200 && response.status <= 300) {
+          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+        
+          
+              
           
           
           
