@@ -67,6 +67,7 @@ const ReceiptCreationForm = ({
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [supplierOptions, setSupplierOptions] = useState([]);
+  console.log('Opciones en supplier', supplierOptions);
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const today = dayjs().format("YYYY-MM-DD");
@@ -774,6 +775,23 @@ const ReceiptCreationForm = ({
     return options;
   };
 
+  const loadSupplierSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseVendors = (await VendorService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+
+    const options = [
+      ...addTypeToObjects(responseVendors, "vendor"),
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+    ];
+
+    return options;
+  };
+
   const loadConsigneeSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
       .results;
@@ -1414,18 +1432,18 @@ const ReceiptCreationForm = ({
               </div>
               <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
-                  <label htmlFor="shipper" className="form-label">
+                  <label htmlFor="supplier" className="form-label">
                     Name:
                   </label>
                   <AsyncSelect
-                    id="shipper"
+                    id="supplier"
                     onChange={(e) => {
                       handleSupplierSelection(e);
                     }}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={shipperOptions}
-                    loadOptions={loadShipperSelectOptions}
+                    defaultOptions={supplierOptions}
+                    loadOptions={loadSupplierSelectOptions}
                     value={supplierOptions.find(
                       (option) => 
                       option.id === formData.supplierId &&
