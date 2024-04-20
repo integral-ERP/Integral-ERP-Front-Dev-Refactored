@@ -168,11 +168,12 @@ const Receipt = () => {
               setreceipts(newreceipts);
 
               setShowSuccessAlert(true);
-              setTimeout(() => {
-                setShowSuccessAlert(false);
-              },
-              window.location.reload(),3000
-              
+              setTimeout(
+                () => {
+                  setShowSuccessAlert(false);
+                },
+                window.location.reload(),
+                3000
               );
             } catch (error) {
               console.error("Error al eliminar el recibo:", error);
@@ -402,7 +403,8 @@ const Receipt = () => {
             }
           >
             <Table
-            noScroll
+              className="centered-table"
+              noScroll
               data={receipts}
               columns={columns}
               onSelect={handleSelectPickupOrder} // Make sure this line is correct
@@ -419,6 +421,7 @@ const Receipt = () => {
               setData={setreceipts}
               contextService={ReceiptService}
               importEnabled={false}
+              centeredColumns={[2, 7]}
             >
               {selectedPickupOrder !== null && (
                 <ReceiptCreationForm
@@ -453,7 +456,6 @@ const Receipt = () => {
                 <AlertTitle>Success</AlertTitle>
                 <strong>Receipt Order deleted successfully!</strong>
               </Alert>
-              
             )}
             {showErrorAlert && (
               <Alert
@@ -465,32 +467,6 @@ const Receipt = () => {
                 <strong>Error deleting Receipt. Please try again</strong>
               </Alert>
             )}
-
-            {/* {selectedPickupOrder !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReceiptCreationForm
-                  pickupOrder={selectedPickupOrder}
-                  closeModal={closeModal}
-                  creating={false}
-                  onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )}
-
-            {selectedPickupOrder === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReceiptCreationForm
-                  pickupOrder={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onpickupOrderDataChange={handlereceiptsDataChange}
-                  currentPickUpNumber={currentPickupNumber}
-                  setcurrentPickUpNumber={setcurrentPickupNumber}
-                />
-              </ModalForm>
-            )} */}
           </div>
         </div>
       </div>

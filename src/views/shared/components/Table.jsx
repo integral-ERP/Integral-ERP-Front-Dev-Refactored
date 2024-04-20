@@ -43,6 +43,7 @@ const Table = ({
   importEnabled,
   importLabel,
   noScroll,
+  noScrollY,
 
   createWarehouseReceipt,
   Nodoubleclick,
@@ -76,6 +77,18 @@ const Table = ({
     };
     handleScroll();
   }, [noScroll]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!noScrollY) return;
+      const table = document.querySelector(".generic-table");
+      if (!table) return;
+      table.style.overflowY = "hidden";
+    };
+    handleScroll();
+  }, [noScrollY]);
+
+
 
   const endOfWeek = new Date(
     currentDate.getFullYear(),
@@ -176,12 +189,12 @@ const Table = ({
     "Tax Amt": "taxAMT",
     "Amt + Tax": "amtTAX",
     Currency: "currency",
-    " Length": "length",
-    " Height": "height",
-    " Weight": "weight",
-    " Width": "width",
+    " Length (in)": "length",
+    " Height (in)": "height",
+    " Weight (lb)": "weight",
+    " Width (in)": "width",
     " Volume (ft3)": "volumetricWeight",
-    " Weight (lb)": "chargedWeight",
+    // " Weight (lb)": "chargedWeight",
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
@@ -696,6 +709,7 @@ const Table = ({
                                 style={{
                                   display: "flex",
                                   width: "70px",
+                                  marginLeft: "3vw",
 
                                 }}
                               >
@@ -892,15 +906,15 @@ const Table = ({
       window.location.href = window.location.origin;
       // navigate(-1)
     } else {
-      // window.location.reload()
-      onSelect(null);
-      setShowPage("initial");
+      window.location.reload()
+      // onSelect(null);
+      // setShowPage("initial");
     }
   };
 
   return (
     <>
-      <div className="container-fluid" style={{ padding: "0" }}>
+      <div className="container-fluid" style={ noScrollY ? { padding: "0", overflowY: "hidden"}: {padding: "0"}}>
         {showOptions && (
           <div className="layout-fluid">
             <div className="d-flex justify-content-start align-items-center">
@@ -918,65 +932,6 @@ const Table = ({
                   {/* Search menu */}
                   <div className="col-12" id="input-container--first">
                     <div className="position-search mt-3">
-                      {/* {showPage !== "initial" && importLabel && title === "Warehouse Receipts" && (
-                          <div className="search">
-                            <button
-                              className="generic-button ne"
-                              style={{
-                                display: "flex",
-                                width: "70px",
-                                marginLeft: "3vw",
-                              }}
-                            >
-                              <i className="fa fa-print menu-icon fa-3x"></i>
-                              <div className="select_print">
-                                <select
-                                  className="label_pdf_select"
-                                  style={{
-                                    border: "0px solid white",
-                                    height: "3rem",
-                                  }}
-                                  onChange={(e) =>
-                                    e.target.value === "receipt"
-                                      ? generatePDFReceipt()
-                                      : generatePDFLabel()
-                                  }
-                                >
-                                  {/* <option value=""> </option> */}
-                      {/* <option value=""></option>
-
-                                  <option
-                                    value="receipt"
-                                    style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
-                                    }}
-                                  >
-                                    PDF Receipt ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎
-                                  </option>
-
-                                  <option
-                                    value="label"
-                                    style={{
-                                      borderRadius: "0px",
-                                      fontSize: "14px",
-                                      width: "20vw",
-                                      color: "#818080",
-                                      fontFamily: "poppins",
-                                    }}
-                                  >
-                                    PDF Label
-                                  </option>
-                                </select>
-                              </div>
-                            </button>
-                          </div>
-                        )} */}
-
-
                       <div className="search">
                         {showPage === "initial" ? (
                           <>
