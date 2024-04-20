@@ -129,16 +129,16 @@ const PickupOrderCreationForm = ({
         const customers = data.filter(item => item.type === 'customer');
         const vendors = data.filter(item => item.type === 'vendor');
         const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'carrier');
+        const carriers = data.filter(item => item.type === 'Carrier');
 
-        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
-        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
-        setEmployeeOptions([...employees].sort(SortArray));
+        setIssuedByOptions([...forwardingAgents])
+        setDestinationAgentOptions([...forwardingAgents])
+        setEmployeeOptions([...employees]);
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
         setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
-        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
+        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
+        setCarrierOptions([...carriers])
         setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
       })
       .catch((error) => {
@@ -149,6 +149,11 @@ const PickupOrderCreationForm = ({
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    const validTypes = ['forwarding-agent'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported IssuedBy type: ${type}`);
+      return;
+    }
     const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
     const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
       } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
@@ -164,6 +169,11 @@ const PickupOrderCreationForm = ({
   const handlePickUpSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported pickup type: ${type}`);
+      return;
+    }
     const selectedObject = pickupLocationOptions.find(option => option.id === id && option.type === type);
     const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
       } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
@@ -183,6 +193,11 @@ const PickupOrderCreationForm = ({
   const handleDeliveryLocationSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported delivery location type: ${type}`);
+      return;
+    }
     const deliveryLocation = deliveryLocationOptions.find(option => option.id === id && option.type === type);
     if (deliveryLocation) {
       const info = `${deliveryLocation?.street_and_number || ""} - ${deliveryLocation?.city || ""
@@ -203,6 +218,12 @@ const PickupOrderCreationForm = ({
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
+    const type = event?.type || "";
+    const validTypes = ['forwarding-agent'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported Destination Agent type: ${type}`);
+      return;
+    }
     setFormData({
       ...formData,
       destinationAgentId: id,
@@ -211,6 +232,12 @@ const PickupOrderCreationForm = ({
 
   const handleEmployeeSelection = async (event) => {
     const id = event?.id;
+    const type = event?.type || "";
+    const validTypes = ['employee'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported employee type: ${type}`);
+      return;
+    }
     setFormData({
       ...formData,
       employeeId: id,
@@ -248,7 +275,7 @@ const PickupOrderCreationForm = ({
   const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    const validTypes = ['forwarding-agent', 'customer', 'vendor'];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported shipper type: ${type}`);
       return;
@@ -284,7 +311,7 @@ const PickupOrderCreationForm = ({
   const handleMainCarrierSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    const validTypes = ['Carrier'];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported shipper type: ${type}`);
       return;
