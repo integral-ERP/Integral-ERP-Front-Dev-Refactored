@@ -288,8 +288,8 @@ const ReceiptCreationForm = ({
   };
 
   const handleSupplierSelection = async (event) => {
-    const id = event.id || formData.shipperId;
-    const type = event.type || formData.shipperType;
+    const id = event.id || formData.supplierId;
+    const type = event.type || formData.supplierType;
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
@@ -831,7 +831,6 @@ const ReceiptCreationForm = ({
       setShipperOptions([pickupOrder.shipperObj?.data?.obj]);
       setConsigneeOptions([pickupOrder.consigneeObj?.data?.obj]);
       setCarrierOptions([pickupOrder.main_carrierObj]);
-      setSupplierOptions([pickupOrder.supplierObj]);
       setcommodities(pickupOrder.commodities);
 
       let CTBID = "";
