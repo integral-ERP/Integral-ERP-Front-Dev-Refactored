@@ -33,6 +33,8 @@ const ReceiptCreationForm = ({
   fromPickUp,
   fromReceipt
 }) => {
+  console.log("pickupOrder", pickupOrder);
+  console.log('creating', creating);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -45,12 +47,10 @@ const ReceiptCreationForm = ({
   const [showExpenseForm, setshowExpenseForm] = useState(false);
   const [showEventForm, setshowEventForm] = useState(false);
   const [consignee, setconsignee] = useState(null);
-  console.log('Este es el consgine que se renderiza', consignee);
   const [supplier, setSupplier] = useState(null);
   const [defaultValueSupplier, setDefaultValueSupplier] = useState(null);
   const [agent, setagent] = useState(null);
   const [shipper, setshipper] = useState(null);
-  console.log('se renderiza el shipper', shipper);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
@@ -67,7 +67,6 @@ const ReceiptCreationForm = ({
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [supplierOptions, setSupplierOptions] = useState([]);
-  console.log('Opciones en supplier', supplierOptions);
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const today = dayjs().format("YYYY-MM-DD");
@@ -295,8 +294,8 @@ const ReceiptCreationForm = ({
   };
 
   const handleSupplierSelection = async (event) => {
-    const id = event.id || formData.supplierId;
-    const type = event.type || formData.supplierType;
+    const id = event.id || formData.shipperId;
+    const type = event.type || formData.shipperType;
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
@@ -626,6 +625,7 @@ const ReceiptCreationForm = ({
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj
       let CTBID = "";
       if (fromReceipt) {
         CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
@@ -701,12 +701,14 @@ const ReceiptCreationForm = ({
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
 
-        supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplier: initialSupplier,
+        supplierId: initialSupplier?.id,
+        supplierType: initialSupplier?.type,
+        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
+          initialSupplier?.city || ""
+        } - ${initialSupplier?.state || ""} - ${
+          initialSupplier?.country || ""
+        } - ${initialSupplier?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
@@ -825,6 +827,7 @@ const ReceiptCreationForm = ({
     }
   }, [pickupNumber]);
 
+
   useEffect(() => {
     if (fromPickUp) {
       setshowCommodityCreationForm(true);
@@ -847,6 +850,7 @@ const ReceiptCreationForm = ({
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id;
       }
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj
       let updatedFormData = {
         status: 4,
         // notes :pickupOrder.notes,
@@ -917,12 +921,14 @@ const ReceiptCreationForm = ({
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
 
-        supplierId: pickupOrder.supplier,
-        supplierInfo: `${pickupOrder.supplierObj?.street_and_number || ""} - ${
-          pickupOrder.supplierObj?.city || ""
-        } - ${pickupOrder.supplierObj?.state || ""} - ${
-          pickupOrder.supplierObj?.country || ""
-        } - ${pickupOrder.supplierObj?.zip_code || ""}`,
+        supplierId: initialSupplier.id,
+        supplier: initialSupplier.shipper,
+        supplierType: initialSupplier.type,
+        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
+          initialSupplier?.city || ""
+        } - ${initialSupplier?.state || ""} - ${
+          initialSupplier?.country || ""
+        } - ${initialSupplier?.zip_code || ""}`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -945,6 +951,8 @@ const ReceiptCreationForm = ({
     }
   }, [fromPickUp, pickupOrder]);
 
+  
+
   useEffect(() => {
     if (formDataUpdated) {
       handleConsigneeSelection({
@@ -958,6 +966,10 @@ const ReceiptCreationForm = ({
       handleDestinationAgentSelection({
         id: pickupOrder.destination_agentObj?.id,
       });
+      handleSupplierSelection({
+        id: pickupOrder.shipperObj?.data.obj?.id,
+        type: pickupOrder.shipperObj?.data?.obj?.type_person,
+      })
     }
   }, [formDataUpdated, pickupOrder]);
 
@@ -1508,12 +1520,12 @@ const ReceiptCreationForm = ({
                     }}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={supplierOptions}
+                    defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
                     value={shipperOptions.find(
                       (option) => 
-                      option.id === formData.shipperId &&
-                      option.type_person === formData.shipperType
+                      option.id === formData.supplierId &&
+                      option.type_person === formData.supplierType
                     )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
