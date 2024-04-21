@@ -93,28 +93,22 @@ const ReceiptCreationForm = ({
   useEffect(() => {
     fetchFormData()
       .then((data) => {
-        const forwardingAgents = data.filter(
-          (item) => item.type === "forwarding-agent"
-        );
-        const customers = data.filter((item) => item.type === "customer");
-        const vendors = data.filter((item) => item.type === "vendor");
-        const employees = data.filter((item) => item.type === "employee");
-        const carriers = data.filter((item) => item.type === "carrier");
+        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
+        const customers = data.filter(item => item.type === 'customer');
+        const vendors = data.filter(item => item.type === 'vendor');
+        const employees = data.filter(item => item.type === 'employee');
+        const carriers = data.filter(item => item.type === 'Carrier');
 
-        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors]);
-        setDestinationAgentOptions([
-          ...forwardingAgents,
-          ...customers,
-          ...vendors,
-        ]);
-        setEmployeeOptions([...employees].sort(SortArray));
-        setShipperOptions([...forwardingAgents, ...customers, ...vendors]);
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors]);
-        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors]);
-        setSupplierOptions([...forwardingAgents, ...carriers, ...vendors]);
+        setIssuedByOptions([...forwardingAgents])
+        setDestinationAgentOptions([...forwardingAgents])
+        setEmployeeOptions([...employees]);
+        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+        setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
+        setCarrierOptions([...carriers])
       })
       .catch((error) => {
-        console.error("Error al obtener los datos:", error);
+        console.error('Error al obtener los datos:', error);
       });
   }, []);
 
@@ -1520,9 +1514,9 @@ const ReceiptCreationForm = ({
                     }}
                     isClearable={true}
                     placeholder="Search and select..."
-                    defaultOptions={shipperOptions}
+                    defaultOptions={supplierOptions}
                     loadOptions={loadShipperSelectOptions}
-                    value={shipperOptions.find(
+                    value={supplierOptions.find(
                       (option) => 
                       option.id === formData.supplierId &&
                       option.type_person === formData.supplierType
