@@ -518,9 +518,9 @@ const ReleaseOrderCreationForm = ({
                 <h2>General</h2>
                 <span></span>
               </div>
-              <div className="row mb-2">
-                <div className="space-release">
-                  <p className="tex-p">Ware House Number : </p>
+              <div className="row mb-3">
+                <div className="col-4 text-start">
+                  <label className="form-label">Warehouse number: </label>
                   <div className="col-4 text-start">
                     <input
                       className="tex-release"
