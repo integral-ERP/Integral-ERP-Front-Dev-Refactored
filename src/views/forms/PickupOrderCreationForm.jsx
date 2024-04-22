@@ -951,7 +951,7 @@ const PickupOrderCreationForm = ({
           commodities.length === 0
             ? Promise.resolve(null) 
             : creating 
-              ? ReceiptService.createReceipt(rawData)
+              ? Promise.resolve(null)  //ReceiptService.createReceipt(rawData) eliminado
               : (async () => {
                 const buscapick = await PickupService.getPickupById(pickupOrder.id);
                 const buscarecip = (await callrecipt(null)).data.results;
@@ -1014,7 +1014,7 @@ const PickupOrderCreationForm = ({
             setFormData(formFormat);
             //added redirect to warehouse receipt
             window.location.href = `/warehouse/receipt`;
-          }, 2000);
+          }, 1000);
         } else {
           setShowErrorAlert(true);
         }
@@ -1683,7 +1683,6 @@ const PickupOrderCreationForm = ({
         </div>
 
         {/* -------------------------------------------------------------------------------------------------------------- */}
-
 
         <input type="checkbox" id="toggleBoton"></input>
         <label className="button-charge" htmlFor="toggleBoton" style={{ display: 'none' }}></label>
