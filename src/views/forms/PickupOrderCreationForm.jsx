@@ -1118,7 +1118,6 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleEmployeeSelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={employeeOptions}
                     value={employeeOptions.find(
@@ -1159,7 +1158,6 @@ const PickupOrderCreationForm = ({
                           handleDestinationAgentSelection(e);
                         }}
                         className="async-option"
-                        isClearable={true}
                         defaultOptions={destinationAgentOptions}
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
@@ -1176,7 +1174,6 @@ const PickupOrderCreationForm = ({
                         handleDestinationAgentSelection(e);
                       }}
                       className="async-option"
-                      isClearable={true}
                       defaultOptions={destinationAgentOptions}
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
@@ -1218,7 +1215,6 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
                     loadOptions={loadIssuedBySelectOptions}
@@ -1259,7 +1255,6 @@ const PickupOrderCreationForm = ({
                       handleShipperSelection(e);
                     }}
                     value={defaultValueShipper}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
@@ -1312,7 +1307,6 @@ const PickupOrderCreationForm = ({
                         option.id === formData.pickupLocationId &&
                         option.type === formData.pickupLocationType
                     )}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={pickupLocationOptions}
                     loadOptions={loadPickUpLocationSelectOptions}
@@ -1370,7 +1364,6 @@ const PickupOrderCreationForm = ({
                       id="consignee"
                       onChange={(e) => { handleConsigneeSelection(e); }}
                       value={defaultValueConsignee}
-                      isClearable={true}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
                       loadOptions={loadConsigneeSelectOptions}
@@ -1394,7 +1387,6 @@ const PickupOrderCreationForm = ({
                         option.id === formData.deliveryLocationId &&
                         option.type === formData.deliveryLocationType
                     )}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={deliveryLocationOptions}
                     loadOptions={loadDeliveryLocationSelectOptions}
@@ -1447,7 +1439,6 @@ const PickupOrderCreationForm = ({
                         handleClientToBillSelection(e);
                       }}
                       value={getAsyncSelectValue()}
-                      isClearable={true}
                       defaultOptions={releasedToOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
@@ -1491,7 +1482,6 @@ const PickupOrderCreationForm = ({
                     value={carrierOptions.find(
                       (option) => option.id === formData.mainCarrierdId
                     )}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
