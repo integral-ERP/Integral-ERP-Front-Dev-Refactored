@@ -1014,7 +1014,7 @@ const PickupOrderCreationForm = ({
             setFormData(formFormat);
             //added redirect to warehouse receipt
             window.location.href = `/warehouse/receipt`;
-          }, 2000);
+          }, 1000);
         } else {
           setShowErrorAlert(true);
         }
@@ -1683,7 +1683,6 @@ const PickupOrderCreationForm = ({
         </div>
 
         {/* -------------------------------------------------------------------------------------------------------------- */}
-
 
         <input type="checkbox" id="toggleBoton"></input>
         <label className="button-charge" htmlFor="toggleBoton" style={{ display: 'none' }}></label>
