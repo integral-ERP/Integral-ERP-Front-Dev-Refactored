@@ -1142,7 +1142,7 @@ const ReceiptCreationForm = ({
             setFormData(formFormat);
             //added redirect to warehouse receipt
             window.location.href = `/warehouse/receipt`;
-          }, 2000);
+          }, 1000);
         } else {
           setShowErrorAlert(true);
         }
