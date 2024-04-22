@@ -91,11 +91,6 @@ const PickupOrderCreationForm = ({
     shipperId: "",
     shipperType: "",
     shipperInfo: "",
-
-    supplierId: "",
-    supplierType: "",
-    supplierInfo: "",
-
     pickupLocationId: "",
     pickupLocationType: "",
     pickupLocationInfo: "",
@@ -103,7 +98,6 @@ const PickupOrderCreationForm = ({
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
-
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
@@ -129,16 +123,16 @@ const PickupOrderCreationForm = ({
         const customers = data.filter(item => item.type === 'customer');
         const vendors = data.filter(item => item.type === 'vendor');
         const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'Carrier');
+        const carriers = data.filter(item => item.type === 'carrier');
 
-        setIssuedByOptions([...forwardingAgents])
-        setDestinationAgentOptions([...forwardingAgents])
-        setEmployeeOptions([...employees]);
+        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
+        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
+        setEmployeeOptions([...employees].sort(SortArray));
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
         setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
-        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
-        setCarrierOptions([...carriers])
+        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
+        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
+        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
         setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
       })
       .catch((error) => {
@@ -146,14 +140,18 @@ const PickupOrderCreationForm = ({
       });
   }, []);
 
+
+
+
+
+  useEffect(() => {
+
+  }, [employeeOptions, formData.employeeId]);
+
+
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported IssuedBy type: ${type}`);
-      return;
-    }
     const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
     const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
       } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
@@ -169,11 +167,6 @@ const PickupOrderCreationForm = ({
   const handlePickUpSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported pickup type: ${type}`);
-      return;
-    }
     const selectedObject = pickupLocationOptions.find(option => option.id === id && option.type === type);
     const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
       } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
@@ -193,11 +186,6 @@ const PickupOrderCreationForm = ({
   const handleDeliveryLocationSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported delivery location type: ${type}`);
-      return;
-    }
     const deliveryLocation = deliveryLocationOptions.find(option => option.id === id && option.type === type);
     if (deliveryLocation) {
       const info = `${deliveryLocation?.street_and_number || ""} - ${deliveryLocation?.city || ""
@@ -218,26 +206,16 @@ const PickupOrderCreationForm = ({
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
-    const type = event?.type || "";
-    const validTypes = ['forwarding-agent'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported Destination Agent type: ${type}`);
-      return;
-    }
     setFormData({
       ...formData,
       destinationAgentId: id,
     });
+    const result = await ForwardingAgentService.getForwardingAgentById(id);
+    setagent(result?.data);
   };
 
   const handleEmployeeSelection = async (event) => {
     const id = event?.id;
-    const type = event?.type || "";
-    const validTypes = ['employee'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported employee type: ${type}`);
-      return;
-    }
     setFormData({
       ...formData,
       employeeId: id,
@@ -275,9 +253,9 @@ const PickupOrderCreationForm = ({
   const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor'];
+    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
     if (!validTypes.includes(type)) {
-      console.error(`Unsupported shipper type: ${type}`);
+      console.error(`Unsupported consignee type: ${type}`);
       return;
     }
     const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
@@ -285,6 +263,7 @@ const PickupOrderCreationForm = ({
       console.error(`Shipper not found with ID ${id} and type ${type}`);
       return;
     }
+
     const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
       } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
       }`;
@@ -296,11 +275,13 @@ const PickupOrderCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      supplierId: id,
-      supplierType: type,
-      supplierInfo: info
+      consigneeId: id,
+      consigneeType: type,
     });
   };
+
+
+
   const handleCommodityDelete = () => {
     const newCommodities = commodities.filter(
       (com) => com.id != selectedCommodity.id
@@ -310,19 +291,9 @@ const PickupOrderCreationForm = ({
 
   const handleMainCarrierSelection = async (event) => {
     const id = event?.id || "";
-    const type = event?.type || "";
-    const validTypes = ['Carrier'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported shipper type: ${type}`);
-      return;
-    }
-    const selectedCarrier = carrierOptions.find(option => option.id === id && option.type === type);
-    if (!selectedCarrier) {
-      console.error(`Shipper not found with ID ${id} and type ${type}`);
-      return;
-    }
-    const info = `${selectedCarrier?.street_and_number || ""} - ${selectedCarrier?.city || ""
-      } - ${selectedCarrier?.state || ""} - ${selectedCarrier?.country || ""} - ${selectedCarrier?.zip_code || ""
+    const result = await CarrierService.getCarrierById(id);
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""
+      } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""
       }`;
     setFormData({
       ...formData,
@@ -333,6 +304,8 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event?.target?.value || "";
+    console.log("TYPE", type);
+
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -356,6 +329,7 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
         client_to_bill: id,
       });
+      console.log('Este es form data despues de el else', formData);
     }
   };
 
@@ -455,6 +429,7 @@ const PickupOrderCreationForm = ({
               : "other"
           : "other",
       };
+      console.log("updatedFormData", updatedFormData);
       let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
         ?.type_person
         ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
@@ -484,50 +459,144 @@ const PickupOrderCreationForm = ({
   };
 
 
-  const loadSelectOptions = async (options, inputValue) => {
-    let filteredOptions = options;
-    if (inputValue) {
-      filteredOptions = options.filter(option =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-    }
-    const mappedOptions = filteredOptions.map(option => ({
-      ...option,
-      value: option.id,
-      label: option.name
-    }));
-
-    return mappedOptions;
-  };
+  const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
   const loadEmployeeSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(employeeOptions, inputValue)
-  }
+    const response = await EmployeeService.search(inputValue);
+    const data = response.data.results;
+
+    const options = addTypeToObjects(data, "employee");
+    return options;
+  };
+
   const loadIssuedBySelectOptions = async (inputValue) => {
-    return await loadSelectOptions(issuedByOptions, inputValue)
-  }
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseVendors = (await VendorService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+
+    const options = [
+      ...addTypeToObjects(responseVendors, "vendor"),
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+    ];
+
+    return options;
+  };
 
   const loadDestinationAgentsSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(destinationAgentOptions, inputValue)
-  }
-  const loadShipperSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(shipperOptions, inputValue)
-  }
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
 
+    const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
+
+    return options;
+  };
+  const loadShipperSelectOptions = async (inputValue) => {
+    if (inputValue) {
+      const filteredOptions = shipperOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+  
+      return options;
+    } else {
+      const options = shipperOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+      return options;
+    }
+  };
+  
   const loadConsigneeSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(consigneeOptions, inputValue)
-  }
+    if (inputValue) {
+      const filteredOptions = consigneeOptions.filter(option =>
+        option.name.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      const options = filteredOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+  
+      return options;
+    } else {
+      const options = consigneeOptions.map(option => ({
+        ...option,
+        value: option.id,
+        label: option.name
+      }));
+      return options;
+    }
+  };
+  
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(pickupLocationOptions, inputValue)
-  }
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseVendors = (await VendorService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+
+    const options = [
+      ...addTypeToObjects(responseVendors, "vendor"),
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+    ];
+
+    return options;
+  };
 
   const loadDeliveryLocationSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(deliveryLocationOptions, inputValue)
-  }
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseVendors = (await VendorService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data
+      .results;
+
+    const options = [
+      ...addTypeToObjects(responseVendors, "vendor"),
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
+    ];
+
+    return options;
+  };
 
   const loadCarrierSelectOptions = async (inputValue) => {
-    return await loadSelectOptions(carrierOptions, inputValue)
+    const responseCarriers = (await CarrierService.search(inputValue)).data
+      .results;
+
+    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
+
+    return options;
+  };
+
+  const loadClientToBillSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+
+    const options = [
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+    ];
+
+    return options;
   };
 
   const loadShipperOption = async (id, type) => {
@@ -868,7 +937,7 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-         /*  supplier: formData.shipperId, */
+          supplier: formData.shipperId,
           weight: weightUpdated,
         };
 
@@ -918,7 +987,7 @@ const PickupOrderCreationForm = ({
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
         let rawData = {
-          status: 14,
+          status: 14, 
           number: formData.number,
           creation_date: formData.createdDateAndTime,
           issued_by: formData.issuedById,
