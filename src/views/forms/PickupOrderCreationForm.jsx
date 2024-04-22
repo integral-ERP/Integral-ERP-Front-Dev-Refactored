@@ -951,7 +951,7 @@ const PickupOrderCreationForm = ({
           commodities.length === 0
             ? Promise.resolve(null) 
             : creating 
-              ? ReceiptService.createReceipt(rawData)
+              ? Promise.resolve(null)  //ReceiptService.createReceipt(rawData) eliminado
               : (async () => {
                 const buscapick = await PickupService.getPickupById(pickupOrder.id);
                 const buscarecip = (await callrecipt(null)).data.results;
