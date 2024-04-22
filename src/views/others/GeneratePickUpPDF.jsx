@@ -504,7 +504,7 @@ const GeneratePickUpPDF = (data) => {
                       },
                       {
                         text: [
-                          `${totalVolume} ft3\n`,
+                          `${totalVolume.toFixed(2)} ft3\n`,
                           `${(totalVolume / 35.315).toFixed(2)} m3`,
                         ],
                       },
