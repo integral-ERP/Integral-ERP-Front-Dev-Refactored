@@ -186,8 +186,7 @@ const currentUrl = window.location.href;
 
 // Verificar si la URL contiene cierto texto
 // const isLocationEnabled = currentUrl.includes('http://localhost:5173/warehouse/receipt');
-const isLocationEnabled = currentUrl.includes('https://erp-integral.com/warehouse/receipt');
-
+// const isLocationEnabled = currentUrl.includes('https://erp-integral.com/warehouse/receipt');
 
   return (
     <div className="income-charge-form">
@@ -303,10 +302,10 @@ const isLocationEnabled = currentUrl.includes('https://erp-integral.com/warehous
         </div>
 {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
 
-
 {/* // Renderizar el código basado en la condición */}
 <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
-  {isLocationEnabled && (
+  {/* {isLocationEnabled && ( */}
+  {(
     <>
       <label
         htmlFor="location"
