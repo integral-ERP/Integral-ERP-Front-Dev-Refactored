@@ -295,10 +295,20 @@ const ReceiptCreationForm = ({
 
   const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
-    const type = event.type || formData.supplierType;
+    // const type = event.type || formData.supplierType;
+    const type = event?.type || "";
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
+
+    if (supplierOptions) {
+      console.log("supplierOptions =", supplierOptions);
+      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        supplierId: supplierOptions.id
+      }));
+    }
 
     if (!selectedSupplier) {
       console.error(`Unsupported consignee type: ${type}`);
@@ -712,7 +722,8 @@ const ReceiptCreationForm = ({
 
         supplier: initialSupplier,
         supplierId: initialSupplier?.id,
-        supplierType: initialSupplier?.type,
+        supplierType: initialSupplier?.type_person,
+
         supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
           initialSupplier?.city || ""
         } - ${initialSupplier?.state || ""} - ${
@@ -1419,19 +1430,16 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="shipper"
-                    onChange={(e) => {
-                      handleShipperSelection(e);
-                    }}
-                    onClear={() => {
-                      handleClearShipperSelection();
-                    }}
+                    value={shipperOptions.find(
+                      (option) => 
+                        option.id === formData.shipperId &&
+                        option.type_person === formData.shipperType
+                    )}
+                    onChange={(e) => handleShipperSelection(e)}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
-                    value={shipperOptions.find(
-                      (option) => option.id === formData.shipperId
-                    )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1440,7 +1448,6 @@ const ReceiptCreationForm = ({
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
                   </label>
-                  <div className="custom-select">
                     <AsyncSelect
                       id="consignee"
                       value={consigneeOptions.find(
@@ -1456,7 +1463,6 @@ const ReceiptCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
-                  </div>
                 </div>
               </div>
 
@@ -1521,6 +1527,21 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="supplier"
+                    value={supplierOptions.find(
+                      (option) => 
+                        option.id === formData.supplierId &&
+                        option.type_person === formData.supplierType
+                    )}
+                    onChange={(e) => handleSupplierSelection(e)}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={supplierOptions}
+                    loadOptions={loadShipperSelectOptions}c
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                  {/* <AsyncSelect
+                    id="supplier"
                     onChange={(e) => {
                       handleSupplierSelection(e);
                     }}
@@ -1535,7 +1556,7 @@ const ReceiptCreationForm = ({
                     )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
-                  />
+                  /> */}
                 </div>
 
                 <div className="col-6 text-start">

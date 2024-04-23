@@ -100,7 +100,7 @@ const PortsCreationForm = ({
         onPortDataChange();
         setShowSuccessAlert(false);
         window.location.reload();
-      }, 100000);
+      }, 1000);
     } else {
       setShowErrorAlert(true);
     }

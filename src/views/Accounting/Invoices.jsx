@@ -118,7 +118,7 @@ const Invoices = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
 
             const newInvoices = invoices.filter((order) => order.id !== selectedInvoices.id);
             setInvoices(newInvoices);
@@ -126,7 +126,7 @@ const Invoices = () => {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

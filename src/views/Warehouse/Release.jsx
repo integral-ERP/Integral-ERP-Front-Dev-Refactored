@@ -178,12 +178,12 @@ const Release = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {});

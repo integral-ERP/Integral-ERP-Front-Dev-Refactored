@@ -7,6 +7,7 @@ import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../../../styles/components/Table.scss";
 import generatePickUpPDF from "../../others/GeneratePickUpPDF";
+import GenerateReleasePDF from "../../others/GenerateReleasePDF";
 import generateLabelPDF from "../../others/generateLabelPDF";
 import GenerateReceiptPdf from "../../others/GenerateReceiptPDF";
 import { GlobalContext } from "../../../context/global";
@@ -433,7 +434,7 @@ const Table = ({
   //-------------------------------------------------------------------------------------------------------
 
   const generatePDFRelease = () => {
-    generatePickUpPDF(selectedRow)
+    GenerateReleasePDF(selectedRow)
       .then((pdfUrl) => {
         window.open(pdfUrl, "_blank");
       })
@@ -702,10 +703,24 @@ const Table = ({
                              <img src={iconoPdf} alt="Ícono personalizado" />
                             </button>
                             
-                          ) : columnName === "View Receipt PDF" ? (
+                          ) : 
+
+                          columnName === "View Release PDF" ? (
+                            <button
+                              type="button"
+                              onClick={generatePDFRelease}
+                              className="custom-button-pdf"
+                            >
+                             <img src={iconoPdf} alt="Ícono personalizado" />
+                            </button>
+                            
+                          ) : 
+                          
+                          columnName === "View Receipt PDF" ? (
                             <>
                               <button
                                 className="generic-button ne"
+                                onClick={generatePDF}
                                 style={{
                                   display: "flex",
                                   width: "70px",

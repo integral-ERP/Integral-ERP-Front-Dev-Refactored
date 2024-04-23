@@ -101,14 +101,14 @@ const Customers = () => {
           setShowSuccessAlert(true);
           setTimeout(() => {
             setShowSuccessAlert(false);
-          }, 3000);
+          }, 1000);
           const newreceipts = customers.filter((order) => order.id !== selectedCustomer.id);
           setcustomers(newreceipts);
         } else {
           setShowErrorAlert(true);
           setTimeout(() => {
             setShowErrorAlert(false);
-          }, 3000);
+          }, 1000);
         }
       })
         .catch((error) => {
