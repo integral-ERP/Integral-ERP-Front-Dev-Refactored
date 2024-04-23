@@ -570,6 +570,23 @@ const ReceiptCreationForm = ({
     setdefaultValueShipper(option.data);
   };
 
+  const loadSupplierOption = async (id, type) => {
+    let option = null;
+    if (type === "customer") {
+      option = await CustomerService.getCustomerById(id);
+    }
+    if (type === "vendor") {
+      option = await VendorService.getVendorByID(id);
+    }
+    if (type === "forwarding-agent") {
+      option = await ForwardingAgentService.getForwardingAgentById(id);
+    }
+    if (type === "Carrier") {
+      option = await CarrierService.getCarrierById(id);
+    }
+    setDefaultValueSupplier(option?.data);
+  };
+
   const loadConsigneeOption = async (id, type) => {
     let option = null;
     if (type === "customer") {
@@ -1087,7 +1104,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-          /* supplier: shipperRequest, */
+          supplier: formData.supplierId,
           shipper: shipperRequest,
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
@@ -1139,7 +1156,7 @@ const ReceiptCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-         /*  supplier: formData.shipperId, */
+          supplier: formData.supplierId, 
           weight: weightUpdated,
         };
         
@@ -1285,7 +1302,6 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleEmployeeSelection(e);
                     }}
-                    isClearable={true}
                     defaultOptions={employeeOptions}
                     loadOptions={loadEmployeeSelectOptions}
                     getOptionLabel={(option) => option.name}
@@ -1310,7 +1326,6 @@ const ReceiptCreationForm = ({
                         value={destinationAgentOptions.find(
                           (option) => option.id === formData.destinationAgentId
                         )}
-                        isClearable={true}
                         defaultOptions={destinationAgentOptions}
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
@@ -1326,7 +1341,6 @@ const ReceiptCreationForm = ({
                       value={destinationAgentOptions.find(
                         (option) => option.id === formData.destinationAgentId
                       )}
-                      isClearable={true}
                       defaultOptions={destinationAgentOptions}
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
@@ -1368,7 +1382,6 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
                     loadOptions={loadIssuedBySelectOptions}
@@ -1410,7 +1423,6 @@ const ReceiptCreationForm = ({
                     onClear={() => {
                       handleClearShipperSelection();
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
@@ -1436,7 +1448,6 @@ const ReceiptCreationForm = ({
                           option.type_person === formData.consigneeType
                       )}
                       onChange={(e) => handleConsigneeSelection(e)}
-                      isClearable={true}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
                       loadOptions={loadConsigneeSelectOptions}
@@ -1511,15 +1522,10 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleSupplierSelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={supplierOptions}
-                    loadOptions={loadShipperSelectOptions}
-                    value={supplierOptions.find(
-                      (option) => 
-                      option.id === formData.supplierId &&
-                      option.type_person === formData.supplierType
-                    )}
+                    loadOptions={loadSupplierOption}
+                    value={defaultValueSupplier}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1591,7 +1597,6 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleMainCarrierSelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
