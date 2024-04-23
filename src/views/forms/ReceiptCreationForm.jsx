@@ -1087,7 +1087,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-          supplier: shipperRequest,
+          /* supplier: shipperRequest, */
           shipper: shipperRequest,
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
@@ -1139,7 +1139,7 @@ const ReceiptCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          supplier: formData.shipperId,
+         /*  supplier: formData.shipperId, */
           weight: weightUpdated,
         };
         
