@@ -50,35 +50,36 @@ const GenerateReleasePDF = (data) => {
       data.commodities?.forEach((commodity) => {
         firstRowText += `1 \n`;
         secondRowText = data.warehouseReceiptObj?.number || "";
-        thirdRowText = commodity.locationCode || "";
+        thirdRowText += `${commodity.locationCode} \n`;
         fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fifthRowText = "Box";
+        fifthRowText += `${"Box"} \n`;
         sixthRowText += `${commodity.description} \n`;
         seventhRowText += `${commodity.weight} lbs \n`;
         eigthRowText += `${commodity.volumetricWeight} ft3 \n`;
-        ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
+        // ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
-        if (commodity.containsCommodities && commodity.internalCommodities) {
-          commodity.internalCommodities.forEach((internalCommodity) => {
+        // if (commodity.containsCommodities && commodity.internalCommodities) {
+        //   commodity.internalCommodities.forEach((internalCommodity) => {
 
-            thirdRowText += commodity.locationCode || "";
-            fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fifthRowText += `${internalCommodity.package_type_description} \n`;
-            sixthRowText += `${internalCommodity.description} lbs \n`;
-            seventhRowText += `${internalCommodity.weight} lbs \n`;
-            eigthRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-            ninenthRowText = `${internalCommodity.chargedWeight} Vlb \n`;
-            totalWeight += parseFloat(internalCommodity.weight);
-            totalVolume += parseFloat(internalCommodity.volumetricWeight);
-          });
-        }
+        //     thirdRowText += commodity.locationCode || "";
+        //     fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+        //     fifthRowText += `${internalCommodity.package_type_description} \n`;
+        //     sixthRowText += `${internalCommodity.description} lbs \n`;
+        //     seventhRowText += `${internalCommodity.weight} lbs \n`;
+        //     eigthRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+        //     ninenthRowText = `${internalCommodity.chargedWeight} Vlb \n`;
+        //     totalWeight += parseFloat(internalCommodity.weight);
+        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
+        //   });
+        // }
       });
       const commodityRow = [
         {
 
           text: firstRowText,
+          margin: [0, 0, 0, 300],
         },
         {
 
@@ -104,10 +105,10 @@ const GenerateReleasePDF = (data) => {
 
           text: eigthRowText,
         },
-        {
+        // {
 
-          text: ninenthRowText,
-        },
+        //   text: ninenthRowText,
+        // },
       ];
       commodityRows.push(commodityRow);
     }
@@ -270,7 +271,7 @@ const GenerateReleasePDF = (data) => {
                     `*`,
                     `auto`,
                     `auto`,
-                    `auto`,
+                    // `auto`,
                   ],
                   body: [
                     [
@@ -316,14 +317,65 @@ const GenerateReleasePDF = (data) => {
                         margin: [0, 0, 0, 0],
                         alignment: "center",
                       },
-                      {
-                        text: `Vol Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
+                      // {
+                      //   text: `Vol Weight`,
+                      //   fillColor: `#CCCCCC`,
+                      //   margin: [0, 0, 0, 0],
+                      //   alignment: "center",
+                      // },
                     ],
                     ...commodityRows,
+                    
+                    [
+                      {
+                        text: `Signature:`,
+                        colSpan: 5,
+                        rowSpan: 2,
+                      },
+                      {},
+                      {},
+                      {},
+                      {},
+                      {
+                        text: `Pieces`,
+                      },
+                      {
+                        text: `Weight`,
+                      },
+                      {
+                        text: `Volume`,
+                      },
+                        // {
+                        //   text: [`Volume Weight`],
+                        // },
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {
+                        text: totalPieces,
+                        alignment: "right"
+                      },
+                      {
+                        text: [
+                          `${(totalWeight ).toFixed(2)} lb`,
+                          ],
+                          alignment: "right"
+                      },
+                      {
+                        text: [
+                          `${totalVolume.toFixed(2)} ft3\n`,
+                        ],
+                        alignment: "right"
+                      },
+                      // {
+                      //   text:"WWW",
+                      //   alignment: "right"
+                      // },
+                    ],
                   ],
                 },
                 margin: [0, 50, 0, 20],

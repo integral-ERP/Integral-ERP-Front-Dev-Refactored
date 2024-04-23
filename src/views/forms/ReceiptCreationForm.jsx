@@ -1388,12 +1388,12 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="issuedBy"
-                    value={issuedByOptions.find(
-                      (option) => option.id === formData.issuedById
-                    )}
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
+                    value={issuedByOptions.find(
+                      (option) => option.id === formData.issuedById
+                    )}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
@@ -1536,7 +1536,7 @@ const ReceiptCreationForm = ({
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={supplierOptions}
-                    loadOptions={loadShipperSelectOptions}c
+                    loadOptions={loadShipperSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />

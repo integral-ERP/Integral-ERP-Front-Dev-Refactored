@@ -86,8 +86,9 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("Aqui -1 = ",fetchData());
+    console.log("Aqui-1 = ",fetchData());
     console.log("Aqui-2 = ",fetchData());
+    console.log("Aqui-3 = ",fetchData());
   }, []);
 
   const updateReleaseOrders = (url = null) => {

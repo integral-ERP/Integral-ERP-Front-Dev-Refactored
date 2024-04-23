@@ -784,7 +784,7 @@ const ReleaseOrderCreationForm = ({
             data={commodities}
             columns={[
               "Description",
-              " Length",
+              " Length (in)",
               " Width (in)",
               " Height (in)",
               " Weight (lb)",

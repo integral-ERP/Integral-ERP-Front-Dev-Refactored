@@ -141,11 +141,7 @@ const PickupOrderCreationForm = ({
   }, []);
 
 
-
-
-
   useEffect(() => {
-
   }, [employeeOptions, formData.employeeId]);
 
 
@@ -1278,14 +1274,15 @@ const PickupOrderCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="issuedById"
-                    value={issuedByOptions.find(
-                      (option) => option.id === formData.issuedById
-                    )}
+                    defaultValue={formData.issuedById}
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
+                    value={issuedByOptions.find(
+                      (issued_by) => issued_by.id === formData.issuedById
+                    )}
                     loadOptions={loadIssuedBySelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
@@ -1320,9 +1317,7 @@ const PickupOrderCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="shipper"
-                    onChange={(e) => {
-                      handleShipperSelection(e);
-                    }}
+                    onChange={(e) => {handleShipperSelection(e);}}
                     value={defaultValueShipper}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
@@ -1431,7 +1426,8 @@ const PickupOrderCreationForm = ({
                   <div className="custom-select">
                     <AsyncSelect
                       id="consignee"
-                      onChange={(e) => { handleConsigneeSelection(e); }}
+                      defaultValue={formData.consigneeId}
+                      onChange={(e) => {handleConsigneeSelection(e); }}
                       value={defaultValueConsignee}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
