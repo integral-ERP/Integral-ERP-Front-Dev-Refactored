@@ -34,7 +34,6 @@ const ReceiptCreationForm = ({
   fromReceipt
 }) => {
   console.log("pickupOrder", pickupOrder);
-  console.log('creating', creating);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -201,7 +200,6 @@ const ReceiptCreationForm = ({
   //------------------------------------------------
   const handleSelectEvent = (events) => {
     setSelectEvent(events);
-    console.log("selected events ", events);
   };
 
   const handleDeleteEvent = () => {
@@ -288,8 +286,8 @@ const ReceiptCreationForm = ({
   };
 
   const handleSupplierSelection = async (event) => {
-    const id = event.id || formData.supplierId;
-    const type = event.type || formData.supplierType;
+    const id = event.id || '';
+    const type = event.type || '';
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
@@ -446,7 +444,6 @@ const ReceiptCreationForm = ({
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
-    console.log("selected commodity ", commodity);
   };
 
   const handleCommodityDelete = async () => {
@@ -621,10 +618,10 @@ const ReceiptCreationForm = ({
           ? pickupOrder.shipperObj?.data?.obj?.type_person
           : "forwarding-agent"
       );
-      loadConsigneeOption(
-        pickupOrder.consigneeObj?.data?.obj?.id,
-        pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
-          ? pickupOrder.consigneeObj?.data?.obj?.type_person
+      loadSupplierOption(
+        pickupOrder.shipperObj?.data?.obj?.id,
+        pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
+          ? pickupOrder.shipperObj?.data?.obj?.type_person
           : "forwarding-agent"
       );
       setshowExpenseForm(true);
