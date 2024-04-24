@@ -1624,6 +1624,7 @@ const PickupOrderCreationForm = ({
                 commodity={selectedCommodity}
                 setEditingComodity={setEditingComodity}
                 locationEnabled={true}
+                hideLocation={true}
               />
               <br />
 
@@ -1639,7 +1640,7 @@ const PickupOrderCreationForm = ({
                       " Width (in)",
                       " Height (in)",
                       " Weight (lb)",
-                      " Location",
+                      // " Location",
                       " Volume (ft3)",
                       // " Weight (lb)",
                       "Options",
