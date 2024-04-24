@@ -577,57 +577,13 @@ const PickupOrderCreationForm = ({
     }
   }, [pickupNumber]);
 
-  const listId = [
-    { selectedId: "#pickupnumber", asociatedId: "#pickupnumber" },
-    { selectedId: "#issuedById > div", asociatedId: "#issuedById > div" },
-    { selectedId: "#employeeId  > div", asociatedId: "#employeeId > div" },
-    { selectedId: "#creationdateandtime", asociatedId: "#creationdateandtime" },
-    { selectedId: "#pickupdateandtime", asociatedId: "#pickupdateandtime" },
-    { selectedId: "#deliverydateandtime", asociatedId: "#deliverydateandtime" },
-    { selectedId: "#shipper > div", asociatedId: "#shipperinfo" },
-    // { selectedId: "#pickupLocation > div", asociatedId: "#pickupinfo" },
-    { selectedId: "#pickupLocation > div", asociatedId: "#pickupLocationInfo" },
-    { selectedId: "#consignee > div", asociatedId: "#consigneeInfo" },
-    { selectedId: "#deliveryLocation > div", asociatedId: "#deliveryInfo" },
-    {
-      selectedId: "#destinationAgentId > div",
-      asociatedId: "#destinationAgentId > div",
-    },
-    { selectedId: "#mainCarrier > div", asociatedId: "#issuedbydata" },
-    { selectedId: "#invoiceNumber", asociatedId: "#invoiceNumber" },
-    { selectedId: "#trackingNumber", asociatedId: "#trackingNumber" },
-    { selectedId: "#proNumber", asociatedId: "#proNumber" },
-    { selectedId: "#purchaseOrderNumber", asociatedId: "#purchaseOrderNumber" },
-  ];
-
   useEffect(() => {
     if (commodities && commodities.length >= 1) {
       setFormData({ ...formData, status: 5 });
     }
   }, [commodities]);
 
-  const [inputStyle, setinputStyle] = useState({});
   const sendData = async () => {
-    for (const inputs of listId) {
-      const inputSelected = document.querySelector(inputs.selectedId);
-      const inputAsociated = document.querySelector(inputs.asociatedId);
-      const isValid = true; //inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-
-      if (inputSelected && formData[inputSelected.id]) {
-        inputSelected.style.border = "1px solid green";
-
-        continue;
-      } else {
-        if (inputSelected) inputSelected.style.border = "1px solid red";
-
-        if (!isValid && inputSelected?.style) {
-          inputSelected.style.border = "1px solid red";
-        } else {
-          if (inputSelected) inputSelected.style.border = "1px solid green";
-        }
-      }
-    }
-
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
