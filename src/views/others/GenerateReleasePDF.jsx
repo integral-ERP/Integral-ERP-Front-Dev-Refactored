@@ -4,25 +4,23 @@ import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
-pdfMake.vfs = pdfFonts;
 
 const GenerateReleasePDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
 
-
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
-    canvas = document.createElement("canvas");
+    canvas = document.createElement('canvas');
     const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128),
-      text: data.number + "",
+      bcid: "code128", // Barcode type (e.g., code128)
+      text: data.number + '', // Barcode data
       scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode,
-      includeText: true,
+      height: 10, // Height of the barcode
+      includetext: true, // Include human-readable text below the barcode
+      textxalign: "center",
     };
     try {
 
@@ -47,9 +45,9 @@ const GenerateReleasePDF = (data) => {
       let seventhRowText = "";
       let eigthRowText = "";
       let ninenthRowText = "";
-      data.commodities?.forEach((commodity) => {
+      data.commodities?.forEach((commodity, index) => {
         firstRowText += `1 \n`;
-        secondRowText = data.warehouseReceiptObj?.number || "";
+        // secondRowText = data.warehouseReceiptObj?.number || "";
         thirdRowText += `${commodity.locationCode} \n`;
         fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fifthRowText += `${"Box"} \n`;

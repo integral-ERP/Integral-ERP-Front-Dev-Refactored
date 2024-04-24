@@ -150,6 +150,7 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
+    console.log("Release-1", releaseOrders[0]);
   };
 
   const handleEditreceipts = () => {

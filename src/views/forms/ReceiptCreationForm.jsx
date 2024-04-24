@@ -1000,7 +1000,7 @@ const ReceiptCreationForm = ({
       setShowWarningAlert(true);
       return;
     }
-
+    
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
