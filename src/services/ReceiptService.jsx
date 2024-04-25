@@ -51,6 +51,11 @@ class ReceiptService{
     return response;
   }
 
+  async createSupplier(data){
+    const response = await axios.post(`${this.BASE_URL}supplier/`, data);
+    return response;
+  }
+
   async createClientToBill(data){
     const response = await axios.post(`${this.BASE_URL}clientToBill/`, data);
     return response;
