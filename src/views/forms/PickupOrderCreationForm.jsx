@@ -6,7 +6,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import ForwardingAgentService from "../../services/ForwardingAgentService";
 import CustomerService from "../../services/CustomerService";
 import VendorService from "../../services/VendorService";
-import EmployeeService from "../../services/EmployeeService";
 import Input from "../shared/components/Input";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -23,7 +22,6 @@ import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
-import { BorderColor } from "@mui/icons-material";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -137,7 +135,7 @@ const PickupOrderCreationForm = ({
         setEmployeeOptions([...employees]);
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
         setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
+        setConsigneeOptions([...customers, ...vendors, ...carriers])
         setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
         setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
@@ -248,7 +246,7 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
+    const validTypes = ['customer', 'vendor', 'Carrier'];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
@@ -584,38 +582,7 @@ const PickupOrderCreationForm = ({
     }
   }, [commodities]);
 
-  // Validacion temporal, pueden ser reemplazadas por la libreria de validaciones de formularios formik
-  const validateFields = (fieldName) => {
-    const field = document.getElementById(fieldName);
-    if (!formData[fieldName]) {
-      field.classList.add('is-invalid');
-      return false
-    } else {
-      field.classList.remove('is-invalid');
-      return true
-    }
-  }
-
   const sendData = async () => {
-    let isValid = true;
-    const fields = [
-      { name: 'employeeId'},
-      { name: 'destinationAgentId'},
-      { name: 'issuedById'},
-      { name: 'shipper'},
-      { name: 'consignee' },
-      { name: 'pickupLocation' },
-      { name: 'deliveryLocation'},
-      { name: 'clientToBill' },
-      { name: 'mainCarrier'},
-    ]
-
-    for (const field of fields) {
-      if (!validateFields(field.name)) {
-        isValid = false;
-      }
-    }
-    if (isValid) {
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -766,7 +733,6 @@ const PickupOrderCreationForm = ({
       }
     }
   }
-}
 
   const checkUpdatesComplete = () => {
     if (

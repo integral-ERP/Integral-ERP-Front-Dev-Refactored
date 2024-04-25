@@ -4,8 +4,6 @@
   align-items: flex-start;
 }
 
-.is-invalid {border:1px solid red;}
-
 .company-form__tabs-button-container{
   margin-bottom: 20px;
   background-color: rgba(240,240,240,255);
