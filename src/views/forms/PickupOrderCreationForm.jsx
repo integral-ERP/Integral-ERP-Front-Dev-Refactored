@@ -124,11 +124,11 @@ const PickupOrderCreationForm = ({
   useEffect(() => {
     fetchFormData()
       .then((data) => {
-        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
-        const customers = data.filter(item => item.type === 'customer');
-        const vendors = data.filter(item => item.type === 'vendor');
-        const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'Carrier');
+        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent').sort((a, b) => a.name.localeCompare(b.name))
+        const customers = data.filter(item => item.type === 'customer').sort((a, b) => a.name.localeCompare(b.name))
+        const vendors = data.filter(item => item.type === 'vendor').sort((a, b) => a.name.localeCompare(b.name))
+        const employees = data.filter(item => item.type === 'employee').sort((a, b) => a.name.localeCompare(b.name))
+        const carriers = data.filter(item => item.type === 'Carrier').sort((a, b) => a.name.localeCompare(b.name))
 
         setIssuedByOptions([...forwardingAgents])
         setDestinationAgentOptions([...forwardingAgents])
@@ -223,7 +223,7 @@ const PickupOrderCreationForm = ({
       console.error(`Unsupported Destination Agent type: ${type}`);
       return;
     }
-    setagent( await ForwardingAgentService.getForwardingAgentById(id))
+    setagent(await ForwardingAgentService.getForwardingAgentById(id))
     setFormData({
       ...formData,
       destinationAgentId: id,
