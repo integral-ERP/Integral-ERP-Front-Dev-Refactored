@@ -479,11 +479,6 @@ const PickupOrderCreationForm = ({
     }
   }, [charges.length]);
 
-  const SortArray = (x, y) => {
-    return new Intl.Collator("es").compare(x.name, y.name);
-  };
-
-
   const loadSelectOptions = async (options, inputValue) => {
     let filteredOptions = options;
     if (inputValue) {
