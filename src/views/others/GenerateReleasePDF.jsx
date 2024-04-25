@@ -4,25 +4,23 @@ import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
-pdfMake.vfs = pdfFonts;
 
 const GenerateReleasePDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
 
-
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
-    canvas = document.createElement("canvas");
+    canvas = document.createElement('canvas');
     const barcodeOptions = {
-      bcid: "code128", // Barcode type (e.g., code128),
-      text: data.number + "",
+      bcid: "code128", // Barcode type (e.g., code128)
+      text: data.number + '', // Barcode data
       scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode,
-      includeText: true,
+      height: 10, // Height of the barcode
+      includetext: true, // Include human-readable text below the barcode
+      textxalign: "center",
     };
     try {
 
@@ -47,38 +45,39 @@ const GenerateReleasePDF = (data) => {
       let seventhRowText = "";
       let eigthRowText = "";
       let ninenthRowText = "";
-      data.commodities?.forEach((commodity) => {
+      data.commodities?.forEach((commodity, index) => {
         firstRowText += `1 \n`;
-        secondRowText = data.warehouseReceiptObj?.number || "";
-        thirdRowText = commodity.locationCode || "";
+        // secondRowText = data.warehouseReceiptObj?.number || "";
+        thirdRowText += `${commodity.locationCode} \n`;
         fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fifthRowText = "Box";
+        fifthRowText += `${"Box"} \n`;
         sixthRowText += `${commodity.description} \n`;
         seventhRowText += `${commodity.weight} lbs \n`;
         eigthRowText += `${commodity.volumetricWeight} ft3 \n`;
-        ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
+        // ninenthRowText = `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
-        if (commodity.containsCommodities && commodity.internalCommodities) {
-          commodity.internalCommodities.forEach((internalCommodity) => {
+        // if (commodity.containsCommodities && commodity.internalCommodities) {
+        //   commodity.internalCommodities.forEach((internalCommodity) => {
 
-            thirdRowText += commodity.locationCode || "";
-            fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fifthRowText += `${internalCommodity.package_type_description} \n`;
-            sixthRowText += `${internalCommodity.description} lbs \n`;
-            seventhRowText += `${internalCommodity.weight} lbs \n`;
-            eigthRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-            ninenthRowText = `${internalCommodity.chargedWeight} Vlb \n`;
-            totalWeight += parseFloat(internalCommodity.weight);
-            totalVolume += parseFloat(internalCommodity.volumetricWeight);
-          });
-        }
+        //     thirdRowText += commodity.locationCode || "";
+        //     fourthRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+        //     fifthRowText += `${internalCommodity.package_type_description} \n`;
+        //     sixthRowText += `${internalCommodity.description} lbs \n`;
+        //     seventhRowText += `${internalCommodity.weight} lbs \n`;
+        //     eigthRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+        //     ninenthRowText = `${internalCommodity.chargedWeight} Vlb \n`;
+        //     totalWeight += parseFloat(internalCommodity.weight);
+        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
+        //   });
+        // }
       });
       const commodityRow = [
         {
 
           text: firstRowText,
+          margin: [0, 0, 0, 300],
         },
         {
 
@@ -104,10 +103,10 @@ const GenerateReleasePDF = (data) => {
 
           text: eigthRowText,
         },
-        {
+        // {
 
-          text: ninenthRowText,
-        },
+        //   text: ninenthRowText,
+        // },
       ];
       commodityRows.push(commodityRow);
     }
@@ -270,7 +269,7 @@ const GenerateReleasePDF = (data) => {
                     `*`,
                     `auto`,
                     `auto`,
-                    `auto`,
+                    // `auto`,
                   ],
                   body: [
                     [
@@ -316,14 +315,65 @@ const GenerateReleasePDF = (data) => {
                         margin: [0, 0, 0, 0],
                         alignment: "center",
                       },
-                      {
-                        text: `Vol Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
+                      // {
+                      //   text: `Vol Weight`,
+                      //   fillColor: `#CCCCCC`,
+                      //   margin: [0, 0, 0, 0],
+                      //   alignment: "center",
+                      // },
                     ],
                     ...commodityRows,
+                    
+                    [
+                      {
+                        text: `Signature:`,
+                        colSpan: 5,
+                        rowSpan: 2,
+                      },
+                      {},
+                      {},
+                      {},
+                      {},
+                      {
+                        text: `Pieces`,
+                      },
+                      {
+                        text: `Weight`,
+                      },
+                      {
+                        text: `Volume`,
+                      },
+                        // {
+                        //   text: [`Volume Weight`],
+                        // },
+                    ],
+                    [
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {
+                        text: totalPieces,
+                        alignment: "right"
+                      },
+                      {
+                        text: [
+                          `${(totalWeight ).toFixed(2)} lb`,
+                          ],
+                          alignment: "right"
+                      },
+                      {
+                        text: [
+                          `${totalVolume.toFixed(2)} ft3\n`,
+                        ],
+                        alignment: "right"
+                      },
+                      // {
+                      //   text:"WWW",
+                      //   alignment: "right"
+                      // },
+                    ],
                   ],
                 },
                 margin: [0, 50, 0, 20],

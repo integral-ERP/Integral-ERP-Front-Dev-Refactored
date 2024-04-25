@@ -14,6 +14,7 @@ const CommodityCreationForm = ({
   commodity,
   locationEnabled,
   setEditingComodity,
+  hideLocation
 }) => {
   const formFormat = {
     id: "",
@@ -305,7 +306,8 @@ const currentUrl = window.location.href;
 {/* // Renderizar el código basado en la condición */}
 <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
   {/* {isLocationEnabled && ( */}
-  {(
+  {!hideLocation  && (
+  
     <>
       <label
         htmlFor="location"
@@ -314,17 +316,19 @@ const currentUrl = window.location.href;
       >
         Locationn:
       </label>
+
       <select
-        name="location"
-        id="location"
-        value={formData.locationId}
-        onChange={(e) => {
-          setformData({
-            ...formData,
-            locationId: e.target.value,
-            locationCode:
-              e.target.options[e.target.selectedIndex].getAttribute(
-                "data-key"
+      name="location"
+      id="location"
+      value={formData.locationId}
+      onChange={(e) => {
+        setformData({
+          ...formData,
+          locationId: e.target.value,
+          locationCode:
+          e.target.options[e.target.selectedIndex].getAttribute(
+            "data-key"
+         
               ),
           });
         }}
@@ -345,7 +349,8 @@ const currentUrl = window.location.href;
         })}
       </select>
     </>
-  )}
+  
+   )}
 </div>;
 
 

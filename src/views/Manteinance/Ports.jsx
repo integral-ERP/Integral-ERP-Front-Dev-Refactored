@@ -101,7 +101,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
             const newreceipts = ports.filter((order) => order.id !== selectedPort.id);
             setports(newreceipts);
           } else {

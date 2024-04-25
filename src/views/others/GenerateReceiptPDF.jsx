@@ -506,13 +506,13 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {
                         text: [
-                          `${totalWeight} kg\n`,
+                          `${totalWeight.toFixed(2)} kg\n`,
                           `${(totalWeight / 2.205).toFixed(2)} lb`,
                         ],
                       },
                       {
                         text: [
-                          `${totalVolume} ft3\n`,
+                          `${totalVolume.toFixed(2)} ft3\n`,
                           `${(totalVolume / 35.315).toFixed(2)} m3`,
                         ],
                       },

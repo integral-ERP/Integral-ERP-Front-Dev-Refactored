@@ -111,7 +111,7 @@ const Payments = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
 
             const newPaymentsTerms = payments.filter(
               (order) => order.id !== selectedPayments.id
@@ -121,7 +121,7 @@ const Payments = () => {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

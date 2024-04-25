@@ -120,14 +120,14 @@ const Carrier = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
             const newreceipts = carriers.filter((order) => order.id !== selectedCarrier.id);
             setCarriers(newreceipts);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

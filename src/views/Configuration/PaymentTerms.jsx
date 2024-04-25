@@ -153,7 +153,7 @@ const PaymentTerms  = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
 
             const newDeposits = DepositsService.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
@@ -161,7 +161,7 @@ const PaymentTerms  = () => {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

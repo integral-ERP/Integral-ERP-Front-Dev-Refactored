@@ -98,7 +98,7 @@ const Deposits = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
 
             const newDeposits = deposits.filter((order) => order.id !== selectedDeposits.id);
             setDeposits(newDeposits);
@@ -106,7 +106,7 @@ const Deposits = () => {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

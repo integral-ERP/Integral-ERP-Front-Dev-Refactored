@@ -214,7 +214,7 @@ const Pickup = () => {
               setShowErrorAlert(true);
               setTimeout(() => {
                 setShowErrorAlert(false);
-              }, 3000);
+              }, 1000);
             }
           })
           .catch((error) => {});

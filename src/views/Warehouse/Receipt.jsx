@@ -173,14 +173,14 @@ const Receipt = () => {
                   setShowSuccessAlert(false);
                 },
                 window.location.reload(),
-                3000
+                1000
               );
             } catch (error) {
               console.error("Error al eliminar el recibo:", error);
               setShowErrorAlert(true);
               setTimeout(() => {
                 setShowErrorAlert(false);
-              }, 1500);
+              }, 1000);
             }
 
             // Salir del bucle después de la actualización

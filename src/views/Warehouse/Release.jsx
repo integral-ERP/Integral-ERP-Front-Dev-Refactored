@@ -86,8 +86,9 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("Aqui -1 = ",fetchData());
+    console.log("Aqui-1 = ",fetchData());
     console.log("Aqui-2 = ",fetchData());
+    console.log("Aqui-3 = ",fetchData());
   }, []);
 
   const updateReleaseOrders = (url = null) => {
@@ -149,6 +150,7 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
+    console.log("Release-1", releaseOrders[0]);
   };
 
   const handleEditreceipts = () => {
@@ -178,12 +180,12 @@ const Release = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
           } else {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {});

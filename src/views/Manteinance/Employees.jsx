@@ -119,14 +119,14 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
           setShowSuccessAlert(true);
           setTimeout(() => {
             setShowSuccessAlert(false);
-          }, 3000);
+          }, 1000);
           const newreceipts = employees.filter((order) => order.id !== selectedEmployee.id);
             setemployees(newreceipts);
         } else {
           setShowErrorAlert(true);
           setTimeout(() => {
             setShowErrorAlert(false);
-          }, 3000);
+          }, 1000);
         }
       })
       .catch((error) => {

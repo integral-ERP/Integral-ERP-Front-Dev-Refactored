@@ -31,13 +31,15 @@ const ReceiptCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
   fromPickUp,
-  fromReceipt
+  fromReceipt,
+  showBModal,
 }) => {
   console.log("pickupOrder", pickupOrder);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
+  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -54,7 +56,8 @@ const ReceiptCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] =
+    useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -174,19 +177,22 @@ const ReceiptCreationForm = ({
   const [selectedRepackId, setSelectedRepackId] = useState(null);
 
   const handleIssuedBySelection = async (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    const selectedObject = issuedByOptions.find(option => option.id === id && option.type === type);
-    const info = `${selectedObject?.street_and_number || ""} - ${selectedObject?.city || ""
-      } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${selectedObject?.zip_code || ""
-      }`;
+    const id = event.id;
+    const type = event.type;
+    const result = await ForwardingAgentService.getForwardingAgentById(id);
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       issuedById: id,
       issuedByType: type,
       issuedByInfo: info,
-    })
-  }
+    });
+  };
+
   const handleDestinationAgentSelection = async (event) => {
     const id = event.id;
     setFormData({
@@ -286,14 +292,24 @@ const ReceiptCreationForm = ({
   };
 
   const handleSupplierSelection = async (event) => {
-    const id = event.id || '';
-    const type = event.type || '';
+    const id = event.id || formData.supplierId;
+    // const type = event.type || formData.supplierType;
+    const type = event?.type || "";
     const selectedSupplier = supplierOptions.find(
       (option) => option.id === id && option.type === type
     );
 
+    if (supplierOptions) {
+      console.log("supplierOptions =", supplierOptions);
+      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        supplierId: supplierOptions.id
+      }));
+    }
+
     if (!selectedSupplier) {
-      console.error(`Unsupported supplier type: ${type}`);
+      console.error(`Unsupported consignee type: ${type}`);
       return;
     }
 
@@ -304,7 +320,7 @@ const ReceiptCreationForm = ({
     } - ${selectedSupplier?.zip_code || ""}`;
 
     setSupplier(selectedSupplier);
-    setDefaultValueSupplier(selectedSupplier);
+
     setFormData({
       ...formData,
       supplierId: id,
@@ -312,31 +328,40 @@ const ReceiptCreationForm = ({
       supplierInfo: info,
     });
   };
-  const handleShipperSelection = (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    const validTypes = ['forwarding-agent', 'customer', 'vendor', 'Carrier'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported shipper type: ${type}`);
-      return;
-    }
-    const selectedShipper = shipperOptions.find(option => option.id === id && option.type === type);
-    if (!selectedShipper) {
-      console.error(`Shipper not found with ID ${id} and type ${type}`);
-      return;
-    }
-    const info = `${selectedShipper?.street_and_number || ""} - ${selectedShipper?.city || ""
-      } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${selectedShipper?.zip_code || ""
-      }`;
 
-    setshipper(selectedShipper);
-    setdefaultValueShipper(selectedShipper);
-    setFormData({
-      ...formData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
-    });
+  const handleShipperSelection = async (event) => {
+    if (event && event.id) {
+      const id = event.id || formData.shipperId;
+      const type = event.type || formData.shipperType;
+
+      let result;
+      if (type === "forwarding-agent") {
+        result = await ForwardingAgentService.getForwardingAgentById(id);
+      } else if (type === "customer") {
+        result = await CustomerService.getCustomerById(id);
+      } else if (type === "vendor") {
+        result = await VendorService.getVendorByID(id);
+      }
+
+      const info = result?.data
+        ? `${result.data.street_and_number || ""} - ${
+            result.data.city || ""
+          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+            result.data.zip_code || ""
+          }`
+        : formData.shipperInfo;
+      setshipper(result?.data || shipper);
+      setFormData({
+        ...formData,
+        shipperId: id,
+        shipperType: type,
+        shipperInfo: info,
+      });
+    } else {
+      console.error(
+        "El objeto de selección de shipper es nulo o no tiene una propiedad 'id'"
+      );
+    }
   };
 
   const handleClearShipperSelection = () => {
@@ -711,7 +736,8 @@ const ReceiptCreationForm = ({
 
         supplier: initialSupplier,
         supplierId: initialSupplier?.id,
-        supplierType: initialSupplier?.type,
+        supplierType: initialSupplier?.type_person,
+
         supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
           initialSupplier?.city || ""
         } - ${initialSupplier?.state || ""} - ${
@@ -988,7 +1014,7 @@ const ReceiptCreationForm = ({
       setShowWarningAlert(true);
       return;
     }
-
+    
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -1035,11 +1061,11 @@ const ReceiptCreationForm = ({
       shipperName = "carrierid";
     }
     if (shipperName !== "") {
-      const shipper = {
+      const consignee = {
         [shipperName]: formData.shipperId,
       };
 
-      const response = await ReceiptService.createShipper(shipper);
+      const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
         setshipperRequest(response.data.id);
       }
@@ -1373,12 +1399,13 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="issuedBy"
-                    value={issuedByOptions.find(
-                      (option) => option.id === formData.issuedById
-                    )}
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
+                    value={issuedByOptions.find(
+                      (option) => option.id === formData.issuedById
+                    )}
+                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={issuedByOptions}
                     loadOptions={loadIssuedBySelectOptions}
@@ -1414,20 +1441,16 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="shipper"
-                    onChange={(e) => {
-                      handleShipperSelection(e);
-                    }}
-                    onClear={() => {
-                      handleClearShipperSelection();
-                    }}
+                    value={shipperOptions.find(
+                      (option) => 
+                        option.id === formData.shipperId &&
+                        option.type_person === formData.shipperType
+                    )}
+                    onChange={(e) => handleShipperSelection(e)}
+                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
-                    value={shipperOptions.find(
-                      (option) =>
-                       option.id === formData.shipperId &&
-                       option.type === formData.shipperType
-                    )}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
@@ -1436,7 +1459,6 @@ const ReceiptCreationForm = ({
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
                   </label>
-                  <div className="custom-select">
                     <AsyncSelect
                       id="consignee"
                       value={consigneeOptions.find(
@@ -1451,7 +1473,6 @@ const ReceiptCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
-                  </div>
                 </div>
               </div>
 
@@ -1516,6 +1537,21 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="supplier"
+                    value={supplierOptions.find(
+                      (option) => 
+                        option.id === formData.supplierId &&
+                        option.type_person === formData.supplierType
+                    )}
+                    onChange={(e) => handleSupplierSelection(e)}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={supplierOptions}
+                    loadOptions={loadShipperSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                  {/* <AsyncSelect
+                    id="supplier"
                     onChange={(e) => {
                       handleSupplierSelection(e);
                     }}
@@ -1525,7 +1561,7 @@ const ReceiptCreationForm = ({
                     value={defaultValueSupplier}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
-                  />
+                  /> */}
                 </div>
 
                 <div className="col-6 text-start">
@@ -2146,12 +2182,6 @@ ReceiptCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool,
   onpickupOrderDataChange: propTypes.func,
-  currentPickUpNumber: propTypes.number,
-  setcurrentPickUpNumber : propTypes.func,
-  fromPickUp: propTypes.any,
-  fromReceipt: propTypes.any,
-  showBModal: propTypes.bool
-
 };
 
 ReceiptCreationForm.defaultProps = {

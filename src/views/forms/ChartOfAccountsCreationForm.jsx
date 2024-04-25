@@ -88,7 +88,7 @@ const ChartOfAccountsCreationForm = ({
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
-      }, 15000);
+      }, 1000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);

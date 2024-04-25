@@ -136,7 +136,7 @@ const Bills = () => {
             setShowSuccessAlert(true);
             setTimeout(() => {
               setShowSuccessAlert(false);
-            }, 3000);
+            }, 1000);
 
             const newBill = bills.filter(
               (order) => order.id !== selectedBills.id
@@ -146,7 +146,7 @@ const Bills = () => {
             setShowErrorAlert(true);
             setTimeout(() => {
               setShowErrorAlert(false);
-            }, 3000);
+            }, 1000);
           }
         })
         .catch((error) => {

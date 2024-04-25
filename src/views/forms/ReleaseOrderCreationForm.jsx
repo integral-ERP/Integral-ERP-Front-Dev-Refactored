@@ -469,7 +469,7 @@ const ReleaseOrderCreationForm = ({
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
-          }, 2000);
+          }, 1000);
         } else {
           setShowErrorAlert(true);
         }
@@ -784,7 +784,7 @@ const ReleaseOrderCreationForm = ({
             data={commodities}
             columns={[
               "Description",
-              " Length",
+              " Length (in)",
               " Width (in)",
               " Height (in)",
               " Weight (lb)",

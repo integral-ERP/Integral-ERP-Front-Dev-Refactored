@@ -68,7 +68,7 @@ const PaymentTermsCreationForms = ({
         setShowSuccessAlert(false);
         setFormData(formFormat)
         window.location.reload();
-      }, 19000);
+      }, 1000);
     } else {
       console.log("Something went wrong:", response);
       setShowErrorAlert(true);
