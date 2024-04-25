@@ -23,6 +23,7 @@ import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
+import { BorderColor } from "@mui/icons-material";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -583,7 +584,38 @@ const PickupOrderCreationForm = ({
     }
   }, [commodities]);
 
+  // Validacion temporal, pueden ser reemplazadas por la libreria de validaciones de formularios formik
+  const validateFields = (fieldName) => {
+    const field = document.getElementById(fieldName);
+    if (!formData[fieldName]) {
+      field.classList.add('is-invalid');
+      return false
+    } else {
+      field.classList.remove('is-invalid');
+      return true
+    }
+  }
+
   const sendData = async () => {
+    let isValid = true;
+    const fields = [
+      { name: 'employeeId'},
+      { name: 'destinationAgentId'},
+      { name: 'issuedById'},
+      { name: 'shipper'},
+      { name: 'consignee' },
+      { name: 'pickupLocation' },
+      { name: 'deliveryLocation'},
+      { name: 'clientToBill' },
+      { name: 'mainCarrier'},
+    ]
+
+    for (const field of fields) {
+      if (!validateFields(field.name)) {
+        isValid = false;
+      }
+    }
+    if (isValid) {
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -733,7 +765,8 @@ const PickupOrderCreationForm = ({
         setFormData({ ...formData, client_to_bill: response.data.id });
       }
     }
-  };
+  }
+}
 
   const checkUpdatesComplete = () => {
     if (
@@ -824,7 +857,7 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-         /*  supplier: formData.shipperId, */
+          /*  supplier: formData.shipperId, */
           weight: weightUpdated,
         };
 
@@ -905,17 +938,17 @@ const PickupOrderCreationForm = ({
         const response = await (
           //added for create commdities 
           commodities.length === 0
-            ? Promise.resolve(null) 
-            : creating 
+            ? Promise.resolve(null)
+            : creating
               ? Promise.resolve(null)  //ReceiptService.createReceipt(rawData) eliminado
               : (async () => {
                 const buscapick = await PickupService.getPickupById(pickupOrder.id);
                 const buscarecip = (await callrecipt(null)).data.results;
-        
+
                 //console.log("BUSCARPICKUP", buscarecip);
                 const numeroRecibo = buscapick.data.number;
                 //console.log("numeroRecibo", numeroRecibo);
-        
+
                 // Verifica si buscapick se ha obtenido correctamente
                 if (buscapick.status >= 200 && buscapick.status <= 300) {
                   // Realiza la lógica solo si buscapick se ha obtenido correctamente
@@ -926,13 +959,13 @@ const PickupOrderCreationForm = ({
                     }
                   });
                 } else {
-                  
+
                   console.error("Error al obtener buscapick");
                 }
-    
+
               })()
         );
-        
+
 
         if (response.status >= 200 && response.status <= 300) {
           /* if (!creating) {
@@ -992,7 +1025,7 @@ const PickupOrderCreationForm = ({
       throw error;
     }
   };
-  
+
   const getAsyncSelectValue = () => {
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
@@ -1082,6 +1115,12 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadEmployeeSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    styles={{
+                      control: (provided, state) => ({
+                        ...provided,
+                        border: state.isFocused ? '1px solid blue' : '1px solid #ced4da',
+                      }),
+                    }}
                   />
                 </div>
                 <div className="col-6 text-start" id="dates">
