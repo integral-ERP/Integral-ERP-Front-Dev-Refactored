@@ -333,7 +333,7 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event?.target?.value || "";
-    if (type === "other") {
+    if (type === "Other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
       if (formData.shipperId || formData.consigneeId) {
@@ -468,6 +468,7 @@ const PickupOrderCreationForm = ({
       });
       setFormData(updatedFormData);
       setcanRender(true);
+      console.log('Este es el form que se carga despues de guardar: ', updatedFormData);
 
     }
   }, [creating, pickupOrder]);
@@ -723,10 +724,13 @@ const PickupOrderCreationForm = ({
             : formData.client_to_bill,
       };
       const response = await ReleaseService.createClientToBill(clientToBill);
+      console.log("response al crear el client to bill", response.data.id);
       if (response.status === 201) {
         setclientToBillRequest(response.data.id);
         setFormData({ ...formData, client_to_bill: response.data.id });
       }
+      console.log("Estado actual del formulario:", formData);
+
     }
   }
 
@@ -1002,14 +1006,14 @@ const PickupOrderCreationForm = ({
           option.id === formData.consigneeId &&
           option.type === formData.consigneeType
       );
-    } else {
+    } else if (formData.client_to_bill_type === "other") {
       selectedOption = releasedToOptions.find(
-        (option) =>
-          option.id === formData.client_to_bill && option.type === CTBType
+        (option) => option.id === formData.client_to_bill
       );
     }
     return selectedOption;
   };
+  
   //--------------------------------------------------
   //added edit commodities
   const handleCommodityEdit = () => {
@@ -1374,7 +1378,7 @@ const PickupOrderCreationForm = ({
                       name="clientToBill"
                       id="clientToBill"
                       className="form-input"
-                      value={formData.client_to_bill_type}
+                      value={formData.client_to_bill_type }
                       onChange={(e) => {
                         handleClientToBillSelection(e);
                       }}
@@ -1384,9 +1388,6 @@ const PickupOrderCreationForm = ({
                       <option value="consignee">Ultimate Consignee</option>
                       <option value="other">Other</option>
                     </select>
-                    <p style={{ color: "red" }}>
-                      Note: Always select a client to bill when editing
-                    </p>
                   </div>
                   <div className="text-start">
                     <AsyncSelect
