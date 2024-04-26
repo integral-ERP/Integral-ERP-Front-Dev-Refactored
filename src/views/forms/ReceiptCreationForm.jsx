@@ -1289,7 +1289,13 @@ const ReceiptCreationForm = ({
         };
         
         const response = await (creating
-          ? ReceiptService.createReceipt(rawData)
+          ? (async () => {
+              const result = await ReceiptService.createReceipt(rawData);
+              if (result) {
+                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+              }
+              return result;
+            })()
           : (async () => {
               const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
               const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
@@ -1302,9 +1308,10 @@ const ReceiptCreationForm = ({
                 }
               });
               
-              return result; // retornar el resultado de updateReceipt
+              return result; // Retornar el resultado de updateReceipt
             })()
         );
+        
         
 
         /* if (!creating) {
@@ -1323,7 +1330,7 @@ const ReceiptCreationForm = ({
           }  */
 
         if (response.status >= 200 && response.status <= 300) {
-          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+          //PickupService.updatePickup(pickupOrder.id, rawDatapick);
         
           
               
@@ -1331,13 +1338,13 @@ const ReceiptCreationForm = ({
           
           
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-          if (fromPickUp) {
+          /* if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
             const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
-          }
+          } */
 
           if (!fromPickUp) {
             //added onhand status
