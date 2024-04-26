@@ -116,29 +116,69 @@ const PickupOrderCreationForm = ({
   };
   const [formData, setFormData] = useState(formFormat);
 
-  useEffect(() => {
-    fetchFormData()
-      .then((data) => {
-        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
-        const customers = data.filter(item => item.type === 'customer');
-        const vendors = data.filter(item => item.type === 'vendor');
-        const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'carrier');
+  //-------------------------------------------------------------
+  const fetchFormData = async () => {
+    const forwardingAgents  = (await ForwardingAgentService.getForwardingAgents()).data.results;
+    const customers         = (await CustomerService.getCustomers()).data.results;
+    const vendors           = (await VendorService.getVendors()).data.results;
+    const employees         = (await EmployeeService.getEmployees()).data.results;
+    const carriers          = (await CarrierService.getCarriers()).data.results;
 
-        setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
-        setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
-        setEmployeeOptions([...employees].sort(SortArray));
-        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-        setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
-        setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
-        setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
-        setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
-      })
-      .catch((error) => {
-        console.error('Error al obtener los datos:', error);
-      });
-  }, []);
+    const addTypeToObjects = (arr, type) =>
+      arr.map((obj) => ({ ...obj, type }));
+
+    const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents, "forwarding-agent");
+    const customersWithType         = addTypeToObjects(customers, "customer");
+    const vendorsWithType           = addTypeToObjects(vendors, "vendor");
+    const employeesWithType         = addTypeToObjects(employees, "employee");
+    const carriersWithType          = addTypeToObjects(carriers, "Carrier");
+
+    const issuedByOptions         = [...forwardingAgentsWithType];
+    const destinationAgentOptions = [...forwardingAgentsWithType];
+    const employeeOptions         = [...employeesWithType];
+    const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    const pickupLocationOptions   = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
+
+    // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType, ...carriersWithType];
+    const deliveryLocationOptions = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType, ...carriersWithType];
+    const carrierOptions          = [...carriersWithType];
+    const clientToBillOptions     = [...customersWithType, ...forwardingAgentsWithType,];
+
+    setIssuedByOptions(issuedByOptions.sort(SortArray));
+    setDestinationAgentOptions(destinationAgentOptions.sort(SortArray));
+    setEmployeeOptions(employeeOptions.sort(SortArray));
+    setShipperOptions(shipperOptions.sort(SortArray));
+    setPickupLocationOptions(pickupLocationOptions.sort(SortArray));
+    setConsigneeOptions(consigneeOptions.sort(SortArray));
+    setDeliveryLocationOptions(deliveryLocationOptions.sort(SortArray));
+    setCarrierOptions(carrierOptions.sort(SortArray));
+    setReleasedToOptions(clientToBillOptions.sort(SortArray));
+  };
+
+  // useEffect(() => {
+  //   fetchFormData()
+  //     .then((data) => {
+  //       const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
+  //       const customers = data.filter(item => item.type === 'customer');
+  //       const vendors = data.filter(item => item.type === 'vendor');
+  //       const employees = data.filter(item => item.type === 'employee');
+  //       const carriers = data.filter(item => item.type === 'carrier');
+
+  //       setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setEmployeeOptions([...employees].sort(SortArray));
+  //       setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
+  //       setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
+  //       setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error al obtener los datos:', error);
+  //     });
+  // }, []);
 
 
   useEffect(() => {
@@ -218,6 +258,38 @@ const PickupOrderCreationForm = ({
     });
   };
 
+  //-----------------------------------------------------------
+  // const handleConsigneeSelection = async (event) => {
+  //   const id = event?.id || "";
+  //   const type = event?.type || "";
+
+  //   let result;
+  //   if (type === "forwarding-agent") {
+  //     result = await ForwardingAgentService.getForwardingAgentById(id);
+  //   }
+  //   if (type === "customer") {
+  //     result = await CustomerService.getCustomerById(id);
+  //   }
+  //   if (type === "vendor") {
+  //     result = await VendorService.getVendorByID(id);
+  //   }
+  //   if (type === "Carrier") {
+  //     result = await CarrierService.getCarrierById(id);
+  //   }
+  //   const info = `${result?.data.street_and_number || ""} - ${
+  //     result?.data.city || ""
+  //   } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+  //     result?.data.zip_code || ""
+  //   }`;
+  //   setconsignee(result?.data);
+  //   setFormData({
+  //     ...formData,
+  //     consigneeId: id,
+  //     consigneeType: type,
+  //     consigneeInfo: info,
+  //   });
+  // };
+
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
@@ -271,8 +343,8 @@ const PickupOrderCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      consigneeId: id,
-      consigneeType: type,
+      // consigneeId: id,
+      // consigneeType: type,
     });
   };
 
@@ -511,6 +583,26 @@ const PickupOrderCreationForm = ({
       return options;
     }
   };
+//---------------------------------------------------------
+// const loadConsigneeSelectOptions = async (inputValue) => {
+//   const responseCustomers = (await CustomerService.search(inputValue)).data
+//     .results;
+//   const responseVendors = (await VendorService.search(inputValue)).data
+//     .results;
+//   const responseAgents = (await ForwardingAgentService.search(inputValue))
+//     .data.results;
+//   const responseCarriers = (await CarrierService.search(inputValue)).data
+//     .results;
+
+//   const options = [
+//     ...addTypeToObjects(responseVendors, "vendor"),
+//     ...addTypeToObjects(responseCustomers, "customer"),
+//     ...addTypeToObjects(responseAgents, "forwarding-agent"),
+//     ...addTypeToObjects(responseCarriers, "Carrier"),
+//   ];
+
+//   return options;
+// };
   
   const loadConsigneeSelectOptions = async (inputValue) => {
     if (inputValue) {
@@ -1424,7 +1516,17 @@ const PickupOrderCreationForm = ({
                     Consignee:
                   </label>
                   <div className="custom-select">
-                    <AsyncSelect
+                  <AsyncSelect
+                    id="consignee"
+                    onChange={(e) => {handleConsigneeSelection(e); }}
+                    value={defaultValueConsignee}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                    {/* <AsyncSelect
                       id="consignee"
                       defaultValue={formData.consigneeId}
                       onChange={(e) => {handleConsigneeSelection(e); }}
@@ -1434,7 +1536,7 @@ const PickupOrderCreationForm = ({
                       loadOptions={loadConsigneeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                    />
+                    /> */}
                   </div>
                 </div>
                 <div
