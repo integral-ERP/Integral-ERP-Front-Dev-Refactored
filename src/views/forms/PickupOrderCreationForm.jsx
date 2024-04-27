@@ -45,7 +45,7 @@ const PickupOrderCreationForm = ({
   const [deliverylocation, setdeliverylocation] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
-  const [releasedToOptions, setReleasedToOptions] = useState([]);
+  const [clientToBillOptions, setClientToBillOptions] = useState([]);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
@@ -139,7 +139,7 @@ const PickupOrderCreationForm = ({
         setConsigneeOptions([...customers, ...vendors, ...carriers])
         setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
-        setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
+        setClientToBillOptions([...forwardingAgents, ...customers, ...vendors])
       })
       .catch((error) => {
         console.error('Error al obtener los datos:', error);
@@ -350,18 +350,44 @@ const PickupOrderCreationForm = ({
         console.error("ShipperId or consigneeId is not available.");
       }
     } else {
-      setCTBType(event?.id);
+      setCTBType(event?.type);
       const id = event?.id;
+      const type = event?.type
+      console.log("Este es el client to bill seleccionado", id, type);
       const selectedType = event?.type === "shipper" ? "shipper" : event?.type === "consignee" ? "consignee" : "other";
-      console.log("selectedType", selectedType);
-
+      if (selectedType === "other") {
       setFormData({
         ...formData,
-        client_to_bill_type: selectedType,
+        client_to_bill_type: type,
         client_to_bill: id,
       });
+      }
     }
+    console.log('Este es el form despues de el evento y setear datos', formData);
   };
+
+
+  const handleClientToBillOther = (event) => {
+    const id = event?.id;
+    const type = event?.type
+    console.log("Este es el client to bill seleccionado en other", id, type);
+    const validTypes = ['customer', 'vendor', 'forwarding-agent', 'Carrier'];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported client to bill type: ${type}`);
+    }
+    const selectedClientToBill = clientToBillOptions.find(option => option.id === id && option.type === type);
+    if (!selectedClientToBill) {
+      console.error(`Client to bill not found with ID ${id} and type ${type}`);
+    } else {
+      setFormData({
+        ...formData,
+        client_to_bill_type: type,
+        client_to_bill: id,
+      })
+    }
+  }
+
+  
 
 
   useEffect(() => {
@@ -1002,20 +1028,21 @@ const PickupOrderCreationForm = ({
   const getAsyncSelectValue = () => {
     let selectedOption = null;
     if (formData.client_to_bill_type === "shipper") {
-      selectedOption = releasedToOptions.find(
+      selectedOption = clientToBillOptions.find(
         (option) =>
           option.id === formData.shipperId &&
           option.type === formData.shipperType
       );
     } else if (formData.client_to_bill_type === "consignee") {
-      selectedOption = releasedToOptions.find(
+      selectedOption = clientToBillOptions.find(
         (option) =>
           option.id === formData.consigneeId &&
           option.type === formData.consigneeType
-      );
+        );
     } else if (formData.client_to_bill_type === "other") {
-      selectedOption = releasedToOptions.find(
-        (option) => option.id === formData.client_to_bill
+      selectedOption = clientToBillOptions.find(
+        (option) => option.id === formData.client_to_bill && 
+        option.type === formData.client_to_bill_type
       );
     }
     return selectedOption;
@@ -1399,12 +1426,12 @@ const PickupOrderCreationForm = ({
                   <div className="text-start">
                     <AsyncSelect
                       id="releasedToOther"
-                      isDisabled={formData.client_to_bill_type !== "other"}
+                      isDisabled={formData.client_to_bill_type == "shipper" || formData.client_to_bill_type == "consignee" ? true : false}
                       onChange={(e) => {
-                        handleClientToBillSelection(e);
+                        handleClientToBillOther(e);
                       }}
                       value={getAsyncSelectValue()}
-                      defaultOptions={releasedToOptions}
+                      defaultOptions={clientToBillOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
