@@ -335,11 +335,14 @@ const PickupOrderCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    console.log("event", event);
     const option = event?.target?.value || "";
-    if (option === "Other") {
-      setFormData({ ...formData, client_to_bill_option: option });
-    } else if (option === "shipper" || option === "consignee") {
+    if (option === "other") {
+      setFormData({
+        ...formData,
+        client_to_bill_option: option,
+      })
+    }
+    else if (option === "shipper" || option === "consignee") {
       if (formData.shipperId || formData.consigneeId) {
         const id = option === "shipper" ? formData.shipperId : formData.consigneeId;
         setFormData({
@@ -1395,7 +1398,7 @@ const PickupOrderCreationForm = ({
                   <div className="text-start">
                     <AsyncSelect
                       id="releasedToOther"
-                      isDisabled={formData.client_to_bill_option == "shipper" || formData.client_to_bill_option == "consignee" ? true : false}
+                      isDisabled={formData.client_to_bill_option !== "other"}
                       onChange={(e) => {
                         handleClientToBillOther(e);
                       }}
