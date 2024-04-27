@@ -336,15 +336,15 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     console.log("event", event);
-    const type = event?.target?.value || "";
-    if (type === "Other") {
-      setFormData({ ...formData, client_to_bill_type: type });
-    } else if (type === "shipper" || type === "consignee") {
+    const option = event?.target?.value || "";
+    if (option === "Other") {
+      setFormData({ ...formData, client_to_bill_option: option });
+    } else if (option === "shipper" || option === "consignee") {
       if (formData.shipperId || formData.consigneeId) {
-        const id = type === "shipper" ? formData.shipperId : formData.consigneeId;
+        const id = option === "shipper" ? formData.shipperId : formData.consigneeId;
         setFormData({
           ...formData,
-          client_to_bill_type: type,
+          client_to_bill_option: option,
           client_to_bill: id,
         });
       } else {
@@ -368,7 +368,7 @@ const PickupOrderCreationForm = ({
     } else {
       setFormData({
         ...formData,
-        client_to_bill_type: type,
+        client_to_bill_option: type,
         client_to_bill: id,
       })
     }
@@ -455,7 +455,7 @@ const PickupOrderCreationForm = ({
         client_to_bill_id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id,
-        client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
+        client_to_bill_option: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
           ?.type_person
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
             pickupOrder.shipperObj?.data?.obj?.id
@@ -611,7 +611,7 @@ const PickupOrderCreationForm = ({
       console.log('Consignee a enviar', consignee);
       const response = await PickupService.createConsignee(consignee);
       if (response.status === 201) {
-        formData.client_to_bill_type === "consignee"
+        formData.client_to_bill_option === "consignee"
           ? (auxVar = response.data.id)
           : "";
         setconsigneeRequest(response.data.id);
@@ -686,18 +686,18 @@ const PickupOrderCreationForm = ({
       console.log('Shipper a enviar', shipper);
       const response = await PickupService.createShipper(shipper);
       if (response.status === 201) {
-        formData.client_to_bill_type === "shipper"
+        formData.client_to_bill_option === "shipper"
           ? (auxVar = response.data.id)
           : "";
         setshipperRequest(response.data.id);
       }
     }
     let clientToBillName = "";
-    if (formData.client_to_bill_type === "shipper") {
+    if (formData.client_to_bill_option === "shipper") {
       clientToBillName = "shipperid";
-    } else if (formData.client_to_bill_type === "consignee") {
+    } else if (formData.client_to_bill_option === "consignee") {
       clientToBillName = "consigneeid";
-    } else if (formData.client_to_bill_type === "Other") {
+    } else if (formData.client_to_bill_option === "Other") {
       // Verificar el tipo de entidad seleccionada
       if (formData.shipperType === "forwarding-agent") {
         clientToBillName = "agentid";
@@ -712,7 +712,7 @@ const PickupOrderCreationForm = ({
 
     // Crear el objeto clientToBill con el nombre de campo determinado
     const clientToBill = {
-      [clientToBillName]: formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee" || formData.client_to_bill_type === "Other"
+      [clientToBillName]: formData.client_to_bill_option === "shipper" || formData.client_to_bill_option === "consignee" || formData.client_to_bill_option === "Other"
         ? auxVar
         : formData.client_to_bill,
     };
@@ -812,7 +812,7 @@ const PickupOrderCreationForm = ({
 
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
-          client_to_bill_type: formData.client_to_bill_type,
+          client_to_bill_option: formData.client_to_bill_option,
           client_to_bill: formData.client_to_bill,
 
           pro_number: formData.proNumber,
@@ -996,22 +996,22 @@ const PickupOrderCreationForm = ({
 
   const getAsyncSelectValue = () => {
     let selectedOption = null;
-    if (formData.client_to_bill_type === "shipper") {
+    if (formData.client_to_bill_option === "shipper") {
       selectedOption = clientToBillOptions.find(
         (option) =>
           option.id === formData.shipperId &&
           option.type === formData.shipperType
       );
-    } else if (formData.client_to_bill_type === "consignee") {
+    } else if (formData.client_to_bill_option === "consignee") {
       selectedOption = clientToBillOptions.find(
         (option) =>
           option.id === formData.consigneeId &&
           option.type === formData.consigneeType
       );
-    } else if (formData.client_to_bill_type === "other") {
+    } else if (formData.client_to_bill_option === "other") {
       selectedOption = clientToBillOptions.find(
         (option) => option.id === formData.client_to_bill &&
-          option.type === formData.client_to_bill_type
+          option.type === formData.client_to_bill_option
       );
     }
     return selectedOption;
@@ -1381,7 +1381,7 @@ const PickupOrderCreationForm = ({
                       name="clientToBill"
                       id="clientToBill"
                       className="form-input"
-                      value={formData.client_to_bill_type}
+                      value={formData.client_to_bill_option}
                       onChange={(e) => {
                         handleClientToBillSelection(e);
                       }}
@@ -1395,7 +1395,7 @@ const PickupOrderCreationForm = ({
                   <div className="text-start">
                     <AsyncSelect
                       id="releasedToOther"
-                      isDisabled={formData.client_to_bill_type == "shipper" || formData.client_to_bill_type == "consignee" ? true : false}
+                      isDisabled={formData.client_to_bill_option == "shipper" || formData.client_to_bill_option == "consignee" ? true : false}
                       onChange={(e) => {
                         handleClientToBillOther(e);
                       }}
