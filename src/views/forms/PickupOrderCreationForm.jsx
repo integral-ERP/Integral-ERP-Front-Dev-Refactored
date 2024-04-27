@@ -68,8 +68,6 @@ const PickupOrderCreationForm = ({
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const [canRender, setcanRender] = useState(false);
   const [selectedCommodity, setselectedCommodity] = useState(null);
-  const [CTBType, setCTBType] = useState("");
-  console.log("CTBType", CTBType);
   const [editingComodity, setEditingComodity] = useState(false);
   //added events y attachments para save commodities
   const [events, setEvents] = useState([]);
@@ -360,7 +358,6 @@ const PickupOrderCreationForm = ({
   const handleClientToBillOther = (event) => {
     const id = event?.id;
     const type = event?.type
-    console.log("Este es el client to bill seleccionado en other", id, type);
     const validTypes = ['customer', 'vendor', 'forwarding-agent', 'Carrier'];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported client to bill type: ${type}`);
@@ -371,14 +368,11 @@ const PickupOrderCreationForm = ({
     } else {
       setFormData({
         ...formData,
-        client_to_bill_option: type,
-        client_to_bill: id,
+        client_to_bill_type: type,
+        client_to_bill_id: id,
       })
     }
   }
-
-
-
 
   useEffect(() => {
     if (!creating && pickupOrder != null) {
@@ -614,9 +608,7 @@ const PickupOrderCreationForm = ({
       console.log('Consignee a enviar', consignee);
       const response = await PickupService.createConsignee(consignee);
       if (response.status === 201) {
-        formData.client_to_bill_option === "consignee"
-          ? (auxVar = response.data.id)
-          : "";
+        formData.client_to_bill_option === "consignee" ? (auxVar = response.data.id) : "";
         setconsigneeRequest(response.data.id);
       }
     }
@@ -689,52 +681,36 @@ const PickupOrderCreationForm = ({
       console.log('Shipper a enviar', shipper);
       const response = await PickupService.createShipper(shipper);
       if (response.status === 201) {
-        formData.client_to_bill_option === "shipper"
-          ? (auxVar = response.data.id)
-          : "";
+        formData.client_to_bill_option === "shipper" ? (auxVar = response.data.id) : "";
         setshipperRequest(response.data.id);
       }
     }
     let clientToBillName = "";
-    if (formData.client_to_bill_option === "shipper") {
-      clientToBillName = "shipperid";
-    } else if (formData.client_to_bill_option === "consignee") {
-      clientToBillName = "consigneeid";
-    } else if (formData.client_to_bill_option === "Other") {
-      // Verificar el tipo de entidad seleccionada
-      if (formData.shipperType === "forwarding-agent") {
-        clientToBillName = "agentid";
-      } else if (formData.shipperType === "vendor") {
-        clientToBillName = "vendorid";
-      } else if (formData.shipperType === "customer") {
-        clientToBillName = "customerid";
-      } else if (formData.shipperType === "Carrier") {
-        clientToBillName = "carrierid";
-      }
+    if (formData.client_to_bill_type === "customer") {
+      clientToBillName = "customerid";
     }
+    if (formData.client_to_bill_type === "vendor") {
+      clientToBillName = "vendorid";
+    }
+    if (formData.client_to_bill_type === "forwarding-agent") {
+      clientToBillName = "agentid";
+    }
+    if (formData.client_to_bill_type === "Carrier") {
+      clientToBillName = "carrierid";
+    }
+    if (clientToBillName !== "") {
+      const clientToBill = {
+        [clientToBill]: formData.client_to_bill_id,
+      };
+      console.log("client to bill a enviar:", clientToBill);
 
-    // Crear el objeto clientToBill con el nombre de campo determinado
-    const clientToBill = {
-      [clientToBillName]: formData.client_to_bill_option === "shipper" || formData.client_to_bill_option === "consignee" || formData.client_to_bill_option === "Other"
-        ? auxVar
-        : formData.client_to_bill,
-    };
-
-
-    console.log("client to bill a enviar:", clientToBill);
-
-    try {
-      // Enviar el objeto clientToBill al servicio correspondiente
       const response = await ReleaseService.createClientToBill(clientToBill);
-      console.log("response al crear el client to bill", response.data.id);
 
       if (response.status === 201) {
+        formData.client_to_bill_option === "other" ? (auxVar = response.data.id) : "";
         setclientToBillRequest(response.data.id);
-        setFormData({ ...formData, client_to_bill: response.data.id });
       }
       console.log("Estado actual del formulario:", formData);
-    } catch (error) {
-      console.error("Error al enviar el cliente a facturar:", error);
     }
 
   }
@@ -1013,8 +989,8 @@ const PickupOrderCreationForm = ({
       );
     } else if (formData.client_to_bill_option === "other") {
       selectedOption = clientToBillOptions.find(
-        (option) => option.id === formData.client_to_bill &&
-          option.type === formData.client_to_bill_option
+        (option) => option.id === formData.client_to_bill_id &&
+          option.type === formData.client_to_bill_type
       );
     }
     return selectedOption;
