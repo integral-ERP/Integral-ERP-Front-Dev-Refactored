@@ -316,12 +316,12 @@ const PickupOrderCreationForm = ({
     const type = event?.type || "";
     const validTypes = ['Carrier'];
     if (!validTypes.includes(type)) {
-      console.error(`Unsupported shipper type: ${type}`);
+      console.error(`Unsupported Carrier type: ${type}`);
       return;
     }
     const selectedCarrier = carrierOptions.find(option => option.id === id && option.type === type);
     if (!selectedCarrier) {
-      console.error(`Shipper not found with ID ${id} and type ${type}`);
+      console.error(`Carrier not found with ID ${id} and type ${type}`);
       return;
     }
     const info = `${selectedCarrier?.street_and_number || ""} - ${selectedCarrier?.city || ""
@@ -397,14 +397,11 @@ const PickupOrderCreationForm = ({
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
-        issuedByType: pickupOrder.issued_byObj?.type,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
           } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
           } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
-        employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
-        weight: pickupOrder.weight,
 
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType:
@@ -455,11 +452,7 @@ const PickupOrderCreationForm = ({
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
-        client_to_billById: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-          ?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        client_to_bill: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
+        client_to_bill_id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id,
         client_to_bill_type: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
@@ -473,17 +466,6 @@ const PickupOrderCreationForm = ({
               : "other"
           : "other",
       };
-      let temp = pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-        ?.type_person
-        ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
-        : pickupOrder.client_to_billObj?.data?.obj?.type_person;
-      setCTBType(temp !== "agent" ? temp : "forwarding-agent");
-      handleClientToBillSelection({
-        id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        type: temp !== "agent" ? temp : "forwarding-agent",
-      });
       setFormData(updatedFormData);
       setcanRender(true);
       console.log('Este es el form que se carga despues de guardar: ', updatedFormData);
@@ -730,7 +712,7 @@ const PickupOrderCreationForm = ({
 
     // Crear el objeto clientToBill con el nombre de campo determinado
     const clientToBill = {
-      [clientToBillName]: formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee"
+      [clientToBillName]: formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee" || formData.client_to_bill_type === "Other"
         ? auxVar
         : formData.client_to_bill,
     };
