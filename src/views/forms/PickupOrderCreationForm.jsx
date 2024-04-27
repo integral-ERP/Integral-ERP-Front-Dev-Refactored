@@ -107,8 +107,9 @@ const PickupOrderCreationForm = ({
     deliveryLocationId: "",
     deliveryLocationType: "",
     deliveryLocationInfo: "",
-    client_to_bill: "",
+    client_to_bill_id: "",
     client_to_bill_type: "",
+    client_to_bill_option: "",
 
     proNumber: "",
     trackingNumber: "",
@@ -349,21 +350,7 @@ const PickupOrderCreationForm = ({
       } else {
         console.error("ShipperId or consigneeId is not available.");
       }
-    } else {
-      setCTBType(event?.type);
-      const id = event?.id;
-      const type = event?.type
-      console.log("Este es el client to bill seleccionado", id, type);
-      const selectedType = event?.type === "shipper" ? "shipper" : event?.type === "consignee" ? "consignee" : "other";
-      if (selectedType === "other") {
-      setFormData({
-        ...formData,
-        client_to_bill_type: type,
-        client_to_bill: id,
-      });
-      }
     }
-    console.log('Este es el form despues de el evento y setear datos', formData);
   };
 
 
@@ -387,7 +374,7 @@ const PickupOrderCreationForm = ({
     }
   }
 
-  
+
 
 
   useEffect(() => {
@@ -740,30 +727,30 @@ const PickupOrderCreationForm = ({
         clientToBillName = "carrierid";
       }
     }
-    
+
     // Crear el objeto clientToBill con el nombre de campo determinado
     const clientToBill = {
       [clientToBillName]: formData.client_to_bill_type === "shipper" || formData.client_to_bill_type === "consignee"
         ? auxVar
         : formData.client_to_bill,
     };
-    
 
-  console.log("client to bill a enviar:", clientToBill);
 
-  try {
-    // Enviar el objeto clientToBill al servicio correspondiente
-    const response = await ReleaseService.createClientToBill(clientToBill);
-    console.log("response al crear el client to bill", response.data.id);
+    console.log("client to bill a enviar:", clientToBill);
 
-    if (response.status === 201) {
-      setclientToBillRequest(response.data.id);
-      setFormData({ ...formData, client_to_bill: response.data.id });
+    try {
+      // Enviar el objeto clientToBill al servicio correspondiente
+      const response = await ReleaseService.createClientToBill(clientToBill);
+      console.log("response al crear el client to bill", response.data.id);
+
+      if (response.status === 201) {
+        setclientToBillRequest(response.data.id);
+        setFormData({ ...formData, client_to_bill: response.data.id });
+      }
+      console.log("Estado actual del formulario:", formData);
+    } catch (error) {
+      console.error("Error al enviar el cliente a facturar:", error);
     }
-    console.log("Estado actual del formulario:", formData);
-  } catch (error) {
-    console.error("Error al enviar el cliente a facturar:", error);
-  }
 
   }
 
@@ -1038,11 +1025,11 @@ const PickupOrderCreationForm = ({
         (option) =>
           option.id === formData.consigneeId &&
           option.type === formData.consigneeType
-        );
+      );
     } else if (formData.client_to_bill_type === "other") {
       selectedOption = clientToBillOptions.find(
-        (option) => option.id === formData.client_to_bill && 
-        option.type === formData.client_to_bill_type
+        (option) => option.id === formData.client_to_bill &&
+          option.type === formData.client_to_bill_type
       );
     }
     return selectedOption;
