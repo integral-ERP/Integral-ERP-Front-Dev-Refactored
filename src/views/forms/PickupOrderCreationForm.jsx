@@ -513,6 +513,10 @@ const PickupOrderCreationForm = ({
     return await loadSelectOptions(carrierOptions, inputValue)
   };
 
+  const loadClientToBillSelectedOptions = async (inputValue) => {
+    return await loadSelectOptions(clientToBillOptions, inputValue)
+  }
+
   const loadShipperOption = async (id, type) => {
     let option = null;
     if (type === "customer") {
@@ -1371,6 +1375,7 @@ const PickupOrderCreationForm = ({
                       }}
                       value={getAsyncSelectValue()}
                       defaultOptions={clientToBillOptions}
+                      loadOptions={loadClientToBillSelectedOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
