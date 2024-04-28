@@ -138,7 +138,7 @@ const PickupOrderCreationForm = ({
         setConsigneeOptions([...customers, ...vendors, ...carriers])
         setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
-        setClientToBillOptions([...forwardingAgents, ...customers, ...vendors])
+        setClientToBillOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
       })
       .catch((error) => {
         console.error('Error al obtener los datos:', error);
@@ -449,23 +449,13 @@ const PickupOrderCreationForm = ({
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
-        client_to_bill_id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id,
-        client_to_bill_option: pickupOrder.client_to_billObj?.data?.obj?.data?.obj
-          ?.type_person
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
-            pickupOrder.shipperObj?.data?.obj?.id
-            ? "shipper"
-            : pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id ===
-              pickupOrder.consigneeObj?.data?.obj?.id
-              ? "consignee"
-              : "other"
-          : "other",
+        client_to_bill_id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id,
+        client_to_bill_option: pickupOrder.client_to_billObj?.data?.obj?.data?.obj, 
       };
       setFormData(updatedFormData);
       setcanRender(true);
       console.log('Este es el form que se carga despues de guardar: ', updatedFormData);
+      console.log('Este es el pickupOrder que se carga despues de guardar: ', pickupOrder);
 
     }
   }, [creating, pickupOrder]);
@@ -807,6 +797,7 @@ const PickupOrderCreationForm = ({
           /*  supplier: formData.shipperId, */
           weight: weightUpdated,
         };
+        
 
         const response = await (creating
           ? PickupService.createPickup(rawData)
