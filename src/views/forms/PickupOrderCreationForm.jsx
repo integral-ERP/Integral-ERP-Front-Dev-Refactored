@@ -700,7 +700,7 @@ const PickupOrderCreationForm = ({
     }
     if (clientToBillName !== "") {
       const clientToBill = {
-        [clientToBill]: formData.client_to_bill_id,
+        [clientToBillName]: formData.client_to_bill_id,
       };
       console.log("client to bill a enviar:", clientToBill);
 
