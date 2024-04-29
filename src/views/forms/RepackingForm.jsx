@@ -213,7 +213,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       <div className="form-row">
         <div className="form-column-create">
           <label className="text-comm">Weigth:</label>
-          <div className="input-group ">
+          <div className="input-group-r">
             <input
               type="number"
               className="form-comm"
@@ -229,7 +229,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </div>
         <div className="form-column-create">
           <label className="text-comm">Length:</label>
-          <div className="input-group ">
+          <div className="input-group-r">
             <input
               type="number"
               className="form-comm"
@@ -244,7 +244,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </div>
         <div className="form-column-create">
           <label className="text-comm">Width:</label>
-          <div className="input-group ">
+          <div className="input-group-r">
             <input
               type="number"
               className="form-comm"
@@ -259,7 +259,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </div>
         <div className="form-column-create">
           <label className="text-comm">Height:</label>
-          <div className="input-group ">
+          <div className="input-group-r">
             <input
               type="number"
               className="form-comm"
@@ -274,7 +274,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </div>
         <div className="form-column-create">
           <label className="text-comm">Volume:</label>
-          <div className="input-group ">
+          <div className="input-group-r">
             <input
               type="number"
               className="form-comm"

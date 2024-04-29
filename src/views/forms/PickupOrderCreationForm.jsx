@@ -1713,7 +1713,7 @@ const PickupOrderCreationForm = ({
                         ))}
                     </div>
                   )}
-                  <button
+                  {/* <button
                     className="button-save"
                     type="button"
                     onClick={() => {
@@ -1721,7 +1721,7 @@ const PickupOrderCreationForm = ({
                     }}
                   >
                     Repack
-                  </button>
+                  </button> */}
                   <br />
                   <br />
                   <br />

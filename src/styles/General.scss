@@ -714,8 +714,6 @@
     width: 100%;
     text-align: center;
     margin-right: 3vw;
-    // margin-bottom: 20vw;
-    // margin: 8px 0;
   }
 
   .alert-notification {
@@ -731,7 +729,7 @@
     top: 50%;
     background-color: #3498db !important;
     border: 2px solid #006BAD;
-    margin-left: 20vw;
+    // margin-left: 20vw;
   }
 
   .alert-notification{
@@ -746,7 +744,7 @@
 
 
   .succes {
-    font-size: x-large;
+    font-size: medium;
     font-weight: 500;
     color: white;
   }
@@ -964,6 +962,11 @@
     width: 28vw !important;
   }
 
+  .input-group-r{
+    width: 20vw !important;
+    display: flex;
+  }
+
 
   .text-comm {
     width: 100%;
@@ -1014,22 +1017,14 @@
     justify-content: center;
   }
 
-  /* Context Menu Styles */
   .context-menu {
     position: absolute;
     background-color: #fff;
-
-    /* Background color */
     border: 1px solid #ccc;
-    /* Border */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    /* Box shadow */
     z-index: 1000;
-    /* Ensure it appears above other content */
     padding: 8px;
-    /* Padding */
     min-width: 100px;
-    /* Minimum width */
     height: max-content;
     display: grid;
     justify-content: left;
@@ -1049,12 +1044,10 @@
     margin: 5px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-    /* Smooth background color transition on hover */
   }
 
   .context-menu li:hover {
     background-color: #a19999;
-    /* Background color on hover */
   }
 
   .context-menu li:last-child {
@@ -1082,7 +1075,6 @@
 
 
   .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-    // padding-right: 0% !important;
     border: 1px solid #818080;;
     height: 3rem;
     width: 100% !important;

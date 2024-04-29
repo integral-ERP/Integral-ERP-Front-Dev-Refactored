@@ -6,12 +6,12 @@ const ContextMenu = ({ x, y, onClose, options }) => {
   }
 
   return (
-    <div 
+    <div
     className="context-menu"
           style={{
             position: "absolute",
-            top: y,
-            left: x,
+            top: `15vw`, // Establece 15vw como valor para la propiedad top
+            // left: x,
           }}>
       <ul>
         {options.map((option, index) => (
