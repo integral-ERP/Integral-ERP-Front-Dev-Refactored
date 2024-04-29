@@ -106,7 +106,7 @@ const ReceiptCreationForm = ({
         setIssuedByOptions([...forwardingAgents])
         setDestinationAgentOptions([...forwardingAgents])
         setEmployeeOptions([...employees]);
-        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+        setShipperOptions([ ...customers, ...vendors])
         setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
         setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])

@@ -136,7 +136,7 @@ const PickupOrderCreationForm = ({
     const issuedByOptions         = [...forwardingAgentsWithType];
     const destinationAgentOptions = [...forwardingAgentsWithType];
     const employeeOptions         = [...employeesWithType];
-    const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    const shipperOptions          = [...customersWithType, ...vendorsWithType];
     const pickupLocationOptions   = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
     const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
 
