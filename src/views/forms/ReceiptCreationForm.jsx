@@ -1035,14 +1035,17 @@ const ReceiptCreationForm = ({
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
 
-        supplierId: initialSupplier.id,
-        supplier: initialSupplier.shipper,
-        supplierType: initialSupplier.type,
-        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
-          initialSupplier?.city || ""
-        } - ${initialSupplier?.state || ""} - ${
-          initialSupplier?.country || ""
-        } - ${initialSupplier?.zip_code || ""}`,
+        supplierId: pickupOrder.shipperObj.data?.obj?.id,
+        supplierType: pickupOrder.shipperObj.data?.obj?.type_person,
+        supplier: pickupOrder.shipper,
+        supplierObjId: pickupOrder.shipperObj.data?.obj?.id,
+        supplierInfo: `${
+          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.state || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+        }`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
