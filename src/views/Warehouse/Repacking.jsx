@@ -8,7 +8,7 @@ import ModalForm from "../shared/components/ModalForm";
 import { useModal } from "../../hooks/useModal";
 const Repacking = () => {
   const { hideShowSlider } = useContext(GlobalContext);
-  const [pickups, setPickups] = useState([]);
+  /* const [pickups, setPickups] = useState([]); */
   const [receipts, setReceipts] = useState([]);
   const [repackedCommodities, setRepackedCommodities] = useState([]);
   const [selectedCommodity, setSelectedCommodity] = useState(null);
@@ -33,15 +33,15 @@ const Repacking = () => {
 
   const fetchData = async () => {
     try {
-      const pickupOrders = (await PickupService.getPickups()).data.results;
+      /* const pickupOrders = (await PickupService.getPickups()).data.results; */
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
-      setPickups(pickupOrders);
+      /* setPickups(pickupOrders); */
       setReceipts(receiptOrders);
       const commoditiesExtracted = [];
       let pickIds = 80000;
       let receiptIds = 9000;
 
-      pickupOrders.forEach((pickupOrder) => {
+      /* pickupOrders.forEach((pickupOrder) => {
         const { commodities } = pickupOrder;
         const repackedCommodities = commodities.filter(
           (commodity) => commodity.containsCommodities === true
@@ -68,7 +68,7 @@ const Repacking = () => {
           ...pickupOrder,
           commodities: commoditiesWithParentId,
         };
-      });
+      }); */
 
       receiptOrders.forEach((receiptOrder) => {
         const { commodities } = receiptOrder;
