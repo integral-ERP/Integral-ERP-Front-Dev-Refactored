@@ -374,6 +374,7 @@ const PickupOrderCreationForm = ({
     const type = event?.target?.value || "";
     console.log("TYPE", type);
 
+    
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -1591,7 +1592,7 @@ const PickupOrderCreationForm = ({
                     >
                       <option value="">Select an option</option>
                       <option value="shipper">Shipper</option>
-                      <option value="consignee">Ultimate Consignee</option>
+                      <option value="consignee">Consignee</option>
                       <option value="other">Other</option>
                     </select>
                     <p style={{ color: "red" }}>

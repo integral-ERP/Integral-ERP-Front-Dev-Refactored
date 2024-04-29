@@ -720,7 +720,7 @@ const Table = ({
                             <>
                               <button
                                 className="generic-button ne"
-                                onClick={generatePDF}
+                                // onClick={generatePDF}
                                 style={{
                                   display: "flex",
                                   width: "70px",

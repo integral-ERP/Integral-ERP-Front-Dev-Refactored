@@ -1184,8 +1184,8 @@ const ReceiptCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipperId //CAMBIO
-            : formData.consigneeId, //CAMBIO
+            ? formData.shipper
+            : formData.consignee,
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1193,6 +1193,25 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
+    // if (formData.clientToBillType === "shipper") {
+    //   clientToBillName = "shipperid";
+    // }
+    // if (formData.clientToBillType === "consignee") {
+    //   clientToBillName = "consigneeid";
+    // }
+    // if (clientToBillName !== "") {
+    //   const clientToBill = {
+    //     [clientToBillName]:
+    //       clientToBillName === "shipperid"
+    //         ? formData.shipperId //CAMBIO
+    //         : formData.consigneeId, //CAMBIO
+    //   };
+
+    //   const response = await ReceiptService.createClientToBill(clientToBill);
+    //   if (response.status === 201) {
+    //     setclientToBillRequest(response.data.id);
+    //   }
+    // }
 
     if (commodities.length > 0) {
       let weight = 0;
