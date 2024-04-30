@@ -86,6 +86,7 @@ const PickupOrderCreationForm = ({
     issuedByType: "",
     issuedByInfo: "",
     destinationAgentId: "",
+    destinationAgentInfo: "",
     employeeId: "",
 
     shipperId: "",
@@ -242,9 +243,13 @@ const PickupOrderCreationForm = ({
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
+    const type = event?.type || "";
+    const selectedObject = destinationAgentOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject?.name || ""} `;
     setFormData({
       ...formData,
       destinationAgentId: id,
+      destinationAgentInfo: info
     });
     const result = await ForwardingAgentService.getForwardingAgentById(id);
     setagent(result?.data);
@@ -420,6 +425,7 @@ const PickupOrderCreationForm = ({
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
+        destinationAgentInfo: `${pickupOrder.destination_agentObj?.name || ""} `,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
@@ -1340,6 +1346,18 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
+                  <div className="row mb-3">
+                <div className="col-12 text-start">
+                  <Input
+                    id="TextDestinationAgent"
+                    type="textarea"
+                    inputName="destinationagentinfo"
+                    placeholder="Destination Agent..."
+                    value={formData.destinationAgentInfo}
+                    readonly={true}
+                  />
+                </div>
+              </div>
                 </div>
 
                 <div className="col-6 text-start" id="dates">
