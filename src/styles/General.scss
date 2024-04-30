@@ -731,7 +731,7 @@
     top: 50%;
     background-color: #3498db !important;
     border: 2px solid #006BAD;
-    margin-left: 20vw;
+    // margin-left: 20vw;
   }
 
   .alert-notification{
@@ -746,7 +746,7 @@
 
 
   .succes {
-    font-size: x-large;
+    font-size: medium;
     font-weight: 500;
     color: white;
   }
@@ -962,6 +962,11 @@
 
   .input-group{
     width: 28vw !important;
+  }
+
+  .input-group-r{
+    width: 20vw !important;
+    display: flex;
   }
 
 

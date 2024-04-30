@@ -84,6 +84,7 @@ const ReceiptCreationForm = ({
   const [selectedCommodity, setselectedCommodity] = useState(null);
   //-------------------------------------------------------
   const [SelectEvent, setSelectEvent] = useState(null);
+  const [changeStateButton, setChangeStateButton] = useState(false);
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -93,6 +94,8 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+
+
 
   useEffect(() => {
     fetchFormData()
@@ -1090,6 +1093,7 @@ const ReceiptCreationForm = ({
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
+
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
       setchangeStateSave(true);
@@ -1376,6 +1380,7 @@ const ReceiptCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setChangeStateButton(false);
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
@@ -2250,9 +2255,14 @@ const ReceiptCreationForm = ({
 
         <div className="company-form__options-container">
           <button
-            disabled={changeStateSave}
+            // disabled={changeStateSave} 
             className="button-save"
-            onClick={sendData}
+            onClick={(e)=>{
+              sendData();
+              setChangeStateButton(true);
+              
+            }}
+            disabled={changeStateSave || changeStateButton} 
           >
             Save
           </button>

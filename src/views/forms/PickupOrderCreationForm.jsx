@@ -75,6 +75,8 @@ const PickupOrderCreationForm = ({
   const [events, setEvents] = useState([]);
   const [attachments, setattachments] = useState([]);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
 
   const formFormat = {
     status: 14,
@@ -1039,11 +1041,14 @@ const PickupOrderCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setIsButtonDisabled(false);  // Re-habilita el botón después de que la operación ha terminado
+            console.log("Data sent!");
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
             window.location.reload();
+            console.log("Data sent! -2");
           }, 500 /* 2147483647 */);
         } else {
           setShowErrorAlert(true);
@@ -1817,7 +1822,7 @@ const PickupOrderCreationForm = ({
                         ))}
                     </div>
                   )}
-                  <button
+                  {/* <button
                     className="button-save"
                     type="button"
                     onClick={() => {
@@ -1825,7 +1830,7 @@ const PickupOrderCreationForm = ({
                     }}
                   >
                     Repack
-                  </button>
+                  </button> */}
                   <br />
                   <br />
                   <br />
@@ -1932,10 +1937,15 @@ const PickupOrderCreationForm = ({
           <button
             className="button-save"
             onClick={(e) => {
+              // e.preventDefault();
+              // sendData();
               e.preventDefault();
+              setIsButtonDisabled(true); // Deshabilita el botón cuando se hace clic
               sendData();
             }}
-            type="submit"
+            // type="submit"
+              disabled={isButtonDisabled} // Usa el estado para deshabilitar el botón
+              type="submit"
           >
             Save
           </button>
