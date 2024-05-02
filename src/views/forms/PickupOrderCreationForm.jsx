@@ -1041,12 +1041,12 @@ const PickupOrderCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
-            setIsButtonDisabled(false);  // Re-habilita el botón después de que la operación ha terminado
-            console.log("Data sent!");
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
+            setIsButtonDisabled(false);  // Re-habilita el botón después de que la operación ha terminado
+            console.log("Data sent!");
             window.location.reload();
             console.log("Data sent! -2");
           }, 500 /* 2147483647 */);
@@ -1937,15 +1937,10 @@ const PickupOrderCreationForm = ({
           <button
             className="button-save"
             onClick={(e) => {
-              // e.preventDefault();
-              // sendData();
               e.preventDefault();
-              setIsButtonDisabled(true); // Deshabilita el botón cuando se hace clic
               sendData();
             }}
-            // type="submit"
-              disabled={isButtonDisabled} // Usa el estado para deshabilitar el botón
-              type="submit"
+            type="submit"
           >
             Save
           </button>
