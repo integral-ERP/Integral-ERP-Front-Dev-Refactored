@@ -1856,6 +1856,7 @@ const ReceiptCreationForm = ({
                   " Weight (lb)",
                   " Location",
                   " Volume (ft3)",
+                  " Volume-Weight (Vlb)",
                   // " Weight (lb)",
                   "Options",
                 ]}

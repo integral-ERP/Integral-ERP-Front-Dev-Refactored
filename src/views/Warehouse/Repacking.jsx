@@ -28,6 +28,7 @@ const Repacking = () => {
     " Location",
     // " Volumetric Weight",
     " Volume (ft3)",
+    " Volume-Weight (Vlb)",
     "Repack Options",
   ];
 
@@ -152,7 +153,7 @@ const Repacking = () => {
       const newCommodities = repackedCommodities.filter(
         (item) => item.id !== selectedCommodity.id
       );
-      setRepackedCommodities(newCommodities);
+      setRepackedCommodities(newCommodities).reverse();
     }
   };
 
