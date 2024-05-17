@@ -88,6 +88,7 @@ const PickupOrderCreationForm = ({
     issuedByType: "",
     issuedByInfo: "",
     destinationAgentId: "",
+    destinationAgentInfo: "",
     employeeId: "",
 
     shipperId: "",
@@ -245,9 +246,15 @@ const PickupOrderCreationForm = ({
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
+    const type = event?.type || "";
+    const selectedObject = destinationAgentOptions.find(option => option.id === id && option.type === type);
+    const info = `${selectedObject.street_and_number || ""} - ${selectedObject.city || ""
+      } - ${selectedObject.state || ""} - ${selectedObject.country || ""} - ${selectedObject.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       destinationAgentId: id,
+      destinationAgentInfo: info
     });
     const result = await ForwardingAgentService.getForwardingAgentById(id);
     setagent(result?.data);
@@ -424,6 +431,9 @@ const PickupOrderCreationForm = ({
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
+        destinationAgentInfo: `${pickupOrder.destination_agentObj?.street_and_number || ""}- ${pickupOrder.destination_agentObj?.city || ""
+          } - ${pickupOrder.destination_agentObj?.state || ""} - ${pickupOrder.destination_agentObj?.country || ""
+          } - ${pickupOrder.destination_agentObj?.zip_code || ""} `,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
@@ -1253,6 +1263,8 @@ const PickupOrderCreationForm = ({
                     label="Number"
                   />
                 </div>
+              </div>
+              <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <p id="creation-date" className="text-date">
@@ -1269,9 +1281,27 @@ const PickupOrderCreationForm = ({
                       }
                     />
                   </LocalizationProvider>
+                </div> 
+                <div className="col-6 text-start" id="dates">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Pick-up Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Pick-up Date and Time"
+                      value={dayjs(formData.pickupDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                      className="creation creation-label"
+                    />
+                  </LocalizationProvider>
                 </div>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="employee" className="form-label">
                     Employee:
@@ -1292,23 +1322,26 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
+
                 <div className="col-6 text-start" id="dates">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Pick-up Date and Time</p>
+                    <p id="creation-date" className="text-date">
+                      Delivery Date and Time
+                    </p>
                     <DateTimePicker
-                      // label="Pick-up Date and Time"
-                      value={dayjs(formData.pickupDateAndTime)}
+                      // label="Delivery Date and Time"
+                      value={dayjs(formData.deliveryDateAndTime)}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
                         })
                       }
-                      className="creation creation-label"
                     />
                   </LocalizationProvider>
                 </div>
               </div>
+
               <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
@@ -1323,12 +1356,13 @@ const PickupOrderCreationForm = ({
                         }}
                         className="async-option"
                         defaultOptions={destinationAgentOptions}
-                        loadOptions={loadDestinationAgentsSelectOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
                         value={destinationAgentOptions.find(
                           (option) => option.id === formData.destinationAgentId
                         )}
+                        loadOptions={loadDestinationAgentsSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                        
                       />
                     )
                   ) : (
@@ -1348,25 +1382,6 @@ const PickupOrderCreationForm = ({
                     />
                   )}
                 </div>
-
-                <div className="col-6 text-start" id="dates">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
-                    <DateTimePicker
-                      // label="Delivery Date and Time"
-                      value={dayjs(formData.deliveryDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-              </div>
-
-              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">
                     Issued By:
@@ -1387,7 +1402,21 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-6 text-start" style={{ marginTop: "20px" }}>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-6 text-start">
+                    <Input
+                      id="TextDestinationAgent"
+                      type="textarea"
+                      inputName="destinationagentinfo"
+                      placeholder="Destination Agent..."
+                      value={formData.destinationAgentInfo}
+                      readonly={true}
+                    />
+                  </div>
+              
+                <div className="col-6 text-start">
                   <div className="company-form__section">
                     <Input
                       type="textarea"
@@ -1398,7 +1427,8 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-              </div>
+                </div>
+            
             </div>
           </div>
 
