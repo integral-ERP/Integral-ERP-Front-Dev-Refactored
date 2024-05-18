@@ -1357,21 +1357,39 @@ const PickupOrderCreationForm = ({
                   <label htmlFor="destinationAgent" className="form-label">
                     Destination Agent::
                   </label>
+                  {!creating ? (
+                    canRender && (
                       <AsyncSelect
                         id="destinationAgent"
-                        onChange={(e) => {handleDestinationAgentSelection(e);}}
-                        value={destinationAgentOptions.find(
-                          (option) => 
-                          option.id === formData.destinationAgentId &&
-                          option.type === formData.destinationAgentType
-                        )}
-                        placeholder="Search and select......"
+                        onChange={(e) => {
+                          handleDestinationAgentSelection(e);
+                        }}
+                        className="async-option"
                         defaultOptions={destinationAgentOptions}
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
-                        
+                        value={destinationAgentOptions.find(
+                          (option) => option.id === formData.destinationAgentId
+                        )}
                       />
+                    )
+                  ) : (
+                    <AsyncSelect
+                      id="destinationAgentId"
+                      onChange={(e) => {
+                        handleDestinationAgentSelection(e);
+                      }}
+                      className="async-option"
+                      defaultOptions={destinationAgentOptions}
+                      loadOptions={loadDestinationAgentsSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                      value={destinationAgentOptions.find(
+                        (option) => option.id === formData.destinationAgentId
+                      )}
+                    />
+                  )}
                   
                 </div>
                 <div className="col-6 text-start">
