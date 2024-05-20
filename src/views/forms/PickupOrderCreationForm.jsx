@@ -127,8 +127,7 @@ const PickupOrderCreationForm = ({
     const employees         = (await EmployeeService.getEmployees()).data.results;
     const carriers          = (await CarrierService.getCarriers()).data.results;
 
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
+    const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
     const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents, "forwarding-agent");
     const customersWithType         = addTypeToObjects(customers, "customer");
@@ -143,8 +142,8 @@ const PickupOrderCreationForm = ({
 
     const employeeOptions         = [...employeesWithType];
 
-    const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
-    // const shipperOptions          = [...customersWithType, ...vendorsWithType];
+    // const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    const shipperOptions          = [...customersWithType];
 
     const pickupLocationOptions   = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
     // const pickupLocationOptions   = [...customersWithType, ...vendorsWithType];
@@ -1049,7 +1048,7 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          supplier: formData.shipperId,
+          supplier: formData.supplierId,
           weight: weightUpdated,
         };
 
