@@ -84,6 +84,7 @@ const PickupOrderCreationForm = ({
     issuedByType: "",
     issuedByInfo: "",
     destinationAgentId: "",
+    destinationAgentInfo: "",
     employeeId: "",
 
     shipperId: "",
@@ -228,6 +229,7 @@ const PickupOrderCreationForm = ({
     setFormData({
       ...formData,
       destinationAgentId: id,
+      destinationAgentInfo: info
     });
   };
 
@@ -393,6 +395,7 @@ const PickupOrderCreationForm = ({
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
+        destinationAgentInfo: `${pickupOrder.destination_agentObj?.name || ""} `,
         issuedById: pickupOrder.issued_by,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
           } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
@@ -1121,6 +1124,18 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
+                  <div className="row mb-3">
+                    <div className="col-12 text-start">
+                      <Input
+                        id="TextDestinationAgent"
+                        type="textarea"
+                        inputName="destinationagentinfo"
+                        placeholder="Destination Agent..."
+                        value={formData.destinationAgentInfo}
+                        readonly={true}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="col-6 text-start" id="dates">
@@ -1310,6 +1325,7 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
+                
                 <div
                   className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
