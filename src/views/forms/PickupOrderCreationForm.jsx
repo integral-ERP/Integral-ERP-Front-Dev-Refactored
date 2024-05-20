@@ -1031,10 +1031,9 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          supplier: formData.shipperId,
+          supplier: formData.supplierId,/* ojo antes era supplier: formData.shipperId, */
           weight: weightUpdated,
         };
-
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
