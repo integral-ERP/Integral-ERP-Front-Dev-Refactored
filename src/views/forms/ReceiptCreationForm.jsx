@@ -23,6 +23,8 @@ import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFile, faFilePdf, faFileWord, faFileExcel } from '@fortawesome/free-solid-svg-icons'
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -517,6 +519,7 @@ const ReceiptCreationForm = ({
           newAttachments.push({
             name: file.name,
             base64: reader.result,
+            type: file.type,
           });
 
           if (newAttachments.length === files.length) {
@@ -531,7 +534,7 @@ const ReceiptCreationForm = ({
       }
     }
   };
-  //------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
@@ -1432,6 +1435,44 @@ const ReceiptCreationForm = ({
     window.location.reload();
   };
 
+  //---------------------------------------------------------------------
+  const renderPreview = (attachment) => {
+    const { name, base64, type } = attachment;
+
+    if (type.startsWith("image/")) {
+      return (
+        <img
+          src={base64}
+          alt={name}
+          onClick={() => handleShowLargeImage(base64)}
+          style={{ width: "100px", height: "100px", objectFit: "cover" }}
+        />
+      );
+    } else if (type === 'application/pdf') {
+      return (
+        <embed
+          src={base64}
+          type="application/pdf"
+          width="100px"
+          height="100px"
+          onClick={() => handleShowLargeImage(base64)}
+        />
+      );
+    } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
+      return (
+        <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
+      );
+    } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
+      return (
+        <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
+      );
+    } else {
+      return (
+        <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
+      );
+    }
+  };
+  
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -2129,8 +2170,65 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
-
         <div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Attachments</h3>
+            <span></span>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <label htmlFor="fileInput" className="custom-file-input">
+                <span className="button-text">Seleccionar archivos</span>
+                <input
+                  type="file"
+                  id="fileInput"
+                  multiple
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+              </label>
+              <br />
+              <br />
+              <div className="attachment-container">
+                {attachments.map((attachment) => (
+                  <div key={attachment.name} className="attachment-wrapper">
+                    {renderPreview(attachment)}
+                    <span className="attachment-name">{attachment.name}</span>
+                    <div className="delete-button-container">
+                      <button
+                        className="custom-button"
+                        onClick={() => handleDeleteAttachment(attachment.name)}
+                      >
+                        <div className="delete-icon">
+                          <span>&times;</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {showLargeImage && (
+                  <div className="large-image-overlay" onClick={handleCloseLargeImage}>
+                    <div className="large-image-container">
+                      <button
+                        className="button-cancel pick"
+                        onClick={handleCloseLargeImage}
+                      >
+                        <i className="fas fa-times-circle"></i>
+                      </button>
+                      <img
+                        src={largeImageSrc}
+                        style={{ width: "60rem" }}
+                        alt="Large Image"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Attachments</h3>
             <span></span>
@@ -2162,12 +2260,12 @@ const ReceiptCreationForm = ({
                       >
                         <i className="fas fa-trash"></i>
                       </button>
-                      {/* <button
+                      <button
               className="custom-button"
               onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
             >
               <i className="fas fa-download"></i>
-            </button> */}
+            </button>
                     </div>
                   </div>
                 ))}
@@ -2194,7 +2292,7 @@ const ReceiptCreationForm = ({
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="creation creation-container">
           <div className="form-label_name">

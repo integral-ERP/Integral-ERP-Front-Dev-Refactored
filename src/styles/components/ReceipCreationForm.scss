@@ -39,7 +39,7 @@
   background-color: #f7f7f7;
   border: 2px solid #ddd;
   padding: 10px;
-  font-size: 15px;
+  font-size: 12px;
 
   // margin-bottom: 15px;
   // border-radius: 5px;
@@ -54,12 +54,15 @@
 
 .item-description {
   font-weight: bold;
-  margin: 5px 50px;
+  // margin: 5px 50px;
+  width: 10vw;
+  text-align: left;
 }
 
 .item-info {
-  margin: 5px 50px;;
-  // font-weight: bold;
+  // margin: 5px 50px;
+  width: 14vw;
+  text-align: left;
 }
 
 .image-container {
@@ -87,4 +90,62 @@
   display: block;
   text-align: center;
   margin-top: 5px;
+}
+
+.attachment-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.attachment-wrapper {
+  position: relative; 
+  margin-right: 10px;
+  margin-left: 2px;
+  margin-bottom: 5px;
+}
+
+.attachment-wrapper img {
+  width: 15rem;
+  height: 15rem;
+  object-fit: cover;
+}
+
+.attachment-wrapper img:hover {
+  cursor: pointer;
+}
+
+.attachment-wrapper span {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.delete-button-container {
+  position: relative;  
+  top: 5px;
+}
+
+.custom-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.delete-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: rgb(15, 15, 15);
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+}
+
+.delete-icon span {
+  display: inline-block;
+  transform: rotate(90deg);
+  line-height: 24px;
 }

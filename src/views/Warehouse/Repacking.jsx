@@ -246,14 +246,14 @@ const Repacking = () => {
              {/*  fix the repacking show internalCommodities for edition */}
              {selectedCommodity.internalCommodities &&
                selectedCommodity.internalCommodities.map((com) => (
-                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '15px', flexDirection: 'row' }}>
+                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '12px', flexDirection: 'row', margin: '0px'}}>
                    <p className="item-description">{com.description}</p>
-                   <p className="item-info" style={{ marginLeft: '50px'}}>Length (in): {com.length}</p>
-                   <p className="item-info" style={{ marginLeft: '43px'}}>Width(in): {com.width}</p>
+                   <p className="item-info">Length (in): {com.length}</p>
+                   <p className="item-info">Width(in): {com.width}</p>
                    <p className="item-info">Height (in): {com.height}</p>
-                   <p className="item-info">Weight (lb): {com.weight}</p>
+                   <p className="item-info">Height (in): {com.height}</p>
                    <p className="item-info">Volume (ft3): {com.volumen}</p>
-                   <p className="item-info"> Volume-Weight (Vlb): {com.volumetricWeight}</p>
+                   <p className="item-info">Volume-Weight (Vlb): {com.volumetricWeight}</p>
                    {/* <p className="item-info">
                      Chargeable Weight: {com.chargedWeight}
                    </p> */}
