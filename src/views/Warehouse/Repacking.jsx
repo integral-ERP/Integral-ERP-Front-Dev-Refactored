@@ -6,70 +6,35 @@ import PickupService from "../../services/PickupService";
 import ReceiptService from "../../services/ReceiptService";
 import ModalForm from "../shared/components/ModalForm";
 import { useModal } from "../../hooks/useModal";
+
 const Repacking = () => {
   const { hideShowSlider } = useContext(GlobalContext);
-  /* const [pickups, setPickups] = useState([]); */
   const [receipts, setReceipts] = useState([]);
   const [repackedCommodities, setRepackedCommodities] = useState([]);
   const [selectedCommodity, setSelectedCommodity] = useState(null);
   const [isOpen, openModal, closeModal] = useModal(false);
+  
   const columns = [
     "Parent Order",
     "Piece Quantity",
     "Description",
-    // " Length",
-    // " Width",
-    // " Height",
-    // " Weight",
-    " Length (in)",
-    " Width (in)",
-    " Height (in)",
-    " Weight (lb)",
-    " Location",
-    // " Volumetric Weight",
-    " Volume (ft3)",
-    " Volume-Weight (Vlb)",
+    "Length (in)",
+    "Width (in)",
+    "Height (in)",
+    "Weight (lb)",
+    "Location",
+    "Volume (ft3)",
+    "Volume-Weight (Vlb)",
     "Repack Options",
   ];
 
   const fetchData = async () => {
     try {
-      /* const pickupOrders = (await PickupService.getPickups()).data.results; */
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
-      /* setPickups(pickupOrders); */
       setReceipts(receiptOrders);
+      
       const commoditiesExtracted = [];
-      let pickIds = 80000;
       let receiptIds = 9000;
-
-      /* pickupOrders.forEach((pickupOrder) => {
-        const { commodities } = pickupOrder;
-        const repackedCommodities = commodities.filter(
-          (commodity) => commodity.containsCommodities === true
-        );
-
-        const commoditiesWithParentId = repackedCommodities.map((commodity) => {
-          const updatedCommodity = {
-            ...commodity,
-            comesFrom: "PickUp Order",
-            parentId: pickupOrder.id,
-            parent: "PickUp Order No. " + pickupOrder.number,
-            commodityAmount: commodity.internalCommodities.length,
-            originalId: commodity.id,
-            id: pickIds,
-          };
-
-          pickIds++;
-
-          return updatedCommodity;
-        });
-        commoditiesExtracted.push(...commoditiesWithParentId);
-
-        return {
-          ...pickupOrder,
-          commodities: commoditiesWithParentId,
-        };
-      }); */
 
       receiptOrders.forEach((receiptOrder) => {
         const { commodities } = receiptOrder;
@@ -92,11 +57,6 @@ const Repacking = () => {
           return updatedCommodity;
         });
         commoditiesExtracted.push(...commoditiesWithParentId);
-
-        return {
-          ...receiptOrder,
-          commodities: commoditiesWithParentId,
-        };
       });
 
       setRepackedCommodities(commoditiesExtracted);
@@ -153,7 +113,7 @@ const Repacking = () => {
       const newCommodities = repackedCommodities.filter(
         (item) => item.id !== selectedCommodity.id
       );
-      setRepackedCommodities(newCommodities).reverse();
+      setRepackedCommodities(newCommodities.reverse());
     }
   };
 
@@ -187,35 +147,32 @@ const Repacking = () => {
     <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
-          <div>
-            <Sidebar />
-          </div>
+          <Sidebar />
+        </div>
+        <div
+          className="content-page"
+          style={
+            !hideShowSlider
+              ? { marginLeft: "21rem", width: "calc(100vw - 250px)" }
+              : { marginInline: "auto" }
+          }
+        >
+          <Table
+            data={repackedCommodities}
+            columns={columns}
+            onSelect={handleSelectCommodity}
+            selectedRow={selectedCommodity}
+            onEdit={handleUnpackCommodity}
+            onInspect={handleInspectCommodity}
+            title="Repacked Commodities"
+            setData={setRepackedCommodities}
+            importEnabled={false}
+            importLabel={false}
+          />
 
-          <div
-            className="content-page"
-            style={
-              !hideShowSlider
-                ? { marginLeft: "21rem", width: "calc(100vw - 250px)" }
-                : { marginInline: "auto" }
-            }
-          >
-            <Table
-              data={repackedCommodities}
-              columns={columns}
-              onSelect={handleSelectCommodity}
-              selectedRow={selectedCommodity}
-              onEdit={handleUnpackCommodity}
-              onInspect={handleInspectCommodity}
-              title="Repacked Commodities"
-              setData={setRepackedCommodities}
-              importEnabled={false}
-              importLabel={false}
-            />
-
-            {selectedCommodity !== null && (
-             
-             <div className="repacking-container">
-             <div className="main-commodity">
+          {selectedCommodity !== null && (
+            <div className="repacking-container">
+              <div className="main-commodity">
                 <p className="item-description">
                   {selectedCommodity.description}
                 </p>
@@ -232,42 +189,37 @@ const Repacking = () => {
                   Weight(lb): {selectedCommodity.weight}
                 </p>
                 <p className="item-info">
-                  {/* Volumetric Weight: {selectedCommodity.volumetricWeight} */}
-                  Volume (ft3): {selectedCommodity.volumetricWeight} 
+                  Volume (ft3): {selectedCommodity.volumetricWeight}
                 </p>
-                {/* <p className="item-info">
-                  Chargeable Weight: {selectedCommodity.chargedWeight}
-                </p> */}
                 <p className="item-info">
                   Location: {selectedCommodity.locationCode}
                 </p>
-               {/* <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p> */}
-             </div>
-             {/*  fix the repacking show internalCommodities for edition */}
-             {selectedCommodity.internalCommodities &&
-               selectedCommodity.internalCommodities.map((com) => (
-                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '12px', flexDirection: 'row', margin: '0px'}}>
-                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '12px', flexDirection: 'row', margin: '0px'}}>
-                   <p className="item-description">{com.description}</p>
-                   <p className="item-info">Length (in): {com.length}</p>
-                   <p className="item-info">Width(in): {com.width}</p>
-                   <p className="item-info">Height (in): {com.height}</p>
-                   <p className="item-info">Height (in): {com.height}</p>
-                   <p className="item-info">Volume (ft3): {com.volumen}</p>
-                   <p className="item-info">Volume-Weight (Vlb): {com.volumetricWeight}</p>
-                   {/* <p className="item-info">
-                     Chargeable Weight: {com.chargedWeight}
-                   </p> */}
-                   {/* <p className="item-info">
-                     Location: {com.locationCode}
-                   </p> */}
-                   {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
-                 </div>
-               ))}
-           </div>
-              
-            )}
-          </div>
+              </div>
+              {selectedCommodity.internalCommodities &&
+                selectedCommodity.internalCommodities.map((com) => (
+                  <div
+                    key={com.id}
+                    className="card"
+                    style={{
+                      display: "flex",
+                      textAlign: "left",
+                      fontSize: "12px",
+                      flexDirection: "row",
+                      margin: "0px",
+                    }}
+                  >
+                    <p className="item-description">{com.description}</p>
+                    <p className="item-info">Length (in): {com.length}</p>
+                    <p className="item-info">Width(in): {com.width}</p>
+                    <p className="item-info">Height (in): {com.height}</p>
+                    <p className="item-info">Volume (ft3): {com.volume}</p>
+                    <p className="item-info">
+                      Volume-Weight (Vlb): {com.volumetricWeight}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -275,4 +227,3 @@ const Repacking = () => {
 };
 
 export default Repacking;
-
