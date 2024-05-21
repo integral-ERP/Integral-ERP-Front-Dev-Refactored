@@ -115,7 +115,7 @@ const PickupOrderCreationForm = ({
     purchaseOrderNumber: "",
 
     commodities: [],
-    weight: 0,
+    
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -439,6 +439,7 @@ const PickupOrderCreationForm = ({
       );
       let updatedFormData = {
         status: pickupOrder.status,
+        weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -455,7 +456,6 @@ const PickupOrderCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
-        weight: pickupOrder.weight,
 
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType:
@@ -817,6 +817,14 @@ const PickupOrderCreationForm = ({
       setWeightUpdated(totalWeight);
     }
 
+    if (commodities.length > 0) {
+      let weight = 0;
+      commodities.forEach((com) => {
+        weight += com.weight;
+      });
+      setFormData({ ...formData, weight: weight });
+    }
+
     let auxVar;
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
@@ -1100,6 +1108,7 @@ const PickupOrderCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("shipperRequest",shipperRequest);
         let rawData = {
           status: 14, 
           number: formData.number,

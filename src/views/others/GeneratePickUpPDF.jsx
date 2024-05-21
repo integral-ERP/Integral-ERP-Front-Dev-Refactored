@@ -42,26 +42,25 @@ const GeneratePickUpPDF = (data) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity, index) => {
-        firstRowText += `1; Pallet \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fourthRowText += `${commodity.description} \n`;
-        sixthRowText += `${commodity.weight} lbs \n`;
-        (seventhRowText += `${commodity.volumetricWeight} ft3 \n`),
-          `${commodity.chargedWeight} Vlb \n`;
+        firstRowText += `1; Pallet \n \n`;
+        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n`;
+        fourthRowText += `${commodity.description} \n \n`;
+        sixthRowText += `${commodity.weight} lbs \n \n`;
+        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
-        if (commodity.containsCommodities && commodity.internalCommodities) {
-          commodity.internalCommodities.forEach((internalCommodity) => {
+        // if (commodity.containsCommodities && commodity.internalCommodities) {
+        //   commodity.internalCommodities.forEach((internalCommodity) => {
 
-            thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fourthRowText += `${internalCommodity.description} \n`;
-            sixthRowText += `${internalCommodity.weight} lbs \n`;
-            seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-            totalWeight += parseFloat(internalCommodity.weight);
-            totalVolume += parseFloat(internalCommodity.volumetricWeight);
-          });
-        }
+        //     thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+        //     fourthRowText += `${internalCommodity.description} \n`;
+        //     sixthRowText += `${internalCommodity.weight} lbs \n`;
+        //     seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+        //     totalWeight += parseFloat(internalCommodity.weight);
+        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
+        //   });
+        // }
       });
       const commodityRow = [
         {
@@ -498,8 +497,8 @@ const GeneratePickUpPDF = (data) => {
                       },
                       {
                         text: [
-                          `${totalWeight} kg\n`,
-                          `${(totalWeight / 2.205).toFixed(2)} lb`,
+                          `${totalWeight.toFixed(2)} lb\n`,
+                          `${(totalWeight / 2.205).toFixed(2)} kg`,
                         ],
                       },
                       {
