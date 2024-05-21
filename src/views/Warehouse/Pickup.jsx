@@ -60,7 +60,7 @@ const Pickup = () => {
     "Pieces",
     // "Weight", 
     "Carrier Name",
-    "Carrier Address",
+    // "Carrier Address",
     "PRO Number",
     "Tracking Number",
     "Invoice Number",
