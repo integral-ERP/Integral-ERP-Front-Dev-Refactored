@@ -194,8 +194,9 @@ const Table = ({
     " Height (in)": "height",
     " Weight (lb)": "weight",
     " Width (in)": "width",
-    " Volume (ft3)": "volumetricWeight",
+    " Volume-Weight (Vlb)": "volumetricWeight",
     // " Weight (lb)": "chargedWeight",
+    " Volume (ft3)": "volumen",
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
@@ -720,7 +721,7 @@ const Table = ({
                             <>
                               <button
                                 className="generic-button ne"
-                                onClick={generatePDF}
+                                // onClick={generatePDF}
                                 style={{
                                   display: "flex",
                                   width: "70px",

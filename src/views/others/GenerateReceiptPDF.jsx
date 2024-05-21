@@ -4,9 +4,6 @@ import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
 
 pdfMake.vfs = pdfFonts;
-pdfMake.vfs = pdfFonts;
-
-
 
 const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
@@ -45,12 +42,11 @@ const GenerateReceiptPDF = (data, numCon) => {
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
         // firstRowText += `1; Pallet \n`;
-        firstRowText += `1 \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fourthRowText += `${commodity.description} \n`;
-        sixthRowText += `${commodity.weight} lbs \n`;
-        (seventhRowText += `${commodity.volumetricWeight} ft3 \n`),
-          `${commodity.chargedWeight} Vlb \n`;
+        firstRowText += `1; Pallet \n \n`;
+        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n`;
+        fourthRowText += `${commodity.description} \n \n`;
+        sixthRowText += `${commodity.weight} lbs \n \n`;
+        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
@@ -290,7 +286,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.mainCarrierObj?.name || ``}`,
+                        text: `${data.main_carrierObj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       },
                       {
@@ -298,7 +294,8 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.mainCarrierObj?.name || ``}`,
+                        // text: `${data.mainCarrierObj?.name || ``}`,
+                        text: `${data.supplierObj?.data?.obj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       }
                     ],
@@ -506,8 +503,8 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {
                         text: [
-                          `${totalWeight.toFixed(2)} kg\n`,
-                          `${(totalWeight / 2.205).toFixed(2)} lb`,
+                          `${totalWeight.toFixed(2)} lb\n`,
+                          `${(totalWeight / 2.205).toFixed(2)} kg`,
                         ],
                       },
                       {
