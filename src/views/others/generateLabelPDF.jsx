@@ -513,7 +513,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                         alignment: `center`,
                         fontSize: 25,
                         margin: [0, 10, 0, 25],
-                        border: ['top', '', 'top', '']
+                        border: ['top', 'top', 'top', 'top']
                       },
                       {
                         text: numPage + '/' + numCon,
