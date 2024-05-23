@@ -148,9 +148,6 @@
   text-align: center;
 }
 
-.delete-button-container {
-  margin-top: 10px;
-}
 
 .preview-overlay {
   position: fixed;
@@ -176,19 +173,5 @@
   position: relative;
 }
 
-.preview-container img,
-.preview-container iframe {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
 
-.icon-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.icon-preview p {
-  margin-top: 10px;
-}
