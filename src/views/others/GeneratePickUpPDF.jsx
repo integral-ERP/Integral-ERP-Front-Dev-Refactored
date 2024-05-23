@@ -133,12 +133,25 @@ const GeneratePickUpPDF = (data) => {
           const pdf = {
             content: [
               {   
-                margin: [0, 0, 0, 20],
+                // margin: [0, 0, -10, 0],
                 columns: [
+                  {
+                    margin: [0, 0, -10, 0],
+                    stack: [
+                      
+                      {
+                        image: imgUrl,
+                        fit: [100, 100],
+                      },
+                      
+                    ],
+                  },
                   {
                     stack: [
                       {},
                       {
+                        margin: [-50, 0, 0, 0],
+                        bold: true,
                         text: [
                           `${data.issued_byObj?.name || ``} \n`,
                           `${
@@ -156,21 +169,19 @@ const GeneratePickUpPDF = (data) => {
                           } ${data.issued_byObj?.zip_code || ``} \n`,
                           `${data.issued_byObj?.country || ``}`,
                         ],
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
                       },
                       
                     ],
                   
                   },
                   { 
-                    margin: [112, 0, 0, 0],
+                    style: `tableExample`,
                     table: {
                       body: [
                             [
                               {text: "Pickup Order",
-                              fontSize: 20,
+                              alignment: "center",
+                              fontSize: 18,
                               border: ['', '', '', ''],
                               colSpan: 2,
                               bold: true,
@@ -180,10 +191,11 @@ const GeneratePickUpPDF = (data) => {
                             ],
                             [`Number`, `${data.number || ``}`],
                             [`Pickup Date`, `${data.pick_up_date || ``}`],
-                            [`Creation Date`, `${data.creation_date || ``}`],
+                            [`Creation Date/Time`, `${data.creation_date || ``}`],
                             [`Delivery Date`, `${data.delivery_date || ``}`],
                             [`Employe`, `${data.employeeObj.name || ``}, `],
                       ],
+                      margin: [0, 0, 0, 0],
                     },
                   },
                 ],

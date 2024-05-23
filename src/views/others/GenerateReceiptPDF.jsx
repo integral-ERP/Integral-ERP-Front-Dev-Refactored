@@ -17,8 +17,8 @@ const GenerateReceiptPDF = (data, numCon) => {
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128),
       text: data.number + '',
-      scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
+      scale: 4, // Scale factor for the barcode size
+      height: 5, // Height of the barcode
     };
     barcodeOptions.text = barcodeOptions.text.toUpperCase();
     try {
@@ -132,24 +132,26 @@ const GenerateReceiptPDF = (data, numCon) => {
           const pdf = {
             content: [
               {
+                // widths: ["28%", "40%", "32%"],
                 columns: [
+                  
                   {
+                    margin: [0, 0, -10, 0],
                     stack: [
+                      
                       {
                         image: imgUrl,
                         fit: [100, 100],
                       },
-                      {
-                        text: "Warehouse Receipt",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      }
+                      
                     ],
                   },
                   {
+                    margin: [-50, 0, 0, 0],
+                    bold: true,
                     text: [
-                      `Issued By \n`,
+                      
+                      // `Issued By \n`,
                       `${data.issued_byObj?.name || ``} \n`,
                       `${data.issued_byObj?.phone
                         ? `Tel: ${data.issued_byObj.phone}, `
@@ -165,34 +167,44 @@ const GenerateReceiptPDF = (data, numCon) => {
                     ],
                   },
                   {
-                    // stack: [
-                    //   {
-                    //     image: "",
-                    //     fit: [100, 200],
-                    //     alignment: `right`,
-                    //   },
-                    // ],
-                  },
-                ],
-              },
-              {
-                columns: [
-                  [
-                    {}, // Empty cell for the logo image (rowspan: 2)
-                  ],
-                  {},
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [`Receipt Number`, `${data.number || ``}`],
-                        [`Received Date/Time`, `${data.creation_date || ``}`],
-                        [`Received By`, `${data.employeeObj?.name || ``}`]
-                      ],
-                      margin: [5, 0, 5, 0],
-                    },
-                  },
+                      style: `tableExample`,
+                      table: {
+                        // width: `*`,
+                        body: [
+                          [
+                            {text: "Warehouse Receipt",
+                            alignment: "center",
+                            fontSize: 18,
+                            border: ['', '', '', ''],
+                            colSpan: 2,
+                            bold: true,
+                            }, 
+                            {
+                            }
+                          ],
+                          [
+                            {
+                              border: ['', '', '', ''],
+                              colSpan: 2,
+                              stack: [
+                                {
+                                  image: barcodeImage,
+                                  fit: [1000, 50],
+                                  alignment: `center`,
+                                },
+                              ],
+                            },
+                            {
+                            }
+                          ],
+                        
+                          [`Receipt Number`, `${data.number || ``}`],
+                          [`Received Date/Time`, `${data.creation_date || ``}`],
+                          [`Received By`, `${data.employeeObj?.name || ``}`]
+                        ],
+                        margin: [0, 0, 50, 0],
+                      },
+                  },                  
                 ],
               },
               {
@@ -365,8 +377,9 @@ const GenerateReceiptPDF = (data, numCon) => {
                         table: {
                           widths: ["28%", "40%", "32%"],
                           body: [
-                            ["Type", `Description`, `Price`],
-                            ...chargeRows,
+                            // ["Type", `Description`, `Price`],
+                            // ...chargeRows,
+                            [...chargeRows,]
                           ],
                         },
                         rowSpan: 2,
