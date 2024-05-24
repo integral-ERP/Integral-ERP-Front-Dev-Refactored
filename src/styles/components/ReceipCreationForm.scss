@@ -7,10 +7,10 @@
   .box__event--form {
     width: 100%;
 
-    &>.income-charge-form {
+    & > .income-charge-form {
       width: 100% !important;
 
-      &>div {
+      & > div {
         display: flex;
         flex-direction: row !important;
         gap: 10px;
@@ -87,4 +87,125 @@
   display: block;
   text-align: center;
   margin-top: 5px;
+}
+
+
+.attachment-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.attachment-wrapper {
+  position: relative; 
+  margin-right: 10px;
+  margin-left: 2px;
+  margin-bottom: 5px;
+}
+
+.attachment-wrapper img,
+.attachment-wrapper embed {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.attachment-wrapper img:hover {
+  cursor: pointer;
+}
+
+.attachment-wrapper span {
+  display: block;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.attachment-name {
+  margin-top: 10px;
+  text-align: center;
+  font-size: small;
+}
+
+.delete-button-container {
+  // position: relative;  
+  // top: 5px;
+  margin-top: 5px;
+}
+
+.custom-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.delete-icon {
+  display: flex;
+  align-items: center;
+  width: 27px;
+  height: 27px;
+  background-color: #006BAD;
+  border-radius: 50%;
+  color: white;
+  font-size: 2.5rem;
+  align-content: center;
+  flex-direction: column-reverse;
+  justify-content: space-evenly;
+}
+
+.delete-icon span {
+  // display: inline-block;
+  // transform: rotate(90deg);
+  line-height: 24px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: red;
+}
+
+.preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.preview-container {
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.preview-container img,
+.preview-container iframe {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.icon-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-preview p {
+  margin-top: 10px;
 }

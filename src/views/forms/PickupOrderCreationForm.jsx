@@ -75,6 +75,8 @@ const PickupOrderCreationForm = ({
   const [events, setEvents] = useState([]);
   const [attachments, setattachments] = useState([]);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
 
   const formFormat = {
     status: 14,
@@ -113,7 +115,7 @@ const PickupOrderCreationForm = ({
     purchaseOrderNumber: "",
 
     commodities: [],
-    weight: 0,
+    
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -125,8 +127,7 @@ const PickupOrderCreationForm = ({
     const employees         = (await EmployeeService.getEmployees()).data.results;
     const carriers          = (await CarrierService.getCarriers()).data.results;
 
-    const addTypeToObjects = (arr, type) =>
-      arr.map((obj) => ({ ...obj, type }));
+    const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
 
     const forwardingAgentsWithType  = addTypeToObjects(forwardingAgents, "forwarding-agent");
     const customersWithType         = addTypeToObjects(customers, "customer");
@@ -135,15 +136,26 @@ const PickupOrderCreationForm = ({
     const carriersWithType          = addTypeToObjects(carriers, "Carrier");
 
     const issuedByOptions         = [...forwardingAgentsWithType];
-    const destinationAgentOptions = [...forwardingAgentsWithType];
-    const employeeOptions         = [...employeesWithType];
-    const shipperOptions          = [...customersWithType, ...vendorsWithType];
-    const pickupLocationOptions   = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
-    const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
 
-    // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType, ...carriersWithType];
+    const destinationAgentOptions = [...forwardingAgentsWithType];
+    // const destinationAgentOptions = [];
+
+    const employeeOptions         = [...employeesWithType];
+
+    // const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    const shipperOptions          = [...customersWithType];
+
+    const pickupLocationOptions   = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
+    // const pickupLocationOptions   = [...customersWithType, ...vendorsWithType];
+
+    // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
+    const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType, ...carriersWithType];
+    
     const deliveryLocationOptions = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType, ...carriersWithType];
+    // const deliveryLocationOptions = [...customersWithType, ...vendorsWithType, ...carriersWithType];
+    
     const carrierOptions          = [...carriersWithType];
+
     const clientToBillOptions     = [...customersWithType, ...forwardingAgentsWithType,];
 
     setIssuedByOptions(issuedByOptions.sort(SortArray));
@@ -244,15 +256,20 @@ const PickupOrderCreationForm = ({
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
     const type = event?.type || "";
-    const selectedObject = destinationAgentOptions.find(option => option.id === id && option.type === type);
-    const info = `${selectedObject?.name || ""} `;
+    // const selectedObject = await ForwardingAgentService.getForwardingAgentById(id);
+    const sele = destinationAgentOptions.find(option => option.id === id && option.type === type);
+    const info = `${sele.street_and_number || ""} - ${sele.city || ""
+      } - ${sele.state || ""} - ${sele.country || ""} - ${sele.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       destinationAgentId: id,
-      destinationAgentInfo: info
+      destinationAgentType: type,
+      destinationAgentInfo: info,
+      
     });
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    setagent(result?.data);
+    // const result = await ForwardingAgentService.getForwardingAgentById(id);
+    // setagent(result?.data);
   };
 
   const handleEmployeeSelection = async (event) => {
@@ -379,6 +396,7 @@ const PickupOrderCreationForm = ({
     const type = event?.target?.value || "";
     console.log("TYPE", type);
 
+    
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
     } else if (type === "shipper" || type === "consignee") {
@@ -421,11 +439,14 @@ const PickupOrderCreationForm = ({
       );
       let updatedFormData = {
         status: pickupOrder.status,
+        weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
-        destinationAgentInfo: `${pickupOrder.destination_agentObj?.name || ""} `,
+        destinationAgentInfo: `${pickupOrder.destination_agentObj?.street_and_number || ""}- ${pickupOrder.destination_agentObj?.city || ""
+          } - ${pickupOrder.destination_agentObj?.state || ""} - ${pickupOrder.destination_agentObj?.country || ""
+          } - ${pickupOrder.destination_agentObj?.zip_code || ""} `,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
@@ -434,7 +455,6 @@ const PickupOrderCreationForm = ({
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
-        weight: pickupOrder.weight,
 
         shipperId: pickupOrder.shipperObj?.data?.obj?.id,
         shipperType:
@@ -544,12 +564,9 @@ const PickupOrderCreationForm = ({
   };
 
   const loadIssuedBySelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
 
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
@@ -561,8 +578,7 @@ const PickupOrderCreationForm = ({
   };
 
   const loadDestinationAgentsSelectOptions = async (inputValue) => {
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
 
     const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
 
@@ -798,6 +814,14 @@ const PickupOrderCreationForm = ({
       });
 
       setWeightUpdated(totalWeight);
+    }
+
+    if (commodities.length > 0) {
+      let weight = 0;
+      commodities.forEach((com) => {
+        weight += com.weight;
+      });
+      setFormData({ ...formData, weight: weight });
     }
 
     let auxVar;
@@ -1046,7 +1070,10 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
+            setIsButtonDisabled(false);  // Re-habilita el botón después de que la operación ha terminado
+            console.log("Data sent!");
             window.location.reload();
+            console.log("Data sent! -2");
           }, 500 /* 2147483647 */);
         } else {
           setShowErrorAlert(true);
@@ -1079,6 +1106,7 @@ const PickupOrderCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("shipperRequest",shipperRequest);
         let rawData = {
           status: 14, 
           number: formData.number,
@@ -1251,6 +1279,8 @@ const PickupOrderCreationForm = ({
                     label="Number"
                   />
                 </div>
+              </div>
+              <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <p id="creation-date" className="text-date">
@@ -1267,9 +1297,27 @@ const PickupOrderCreationForm = ({
                       }
                     />
                   </LocalizationProvider>
+                </div> 
+                <div className="col-6 text-start" id="dates">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Pick-up Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Pick-up Date and Time"
+                      value={dayjs(formData.pickupDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                      className="creation creation-label"
+                    />
+                  </LocalizationProvider>
                 </div>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="employee" className="form-label">
                     Employee:
@@ -1290,27 +1338,30 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
+
                 <div className="col-6 text-start" id="dates">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Pick-up Date and Time</p>
+                    <p id="creation-date" className="text-date">
+                      Delivery Date and Time
+                    </p>
                     <DateTimePicker
-                      // label="Pick-up Date and Time"
-                      value={dayjs(formData.pickupDateAndTime)}
+                      // label="Delivery Date and Time"
+                      value={dayjs(formData.deliveryDateAndTime)}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
                         })
                       }
-                      className="creation creation-label"
                     />
                   </LocalizationProvider>
                 </div>
               </div>
+
               <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
-                    Destination Agent:
+                    Destination Agent::
                   </label>
                   {!creating ? (
                     canRender && (
@@ -1345,18 +1396,6 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                  <div className="row mb-3">
-                <div className="col-12 text-start">
-                  <Input
-                    id="TextDestinationAgent"
-                    type="textarea"
-                    inputName="destinationagentinfo"
-                    placeholder="Destination Agent..."
-                    value={formData.destinationAgentInfo}
-                    readonly={true}
-                  />
-                </div>
-              </div>
                 </div>
 
                 <div className="col-6 text-start" id="dates">
@@ -1374,9 +1413,6 @@ const PickupOrderCreationForm = ({
                     />
                   </LocalizationProvider>
                 </div>
-              </div>
-
-              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">
                     Issued By:
@@ -1397,7 +1433,21 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-6 text-start" style={{ marginTop: "20px" }}>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-6 text-start">
+                    <Input
+                      // id="TextDestinationAgent"
+                      type="textarea"
+                      inputName="AgentInfo"
+                      placeholder="Destination Agent..."
+                      value={formData.destinationAgentInfo}
+                      readonly={true}
+                    />
+                  </div>
+              
+                <div className="col-6 text-start">
                   <div className="company-form__section">
                     <Input
                       type="textarea"
@@ -1408,7 +1458,8 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-              </div>
+                </div>
+            
             </div>
           </div>
 
@@ -1608,7 +1659,7 @@ const PickupOrderCreationForm = ({
                     >
                       <option value="">Select an option</option>
                       <option value="shipper">Shipper</option>
-                      <option value="consignee">Ultimate Consignee</option>
+                      <option value="consignee">Consignee</option>
                       <option value="other">Other</option>
                     </select>
                     <p style={{ color: "red" }}>
@@ -1660,9 +1711,7 @@ const PickupOrderCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    onChange={(e) => {
-                      handleMainCarrierSelection(e);
-                    }}
+                    onChange={(e) => {handleMainCarrierSelection(e);}}
                     value={carrierOptions.find(
                       (option) => option.id === formData.mainCarrierdId
                     )}
@@ -1761,6 +1810,7 @@ const PickupOrderCreationForm = ({
                       " Weight (lb)",
                       // " Location",
                       " Volume (ft3)",
+                      " Volume-Weight (Vlb)",
                       // " Weight (lb)",
                       "Options",
                     ]}
@@ -1832,7 +1882,7 @@ const PickupOrderCreationForm = ({
                         ))}
                     </div>
                   )}
-                  <button
+                  {/* <button
                     className="button-save"
                     type="button"
                     onClick={() => {
@@ -1840,7 +1890,7 @@ const PickupOrderCreationForm = ({
                     }}
                   >
                     Repack
-                  </button>
+                  </button> */}
                   <br />
                   <br />
                   <br />

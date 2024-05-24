@@ -14,6 +14,7 @@ const CommodityCreationForm = ({
   commodity,
   locationEnabled,
   setEditingComodity,
+  hideLocation
 }) => {
   const formFormat = {
     id: "",
@@ -78,6 +79,7 @@ const CommodityCreationForm = ({
       height: formData.height,
       width: formData.width,
       weight: formData.weight,
+      volumen: formData.volumen,
       volumetricWeight: formData.volumetricWeight,
       chargedWeight: formData.volumetricWeight,
       description: formData.description,
@@ -107,6 +109,7 @@ const CommodityCreationForm = ({
                 height: formData.height,
                 width: formData.width,
                 weight: formData.weight,
+                volumen: formData.volumen,
                 volumetricWeight: formData.volumetricWeight,
                 internalCommodities: prevCommodity.internalCommodities,
                 chargedWeight: prevCommodity.chargedWeight,
@@ -140,13 +143,12 @@ const CommodityCreationForm = ({
 
   useEffect(() => {
     if (formData.height && formData.width && formData.length) {
-      const volWeight = (
-        (formData.height * formData.width * formData.length) /
-        166
-      ).toFixed(2);
+      const volu =((formData.height * formData.width * formData.length) / 1728).toFixed(2);
+      const volWeight = ((formData.height * formData.width * formData.length) / 166).toFixed(2);
 
       setformData((prevFormData) => ({
         ...prevFormData,
+        volumen: volu,
         volumetricWeight: volWeight,
         chargedWeight: Math.max(volWeight, prevFormData.weight),
       }));
@@ -162,6 +164,7 @@ const CommodityCreationForm = ({
         length: commodity.length,
         width: commodity.width,
         height: commodity.height,
+        volumen:commodity.volumen,
         volumetricWeight: commodity.volumetricWeight,
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
@@ -305,7 +308,8 @@ const currentUrl = window.location.href;
 {/* // Renderizar el código basado en la condición */}
 <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
   {/* {isLocationEnabled && ( */}
-  {(
+  {!hideLocation  && (
+  
     <>
       <label
         htmlFor="location"
@@ -314,17 +318,19 @@ const currentUrl = window.location.href;
       >
         Locationn:
       </label>
+
       <select
-        name="location"
-        id="location"
-        value={formData.locationId}
-        onChange={(e) => {
-          setformData({
-            ...formData,
-            locationId: e.target.value,
-            locationCode:
-              e.target.options[e.target.selectedIndex].getAttribute(
-                "data-key"
+      name="location"
+      id="location"
+      value={formData.locationId}
+      onChange={(e) => {
+        setformData({
+          ...formData,
+          locationId: e.target.value,
+          locationCode:
+          e.target.options[e.target.selectedIndex].getAttribute(
+            "data-key"
+         
               ),
           });
         }}
@@ -345,7 +351,8 @@ const currentUrl = window.location.href;
         })}
       </select>
     </>
-  )}
+  
+   )}
 </div>;
 
 
