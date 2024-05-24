@@ -24,7 +24,8 @@ import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faTimesCircle, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import DocViewer, { DocViewerRenderers, DocViewerOptions } from '@cyntler/react-doc-viewer'
 
 
 const ReceiptCreationForm = ({
@@ -38,12 +39,10 @@ const ReceiptCreationForm = ({
   fromReceipt,
   showBModal,
 }) => {
-  console.log("pickupOrder", pickupOrder);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
-  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -65,7 +64,6 @@ const ReceiptCreationForm = ({
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
-  const [attachments, setAttachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
@@ -360,8 +358,9 @@ const ReceiptCreationForm = ({
   };
 
   //---------------------------------CHARGE IMG---------------------------------------------------------
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewContent, setPreviewContent] = useState({});
+  const [showfile, setShowfile] = useState(false);
+  const [fileContent, setfileContent] = useState({});
+  const [attachments, setAttachments] = useState([]);
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
@@ -379,7 +378,7 @@ const ReceiptCreationForm = ({
         reader.onload = () => {
           resolve({
             name: file.name,
-            base64: reader.result,
+            base64: reader.result.split(',')[1],
             type: file.type,
           });
         };
@@ -394,14 +393,14 @@ const ReceiptCreationForm = ({
   };
 
 
-  const handlePreview = (attachment) => {
-    setPreviewContent(attachment);
-    setShowPreview(true);
+  const handlefile = (attachment) => {
+    setfileContent(attachment);
+    setShowfile(true);
   };
 
-  const handleClosePreview = () => {
-    setShowPreview(false);
-    setPreviewContent({});
+  const handleClosefile = () => {
+    setShowfile(false);
+    setfileContent({});
   };
 
   const getIcon = (type) => {
@@ -409,7 +408,7 @@ const ReceiptCreationForm = ({
       return faFilePdf;
     } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       return faFileWord;
-    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || type === 'application/vnd.ms-excel' || type === 'text/csv') {
       return faFileExcel;
     } else {
       return faFile;
@@ -418,17 +417,17 @@ const ReceiptCreationForm = ({
 
   const getColor = (type) => {
     if (type === 'application/pdf') {
-      return "#ff0000";
+      return '#e74c3c';
     } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      return "#1976d2";
-    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      return "#43a047";
+      return '#3498db';
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || type === 'application/vnd.ms-excel' || type === 'text/csv') {
+      return '#2ecc71';
     } else {
-      return "#9e9e9e";
+      return '#95a5a6';
     }
   };
 
-  const getPreviewUrl = (attachment) => {
+  const getfileUrl = (attachment) => {
     const { base64, type } = attachment;
     if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       const fileBlob = new Blob([base64], { type });
@@ -1948,7 +1947,7 @@ const ReceiptCreationForm = ({
               <div className="attachment-container">
                 {attachments.map((attachment) => (
                   <div key={attachment.name} className="attachment-wrapper">
-                    <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                    <div onClick={() => handlefile(attachment)} style={{ cursor: 'pointer' }}>
                       {attachment.type.startsWith("image/") ? (
                         <img
                           src={attachment.base64}
@@ -1980,31 +1979,47 @@ const ReceiptCreationForm = ({
             </div>
           </div>
 
-          {showPreview && (
-            <div className="preview-overlay" onClick={handleClosePreview}>
-              <div className="preview-container">
-                <button className="button-cancel pick" onClick={handleClosePreview}>
+          {showfile && (
+            <div className="file-overlay" onClick={handleClosefile}>
+              <div className="file-container">
+                <button className="button-cancel pick" onClick={handleClosefile}>
                   <i className="fas fa-times-circle"></i>
                 </button>
-                {previewContent.type.startsWith("image/") && (
-                  <img src={previewContent.base64} style={{ width: "60rem" }} alt="Large Preview" />
+                {fileContent.type.startsWith("image/") && (
+                  <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large file" />
                 )}
-                {previewContent.type === 'application/pdf' && (
+                {fileContent.type === 'application/pdf' && (
                   <iframe
-                    src={previewContent.base64}
+                    src={fileContent.base64}
                     width="100%"
                     height="500px"
-                    title="PDF Preview"
+                    title="PDF file"
                   />
                 )}
-                {previewContent.type !== 'application/pdf' && !previewContent.type.startsWith("image/") && (
-                  <iframe
-                    src={getPreviewUrl(previewContent)}
-                    width="100%"
-                    height="500px"
-                    title="File Preview"
-                  />
-                )}
+                {console.log('Este es el typo de archivo: ', fileContent)}
+                {(
+                  fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                  fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                  fileContent.type === 'application/vnd.ms-excel'
+                ) && (
+                    <div className="render-document">
+                      {console.log('Renderizando documento con DocViewer:', {
+                        fileData: new Blob([atob(fileContent.base64)], { type: fileContent.type }),
+                        fileName: fileContent.name,
+                      })}
+                      <DocViewer
+                        fileType={fileContent.type}
+                        documents={[
+                          {
+                            fileData: new Blob([atob(fileContent.base64)], { type: fileContent.type }),
+                            fileName: fileContent.name,
+                          },
+                        ]}
+                        pluginRenderers={DocViewerRenderers}
+                        pluginOptions={DocViewerOptions}
+                      />
+                    </div>
+                  )}
               </div>
             </div>
           )}
