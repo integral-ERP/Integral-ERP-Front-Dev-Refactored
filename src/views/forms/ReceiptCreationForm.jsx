@@ -24,7 +24,8 @@ import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faFilePdf, faFileWord, faFileExcel } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faTimesCircle, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -65,7 +66,7 @@ const ReceiptCreationForm = ({
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
-  const [attachments, setattachments] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
@@ -78,7 +79,7 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
-  const [supplierInfo, setsupplierInfo] = useState("");
+  // const [supplierInfo, setsupplierInfo] = useState("");
 
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -453,27 +454,27 @@ const ReceiptCreationForm = ({
       );
     }
   };
-
-  const handleClearShipperSelection = () => {
-    setFormData({
-      ...formData,
-      shipperId: null,
-      shipperType: null,
-      shipperInfo: "",
-    });
-  };
+  //NO se esta llamando esta funcion 
+  // const handleClearShipperSelection = () => {
+  //   setFormData({
+  //     ...formData,
+  //     shipperId: null,
+  //     shipperType: null,
+  //     shipperInfo: "",
+  //   });
+  // };
   //---------------------------------CHARGE IMG---------------------------------------------------------
-  const [showLargeImage, setShowLargeImage] = useState(false);
-  const [largeImageSrc, setLargeImageSrc] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewContent, setPreviewContent] = useState({});
 
-  const handleShowLargeImage = (src) => {
-    setLargeImageSrc(src);
-    setShowLargeImage(true);
-  };
+  // const handleShowLargeImage = (src) => {
+  //   setLargeImageSrc(src);
+  //   setShowLargeImage(true);
+  // };
 
-  const handleCloseLargeImage = () => {
-    setShowLargeImage(false);
-  };
+  // const handleCloseLargeImage = () => {
+  //   setShowLargeImage(false);
+  // };
 
   const handleDownloadAttachment = (base64Data, fileName) => {
     // Convertir la base64 a un Blob
@@ -504,44 +505,117 @@ const ReceiptCreationForm = ({
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
-
+  //---------------------------------------
   const handleFileUpload = (event) => {
-    const files = event.target.files;
+    const files = Array.from(event.target.files);
 
-    if (files && files.length > 0) {
-      const newAttachments = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+    const promises = files.map(file => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
-
         reader.onload = () => {
-          newAttachments.push({
+          resolve({
             name: file.name,
             base64: reader.result,
             type: file.type,
           });
-
-          if (newAttachments.length === files.length) {
-            setattachments((prevAttachments) => [
-              ...prevAttachments,
-              ...newAttachments,
-            ]);
-          }
         };
-
+        reader.onerror = reject;
         reader.readAsDataURL(file);
-      }
+      });
+    });
+
+    Promise.all(promises).then(newAttachments => {
+      setAttachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+    });
+  };
+
+  const handlePreview = (attachment) => {
+    setPreviewContent(attachment);
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setPreviewContent({});
+  };
+
+  const getIcon = (type) => {
+    if (type === 'application/pdf') {
+      return faFilePdf;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return faFileWord;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return faFileExcel;
+    } else {
+      return faFile;
     }
   };
-  // ----------------------------------------------------------------------------------------
 
+  const getColor = (type) => {
+    if (type === 'application/pdf') {
+      return "#ff0000";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return "#1976d2";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return "#43a047";
+    } else {
+      return "#9e9e9e";
+    }
+  };
+
+  const getPreviewUrl = (attachment) => {
+    const { base64, type } = attachment;
+    if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const fileBlob = new Blob([base64], { type });
+      const url = URL.createObjectURL(fileBlob);
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+    }
+    return null;
+  };
+
+  // const handleFileUpload = (event) => {
+  //   const files = event.target.files;
+
+  //   if (files && files.length > 0) {
+  //     const newAttachments = [];
+
+  //     for (let i = 0; i < files.length; i++) {
+  //       const file = files[i];
+  //       const reader = new FileReader();
+
+  //       reader.onload = () => {
+  //         newAttachments.push({
+  //           name: file.name,
+  //           base64: reader.result,
+  //           type: file.type,
+  //         });
+
+  //         if (newAttachments.length === files.length) {
+  //           setattachments((prevAttachments) => [
+  //             ...prevAttachments,
+  //             ...newAttachments,
+  //           ]);
+  //         }
+  //       };
+
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }
+  // };
+  // ----------------------------------------------------------------------------------------
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
       (attachment) => attachment.name !== name
     );
-    setattachments(updateAttachments);
-  };
+    setAttachments(updateAttachments);
+  }
+
+  // const handleDeleteAttachment = (name) => {
+  //   const updateAttachments = attachments.filter(
+  //     (attachment) => attachment.name !== name
+  //   );
+  //   setattachments(updateAttachments);
+  // };
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
@@ -710,7 +784,7 @@ const ReceiptCreationForm = ({
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
-      setattachments(pickupOrder.attachments);
+      setAttachments(pickupOrder.attachments);
 
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
@@ -1436,42 +1510,42 @@ const ReceiptCreationForm = ({
   };
 
   //---------------------------------------------------------------------
-  const renderPreview = (attachment) => {
-    const { name, base64, type } = attachment;
+  // const renderPreview = (attachment) => {
+  //   const { name, base64, type } = attachment;
 
-    if (type.startsWith("image/")) {
-      return (
-        <img
-          src={base64}
-          alt={name}
-          onClick={() => handleShowLargeImage(base64)}
-          style={{ width: "100px", height: "100px", objectFit: "cover" }}
-        />
-      );
-    } else if (type === 'application/pdf') {
-      return (
-        <embed
-          src={base64}
-          type="application/pdf"
-          width="100px"
-          height="100px"
-          onClick={() => handleShowLargeImage(base64)}
-        />
-      );
-    } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
-      return (
-        <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
-      );
-    } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
-      return (
-        <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
-      );
-    } else {
-      return (
-        <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
-      );
-    }
-  };
+  //   if (type.startsWith("image/")) {
+  //     return (
+  //       <img
+  //         src={base64}
+  //         alt={name}
+  //         onClick={() => handleShowLargeImage(base64)}
+  //         style={{ width: "100px", height: "100px", objectFit: "cover" }}
+  //       />
+  //     );
+  //   } else if (type === 'application/pdf') {
+  //     return (
+  //       <embed
+  //         src={base64}
+  //         type="application/pdf"
+  //         width="100px"
+  //         height="100px"
+  //         onClick={() => handleShowLargeImage(base64)}
+  //       />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
+  //     );
+  //   } else {
+  //     return (
+  //       <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
+  //     );
+  //   }
+  // };
   
   return (
     <div className="form-container">
@@ -2170,6 +2244,7 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
+        
         <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Attachments</h3>
@@ -2192,7 +2267,21 @@ const ReceiptCreationForm = ({
               <div className="attachment-container">
                 {attachments.map((attachment) => (
                   <div key={attachment.name} className="attachment-wrapper">
-                    {renderPreview(attachment)}
+                    <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                      {attachment.type.startsWith("image/") ? (
+                        <img
+                          src={attachment.base64}
+                          alt={attachment.name}
+                          style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={getIcon(attachment.type)}
+                          size="10x"
+                          style={{ color: getColor(attachment.type) }}
+                        />
+                      )}
+                    </div>
                     <span className="attachment-name">{attachment.name}</span>
                     <div className="delete-button-container">
                       <button
@@ -2206,93 +2295,41 @@ const ReceiptCreationForm = ({
                     </div>
                   </div>
                 ))}
-                {showLargeImage && (
-                  <div className="large-image-overlay" onClick={handleCloseLargeImage}>
-                    <div className="large-image-container">
-                      <button
-                        className="button-cancel pick"
-                        onClick={handleCloseLargeImage}
-                      >
-                        <i className="fas fa-times-circle"></i>
-                      </button>
-                      <img
-                        src={largeImageSrc}
-                        style={{ width: "60rem" }}
-                        alt="Large Image"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
+
+          {showPreview && (
+            <div className="preview-overlay" onClick={handleClosePreview}>
+              <div className="preview-container">
+                <button className="button-cancel pick" onClick={handleClosePreview}>
+                  <i className="fas fa-times-circle"></i>
+                </button>
+                {previewContent.type.startsWith("image/") && (
+                  <img src={previewContent.base64} style={{ width: "60rem" }} alt="Large Preview" />
+                )}
+                {previewContent.type === 'application/pdf' && (
+                  <iframe
+                    src={previewContent.base64}
+                    width="100%"
+                    height="500px"
+                    title="PDF Preview"
+                  />
+                )}
+                {previewContent.type !== 'application/pdf' && !previewContent.type.startsWith("image/") && (
+                  <iframe
+                    src={getPreviewUrl(previewContent)}
+                    width="100%"
+                    height="500px"
+                    title="File Preview"
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* <div className="creation creation-container">
-          <div className="form-label_name">
-            <h3>Attachments</h3>
-            <span></span>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="fileInput" className="custom-file-input">
-                <span className="button-text">Seleccionar archivos</span>
-                <input
-                  type="file"
-                  id="fileInput"
-                  multiple
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
-                />
-              </label>
-              <div className="image-container">
-                {attachments.map((attachment) => (
-                  <div key={attachment.name} className="image-wrapper">
-                    <img
-                      src={attachment.base64}
-                      alt={attachment.name}
-                      onClick={() => handleShowLargeImage(attachment.base64)}
-                    />
-                    <div className="image-buttons">
-                      <button
-                        className="custom-button"
-                        onClick={() => handleDeleteAttachment(attachment.name)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                      <button
-              className="custom-button"
-              onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
-            >
-              <i className="fas fa-download"></i>
-            </button>
-                    </div>
-                  </div>
-                ))}
-                {showLargeImage && (
-                  <div
-                    className="large-image-overlay"
-                    onClick={handleCloseLargeImage}
-                  >
-                    <div className="large-image-container">
-                      <button
-                        className="button-cancel pick "
-                        onClick={handleCloseLargeImage}
-                      >
-                        <i className="fas fa-times-circle"></i>
-                      </button>
-                      <img
-                        src={largeImageSrc}
-                        style={{ width: "60rem" }}
-                        alt="Large Image"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div> */}
+        
 
         <div className="creation creation-container">
           <div className="form-label_name">
