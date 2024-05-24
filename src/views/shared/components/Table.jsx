@@ -417,7 +417,16 @@ const Table = ({
     }
   };
   //-------------------------------------------------------------------------------------------------------
-
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    if (value === "receipt") {
+      generatePDFReceipt();
+    } else if (value === "label") {
+      generatePDFLabel();
+    }
+    e.target.value = ""; 
+  };
+  //-------------------------------------------------------------------------------------------------------
   const generatePDFLabel = () => {
     const Comodities = selectedRow;
     const numCom = selectedRow.commodities.length;
@@ -735,11 +744,7 @@ const Table = ({
                                       border: "0px solid white",
                                       height: "3rem",
                                     }}
-                                    onChange={(e) =>
-                                      e.target.value === "receipt"
-                                        ? generatePDFReceipt()
-                                        : generatePDFLabel()
-                                    }
+                                    onChange={handleSelectChange}
                                   >
                                     {/* <option value=""> </option> */}
                                     <option value="">Select Option</option>
