@@ -11,7 +11,7 @@ pdfMake.vfs = pdfFonts;
 
 
 
-const GenerateReceiptPDF = (data, numCon) => {
+const GenerateLabeltPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
 
@@ -604,4 +604,4 @@ const GenerateReceiptPDF = (data, numCon) => {
   });
 };
 
-export default GenerateReceiptPDF;
+export default GenerateLabeltPDF;
