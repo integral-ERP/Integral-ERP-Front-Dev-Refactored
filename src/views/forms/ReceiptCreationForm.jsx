@@ -25,8 +25,6 @@ import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
-import { Viewer } from '@react-pdf-viewer/core';
-import { Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import * as XLSX from 'xlsx';
 import '@react-pdf-viewer/core/lib/styles/index.css';
