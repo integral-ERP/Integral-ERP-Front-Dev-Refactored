@@ -24,7 +24,14 @@ import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faTimesCircle, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { Viewer } from '@react-pdf-viewer/core';
+import { Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import * as XLSX from 'xlsx';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import mammoth from 'mammoth'
 
 
 const ReceiptCreationForm = ({
@@ -361,7 +368,9 @@ const ReceiptCreationForm = ({
 
   //---------------------------------CHARGE IMG---------------------------------------------------------
   const [showPreview, setShowPreview] = useState(false);
-  const [previewContent, setPreviewContent] = useState({});
+  const [fileContent, setfileContent] = useState({});
+
+  const pdfPlugin = defaultLayoutPlugin();
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
@@ -393,15 +402,25 @@ const ReceiptCreationForm = ({
     });
   };
 
-
-  const handlePreview = (attachment) => {
-    setPreviewContent(attachment);
+  const handlePreview = async (attachment) => {
+    if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      try {
+        const arrayBuffer = convertDataURIToBinary(attachment.base64);
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        setfileContent({ ...attachment, htmlContent: result.value });
+      } catch (error) {
+        console.error("Error processing Word file:", error);
+        alert("Error processing Word file. Please try again.");
+      }
+    } else {
+      setfileContent(attachment);
+    }
     setShowPreview(true);
   };
 
   const handleClosePreview = () => {
     setShowPreview(false);
-    setPreviewContent({});
+    setfileContent({});
   };
 
   const getIcon = (type) => {
@@ -428,17 +447,47 @@ const ReceiptCreationForm = ({
     }
   };
 
-  const getPreviewUrl = (attachment) => {
-    const { base64, type } = attachment;
-    if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      const fileBlob = new Blob([base64], { type });
-      const url = URL.createObjectURL(fileBlob);
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+  const convertDataURIToBinary = (dataURI) => {
+    const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
+    const base64 = dataURI.substring(base64Index);
+    const raw = atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
     }
-    return null;
+    return array.buffer;
   };
 
+  const renderPreviewContent = () => {
+    if (fileContent.type.startsWith("image/")) {
+      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+    }
+    if (fileContent.type === 'application/pdf') {
+      return (
+        <iframe
+          src={fileContent.base64}
+          width="100%"
+          height="500px"
+          title="PDF file"
+        />
+      );
+    }
 
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
+      return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
+    }
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+    }
+
+    return <div>No se puede previsualizar este tipo de archivo</div>;
+  };
   //------------------------------------------------------------------------------------------
 
 
@@ -1986,25 +2035,7 @@ const ReceiptCreationForm = ({
                 <button className="button-cancel pick" onClick={handleClosePreview}>
                   <i className="fas fa-times-circle"></i>
                 </button>
-                {previewContent.type.startsWith("image/") && (
-                  <img src={previewContent.base64} style={{ width: "60rem" }} alt="Large Preview" />
-                )}
-                {previewContent.type === 'application/pdf' && (
-                  <iframe
-                    src={previewContent.base64}
-                    width="100%"
-                    height="500px"
-                    title="PDF Preview"
-                  />
-                )}
-                {previewContent.type !== 'application/pdf' && !previewContent.type.startsWith("image/") && (
-                  <iframe
-                    src={getPreviewUrl(previewContent)}
-                    width="100%"
-                    height="500px"
-                    title="File Preview"
-                  />
-                )}
+                {renderPreviewContent()}
               </div>
             </div>
           )}
