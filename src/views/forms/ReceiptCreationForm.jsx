@@ -1968,71 +1968,71 @@ const ReceiptCreationForm = ({
           </div>
         </div>
 
-        <div className="creation creation-container">
-          <div className="form-label_name">
-            <h3>Attachments</h3>
-            <span></span>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="fileInput" className="custom-file-input">
-                <span className="button-text">Seleccionar archivos</span>
-                <input
-                  type="file"
-                  id="fileInput"
-                  multiple
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
-                />
-              </label>
-              <br />
-              <br />
-              <div className="attachment-container">
-                {attachments.map((attachment) => (
-                  <div key={attachment.name} className="attachment-wrapper">
-                    <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
-                      {attachment.type.startsWith("image/") ? (
-                        <img
-                          src={attachment.base64}
-                          alt={attachment.name}
-                          style={{ width: "100px", height: "100px", objectFit: "cover" }}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={getIcon(attachment.type)}
-                          size="10x"
-                          style={{ color: getColor(attachment.type) }}
-                        />
-                      )}
+        <div className="Attachments-container">
+      <div className="">
+        <h3>Attachments</h3>
+        <span></span>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <label htmlFor="fileInput" className="custom-file-input">
+            <span className="button-text">Seleccionar archivos</span>
+            <input
+              type="file"
+              id="fileInput"
+              multiple
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+          </label>
+          <br />
+          <br />
+          <div className="attachment-container">
+            {attachments.map((attachment) => (
+              <div key={attachment.name} className="attachment-wrapper">
+                <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                  {attachment.type.startsWith("image/") ? (
+                    <img
+                      src={attachment.base64}
+                      alt={attachment.name}
+                      style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={getIcon(attachment.type)}
+                      size="10x"
+                      style={{ color: getColor(attachment.type) }}
+                    />
+                  )}
+                </div>
+                <span className="attachment-name">{attachment.name}</span>
+                <div className="delete-button-container">
+                  <button
+                    className="custom-button"
+                    onClick={() => handleDeleteAttachment(attachment.name)}
+                  >
+                    <div className="delete-icon">
+                      <span>&times;</span>
                     </div>
-                    <span className="attachment-name">{attachment.name}</span>
-                    <div className="delete-button-container">
-                      <button
-                        className="custom-button"
-                        onClick={() => handleDeleteAttachment(attachment.name)}
-                      >
-                        <div className="delete-icon">
-                          <span>&times;</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  </button>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-
-          {showPreview && (
-            <div className="preview-overlay" onClick={handleClosePreview}>
-              <div className="preview-container">
-                <button className="button-cancel pick" onClick={handleClosePreview}>
-                  <i className="fas fa-times-circle"></i>
-                </button>
-                {renderPreviewContent()}
-              </div>
-            </div>
-          )}
         </div>
+      </div>
+
+      {showPreview && (
+        <div className="preview-overlay" onClick={handleClosePreview}>
+          <div className="preview-container">
+            <button className="button-cancel pick" onClick={handleClosePreview}>
+              <i className="fas fa-times-circle"></i>
+            </button>
+            {renderPreviewContent()}
+          </div>
+        </div>
+      )}
+    </div>
 
         <div className="creation creation-container">
           <div className="form-label_name">

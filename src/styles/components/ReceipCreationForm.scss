@@ -89,7 +89,7 @@
 }
 
 .attachment-wrapper {
-  position: relative; 
+  position: relative;
   margin-right: 10px;
   margin-left: 2px;
   margin-bottom: 5px;
@@ -114,7 +114,7 @@
 }
 
 .delete-button-container {
-  position: relative;  
+  position: relative;
   top: 5px;
 }
 
@@ -169,10 +169,16 @@
   height: 80%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Cambiado de center a flex-start */
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  overflow: auto; /* Add overflow auto for content scrolling */
+  overflow: auto;
+}
+
+.preview-container div[dangerouslySetInnerHTML] {
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
 }
 
 .preview-container img,
@@ -181,25 +187,20 @@
   max-height: 100%;
 }
 
-.preview-container div[dangerouslySetInnerHTML] {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto; 
-}
-
 .preview-container table {
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
+  overflow: auto; 
 }
 
-.preview-container table, 
-.preview-container th, 
+.preview-container table,
+.preview-container th,
 .preview-container td {
   border: 1px solid #ddd;
 }
 
-.preview-container th, 
+.preview-container th,
 .preview-container td {
   padding: 8px;
   text-align: left;
