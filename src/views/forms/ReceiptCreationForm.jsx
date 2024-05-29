@@ -25,7 +25,6 @@ import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import * as XLSX from 'xlsx';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -43,12 +42,10 @@ const ReceiptCreationForm = ({
   fromReceipt,
   showBModal,
 }) => {
-  console.log("pickupOrder", pickupOrder);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
-  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -367,8 +364,6 @@ const ReceiptCreationForm = ({
   //---------------------------------CHARGE IMG---------------------------------------------------------
   const [showPreview, setShowPreview] = useState(false);
   const [fileContent, setfileContent] = useState({});
-
-  const pdfPlugin = defaultLayoutPlugin();
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
