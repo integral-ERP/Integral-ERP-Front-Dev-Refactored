@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
-import logotextcolor from "../../img/logotextcolor.jpg";
-// import logotextcolor from "../../img/logo.png";
+import logotextcolor from "../../img/LoginConColor.jpg";
 import bwipjs from "bwip-js";
 import { PDFDocument, rgb } from 'pdf-lib';
 import Alert from "@mui/material/Alert";
@@ -209,10 +208,10 @@ const GenerateLabeltPDF = (data, numCon) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [400, 400],
+                        fit: [350, 100],
                         colSpan: 2,
-                        alignment: "right",
-                        margin: [0, -20, 0, 20],
+                        alignment: "left",
+                        margin: [0, -10, 0, 20],
                       },
                       {}
                     ],
