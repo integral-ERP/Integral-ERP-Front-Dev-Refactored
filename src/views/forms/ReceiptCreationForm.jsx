@@ -60,6 +60,7 @@ const ReceiptCreationForm = ({
   const [shipper, setshipper] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [supplierRequest, setsupplierRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
@@ -67,6 +68,7 @@ const ReceiptCreationForm = ({
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
@@ -87,6 +89,7 @@ const ReceiptCreationForm = ({
   const [selectedCommodity, setselectedCommodity] = useState(null);
   //-------------------------------------------------------
   const [SelectEvent, setSelectEvent] = useState(null);
+  const [changeStateButton, setChangeStateButton] = useState(false);
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -96,6 +99,8 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+
+
 
   useEffect(() => {
     fetchFormData()
@@ -110,7 +115,8 @@ const ReceiptCreationForm = ({
         setDestinationAgentOptions([...forwardingAgents])
         setEmployeeOptions([...employees]);
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-        setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
+        // setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
+        setSupplierOptions([...customers, ...vendors])
         setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
       })
@@ -292,7 +298,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
+ /*  const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
     // const type = event.type || formData.supplierType;
     const type = event?.type || "";
@@ -306,6 +312,51 @@ const ReceiptCreationForm = ({
       setFormData(prevFormData => ({
         ...prevFormData,
         supplierId: supplierOptions.id
+      }));
+    }
+
+    if (!selectedSupplier) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+
+    const info = `${selectedSupplier?.street_and_number || ""} - ${selectedSupplier?.city || ""
+      } - ${selectedSupplier?.state || ""} - ${selectedSupplier?.country || ""
+      } - ${selectedSupplier?.zip_code || ""}`;
+
+    setSupplier(selectedSupplier);
+
+    setFormData({
+      ...formData,
+      supplierId: id,
+      supplierType: type,
+      supplierInfo: info,
+    });
+  }; */
+ /*  const handleSupplierSelection = async (event) => {
+    const id = event.id || "";
+    // const type = event.type || formData.supplierType;
+    const type = event?.type || "";
+    const selectedSupplier = supplierOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    
+
+    
+    if (supplierOptions) {
+      console.log("supplierOptions =", supplierOptions);
+      console.log("selectedSupplier =", selectedSupplier);
+      const info = `${selectedSupplier?.street_and_number || ""} - ${
+        selectedSupplier?.city || "" 
+      } - ${selectedSupplier?.state || ""} - ${
+        selectedSupplier?.country || ""
+      } - ${selectedSupplier?.zip_code || ""}`;
+      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        supplierId: selectedSupplier.id,
+        supplierType: selectedSupplier.type,
+        supplierInfo: info,
       }));
     }
 
@@ -686,6 +737,7 @@ const ReceiptCreationForm = ({
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
       setAttachments(pickupOrder.attachments);
+      setAttachments(pickupOrder.attachments);
 
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
@@ -705,6 +757,7 @@ const ReceiptCreationForm = ({
       setconsigneeRequest(pickupOrder.consignee);
       setshipper(pickupOrder.shipperObj?.data?.obj);
       setshipperRequest(pickupOrder.shipper);
+      setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
@@ -767,7 +820,7 @@ const ReceiptCreationForm = ({
           } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
           }`,
 
-        supplier: initialSupplier,
+        /* supplier: initialSupplier,
         supplierId: initialSupplier?.id,
         supplierType: initialSupplier?.type_person,
 
@@ -776,6 +829,7 @@ const ReceiptCreationForm = ({
           } - ${initialSupplier?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
+        
 
         clientToBillId: CTBID,
         clientToBillType:
@@ -991,6 +1045,7 @@ const ReceiptCreationForm = ({
       setFormDataUpdated(true);
       setconsigneeRequest(pickupOrder.consignee);
       setshipperRequest(pickupOrder.shipper);
+      setsupplierRequest(pickupOrder.supplier);
     }
   }, [fromPickUp, pickupOrder]);
 
@@ -1009,14 +1064,12 @@ const ReceiptCreationForm = ({
       handleDestinationAgentSelection({
         id: pickupOrder.destination_agentObj?.id,
       });
-      handleSupplierSelection({
-        id: pickupOrder.shipperObj?.data.obj?.id,
-        type: pickupOrder.shipperObj?.data?.obj?.type_person,
-      })
+      
     }
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
+
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
       setchangeStateSave(true);
@@ -1080,6 +1133,29 @@ const ReceiptCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
+    let supplierName = "";
+    if (formData.supplierType === "customer") {
+      supplierName = "customerid";
+    }
+    if (formData.supplierType === "vendor") {
+      supplierName = "vendorid";
+    }
+    if (formData.supplierType === "forwarding-agent") {
+      supplierName = "agentid";
+    }
+    if (formData.supplierType === "Carrier") {
+      supplierName = "carrierid";
+    }
+    if (supplierName !== "") {
+      const consignee = {
+        [supplierName]: formData.supplierId,
+      };
+
+      const response = await ReceiptService.createSupplier(consignee);
+      if (response.status === 201) {
+        setsupplierRequest(response.data.id);
+      }
+    }
 
     let clientToBillName = "";
     if (formData.clientToBillType === "shipper") {
@@ -1092,8 +1168,8 @@ const ReceiptCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipperId //CAMBIO
-            : formData.consigneeId, //CAMBIO
+            ? formData.shipper
+            : formData.consignee,
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1101,6 +1177,25 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
+    // if (formData.clientToBillType === "shipper") {
+    //   clientToBillName = "shipperid";
+    // }
+    // if (formData.clientToBillType === "consignee") {
+    //   clientToBillName = "consigneeid";
+    // }
+    // if (clientToBillName !== "") {
+    //   const clientToBill = {
+    //     [clientToBillName]:
+    //       clientToBillName === "shipperid"
+    //         ? formData.shipperId //CAMBIO
+    //         : formData.consigneeId, //CAMBIO
+    //   };
+
+    //   const response = await ReceiptService.createClientToBill(clientToBill);
+    //   if (response.status === 201) {
+    //     setclientToBillRequest(response.data.id);
+    //   }
+    // }
 
     if (commodities.length > 0) {
       let weight = 0;
@@ -1114,6 +1209,7 @@ const ReceiptCreationForm = ({
   const checkUpdatesComplete = () => {
     if (
       shipperRequest !== null &&
+      supplierRequest !== null &&
       consigneeRequest !== null &&
       clientToBillRequest !== null &&
       weightUpdated
@@ -1130,6 +1226,7 @@ const ReceiptCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("createPickUpAAA",supplierRequest);
         let rawData = {
           status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
@@ -1194,7 +1291,13 @@ const ReceiptCreationForm = ({
         };
 
         const response = await (creating
-          ? ReceiptService.createReceipt(rawData)
+          ? (async () => {
+              const result = await ReceiptService.createReceipt(rawData);
+              if (result) {
+                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+              }
+              return result;
+            })()
           : (async () => {
             const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
             const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
@@ -1236,13 +1339,13 @@ const ReceiptCreationForm = ({
 
 
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-          if (fromPickUp) {
+          /* if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
             const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
-          }
+          } */
 
           if (!fromPickUp) {
             //added onhand status
@@ -1251,6 +1354,7 @@ const ReceiptCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setChangeStateButton(false);
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
@@ -1266,6 +1370,7 @@ const ReceiptCreationForm = ({
     }
   }, [
     shipperRequest,
+    supplierRequest,
     consigneeRequest,
     allStateUpdatesComplete,
     clientToBillRequest,
@@ -1301,6 +1406,44 @@ const ReceiptCreationForm = ({
     window.location.reload();
   };
 
+  //---------------------------------------------------------------------
+  // const renderPreview = (attachment) => {
+  //   const { name, base64, type } = attachment;
+
+  //   if (type.startsWith("image/")) {
+  //     return (
+  //       <img
+  //         src={base64}
+  //         alt={name}
+  //         onClick={() => handleShowLargeImage(base64)}
+  //         style={{ width: "100px", height: "100px", objectFit: "cover" }}
+  //       />
+  //     );
+  //   } else if (type === 'application/pdf') {
+  //     return (
+  //       <embed
+  //         src={base64}
+  //         type="application/pdf"
+  //         width="100px"
+  //         height="100px"
+  //         onClick={() => handleShowLargeImage(base64)}
+  //       />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
+  //     );
+  //   } else {
+  //     return (
+  //       <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
+  //     );
+  //   }
+  // };
+  
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -1715,6 +1858,7 @@ const ReceiptCreationForm = ({
                   " Weight (lb)",
                   " Location",
                   " Volume (ft3)",
+                  " Volume-Weight (Vlb)",
                   // " Weight (lb)",
                   "Options",
                 ]}
@@ -2055,6 +2199,9 @@ const ReceiptCreationForm = ({
         </div>
 
 
+
+        
+
         <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Notes</h3>
@@ -2073,51 +2220,20 @@ const ReceiptCreationForm = ({
                   setFormData({ ...formData, notes: e.target.value })
                 }
               />
-              {/* <input
-              name="notes"
-              type="text"
-              className="form-input"
-              placeholder="Notes..."
-              onChange={(e) => setNote(e.target.value)}
-              style={{ width: "99%" }}
-            /> */}
             </div>
-
-            {/* <div className="col">
-            <button
-              type="button"
-              onClick={addNotes}
-              style={{
-                backgroundColor: "#006BAD",
-                color: "white",
-                fontSize: "15px",
-                width: "90%",
-                borderRadius: "5px",
-              }}
-            >
-              Add
-            </button>
-          </div> */}
-            {/* <div className="row">
-            <div className="col-10 text-start">
-              <Input
-                name="notes"
-                className="form-input w-100"
-                placeholder="PRO Number..."
-                value={formData.notes?.toString()}
-                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
-                // readOnly
-              />
-            </div> 
-          </div>*/}
           </div>
         </div>
 
         <div className="company-form__options-container">
           <button
-            disabled={changeStateSave}
+            // disabled={changeStateSave} 
             className="button-save"
-            onClick={sendData}
+            onClick={(e)=>{
+              sendData();
+              setChangeStateButton(true);
+              
+            }}
+            disabled={changeStateSave || changeStateButton} 
           >
             Save
           </button>
@@ -2126,18 +2242,6 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
-        {/* {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Warehouse Receipt {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
-      )} */}
         {showSuccessAlert && (
           <Alert
             severity="success"

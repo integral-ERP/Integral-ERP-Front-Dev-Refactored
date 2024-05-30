@@ -73,6 +73,8 @@ const PickupOrderCreationForm = ({
   const [events, setEvents] = useState([]);
   const [attachments, setattachments] = useState([]);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
 
   const formFormat = {
     status: 14,
@@ -118,7 +120,7 @@ const PickupOrderCreationForm = ({
     purchaseOrderNumber: "",
 
     commodities: [],
-    weight: 0,
+    
   };
   const [formData, setFormData] = useState(formFormat);
 
@@ -229,7 +231,9 @@ const PickupOrderCreationForm = ({
     setFormData({
       ...formData,
       destinationAgentId: id,
-      destinationAgentInfo: info
+      destinationAgentType: type,
+      destinationAgentInfo: info,
+      
     });
   };
 
@@ -246,6 +250,38 @@ const PickupOrderCreationForm = ({
       employeeId: id,
     });
   };
+
+  //-----------------------------------------------------------
+  // const handleConsigneeSelection = async (event) => {
+  //   const id = event?.id || "";
+  //   const type = event?.type || "";
+
+  //   let result;
+  //   if (type === "forwarding-agent") {
+  //     result = await ForwardingAgentService.getForwardingAgentById(id);
+  //   }
+  //   if (type === "customer") {
+  //     result = await CustomerService.getCustomerById(id);
+  //   }
+  //   if (type === "vendor") {
+  //     result = await VendorService.getVendorByID(id);
+  //   }
+  //   if (type === "Carrier") {
+  //     result = await CarrierService.getCarrierById(id);
+  //   }
+  //   const info = `${result?.data.street_and_number || ""} - ${
+  //     result?.data.city || ""
+  //   } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+  //     result?.data.zip_code || ""
+  //   }`;
+  //   setconsignee(result?.data);
+  //   setFormData({
+  //     ...formData,
+  //     consigneeId: id,
+  //     consigneeType: type,
+  //     consigneeInfo: info,
+  //   });
+  // };
 
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
@@ -391,11 +427,15 @@ const PickupOrderCreationForm = ({
       );
       let updatedFormData = {
         status: pickupOrder.status,
+        weight: pickupOrder.weight,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
-        destinationAgentInfo: `${pickupOrder.destination_agentObj?.name || ""} `,
+        destinationAgentInfo: `${pickupOrder.destination_agentObj?.street_and_number || ""}- ${pickupOrder.destination_agentObj?.city || ""
+          } - ${pickupOrder.destination_agentObj?.state || ""} - ${pickupOrder.destination_agentObj?.country || ""
+          } - ${pickupOrder.destination_agentObj?.zip_code || ""} `,
+
         issuedById: pickupOrder.issued_by,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
           } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
@@ -581,6 +621,14 @@ const PickupOrderCreationForm = ({
       });
 
       setWeightUpdated(totalWeight);
+    }
+
+    if (commodities.length > 0) {
+      let weight = 0;
+      commodities.forEach((com) => {
+        weight += com.weight;
+      });
+      setFormData({ ...formData, weight: weight });
     }
 
     let auxVar;
@@ -818,7 +866,10 @@ const PickupOrderCreationForm = ({
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
+            setIsButtonDisabled(false);  // Re-habilita el botón después de que la operación ha terminado
+            console.log("Data sent!");
             window.location.reload();
+            console.log("Data sent! -2");
           }, 500 /* 2147483647 */);
         } else {
           setShowErrorAlert(true);
@@ -851,6 +902,7 @@ const PickupOrderCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("shipperRequest",shipperRequest);
         let rawData = {
           status: 14,
           number: formData.number,
@@ -1024,6 +1076,8 @@ const PickupOrderCreationForm = ({
                     label="Number"
                   />
                 </div>
+              </div>
+              <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <p id="creation-date" className="text-date">
@@ -1040,9 +1094,27 @@ const PickupOrderCreationForm = ({
                       }
                     />
                   </LocalizationProvider>
+                </div> 
+                <div className="col-6 text-start" id="dates">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">
+                      Pick-up Date and Time
+                    </p>
+                    <DateTimePicker
+                      // label="Pick-up Date and Time"
+                      value={dayjs(formData.pickupDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                      className="creation creation-label"
+                    />
+                  </LocalizationProvider>
                 </div>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="employee" className="form-label">
                     Employee:
@@ -1069,27 +1141,30 @@ const PickupOrderCreationForm = ({
                     }}
                   />
                 </div>
+
                 <div className="col-6 text-start" id="dates">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Pick-up Date and Time</p>
+                    <p id="creation-date" className="text-date">
+                      Delivery Date and Time
+                    </p>
                     <DateTimePicker
-                      // label="Pick-up Date and Time"
-                      value={dayjs(formData.pickupDateAndTime)}
+                      // label="Delivery Date and Time"
+                      value={dayjs(formData.deliveryDateAndTime)}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
                         })
                       }
-                      className="creation creation-label"
                     />
                   </LocalizationProvider>
                 </div>
               </div>
+
               <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
-                    Destination Agent:
+                    Destination Agent::
                   </label>
                   {!creating ? (
                     canRender && (
@@ -1124,38 +1199,8 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                  <div className="row mb-3">
-                    <div className="col-12 text-start">
-                      <Input
-                        id="TextDestinationAgent"
-                        type="textarea"
-                        inputName="destinationagentinfo"
-                        placeholder="Destination Agent..."
-                        value={formData.destinationAgentInfo}
-                        readonly={true}
-                      />
-                    </div>
-                  </div>
+                  
                 </div>
-
-                <div className="col-6 text-start" id="dates">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
-                    <DateTimePicker
-                      // label="Delivery Date and Time"
-                      value={dayjs(formData.deliveryDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-              </div>
-
-              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">
                     Issued By:
@@ -1175,7 +1220,21 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-6 text-start" style={{ marginTop: "20px" }}>
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-6 text-start">
+                    <Input
+                      // id="TextDestinationAgent"
+                      type="textarea"
+                      inputName="AgentInfo"
+                      placeholder="Destination Agent..."
+                      value={formData.destinationAgentInfo}
+                      readonly={true}
+                    />
+                  </div>
+              
+                <div className="col-6 text-start">
                   <div className="company-form__section">
                     <Input
                       type="textarea"
@@ -1186,7 +1245,8 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-              </div>
+                </div>
+            
             </div>
           </div>
 
@@ -1325,7 +1385,6 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-                
                 <div
                   className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
@@ -1378,7 +1437,7 @@ const PickupOrderCreationForm = ({
                     >
                       <option value="">Select an option</option>
                       <option value="shipper">Shipper</option>
-                      <option value="consignee">Ultimate Consignee</option>
+                      <option value="consignee">Consignee</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
@@ -1428,9 +1487,7 @@ const PickupOrderCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    onChange={(e) => {
-                      handleMainCarrierSelection(e);
-                    }}
+                    onChange={(e) => {handleMainCarrierSelection(e);}}
                     value={carrierOptions.find(
                       (option) => option.id === formData.mainCarrierdId
                     )}
@@ -1528,6 +1585,7 @@ const PickupOrderCreationForm = ({
                       " Weight (lb)",
                       " Location",
                       " Volume (ft3)",
+                      " Volume-Weight (Vlb)",
                       // " Weight (lb)",
                       "Options",
                     ]}
@@ -1599,7 +1657,7 @@ const PickupOrderCreationForm = ({
                         ))}
                     </div>
                   )}
-                  <button
+                  {/* <button
                     className="button-save"
                     type="button"
                     onClick={() => {
@@ -1607,7 +1665,7 @@ const PickupOrderCreationForm = ({
                     }}
                   >
                     Repack
-                  </button>
+                  </button> */}
                   <br />
                   <br />
                   <br />
