@@ -2008,6 +2008,7 @@ const ReceiptCreationForm = ({
               </label>
               <br />
               <br />
+              <br />
               <div className="attachment-container">
                 {attachments.map((attachment) => (
                   <div key={attachment.name} className="attachment-wrapper">
