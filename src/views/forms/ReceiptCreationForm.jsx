@@ -479,7 +479,7 @@ const ReceiptCreationForm = ({
       );
     }
 
-    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  || fileContent.type === "text/csv" || fileContent.type === 'application/vnd.ms-excel') {
       const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
@@ -1991,6 +1991,7 @@ const ReceiptCreationForm = ({
         <div className="Attachments-container">
           <div className="">
             <h3>Attachments</h3>
+            <br />
             <span></span>
           </div>
           <div className="row">
@@ -2025,7 +2026,10 @@ const ReceiptCreationForm = ({
                         />
                       )}
                     </div>
-                    <span className="attachment-name">{attachment.name}</span>
+                    <span className="attachment-name">
+                      {attachment.name.split('.').slice(0, -1).join('.')}<br />
+                      {attachment.name.split('.').pop()}
+                    </span>
                     <div className="delete-button-container">
                       <button
                         className="custom-button"
