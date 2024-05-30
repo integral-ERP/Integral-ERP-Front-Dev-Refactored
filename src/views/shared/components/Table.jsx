@@ -267,7 +267,8 @@ const Table = ({
   };
 
   const getStatus = (statusCode) => {
-    switch (statusCode.toString()) {
+    // switch (statusCode.toString()) {
+      switch (statusCode) {
       case "1":
         return (
           <span>
