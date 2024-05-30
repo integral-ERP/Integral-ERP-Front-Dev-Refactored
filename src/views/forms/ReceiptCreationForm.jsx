@@ -468,7 +468,7 @@ const ReceiptCreationForm = ({
       );
     }
 
-    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileContent.type === "text/csv" || fileContent.type === 'application/vnd.ms-excel') {
       const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
