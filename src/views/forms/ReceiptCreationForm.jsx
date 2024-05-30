@@ -485,7 +485,7 @@ const ReceiptCreationForm = ({
       const sheet = workbook.Sheets[sheetName];
       const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
       return (
-        <div className="preview-docs" dangerouslySetInnerHTML={{ __html: htmlString }} />
+        <div className="preview-excel" dangerouslySetInnerHTML={{ __html: htmlString }} />
       );
     }
 
@@ -2044,9 +2044,6 @@ const ReceiptCreationForm = ({
 
           {showPreview && (
             <div className="preview-overlay" onClick={handleClosePreview}>
-              <button className="button-cancel pick" onClick={handleClosePreview}>
-                <i className="fas fa-times-circle"></i>
-              </button>
               {renderPreviewContent()}
             </div>
           )}

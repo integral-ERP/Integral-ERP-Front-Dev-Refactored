@@ -179,7 +179,7 @@
 
 
 /* Estilos para la vista previa de documentos Excel */
-.preview-docs {
+.preview-excel {
   background: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -193,32 +193,27 @@
   overflow: auto;
 }
 
-.preview-docs div[dangerouslySetInnerHTML] {
+.preview-excel div[dangerouslySetInnerHTML] {
   width: 100%;
   height: 100%;
   overflow: auto;
 }
 
-.preview-docs table {
-  width: auto;
+.preview-excel table {
+  width: 100%; 
   border-collapse: collapse;
   font-family: Arial, sans-serif;
 }
 
-.preview-docs table,
-.preview-docs th,
-.preview-docs td {
+.preview-excel th,
+.preview-excel td {
   border: 1px solid #ddd;
-}
-
-.preview-docs th,
-.preview-docs td {
   padding: 8px;
-  text-align: center;
-  vertical-align: middle;
+  text-align: center; 
+  vertical-align: middle; 
 }
 
-.preview-docs th {
+.preview-excel th {
   background-color: #f2f2f2;
 }
 
