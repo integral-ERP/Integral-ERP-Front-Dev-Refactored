@@ -2,6 +2,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 pdfMake.vfs = pdfFonts;
 
@@ -42,26 +43,25 @@ const GeneratePickUpPDF = (data) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity, index) => {
-        firstRowText += `1; Pallet \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fourthRowText += `${commodity.description} \n`;
-        sixthRowText += `${commodity.weight} lbs \n`;
-        (seventhRowText += `${commodity.volumetricWeight} ft3 \n`),
-          `${commodity.chargedWeight} Vlb \n`;
+        firstRowText += `1; Pallet \n \n`;
+        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n`;
+        fourthRowText += `${commodity.description} \n \n`;
+        sixthRowText += `${commodity.weight} lbs \n \n`;
+        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
 
-        if (commodity.containsCommodities && commodity.internalCommodities) {
-          commodity.internalCommodities.forEach((internalCommodity) => {
+        // if (commodity.containsCommodities && commodity.internalCommodities) {
+        //   commodity.internalCommodities.forEach((internalCommodity) => {
 
-            thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-            fourthRowText += `${internalCommodity.description} \n`;
-            sixthRowText += `${internalCommodity.weight} lbs \n`;
-            seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-            totalWeight += parseFloat(internalCommodity.weight);
-            totalVolume += parseFloat(internalCommodity.volumetricWeight);
-          });
-        }
+        //     thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
+        //     fourthRowText += `${internalCommodity.description} \n`;
+        //     sixthRowText += `${internalCommodity.weight} lbs \n`;
+        //     seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
+        //     totalWeight += parseFloat(internalCommodity.weight);
+        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
+        //   });
+        // }
       });
       const commodityRow = [
         {
@@ -132,159 +132,92 @@ const GeneratePickUpPDF = (data) => {
 
           const pdf = {
             content: [
-              {
+              {   
+                // margin: [0, 0, -10, 0],
                 columns: [
                   {
+                    margin: [0, 0, -10, 0],
                     stack: [
+                      
                       {
                         image: imgUrl,
                         fit: [100, 100],
                       },
-                      {
-                        text: "Pick-up Order",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                      {
-                        text: "Land Bill of Landing",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                    ],
-                  },
-                  {
-                    text: [
-                      `Issued By \n`,
-                      `${data.issued_byObj?.name || ``} \n`,
-                      `${
-                        data.issued_byObj?.phone
-                          ? `Tel: ${data.issued_byObj.phone}, `
-                          : ``
-                      }${
-                        data.issued_byObj?.fax
-                          ? `Fax: ${data.issued_byObj.fax}`
-                          : ``
-                      }\n`,
-                      `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}, ${
-                        data.issuedBy?.state || ``
-                      } ${data.issued_byObj?.zip_code || ``} \n`,
-                      `${data.issued_byObj?.country || ``}`,
+                      
                     ],
                   },
                   {
                     stack: [
+                      {},
                       {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
+                        margin: [-50, 0, 0, 0],
+                        bold: true,
+                        text: [
+                          `${data.issued_byObj?.name || ``} \n`,
+                          `${
+                            data.issued_byObj?.phone
+                              ? `Tel: ${data.issued_byObj.phone}, `
+                              : ``
+                          }${
+                            data.issued_byObj?.fax
+                              ? `Fax: ${data.issued_byObj.fax}`
+                              : ``
+                          }\n`,
+                          `${data.issued_byObj?.street_and_number || ``} \n`,
+                          `${data.issued_byObj?.city || ``}, ${
+                            data.issuedBy?.state || ``
+                          } ${data.issued_byObj?.zip_code || ``} \n`,
+                          `${data.issued_byObj?.country || ``}`,
+                        ],
                       },
+                      
                     ],
+                  
                   },
-                ],
-              },
-              {
-                columns: [
-                  [
-                    {}, // Empty cell for the logo image (rowspan: 2)
-                  ],
-                  {
-                    // style: `tableExample`,
-                    // table: {
-                    //   width: `*`,
-                    //   body: [
-                    //     [`Received By:`, `${data.employeeObj?.name || ``}`],
-                    //   ],
-                    // },
-                  },
-                  {
-                    // style: `tableExample`,
-                    // table: {
-                    //   width: `*`,
-                    //   body: [[`Received Date`, `${data.creation_date || ``}`]],
-                    //   margin: [5, 0, 5, 0],
-                    // },
-                  },
-                ],
-              },
-              {
-                columns: [
-                  {
-                    // style: `tableExample`,
+                  { 
+                    style: `tableExample`,
                     table: {
-                      // width: `*`,
                       body: [
+                            [
+                              {text: "Pickup Order",
+                              alignment: "center",
+                              fontSize: 18,
+                              border: ['', '', '', ''],
+                              colSpan: 2,
+                              bold: true,
+                              }, 
+                              {
+                              }
+                            ],
+                            [`Number`, `${data.number || ``}`],
                             [`Pickup Date`, `${data.pick_up_date || ``}`],
-                            [`Received Date`, `${data.creation_date || ``}`],
-                    ],
-                    },
-                    // table:{
-                    //   text: [`Pickup Date`, `${data.pick_up_date || ``}`],
-                    //   margin: [0, 0, 0, 0],
-                    // },
-                    
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      width: `*`,
-                      body: [
-                        [`Delivery Date`, `${data.delivery_date || ``}`],
-                        [`Received By:`, `${data.employeeObj?.name || ``}`],
+                            [`Creation Date/Time`, `${data.creation_date || ``}`],
+                            [`Delivery Date`, `${data.delivery_date || ``}`],
+                            [`Employe`, `${data.employeeObj.name || ``}, `],
                       ],
-                    },
-                  },
-                  {
-                    style: `tableExample`,
-                    table: {
-                      // width: ['100%'],
-                      margin: [50, 50, 50, 50],
-                      body: [
-                        [`Carrier`, `${data.main_carrierObj?.name || ``}`],
-                      ],
+                      margin: [0, 0, 0, 0],
                     },
                   },
                 ],
               },
+              {},
+              {},
               {
                 table: {
-                  widths: [`33%`, `34%`, `33%`],
+                  widths: [`50%`, `50%`],
                   body: [
                     [
                       {
                         text: `Pickup Company`,
                         bold: true,
                         fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
+                        fontSize: 11,
                       },
                       {
                         text: `Delivery Company`,
                         bold: true,
                         fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `PRO Number`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                    ],
-                    [
-                      {
-                        text: `${
-                          data.pickUpLocationObj?.data?.obj?.name || ``
-                        }`,
-                      },
-                      {
-                        text: `${
-                          data.deliveryLocationObj?.data?.obj?.name || ``
-                        }`,
-                      },
-                      {
-                        text: `${data.pro_number || ``}`,
+                        fontSize: 11,
                       },
                     ],
                     [
@@ -344,63 +277,126 @@ const GeneratePickUpPDF = (data) => {
                         ],
                         margin: [0, 0, 0, 10],
                       },
-                      {
-                        text: [
-                          `Tracking Number: \n`,
-                          `${data.tracking_number || ``}`,
-                        ],
-                        margin: [0, 0, 0, 10],
-                      },
-                    ],
-                    [
-                      {
-                        text: `Original Shipper Information`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Final Consignee Information`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                      {
-                        text: `Charges`,
-                        bold: true,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                      },
-                    ],
-                    [
-                      {
-                        text: `${data.shipperObj?.data?.obj?.name || ``}`,
-                        rowSpan: 2,
-                      },
-                      {
-                        text: `${data.consigneeObj?.data?.obj?.name || ``}`,
-                      },
-                      {
-                        style: `tableExampleLeft`,
-                        table: {
-                          widths: ["28%", "40%", "32%"],
-                          body: [
-                            ["Type", `Description`, `Price`],
-                            ...chargeRows,
-                          ],
-                        },
-                        rowSpan: 2,
-                      },
-                    ],
-                    [
-                      {},
-                      {
-                        text: `Invoice: ${data.invoice_number || ``}`,
-                      },
-                      {},
                     ],
                   ],
                 },
+              },
+              {
+                table: {
+                  widths: [`20%`, `30%`,`20%`, `30%`],
+                  body: [
+                    [
+                      {
+                        text: `Shipper`,
+                        bold: true,
+                        fontSize: 11,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `${data.shipperObj?.data?.obj?.name || ``}`,
+                        bold: true,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `Consignee`,
+                        bold: true,
+                        fontSize: 11,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `${data.consigneeObj?.data?.obj?.name || ``}`,
+                        bold: true,
+                        border: ['top', '', 'top', ''],
+                      },
+                    ],
+                  ]
+                }
+              },
+              {
+                table: {
+                  widths: [`20%`, `30%`,`20%`, `30%`],
+                  body: [
+                    [
+                      {
+                        text: `Inland Carrier and Supplier Information`,
+                        bold: true,
+                        fontSize: 13,
+                        fillColor: `#CCCCCC`,
+                        // margin: [0, 0, 0, 0],
+                        colSpan: 4,
+                        alignment: "center"
+                      },
+                      {},
+                      {},
+                      {},
+                    ],
+                    [
+                      {
+                        text: `Carrier Name`,
+                        bold: true,
+                        fontSize: 11,
+                      },
+                      {
+                        text: `${data.main_carrierObj?.name || ``}`,
+                        bold: true,
+                      },
+                      {
+                        text: `P.O. Number`,
+                        bold: true,
+                        fontSize: 11,
+                      },
+                      {
+                        text: `${data.purchase_order_number || ``}`,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                      },
+                    ],
+                    [
+                      {
+                        text: `PRO Number`,
+                        bold: true,
+                        fontSize: 11,
+                      },
+                      {
+                        text: `${data.pro_number || ``}`,
+                        bold: true,
+                      },
+                      {
+                        text: `Supplier Name`,
+                        bold: true,
+                        fontSize: 11,
+                      },
+                      {
+                        text: `${data.pickUpLocationObj?.data?.obj.name || ``}`,
+                        bold: true,
+                      },
+                    ],
+                    [
+                      {
+                        text: `Tracking Number`,
+                        bold: true,
+                        fontSize: 11,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `${data.tracking_number || ``}`,
+                        bold: true,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `Invoice Number`,
+                        bold: true,
+                        fontSize: 11,
+                        border: ['top', '', 'top', ''],
+                      },
+                      {
+                        text: `${data.invoice_number || ``}`,
+                        bold: true,
+                        border: ['top', '', 'top', ''],
+                      },
+                    ],
+                  ]
+                }
               },
               {
                 table: {
@@ -497,12 +493,16 @@ const GeneratePickUpPDF = (data) => {
                         text: totalPieces,
                       },
                       {
+                        bold: true,
+                        fontSize: 11,
                         text: [
-                          `${totalWeight} kg\n`,
-                          `${(totalWeight / 2.205).toFixed(2)} lb`,
+                          `${totalWeight.toFixed(2)} lb\n`,
+                          `${(totalWeight / 2.205).toFixed(2)} kg`,
                         ],
                       },
                       {
+                        bold: true,
+                        fontSize: 11,
                         text: [
                           `${totalVolume.toFixed(2)} ft3\n`,
                           `${(totalVolume / 35.315).toFixed(2)} m3`,

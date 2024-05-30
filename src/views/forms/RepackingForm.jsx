@@ -13,6 +13,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     length: "",
     width: "",
     height: "",
+    volumen: "",
     volumetricWeight: "",
     chargedWeight: "",
     description: "",
@@ -42,13 +43,12 @@ const RepackingForm = ({ commodities, setCommodities }) => {
 
   useEffect(() => {
     if (formData.height && formData.width && formData.length) {
-      const volWeight = (
-        (formData.height * formData.width * formData.length) /
-        166
-      ).toFixed(2);
+      const vol = ((formData.height * formData.width * formData.length) / 1728 ).toFixed(2);
+      const volWeight = ((formData.height * formData.width * formData.length) / 166 ).toFixed(2);
 
       setformData((prevFormData) => ({
         ...prevFormData,
+        volumen: vol,
         volumetricWeight: volWeight,
         chargedWeight: Math.max(volWeight, prevFormData.weight),
       }));
@@ -212,8 +212,56 @@ const RepackingForm = ({ commodities, setCommodities }) => {
       </div>
       <div className="form-row">
         <div className="form-column-create">
+          <label className="text-comm">Length:</label>
+          <div className="input-group-r ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.length}
+              onChange={(e) =>
+                setformData({ ...formData, length: e.target.value })
+              }
+            />
+            <span className="input-group-text num-com">in</span>
+          </div>
+        </div>
+
+        <div className="form-column-create">
+          <label className="text-comm">Width:</label>
+          <div className="input-group-r ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.width}
+              onChange={(e) =>
+                setformData({ ...formData, width: e.target.value })
+              }
+            />
+            <span className="input-group-text num-com">in</span>
+          </div>
+        </div>
+
+        <div className="form-column-create">
+          <label className="text-comm">Height:</label>
+          <div className="input-group-r ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.height}
+              onChange={(e) =>
+                setformData({ ...formData, height: e.target.value })
+              }
+            />
+            <span className="input-group-text num-com">in</span>
+          </div>
+        </div>
+
+        <div className="form-column-create">
           <label className="text-comm">Weigth:</label>
-          <div className="input-group ">
+          <div className="input-group-r ">
             <input
               type="number"
               className="form-comm"
@@ -227,54 +275,12 @@ const RepackingForm = ({ commodities, setCommodities }) => {
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
-        <div className="form-column-create">
-          <label className="text-comm">Length:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.length}
-              onChange={(e) =>
-                setformData({ ...formData, length: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">in</span>
-          </div>
-        </div>
-        <div className="form-column-create">
-          <label className="text-comm">Width:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.width}
-              onChange={(e) =>
-                setformData({ ...formData, width: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">in</span>
-          </div>
-        </div>
-        <div className="form-column-create">
-          <label className="text-comm">Height:</label>
-          <div className="input-group ">
-            <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.height}
-              onChange={(e) =>
-                setformData({ ...formData, height: e.target.value })
-              }
-            />
-            <span className="input-group-text num-com">in</span>
-          </div>
-        </div>
-        <div className="form-column-create">
+        
+        
+        
+        {/* <div className="form-column-create">
           <label className="text-comm">Volume:</label>
-          <div className="input-group ">
+          <div className="input-group-r ">
             <input
               type="number"
               className="form-comm"
@@ -282,9 +288,23 @@ const RepackingForm = ({ commodities, setCommodities }) => {
               value={formData.volumetricWeight}
               readOnly
             />
-            <span className="input-group-text num-com">in3</span>
+            <span className="input-group-text num-com">ft3</span>
+          </div>
+        </div> */}
+        <div className="form-column-create">
+          <label className="text-comm">Volume:</label>
+          <div className="input-group-r ">
+            <input
+              type="number"
+              className="form-comm"
+              aria-label=""
+              value={formData.volumen}
+              readOnly
+            />
+            <span className="input-group-text num-com">ft3</span>
           </div>
         </div>
+
         <label htmlFor="description" className="text-comm">
           Description:
         </label>

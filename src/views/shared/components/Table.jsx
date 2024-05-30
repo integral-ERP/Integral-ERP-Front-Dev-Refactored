@@ -194,8 +194,9 @@ const Table = ({
     " Height (in)": "height",
     " Weight (lb)": "weight",
     " Width (in)": "width",
-    " Volume (ft3)": "volumetricWeight",
+    " Volume-Weight (Vlb)": "volumetricWeight",
     // " Weight (lb)": "chargedWeight",
+    " Volume (ft3)": "volumen",
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
@@ -415,6 +416,16 @@ const Table = ({
           console.error("Error generating PDF:", error);
         });
     }
+  };
+  //-------------------------------------------------------------------------------------------------------
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    if (value === "receipt") {
+      generatePDFReceipt();
+    } else if (value === "label") {
+      generatePDFLabel();
+    }
+    e.target.value = ""; 
   };
   //-------------------------------------------------------------------------------------------------------
 
@@ -720,7 +731,7 @@ const Table = ({
                             <>
                               <button
                                 className="generic-button ne"
-                                onClick={generatePDF}
+                                // onClick={generatePDF}
                                 style={{
                                   display: "flex",
                                   width: "70px",
@@ -736,11 +747,12 @@ const Table = ({
                                       border: "0px solid white",
                                       height: "3rem",
                                     }}
-                                    onChange={(e) =>
-                                      e.target.value === "receipt"
-                                        ? generatePDFReceipt()
-                                        : generatePDFLabel()
-                                    }
+                                    onChange={handleSelectChange}
+                                    // onChange={(e) =>
+                                    //   e.target.value === "receipt"
+                                    //     ? generatePDFReceipt()
+                                    //     : generatePDFLabel()
+                                    // }
                                   >
                                     {/* <option value=""> </option> */}
                                     <option value="">Select Option</option>

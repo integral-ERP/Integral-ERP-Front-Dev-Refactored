@@ -23,6 +23,9 @@ import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFile, faTimesCircle, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -55,6 +58,7 @@ const ReceiptCreationForm = ({
   const [shipper, setshipper] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
+  const [supplierRequest, setsupplierRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
@@ -62,7 +66,7 @@ const ReceiptCreationForm = ({
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
-  const [attachments, setattachments] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
@@ -75,7 +79,7 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
-  const [supplierInfo, setsupplierInfo] = useState("");
+  // const [supplierInfo, setsupplierInfo] = useState("");
 
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -83,6 +87,7 @@ const ReceiptCreationForm = ({
   const [selectedCommodity, setselectedCommodity] = useState(null);
   //-------------------------------------------------------
   const [SelectEvent, setSelectEvent] = useState(null);
+  const [changeStateButton, setChangeStateButton] = useState(false);
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -92,6 +97,8 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+
+
 
   useEffect(() => {
     fetchFormData()
@@ -106,7 +113,8 @@ const ReceiptCreationForm = ({
         setDestinationAgentOptions([...forwardingAgents])
         setEmployeeOptions([...employees]);
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-        setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
+        // setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
+        setSupplierOptions([...customers, ...vendors])
         setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
       })
@@ -293,7 +301,7 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handleSupplierSelection = async (event) => {
+ /*  const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
     // const type = event.type || formData.supplierType;
     const type = event?.type || "";
@@ -329,6 +337,87 @@ const ReceiptCreationForm = ({
       supplierType: type,
       supplierInfo: info,
     });
+  }; */
+ /*  const handleSupplierSelection = async (event) => {
+    const id = event.id || "";
+    // const type = event.type || formData.supplierType;
+    const type = event?.type || "";
+    const selectedSupplier = supplierOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    
+
+    
+    if (supplierOptions) {
+      console.log("supplierOptions =", supplierOptions);
+      console.log("selectedSupplier =", selectedSupplier);
+      const info = `${selectedSupplier?.street_and_number || ""} - ${
+        selectedSupplier?.city || "" 
+      } - ${selectedSupplier?.state || ""} - ${
+        selectedSupplier?.country || ""
+      } - ${selectedSupplier?.zip_code || ""}`;
+      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        supplierId: selectedSupplier.id,
+        supplierType: selectedSupplier.type,
+        supplierInfo: info,
+      }));
+    }
+
+    if (!selectedSupplier) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+
+    const info = `${selectedSupplier?.street_and_number || ""} - ${
+      selectedSupplier?.city || ""
+    } - ${selectedSupplier?.state || ""} - ${
+      selectedSupplier?.country || ""
+    } - ${selectedSupplier?.zip_code || ""}`;
+
+    setSupplier(selectedSupplier);
+
+    setFormData({
+      ...formData,
+      supplierId: id,
+      supplierType: type,
+      supplierInfo: info,
+    });
+  }; */
+  const handleSupplierSelection = async (event) => {
+    if (event && event.id) {
+      const id = event.id || formData.supplierId;
+      const type = event.type || formData.supplierType;
+
+      let result;
+      if (type === "forwarding-agent") {
+        result = await ForwardingAgentService.getForwardingAgentById(id);
+      } else if (type === "customer") {
+        result = await CustomerService.getCustomerById(id);
+      } else if (type === "vendor") {
+        result = await VendorService.getVendorByID(id);
+      }
+
+      const info = result?.data
+        ? `${result.data.street_and_number || ""} - ${
+            result.data.city || ""
+          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+            result.data.zip_code || ""
+          }`
+        : formData.supplierInfo;
+      setSupplier(result?.data || supplier);
+      setFormData({
+        ...formData,
+        supplierId: id,
+        supplierType: type,
+        supplierInfo: info,
+      });
+    } else {
+      console.error(
+        "El objeto de selección de supplier es nulo o no tiene una propiedad 'id'"
+      );
+    }
   };
 
   const handleShipperSelection = async (event) => {
@@ -365,27 +454,27 @@ const ReceiptCreationForm = ({
       );
     }
   };
-
-  const handleClearShipperSelection = () => {
-    setFormData({
-      ...formData,
-      shipperId: null,
-      shipperType: null,
-      shipperInfo: "",
-    });
-  };
+  //NO se esta llamando esta funcion 
+  // const handleClearShipperSelection = () => {
+  //   setFormData({
+  //     ...formData,
+  //     shipperId: null,
+  //     shipperType: null,
+  //     shipperInfo: "",
+  //   });
+  // };
   //---------------------------------CHARGE IMG---------------------------------------------------------
-  const [showLargeImage, setShowLargeImage] = useState(false);
-  const [largeImageSrc, setLargeImageSrc] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewContent, setPreviewContent] = useState({});
 
-  const handleShowLargeImage = (src) => {
-    setLargeImageSrc(src);
-    setShowLargeImage(true);
-  };
+  // const handleShowLargeImage = (src) => {
+  //   setLargeImageSrc(src);
+  //   setShowLargeImage(true);
+  // };
 
-  const handleCloseLargeImage = () => {
-    setShowLargeImage(false);
-  };
+  // const handleCloseLargeImage = () => {
+  //   setShowLargeImage(false);
+  // };
 
   const handleDownloadAttachment = (base64Data, fileName) => {
     // Convertir la base64 a un Blob
@@ -416,43 +505,117 @@ const ReceiptCreationForm = ({
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
-
+  //---------------------------------------
   const handleFileUpload = (event) => {
-    const files = event.target.files;
+    const files = Array.from(event.target.files);
 
-    if (files && files.length > 0) {
-      const newAttachments = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+    const promises = files.map(file => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
-
         reader.onload = () => {
-          newAttachments.push({
+          resolve({
             name: file.name,
             base64: reader.result,
+            type: file.type,
           });
-
-          if (newAttachments.length === files.length) {
-            setattachments((prevAttachments) => [
-              ...prevAttachments,
-              ...newAttachments,
-            ]);
-          }
         };
-
+        reader.onerror = reject;
         reader.readAsDataURL(file);
-      }
+      });
+    });
+
+    Promise.all(promises).then(newAttachments => {
+      setAttachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+    });
+  };
+
+  const handlePreview = (attachment) => {
+    setPreviewContent(attachment);
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setPreviewContent({});
+  };
+
+  const getIcon = (type) => {
+    if (type === 'application/pdf') {
+      return faFilePdf;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return faFileWord;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return faFileExcel;
+    } else {
+      return faFile;
     }
   };
-  //------------------------------------------------------------------------------------------
 
+  const getColor = (type) => {
+    if (type === 'application/pdf') {
+      return "#ff0000";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return "#1976d2";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return "#43a047";
+    } else {
+      return "#9e9e9e";
+    }
+  };
+
+  const getPreviewUrl = (attachment) => {
+    const { base64, type } = attachment;
+    if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const fileBlob = new Blob([base64], { type });
+      const url = URL.createObjectURL(fileBlob);
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+    }
+    return null;
+  };
+
+  // const handleFileUpload = (event) => {
+  //   const files = event.target.files;
+
+  //   if (files && files.length > 0) {
+  //     const newAttachments = [];
+
+  //     for (let i = 0; i < files.length; i++) {
+  //       const file = files[i];
+  //       const reader = new FileReader();
+
+  //       reader.onload = () => {
+  //         newAttachments.push({
+  //           name: file.name,
+  //           base64: reader.result,
+  //           type: file.type,
+  //         });
+
+  //         if (newAttachments.length === files.length) {
+  //           setattachments((prevAttachments) => [
+  //             ...prevAttachments,
+  //             ...newAttachments,
+  //           ]);
+  //         }
+  //       };
+
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }
+  // };
+  // ----------------------------------------------------------------------------------------
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
       (attachment) => attachment.name !== name
     );
-    setattachments(updateAttachments);
-  };
+    setAttachments(updateAttachments);
+  }
+
+  // const handleDeleteAttachment = (name) => {
+  //   const updateAttachments = attachments.filter(
+  //     (attachment) => attachment.name !== name
+  //   );
+  //   setattachments(updateAttachments);
+  // };
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
@@ -621,7 +784,7 @@ const ReceiptCreationForm = ({
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
-      setattachments(pickupOrder.attachments);
+      setAttachments(pickupOrder.attachments);
 
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
@@ -641,6 +804,7 @@ const ReceiptCreationForm = ({
       setconsigneeRequest(pickupOrder.consignee);
       setshipper(pickupOrder.shipperObj?.data?.obj);
       setshipperRequest(pickupOrder.shipper);
+      setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
@@ -720,7 +884,7 @@ const ReceiptCreationForm = ({
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
 
-        supplier: initialSupplier,
+        /* supplier: initialSupplier,
         supplierId: initialSupplier?.id,
         supplierType: initialSupplier?.type_person,
 
@@ -728,9 +892,21 @@ const ReceiptCreationForm = ({
           initialSupplier?.city || ""
         } - ${initialSupplier?.state || ""} - ${
           initialSupplier?.country || ""
-        } - ${initialSupplier?.zip_code || ""}`,
+        } - ${initialSupplier?.zip_code || ""}`, */
+        supplier: pickupOrder.supplier,
+        supplierId: pickupOrder.supplierObj.data?.obj?.id,
+        supplierType: pickupOrder.supplierObj.data?.obj?.type_person,
+        supplierInfo: `${
+          pickupOrder.supplierObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.supplierObj?.data?.obj?.city || ""} - ${
+          pickupOrder.supplierObj?.data?.obj?.state || ""
+        } - ${pickupOrder.supplierObj?.data?.obj?.country || ""} - ${
+          pickupOrder.supplierObj?.data?.obj?.zip_code || ""
+        }`,
+
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
+        
 
         clientToBillId: CTBID,
         clientToBillType:
@@ -940,14 +1116,17 @@ const ReceiptCreationForm = ({
           pickupOrder.main_carrierObj?.zip_code || ""
         }`,
 
-        supplierId: initialSupplier.id,
-        supplier: initialSupplier.shipper,
-        supplierType: initialSupplier.type,
-        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
-          initialSupplier?.city || ""
-        } - ${initialSupplier?.state || ""} - ${
-          initialSupplier?.country || ""
-        } - ${initialSupplier?.zip_code || ""}`,
+        supplierId: pickupOrder.shipperObj.data?.obj?.id,
+        supplierType: pickupOrder.shipperObj.data?.obj?.type_person,
+        supplier: pickupOrder.shipper,
+        supplierObjId: pickupOrder.shipperObj.data?.obj?.id,
+        supplierInfo: `${
+          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.state || ""
+        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
+          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+        }`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -967,6 +1146,7 @@ const ReceiptCreationForm = ({
       setFormDataUpdated(true);
       setconsigneeRequest(pickupOrder.consignee);
       setshipperRequest(pickupOrder.shipper);
+      setsupplierRequest(pickupOrder.supplier);
     }
   }, [fromPickUp, pickupOrder]);
 
@@ -985,14 +1165,12 @@ const ReceiptCreationForm = ({
       handleDestinationAgentSelection({
         id: pickupOrder.destination_agentObj?.id,
       });
-      handleSupplierSelection({
-        id: pickupOrder.shipperObj?.data.obj?.id,
-        type: pickupOrder.shipperObj?.data?.obj?.type_person,
-      })
+      
     }
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
+
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
       setchangeStateSave(true);
@@ -1056,6 +1234,29 @@ const ReceiptCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
+    let supplierName = "";
+    if (formData.supplierType === "customer") {
+      supplierName = "customerid";
+    }
+    if (formData.supplierType === "vendor") {
+      supplierName = "vendorid";
+    }
+    if (formData.supplierType === "forwarding-agent") {
+      supplierName = "agentid";
+    }
+    if (formData.supplierType === "Carrier") {
+      supplierName = "carrierid";
+    }
+    if (supplierName !== "") {
+      const consignee = {
+        [supplierName]: formData.supplierId,
+      };
+
+      const response = await ReceiptService.createSupplier(consignee);
+      if (response.status === 201) {
+        setsupplierRequest(response.data.id);
+      }
+    }
 
     let clientToBillName = "";
     if (formData.clientToBillType === "shipper") {
@@ -1068,8 +1269,8 @@ const ReceiptCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipperId //CAMBIO
-            : formData.consigneeId, //CAMBIO
+            ? formData.shipper
+            : formData.consignee,
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1077,6 +1278,25 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
+    // if (formData.clientToBillType === "shipper") {
+    //   clientToBillName = "shipperid";
+    // }
+    // if (formData.clientToBillType === "consignee") {
+    //   clientToBillName = "consigneeid";
+    // }
+    // if (clientToBillName !== "") {
+    //   const clientToBill = {
+    //     [clientToBillName]:
+    //       clientToBillName === "shipperid"
+    //         ? formData.shipperId //CAMBIO
+    //         : formData.consigneeId, //CAMBIO
+    //   };
+
+    //   const response = await ReceiptService.createClientToBill(clientToBill);
+    //   if (response.status === 201) {
+    //     setclientToBillRequest(response.data.id);
+    //   }
+    // }
 
     if (commodities.length > 0) {
       let weight = 0;
@@ -1090,6 +1310,7 @@ const ReceiptCreationForm = ({
   const checkUpdatesComplete = () => {
     if (
       shipperRequest !== null &&
+      supplierRequest !== null &&
       consigneeRequest !== null &&
       clientToBillRequest !== null &&
       weightUpdated
@@ -1106,6 +1327,7 @@ const ReceiptCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
+        console.log("createPickUpAAA",supplierRequest);
         let rawData = {
           status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
@@ -1113,6 +1335,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
+          supplier: supplierRequest,
           /* supplier: shipperRequest, */
           shipper: shipperRequest,
           consignee: consigneeRequest,
@@ -1170,7 +1393,13 @@ const ReceiptCreationForm = ({
         };
         
         const response = await (creating
-          ? ReceiptService.createReceipt(rawData)
+          ? (async () => {
+              const result = await ReceiptService.createReceipt(rawData);
+              if (result) {
+                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+              }
+              return result;
+            })()
           : (async () => {
               const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
               const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
@@ -1183,9 +1412,10 @@ const ReceiptCreationForm = ({
                 }
               });
               
-              return result; // retornar el resultado de updateReceipt
+              return result; // Retornar el resultado de updateReceipt
             })()
         );
+        
         
 
         /* if (!creating) {
@@ -1204,7 +1434,7 @@ const ReceiptCreationForm = ({
           }  */
 
         if (response.status >= 200 && response.status <= 300) {
-          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+          //PickupService.updatePickup(pickupOrder.id, rawDatapick);
         
           
               
@@ -1212,13 +1442,13 @@ const ReceiptCreationForm = ({
           
           
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-          if (fromPickUp) {
+          /* if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
             const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
-          }
+          } */
 
           if (!fromPickUp) {
             //added onhand status
@@ -1227,6 +1457,7 @@ const ReceiptCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setChangeStateButton(false);
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
@@ -1242,6 +1473,7 @@ const ReceiptCreationForm = ({
     }
   }, [
     shipperRequest,
+    supplierRequest,
     consigneeRequest,
     allStateUpdatesComplete,
     clientToBillRequest,
@@ -1277,6 +1509,44 @@ const ReceiptCreationForm = ({
     window.location.reload();
   };
 
+  //---------------------------------------------------------------------
+  // const renderPreview = (attachment) => {
+  //   const { name, base64, type } = attachment;
+
+  //   if (type.startsWith("image/")) {
+  //     return (
+  //       <img
+  //         src={base64}
+  //         alt={name}
+  //         onClick={() => handleShowLargeImage(base64)}
+  //         style={{ width: "100px", height: "100px", objectFit: "cover" }}
+  //       />
+  //     );
+  //   } else if (type === 'application/pdf') {
+  //     return (
+  //       <embed
+  //         src={base64}
+  //         type="application/pdf"
+  //         width="100px"
+  //         height="100px"
+  //         onClick={() => handleShowLargeImage(base64)}
+  //       />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
+  //     );
+  //   } else {
+  //     return (
+  //       <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
+  //     );
+  //   }
+  // };
+  
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -1701,6 +1971,7 @@ const ReceiptCreationForm = ({
                   " Weight (lb)",
                   " Location",
                   " Volume (ft3)",
+                  " Volume-Weight (Vlb)",
                   // " Weight (lb)",
                   "Options",
                 ]}
@@ -1973,7 +2244,7 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
-
+        
         <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Attachments</h3>
@@ -1991,54 +2262,74 @@ const ReceiptCreationForm = ({
                   style={{ display: "none" }}
                 />
               </label>
-              <div className="image-container">
+              <br />
+              <br />
+              <div className="attachment-container">
                 {attachments.map((attachment) => (
-                  <div key={attachment.name} className="image-wrapper">
-                    <img
-                      src={attachment.base64}
-                      alt={attachment.name}
-                      onClick={() => handleShowLargeImage(attachment.base64)}
-                    />
-                    <div className="image-buttons">
+                  <div key={attachment.name} className="attachment-wrapper">
+                    <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                      {attachment.type.startsWith("image/") ? (
+                        <img
+                          src={attachment.base64}
+                          alt={attachment.name}
+                          style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={getIcon(attachment.type)}
+                          size="10x"
+                          style={{ color: getColor(attachment.type) }}
+                        />
+                      )}
+                    </div>
+                    <span className="attachment-name">{attachment.name}</span>
+                    <div className="delete-button-container">
                       <button
                         className="custom-button"
                         onClick={() => handleDeleteAttachment(attachment.name)}
                       >
-                        <i className="fas fa-trash"></i>
+                        <div className="delete-icon">
+                          <span>&times;</span>
+                        </div>
                       </button>
-                      {/* <button
-              className="custom-button"
-              onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
-            >
-              <i className="fas fa-download"></i>
-            </button> */}
                     </div>
                   </div>
                 ))}
-                {showLargeImage && (
-                  <div
-                    className="large-image-overlay"
-                    onClick={handleCloseLargeImage}
-                  >
-                    <div className="large-image-container">
-                      <button
-                        className="button-cancel pick "
-                        onClick={handleCloseLargeImage}
-                      >
-                        <i className="fas fa-times-circle"></i>
-                      </button>
-                      <img
-                        src={largeImageSrc}
-                        style={{ width: "60rem" }}
-                        alt="Large Image"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
+
+          {showPreview && (
+            <div className="preview-overlay" onClick={handleClosePreview}>
+              <div className="preview-container">
+                <button className="button-cancel pick" onClick={handleClosePreview}>
+                  <i className="fas fa-times-circle"></i>
+                </button>
+                {previewContent.type.startsWith("image/") && (
+                  <img src={previewContent.base64} style={{ width: "60rem" }} alt="Large Preview" />
+                )}
+                {previewContent.type === 'application/pdf' && (
+                  <iframe
+                    src={previewContent.base64}
+                    width="100%"
+                    height="500px"
+                    title="PDF Preview"
+                  />
+                )}
+                {previewContent.type !== 'application/pdf' && !previewContent.type.startsWith("image/") && (
+                  <iframe
+                    src={getPreviewUrl(previewContent)}
+                    width="100%"
+                    height="500px"
+                    title="File Preview"
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
+
+        
 
         <div className="creation creation-container">
           <div className="form-label_name">
@@ -2100,9 +2391,14 @@ const ReceiptCreationForm = ({
 
         <div className="company-form__options-container">
           <button
-            disabled={changeStateSave}
+            // disabled={changeStateSave} 
             className="button-save"
-            onClick={sendData}
+            onClick={(e)=>{
+              sendData();
+              setChangeStateButton(true);
+              
+            }}
+            disabled={changeStateSave || changeStateButton} 
           >
             Save
           </button>
