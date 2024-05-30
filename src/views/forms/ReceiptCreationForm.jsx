@@ -399,7 +399,10 @@ const ReceiptCreationForm = ({
     if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       try {
         const arrayBuffer = convertDataURIToBinary(attachment.base64);
-        const result = await mammoth.convertToHtml({ arrayBuffer });
+        const options = {
+          convertStyleToCSS: true
+        };
+        const result = await mammoth.convertToHtml({ arrayBuffer }, options);
         setfileContent({ ...attachment, htmlContent: result.value });
       } catch (error) {
         console.error("Error processing Word file:", error);
@@ -410,6 +413,7 @@ const ReceiptCreationForm = ({
     }
     setShowPreview(true);
   };
+
 
   const handleClosePreview = () => {
     setShowPreview(false);
@@ -455,32 +459,48 @@ const ReceiptCreationForm = ({
 
   const renderPreviewContent = () => {
     if (fileContent.type.startsWith("image/")) {
-      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+      return (
+        <div className="preview-image-pdf">
+          <img src={fileContent.base64} style={{ maxWidth: "80%", maxHeight: "80%" }} alt="Large Preview" />
+        </div>
+      );
     }
     if (fileContent.type === 'application/pdf') {
       return (
-        <iframe
-          src={fileContent.base64}
-          width="100%"
-          height="500px"
-          title="PDF file"
-        />
+        <div className="preview-image-pdf">
+          <iframe
+            src={fileContent.base64}
+            width="80%"
+            height="80%"
+            title="PDF file"
+            style={{ border: 'none' }}
+          />
+        </div>
       );
     }
 
-    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileContent.type === "text/csv" || fileContent.type === 'application/vnd.ms-excel') {
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
-      return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
+      return (
+        <div className="preview-docs" dangerouslySetInnerHTML={{ __html: htmlString }} />
+      );
     }
+
     if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+      return (
+        <div className="preview-word">
+          <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />
+        </div>
+      );
     }
 
     return <div>No se puede previsualizar este tipo de archivo</div>;
   };
+
+
   //------------------------------------------------------------------------------------------
 
 
@@ -2024,15 +2044,14 @@ const ReceiptCreationForm = ({
 
           {showPreview && (
             <div className="preview-overlay" onClick={handleClosePreview}>
-              <div className="preview-container">
-                <button className="button-cancel pick" onClick={handleClosePreview}>
-                  <i className="fas fa-times-circle"></i>
-                </button>
-                {renderPreviewContent()}
-              </div>
+              <button className="button-cancel pick" onClick={handleClosePreview}>
+                <i className="fas fa-times-circle"></i>
+              </button>
+              {renderPreviewContent()}
             </div>
           )}
         </div>
+
 
         <div className="creation creation-container">
           <div className="form-label_name">
