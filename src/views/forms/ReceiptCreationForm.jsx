@@ -2287,7 +2287,7 @@ const ReceiptCreationForm = ({
                     onClick={() => handleDeleteAttachment(attachment.name)}
                   >
                     <div className="delete-icon">
-                      <span>&times;</span>
+                      <p>&times;</p>
                     </div>
                   </button>
                 </div>
