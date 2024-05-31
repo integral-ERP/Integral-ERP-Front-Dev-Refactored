@@ -379,7 +379,7 @@
     left: 25rem;
     width: calc(100% - 25rem);
     transition: all 0.5s ease-in-out;
-    box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
+    // box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
     /* Definir la sombra */
   
   }
@@ -828,7 +828,11 @@
   
   .sidebar.close~.home-section {
     left: 3.5rem;
-    width: 97%
+    width: 97%;
+    // box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
+  }
+  .sombra{
+    box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5)
   }
   
   .home-section .home-content {

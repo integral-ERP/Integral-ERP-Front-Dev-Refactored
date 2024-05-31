@@ -392,7 +392,7 @@ const Receipt = () => {
   return (
     <>
       <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
+        <div className="dashboard__sidebar sombra">
           <Sidebar />
           <div
             className="content-page"
