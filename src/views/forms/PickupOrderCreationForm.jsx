@@ -226,12 +226,11 @@ const PickupOrderCreationForm = ({
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id;
     const type = event?.type || "";
-    const validTypes = ['forwarding-agent'];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported Destination Agent type: ${type}`);
-      return;
-    }
-    setagent(await ForwardingAgentService.getForwardingAgentById(id))
+    // const selectedObject = await ForwardingAgentService.getForwardingAgentById(id);
+    const sele = destinationAgentOptions.find(option => option.id === id && option.type === type);
+    const info = `${sele.street_and_number || ""} - ${sele.city || ""
+      } - ${sele.state || ""} - ${sele.country || ""} - ${sele.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       destinationAgentId: id,
@@ -1408,7 +1407,6 @@ const PickupOrderCreationForm = ({
                     />
                   </div>
                 </div>
-
                 <div
                   className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}

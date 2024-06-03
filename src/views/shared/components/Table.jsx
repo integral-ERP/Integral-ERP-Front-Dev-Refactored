@@ -200,7 +200,7 @@ const Table = ({
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
-    "Release Date": "release_date",
+    "Release Date": "creation_date",
     "Released to": "releasedToObj.data.obj.name",
     " Location": "locationCode",
     "Parent Order": "parent",
@@ -267,7 +267,8 @@ const Table = ({
   };
 
   const getStatus = (statusCode) => {
-    switch (statusCode) {
+    // switch (statusCode.toString()) {
+      switch (statusCode) {
       case "1":
         return (
           <span>
@@ -416,6 +417,16 @@ const Table = ({
           console.error("Error generating PDF:", error);
         });
     }
+  };
+  //-------------------------------------------------------------------------------------------------------
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    if (value === "receipt") {
+      generatePDFReceipt();
+    } else if (value === "label") {
+      generatePDFLabel();
+    }
+    e.target.value = ""; 
   };
   //-------------------------------------------------------------------------------------------------------
 
@@ -737,11 +748,12 @@ const Table = ({
                                       border: "0px solid white",
                                       height: "3rem",
                                     }}
-                                    onChange={(e) =>
-                                      e.target.value === "receipt"
-                                        ? generatePDFReceipt()
-                                        : generatePDFLabel()
-                                    }
+                                    onChange={handleSelectChange}
+                                    // onChange={(e) =>
+                                    //   e.target.value === "receipt"
+                                    //     ? generatePDFReceipt()
+                                    //     : generatePDFLabel()
+                                    // }
                                   >
                                     {/* <option value=""> </option> */}
                                     <option value="">Select Option</option>

@@ -4,11 +4,18 @@
   gap: 20px;
   justify-content: center;
 }
+}
 
 .container-box.event-section .box__event--form {
   width: 100%;
 }
+.container-box.event-section .box__event--form {
+  width: 100%;
+}
 
+.container-box.event-section .box__event--form > .income-charge-form {
+  width: 100% !important;
+}
 .container-box.event-section .box__event--form > .income-charge-form {
   width: 100% !important;
 }
@@ -116,10 +123,12 @@
   background: #f1f1f1;
 }
 
-.attachment-wrapper img {
-  width: 15rem;
-  height: 15rem;
+.attachment-wrapper img,
+.attachment-wrapper embed {
+  width: 100px;
+  height: 100px;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .attachment-wrapper img:hover {
@@ -135,7 +144,7 @@
 }
 
 .delete-button-container {
-  position: relative;  
+  position: relative;
   top: 5px;
   margin-bottom: 10px;
 }
@@ -167,4 +176,72 @@
   font-size: 17px;
   // margin-right: 2px;
  
+  font-size: x-large;
+}
+
+.attachment-name {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.preview-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Cambiado de center a flex-start */
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.preview-container div[dangerouslySetInnerHTML] {
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+}
+
+.preview-container img,
+.preview-container iframe {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.preview-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  overflow: auto; 
+}
+
+.preview-container table,
+.preview-container th,
+.preview-container td {
+  border: 1px solid #ddd;
+}
+
+.preview-container th,
+.preview-container td {
+  padding: 8px;
+  text-align: left;
+}
+
+.preview-container th {
+  background-color: #f2f2f2;
 }

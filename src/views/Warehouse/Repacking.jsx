@@ -170,9 +170,10 @@ const Repacking = () => {
             importLabel={false}
           />
 
-          {selectedCommodity !== null && (
-            <div className="repacking-container">
-              <div className="main-commodity">
+            {selectedCommodity !== null && (
+             
+             <div className="repacking-container">
+             {/* <div className="main-commodity">
                 <p className="item-description">
                   {selectedCommodity.description}
                 </p>
@@ -189,37 +190,41 @@ const Repacking = () => {
                   Weight(lb): {selectedCommodity.weight}
                 </p>
                 <p className="item-info">
-                  Volume (ft3): {selectedCommodity.volumetricWeight}
+                  Volumetric Weight: {selectedCommodity.volumetricWeight}
+                  Volume (ft3): {selectedCommodity.volumetricWeight} 
+                </p>
+                <p className="item-info">
+                  Chargeable Weight: {selectedCommodity.chargedWeight}
                 </p>
                 <p className="item-info">
                   Location: {selectedCommodity.locationCode}
                 </p>
-              </div>
-              {selectedCommodity.internalCommodities &&
-                selectedCommodity.internalCommodities.map((com) => (
-                  <div
-                    key={com.id}
-                    className="card"
-                    style={{
-                      display: "flex",
-                      textAlign: "left",
-                      fontSize: "12px",
-                      flexDirection: "row",
-                      margin: "0px",
-                    }}
-                  >
-                    <p className="item-description">{com.description}</p>
-                    <p className="item-info">Length (in): {com.length}</p>
-                    <p className="item-info">Width(in): {com.width}</p>
-                    <p className="item-info">Height (in): {com.height}</p>
-                    <p className="item-info">Volume (ft3): {com.volume}</p>
-                    <p className="item-info">
-                      Volume-Weight (Vlb): {com.volumetricWeight}
-                    </p>
-                  </div>
-                ))}
-            </div>
-          )}
+               <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p>
+             </div> */}
+             {/*  fix the repacking show internalCommodities for edition */}
+             {selectedCommodity.internalCommodities &&
+               selectedCommodity.internalCommodities.map((com) => (
+                <div key={com.id} className="card" style={{ display: 'flex', textAlign: 'left', fontSize: '12px', flexDirection: 'row', margin: '0px'}}>
+                   <p className="item-description">{com.description}</p>
+                   <p className="item-info">Length (in): {com.length}</p>
+                   <p className="item-info">Width(in): {com.width}</p>
+                   <p className="item-info">Height (in): {com.height}</p>
+                   <p className="item-info">Height (in): {com.height}</p>
+                   <p className="item-info">Volume (ft3): {com.volumen}</p>
+                   <p className="item-info">Volume-Weight (Vlb): {com.volumetricWeight}</p>
+                   {/* <p className="item-info">
+                     Chargeable Weight: {com.chargedWeight}
+                   </p> */}
+                   {/* <p className="item-info">
+                     Location: {com.locationCode}
+                   </p> */}
+                   {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
+                 </div>
+               ))}
+           </div>
+              
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -30,7 +30,6 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import mammoth from 'mammoth'
 
-
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -80,6 +79,7 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
+  // const [supplierInfo, setsupplierInfo] = useState("");
 
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -360,18 +360,44 @@ const ReceiptCreationForm = ({
       );
     }
   };
-
   //---------------------------------CHARGE IMG---------------------------------------------------------
+
   const [showPreview, setShowPreview] = useState(false);
+  
   const [fileContent, setfileContent] = useState({});
 
-  const handleDeleteAttachment = (name) => {
-    const updateAttachments = attachments.filter(
-      (attachment) => attachment.name !== name
-    );
-    setAttachments(updateAttachments);
-  };
+  // const pdfPlugin = defaultLayoutPlugin();
 
+  const handleDownloadAttachment = (base64Data, fileName) => {
+    // Convertir la base64 a un Blob
+    const byteCharacters = atob(base64Data.split(",")[1]);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: "image/jpeg" });
+
+    // Crear un enlace temporal y descargar el Blob
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+  //---------------------------------------
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
 
@@ -440,6 +466,15 @@ const ReceiptCreationForm = ({
     }
   };
 
+
+  // ----------------------------------------------------------------------------------------
+  const handleDeleteAttachment = (name) => {
+    const updateAttachments = attachments.filter(
+      (attachment) => attachment.name !== name
+    );
+    setAttachments(updateAttachments);
+  }
+
   const convertDataURIToBinary = (dataURI) => {
     const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
     const base64 = dataURI.substring(base64Index);
@@ -481,8 +516,6 @@ const ReceiptCreationForm = ({
 
     return <div>No se puede previsualizar este tipo de archivo</div>;
   };
-  //------------------------------------------------------------------------------------------
-
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
@@ -1281,6 +1314,44 @@ const ReceiptCreationForm = ({
     window.location.reload();
   };
 
+  //---------------------------------------------------------------------
+  // const renderPreview = (attachment) => {
+  //   const { name, base64, type } = attachment;
+
+  //   if (type.startsWith("image/")) {
+  //     return (
+  //       <img
+  //         src={base64}
+  //         alt={name}
+  //         onClick={() => handleShowLargeImage(base64)}
+  //         style={{ width: "100px", height: "100px", objectFit: "cover" }}
+  //       />
+  //     );
+  //   } else if (type === 'application/pdf') {
+  //     return (
+  //       <embed
+  //         src={base64}
+  //         type="application/pdf"
+  //         width="100px"
+  //         height="100px"
+  //         onClick={() => handleShowLargeImage(base64)}
+  //       />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
+  //     );
+  //   } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
+  //     return (
+  //       <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
+  //     );
+  //   } else {
+  //     return (
+  //       <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
+  //     );
+  //   }
+  // };
+  
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -1967,27 +2038,27 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
-
-        <div className="Attachments-container">
-      <div className="">
-        <h3>Attachments</h3>
-        <span></span>
-      </div>
-      <div className="row">
-        <div className="col-12">
-          <label htmlFor="fileInput" className="custom-file-input">
-            <span className="button-text">Seleccionar archivos</span>
-            <input
-              type="file"
-              id="fileInput"
-              multiple
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
-          </label>
-          <br />
-          <br />
-          <div className="attachment-container">
+        
+        <div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Attachments</h3>
+            <span></span>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <label htmlFor="fileInput" className="custom-file-input">
+                <span className="button-text">Seleccionar archivos</span>
+                <input
+                  type="file"
+                  id="fileInput"
+                  multiple
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+              </label>
+              <br />
+              <br />
+              <div className="attachment-container">
             {attachments.map((attachment) => (
               <div key={attachment.name} className="attachment-wrapper">
                 <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
@@ -2012,7 +2083,7 @@ const ReceiptCreationForm = ({
                     onClick={() => handleDeleteAttachment(attachment.name)}
                   >
                     <div className="delete-icon">
-                      <span>&times;</span>
+                      <p>&times;</p>
                     </div>
                   </button>
                 </div>
@@ -2034,6 +2105,9 @@ const ReceiptCreationForm = ({
       )}
     </div>
 
+
+        
+
         <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Notes</h3>
@@ -2052,43 +2126,7 @@ const ReceiptCreationForm = ({
                   setFormData({ ...formData, notes: e.target.value })
                 }
               />
-              {/* <input
-              name="notes"
-              type="text"
-              className="form-input"
-              placeholder="Notes..."
-              onChange={(e) => setNote(e.target.value)}
-              style={{ width: "99%" }}
-            /> */}
             </div>
-
-            {/* <div className="col">
-            <button
-              type="button"
-              onClick={addNotes}
-              style={{
-                backgroundColor: "#006BAD",
-                color: "white",
-                fontSize: "15px",
-                width: "90%",
-                borderRadius: "5px",
-              }}
-            >
-              Add
-            </button>
-          </div> */}
-            {/* <div className="row">
-            <div className="col-10 text-start">
-              <Input
-                name="notes"
-                className="form-input w-100"
-                placeholder="PRO Number..."
-                value={formData.notes?.toString()}
-                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
-                // readOnly
-              />
-            </div> 
-          </div>*/}
           </div>
         </div>
 
@@ -2105,18 +2143,6 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
-        {/* {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Warehouse Receipt {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
-      )} */}
         {showSuccessAlert && (
           <Alert
             severity="success"
