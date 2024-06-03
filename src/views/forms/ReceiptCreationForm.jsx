@@ -24,7 +24,13 @@ import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faFilePdf, faFileWord, faFileExcel } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import * as XLSX from 'xlsx';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import mammoth from 'mammoth'
+
+
 const ReceiptCreationForm = ({
   pickupOrder,
   closeModal,
@@ -36,13 +42,10 @@ const ReceiptCreationForm = ({
   fromReceipt,
   showBModal,
 }) => {
-  console.log("pickupOrder", pickupOrder);
-  console.log('creating', creating);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formDataUpdated, setFormDataUpdated] = useState(false);
-  console.log("formdataupdated", formDataUpdated);
   //added warning alert for commodities
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -57,7 +60,6 @@ const ReceiptCreationForm = ({
   const [shipper, setshipper] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [shipperRequest, setshipperRequest] = useState(null);
-  const [supplierRequest, setsupplierRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
@@ -65,7 +67,7 @@ const ReceiptCreationForm = ({
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
-  const [attachments, setattachments] = useState([]);
+  const [attachments, setAttachments] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [issuedByOptions, setIssuedByOptions] = useState([]);
   const [destinationAgentOptions, setDestinationAgentOptions] = useState([]);
@@ -78,7 +80,6 @@ const ReceiptCreationForm = ({
   const today = dayjs().format("YYYY-MM-DD");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
-  const [supplierInfo, setsupplierInfo] = useState("");
 
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
@@ -86,7 +87,6 @@ const ReceiptCreationForm = ({
   const [selectedCommodity, setselectedCommodity] = useState(null);
   //-------------------------------------------------------
   const [SelectEvent, setSelectEvent] = useState(null);
-  const [changeStateButton, setChangeStateButton] = useState(false);
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
@@ -96,8 +96,6 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
-
-
 
   useEffect(() => {
     fetchFormData()
@@ -112,8 +110,7 @@ const ReceiptCreationForm = ({
         setDestinationAgentOptions([...forwardingAgents])
         setEmployeeOptions([...employees]);
         setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-        // setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
-        setSupplierOptions([...customers, ...vendors])
+        setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
         setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
         setCarrierOptions([...carriers])
       })
@@ -188,11 +185,9 @@ const ReceiptCreationForm = ({
     const id = event.id;
     const type = event.type;
     const result = await ForwardingAgentService.getForwardingAgentById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -214,7 +209,6 @@ const ReceiptCreationForm = ({
   //------------------------------------------------
   const handleSelectEvent = (events) => {
     setSelectEvent(events);
-    console.log("selected events ", events);
   };
 
   const handleDeleteEvent = () => {
@@ -260,8 +254,8 @@ const ReceiptCreationForm = ({
       type === "shipper"
         ? formData.shipperId
         : type === "consignee"
-        ? formData.consigneeId
-        : "";
+          ? formData.consigneeId
+          : "";
     setFormData({
       ...formData,
       clientToBillId: id,
@@ -285,11 +279,9 @@ const ReceiptCreationForm = ({
       return;
     }
 
-    const info = `${selectedConsignee.street_and_number || ""} - ${
-      selectedConsignee.city || ""
-    } - ${selectedConsignee.state || ""} - ${
-      selectedConsignee.country || ""
-    } - ${selectedConsignee.zip_code || ""}`;
+    const info = `${selectedConsignee.street_and_number || ""} - ${selectedConsignee.city || ""
+      } - ${selectedConsignee.state || ""} - ${selectedConsignee.country || ""
+      } - ${selectedConsignee.zip_code || ""}`;
     setconsignee(selectedConsignee);
     setdefaultValueConsignee(selectedConsignee);
     setFormData({
@@ -300,7 +292,7 @@ const ReceiptCreationForm = ({
     });
   };
 
- /*  const handleSupplierSelection = async (event) => {
+  const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
     // const type = event.type || formData.supplierType;
     const type = event?.type || "";
@@ -322,58 +314,9 @@ const ReceiptCreationForm = ({
       return;
     }
 
-    const info = `${selectedSupplier?.street_and_number || ""} - ${
-      selectedSupplier?.city || ""
-    } - ${selectedSupplier?.state || ""} - ${
-      selectedSupplier?.country || ""
-    } - ${selectedSupplier?.zip_code || ""}`;
-
-    setSupplier(selectedSupplier);
-
-    setFormData({
-      ...formData,
-      supplierId: id,
-      supplierType: type,
-      supplierInfo: info,
-    });
-  }; */
- /*  const handleSupplierSelection = async (event) => {
-    const id = event.id || "";
-    // const type = event.type || formData.supplierType;
-    const type = event?.type || "";
-    const selectedSupplier = supplierOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    
-
-    
-    if (supplierOptions) {
-      console.log("supplierOptions =", supplierOptions);
-      console.log("selectedSupplier =", selectedSupplier);
-      const info = `${selectedSupplier?.street_and_number || ""} - ${
-        selectedSupplier?.city || "" 
-      } - ${selectedSupplier?.state || ""} - ${
-        selectedSupplier?.country || ""
+    const info = `${selectedSupplier?.street_and_number || ""} - ${selectedSupplier?.city || ""
+      } - ${selectedSupplier?.state || ""} - ${selectedSupplier?.country || ""
       } - ${selectedSupplier?.zip_code || ""}`;
-      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        supplierId: selectedSupplier.id,
-        supplierType: selectedSupplier.type,
-        supplierInfo: info,
-      }));
-    }
-
-    if (!selectedSupplier) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-
-    const info = `${selectedSupplier?.street_and_number || ""} - ${
-      selectedSupplier?.city || ""
-    } - ${selectedSupplier?.state || ""} - ${
-      selectedSupplier?.country || ""
-    } - ${selectedSupplier?.zip_code || ""}`;
 
     setSupplier(selectedSupplier);
 
@@ -383,40 +326,6 @@ const ReceiptCreationForm = ({
       supplierType: type,
       supplierInfo: info,
     });
-  }; */
-  const handleSupplierSelection = async (event) => {
-    if (event && event.id) {
-      const id = event.id || formData.supplierId;
-      const type = event.type || formData.supplierType;
-
-      let result;
-      if (type === "forwarding-agent") {
-        result = await ForwardingAgentService.getForwardingAgentById(id);
-      } else if (type === "customer") {
-        result = await CustomerService.getCustomerById(id);
-      } else if (type === "vendor") {
-        result = await VendorService.getVendorByID(id);
-      }
-
-      const info = result?.data
-        ? `${result.data.street_and_number || ""} - ${
-            result.data.city || ""
-          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-            result.data.zip_code || ""
-          }`
-        : formData.supplierInfo;
-      setSupplier(result?.data || supplier);
-      setFormData({
-        ...formData,
-        supplierId: id,
-        supplierType: type,
-        supplierInfo: info,
-      });
-    } else {
-      console.error(
-        "El objeto de selección de supplier es nulo o no tiene una propiedad 'id'"
-      );
-    }
   };
 
   const handleShipperSelection = async (event) => {
@@ -434,11 +343,9 @@ const ReceiptCreationForm = ({
       }
 
       const info = result?.data
-        ? `${result.data.street_and_number || ""} - ${
-            result.data.city || ""
-          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-            result.data.zip_code || ""
-          }`
+        ? `${result.data.street_and_number || ""} - ${result.data.city || ""
+        } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+        }`
         : formData.shipperInfo;
       setshipper(result?.data || shipper);
       setFormData({
@@ -454,103 +361,135 @@ const ReceiptCreationForm = ({
     }
   };
 
-  const handleClearShipperSelection = () => {
-    setFormData({
-      ...formData,
-      shipperId: null,
-      shipperType: null,
-      shipperInfo: "",
-    });
-  };
   //---------------------------------CHARGE IMG---------------------------------------------------------
-  const [showLargeImage, setShowLargeImage] = useState(false);
-  const [largeImageSrc, setLargeImageSrc] = useState("");
-
-  const handleShowLargeImage = (src) => {
-    setLargeImageSrc(src);
-    setShowLargeImage(true);
-  };
-
-  const handleCloseLargeImage = () => {
-    setShowLargeImage(false);
-  };
-
-  const handleDownloadAttachment = (base64Data, fileName) => {
-    // Convertir la base64 a un Blob
-    const byteCharacters = atob(base64Data.split(",")[1]);
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays, { type: "image/jpeg" });
-
-    // Crear un enlace temporal y descargar el Blob
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  };
-
-  const handleFileUpload = (event) => {
-    const files = event.target.files;
-
-    if (files && files.length > 0) {
-      const newAttachments = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          newAttachments.push({
-            name: file.name,
-            base64: reader.result,
-            type: file.type,
-          });
-
-          if (newAttachments.length === files.length) {
-            setattachments((prevAttachments) => [
-              ...prevAttachments,
-              ...newAttachments,
-            ]);
-          }
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }
-  };
-  // ----------------------------------------------------------------------------------------
+  const [showPreview, setShowPreview] = useState(false);
+  const [fileContent, setfileContent] = useState({});
 
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
       (attachment) => attachment.name !== name
     );
-    setattachments(updateAttachments);
+    setAttachments(updateAttachments);
   };
+
+  const handleFileUpload = (event) => {
+    const files = Array.from(event.target.files);
+
+    const promises = files.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({
+            name: file.name,
+            base64: reader.result,
+            type: file.type,
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(promises).then(newAttachments => {
+      setAttachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+    });
+  };
+
+  const handlePreview = async (attachment) => {
+    if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      try {
+        const arrayBuffer = convertDataURIToBinary(attachment.base64);
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        setfileContent({ ...attachment, htmlContent: result.value });
+      } catch (error) {
+        console.error("Error processing Word file:", error);
+        alert("Error processing Word file. Please try again.");
+      }
+    } else {
+      setfileContent(attachment);
+    }
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setfileContent({});
+  };
+
+  const getIcon = (type) => {
+    if (type === 'application/pdf') {
+      return faFilePdf;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return faFileWord;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return faFileExcel;
+    } else {
+      return faFile;
+    }
+  };
+
+  const getColor = (type) => {
+    if (type === 'application/pdf') {
+      return "#ff0000";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return "#1976d2";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return "#43a047";
+    } else {
+      return "#9e9e9e";
+    }
+  };
+
+  const convertDataURIToBinary = (dataURI) => {
+    const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
+    const base64 = dataURI.substring(base64Index);
+    const raw = atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    return array.buffer;
+  };
+
+  const renderPreviewContent = () => {
+    if (fileContent.type.startsWith("image/")) {
+      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+    }
+    if (fileContent.type === 'application/pdf') {
+      return (
+        <iframe
+          src={fileContent.base64}
+          width="100%"
+          height="500px"
+          title="PDF file"
+        />
+      );
+    }
+
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
+      return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
+    }
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+    }
+
+    return <div>No se puede previsualizar este tipo de archivo</div>;
+  };
+  //------------------------------------------------------------------------------------------
+
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
     const result = await CarrierService.getCarrierById(id);
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
+    const info = `${result.data.street_and_number || ""} - ${result.data.city || ""
+      } - ${result.data.state || ""} - ${result.data.country || ""} - ${result.data.zip_code || ""
+      }`;
     setFormData({
       ...formData,
       mainCarrierdId: id,
@@ -560,7 +499,6 @@ const ReceiptCreationForm = ({
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
-    console.log("selected commodity ", commodity);
   };
 
   const handleCommodityDelete = async () => {
@@ -684,6 +622,23 @@ const ReceiptCreationForm = ({
     setdefaultValueShipper(option.data);
   };
 
+  const loadSupplierOption = async (id, type) => {
+    let option = null;
+    if (type === "customer") {
+      option = await CustomerService.getCustomerById(id);
+    }
+    if (type === "vendor") {
+      option = await VendorService.getVendorByID(id);
+    }
+    if (type === "forwarding-agent") {
+      option = await ForwardingAgentService.getForwardingAgentById(id);
+    }
+    if (type === "Carrier") {
+      option = await CarrierService.getCarrierById(id);
+    }
+    setDefaultValueSupplier(option?.data);
+  };
+
   const loadConsigneeOption = async (id, type) => {
     let option = null;
     if (type === "customer") {
@@ -710,7 +665,7 @@ const ReceiptCreationForm = ({
       setcommodities(pickupOrder.commodities);
       setcharges(pickupOrder.charges);
       setEvents(pickupOrder.events);
-      setattachments(pickupOrder.attachments);
+      setAttachments(pickupOrder.attachments);
 
       loadShipperOption(
         pickupOrder.shipperObj?.data?.obj?.id,
@@ -718,10 +673,10 @@ const ReceiptCreationForm = ({
           ? pickupOrder.shipperObj?.data?.obj?.type_person
           : "forwarding-agent"
       );
-      loadConsigneeOption(
-        pickupOrder.consigneeObj?.data?.obj?.id,
-        pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
-          ? pickupOrder.consigneeObj?.data?.obj?.type_person
+      loadSupplierOption(
+        pickupOrder.shipperObj?.data?.obj?.id,
+        pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
+          ? pickupOrder.shipperObj?.data?.obj?.type_person
           : "forwarding-agent"
       );
       setshowExpenseForm(true);
@@ -730,7 +685,6 @@ const ReceiptCreationForm = ({
       setconsigneeRequest(pickupOrder.consignee);
       setshipper(pickupOrder.shipperObj?.data?.obj);
       setshipperRequest(pickupOrder.shipper);
-      setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
@@ -753,101 +707,68 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
         shipper: pickupOrder.shipper,
         shipperId: pickupOrder.shipperObj.data?.obj?.id, //pickupOrder.shipper
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consignee: pickupOrder.consignee,
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
-        /* supplier: initialSupplier,
+        supplier: initialSupplier,
         supplierId: initialSupplier?.id,
         supplierType: initialSupplier?.type_person,
 
-        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
-          initialSupplier?.city || ""
-        } - ${initialSupplier?.state || ""} - ${
-          initialSupplier?.country || ""
-        } - ${initialSupplier?.zip_code || ""}`, */
-        supplier: pickupOrder.supplier,
-        supplierId: pickupOrder.supplierObj.data?.obj?.id,
-        supplierType: pickupOrder.supplierObj.data?.obj?.type_person,
-        supplierInfo: `${
-          pickupOrder.supplierObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.supplierObj?.data?.obj?.city || ""} - ${
-          pickupOrder.supplierObj?.data?.obj?.state || ""
-        } - ${pickupOrder.supplierObj?.data?.obj?.country || ""} - ${
-          pickupOrder.supplierObj?.data?.obj?.zip_code || ""
-        }`,
-
+        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${initialSupplier?.city || ""
+          } - ${initialSupplier?.state || ""} - ${initialSupplier?.country || ""
+          } - ${initialSupplier?.zip_code || ""}`,
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        
 
         clientToBillId: CTBID,
         clientToBillType:
           CTBID === pickupOrder.shipperObj.data?.obj?.id
             ? "shipper"
             : CTBID === pickupOrder.consigneeObj.data?.obj?.id
-            ? "consignee"
-            : "",
+              ? "consignee"
+              : "",
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
       };
-
-      console.log("updatedFormData", updatedFormData);
 
       setFormData(updatedFormData);
       setcanRender(true);
@@ -982,11 +903,9 @@ const ReceiptCreationForm = ({
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_by?.type,
-        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${
-          pickupOrder.issuedBy?.city || ""
-        } - ${pickupOrder.issuedBy?.state || ""} - ${
-          pickupOrder.issuedBy?.country || ""
-        } - ${pickupOrder.issued_by?.zip_code || ""}`,
+        issuedByInfo: `${pickupOrder.issued_by?.street_and_number || ""} - ${pickupOrder.issuedBy?.city || ""
+          } - ${pickupOrder.issuedBy?.state || ""} - ${pickupOrder.issuedBy?.country || ""
+          } - ${pickupOrder.issued_by?.zip_code || ""}`,
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
 
@@ -994,65 +913,45 @@ const ReceiptCreationForm = ({
         shipperType: pickupOrder.shipperObj.data?.obj?.type_person,
         shipper: pickupOrder.shipper,
         shipperObjId: pickupOrder.shipperObj.data?.obj?.id,
-        shipperInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        shipperInfo: `${pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${pickupOrder.shipperObj?.data?.obj?.state || ""
+          } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${pickupOrder.shipperObj?.data?.obj?.zip_code || ""
+          }`,
         pickupLocationId: pickupOrder.pick_up_location,
 
-        pickupLocationInfo: `${
-          pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.state || ""
-        } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${
-          pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
-        }`,
+        pickupLocationInfo: `${pickupOrder.pick_up_location?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.city || ""} - ${pickupOrder.pick_up_location?.data?.obj?.state || ""
+          } - ${pickupOrder.pick_up_location?.data?.obj?.country || ""} - ${pickupOrder.pick_up_location?.data?.obj?.zip_code || ""
+          }`,
 
         consigneeId: pickupOrder.consigneeObj.data?.obj?.id,
         consignee: pickupOrder.consignee,
         consigneeType: pickupOrder.consigneeObj.data?.obj?.type_person,
         consigneeObjId: pickupOrder.consigneeObj.data?.obj?.id,
-        consigneeInfo: `${
-          pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        consigneeInfo: `${pickupOrder.consigneeObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.city || ""} - ${pickupOrder.consigneeObj?.data?.obj?.state || ""
+          } - ${pickupOrder.consigneeObj?.data?.obj?.country || ""} - ${pickupOrder.consigneeObj?.data?.obj?.zip_code || ""
+          }`,
         deliveryLocationId: pickupOrder.delivery_location,
-        deliveryLocationInfo: `${
-          pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
-        } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${
-          pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
-        }`,
+        deliveryLocationInfo: `${pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.state || ""
+          } - ${pickupOrder.deliveryLocationObj?.data?.obj?.country || ""} - ${pickupOrder.deliveryLocationObj?.data?.obj?.zip_code || ""
+          }`,
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
         mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
-        }`,
+        mainCarrierInfo: `${pickupOrder.main_carrierObj?.street_and_number || ""
+          } - ${pickupOrder.main_carrierObj?.city || ""} - ${pickupOrder.main_carrierObj?.state || ""
+          } - ${pickupOrder.main_carrierObj?.country || ""} - ${pickupOrder.main_carrierObj?.zip_code || ""
+          }`,
 
-        supplierId: pickupOrder.shipperObj.data?.obj?.id,
-        supplierType: pickupOrder.shipperObj.data?.obj?.type_person,
-        supplier: pickupOrder.shipper,
-        supplierObjId: pickupOrder.shipperObj.data?.obj?.id,
-        supplierInfo: `${
-          pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.state || ""
-        } - ${pickupOrder.shipperObj?.data?.obj?.country || ""} - ${
-          pickupOrder.shipperObj?.data?.obj?.zip_code || ""
-        }`,
+        supplierId: initialSupplier.id,
+        supplier: initialSupplier.shipper,
+        supplierType: initialSupplier.type,
+        supplierInfo: `${initialSupplier?.street_and_number || ""} - ${initialSupplier?.city || ""
+          } - ${initialSupplier?.state || ""} - ${initialSupplier?.country || ""
+          } - ${initialSupplier?.zip_code || ""}`,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -1062,8 +961,8 @@ const ReceiptCreationForm = ({
           CTBID === pickupOrder.consigneeObj.data?.obj?.id
             ? "consignee"
             : CTBID === pickupOrder.shipperObj.data?.obj?.id
-            ? "shipper"
-            : "",
+              ? "shipper"
+              : "",
 
         commodities: pickupOrder.commodities,
         // notes: [],
@@ -1072,11 +971,10 @@ const ReceiptCreationForm = ({
       setFormDataUpdated(true);
       setconsigneeRequest(pickupOrder.consignee);
       setshipperRequest(pickupOrder.shipper);
-      setsupplierRequest(pickupOrder.supplier);
     }
   }, [fromPickUp, pickupOrder]);
 
-  
+
 
   useEffect(() => {
     if (formDataUpdated) {
@@ -1091,12 +989,14 @@ const ReceiptCreationForm = ({
       handleDestinationAgentSelection({
         id: pickupOrder.destination_agentObj?.id,
       });
-      
+      handleSupplierSelection({
+        id: pickupOrder.shipperObj?.data.obj?.id,
+        type: pickupOrder.shipperObj?.data?.obj?.type_person,
+      })
     }
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
-
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
       setchangeStateSave(true);
@@ -1104,7 +1004,7 @@ const ReceiptCreationForm = ({
       setShowWarningAlert(true);
       return;
     }
-    
+
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -1160,29 +1060,6 @@ const ReceiptCreationForm = ({
         setshipperRequest(response.data.id);
       }
     }
-    let supplierName = "";
-    if (formData.supplierType === "customer") {
-      supplierName = "customerid";
-    }
-    if (formData.supplierType === "vendor") {
-      supplierName = "vendorid";
-    }
-    if (formData.supplierType === "forwarding-agent") {
-      supplierName = "agentid";
-    }
-    if (formData.supplierType === "Carrier") {
-      supplierName = "carrierid";
-    }
-    if (supplierName !== "") {
-      const consignee = {
-        [supplierName]: formData.supplierId,
-      };
-
-      const response = await ReceiptService.createSupplier(consignee);
-      if (response.status === 201) {
-        setsupplierRequest(response.data.id);
-      }
-    }
 
     let clientToBillName = "";
     if (formData.clientToBillType === "shipper") {
@@ -1195,8 +1072,8 @@ const ReceiptCreationForm = ({
       const clientToBill = {
         [clientToBillName]:
           clientToBillName === "shipperid"
-            ? formData.shipper
-            : formData.consignee,
+            ? formData.shipperId //CAMBIO
+            : formData.consigneeId, //CAMBIO
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1204,25 +1081,6 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
-    // if (formData.clientToBillType === "shipper") {
-    //   clientToBillName = "shipperid";
-    // }
-    // if (formData.clientToBillType === "consignee") {
-    //   clientToBillName = "consigneeid";
-    // }
-    // if (clientToBillName !== "") {
-    //   const clientToBill = {
-    //     [clientToBillName]:
-    //       clientToBillName === "shipperid"
-    //         ? formData.shipperId //CAMBIO
-    //         : formData.consigneeId, //CAMBIO
-    //   };
-
-    //   const response = await ReceiptService.createClientToBill(clientToBill);
-    //   if (response.status === 201) {
-    //     setclientToBillRequest(response.data.id);
-    //   }
-    // }
 
     if (commodities.length > 0) {
       let weight = 0;
@@ -1236,7 +1094,6 @@ const ReceiptCreationForm = ({
   const checkUpdatesComplete = () => {
     if (
       shipperRequest !== null &&
-      supplierRequest !== null &&
       consigneeRequest !== null &&
       clientToBillRequest !== null &&
       weightUpdated
@@ -1253,7 +1110,6 @@ const ReceiptCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
-        console.log("createPickUpAAA",supplierRequest);
         let rawData = {
           status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
@@ -1261,8 +1117,7 @@ const ReceiptCreationForm = ({
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-          supplier: supplierRequest,
-          /* supplier: shipperRequest, */
+          supplier: formData.supplierId,
           shipper: shipperRequest,
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
@@ -1314,35 +1169,28 @@ const ReceiptCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-         /*  supplier: formData.shipperId, */
+          supplier: formData.supplierId,
           weight: weightUpdated,
         };
-        
+
         const response = await (creating
-          ? (async () => {
-              const result = await ReceiptService.createReceipt(rawData);
-              if (result) {
-                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
-              }
-              return result;
-            })()
+          ? ReceiptService.createReceipt(rawData)
           : (async () => {
-              const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
-              const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
-              const buscarpickup = (await callPickupOrders(null)).data.results;
-              const numeroRecibo = buscarrecipt.data.number;
-              
-              buscarpickup.forEach(pickup => {
-                if (pickup.number === numeroRecibo) {
-                  PickupService.updatePickup(pickup.id, rawDatapick);
-                }
-              });
-              
-              return result; // Retornar el resultado de updateReceipt
-            })()
+            const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
+            const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+            const buscarpickup = (await callPickupOrders(null)).data.results;
+            const numeroRecibo = buscarrecipt.data.number;
+
+            buscarpickup.forEach(pickup => {
+              if (pickup.number === numeroRecibo) {
+                PickupService.updatePickup(pickup.id, rawDatapick);
+              }
+            });
+
+            return result; // retornar el resultado de updateReceipt
+          })()
         );
-        
-        
+
 
         /* if (!creating) {
             const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
@@ -1360,21 +1208,21 @@ const ReceiptCreationForm = ({
           }  */
 
         if (response.status >= 200 && response.status <= 300) {
+          PickupService.updatePickup(pickupOrder.id, rawDatapick);
+
+
+
+
+
+
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-        
-          
-              
-          
-          
-          
-          //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-          /* if (fromPickUp) {
+          if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
             //added onhand status
             const statusOnhand = 4;
             const newPickup = { ...pickupOrder, status: statusOnhand };
             PickupService.updatePickup(pickupOrder.id, newPickup);
-          } */
+          }
 
           if (!fromPickUp) {
             //added onhand status
@@ -1383,7 +1231,6 @@ const ReceiptCreationForm = ({
           setcurrentPickUpNumber(currentPickUpNumber + 1);
           setShowSuccessAlert(true);
           setTimeout(() => {
-            setChangeStateButton(false);
             closeModal();
             onpickupOrderDataChange();
             setShowSuccessAlert(false);
@@ -1399,7 +1246,6 @@ const ReceiptCreationForm = ({
     }
   }, [
     shipperRequest,
-    supplierRequest,
     consigneeRequest,
     allStateUpdatesComplete,
     clientToBillRequest,
@@ -1413,8 +1259,8 @@ const ReceiptCreationForm = ({
       throw error;
     }
   };
-  
-  
+
+
 
   /* useEffect(() => {
     console.log(formData)
@@ -1435,44 +1281,6 @@ const ReceiptCreationForm = ({
     window.location.reload();
   };
 
-  //---------------------------------------------------------------------
-  const renderPreview = (attachment) => {
-    const { name, base64, type } = attachment;
-
-    if (type.startsWith("image/")) {
-      return (
-        <img
-          src={base64}
-          alt={name}
-          onClick={() => handleShowLargeImage(base64)}
-          style={{ width: "100px", height: "100px", objectFit: "cover" }}
-        />
-      );
-    } else if (type === 'application/pdf') {
-      return (
-        <embed
-          src={base64}
-          type="application/pdf"
-          width="100px"
-          height="100px"
-          onClick={() => handleShowLargeImage(base64)}
-        />
-      );
-    } else if (['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(type)) {
-      return (
-        <FontAwesomeIcon icon={faFileWord} size="10x" style={{ color: "#1976d2" }} />
-      );
-    } else if (['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(type)) {
-      return (
-        <FontAwesomeIcon icon={faFileExcel} size="10x" style={{ color: "#43a047" }} />
-      );
-    } else {
-      return (
-        <FontAwesomeIcon icon={faFile} size="10x" style={{ color: "#9e9e9e" }} />
-      );
-    }
-  };
-  
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -1507,7 +1315,6 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleEmployeeSelection(e);
                     }}
-                    isClearable={true}
                     defaultOptions={employeeOptions}
                     loadOptions={loadEmployeeSelectOptions}
                     getOptionLabel={(option) => option.name}
@@ -1532,7 +1339,6 @@ const ReceiptCreationForm = ({
                         value={destinationAgentOptions.find(
                           (option) => option.id === formData.destinationAgentId
                         )}
-                        isClearable={true}
                         defaultOptions={destinationAgentOptions}
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
@@ -1548,7 +1354,6 @@ const ReceiptCreationForm = ({
                       value={destinationAgentOptions.find(
                         (option) => option.id === formData.destinationAgentId
                       )}
-                      isClearable={true}
                       defaultOptions={destinationAgentOptions}
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
@@ -1575,9 +1380,9 @@ const ReceiptCreationForm = ({
                     />
                   </LocalizationProvider>
                 </div>
-                </div>
+              </div>
 
-                <div className="row mb-3">
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedBy" className="form-label">
                     Issued By:
@@ -1608,8 +1413,8 @@ const ReceiptCreationForm = ({
                     label="Entry Number"
                   />
                 </div>
-                </div>
-            
+              </div>
+
             </div>
           </div>
 
@@ -1627,7 +1432,7 @@ const ReceiptCreationForm = ({
                   <AsyncSelect
                     id="shipper"
                     value={shipperOptions.find(
-                      (option) => 
+                      (option) =>
                         option.id === formData.shipperId &&
                         option.type_person === formData.shipperType
                     )}
@@ -1644,21 +1449,20 @@ const ReceiptCreationForm = ({
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
                   </label>
-                    <AsyncSelect
-                      id="consignee"
-                      value={consigneeOptions.find(
-                        (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type_person === formData.consigneeType
-                      )}
-                      onChange={(e) => handleConsigneeSelection(e)}
-                      isClearable={true}
-                      placeholder="Search and select..."
-                      defaultOptions={consigneeOptions}
-                      loadOptions={loadConsigneeSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
+                  <AsyncSelect
+                    id="consignee"
+                    value={consigneeOptions.find(
+                      (option) =>
+                        option.id === formData.consigneeId &&
+                        option.type_person === formData.consigneeType
+                    )}
+                    onChange={(e) => handleConsigneeSelection(e)}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
                 </div>
               </div>
 
@@ -1724,7 +1528,7 @@ const ReceiptCreationForm = ({
                   <AsyncSelect
                     id="supplier"
                     value={supplierOptions.find(
-                      (option) => 
+                      (option) =>
                         option.id === formData.supplierId &&
                         option.type_person === formData.supplierType
                     )}
@@ -1741,15 +1545,10 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleSupplierSelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={supplierOptions}
-                    loadOptions={loadShipperSelectOptions}
-                    value={supplierOptions.find(
-                      (option) => 
-                      option.id === formData.supplierId &&
-                      option.type_person === formData.supplierType
-                    )}
+                    loadOptions={loadSupplierOption}
+                    value={defaultValueSupplier}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   /> */}
@@ -1821,7 +1620,6 @@ const ReceiptCreationForm = ({
                     onChange={(e) => {
                       handleMainCarrierSelection(e);
                     }}
-                    isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
@@ -1897,7 +1695,6 @@ const ReceiptCreationForm = ({
                   " Weight (lb)",
                   " Location",
                   " Volume (ft3)",
-                  " Volume-Weight (Vlb)",
                   // " Weight (lb)",
                   "Options",
                 ]}
@@ -1908,11 +1705,11 @@ const ReceiptCreationForm = ({
                 onInspect={() => {
                   setshowCommodityInspect(!showCommodityInspect);
                 }}
-                onAdd={() => {}}
+                onAdd={() => { }}
                 showOptions={false}
                 //added no double click
                 Nodoubleclick={true}
-                /* deleted variable hiden button trash */
+              /* deleted variable hiden button trash */
               />
               {/* added view commodities */}
               {showCommodityInspect && (
@@ -2044,11 +1841,11 @@ const ReceiptCreationForm = ({
                     "Price",
                     "Currency",
                   ]}
-                  onSelect={() => {}} // Make sure this line is correct
+                  onSelect={() => { }} // Make sure this line is correct
                   selectedRow={{}}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
-                  onAdd={() => {}}
+                  onDelete={() => { }}
+                  onEdit={() => { }}
+                  onAdd={() => { }}
                   showOptions={false}
                 />
               )}
@@ -2099,11 +1896,11 @@ const ReceiptCreationForm = ({
                     "Price",
                     "Currency",
                   ]}
-                  onSelect={() => {}} // Make sure this line is correct
+                  onSelect={() => { }} // Make sure this line is correct
                   selectedRow={{}}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
-                  onAdd={() => {}}
+                  onDelete={() => { }}
+                  onEdit={() => { }}
+                  onAdd={() => { }}
                   showOptions={false}
                 />
               )}
@@ -2159,9 +1956,9 @@ const ReceiptCreationForm = ({
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}
-                    onDelete={() => {}}
-                    onEdit={() => {}}
-                    onAdd={() => {}}
+                    onDelete={() => { }}
+                    onEdit={() => { }}
+                    onAdd={() => { }}
                     showOptions={false}
                     importLabel={false}
                   />
@@ -2170,129 +1967,72 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
-        <div className="creation creation-container">
-          <div className="form-label_name">
-            <h3>Attachments</h3>
-            <span></span>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="fileInput" className="custom-file-input">
-                <span className="button-text">Seleccionar archivos</span>
-                <input
-                  type="file"
-                  id="fileInput"
-                  multiple
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
-                />
-              </label>
-              <br />
-              <br />
-              <div className="attachment-container">
-                {attachments.map((attachment) => (
-                  <div key={attachment.name} className="attachment-wrapper">
-                    {renderPreview(attachment)}
-                    <span className="attachment-name">{attachment.name}</span>
-                    <div className="delete-button-container">
-                      <button
-                        className="custom-button"
-                        onClick={() => handleDeleteAttachment(attachment.name)}
-                      >
-                        <div className="delete-icon">
-                          <span>&times;</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {showLargeImage && (
-                  <div className="large-image-overlay" onClick={handleCloseLargeImage}>
-                    <div className="large-image-container">
-                      <button
-                        className="button-cancel pick"
-                        onClick={handleCloseLargeImage}
-                      >
-                        <i className="fas fa-times-circle"></i>
-                      </button>
-                      <img
-                        src={largeImageSrc}
-                        style={{ width: "60rem" }}
-                        alt="Large Image"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* <div className="creation creation-container">
-          <div className="form-label_name">
-            <h3>Attachments</h3>
-            <span></span>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <label htmlFor="fileInput" className="custom-file-input">
-                <span className="button-text">Seleccionar archivos</span>
-                <input
-                  type="file"
-                  id="fileInput"
-                  multiple
-                  onChange={handleFileUpload}
-                  style={{ display: "none" }}
-                />
-              </label>
-              <div className="image-container">
-                {attachments.map((attachment) => (
-                  <div key={attachment.name} className="image-wrapper">
+        <div className="Attachments-container">
+      <div className="">
+        <h3>Attachments</h3>
+        <span></span>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <label htmlFor="fileInput" className="custom-file-input">
+            <span className="button-text">Seleccionar archivos</span>
+            <input
+              type="file"
+              id="fileInput"
+              multiple
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+          </label>
+          <br />
+          <br />
+          <div className="attachment-container">
+            {attachments.map((attachment) => (
+              <div key={attachment.name} className="attachment-wrapper">
+                <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                  {attachment.type.startsWith("image/") ? (
                     <img
                       src={attachment.base64}
                       alt={attachment.name}
-                      onClick={() => handleShowLargeImage(attachment.base64)}
+                      style={{ width: "100px", height: "100px", objectFit: "cover" }}
                     />
-                    <div className="image-buttons">
-                      <button
-                        className="custom-button"
-                        onClick={() => handleDeleteAttachment(attachment.name)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                      <button
-              className="custom-button"
-              onClick={() => handleDownloadAttachment(attachment.base64, attachment.name)}
-            >
-              <i className="fas fa-download"></i>
-            </button>
-                    </div>
-                  </div>
-                ))}
-                {showLargeImage && (
-                  <div
-                    className="large-image-overlay"
-                    onClick={handleCloseLargeImage}
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={getIcon(attachment.type)}
+                      size="10x"
+                      style={{ color: getColor(attachment.type) }}
+                    />
+                  )}
+                </div>
+                <span className="attachment-name">{attachment.name}</span>
+                <div className="delete-button-container">
+                  <button
+                    className="custom-button"
+                    onClick={() => handleDeleteAttachment(attachment.name)}
                   >
-                    <div className="large-image-container">
-                      <button
-                        className="button-cancel pick "
-                        onClick={handleCloseLargeImage}
-                      >
-                        <i className="fas fa-times-circle"></i>
-                      </button>
-                      <img
-                        src={largeImageSrc}
-                        style={{ width: "60rem" }}
-                        alt="Large Image"
-                      />
+                    <div className="delete-icon">
+                      <span>&times;</span>
                     </div>
-                  </div>
-                )}
+                  </button>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        </div> */}
+        </div>
+      </div>
+
+      {showPreview && (
+        <div className="preview-overlay" onClick={handleClosePreview}>
+          <div className="preview-container">
+            <button className="button-cancel pick" onClick={handleClosePreview}>
+              <i className="fas fa-times-circle"></i>
+            </button>
+            {renderPreviewContent()}
+          </div>
+        </div>
+      )}
+    </div>
 
         <div className="creation creation-container">
           <div className="form-label_name">
@@ -2354,14 +2094,9 @@ const ReceiptCreationForm = ({
 
         <div className="company-form__options-container">
           <button
-            // disabled={changeStateSave} 
+            disabled={changeStateSave}
             className="button-save"
-            onClick={(e)=>{
-              sendData();
-              setChangeStateButton(true);
-              
-            }}
-            disabled={changeStateSave || changeStateButton} 
+            onClick={sendData}
           >
             Save
           </button>
@@ -2428,7 +2163,7 @@ const ReceiptCreationForm = ({
           </Alert>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
