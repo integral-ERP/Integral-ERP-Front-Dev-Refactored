@@ -43,7 +43,9 @@ const Receipt = () => {
     "Consignee Name",
     "Carrier Name",
     "Pieces",
-    "Weight",
+    // "Weight",
+    "Weight (lb)",
+    "Volumen (ft3)",
     "View Receipt PDF",
   ];
 
