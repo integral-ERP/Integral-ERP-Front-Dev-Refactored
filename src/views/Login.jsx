@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../styles/pages/Login.scss";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/AuthService";
-import logotext from "../img/logotextcolor.png";
+import logotext from "../img/logotextcolor.jpg";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 

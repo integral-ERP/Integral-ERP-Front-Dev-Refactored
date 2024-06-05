@@ -200,7 +200,7 @@ const Table = ({
     Note: "note",
     "Account Number": "accountNumber",
     Code: "code",
-    "Release Date": "release_date",
+    "Release Date": "creation_date",
     "Released to": "releasedToObj.data.obj.name",
     " Location": "locationCode",
     "Parent Order": "parent",
@@ -267,7 +267,8 @@ const Table = ({
   };
 
   const getStatus = (statusCode) => {
-    switch (statusCode.toString()) {
+    // switch (statusCode.toString()) {
+      switch (statusCode) {
       case "1":
         return (
           <span>
@@ -428,6 +429,7 @@ const Table = ({
     e.target.value = ""; 
   };
   //-------------------------------------------------------------------------------------------------------
+
   const generatePDFLabel = () => {
     const Comodities = selectedRow;
     const numCom = selectedRow.commodities.length;
@@ -746,6 +748,11 @@ const Table = ({
                                       height: "3rem",
                                     }}
                                     onChange={handleSelectChange}
+                                    // onChange={(e) =>
+                                    //   e.target.value === "receipt"
+                                    //     ? generatePDFReceipt()
+                                    //     : generatePDFLabel()
+                                    // }
                                   >
                                     {/* <option value=""> </option> */}
                                     <option value="">Select Option</option>

@@ -24,7 +24,11 @@ import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faTimesCircle, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import * as XLSX from 'xlsx';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import mammoth from 'mammoth'
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -454,27 +458,13 @@ const ReceiptCreationForm = ({
       );
     }
   };
-  //NO se esta llamando esta funcion 
-  // const handleClearShipperSelection = () => {
-  //   setFormData({
-  //     ...formData,
-  //     shipperId: null,
-  //     shipperType: null,
-  //     shipperInfo: "",
-  //   });
-  // };
   //---------------------------------CHARGE IMG---------------------------------------------------------
+
   const [showPreview, setShowPreview] = useState(false);
-  const [previewContent, setPreviewContent] = useState({});
+  
+  const [fileContent, setfileContent] = useState({});
 
-  // const handleShowLargeImage = (src) => {
-  //   setLargeImageSrc(src);
-  //   setShowLargeImage(true);
-  // };
-
-  // const handleCloseLargeImage = () => {
-  //   setShowLargeImage(false);
-  // };
+  // const pdfPlugin = defaultLayoutPlugin();
 
   const handleDownloadAttachment = (base64Data, fileName) => {
     // Convertir la base64 a un Blob
@@ -529,14 +519,25 @@ const ReceiptCreationForm = ({
     });
   };
 
-  const handlePreview = (attachment) => {
-    setPreviewContent(attachment);
+  const handlePreview = async (attachment) => {
+    if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      try {
+        const arrayBuffer = convertDataURIToBinary(attachment.base64);
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        setfileContent({ ...attachment, htmlContent: result.value });
+      } catch (error) {
+        console.error("Error processing Word file:", error);
+        alert("Error processing Word file. Please try again.");
+      }
+    } else {
+      setfileContent(attachment);
+    }
     setShowPreview(true);
   };
 
   const handleClosePreview = () => {
     setShowPreview(false);
-    setPreviewContent({});
+    setfileContent({});
   };
 
   const getIcon = (type) => {
@@ -563,45 +564,7 @@ const ReceiptCreationForm = ({
     }
   };
 
-  const getPreviewUrl = (attachment) => {
-    const { base64, type } = attachment;
-    if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      const fileBlob = new Blob([base64], { type });
-      const url = URL.createObjectURL(fileBlob);
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
-    }
-    return null;
-  };
 
-  // const handleFileUpload = (event) => {
-  //   const files = event.target.files;
-
-  //   if (files && files.length > 0) {
-  //     const newAttachments = [];
-
-  //     for (let i = 0; i < files.length; i++) {
-  //       const file = files[i];
-  //       const reader = new FileReader();
-
-  //       reader.onload = () => {
-  //         newAttachments.push({
-  //           name: file.name,
-  //           base64: reader.result,
-  //           type: file.type,
-  //         });
-
-  //         if (newAttachments.length === files.length) {
-  //           setattachments((prevAttachments) => [
-  //             ...prevAttachments,
-  //             ...newAttachments,
-  //           ]);
-  //         }
-  //       };
-
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // };
   // ----------------------------------------------------------------------------------------
   const handleDeleteAttachment = (name) => {
     const updateAttachments = attachments.filter(
@@ -610,12 +573,47 @@ const ReceiptCreationForm = ({
     setAttachments(updateAttachments);
   }
 
-  // const handleDeleteAttachment = (name) => {
-  //   const updateAttachments = attachments.filter(
-  //     (attachment) => attachment.name !== name
-  //   );
-  //   setattachments(updateAttachments);
-  // };
+  const convertDataURIToBinary = (dataURI) => {
+    const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
+    const base64 = dataURI.substring(base64Index);
+    const raw = atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    return array.buffer;
+  };
+
+  const renderPreviewContent = () => {
+    if (fileContent.type.startsWith("image/")) {
+      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+    }
+    if (fileContent.type === 'application/pdf') {
+      return (
+        <iframe
+          src={fileContent.base64}
+          width="100%"
+          height="500px"
+          title="PDF file"
+        />
+      );
+    }
+
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
+      return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
+    }
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+    }
+
+    return <div>No se puede previsualizar este tipo de archivo</div>;
+  };
 
   const handleMainCarrierSelection = async (event) => {
     const id = event.id;
@@ -2265,69 +2263,52 @@ const ReceiptCreationForm = ({
               <br />
               <br />
               <div className="attachment-container">
-                {attachments.map((attachment) => (
-                  <div key={attachment.name} className="attachment-wrapper">
-                    <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
-                      {attachment.type.startsWith("image/") ? (
-                        <img
-                          src={attachment.base64}
-                          alt={attachment.name}
-                          style={{ width: "100px", height: "100px", objectFit: "cover" }}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={getIcon(attachment.type)}
-                          size="10x"
-                          style={{ color: getColor(attachment.type) }}
-                        />
-                      )}
+            {attachments.map((attachment) => (
+              <div key={attachment.name} className="attachment-wrapper">
+                <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                  {attachment.type.startsWith("image/") ? (
+                    <img
+                      src={attachment.base64}
+                      alt={attachment.name}
+                      style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={getIcon(attachment.type)}
+                      size="10x"
+                      style={{ color: getColor(attachment.type) }}
+                    />
+                  )}
+                </div>
+                <span className="attachment-name">{attachment.name}</span>
+                <div className="delete-button-container">
+                  <button
+                    className="custom-button"
+                    onClick={() => handleDeleteAttachment(attachment.name)}
+                  >
+                    <div className="delete-icon">
+                      <p>&times;</p>
                     </div>
-                    <span className="attachment-name">{attachment.name}</span>
-                    <div className="delete-button-container">
-                      <button
-                        className="custom-button"
-                        onClick={() => handleDeleteAttachment(attachment.name)}
-                      >
-                        <div className="delete-icon">
-                          <span>&times;</span>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  </button>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-
-          {showPreview && (
-            <div className="preview-overlay" onClick={handleClosePreview}>
-              <div className="preview-container">
-                <button className="button-cancel pick" onClick={handleClosePreview}>
-                  <i className="fas fa-times-circle"></i>
-                </button>
-                {previewContent.type.startsWith("image/") && (
-                  <img src={previewContent.base64} style={{ width: "60rem" }} alt="Large Preview" />
-                )}
-                {previewContent.type === 'application/pdf' && (
-                  <iframe
-                    src={previewContent.base64}
-                    width="100%"
-                    height="500px"
-                    title="PDF Preview"
-                  />
-                )}
-                {previewContent.type !== 'application/pdf' && !previewContent.type.startsWith("image/") && (
-                  <iframe
-                    src={getPreviewUrl(previewContent)}
-                    width="100%"
-                    height="500px"
-                    title="File Preview"
-                  />
-                )}
-              </div>
-            </div>
-          )}
         </div>
+      </div>
+
+      {showPreview && (
+        <div className="preview-overlay" onClick={handleClosePreview}>
+          <div className="preview-container">
+            <button className="button-cancel pick" onClick={handleClosePreview}>
+              <i className="fas fa-times-circle"></i>
+            </button>
+            {renderPreviewContent()}
+          </div>
+        </div>
+      )}
+    </div>
+
 
         
 
@@ -2349,43 +2330,7 @@ const ReceiptCreationForm = ({
                   setFormData({ ...formData, notes: e.target.value })
                 }
               />
-              {/* <input
-              name="notes"
-              type="text"
-              className="form-input"
-              placeholder="Notes..."
-              onChange={(e) => setNote(e.target.value)}
-              style={{ width: "99%" }}
-            /> */}
             </div>
-
-            {/* <div className="col">
-            <button
-              type="button"
-              onClick={addNotes}
-              style={{
-                backgroundColor: "#006BAD",
-                color: "white",
-                fontSize: "15px",
-                width: "90%",
-                borderRadius: "5px",
-              }}
-            >
-              Add
-            </button>
-          </div> */}
-            {/* <div className="row">
-            <div className="col-10 text-start">
-              <Input
-                name="notes"
-                className="form-input w-100"
-                placeholder="PRO Number..."
-                value={formData.notes?.toString()}
-                style={{width: "100%",marginTop: "10px",height: "100px",wordWrap: "break-word"}}
-                // readOnly
-              />
-            </div> 
-          </div>*/}
           </div>
         </div>
 
@@ -2407,18 +2352,6 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
-        {/* {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>
-            Warehouse Receipt {creating ? "created" : "updated"} successfully!
-          </strong>
-        </Alert>
-      )} */}
         {showSuccessAlert && (
           <Alert
             severity="success"

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
-import logotextcolor from "../../img/logotextcolor.png";
+import logotextcolor from "../../img/LoginConColor.jpg";
 import bwipjs from "bwip-js";
+import { PDFDocument, rgb } from 'pdf-lib';
 import Alert from "@mui/material/Alert";
 
 pdfMake.vfs = pdfFonts;
@@ -90,26 +91,7 @@ const GenerateLabeltPDF = (data, numCon) => {
   }
 
   return new Promise((resolve, reject) => {
-    // let canvas = null;
-    // let barcodeImage = null;
-    // canvas = document.createElement("canvas");
-    // const barcodeOptions = {
-    //   bcid: "code128", // Barcode type (e.g., code128),
-    //   text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + serialID,
-    //   scale: 2, // Scale factor for the barcode size
-    //   height: 20, // Height of the barcode
-    //   includetext: true, // Include human-readable text below the barcode
-    //   textxalign: "center",
-    //   bold: true,
-    // };
-    // barcodeOptions.text = barcodeOptions.text.toUpperCase();
-    // try {
-    //   canvas = bwipjs.toCanvas(canvas, barcodeOptions);
-    //   barcodeImage = canvas.toDataURL();
-    // } catch (error) {
-    //   reject(error);
-    // }
-    
+        
     const commodityRows = [];
     let totalPieces = 0;
     let totalWeight = 0.0;
@@ -226,10 +208,10 @@ const GenerateLabeltPDF = (data, numCon) => {
                     stack: [
                       {
                         image: imgUrl,
-                        fit: [400, 400],
+                        fit: [350, 100],
                         colSpan: 2,
-                        alignment: "right",
-                        margin: [0, -20, 0, 20],
+                        alignment: "left",
+                        margin: [0, -10, 0, 20],
                       },
                       {}
                     ],
@@ -513,7 +495,7 @@ const GenerateLabeltPDF = (data, numCon) => {
                         alignment: `center`,
                         fontSize: 25,
                         margin: [0, 10, 0, 25],
-                        border: ['top', 'top', 'top', 'top']
+                        border: ['top', 'top', 'top', '']
                       },
                       {
                         text: numPage + '/' + numCon,
