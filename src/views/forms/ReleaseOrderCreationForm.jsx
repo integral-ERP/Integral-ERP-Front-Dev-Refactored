@@ -560,7 +560,7 @@ const ReleaseOrderCreationForm = ({
             
             buscarpickup.forEach(pickup => {
               if (pickup.number === numeroRecibo) {
-                PickupService.updatePickup(pickup.id, updatedReceiptData );
+                //PickupService.updatePickup(pickup.id, updatedReceiptData );
               }
             });
             
