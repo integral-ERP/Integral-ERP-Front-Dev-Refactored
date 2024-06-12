@@ -203,7 +203,7 @@ const Table = ({
     "Account Number": "accountNumber",
     Code: "code",
     "Release Date": "creation_date",
-    "Released to": "releasedToObj.data.obj.name",
+    "Released to": "consigneeObj.data.obj.name",
     " Location": "locationCode",
     "Parent Order": "parent",
     "Piece Quantity": "commodityAmount",
@@ -734,7 +734,6 @@ const Table = ({
                             <>
                               <button
                                 className="generic-button ne"
-                                // onClick={generatePDF}
                                 style={{
                                   display: "flex",
                                   width: "70px",
