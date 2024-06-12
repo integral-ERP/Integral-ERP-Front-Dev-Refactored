@@ -16,7 +16,7 @@ import ReceiptService from "../../services/ReceiptService";
 import AsyncSelect from "react-select/async";
 import ReleaseService from "../../services/ReleaseService";
 import Table from "../shared/components/Table";
-
+import PickupService from "../../services/PickupService";
 const ReleaseOrderCreationForm = ({
   releaseOrder,
   closeModal,
@@ -44,6 +44,9 @@ const ReleaseOrderCreationForm = ({
   const [selectedCommodities, setSelectedCommodities] = useState([]);
   const [warehouseReceipts, setWarehouseReceipts] = useState([]);
   const [weightUpdated, setWeightUpdated] = useState(0);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [consignee, setconsignee] = useState(null);
+  const [consigneeRequest, setconsigneeRequest] = useState(null);
   const formFormat = {
     status: 14,
     number: pickupNumber,
@@ -64,6 +67,9 @@ const ReleaseOrderCreationForm = ({
     main_carrierObj: "",
     warehouseReceiptId: "",
     commodities: [],
+    consigneeId: "",
+    consigneeType: "",
+    consigneeInfo: "",
   };
 
   const [formData, setFormData] = useState(formFormat);
@@ -153,6 +159,37 @@ const ReleaseOrderCreationForm = ({
     });
   };
 
+//added consignee
+  const handleConsigneeSelection =async (event) => {
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+    const selectedConsignee = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    if (!selectedConsignee) {
+      console.error(`Consignee not found with ID ${id} and type ${type}`);
+      return;
+    }
+
+    const info = `${selectedConsignee.street_and_number || ""} - ${
+      selectedConsignee.city || ""
+    } - ${selectedConsignee.state || ""} - ${
+      selectedConsignee.country || ""
+    } - ${selectedConsignee.zip_code || ""}`;
+    setconsignee(selectedConsignee);
+    setFormData({
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
+    });
+  };
+
   const handleReceiptSelection = (receiptNumber) => {
     if (selectedReceipts.includes(receiptNumber)) {
       setSelectedReceipts(
@@ -207,8 +244,19 @@ const ReleaseOrderCreationForm = ({
         warehouseReceiptId: releaseOrder.warehouseReceiptId,
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
+        consignee: releaseOrder.consignee,
+        consigneeId: releaseOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
+        consigneeType: releaseOrder.consigneeObj.data?.obj?.type_person,
+        consigneeInfo: `${
+          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
       };
-
+      setconsignee(releaseOrder.consigneeObj?.data?.obj);
+      setconsigneeRequest(releaseOrder.consignee);
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -233,7 +281,7 @@ const ReleaseOrderCreationForm = ({
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "carrier");
+    const carriersWithType = addTypeToObjects(carriers, "Carrier");
 
     const issuedByOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
@@ -246,6 +294,13 @@ const ReleaseOrderCreationForm = ({
 
     const carrierOptions = [...carriersWithType];
 
+    const consigneeOptions = [
+      ...customersWithType,
+      ...vendorsWithType,
+      ...forwardingAgentsWithType,
+      ...carriersWithType,
+    ]
+
     issuedByOptions.sort((a, b) => {
       return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
@@ -257,7 +312,7 @@ const ReleaseOrderCreationForm = ({
     carrierOptions.sort((a, b) => {
       return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
-
+    setConsigneeOptions(consigneeOptions);
     setReleasedToOptions(releasedToOptions);
     setIssuedByOptions(issuedByOptions);
     setEmployeeOptions(employeeOptions);
@@ -313,6 +368,27 @@ const ReleaseOrderCreationForm = ({
     return options;
   };
 
+
+  const loadConsigneeToOptionsSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const responseVendors = (await VendorService.search(inputValue)).data
+      .results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue))
+      .data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data
+      .results;
+
+    const options = [
+      ...addTypeToObjects(responseVendors, "vendor"),
+      ...addTypeToObjects(responseCustomers, "customer"),
+      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
+    ];
+
+    return options;
+  };
+
   const fetchReceipts = async () => {
     ReceiptService.getReceipts()
       .then((response) => {
@@ -341,6 +417,8 @@ const ReleaseOrderCreationForm = ({
     }
   }, [commodities]);
 
+
+  
   const sendData = async () => {
     let releasedToName = "";
     if (formData.releasedToType === "customer") {
@@ -395,7 +473,7 @@ const ReleaseOrderCreationForm = ({
     if (formData.clientToBillType === "agent") {
       clientToBillName = "agentid";
     }
-    if (formData.clientToBillType === "carrier") {
+    if (formData.clientToBillType === "Carrier") {
       clientToBillName = "carrierid";
     }
     if (clientToBillName !== "") {
@@ -403,24 +481,57 @@ const ReleaseOrderCreationForm = ({
         [clientToBillName]: formData.clientToBillId,
       };
 
+      
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setClientToBill(response.data.id);
       }
     }
 
+    let consigneeName = "";
+    if (formData.consigneeType === "customer") {
+      consigneeName = "customerid";
+    }
+    if (formData.consigneeType === "vendor") {
+      consigneeName = "vendorid";
+    }
+    if (formData.consigneeType === "forwarding-agent") {
+      consigneeName = "agentid";
+    }
+    if (formData.consigneeType === "Carrier") {
+      consigneeName = "carrierid";
+    }
+    if (consigneeName !== "") {
+      const consignee = {
+        [consigneeName]: formData.consigneeId,
+      };
+
+      const response = await ReceiptService.createConsignee(consignee);
+      if (response.status === 201) {
+        setconsigneeRequest(response.data.id);
+      }
+    }
+    
+    console.log("hecho3");
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-
       setWeightUpdated(totalWeight);
     }
   };
-
+  const callPickupOrders = async (url = null) => {
+    try {
+      return await PickupService.getPickups(url);
+    } catch (error) {
+      console.error("Error al obtener pedidos de recogida:", error);
+      throw error;
+    }
+  };
+  
   const checkUpdatesComplete = () => {
-    if (releasedTo !== null && clientToBill !== null && weightUpdated) {
+    if (/* releasedTo !== null && clientToBill !== null && */ weightUpdated) {
       setAllStateUpdatesComplete(true);
     }
   };
@@ -435,6 +546,8 @@ const ReleaseOrderCreationForm = ({
         charges = [...charges, order.charges];
       });
 
+      
+
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
@@ -446,7 +559,7 @@ const ReleaseOrderCreationForm = ({
           issuedByType: formData.issuedByType,
           released_to: releasedTo,
           releasodToType: formData.releasedToType,
-          client_to_bill: clientToBill,
+          client_to_bill: formData.clientToBill,
           client_to_bill_type: formData.clientToBillType,
           carrier_by: formData.carrierId,
           pro_number: formData.pro_number,
@@ -455,10 +568,34 @@ const ReleaseOrderCreationForm = ({
           main_carrierObj: formData.main_carrierObj,
           warehouse_receipt: formData.warehouseReceiptId,
           commodities: commodities,
+          consignee: consigneeRequest,
         };
+        //console.log("CHNAGED", updatedReceiptData.consigneeObj.data.obj);
+        console.log("CONSIGNEREQUEST", consigneeRequest);
         const response = await (creating
           ? ReleaseService.createRelease(rawData)
-          : ReleaseService.updateRelease(releaseOrder.id, rawData));
+          :  (async () => {
+            const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
+            const updatedReceiptData = { ...buscarrecipt.data };
+            //console.log("updatedReceiptData", updatedReceiptData);
+            updatedReceiptData.consignee=consigneeRequest;
+            updatedReceiptData.consigneeObj.data.obj = consignee;
+            console.log("updatedReceiptData request", updatedReceiptData.consignee);
+            console.log("updatedReceiptData", updatedReceiptData.consigneeObj.data.obj);
+            const result = await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
+            
+            const buscarpickup = (await callPickupOrders(null)).data.results;
+            const numeroRecibo = buscarrecipt.data.number;
+            
+            buscarpickup.forEach(pickup => {
+              if (pickup.number === numeroRecibo) {
+                PickupService.updatePickup(pickup.id, updatedReceiptData );
+              }
+            });
+            
+            return result; // Retornar el resultado de updateReceipt
+          })()
+      );
 
         if (response.status >= 200 && response.status <= 300) {
           setcurrentReleaseNumber(currentReleaseNumber + 1);
@@ -476,7 +613,7 @@ const ReleaseOrderCreationForm = ({
       };
       createPickUp();
     }
-  }, [allStateUpdatesComplete, clientToBill]);
+  }, [allStateUpdatesComplete, weightUpdated]);
 
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -528,7 +665,7 @@ const ReleaseOrderCreationForm = ({
                       // inputName="number"
                       // placeholder="Number..."
                       value={formData.number}
-                      readonly={true}
+                      onChange={(e) => setFormData({ ...formData, number: e.target.value })}
                       label="Ware House Number"
                     />
                   </div>
@@ -618,6 +755,47 @@ const ReleaseOrderCreationForm = ({
                   </LocalizationProvider>
                 </div>
 
+                <div className="col-4 text-start">
+                <label htmlFor="releasedTo" className="form-label">
+                  Released To:
+                </label>
+                {!creating ? (
+                  canRender && (
+                    <AsyncSelect
+                      id="consignee"
+                      value={consigneeOptions.find(
+                        (option) =>
+                          option.id === formData.consigneeId &&
+                          option.type_person === formData.consigneeType
+                      )}
+                      onChange={(e) => handleConsigneeSelection(e)}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={consigneeOptions}
+                      loadOptions={loadConsigneeToOptionsSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                  )
+                ) : (
+                  <AsyncSelect
+                      id="consignee"
+                      value={consigneeOptions.find(
+                        (option) =>
+                          option.id === formData.consigneeId &&
+                          option.type_person === formData.consigneeType
+                      )}
+                      onChange={(e) => handleConsigneeSelection(e)}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={consigneeOptions}
+                      loadOptions={loadConsigneeToOptionsSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                    />
+                )}
+              </div> 
+
                 {/* <div className="col-4 text-start">
                 <label htmlFor="releasedTo" className="form-label">
                   Released To:
@@ -661,7 +839,7 @@ const ReleaseOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 )}
-              </div> */}
+              </div>  */}
               </div>
 
               {/* <div className="row align-items-center mb-3">
@@ -719,7 +897,7 @@ const ReleaseOrderCreationForm = ({
                     type="text"
                     inputName="purchaseOrderNumber"
                     placeholder="Carrier . . . "
-                    value={formData.main_carrierObj.name}
+                    value={formData.main_carrierObj.name || ""}
                   />
                 </div>
                 <div className="col-6 text-start">
@@ -727,7 +905,7 @@ const ReleaseOrderCreationForm = ({
                     type="text"
                     inputName="trackingNumber"
                     placeholder="Tracking Number..."
-                    value={formData.tracking_number}
+                    value={formData.tracking_number }
                     changeHandler={(e) =>
                       setFormData({
                         ...formData,
@@ -744,7 +922,7 @@ const ReleaseOrderCreationForm = ({
                     type="text"
                     inputName="proNumber"
                     placeholder="PRO Number..."
-                    value={formData.pro_number}
+                    value={formData.pro_number }
                     changeHandler={(e) =>
                       setFormData({ ...formData, pro_number: e.target.value })
                     }
@@ -753,19 +931,19 @@ const ReleaseOrderCreationForm = ({
                 </div>
 
                 <div className="col-6 text-start">
-                  <Input
-                    type="text"
-                    inputName="purchaseOrderNumber"
-                    placeholder="Purchase Order Number..."
-                    value={formData.purchase_order_number}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        purchase_order_number: e.target.value,
-                      })
-                    }
-                    label="Purchase Order Number"
-                  />
+                <Input
+                  type="text"
+                  inputName="purchaseOrderNumber"
+                  placeholder="Purchase Order Number..."
+                  value={formData.purchase_order_number || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      purchase_order_number: e.target.value,
+                    })
+                  }
+                  label="Purchase Order Number"
+                />
                 </div>
               </div>
             </div>
@@ -844,12 +1022,12 @@ const ReleaseOrderCreationForm = ({
       </div> */}
 
         <div className="company-form__options-container">
-          {/* <button className="button-save" onClick={sendData}>
+           <button className="button-save" onClick={sendData}>
           Save
-        </button> */}
-          <button className="button-cancel" onClick={closeModal}>
+        </button> 
+          {/* <button className="button-cancel" onClick={closeModal}>
             Accept
-          </button>
+          </button> */}
         </div>
         {/* {showSuccessAlert && (
         <Alert

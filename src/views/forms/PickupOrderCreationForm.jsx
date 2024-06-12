@@ -447,7 +447,6 @@ const PickupOrderCreationForm = ({
         destinationAgentInfo: `${pickupOrder.destination_agentObj?.street_and_number || ""}- ${pickupOrder.destination_agentObj?.city || ""
           } - ${pickupOrder.destination_agentObj?.state || ""} - ${pickupOrder.destination_agentObj?.country || ""
           } - ${pickupOrder.destination_agentObj?.zip_code || ""} `,
-
         issuedById: pickupOrder.issued_by,
         issuedByType: pickupOrder.issued_byObj?.type,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
@@ -1056,10 +1055,9 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          supplier: formData.supplierId,
+          supplier: formData.supplierId,/* ojo antes era supplier: formData.shipperId, */
           weight: weightUpdated,
         };
-
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
@@ -1398,7 +1396,22 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                  
+                </div>
+
+                <div className="col-6 text-start" id="dates">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
+                    <DateTimePicker
+                      // label="Delivery Date and Time"
+                      value={dayjs(formData.deliveryDateAndTime)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                        })
+                      }
+                    />
+                  </LocalizationProvider>
                 </div>
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">

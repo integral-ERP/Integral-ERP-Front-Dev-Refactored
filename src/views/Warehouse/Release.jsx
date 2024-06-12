@@ -101,8 +101,8 @@ const Release = () => {
           );
         });
 
-        // setReleaseOrders([...releaseOrders, ...newreleises].reverse());
-        setReleaseOrders([...response.data.results].reverse());
+         setReleaseOrders([...releaseOrders, ...newreleises].reverse());
+        //setReleaseOrders([...response.data.results].reverse());
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -150,7 +150,7 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
-    console.log("Release-1", releaseOrders[0]);
+    console.log("ReleaseSelected", releaseOrder);
   };
 
   const handleEditreceipts = () => {
