@@ -46,6 +46,7 @@ const ReleaseOrderCreationForm = ({
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [consignee, setconsignee] = useState(null);
+  const [consigneeRequest, setconsigneeRequest] = useState(null);
   const formFormat = {
     status: 14,
     number: pickupNumber,
@@ -160,28 +161,27 @@ const ReleaseOrderCreationForm = ({
 
 //added consignee
   const handleConsigneeSelection =async (event) => {
-    const id = event.id;
-    const type = event.type;
-    let result;
-    if (type === "customer") {
-      result = await CustomerService.getCustomerById(id);
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
     }
-    if (type === "vendor") {
-      result = await VendorService.getVendorByID(id);
+    const selectedConsignee = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    if (!selectedConsignee) {
+      console.error(`Consignee not found with ID ${id} and type ${type}`);
+      return;
     }
-    if (type === "agent") {
-      result = await ForwardingAgentService.getForwardingAgentById(id);
-    }
-    if (type === "carrier") {
-      result = await CarrierService.getCarrierById(id);
-    }
-    const info = `${result.data.street_and_number || ""} - ${
-      result.data.city || ""
-    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-      result.data.zip_code || ""
-    }`;
-    setconsignee(result.data);
-    console.log("consignee", consignee);
+
+    const info = `${selectedConsignee.street_and_number || ""} - ${
+      selectedConsignee.city || ""
+    } - ${selectedConsignee.state || ""} - ${
+      selectedConsignee.country || ""
+    } - ${selectedConsignee.zip_code || ""}`;
+    setconsignee(selectedConsignee);
     setFormData({
       ...formData,
       consigneeId: id,
@@ -255,7 +255,8 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
         }`,
       };
-      
+      setconsignee(releaseOrder.consigneeObj?.data?.obj);
+      setconsigneeRequest(releaseOrder.consignee);
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -280,7 +281,7 @@ const ReleaseOrderCreationForm = ({
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
-    const carriersWithType = addTypeToObjects(carriers, "carrier");
+    const carriersWithType = addTypeToObjects(carriers, "Carrier");
 
     const issuedByOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
@@ -382,7 +383,7 @@ const ReleaseOrderCreationForm = ({
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
-      ...addTypeToObjects(responseCarriers, "carrier"),
+      ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
     return options;
@@ -472,7 +473,7 @@ const ReleaseOrderCreationForm = ({
     if (formData.clientToBillType === "agent") {
       clientToBillName = "agentid";
     }
-    if (formData.clientToBillType === "carrier") {
+    if (formData.clientToBillType === "Carrier") {
       clientToBillName = "carrierid";
     }
     if (clientToBillName !== "") {
@@ -484,6 +485,30 @@ const ReleaseOrderCreationForm = ({
       const response = await ReleaseService.createClientToBill(clientToBill);
       if (response.status === 201) {
         setClientToBill(response.data.id);
+      }
+    }
+
+    let consigneeName = "";
+    if (formData.consigneeType === "customer") {
+      consigneeName = "customerid";
+    }
+    if (formData.consigneeType === "vendor") {
+      consigneeName = "vendorid";
+    }
+    if (formData.consigneeType === "forwarding-agent") {
+      consigneeName = "agentid";
+    }
+    if (formData.consigneeType === "Carrier") {
+      consigneeName = "carrierid";
+    }
+    if (consigneeName !== "") {
+      const consignee = {
+        [consigneeName]: formData.consigneeId,
+      };
+
+      const response = await ReceiptService.createConsignee(consignee);
+      if (response.status === 201) {
+        setconsigneeRequest(response.data.id);
       }
     }
     
@@ -543,16 +568,20 @@ const ReleaseOrderCreationForm = ({
           main_carrierObj: formData.main_carrierObj,
           warehouse_receipt: formData.warehouseReceiptId,
           commodities: commodities,
-          consignee: formData.consigneeId,
+          consignee: consigneeRequest,
         };
         //console.log("CHNAGED", updatedReceiptData.consigneeObj.data.obj);
+        console.log("CONSIGNEREQUEST", consigneeRequest);
         const response = await (creating
           ? ReleaseService.createRelease(rawData)
           :  (async () => {
             const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
             const updatedReceiptData = { ...buscarrecipt.data };
-            console.log("updatedReceiptData", updatedReceiptData);
+            //console.log("updatedReceiptData", updatedReceiptData);
+            updatedReceiptData.consignee=consigneeRequest;
             updatedReceiptData.consigneeObj.data.obj = consignee;
+            console.log("updatedReceiptData request", updatedReceiptData.consignee);
+            console.log("updatedReceiptData", updatedReceiptData.consigneeObj.data.obj);
             const result = await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
             
             const buscarpickup = (await callPickupOrders(null)).data.results;
@@ -560,7 +589,7 @@ const ReleaseOrderCreationForm = ({
             
             buscarpickup.forEach(pickup => {
               if (pickup.number === numeroRecibo) {
-                //PickupService.updatePickup(pickup.id, updatedReceiptData );
+                PickupService.updatePickup(pickup.id, updatedReceiptData );
               }
             });
             
