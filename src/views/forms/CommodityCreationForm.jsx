@@ -187,10 +187,6 @@ const CommodityCreationForm = ({
   // Obtener la URL actual
 const currentUrl = window.location.href;
 
-// Verificar si la URL contiene cierto texto
-// const isLocationEnabled = currentUrl.includes('http://localhost:5173/warehouse/receipt');
-// const isLocationEnabled = currentUrl.includes('https://erp-integral.com/warehouse/receipt');
-
   return (
     <div className="income-charge-form">
       {/* <h3>Commodity Creation Form</h3> */}
@@ -316,7 +312,7 @@ const currentUrl = window.location.href;
         className="text-comm"
         style={{ marginLeft: "-8px" }}
       >
-        Locationn:
+        Location:
       </label>
 
       <select
@@ -354,51 +350,6 @@ const currentUrl = window.location.href;
   
    )}
 </div>;
-
-
-        {/* <div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
-        {locationEnabled && (
-          <>
-            <label
-              htmlFor="location"
-              className="text-comm"
-              style={{ marginLeft: "-8px" }}
-            >
-              Locationn:
-            </label>
-            <select
-              name="location"
-              id="location"
-              value={formData.locationId}
-              onChange={(e) => {
-                setformData({
-                  ...formData,
-                  locationId: e.target.value,
-                  locationCode:
-                    e.target.options[e.target.selectedIndex].getAttribute(
-                      "data-key"
-                    ),
-                });
-              }}
-              //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-              style={{ fontSize: '14px', color: 'gray', padding: "4px" }}
-            >
-              <option value="">Select an option</option>
-              {locations.map((location) => {
-                return (
-                  <option
-                    key={location.id}
-                    value={location.id}
-                    data-key={location.code}
-                  >
-                    {location.code}
-                  </option>
-                );
-              })}
-            </select>
-          </>
-        )}
-         </div> */}
 
         <div className="table-hover charge-buttons">
           <button

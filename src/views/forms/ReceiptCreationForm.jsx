@@ -2317,7 +2317,7 @@ const ReceiptCreationForm = ({
                 type="textarea"
                 inputName="notes"
                 placeholder="Nota here..."
-                label="Note"
+                // label="Note"
                 value={formData.notes}
                 changeHandler={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
