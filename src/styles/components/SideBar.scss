@@ -379,7 +379,7 @@
     left: 25rem;
     width: calc(100% - 25rem);
     transition: all 0.5s ease-in-out;
-    box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
+    // box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
     /* Definir la sombra */
   
   }
@@ -388,6 +388,7 @@
   .sidebar.close~.home-section {
     left: 6%;
     width: min-content !important;
+    
   }
   
   .home-section .home-content {
@@ -401,12 +402,15 @@
   
   .home-section .home-content .bx-menu,
   .home-section .home-content .text {
-    color: #ffffff;
+    color: #fff;
     font-size: 400%;
+    display: flex;
+    align-items: center;
   }
   
   .home-section .home-content .bx-menu {
-  
+    display: flex;
+    align-items: center;
     cursor: pointer;
   }
   
@@ -828,7 +832,12 @@
   
   .sidebar.close~.home-section {
     left: 3.5rem;
-    width: 97%
+    width: 97%;
+    height: 7vh;
+    // box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5);
+  }
+  .sombra{
+    box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5)
   }
   
   .home-section .home-content {
@@ -842,10 +851,14 @@
   .home-section .home-content .text {
     color: #ffffff;
     font-size: 400%;
+    display: flex;
+    align-items: center;
+    
   }
   
   .home-section .home-content .bx-menu {
-  
+    display: flex;
+    align-items: center;
     cursor: pointer;
   }
   

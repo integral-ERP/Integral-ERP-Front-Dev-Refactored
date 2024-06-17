@@ -34,7 +34,9 @@ const Release = () => {
     "Release Date",
     "Released to",
     "Pieces",
-    "Weight",
+    // "Weight",
+    "Weight (lb)",
+    "Volumen (ft3)", 
     "View Release PDF",
   ];
 
@@ -86,9 +88,9 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("Aqui-1 = ",fetchData());
-    console.log("Aqui-2 = ",fetchData());
-    console.log("Aqui-3 = ",fetchData());
+    console.log("Aqui-1 = ",fetchData());// No borrar
+    console.log("Aqui-2 = ",fetchData());// No borrar
+    console.log("Aqui-3 = ",fetchData());// No borrar
   }, []);
 
   const updateReleaseOrders = (url = null) => {
@@ -272,7 +274,7 @@ const Release = () => {
   return (
     <>
       <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
+        <div className="dashboard__sidebar sombra">
           <Sidebar />
           <div
             className="content-page"

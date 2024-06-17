@@ -53,6 +53,7 @@ const PickupOrderCreationForm = ({
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [weightUpdated, setWeightUpdated] = useState(0);
+  const [volumenUpdated, setVolumenUpdated] = useState(0);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -440,6 +441,7 @@ const PickupOrderCreationForm = ({
       let updatedFormData = {
         status: pickupOrder.status,
         weight: pickupOrder.weight,
+        volumen: pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -817,6 +819,14 @@ const PickupOrderCreationForm = ({
     }
 
     if (commodities.length > 0) {
+      let totalVolume = 0;
+      commodities.forEach((com) => {
+        totalVolume += parseFloat(com.volumen);
+      });
+      setVolumenUpdated(totalVolume);
+    }
+
+    if (commodities.length > 0) {
       let weight = 0;
       commodities.forEach((com) => {
         weight += com.weight;
@@ -1057,6 +1067,7 @@ const PickupOrderCreationForm = ({
           charges: charges,
           supplier: formData.supplierId,/* ojo antes era supplier: formData.shipperId, */
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
         const response = await (creating
           ? PickupService.createPickup(rawData)
@@ -1089,6 +1100,7 @@ const PickupOrderCreationForm = ({
     allStateUpdatesComplete,
     clientToBillRequest,
     weightUpdated,
+    volumenUpdated,
   ]);
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -1135,6 +1147,7 @@ const PickupOrderCreationForm = ({
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
+          volumen:volumenUpdated,
         };
         const response = await (
           //added for create commdities 
@@ -1261,7 +1274,7 @@ const PickupOrderCreationForm = ({
     <div className="form-container">
       <form className="company-form pickup">
         <div className="row w-100">
-          <div className="col-6">
+        <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 <h2>General</h2>
@@ -1396,22 +1409,7 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                </div>
-
-                <div className="col-6 text-start" id="dates">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
-                    <DateTimePicker
-                      // label="Delivery Date and Time"
-                      value={dayjs(formData.deliveryDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
+                  
                 </div>
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">

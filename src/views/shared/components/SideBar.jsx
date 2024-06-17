@@ -58,7 +58,7 @@ const Sidebar = () => {
   }, [controlSlider])
 
   return (
-    <div className="sidebar-container">
+    <div className="sidebar-container sombra">
       <div className={`sidebar ${hideShowSlider ? "close" : ""}`}>
         <div className="logo-details">
           {/* <i className="bx bxl-c-plus-plus"></i> */}

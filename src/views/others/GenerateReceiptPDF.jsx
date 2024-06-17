@@ -32,6 +32,7 @@ const GenerateReceiptPDF = (data, numCon) => {
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
+    let totalVolumeM = 0.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -41,26 +42,14 @@ const GenerateReceiptPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        // firstRowText += `1; Pallet \n`;
-        firstRowText += `1; Pallet \n \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n`;
-        fourthRowText += `${commodity.description} \n \n`;
-        sixthRowText += `${commodity.weight} lbs \n \n`;
-        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n`;
+        firstRowText += `1; Pallet \n \n \n`;
+        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
+        fourthRowText += `${commodity.description} \n \n \n`;
+        sixthRowText += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
+        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
-
-        // if (commodity.containsCommodities && commodity.internalCommodities) {
-        //   commodity.internalCommodities.forEach((internalCommodity) => {
-
-        //     thirdRowText += `${internalCommodity.length}x${internalCommodity.width}x${internalCommodity.height} in \n`;
-        //     fourthRowText += `${internalCommodity.description} \n`;
-        //     sixthRowText += `${internalCommodity.weight} lbs \n`;
-        //     seventhRowText += `${internalCommodity.volumetricWeight} ft3 \n`;
-        //     totalWeight += parseFloat(internalCommodity.weight);
-        //     totalVolume += parseFloat(internalCommodity.volumetricWeight);
-        //   });
-        // }
+        totalVolumeM += parseFloat(commodity.volumen);
       });
       const commodityRow = [
         {
@@ -522,8 +511,8 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {
                         text: [
-                          `${totalVolume.toFixed(2)} ft3\n`,
-                          `${(totalVolume / 35.315).toFixed(2)} m3`,
+                          `${totalVolume.toFixed(2)} Vlb\n`,
+                          `${(totalVolumeM).toFixed(2)} ft3`,
                         ],
                       },
                     ],

@@ -65,8 +65,8 @@ const ReceiptCreationForm = ({
   const [supplierRequest, setsupplierRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [volumenUpdated, setVolumenUpdated] = useState(0);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -1048,6 +1048,7 @@ const ReceiptCreationForm = ({
         status: 4,
         // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
+        volumen : pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -1182,9 +1183,17 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-
       setWeightUpdated(totalWeight);
     }
+
+    if (commodities.length > 0) {
+      let totalVolume = 0;
+      commodities.forEach((com) => {
+        totalVolume += parseFloat(com.volumen);
+      });
+      setVolumenUpdated(totalVolume);
+    }
+
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -1276,25 +1285,6 @@ const ReceiptCreationForm = ({
         setclientToBillRequest(response.data.id);
       }
     }
-    // if (formData.clientToBillType === "shipper") {
-    //   clientToBillName = "shipperid";
-    // }
-    // if (formData.clientToBillType === "consignee") {
-    //   clientToBillName = "consigneeid";
-    // }
-    // if (clientToBillName !== "") {
-    //   const clientToBill = {
-    //     [clientToBillName]:
-    //       clientToBillName === "shipperid"
-    //         ? formData.shipperId //CAMBIO
-    //         : formData.consigneeId, //CAMBIO
-    //   };
-
-    //   const response = await ReceiptService.createClientToBill(clientToBill);
-    //   if (response.status === 201) {
-    //     setclientToBillRequest(response.data.id);
-    //   }
-    // }
 
     if (commodities.length > 0) {
       let weight = 0;
@@ -1311,7 +1301,8 @@ const ReceiptCreationForm = ({
       supplierRequest !== null &&
       consigneeRequest !== null &&
       clientToBillRequest !== null &&
-      weightUpdated
+      weightUpdated &&
+      volumenUpdated
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -1355,6 +1346,7 @@ const ReceiptCreationForm = ({
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
         //added para guardar comidities in pickup order
         let rawDatapick = {
@@ -1388,6 +1380,7 @@ const ReceiptCreationForm = ({
           charges: charges,
          /*  supplier: formData.shipperId, */
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
         
         const response = await (creating
