@@ -1274,7 +1274,7 @@ const PickupOrderCreationForm = ({
     <div className="form-container">
       <form className="company-form pickup">
         <div className="row w-100">
-          <div className="col-6">
+        <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 <h2>General</h2>
@@ -1409,22 +1409,7 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                </div>
-
-                <div className="col-6 text-start" id="dates">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">Delivery Date and Time</p>
-                    <DateTimePicker
-                      // label="Delivery Date and Time"
-                      value={dayjs(formData.deliveryDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
+                  
                 </div>
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">
