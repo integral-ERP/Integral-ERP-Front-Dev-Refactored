@@ -80,7 +80,7 @@ const Release = () => {
       }
       // console.log("Aqui-1 = ",filteredData);
       // console.log("Aqui-2 = ",filteredData);
-      setReleaseOrders(filteredData);
+      setReleaseOrders(filteredData.reverse());
     } catch (error) {
       console.log(error);
     }
