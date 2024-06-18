@@ -144,7 +144,6 @@ const Repacking = () => {
   }, []);
 
   return (
-    <>
       <div className="dashboard__layout">
         <div className="dashboard__sidebar">
           <Sidebar />
@@ -226,8 +225,6 @@ const Repacking = () => {
             )}
           </div>
         </div>
-      </div>
-    </>
   );
 };
 

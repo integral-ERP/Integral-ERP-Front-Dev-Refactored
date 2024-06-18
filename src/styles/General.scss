@@ -82,7 +82,7 @@
     background: none;
     // margin-right: 1rem;
     border: 2px solid #dfdfdf;
-    margin-left: 8vw;
+    // margin-left: 8vw;
     border-radius: 8px;
     // translate: 22vw 0;
   }
@@ -92,7 +92,7 @@
     margin-right: 1rem;
     border: 2px solid #dfdfdf;
     border-radius: 8px;
-    margin-left: 3vw;
+    // margin-left: 1vw;
   }
 
   .export-dropdown {
@@ -584,6 +584,23 @@
   .movile {
     display: table-cell;
 
+  }
+
+  .button-charge {
+    width: 12rem;
+    margin-bottom: 2vw;
+    height: 3rem;
+    border-radius: 1rem;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.6rem;
+    margin: 0;
+    padding: 0;
+    border-color: #006BAD;
+    background-color: #006BAD;
+    color: white;
+    cursor: pointer;
+    transition: background-color 9.7s ease;
   }
 
 
@@ -1305,6 +1322,8 @@
   color: white;
   cursor: pointer;
   transition: background-color 9.7s ease;
+  margin-bottom: 2vw;
+  
 }
 
 //---------------------------------------------------------------
