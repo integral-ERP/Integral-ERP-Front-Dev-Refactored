@@ -64,7 +64,7 @@ const PickupOrderCreationForm = ({
   const [deliveryLocationOptions, setDeliveryLocationOptions] = useState([]);
   const [carrierOptions, setCarrierOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
-  const today = dayjs().format("YYYY-MM-DD");
+  const today = dayjs().format("YYYY-MM-DD hh:mm A");
   const pickupNumber = currentPickUpNumber + 1;
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
@@ -1035,13 +1035,17 @@ const PickupOrderCreationForm = ({
   useEffect(() => {
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
+       // Convertir createdDateAndTime a ISO 8601
+       const isoDate = dayjs(formData.createdDateAndTime, "YYYY-MM-DD hh:mm A").toISOString();
+       const isopickupDate = dayjs(formData.pickupDateAndTime, "YYYY-MM-DD hh:mm A").toISOString();
+       const isodeliveryDate = dayjs(formData.deliveryDateAndTime, "YYYY-MM-DD hh:mm A").toISOString();
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
           number: formData.number,
-          creation_date: formData.createdDateAndTime,
-          pick_up_date: formData.pickupDateAndTime,
-          delivery_date: formData.deliveryDateAndTime,
+          creation_date: isoDate,
+          pick_up_date: isopickupDate,
+          delivery_date: isodeliveryDate,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1305,7 +1309,7 @@ const PickupOrderCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />
@@ -1322,7 +1326,7 @@ const PickupOrderCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          pickupDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                       className="creation creation-label"
@@ -1363,7 +1367,7 @@ const PickupOrderCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          deliveryDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />

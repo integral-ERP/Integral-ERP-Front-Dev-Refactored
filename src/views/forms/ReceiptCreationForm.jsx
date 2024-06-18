@@ -80,7 +80,7 @@ const ReceiptCreationForm = ({
   const [supplierOptions, setSupplierOptions] = useState([]);
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
-  const today = dayjs().format("YYYY-MM-DD");
+  const today = dayjs().format("YYYY-MM-DD hh:mm A");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
   // const [supplierInfo, setsupplierInfo] = useState("");
@@ -1634,7 +1634,7 @@ const ReceiptCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />
