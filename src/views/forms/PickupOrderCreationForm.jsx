@@ -53,6 +53,7 @@ const PickupOrderCreationForm = ({
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
   const [weightUpdated, setWeightUpdated] = useState(0);
+  const [volumenUpdated, setVolumenUpdated] = useState(0);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -436,6 +437,7 @@ const PickupOrderCreationForm = ({
       let updatedFormData = {
         status: pickupOrder.status,
         weight: pickupOrder.weight,
+        volumen: pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -443,7 +445,6 @@ const PickupOrderCreationForm = ({
         destinationAgentInfo: `${pickupOrder.destination_agentObj?.street_and_number || ""}- ${pickupOrder.destination_agentObj?.city || ""
           } - ${pickupOrder.destination_agentObj?.state || ""} - ${pickupOrder.destination_agentObj?.country || ""
           } - ${pickupOrder.destination_agentObj?.zip_code || ""} `,
-
         issuedById: pickupOrder.issued_by,
         issuedByInfo: `${pickupOrder.issued_byObj?.street_and_number || ""} - ${pickupOrder.issued_byObj?.city || ""
           } - ${pickupOrder.issued_byObj?.state || ""} - ${pickupOrder.issued_byObj?.country || ""
@@ -643,6 +644,14 @@ const PickupOrderCreationForm = ({
       });
 
       setWeightUpdated(totalWeight);
+    }
+
+    if (commodities.length > 0) {
+      let totalVolume = 0;
+      commodities.forEach((com) => {
+        totalVolume += parseFloat(com.volumen);
+      });
+      setVolumenUpdated(totalVolume);
     }
 
     if (commodities.length > 0) {
@@ -871,11 +880,10 @@ const PickupOrderCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-          /*  supplier: formData.shipperId, */
+          supplier: formData.supplierId,/* ojo antes era supplier: formData.shipperId, */
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
-        
-
         const response = await (creating
           ? PickupService.createPickup(rawData)
           : PickupService.updatePickup(pickupOrder.id, rawData));
@@ -907,6 +915,7 @@ const PickupOrderCreationForm = ({
     allStateUpdatesComplete,
     clientToBillRequest,
     weightUpdated,
+    volumenUpdated,
   ]);
   const [colorTab, setcolorTab] = useState(true);
   useEffect(() => {
@@ -953,6 +962,7 @@ const PickupOrderCreationForm = ({
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
+          volumen:volumenUpdated,
         };
         const response = await (
           //added for create commdities 
@@ -1080,7 +1090,7 @@ const PickupOrderCreationForm = ({
     <div className="form-container">
       <form className="company-form pickup">
         <div className="row w-100">
-          <div className="col-6">
+        <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 <h2>General</h2>

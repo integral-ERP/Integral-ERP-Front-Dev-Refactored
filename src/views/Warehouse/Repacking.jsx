@@ -6,35 +6,70 @@ import PickupService from "../../services/PickupService";
 import ReceiptService from "../../services/ReceiptService";
 import ModalForm from "../shared/components/ModalForm";
 import { useModal } from "../../hooks/useModal";
-
 const Repacking = () => {
   const { hideShowSlider } = useContext(GlobalContext);
+  /* const [pickups, setPickups] = useState([]); */
   const [receipts, setReceipts] = useState([]);
   const [repackedCommodities, setRepackedCommodities] = useState([]);
   const [selectedCommodity, setSelectedCommodity] = useState(null);
   const [isOpen, openModal, closeModal] = useModal(false);
-  
   const columns = [
     "Parent Order",
     "Piece Quantity",
     "Description",
-    "Length (in)",
-    "Width (in)",
-    "Height (in)",
-    "Weight (lb)",
-    "Location",
-    "Volume (ft3)",
-    "Volume-Weight (Vlb)",
+    // " Length",
+    // " Width",
+    // " Height",
+    // " Weight",
+    " Length (in)",
+    " Width (in)",
+    " Height (in)",
+    " Weight (lb)",
+    " Location",
+    // " Volumetric Weight",
+    " Volume (ft3)",
+    " Volume-Weight (Vlb)",
     "Repack Options",
   ];
 
   const fetchData = async () => {
     try {
+      /* const pickupOrders = (await PickupService.getPickups()).data.results; */
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
+      /* setPickups(pickupOrders); */
       setReceipts(receiptOrders);
-      
       const commoditiesExtracted = [];
+      let pickIds = 80000;
       let receiptIds = 9000;
+
+      /* pickupOrders.forEach((pickupOrder) => {
+        const { commodities } = pickupOrder;
+        const repackedCommodities = commodities.filter(
+          (commodity) => commodity.containsCommodities === true
+        );
+
+        const commoditiesWithParentId = repackedCommodities.map((commodity) => {
+          const updatedCommodity = {
+            ...commodity,
+            comesFrom: "PickUp Order",
+            parentId: pickupOrder.id,
+            parent: "PickUp Order No. " + pickupOrder.number,
+            commodityAmount: commodity.internalCommodities.length,
+            originalId: commodity.id,
+            id: pickIds,
+          };
+
+          pickIds++;
+
+          return updatedCommodity;
+        });
+        commoditiesExtracted.push(...commoditiesWithParentId);
+
+        return {
+          ...pickupOrder,
+          commodities: commoditiesWithParentId,
+        };
+      }); */
 
       receiptOrders.forEach((receiptOrder) => {
         const { commodities } = receiptOrder;
@@ -57,6 +92,11 @@ const Repacking = () => {
           return updatedCommodity;
         });
         commoditiesExtracted.push(...commoditiesWithParentId);
+
+        return {
+          ...receiptOrder,
+          commodities: commoditiesWithParentId,
+        };
       });
 
       setRepackedCommodities(commoditiesExtracted);
@@ -113,7 +153,7 @@ const Repacking = () => {
       const newCommodities = repackedCommodities.filter(
         (item) => item.id !== selectedCommodity.id
       );
-      setRepackedCommodities(newCommodities.reverse());
+      setRepackedCommodities(newCommodities).reverse();
     }
   };
 
@@ -144,30 +184,33 @@ const Repacking = () => {
   }, []);
 
   return (
+    <>
       <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
-          <Sidebar />
-        </div>
-        <div
-          className="content-page"
-          style={
-            !hideShowSlider
-              ? { marginLeft: "21rem", width: "calc(100vw - 250px)" }
-              : { marginInline: "auto" }
-          }
-        >
-          <Table
-            data={repackedCommodities}
-            columns={columns}
-            onSelect={handleSelectCommodity}
-            selectedRow={selectedCommodity}
-            onEdit={handleUnpackCommodity}
-            onInspect={handleInspectCommodity}
-            title="Repacked Commodities"
-            setData={setRepackedCommodities}
-            importEnabled={false}
-            importLabel={false}
-          />
+        <div className="dashboard__sidebar sombra">
+          <div>
+            <Sidebar />
+          </div>
+
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "21rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
+            <Table
+              data={repackedCommodities}
+              columns={columns}
+              onSelect={handleSelectCommodity}
+              selectedRow={selectedCommodity}
+              onEdit={handleUnpackCommodity}
+              onInspect={handleInspectCommodity}
+              title="Repacked Commodities"
+              setData={setRepackedCommodities}
+              importEnabled={false}
+              importLabel={false}
+            />
 
             {selectedCommodity !== null && (
              
@@ -225,6 +268,8 @@ const Repacking = () => {
             )}
           </div>
         </div>
+      </div>
+    </>
   );
 };
 

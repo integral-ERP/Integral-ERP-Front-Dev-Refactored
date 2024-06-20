@@ -61,8 +61,8 @@ const ReceiptCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [volumenUpdated, setVolumenUpdated] = useState(0);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -930,6 +930,7 @@ const ReceiptCreationForm = ({
         status: 4,
         // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
+        volumen : pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
         pickupDateAndTime: pickupOrder.pick_up_date,
@@ -1043,9 +1044,17 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalWeight += parseFloat(com.weight);
       });
-
       setWeightUpdated(totalWeight);
     }
+
+    if (commodities.length > 0) {
+      let totalVolume = 0;
+      commodities.forEach((com) => {
+        totalVolume += parseFloat(com.volumen);
+      });
+      setVolumenUpdated(totalVolume);
+    }
+
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -1129,7 +1138,8 @@ const ReceiptCreationForm = ({
       shipperRequest !== null &&
       consigneeRequest !== null &&
       clientToBillRequest !== null &&
-      weightUpdated
+      weightUpdated &&
+      volumenUpdated
     ) {
       setAllStateUpdatesComplete(true);
     }
@@ -1171,6 +1181,7 @@ const ReceiptCreationForm = ({
           invoice_number: formData.invoiceNumber,
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
         //added para guardar comidities in pickup order
         let rawDatapick = {
@@ -1204,6 +1215,7 @@ const ReceiptCreationForm = ({
           charges: charges,
           supplier: formData.supplierId,
           weight: weightUpdated,
+          volumen: volumenUpdated,
         };
 
         const response = await (creating
@@ -2120,7 +2132,7 @@ const ReceiptCreationForm = ({
                 type="textarea"
                 inputName="notes"
                 placeholder="Nota here..."
-                label="Note"
+                // label="Note"
                 value={formData.notes}
                 changeHandler={(e) =>
                   setFormData({ ...formData, notes: e.target.value })

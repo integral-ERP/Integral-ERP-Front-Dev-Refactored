@@ -34,7 +34,9 @@ const Release = () => {
     "Release Date",
     "Released to",
     "Pieces",
-    "Weight",
+    // "Weight",
+    "Weight (lb)",
+    "Volumen (ft3)", 
     "View Release PDF",
   ];
 
@@ -78,7 +80,7 @@ const Release = () => {
       }
       // console.log("Aqui-1 = ",filteredData);
       // console.log("Aqui-2 = ",filteredData);
-      setReleaseOrders(filteredData);
+      setReleaseOrders(filteredData.reverse());
     } catch (error) {
       console.log(error);
     }
@@ -86,9 +88,9 @@ const Release = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("Aqui-1 = ",fetchData());
-    console.log("Aqui-2 = ",fetchData());
-    console.log("Aqui-3 = ",fetchData());
+    console.log("Aqui-1 = ",fetchData());// No borrar
+    console.log("Aqui-2 = ",fetchData());// No borrar
+    console.log("Aqui-3 = ",fetchData());// No borrar
   }, []);
 
   const updateReleaseOrders = (url = null) => {
@@ -101,8 +103,8 @@ const Release = () => {
           );
         });
 
-        // setReleaseOrders([...releaseOrders, ...newreleises].reverse());
-        setReleaseOrders([...response.data.results].reverse());
+         setReleaseOrders([...releaseOrders, ...newreleises].reverse());
+        //setReleaseOrders([...response.data.results].reverse());
 
         if (response.data.next) {
           setNextPageURL(response.data.next);
@@ -150,7 +152,7 @@ const Release = () => {
 
   const handleSelectPickupOrder = (releaseOrder) => {
     setSelectedReleaseOrder(releaseOrder);
-    console.log("Release-1", releaseOrders[0]);
+    console.log("ReleaseSelected", releaseOrder);
   };
 
   const handleEditreceipts = () => {
@@ -272,7 +274,7 @@ const Release = () => {
   return (
     <>
       <div className="dashboard__layout">
-        <div className="dashboard__sidebar">
+        <div className="dashboard__sidebar sombra">
           <Sidebar />
           <div
             className="content-page"
