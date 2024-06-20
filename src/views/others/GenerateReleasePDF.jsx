@@ -34,6 +34,7 @@ const GenerateReleasePDF = (data) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
+    let longboard = 440.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -47,30 +48,25 @@ const GenerateReleasePDF = (data) => {
       let eigthRowText = "";
       let ninenthRowText = "";
       data.commodities?.forEach((commodity, index) => {
-        firstRowText += `1 \n`;
-        secondRowText = data.warehouseReceiptObj?.number || "";
-        thirdRowText += `${commodity.locationCode} \n`;
-        fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fifthRowText += `${"Box"} \n`;
-        sixthRowText += `${commodity.description} \n`;
-        seventhRowText += `${commodity.weight} lb \n`;
-        eigthRowText += `${commodity.volumen} ft3 \n`;
-        ninenthRowText += `${commodity.volumetricWeight} Vlb \n`;
-
-        totalWeight += parseFloat(commodity.weight);
-        totalVolume += parseFloat(commodity.volumen);
-        totalVolumeM += parseFloat(commodity.volumetricWeight);
-
-
+        firstRowText    += `1 \n`;
+        secondRowText   = data.warehouseReceiptObj?.number || "";
+        thirdRowText    += `${commodity.locationCode} \n`;
+        fourthRowText   += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
+        fifthRowText    += `${"Box"} \n`;
+        sixthRowText    += `${commodity.description} \n`;
+        seventhRowText  += `${commodity.weight} lb \n`;
+        eigthRowText    += `${commodity.volumen} ft3 \n`;
+        ninenthRowText  += `${commodity.volumetricWeight} Vlb \n`;
+        totalWeight     += parseFloat(commodity.weight);
+        totalVolume     += parseFloat(commodity.volumen);
+        totalVolumeM    += parseFloat(commodity.volumetricWeight);
+        longboard       -= 21;
       });
       const commodityRow = [
         {
-
           text: firstRowText,
-          margin: [0, 0, 0, 300],
         },
         {
-
           text: secondRowText,
         },
         {
@@ -80,7 +76,6 @@ const GenerateReleasePDF = (data) => {
           text: fourthRowText,
         },
         {
-
           text: fifthRowText,
         },
         {
@@ -94,6 +89,7 @@ const GenerateReleasePDF = (data) => {
         },
         {
           text: ninenthRowText,
+          margin: [0, 0, 0, longboard],
         },
       ];
       commodityRows.push(commodityRow);
@@ -131,25 +127,18 @@ const GenerateReleasePDF = (data) => {
                     stack: [
                       {
                         text: [
-                          `Issued By \n`,
+                          // `Issued By \n`,
                           `${data.issued_byObj?.name || ``} \n`,
                         ],
                       },
                       {
                         text: [
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
+                          `${data.issued_byObj?.phone? `Tel: ${data.issued_byObj.phone},`: ``}
+                          ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax}`: ``}\n`,
                           `${data.issued_byObj?.street_and_number || ``} \n`,
-                          `${data.issued_byObj?.city || ``}, ${
-                            data.issuedBy?.state || ``
-                          } ${data.issued_byObj?.zip_code || ``} \n`,
+                          `${data.issued_byObj?.city || ``},
+                           ${data.issuedBy?.state || ``} 
+                           ${data.issued_byObj?.zip_code || ``} \n`,
                           `${data.issued_byObj?.country || ``}`,
                         ],
                       },
@@ -175,25 +164,13 @@ const GenerateReleasePDF = (data) => {
                       {
                         text: [
                           `${data.releasedToObj?.data?.obj?.name || ``} \n`,
-                          `${
-                            data.releasedToObj?.data?.obj?.street_and_number ||
-                            ``
-                          } \n`,
-                          `${data.releasedToObj?.data?.obj?.city || ``}, ${
-                            data.releasedToObj?.data?.obj?.state || ``
-                          } ${
-                            data.releasedToObj?.data?.obj?.zip_code || ``
-                          } \n`,
+                          `${data.releasedToObj?.data?.obj?.street_and_number ||``} \n`,
+                          `${data.releasedToObj?.data?.obj?.city || ``}, 
+                          ${data.releasedToObj?.data?.obj?.state || ``} 
+                          ${data.releasedToObj?.data?.obj?.zip_code || ``} \n`,
                           `${data.releasedToObj?.data?.obj?.country || ``}`,
-                          `${
-                            data.releasedToObj?.phone
-                              ? `Tel: ${data.releasedToObj.phone}, `
-                              : ``
-                          }${
-                            data.releasedToObj?.fax
-                              ? `Fax: ${data.releasedToObj.fax}`
-                              : ``
-                          }\n`,
+                          `${data.releasedToObj?.phone? `Tel: ${data.releasedToObj.phone},`:``}
+                          ${data.releasedToObj?.fax? `Fax: ${data.releasedToObj.fax}`:``}\n`,
                         ],
                       },
                     ],
@@ -303,7 +280,7 @@ const GenerateReleasePDF = (data) => {
                         text: `Volume`,
                       },
                         {
-                          text: [`Volume Weight`],
+                          text: [`Vol Weight`],
                         },
                     ],
                     [
