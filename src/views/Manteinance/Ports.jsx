@@ -17,7 +17,7 @@ const Ports = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [nextPageURL, setNextPageURL] = useState("");
-const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const columns = [
     "Code",
     "Name",
@@ -26,7 +26,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     "Subdivision",
     "Used",
     "Remarks",
-    // "Maritime",
+    "Maritime",
     "Rail",
     "Road",
     "Air",
@@ -34,7 +34,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     // "Border Crossing Point",
     "US Customs Code",
   ];
-  const {hideShowSlider} = useContext(GlobalContext);
+  const { hideShowSlider } = useContext(GlobalContext);
   const fetchportsData = (url = null) => {
     PortService.getPorts(url)
       .then((response) => {
@@ -49,7 +49,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
   };
 
   useEffect(() => {
-    if(!initialDataFetched){
+    if (!initialDataFetched) {
       fetchportsData();
       setInitialDataFetched(true);
     }
@@ -68,7 +68,6 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     }
 
     return () => {
-
       observer.disconnect();
     };
   }, [nextPageURL]);
@@ -102,7 +101,9 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             setTimeout(() => {
               setShowSuccessAlert(false);
             }, 1000);
-            const newreceipts = ports.filter((order) => order.id !== selectedPort.id);
+            const newreceipts = ports.filter(
+              (order) => order.id !== selectedPort.id
+            );
             setports(newreceipts);
           } else {
             setShowErrorAlert(true);
@@ -111,9 +112,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
             }, 1000);
           }
         })
-        .catch((error) => {
-          
-        });
+        .catch((error) => {});
     } else {
       alert("Please select a Port to delete.");
     }
@@ -121,7 +120,6 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   useEffect(() => {
     const handleWindowClick = (event) => {
-
       // const clickedElement = event.target;
       // const isWPButton = clickedElement.classList.contains("ne");
       // const isTableRow = clickedElement.closest(".table-row");
@@ -136,68 +134,81 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
     window.addEventListener("click", handleWindowClick);
 
     return () => {
-
       window.removeEventListener("click", handleWindowClick);
     };
   }, []);
 
   return (
     <>
-    <div className="dashboard__layout">
-      <div className="dashboard__sidebar sombra">
+      <div className="dashboard__layout">
+        <div className="dashboard__sidebar sombra">
           <Sidebar />
-      <div className="content-page" style={!hideShowSlider ? { marginLeft: "22rem", width: "calc(100vw - 250px)" } : { marginInline: "auto" }}>
-      <Table
-        data={ports}
-        columns={columns}
-        onSelect={handleSelectPort} // Make sure this line is correct
-        selectedRow={selectedPort}
-        onDelete={handleDeletePort}
-        onEdit={handleEditPort}
-        onAdd={handleAddPort}
-        contextService={PortServices}
-        title="Ports"
-      >
-        {/* <PortsCreationForm
+          <div
+            className="content-page"
+            style={
+              !hideShowSlider
+                ? { marginLeft: "22rem", width: "calc(100vw - 250px)" }
+                : { marginInline: "auto" }
+            }
+          >
+            <Table
+              data={ports}
+              columns={columns}
+              onSelect={handleSelectPort} // Make sure this line is correct
+              selectedRow={selectedPort}
+              onDelete={handleDeletePort}
+              onEdit={handleEditPort}
+              onAdd={handleAddPort}
+              contextService={PortServices}
+              title="Ports"
+            >
+              {/* <PortsCreationForm
             port={selectedPort}
             closeModal={closeModal}
             creating={false}
             onPortDataChange={handleportsDataChange}
           /> */}
-           {selectedPort !== null && (
-          <PortsCreationForm
-            port={selectedPort}
-            closeModal={closeModal}
-            creating={false}
-            onPortDataChange={handleportsDataChange}
-          />
-      )}
-      {selectedPort === null && (
-          <PortsCreationForm
-            port={null}
-            closeModal={closeModal}
-            creating={true}
-            onPortDataChange={handleportsDataChange}
-          />
-      )}
-          </Table>
+              {selectedPort !== null && (
+                <PortsCreationForm
+                  port={selectedPort}
+                  closeModal={closeModal}
+                  creating={false}
+                  onPortDataChange={handleportsDataChange}
+                />
+              )}
+              {selectedPort === null && (
+                <PortsCreationForm
+                  port={null}
+                  closeModal={closeModal}
+                  creating={true}
+                  onPortDataChange={handleportsDataChange}
+                />
+              )}
+            </Table>
 
-      {showSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowSuccessAlert(false)} className="alert-notification">
-          <AlertTitle>Success</AlertTitle>
-          <strong>Port deleted successfully!</strong>
-        </Alert>
-      )}
-      {showErrorAlert && (
-        <Alert severity="error" onClose={() => setShowErrorAlert(false)} className="alert-notification">
-          <AlertTitle>Error</AlertTitle>
-          <strong>Error deleting Port. Please try again</strong>
-        </Alert>
-      )}
-     
+            {showSuccessAlert && (
+              <Alert
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Success</AlertTitle>
+                <strong>Port deleted successfully!</strong>
+              </Alert>
+            )}
+            {showErrorAlert && (
+              <Alert
+                severity="error"
+                onClose={() => setShowErrorAlert(false)}
+                className="alert-notification"
+              >
+                <AlertTitle>Error</AlertTitle>
+                <strong>Error deleting Port. Please try again</strong>
+              </Alert>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
     </>
   );
 };
