@@ -82,7 +82,7 @@
     background: none;
     // margin-right: 1rem;
     border: 2px solid #dfdfdf;
-    margin-left: 8vw;
+    // margin-left: 8vw;
     border-radius: 8px;
     // translate: 22vw 0;
   }
@@ -92,7 +92,7 @@
     margin-right: 1rem;
     border: 2px solid #dfdfdf;
     border-radius: 8px;
-    margin-left: 3vw;
+    // margin-left: 1vw;
   }
 
   .export-dropdown {
@@ -586,6 +586,23 @@
 
   }
 
+  .button-charge {
+    width: 12rem;
+    margin-bottom: 2vw;
+    height: 3rem;
+    border-radius: 1rem;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.6rem;
+    margin: 0;
+    padding: 0;
+    border-color: #006BAD;
+    background-color: #006BAD;
+    color: white;
+    cursor: pointer;
+    transition: background-color 9.7s ease;
+  }
+
 
 }
 
@@ -714,8 +731,6 @@
     width: 100%;
     text-align: center;
     margin-right: 3vw;
-    // margin-bottom: 20vw;
-    // margin: 8px 0;
   }
 
   .alert-notification {
@@ -1019,22 +1034,14 @@
     justify-content: center;
   }
 
-  /* Context Menu Styles */
   .context-menu {
     position: absolute;
     background-color: #fff;
-
-    /* Background color */
     border: 1px solid #ccc;
-    /* Border */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    /* Box shadow */
     z-index: 1000;
-    /* Ensure it appears above other content */
     padding: 8px;
-    /* Padding */
     min-width: 100px;
-    /* Minimum width */
     height: max-content;
     display: grid;
     justify-content: left;
@@ -1054,12 +1061,10 @@
     margin: 5px 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-    /* Smooth background color transition on hover */
   }
 
   .context-menu li:hover {
     background-color: #a19999;
-    /* Background color on hover */
   }
 
   .context-menu li:last-child {
@@ -1087,7 +1092,6 @@
 
 
   .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-    // padding-right: 0% !important;
     border: 1px solid #818080;;
     height: 3rem;
     width: 100% !important;
@@ -1318,6 +1322,8 @@
   color: white;
   cursor: pointer;
   transition: background-color 9.7s ease;
+  margin-bottom: 2vw;
+  
 }
 
 //---------------------------------------------------------------

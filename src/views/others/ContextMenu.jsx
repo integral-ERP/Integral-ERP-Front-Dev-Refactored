@@ -6,7 +6,7 @@ const ContextMenu = ({ x, y, onClose, options }) => {
   }
 
   return (
-    <div 
+    <div
     className="context-menu"
           style={{
             position: "fixed",
