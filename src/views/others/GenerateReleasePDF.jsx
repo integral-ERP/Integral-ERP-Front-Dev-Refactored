@@ -17,8 +17,8 @@ const GenerateReleasePDF = (data) => {
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128)
       text: data.number + '', // Barcode data
-      scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
+      scale: 4, // Scale factor for the barcode size
+      height: 3, // Height of the barcode
       includetext: true, // Include human-readable text below the barcode
       textxalign: "center",
     };
@@ -38,15 +38,15 @@ const GenerateReleasePDF = (data) => {
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
-      let firstRowText = "";
-      let secondRowText = "";
-      let thirdRowText = "";
-      let fourthRowText = "";
-      let fifthRowText = "";
-      let sixthRowText = "";
-      let seventhRowText = "";
-      let eigthRowText = "";
-      let ninenthRowText = "";
+      let firstRowText    = "";
+      let secondRowText   = "";
+      let thirdRowText    = "";
+      let fourthRowText   = "";
+      let fifthRowText    = "";
+      let sixthRowText    = "";
+      let seventhRowText  = "";
+      let eigthRowText    = "";
+      let ninenthRowText  = "";
       data.commodities?.forEach((commodity, index) => {
         firstRowText    += `1 \n`;
         secondRowText   = data.warehouseReceiptObj?.number || "";
@@ -116,8 +116,14 @@ const GenerateReleasePDF = (data) => {
                         fit: [100, 100],
                       },
                       {
-                        text: "CARGO RELEASE",
-                        fontSize: 14,
+                        text: "Release to",
+                        margin: [0, 10, 0, 0], // Adjust margin as needed
+                      },
+                      {
+                        text:[
+                          `${data.consigneeObj.data.obj.name || ``} \n`,
+                        ],
+                        fontSize: 18,
                         bold: true,
                         margin: [0, 10, 0, 0], // Adjust margin as needed
                       },
@@ -127,7 +133,6 @@ const GenerateReleasePDF = (data) => {
                     stack: [
                       {
                         text: [
-                          // `Issued By \n`,
                           `${data.issued_byObj?.name || ``} \n`,
                         ],
                       },
@@ -148,10 +153,18 @@ const GenerateReleasePDF = (data) => {
                   },
                   {
                     stack: [
+                      {text: "CARGO RELEASE",
+                        alignment: "center",
+                        fontSize: 18,
+                        border: ['', '', '', ''],
+                        colSpan: 2,
+                        bold: true,
+                        margin: [0, 0, 0, 0],
+                        }, 
                       {
                         image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
+                        fit: [1000, 50],
+                        alignment: `center`,
                       },
                     ],
                   },
@@ -162,16 +175,16 @@ const GenerateReleasePDF = (data) => {
                   {
                     stack: [
                       {
-                        text: [
-                          `${data.releasedToObj?.data?.obj?.name || ``} \n`,
-                          `${data.releasedToObj?.data?.obj?.street_and_number ||``} \n`,
-                          `${data.releasedToObj?.data?.obj?.city || ``}, 
-                          ${data.releasedToObj?.data?.obj?.state || ``} 
-                          ${data.releasedToObj?.data?.obj?.zip_code || ``} \n`,
-                          `${data.releasedToObj?.data?.obj?.country || ``}`,
-                          `${data.releasedToObj?.phone? `Tel: ${data.releasedToObj.phone},`:``}
-                          ${data.releasedToObj?.fax? `Fax: ${data.releasedToObj.fax}`:``}\n`,
-                        ],
+                        // text: [
+                        //   `${data.releasedToObj?.data?.obj?.name || ``} \n`,
+                        //   `${data.releasedToObj?.data?.obj?.street_and_number ||``} \n`,
+                        //   `${data.releasedToObj?.data?.obj?.city || ``}, 
+                        //   ${data.releasedToObj?.data?.obj?.state || ``} 
+                        //   ${data.releasedToObj?.data?.obj?.zip_code || ``} \n`,
+                        //   `${data.releasedToObj?.data?.obj?.country || ``}`,
+                        //   `${data.releasedToObj?.phone? `Tel: ${data.releasedToObj.phone},`:``}
+                        //   ${data.releasedToObj?.fax? `Fax: ${data.releasedToObj.fax}`:``}\n`,
+                        // ],
                       },
                     ],
                   },
