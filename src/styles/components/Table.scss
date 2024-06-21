@@ -1,7 +1,24 @@
 @media screen and (max-width: 580px) {
+
+  .row.w-100{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-6{
+    width: 86% !important;
+    max-width: max-content !important;
+    margin-bottom: 3vw;
+  }
+
+  .col-3{
+    width: 100% !important;
+  }
+
+
   .search-container {
     margin: 0 1rem 0 0;
-    width: 27rem;
+    width: 15rem;
   }
 
   .modal-view {
@@ -177,6 +194,8 @@
     /* Add some vertical spacing between rows */
   }
 
+ 
+
   .colums-form {
     position: absolute;
     /* Positioning menu absolutely relative to the container */
@@ -281,12 +300,12 @@
     text-overflow: ellipsis;
     width: 5.59%;
     display: inline-block;
-    font-size: 10px;
-    min-height: 40px;
+    font-size: 15px;
+    min-height: 69px;
   }
 
   td:empty {
-    min-height: 40px;
+    min-height: 69px;
     /* Ajusta el valor según sea necesario */
   }
 
@@ -556,6 +575,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 2vw !important;
   }
 
   .containerr__shipper {
@@ -1905,6 +1925,29 @@
     position: relative;
     box-sizing: border-box;
     margin-left: 0 !important;
+  }
+
+  .css-1bcmzxa-MuiMultiSectionDigitalClock-root{
+    color: rgb(55, 55, 55) !important;
+  }
+
+  .css-nk89i7-MuiPickersCalendarHeader-root{
+    color: rgb(55, 55, 55) !important;
+  }
+
+  .css-1vooibu-MuiSvgIcon-root{
+    color: rgb(55, 55, 55) !important;
+  }
+  
+  .css-qa7bje-MuiButtonBase-root-MuiPickersDay-root{
+    color: black !important;
+    font-size: 10px !important;
+  }   
+
+  .css-rhmlg1-MuiTypography-root-MuiDayCalendar-weekDayLabel{
+    color: rgb(0, 0, 0) !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
   }
 
   div.col-4.text-start .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {

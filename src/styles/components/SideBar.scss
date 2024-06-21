@@ -41,8 +41,8 @@
   
   
   .content-page {
-    width: 100%;
-    height: 100%;
+    width: 230vw;
+    height: 225vw;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -480,7 +480,7 @@
   .content-page {
     // overflow-y: scroll;
     width: 97%;
-    height: min-content;
+    // height: min-content;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -890,4 +890,3 @@
     width: 99%;
   }
 }
-

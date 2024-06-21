@@ -42,35 +42,6 @@ const Repacking = () => {
       let pickIds = 80000;
       let receiptIds = 9000;
 
-      /* pickupOrders.forEach((pickupOrder) => {
-        const { commodities } = pickupOrder;
-        const repackedCommodities = commodities.filter(
-          (commodity) => commodity.containsCommodities === true
-        );
-
-        const commoditiesWithParentId = repackedCommodities.map((commodity) => {
-          const updatedCommodity = {
-            ...commodity,
-            comesFrom: "PickUp Order",
-            parentId: pickupOrder.id,
-            parent: "PickUp Order No. " + pickupOrder.number,
-            commodityAmount: commodity.internalCommodities.length,
-            originalId: commodity.id,
-            id: pickIds,
-          };
-
-          pickIds++;
-
-          return updatedCommodity;
-        });
-        commoditiesExtracted.push(...commoditiesWithParentId);
-
-        return {
-          ...pickupOrder,
-          commodities: commoditiesWithParentId,
-        };
-      }); */
-
       receiptOrders.forEach((receiptOrder) => {
         const { commodities } = receiptOrder;
         const repackedCommodities = commodities.filter(
@@ -215,34 +186,6 @@ const Repacking = () => {
             {selectedCommodity !== null && (
              
              <div className="repacking-container">
-             {/* <div className="main-commodity">
-                <p className="item-description">
-                  {selectedCommodity.description}
-                </p>
-                <p className="item-info">
-                  Length(in): {selectedCommodity.length}
-                </p>
-                <p className="item-info">
-                  Width(in): {selectedCommodity.width}
-                </p>
-                <p className="item-info">
-                  Height(in): {selectedCommodity.height}
-                </p>
-                <p className="item-info">
-                  Weight(lb): {selectedCommodity.weight}
-                </p>
-                <p className="item-info">
-                  Volumetric Weight: {selectedCommodity.volumetricWeight}
-                  Volume (ft3): {selectedCommodity.volumetricWeight} 
-                </p>
-                <p className="item-info">
-                  Chargeable Weight: {selectedCommodity.chargedWeight}
-                </p>
-                <p className="item-info">
-                  Location: {selectedCommodity.locationCode}
-                </p>
-               <p className="item-info">Repacked?: {selectedCommodity.containsCommodities ? "Yes" : "No"}</p>
-             </div> */}
              {/*  fix the repacking show internalCommodities for edition */}
              {selectedCommodity.internalCommodities &&
                selectedCommodity.internalCommodities.map((com) => (
@@ -254,12 +197,8 @@ const Repacking = () => {
                    <p className="item-info">Height (in): {com.height}</p>
                    <p className="item-info">Volume (ft3): {com.volumen}</p>
                    <p className="item-info">Volume-Weight (Vlb): {com.volumetricWeight}</p>
-                   {/* <p className="item-info">
-                     Chargeable Weight: {com.chargedWeight}
-                   </p> */}
-                   {/* <p className="item-info">
-                     Location: {com.locationCode}
-                   </p> */}
+                   {/* <p className="item-info">Chargeable Weight: {com.chargedWeight}</p> */}
+                   {/* <p className="item-info">Location: {com.locationCode}</p> */}
                    {/* <p className="item-info">Repacked?: {com.containsCommodities ? "Yes" : "No"}</p> */}
                  </div>
                ))}
