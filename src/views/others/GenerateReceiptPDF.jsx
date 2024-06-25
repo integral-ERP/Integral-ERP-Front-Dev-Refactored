@@ -9,7 +9,6 @@ const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
 
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -33,6 +32,7 @@ const GenerateReceiptPDF = (data, numCon) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
+    let longboard = 305.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -42,21 +42,21 @@ const GenerateReceiptPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText += `1; Pallet \n \n \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
-        fourthRowText += `${commodity.description} \n \n \n`;
-        sixthRowText += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
-        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n \n`;
-        totalWeight += parseFloat(commodity.weight);
-        totalVolume += parseFloat(commodity.volumetricWeight);
-        totalVolumeM += parseFloat(commodity.volumen);
+        firstRowText    += `1; Pallet \n \n \n`;
+        thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
+        fourthRowText   += `${commodity.description} \n \n \n`;
+        sixthRowText    += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
+        seventhRowText  += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n \n`;
+        totalWeight     += parseFloat(commodity.weight);
+        totalVolume     += parseFloat(commodity.volumetricWeight);
+        totalVolumeM    += parseFloat(commodity.volumen);
+        longboard       -= 37;
       });
       const commodityRow = [
         {
 
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 190],
         },
         {},
         {
@@ -65,16 +65,14 @@ const GenerateReceiptPDF = (data, numCon) => {
         {
           text: fourthRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 40],
         },
         {},
         {
           text: sixthRowText,
-          margin: [0, 0, 0, 40],
         },
         {
           text: seventhRowText,
-          margin: [0, 0, 0, 40],
+          margin: [0, 0, 0, longboard],
         },
       ];
       commodityRows.push(commodityRow);
@@ -100,14 +98,10 @@ const GenerateReceiptPDF = (data, numCon) => {
               margin: [0, 0, 0, 0],
             },
           ];
-
-
           chargeRows.push(chargeRow);
         }
       });
-
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -121,13 +115,10 @@ const GenerateReceiptPDF = (data, numCon) => {
           const pdf = {
             content: [
               {
-                // widths: ["28%", "40%", "32%"],
                 columns: [
-                  
                   {
                     margin: [0, 0, -10, 0],
                     stack: [
-                      
                       {
                         image: imgUrl,
                         fit: [100, 100],
@@ -136,29 +127,23 @@ const GenerateReceiptPDF = (data, numCon) => {
                     ],
                   },
                   {
-                    margin: [-50, 0, 0, 0],
+                    margin: [-65, 0, 10, 0],
                     bold: true,
-                    text: [
-                      
-                      // `Issued By \n`,
-                      `${data.issued_byObj?.name || ``} \n`,
-                      `${data.issued_byObj?.phone
-                        ? `Tel: ${data.issued_byObj.phone}, `
-                        : ``
-                      }${data.issued_byObj?.fax
-                        ? `Fax: ${data.issued_byObj.fax}`
-                        : ``
-                      }\n`,
-                      `${data.issued_byObj?.street_and_number || ``} \n`,
-                      `${data.issued_byObj?.city || ``}
-                       ${data.issuedBy?.state || ``} ${data.issued_byObj?.zip_code || ``}`,
-                      `${data.issued_byObj?.country || ``}`,
-                    ],
+                   text: [
+                          `${data.issued_byObj?.name || ``} \n`,
+                          `${data.issued_byObj?.phone? `Tel: ${data.issued_byObj.phone || ``}, \n `: ``}
+                          ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax || ``}`: ``}\n`,
+                          `${data.issued_byObj?.street_and_number || ``} \n`,
+                          `${data.issued_byObj?.country || ``} \n`,
+                          `${data.issued_byObj?.state || ``} \n`,
+                          `${data.issued_byObj?.city || ``} \n`,
+                          `${data.issued_byObj?.zip_code || ``} \n`,   
+                        ],
                   },
                   {
                       style: `tableExample`,
+                      margin: [-30, 0, 0, 5],
                       table: {
-                        // width: `*`,
                         body: [
                           [
                             {text: "Warehouse Receipt",
@@ -167,6 +152,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                             border: ['', '', '', ''],
                             colSpan: 2,
                             bold: true,
+                            margin: [16, 0, 20, 0],
                             }, 
                             {
                             }
@@ -295,7 +281,6 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        // text: `${data.mainCarrierObj?.name || ``}`,
                         text: `${data.supplierObj?.data?.obj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       }
@@ -310,7 +295,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `Tracking Number`,
+                        text: `Tracking Numb.`,
                         margin: [0, 0, 0, 0],
                       },
                       {
@@ -366,8 +351,6 @@ const GenerateReceiptPDF = (data, numCon) => {
                         table: {
                           widths: ["28%", "40%", "32%"],
                           body: [
-                            // ["Type", `Description`, `Price`],
-                            // ...chargeRows,
                             [...chargeRows,]
                           ],
                         },

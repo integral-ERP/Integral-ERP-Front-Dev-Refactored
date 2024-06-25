@@ -2,6 +2,8 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
+import { BorderColor } from "@mui/icons-material";
+import { blue } from "@mui/material/colors";
 
 pdfMake.vfs = pdfFonts;
 
@@ -9,7 +11,6 @@ const GenerateReleasePDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -17,13 +18,12 @@ const GenerateReleasePDF = (data) => {
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128)
       text: data.number + '', // Barcode data
-      scale: 2, // Scale factor for the barcode size
-      height: 10, // Height of the barcode
+      scale: 4, // Scale factor for the barcode size
+      height: 5, // Height of the barcode
       includetext: true, // Include human-readable text below the barcode
       textxalign: "center",
     };
     try {
-
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
       barcodeImage = canvas.toDataURL();
     } catch (error) {
@@ -34,43 +34,39 @@ const GenerateReleasePDF = (data) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
+    let longboard = 440.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
-      let firstRowText = "";
-      let secondRowText = "";
-      let thirdRowText = "";
-      let fourthRowText = "";
-      let fifthRowText = "";
-      let sixthRowText = "";
-      let seventhRowText = "";
-      let eigthRowText = "";
-      let ninenthRowText = "";
+      let firstRowText    = "";
+      let secondRowText   = "";
+      let thirdRowText    = "";
+      let fourthRowText   = "";
+      let fifthRowText    = "";
+      let sixthRowText    = "";
+      let seventhRowText  = "";
+      let eigthRowText    = "";
+      let ninenthRowText  = "";
       data.commodities?.forEach((commodity, index) => {
-        firstRowText += `1 \n`;
-        secondRowText = data.warehouseReceiptObj?.number || "";
-        thirdRowText += `${commodity.locationCode} \n`;
-        fourthRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fifthRowText += `${"Box"} \n`;
-        sixthRowText += `${commodity.description} \n`;
-        seventhRowText += `${commodity.weight} lb \n`;
-        eigthRowText += `${commodity.volumen} ft3 \n`;
-        ninenthRowText += `${commodity.volumetricWeight} Vlb \n`;
-
-        totalWeight += parseFloat(commodity.weight);
-        totalVolume += parseFloat(commodity.volumen);
-        totalVolumeM += parseFloat(commodity.volumetricWeight);
-
-
+        firstRowText    += `1 \n`;
+        secondRowText   = data.warehouseReceiptObj?.number || "";
+        thirdRowText    += `${commodity.locationCode} \n`;
+        fourthRowText   += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
+        fifthRowText    += `${"Box"} \n`;
+        sixthRowText    += `${commodity.description} \n`;
+        seventhRowText  += `${commodity.weight} lb \n`;
+        eigthRowText    += `${commodity.volumen} ft3 \n`;
+        ninenthRowText  += `${commodity.volumetricWeight} Vlb \n`;
+        totalWeight     += parseFloat(commodity.weight);
+        totalVolume     += parseFloat(commodity.volumen);
+        totalVolumeM    += parseFloat(commodity.volumetricWeight);
+        longboard       -= 21;
       });
       const commodityRow = [
         {
-
           text: firstRowText,
-          margin: [0, 0, 0, 300],
         },
         {
-
           text: secondRowText,
         },
         {
@@ -80,7 +76,6 @@ const GenerateReleasePDF = (data) => {
           text: fourthRowText,
         },
         {
-
           text: fifthRowText,
         },
         {
@@ -94,6 +89,7 @@ const GenerateReleasePDF = (data) => {
         },
         {
           text: ninenthRowText,
+          margin: [0, 0, 0, longboard],
         },
       ];
       commodityRows.push(commodityRow);
@@ -112,110 +108,185 @@ const GenerateReleasePDF = (data) => {
           const pdf = {
             content: [
               {
-                columns: [
-                  {
-                    stack: [
+                table:{
+                  widths: [`20%`, `50%`,`30%`],
+                  body:[
+                    [
                       {
-                        image: imgUrl,
-                        fit: [100, 100],
-                      },
-                      {
-                        text: "CARGO RELEASE",
-                        fontSize: 14,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                    ],
-                  },
-                  {
-                    stack: [
-                      {
-                        text: [
-                          `Issued By \n`,
-                          `${data.issued_byObj?.name || ``} \n`,
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
+                        margin: [0, 0, 0, 0],
+                        stack: [
+                          {
+                            image: imgUrl,
+                            fit: [100, 100],
+                          },
                         ],
                       },
                       {
-                        text: [
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
-                          `${data.issued_byObj?.street_and_number || ``} \n`,
-                          `${data.issued_byObj?.city || ``}, ${
-                            data.issuedBy?.state || ``
-                          } ${data.issued_byObj?.zip_code || ``} \n`,
-                          `${data.issued_byObj?.country || ``}`,
-                        ],
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                                  text: `${data.issued_byObj?.name || ``}`,
+                                  margin: [0, 0, 0, 0],
+                                  bold: true,
+                                  fontSize: 12,
+                                },
+                                {
+                                  text: `${data.issued_byObj?.street_and_number || ``}` + " , " +
+                                        `${data.issued_byObj?.city || ``}`+ " , " + 
+                                        `${data.issued_byObj?.state || ``}` + " , " +
+                                        `${data.issued_byObj?.zip_code || ``}`,
+                                  margin: [0, 0, 0, 0],
+                                  fontSize: 9,
+                                },
+                                {
+                                  text: `${data.issued_byObj?.country || ``}\n` +
+                                        " Tel: " + `${data.issued_byObj?.phone || ``}\n` +
+                                        " Fax: " + `${data.issued_byObj?.fax || ``} \n \n \n \n \n`,
+                                  margin: [0, 0, 0, 0],
+                                  fontSize: 9,
+                                },
+                                {
+                                  text:"Released By",
+                                  fontSize: 9,
+                                },
+                                {
+                                  text:data.employeeObj.name,
+                                  bold: true,
+                                  fontSize: 11,
+                                },
+                        ]
                       },
-                      { text: `Released By \n` },
-                      { text: `${data.issued_byObj?.name || ``} \n` },
-                    ],
-                  },
-                  {
-                    stack: [
                       {
-                        image: barcodeImage,
-                        fit: [100, 200],
-                        alignment: `right`,
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          [
+                            {text: "CARGO RELEASE",
+                            alignment: "center",
+                            fontSize: 18,
+                            border: ['', '', '', ''],
+                            colSpan: 2,
+                            bold: true,
+                            margin: [0, 0, 0, 0],
+                            }, 
+                            {}
+                          ],
+                          [
+                            {
+                              border: ['', '', '', ''],
+                              colSpan: 2,
+                              stack: [
+                                {
+                                  image: barcodeImage,
+                                  fit: [1000, 75],
+                                  alignment: `center`,
+                                },
+                                {
+                                  text: data.creation_date ,
+                                  margin: [0, 12, 0, 0],
+                                  fontSize: 12,
+                                  alignment: "center",
+                                  bold: true,
+                                },
+                              ],
+                            },
+                            {}
+                          ],
+                        ]
                       },
                     ],
-                  },
-                ],
+                  ]
+                }
               },
+              // -------------------------
               {
-                columns: [
-                  {
-                    stack: [
+                table:{
+                  widths: [`20%`, `50%`,`30%`],
+                  body:[
+                    [
                       {
-                        text: [
-                          `${data.releasedToObj?.data?.obj?.name || ``} \n`,
-                          `${
-                            data.releasedToObj?.data?.obj?.street_and_number ||
-                            ``
-                          } \n`,
-                          `${data.releasedToObj?.data?.obj?.city || ``}, ${
-                            data.releasedToObj?.data?.obj?.state || ``
-                          } ${
-                            data.releasedToObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.releasedToObj?.data?.obj?.country || ``}`,
-                          `${
-                            data.releasedToObj?.phone
-                              ? `Tel: ${data.releasedToObj.phone}, `
-                              : ``
-                          }${
-                            data.releasedToObj?.fax
-                              ? `Fax: ${data.releasedToObj.fax}`
-                              : ``
-                          }\n`,
+                        border: ['', '', '', ''],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                            text: "Release to:",
+                            margin: [0, 0, 0, 0],
+                            fontSize: 9,
+                          },
+                          {
+                            text: data.consigneeObj.data.obj.name,
+                            margin: [0, 0, 0, 0],
+                            bold: true,
+                            fontSize: 11,
+                          },
                         ],
                       },
+                      {
+                        border: ['', '', '', ''],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                          text: "Carrier",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.main_carrierObj.name,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Driver",
+                          fontSize: 9,
+                          },
+                          {
+                            text: "- - - - - - - - -",
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Driver License",
+                          fontSize: 9,
+                          },
+                          {
+                            text: "- - - - - - - - -",
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Pro Number",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.pro_number,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Tracking Number",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.tracking_number,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                        ],
+                      },
+                      {
+                        border: ['', '', '', ''],
+                        fillColor: `#CCCCCC`,
+                        text: "Release to:",
+                        margin: [0, 0, 0, 0],
+                        fontSize: 9,
+                      },
                     ],
-                  },
-                  {
-                    stack: [
-                      { text: "Carrier" },
-                      { text: data.carrierObj?.name },
-                      { text: "PRO Number" },
-                      { text: data.pro_number },
-                      { text: "Tracking Number" },
-                      { text: data.tracking_number },
-                    ],
-                  },
-                  {
-                    style: `tableExampleLeft`,
-                    table: {
-                      widths: ["28%", "40%", "32%"],
-                      body: [["Type", `Description`, `Price`], ...chargeRows],
-                    },
-                  },
-                ],
+                  ]
+                }
               },
               {
                 table: {
@@ -303,7 +374,7 @@ const GenerateReleasePDF = (data) => {
                         text: `Volume`,
                       },
                         {
-                          text: [`Volume Weight`],
+                          text: [`Vol Weight`],
                         },
                     ],
                     [
@@ -337,7 +408,7 @@ const GenerateReleasePDF = (data) => {
                     ],
                   ],
                 },
-                margin: [0, 50, 0, 20],
+                margin: [0, 10, 0, 20],
               },
             ],
             styles: {
