@@ -2,6 +2,8 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
+import { BorderColor } from "@mui/icons-material";
+import { blue } from "@mui/material/colors";
 
 pdfMake.vfs = pdfFonts;
 
@@ -9,7 +11,6 @@ const GenerateReleasePDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -18,12 +19,11 @@ const GenerateReleasePDF = (data) => {
       bcid: "code128", // Barcode type (e.g., code128)
       text: data.number + '', // Barcode data
       scale: 4, // Scale factor for the barcode size
-      height: 3, // Height of the barcode
+      height: 5, // Height of the barcode
       includetext: true, // Include human-readable text below the barcode
       textxalign: "center",
     };
     try {
-
       canvas = bwipjs.toCanvas(canvas, barcodeOptions);
       barcodeImage = canvas.toDataURL();
     } catch (error) {
@@ -108,104 +108,185 @@ const GenerateReleasePDF = (data) => {
           const pdf = {
             content: [
               {
-                columns: [
-                  {
-                    stack: [
+                table:{
+                  widths: [`20%`, `50%`,`30%`],
+                  body:[
+                    [
                       {
-                        image: imgUrl,
-                        fit: [100, 100],
-                      },
-                      {
-                        text: "Release to",
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                      {
-                        text:[
-                          `${data.consigneeObj.data.obj.name || ``} \n`,
-                        ],
-                        fontSize: 18,
-                        bold: true,
-                        margin: [0, 10, 0, 0], // Adjust margin as needed
-                      },
-                    ],
-                  },
-                  {
-                    stack: [
-                      {
-                        text: [
-                          `${data.issued_byObj?.name || ``} \n`,
-                        ],
-                      },
-                      {
-                        text: [
-                          `${data.issued_byObj?.phone? `Tel: ${data.issued_byObj.phone},`: ``}
-                          ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax}`: ``}\n`,
-                          `${data.issued_byObj?.street_and_number || ``} \n`,
-                          `${data.issued_byObj?.city || ``},
-                           ${data.issuedBy?.state || ``} 
-                           ${data.issued_byObj?.zip_code || ``} \n`,
-                          `${data.issued_byObj?.country || ``}`,
-                        ],
-                      },
-                      { text: `Released By \n` },
-                      { text: `${data.issued_byObj?.name || ``} \n` },
-                    ],
-                  },
-                  {
-                    stack: [
-                      {text: "CARGO RELEASE",
-                        alignment: "center",
-                        fontSize: 18,
-                        border: ['', '', '', ''],
-                        colSpan: 2,
-                        bold: true,
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
                         margin: [0, 0, 0, 0],
-                        }, 
+                        stack: [
+                          {
+                            image: imgUrl,
+                            fit: [100, 100],
+                          },
+                        ],
+                      },
                       {
-                        image: barcodeImage,
-                        fit: [1000, 50],
-                        alignment: `center`,
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                                  text: `${data.issued_byObj?.name || ``}`,
+                                  margin: [0, 0, 0, 0],
+                                  bold: true,
+                                  fontSize: 12,
+                                },
+                                {
+                                  text: `${data.issued_byObj?.street_and_number || ``}` + " , " +
+                                        `${data.issued_byObj?.city || ``}`+ " , " + 
+                                        `${data.issued_byObj?.state || ``}` + " , " +
+                                        `${data.issued_byObj?.zip_code || ``}`,
+                                  margin: [0, 0, 0, 0],
+                                  fontSize: 9,
+                                },
+                                {
+                                  text: `${data.issued_byObj?.country || ``}\n` +
+                                        " Tel: " + `${data.issued_byObj?.phone || ``}\n` +
+                                        " Fax: " + `${data.issued_byObj?.fax || ``} \n \n \n \n \n`,
+                                  margin: [0, 0, 0, 0],
+                                  fontSize: 9,
+                                },
+                                {
+                                  text:"Released By",
+                                  fontSize: 9,
+                                },
+                                {
+                                  text:data.employeeObj.name,
+                                  bold: true,
+                                  fontSize: 11,
+                                },
+                        ]
+                      },
+                      {
+                        border: ['', '', '', 'top'],
+                        borderColor: ['#000000', '#000000', '#000000', '#006BAD'],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          [
+                            {text: "CARGO RELEASE",
+                            alignment: "center",
+                            fontSize: 18,
+                            border: ['', '', '', ''],
+                            colSpan: 2,
+                            bold: true,
+                            margin: [0, 0, 0, 0],
+                            }, 
+                            {}
+                          ],
+                          [
+                            {
+                              border: ['', '', '', ''],
+                              colSpan: 2,
+                              stack: [
+                                {
+                                  image: barcodeImage,
+                                  fit: [1000, 75],
+                                  alignment: `center`,
+                                },
+                                {
+                                  text: data.creation_date ,
+                                  margin: [0, 12, 0, 0],
+                                  fontSize: 12,
+                                  alignment: "center",
+                                  bold: true,
+                                },
+                              ],
+                            },
+                            {}
+                          ],
+                        ]
                       },
                     ],
-                  },
-                ],
+                  ]
+                }
               },
+              // -------------------------
               {
-                columns: [
-                  {
-                    stack: [
+                table:{
+                  widths: [`20%`, `50%`,`30%`],
+                  body:[
+                    [
                       {
-                        // text: [
-                        //   `${data.releasedToObj?.data?.obj?.name || ``} \n`,
-                        //   `${data.releasedToObj?.data?.obj?.street_and_number ||``} \n`,
-                        //   `${data.releasedToObj?.data?.obj?.city || ``}, 
-                        //   ${data.releasedToObj?.data?.obj?.state || ``} 
-                        //   ${data.releasedToObj?.data?.obj?.zip_code || ``} \n`,
-                        //   `${data.releasedToObj?.data?.obj?.country || ``}`,
-                        //   `${data.releasedToObj?.phone? `Tel: ${data.releasedToObj.phone},`:``}
-                        //   ${data.releasedToObj?.fax? `Fax: ${data.releasedToObj.fax}`:``}\n`,
-                        // ],
+                        border: ['', '', '', ''],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                            text: "Release to:",
+                            margin: [0, 0, 0, 0],
+                            fontSize: 9,
+                          },
+                          {
+                            text: data.consigneeObj.data.obj.name,
+                            margin: [0, 0, 0, 0],
+                            bold: true,
+                            fontSize: 11,
+                          },
+                        ],
+                      },
+                      {
+                        border: ['', '', '', ''],
+                        margin: [0, 0, 0, 0],
+                        stack:[
+                          {
+                          text: "Carrier",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.main_carrierObj.name,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Driver",
+                          fontSize: 9,
+                          },
+                          {
+                            text: "- - - - - - - - -",
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Driver License",
+                          fontSize: 9,
+                          },
+                          {
+                            text: "- - - - - - - - -",
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Pro Number",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.pro_number,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                          {
+                          text: "Tracking Number",
+                          fontSize: 9,
+                          },
+                          {
+                            text: data.tracking_number,
+                            fontSize: 11,
+                            bold: true,
+                            },
+                        ],
+                      },
+                      {
+                        border: ['', '', '', ''],
+                        fillColor: `#CCCCCC`,
+                        text: "Release to:",
+                        margin: [0, 0, 0, 0],
+                        fontSize: 9,
                       },
                     ],
-                  },
-                  {
-                    stack: [
-                      { text: "Carrier" },
-                      { text: data.carrierObj?.name },
-                      { text: "PRO Number" },
-                      { text: data.pro_number },
-                      { text: "Tracking Number" },
-                      { text: data.tracking_number },
-                    ],
-                  },
-                  {
-                    style: `tableExampleLeft`,
-                    table: {
-                      widths: ["28%", "40%", "32%"],
-                      body: [["Type", `Description`, `Price`], ...chargeRows],
-                    },
-                  },
-                ],
+                  ]
+                }
               },
               {
                 table: {
@@ -327,7 +408,7 @@ const GenerateReleasePDF = (data) => {
                     ],
                   ],
                 },
-                margin: [0, 50, 0, 20],
+                margin: [0, 10, 0, 20],
               },
             ],
             styles: {

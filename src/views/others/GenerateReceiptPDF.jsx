@@ -9,7 +9,6 @@ const GenerateReceiptPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
 
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -99,14 +98,10 @@ const GenerateReceiptPDF = (data, numCon) => {
               margin: [0, 0, 0, 0],
             },
           ];
-
-
           chargeRows.push(chargeRow);
         }
       });
-
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -286,7 +281,6 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        // text: `${data.mainCarrierObj?.name || ``}`,
                         text: `${data.supplierObj?.data?.obj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       }
@@ -357,8 +351,6 @@ const GenerateReceiptPDF = (data, numCon) => {
                         table: {
                           widths: ["28%", "40%", "32%"],
                           body: [
-                            // ["Type", `Description`, `Price`],
-                            // ...chargeRows,
                             [...chargeRows,]
                           ],
                         },
