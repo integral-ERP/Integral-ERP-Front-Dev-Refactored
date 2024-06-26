@@ -823,7 +823,7 @@ const PickupOrderCreationForm = ({
       commodities.forEach((com) => {
         totalVolume += parseFloat(com.volumen);
       });
-      setVolumenUpdated(totalVolume);
+      setVolumenUpdated(totalVolume.toFixed(2));
     }
 
     if (commodities.length > 0) {
