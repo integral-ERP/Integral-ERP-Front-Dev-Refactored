@@ -302,6 +302,7 @@ const Release = () => {
               contextService={ReleaseService}
               importEnabled={false}
               importLabel={false}
+              hidebuttonsRelease={true}
             >
               {selectedReleaseOrder === null && (
                 <ReleaseOrderCreationForm
