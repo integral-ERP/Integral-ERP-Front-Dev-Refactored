@@ -45,6 +45,7 @@ const Table = ({
   importLabel,
   noScroll,
   noScrollY,
+  hidebuttonsRelease ,
 
   createWarehouseReceipt,
   Nodoubleclick,
@@ -973,7 +974,7 @@ const Table = ({
 
                             <div className="action-buttons">
                               <button
-                                className="generic-button"
+                                className={`generic-button ${hidebuttonsRelease ? "display-none" : ""}`}
                                 onClick={handleOpenCloseSlider}
                               >
                                 <i className="fas fa-plus menu-icon fa-3x"></i>
@@ -986,7 +987,7 @@ const Table = ({
                                 <i className="fas fa-pencil-alt menu-icon fa-3x ne"></i>
                               </button>
                               <button
-                                className="generic-button ne"
+                                className={`generic-button ne ${hidebuttonsRelease ? "display-none" : ""}`}
                                 onClick={onDelete}
                               >
                                 <i className="fas fa-trash-alt menu-icon fa-3x ne"></i>
@@ -994,7 +995,7 @@ const Table = ({
 
                               <div className="col-2 d-flex">
                                 <button
-                                  className="generic-button-eye"
+                                  className={`generic-button-eye ${hidebuttonsRelease ? "display-none" : ""}`}
                                   onClick={() => {
                                     setShowColumnMenu(!showColumnMenu); // Abre o cierra el modal de columnas
                                     setShowFilterMenu(false); // Cierra el modal de filtro si está abierto
