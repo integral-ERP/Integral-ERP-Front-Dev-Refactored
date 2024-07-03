@@ -35,7 +35,7 @@ const ReleaseOrderCreationForm = ({
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [clientToBill, setClientToBill] = useState(null);
   const [releasedTo, setReleasedTo] = useState(null);
-  const today = dayjs().format("YYYY-MM-DD");
+  const today = dayjs().format("YYYY-MM-DD hh:mm A");
   const pickupNumber = currentReleaseNumber ? currentReleaseNumber + 1 : 1;
   const [canRender, setcanRender] = useState(false);
   const [commodities, setcommodities] = useState([]);
@@ -50,7 +50,7 @@ const ReleaseOrderCreationForm = ({
   const formFormat = {
     status: 14,
     number: pickupNumber,
-    creation_date: today,
+    createdDateAndTime: today,
     release_date: today,
     employeeId: "",
     issuedById: "",
@@ -220,7 +220,7 @@ const ReleaseOrderCreationForm = ({
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
-        creation_date: releaseOrder.creation_date,
+        createdDateAndTime: releaseOrder.creation_date,
         release_date: releaseOrder.release_date,
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
@@ -730,7 +730,7 @@ const ReleaseOrderCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />
@@ -748,7 +748,7 @@ const ReleaseOrderCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD"),
+                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />

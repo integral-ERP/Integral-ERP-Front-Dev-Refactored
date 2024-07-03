@@ -2,7 +2,6 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./vfs_fonts.js";
 import logo from "../../img/logo.png";
 import bwipjs from "bwip-js";
-import { text } from "@fortawesome/fontawesome-svg-core";
 
 pdfMake.vfs = pdfFonts;
 
@@ -14,6 +13,53 @@ const GeneratePickUpPDF = (data) => {
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
+// # Obtener la fecha y la hora por separado
+    let dataCreation = new Date(data.creation_date);
+    let year = dataCreation.getFullYear();
+    let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let day = String(dataCreation.getDate()).padStart(2, '0');
+    let hours = dataCreation.getHours();
+    let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let ampm = hours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    hours = hours % 12;
+    hours = hours ? hours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
+
+// # Obtener la fecha y la hora por separado
+    let pickData = new Date(data.pick_up_date);
+    let pickyear = pickData.getFullYear();
+    let pickmonth = String(pickData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let pickday = String(pickData.getDate()).padStart(2, '0');
+    let pickhours = pickData.getHours();
+    let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let pickampm = pickhours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    pickhours = pickhours % 12;
+    pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear} - ${pickhours}:${pickminutes} ${pickampm}`;
+
+// # Obtener la fecha y la hora por separado
+    let deliveryData = new Date(data.delivery_date);
+    let deliveryyear = deliveryData.getFullYear();
+    let deliverymonth = String(deliveryData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let deliveryday = String(deliveryData.getDate()).padStart(2, '0');
+    let deliveryhours = deliveryData.getHours();
+    let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let deliveryampm = deliveryhours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    deliveryhours = deliveryhours % 12;
+    deliveryhours = deliveryhours ? deliveryhours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let deliveryformattedDateTime = `${deliveryday}/${deliverymonth}/${deliveryyear} - ${deliveryhours}:${deliveryminutes} ${deliveryampm}`;
+
+
+  
     canvas = document.createElement('canvas');
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128)
@@ -35,6 +81,7 @@ const GeneratePickUpPDF = (data) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
+    let longboard = 340.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -43,22 +90,26 @@ const GeneratePickUpPDF = (data) => {
       let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
+      
+
+
+      
       data.commodities?.forEach((commodity, index) => {
-        firstRowText += `1; Pallet \n \n \n`;
-        thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
-        fourthRowText += `${commodity.description} \n \n \n`;
-        sixthRowText += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
-        seventhRowText += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n \n`;
-        totalWeight += parseFloat(commodity.weight);
-        totalVolume += parseFloat(commodity.volumetricWeight);
-        totalVolumeM += parseFloat(commodity.volumen);
+        firstRowText    += `1; Pallet \n \n \n`;
+        thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
+        fourthRowText   += `${commodity.description} \n \n \n`;
+        sixthRowText    += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
+        seventhRowText  += `${commodity.volumetricWeight} Vlb \n` +`${commodity.volumen} ft3 \n \n`;
+        totalWeight     += parseFloat(commodity.weight);
+        totalVolume     += parseFloat(commodity.volumetricWeight);
+        totalVolumeM    += parseFloat(commodity.volumen);
+        longboard       -= 35;
+
       });
       const commodityRow = [
         {
-
           text: firstRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 200],
         },
         {},
         {
@@ -67,16 +118,14 @@ const GeneratePickUpPDF = (data) => {
         {
           text: fourthRowText,
           colSpan: 2,
-          margin: [0, 0, 0, 40],
         },
         {},
         {
           text: sixthRowText,
-          margin: [0, 0, 0, 40],
         },
         {
           text: seventhRowText,
-          margin: [0, 0, 0, 40],
+          margin: [0, 0, 0, longboard],
         },
       ];
       commodityRows.push(commodityRow);
@@ -122,13 +171,11 @@ const GeneratePickUpPDF = (data) => {
 
           const pdf = {
             content: [
-              {   
-                // margin: [0, 0, -10, 0],
+              {
                 columns: [
                   {
                     margin: [0, 0, -10, 0],
                     stack: [
-                      
                       {
                         image: imgUrl,
                         fit: [100, 100],
@@ -138,26 +185,18 @@ const GeneratePickUpPDF = (data) => {
                   },
                   {
                     stack: [
-                      {},
                       {
-                        margin: [-50, 0, 0, 0],
+                        margin: [-65, 0, 10, 0],
                         bold: true,
                         text: [
                           `${data.issued_byObj?.name || ``} \n`,
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
+                          `${data.issued_byObj?.phone? `Tel: ${data.issued_byObj.phone || ``}, \n `: ``}
+                          ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax || ``}`: ``}\n`,
                           `${data.issued_byObj?.street_and_number || ``} \n`,
-                          `${data.issued_byObj?.city || ``}, ${
-                            data.issuedBy?.state || ``
-                          } ${data.issued_byObj?.zip_code || ``} \n`,
-                          `${data.issued_byObj?.country || ``}`,
+                          `${data.issued_byObj?.country || ``} \n`,
+                          `${data.issued_byObj?.state || ``} \n`,
+                          `${data.issued_byObj?.city || ``} \n`,
+                          `${data.issued_byObj?.zip_code || ``} \n`,   
                         ],
                       },
                       
@@ -166,7 +205,9 @@ const GeneratePickUpPDF = (data) => {
                   },
                   { 
                     style: `tableExample`,
+                    margin: [-30, 0, 0, 5],
                     table: {
+                      widths: [`34%`, `66%`],
                       body: [
                             [
                               {text: "Pickup Order",
@@ -175,23 +216,65 @@ const GeneratePickUpPDF = (data) => {
                               border: ['', '', '', ''],
                               colSpan: 2,
                               bold: true,
+                              margin: [29, 0, 28, 0],
+                              },
+                              {}
+                            ],
+                            [
+                              {
+                                text: "Number",
+                                bold: true,
                               }, 
                               {
+                                text: `${data.number || ``}`,
+                                fontSize: 10,
                               }
                             ],
-                            [`Number`, `${data.number || ``}`],
-                            [`Pickup Date`, `${data.pick_up_date || ``}`],
-                            [`Creation Date/Time`, `${data.creation_date || ``}`],
-                            [`Delivery Date`, `${data.delivery_date || ``}`],
-                            [`Employe`, `${data.employeeObj.name || ``}, `],
+                            [
+                              {
+                                text: "Pickup Date",
+                                bold: true,
+                              }, 
+                              {
+                                text: pickformattedDateTime,
+                                fontSize: 10,
+                              }
+                            ],
+                            [
+                              {
+                                text: "Creation Date",
+                                bold: true,
+                              }, 
+                              {
+                                text: formattedDateTime,
+                                fontSize: 10,
+                              }
+                            ],
+                            [
+                              {
+                                text: "Delivery Date",
+                                bold: true,
+                              }, 
+                              {
+                                text: deliveryformattedDateTime,
+                                fontSize: 10,
+                              }
+                            ],
+                            [
+                              {
+                                text: "Employe",
+                                bold: true,
+                              }, 
+                              {
+                                text: `${data.employeeObj.name || ``}, `,
+                                fontSize: 10,
+                              }
+                            ],
                       ],
-                      margin: [0, 0, 0, 0],
                     },
                   },
                 ],
               },
-              {},
-              {},
               {
                 table: {
                   widths: [`50%`, `50%`],

@@ -10,7 +10,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
 const EventCreationForm = ({ onCancel, events, setevents }) => {
-  const today = dayjs().format("YYYY-MM-DD");
+  const today = dayjs().format("YYYY-MM-DD hh:mm A");
   const formFormat = {
     dateTime: today,
     eventType: "",
@@ -28,9 +28,10 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
   const [internalID, setinternalID] = useState(0);
 
   const addEvent = () => {
+    const isoDate = dayjs(formData.dateTime, "YYYY-MM-DD hh:mm A").toISOString();
     const body = {
       id: internalID,
-      creation_date: formData.dateTime,
+      creation_date: isoDate,
       eventType: formData.eventType,
       details: formData.details,
       location: formData.location,
@@ -66,7 +67,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
                 onChange={(e) =>
                   setformData({
                     ...formData,
-                    dateTime: dayjs(e).format("YYYY-MM-DDTHH:mm:ss"),
+                    dateTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                   })
                 }
               />
