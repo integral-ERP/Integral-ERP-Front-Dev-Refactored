@@ -12,6 +12,25 @@ const GenerateReceiptPDF = (data, numCon) => {
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
+
+    // # Obtener la fecha y la hora por separado
+    let dataCreation = new Date(data.creation_date);
+    let year = dataCreation.getFullYear();
+    let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let day = String(dataCreation.getDate()).padStart(2, '0');
+    let hours = dataCreation.getHours();
+    let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+    
+    // Determinar AM o PM
+    let ampm = hours >= 12 ? 'Pm' : 'Am';
+    
+    // Convertir horas de 24 horas a 12 horas
+    hours = hours % 12;
+    hours = hours ? hours : 12; // La hora 0 debería ser 12
+    
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
+
     canvas = document.createElement('canvas');
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128),
@@ -174,7 +193,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                           ],
                         
                           [`Receipt Number`, `${data.number || ``}`],
-                          [`Received Date/Time`, `${data.creation_date || ``}`],
+                          [`Received Date`, formattedDateTime],
                           [`Received By`, `${data.employeeObj?.name || ``}`]
                         ],
                         margin: [0, 0, 50, 0],

@@ -13,6 +13,53 @@ const GeneratePickUpPDF = (data) => {
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
+// # Obtener la fecha y la hora por separado
+    let dataCreation = new Date(data.creation_date);
+    let year = dataCreation.getFullYear();
+    let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let day = String(dataCreation.getDate()).padStart(2, '0');
+    let hours = dataCreation.getHours();
+    let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let ampm = hours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    hours = hours % 12;
+    hours = hours ? hours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
+
+// # Obtener la fecha y la hora por separado
+    let pickData = new Date(data.pick_up_date);
+    let pickyear = pickData.getFullYear();
+    let pickmonth = String(pickData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let pickday = String(pickData.getDate()).padStart(2, '0');
+    let pickhours = pickData.getHours();
+    let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let pickampm = pickhours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    pickhours = pickhours % 12;
+    pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear} - ${pickhours}:${pickminutes} ${pickampm}`;
+
+// # Obtener la fecha y la hora por separado
+    let deliveryData = new Date(data.delivery_date);
+    let deliveryyear = deliveryData.getFullYear();
+    let deliverymonth = String(deliveryData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let deliveryday = String(deliveryData.getDate()).padStart(2, '0');
+    let deliveryhours = deliveryData.getHours();
+    let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let deliveryampm = deliveryhours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    deliveryhours = deliveryhours % 12;
+    deliveryhours = deliveryhours ? deliveryhours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let deliveryformattedDateTime = `${deliveryday}/${deliverymonth}/${deliveryyear} - ${deliveryhours}:${deliveryminutes} ${deliveryampm}`;
+
+
+  
     canvas = document.createElement('canvas');
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128)
@@ -43,6 +90,10 @@ const GeneratePickUpPDF = (data) => {
       let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
+      
+
+
+      
       data.commodities?.forEach((commodity, index) => {
         firstRowText    += `1; Pallet \n \n \n`;
         thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
@@ -53,6 +104,7 @@ const GeneratePickUpPDF = (data) => {
         totalVolume     += parseFloat(commodity.volumetricWeight);
         totalVolumeM    += parseFloat(commodity.volumen);
         longboard       -= 35;
+
       });
       const commodityRow = [
         {
@@ -155,7 +207,7 @@ const GeneratePickUpPDF = (data) => {
                     style: `tableExample`,
                     margin: [-30, 0, 0, 5],
                     table: {
-                      widths: [`45%`, `55%`],
+                      widths: [`34%`, `66%`],
                       body: [
                             [
                               {text: "Pickup Order",
@@ -184,17 +236,17 @@ const GeneratePickUpPDF = (data) => {
                                 bold: true,
                               }, 
                               {
-                                text: `${data.pick_up_date || ``}`,
+                                text: pickformattedDateTime,
                                 fontSize: 10,
                               }
                             ],
                             [
                               {
-                                text: "Creation Date/Time",
+                                text: "Creation Date",
                                 bold: true,
                               }, 
                               {
-                                text: `${data.creation_date || ``}`,
+                                text: formattedDateTime,
                                 fontSize: 10,
                               }
                             ],
@@ -204,7 +256,7 @@ const GeneratePickUpPDF = (data) => {
                                 bold: true,
                               }, 
                               {
-                                text: `${data.delivery_date || ``}`,
+                                text: deliveryformattedDateTime,
                                 fontSize: 10,
                               }
                             ],

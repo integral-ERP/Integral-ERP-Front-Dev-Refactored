@@ -14,6 +14,26 @@ const GenerateReleasePDF = (data) => {
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
+
+// # Obtener la fecha y la hora por separado
+let dataCreation = new Date(data.creation_date);
+let year = dataCreation.getFullYear();
+let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+let day = String(dataCreation.getDate()).padStart(2, '0');
+let hours = dataCreation.getHours();
+let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+
+// Determinar AM o PM
+let ampm = hours >= 12 ? 'Pm' : 'Am';
+
+// Convertir horas de 24 horas a 12 horas
+hours = hours % 12;
+hours = hours ? hours : 12; // La hora 0 debería ser 12
+
+// Formato: YYYY-MM-DD HH:MM AM/PM
+let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
+
+
     canvas = document.createElement('canvas');
     const barcodeOptions = {
       bcid: "code128", // Barcode type (e.g., code128)
@@ -187,7 +207,7 @@ const GenerateReleasePDF = (data) => {
                                   alignment: `center`,
                                 },
                                 {
-                                  text: data.creation_date ,
+                                  text: formattedDateTime,
                                   margin: [0, 12, 0, 0],
                                   fontSize: 12,
                                   alignment: "center",
