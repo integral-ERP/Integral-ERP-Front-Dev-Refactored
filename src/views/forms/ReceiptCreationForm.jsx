@@ -1191,7 +1191,7 @@ const ReceiptCreationForm = ({
       commodities.forEach((com) => {
         totalVolume += parseFloat(com.volumen);
       });
-      setVolumenUpdated(totalVolume);
+      setVolumenUpdated(totalVolume.toFixed(2));
     }
 
     let consigneeName = "";
@@ -2214,7 +2214,7 @@ const ReceiptCreationForm = ({
                       "Event Type",
                       "Details",
                       "Location",
-                      // "Include In Tracking",
+                      "Include In Tracking",
                       "Created In",
                       // "Created By",
                       "Created On",
