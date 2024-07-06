@@ -17,11 +17,7 @@ const Pickup = () => {
   const [pickupOrders, setpickupOrders] = useState([]);
   const [releaseOrders, setReleaseOrders] = useState([]);
   const [isOpen, openModal, closeModal] = useModal(false);
-  const [
-    isOpenReceiptCreation,
-    openModalReceiptCreation,
-    closeModalReceiptCreation,
-  ] = useModal(false);
+  const [isOpenReceiptCreation, openModalReceiptCreation, closeModalReceiptCreation] = useModal(false);
   const [selectedPickupOrder, setSelectedPickupOrder] = useState(null);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -50,10 +46,12 @@ const Pickup = () => {
   const columns = [
     "Status",
     "Number",
-    "Date",
+    "Creation Date",
+    // "Date",
     "Ship Date",
     "Delivery Date",
     "Pickup Name",
+    
     // "Pickup Address",
     "Delivery Name",
     // "Delivery Address",

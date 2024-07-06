@@ -1102,33 +1102,70 @@ const PickupOrderCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       // Convertir createdDateAndTime a ISO 8601
-      const isoDate = dayjs(
-        formData.createdDateAndTime,
-        "YYYY-MM-DD hh:mm A"
-      ).toISOString();
-      const isopickupDate = dayjs(
-        formData.pickupDateAndTime,
-        "YYYY-MM-DD hh:mm A"
-      ).toISOString();
-      const isodeliveryDate = dayjs(
-        formData.deliveryDateAndTime,
-        "YYYY-MM-DD hh:mm A"
-      ).toISOString();
+      const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+      // # Obtener la fecha y la hora por separado
+      let dataCreation = new Date(isoDate);
+      let year = dataCreation.getFullYear();
+      let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+      let day = String(dataCreation.getDate()).padStart(2, '0');
+      let hours = dataCreation.getHours();
+      let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+      // Determinar AM o PM
+      let ampm = hours >= 12 ? 'Pm' : 'Am';
+      // Convertir horas de 24 horas a 12 horas
+      hours = hours % 12;
+      hours = hours ? hours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+//-----------------------
+      const isopickupDate = dayjs(formData.pickupDateAndTime, "YYYY-MM-DD hh:mm A").toISOString();
+      // # Obtener la fecha y la hora por separado
+      let pickData = new Date(isopickupDate);
+      let pickyear = pickData.getFullYear();
+      let pickmonth = String(pickData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+      let pickday = String(pickData.getDate()).padStart(2, '0');
+      let pickhours = pickData.getHours();
+      let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
+      // Determinar AM o PM
+      let pickampm = pickhours >= 12 ? 'Pm' : 'Am';
+      // Convertir horas de 24 horas a 12 horas
+      pickhours = pickhours % 12;
+      pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear} - ${pickhours}:${pickminutes} ${pickampm}`;
+//-----------------------
+      // # Obtener la fecha y la hora por separado
+      const isodeliveryDate = dayjs(formData.deliveryDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+      let deliveryData = new Date(isodeliveryDate);
+      let deliveryyear = deliveryData.getFullYear();
+      let deliverymonth = String(deliveryData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+      let deliveryday = String(deliveryData.getDate()).padStart(2, '0');
+      let deliveryhours = deliveryData.getHours();
+      let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, '0');
+      // Determinar AM o PM
+      let deliveryampm = deliveryhours >= 12 ? 'Pm' : 'Am';
+      // Convertir horas de 24 horas a 12 horas
+      deliveryhours = deliveryhours % 12;
+      deliveryhours = deliveryhours ? deliveryhours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let deliveryformattedDateTime = `${deliveryday}/${deliverymonth}/${deliveryyear} - ${deliveryhours}:${deliveryminutes} ${deliveryampm}`;
+
       const createPickUp = async () => {
         let rawData = {
           status: formData.status,
           number: formData.number,
           creation_date: isoDate,
+          creation_date_text: formattedDateTime,
+          pick_up_date_text: pickformattedDateTime,
+          delivery_date_text: deliveryformattedDateTime,
           pick_up_date: isopickupDate,
           delivery_date: isodeliveryDate,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
-
           shipper: shipperRequest,
           shipperType: "",
           pick_up_location: pickuplocation,
-
           consignee: consigneeRequest,
           delivery_location: deliverylocation,
           client_to_bill_type: formData.client_to_bill_type,

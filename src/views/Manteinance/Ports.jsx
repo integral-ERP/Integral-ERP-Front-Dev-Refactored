@@ -25,7 +25,7 @@ const Ports = () => {
     "Country",
     "Subdivision",
     "Used",
-    "Remarks",
+    // "Remarks",
     "Maritime",
     "Rail",
     "Road",
