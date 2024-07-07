@@ -18,7 +18,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
     location: "",
     createIn: "WareHouse Receipt",
     createOn: today,
-    includeInTracking: "",
+    includeInTracking: false,
   };
   const [Eventype, setEventype] = useState("");
   const [formData, setformData] = useState(formFormat);
@@ -28,7 +28,10 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
   const [internalID, setinternalID] = useState(0);
 
   const addEvent = () => {
-    const isoDate = dayjs(formData.dateTime, "YYYY-MM-DD hh:mm A").toISOString();
+    const isoDate = dayjs(
+      formData.dateTime,
+      "YYYY-MM-DD hh:mm A"
+    ).toISOString();
     const body = {
       id: internalID,
       creation_date: isoDate,
@@ -58,7 +61,11 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
         <div className="form-row">
           <div className="form-column-create">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <p id="creation-date" className="text-date" style={{ fontSize: '4rem' }}>
+              <p
+                id="creation-date"
+                className="text-date"
+                style={{ fontSize: "4rem" }}
+              >
                 Entry Date and Time
               </p>
               <DateTimePicker
@@ -81,7 +88,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             <select
               name="eventType"
               id="eventType"
-              style={{ height: "3rem", padding: '0px' }}
+              style={{ height: "3rem", padding: "0px" }}
               value={formData.eventType}
               onChange={(e) => handleeventType(e.target.value)}
             >
@@ -139,7 +146,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               onChange={(e) =>
                 setformData({ ...formData, details: e.target.value })
               }
-              style={{ width: "100%", height: "3rem", padding: '0px 5px' }}
+              style={{ width: "100%", height: "3rem", padding: "0px 5px" }}
             />
           </div>
         </div>
@@ -149,7 +156,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             <select
               name="location"
               id="eventType"
-              style={{ height: "3rem", padding: '0px 5px' }}
+              style={{ height: "3rem", padding: "0px 5px" }}
               value={formData.location}
               onChange={(e) => handlelocation(e.target.value)}
             >
@@ -211,7 +218,10 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
             </select>
           </div>
         </div>
-        <div className="form-row" style={{ width: '12vw', alignItems: 'center', marginLeft: '13px'}}>
+        <div
+          className="form-row"
+          style={{ width: "12vw", alignItems: "center", marginLeft: "13px" }}
+        >
           <div className="form-column-create">
             <Input
               inputName="includeTracking"
@@ -228,7 +238,10 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           </div>
         </div>
 
-        <div className="form-row" style={{ width: '8vw', marginTop: '5px', marginLeft: '-11px'}}>
+        <div
+          className="form-row"
+          style={{ width: "8vw", marginTop: "5px", marginLeft: "-11px" }}
+        >
           <div className="form-column-create">
             <div
               className="table-hover charge-buttons"
