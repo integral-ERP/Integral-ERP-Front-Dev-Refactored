@@ -2243,6 +2243,7 @@ const ReceiptCreationForm = ({
                     data={events}
                     columns={[
                       "Date",
+                      "Creation Date",
                       // "Name",
                       "Event Type",
                       "Details",

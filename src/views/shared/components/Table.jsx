@@ -254,6 +254,8 @@ const Table = ({
     Location: "location",
     "Created In": "createIn",
     "Created On": "createOn",
+    " Creation Date": "creation_text_date",
+    "Time123":"creation_date_text",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {

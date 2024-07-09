@@ -39,6 +39,8 @@ const Receipt = () => {
     "Status",
     "Number",
     "Date",
+    "Creation Date",
+    "Time123",
     "Shipper Name",
     "Consignee Name",
     "Carrier Name",

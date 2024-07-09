@@ -28,13 +28,27 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
   const [internalID, setinternalID] = useState(0);
 
   const addEvent = () => {
-    const isoDate = dayjs(
-      formData.dateTime,
-      "YYYY-MM-DD hh:mm A"
-    ).toISOString();
+    // Convertir createdDateAndTime a ISO 8601
+    const isoDate = dayjs(formData.createOn,"YYYY-MM-DD hh:mm A").toISOString();
+    // # Obtener la fecha y la hora por separado
+    let dataCreation = new Date(isoDate);
+    let year = dataCreation.getFullYear();
+    let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let day = String(dataCreation.getDate()).padStart(2, '0');
+    let hours = dataCreation.getHours();
+    let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let ampm = hours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    hours = hours % 12;
+    hours = hours ? hours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+
     const body = {
       id: internalID,
       creation_date: isoDate,
+      creation_text_date: formattedDateTime,
       eventType: formData.eventType,
       details: formData.details,
       location: formData.location,
