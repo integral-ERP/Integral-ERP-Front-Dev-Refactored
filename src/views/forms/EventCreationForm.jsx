@@ -29,7 +29,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
 
   const addEvent = () => {
     // Convertir createdDateAndTime a ISO 8601
-    const isoDate = dayjs(formData.createOn,"YYYY-MM-DD hh:mm A").toISOString();
+    const isoDate = dayjs(formData.dateTime,"YYYY-MM-DD hh:mm A").toISOString();
     // # Obtener la fecha y la hora por separado
     let dataCreation = new Date(isoDate);
     let year = dataCreation.getFullYear();
@@ -45,6 +45,24 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
     // Formato: YYYY-MM-DD HH:MM AM/PM
     let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
 
+//-----------------------
+    const isopickupDate = dayjs(formData.createOn, "YYYY-MM-DD hh:mm A").toISOString();
+    // # Obtener la fecha y la hora por separado
+    let pickData = new Date(isopickupDate);
+    let pickyear = pickData.getFullYear();
+    let pickmonth = String(pickData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+    let pickday = String(pickData.getDate()).padStart(2, '0');
+    let pickhours = pickData.getHours();
+    let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
+    // Determinar AM o PM
+    let pickampm = pickhours >= 12 ? 'Pm' : 'Am';
+    // Convertir horas de 24 horas a 12 horas
+    pickhours = pickhours % 12;
+    pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
+    // Formato: YYYY-MM-DD HH:MM AM/PM
+    let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear} - ${pickhours}:${pickminutes} ${pickampm}`;
+
+
     const body = {
       id: internalID,
       creation_date: isoDate,
@@ -53,7 +71,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
       details: formData.details,
       location: formData.location,
       createIn: formData.createIn,
-      createOn: formData.createOn,
+      createOn: pickformattedDateTime,
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
