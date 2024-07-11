@@ -225,8 +225,14 @@ const ReceiptCreationForm = ({
 
   const handleDeleteEvent = () => {
     if (SelectEvent) {
+      // Filtra los eventos para eliminar el seleccionado
+      const updatedEvents = events.filter(event => event.id !== SelectEvent.id);
+      setEvents(updatedEvents);
+      setSelectEvent(null); // Resetea el evento seleccionado
     }
   };
+  
+  
 
   //------------------------------------------------
 
@@ -2220,21 +2226,21 @@ const ReceiptCreationForm = ({
                       "Event Type",
                       "Details",
                       "Location",
-                      "Include In Tracking",
+                      //"Include In Tracking",
                       "Created In",
                       // "Created By",
                       "Created On",
                       // "Last Modified By",
                       // "Last Modified On",
-                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                       "OptionsEvents"  
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}
-                    onDelete={() => {}}
-                    onEdit={() => {}}
+                    onDelete={handleDeleteEvent}
                     onAdd={() => {}}
                     showOptions={false}
                     importLabel={false}
+                    Nodoubleclick={true}
                   />
                 )}
               </div>
