@@ -25,7 +25,9 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-  const [internalID, setinternalID] = useState(0);
+  // Initialize internalID to the next available ID
+  const [internalID, setinternalID] = useState(events.length > 0 ? Math.max(...events.map(event => event.id)) + 1 : 1);
+
 
   const addEvent = () => {
     // Convertir createdDateAndTime a ISO 8601
@@ -75,6 +77,8 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
       includeInTracking: formData.includeInTracking,
     };
     setevents([...events, body]);
+    // Increment internalID after adding the event
+    setinternalID(internalID + 1);
   };
 
   const handleeventType = (type) => {
@@ -255,7 +259,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           style={{ width: "12vw", alignItems: "center", marginLeft: "13px" }}
         >
           <div className="form-column-create">
-            <Input
+          {/*  <Input
               inputName="includeTracking"
               changeHandler={(e) =>
                 setformData({
@@ -266,7 +270,8 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               label="Include in Tracking"
               name="includeTracking"
               type="checkbox"
-            ></Input>
+            ></Input>*/}
+           
           </div>
         </div>
 
@@ -287,13 +292,13 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               >
                 <i className="fas fa-check-circle"></i>
               </button>
-              <button
+             {/*  <button
                 className="button-cancel pick "
                 type="button"
                 onClick={() => onCancel(false)}
               >
                 <i className="fas fa-times-circle"></i>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

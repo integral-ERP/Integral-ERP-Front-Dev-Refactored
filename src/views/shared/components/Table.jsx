@@ -833,6 +833,32 @@ const Table = ({
                                   <i className="fas fa-eye"></i>
                                 </button> */}
                             </>
+                          ): columnName === "OptionsEvents" ? (
+                            <>
+                              {" "}
+                              {/* added hiden button trash for table commodity creation form */}
+                              <button
+                                type="button"
+                                onClick={onDelete}
+                                className="custom-button"
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                             {/*  <button
+                                type="button"
+                                onClick={onEdit}
+                                className="custom-button"
+                              >
+                                <i className="fas fa-pencil-alt"></i>
+                              </button> */}
+                              {/* <button
+                                  type="button"
+                                  onClick={onInspect}
+                                  className="custom-button"
+                                >
+                                  <i className="fas fa-eye"></i>
+                                </button> */}
+                            </>
                           ) : columnName === "Repack Options" ? (
                             <>
                               <button
