@@ -4,6 +4,7 @@ import "../../styles/components/IncomeChargeForm.css";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CommoditiesService from "../../services/CommoditiesService";
+import PackageTypeService from "../../services/PackageTypeService";
 import LocationService from "../../services/LocationService";
 const CommodityCreationForm = ({
   onCancel,
@@ -22,6 +23,8 @@ const CommodityCreationForm = ({
     height: "",
     width: "",
     weight: "",
+    package_type_id:"",
+    package_type_description:"",
     volumetricWeight: "",
     chargedWeight: "",
     description: "",
@@ -36,6 +39,8 @@ const CommodityCreationForm = ({
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [locations, setlocations] = useState([]);
   const [internalID, setinternalID] = useState(0);
+
+  const [packTypes, setpackTypes] = useState([]);
 
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
@@ -53,6 +58,8 @@ const CommodityCreationForm = ({
     if (
       !formData.length ||
       !formData.height ||
+      !formData.package_type_id ||
+      !formData.package_type_description ||
       !formData.width ||
       !formData.weight ||
       !formData.description 
@@ -79,6 +86,8 @@ const CommodityCreationForm = ({
       height: formData.height,
       width: formData.width,
       weight: formData.weight,
+      package_type_id: formData.package_type_id,
+      package_type_description: formData.package_type_description,
       volumen: formData.volumen,
       volumetricWeight: formData.volumetricWeight,
       chargedWeight: formData.volumetricWeight,
@@ -109,6 +118,8 @@ const CommodityCreationForm = ({
                 height: formData.height,
                 width: formData.width,
                 weight: formData.weight,
+                package_type_id: formData.package_type_id,
+                package_type_description:formData.package_type_description,
                 volumen: formData.volumen,
                 volumetricWeight: formData.volumetricWeight,
                 internalCommodities: prevCommodity.internalCommodities,
@@ -168,6 +179,8 @@ const CommodityCreationForm = ({
         volumetricWeight: commodity.volumetricWeight,
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
+        package_type_description: commodity.package_type_description,
+        package_type_id: commodity.package_type_id,
         locationId: commodity.locationId,
         locationCode: commodity.locationCode,
       };
@@ -185,7 +198,15 @@ const CommodityCreationForm = ({
 
   //------------------------------------------------------------------
   // Obtener la URL actual
-const currentUrl = window.location.href;
+  const currentUrl = window.location.href;
+
+  useEffect(() => {
+    PackageTypeService.getPackageTypes()
+      .then((response) => {
+        setpackTypes(response.data.results);
+      })
+      .catch((error) => {});
+  }, []);
 
   return (
     <div className="income-charge-form">
@@ -299,6 +320,43 @@ const currentUrl = window.location.href;
             }
           />
         </div>
+        {/* -------------------------------------------------- */}
+        <div>
+          <label
+            htmlFor="containerType"
+            style={{
+              fontSize: "16px",
+              display: "flex",
+              fontWeight: "bold",
+            }}
+          >
+            Container Type:
+          </label>{" "}
+          <select
+            name="containerType"
+            id="containerType"
+            value={formData.package_type_id}
+            onChange={(e) => {
+              setformData({
+                ...formData,
+                package_type_id: e.target.value,
+                package_type_description:
+                  e.target.options[e.target.selectedIndex].text,
+              });
+            }}
+            style={{ fontSize: '14px', color: 'gray', padding: "3px" }}
+          >
+            <option value="">Select an option</option>
+            {packTypes.map((type) => {
+              return (
+                <option value={type.id} key={type.id}>
+                  {type.description}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        {/* -------------------------------------------------- */}
 {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
 
 {/* // Renderizar el código basado en la condición */}

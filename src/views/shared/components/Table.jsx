@@ -255,6 +255,8 @@ const Table = ({
     "Created In": "createIn",
     "Created On": "createOn",
     " Creation Date": "creation_text_date",
+    // "containerType":"package_type_id",
+    "Package Type":"package_type_description",
   };
   const handleMapWithThead = () => {
     return visibleColumnOrder.map((columnName, columnIndex) => {
