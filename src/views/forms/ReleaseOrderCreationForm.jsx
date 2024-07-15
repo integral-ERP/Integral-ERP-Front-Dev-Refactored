@@ -24,6 +24,7 @@ const ReleaseOrderCreationForm = ({
   onReleaseOrderDataChange,
   currentReleaseNumber,
   setcurrentReleaseNumber,
+  fromRecipt,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -47,8 +48,9 @@ const ReleaseOrderCreationForm = ({
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [consignee, setconsignee] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
+  const StatusDelivered = 9;
   const formFormat = {
-    status: 14,
+    status: StatusDelivered,
     number: pickupNumber,
     createdDateAndTime: today,
     release_date: today,
@@ -389,6 +391,12 @@ const ReleaseOrderCreationForm = ({
     return options;
   };
 
+  useEffect(() => {
+    if (!fromRecipt) {
+      fetchFormData();
+    }
+  }, []);
+
   const fetchReceipts = async () => {
     ReceiptService.getReceipts()
       .then((response) => {
@@ -417,7 +425,54 @@ const ReleaseOrderCreationForm = ({
     }
   }, [commodities]);
 
+  useEffect(() => {
+    if (fromRecipt) {
+      setcommodities(releaseOrder.commodities);
 
+      let updatedFormData = {
+        status: releaseOrder.status,
+        number: releaseOrder.number,
+        createdDateAndTime: releaseOrder.creation_date,
+        release_date: releaseOrder.release_date,
+        employeeId: releaseOrder.employee,
+        issuedById: releaseOrder.issued_by,
+        issuedByType: releaseOrder.issued_byObj?.type_person,
+        releasedToId: releaseOrder.releasedToObj?.data?.obj?.id,
+        releasedToType: releaseOrder.releasedToObj?.data?.obj?.type_person,
+        releasedToInfo: `${
+          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
+          releaseOrder.releasedToObj?.data?.obj?.state || ""
+        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
+          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
+        }`,
+        clientToBillId: releaseOrder.client_to_bill,
+        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
+        carrierId: releaseOrder.carrier_by,
+        pro_number: releaseOrder.pro_number,
+        tracking_number: releaseOrder.tracking_number,
+        purchase_order_number: releaseOrder.purchase_order_number,
+        main_carrierObj: releaseOrder.main_carrierObj,
+        warehouseReceiptId: releaseOrder.warehouseReceiptId,
+        commodities: releaseOrder.commodities,
+        charges: releaseOrder.charges,
+        consignee: releaseOrder.consignee,
+        consigneeId: releaseOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
+        consigneeType: releaseOrder.consigneeObj.data?.obj?.type_person,
+        consigneeInfo: `${
+          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
+      };
+      setconsignee(releaseOrder.consigneeObj?.data?.obj);
+      setconsigneeRequest(releaseOrder.consignee);
+      setFormData(updatedFormData);
+      setcanRender(true);
+    }
+  }, [fromRecipt, releaseOrder]);
   
   const sendData = async () => {
     let releasedToName = "";
@@ -550,7 +605,7 @@ const ReleaseOrderCreationForm = ({
 
       const createPickUp = async () => {
         let rawData = {
-          status: formData.status,
+          status: StatusDelivered,
           number: formData.number,
           creation_date: formData.creation_date,
           release_date: formData.release_date,

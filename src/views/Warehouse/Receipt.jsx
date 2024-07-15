@@ -9,6 +9,7 @@ import ReceiptService from "../../services/ReceiptService";
 import Sidebar from "../shared/components/SideBar";
 import { GlobalContext } from "../../context/global";
 import PickupService from "../../services/PickupService";
+import ReleaseOrderCreationForm from "../forms/ReleaseOrderCreationForm";
 
 const Receipt = () => {
   const { hideShowSlider } = useContext(GlobalContext);
@@ -22,6 +23,9 @@ const Receipt = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [createReceiptOrder, setCreateReceiptOrder] = useState(true);
+  //added for creation realease
+  const [createRealeaseOrder, setCreateReleaseOrder] = useState(false);
+  const [isOpenReleaseCreation, openModalReleaseCreation, closeModalReleaseCreation] = useModal(false);
   //added menu context
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -200,7 +204,7 @@ const Receipt = () => {
 
   //added context menu
 
-  const setOnHold = async () => {
+ /*  const setOnHold = async () => {
     if (selectedPickupOrder) {
       const updatedPickuporder = {
         ...selectedPickupOrder,
@@ -306,32 +310,34 @@ const Receipt = () => {
     } else {
       alert("Please select a pickup order to continue.");
     }
+  }; */
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // Función para cambiar el estado
+  const toggleLogin = () => {
+    // Cambiar el estado inverso del estado actual
+    setIsLoggedIn(!isLoggedIn);
   };
+
+  const seteRealease = () => {
+    if (selectedPickupOrder) {
+      setCreateReleaseOrder(true);
+      toggleLogin();
+    } else {
+      alert("Please select a receipt to continue.");
+    }
+  };
+
+  useEffect(() => {
+    if (createRealeaseOrder) {
+      openModalReleaseCreation();
+    }
+  }, [createRealeaseOrder]);
+
 
   const contextMenuOptions = [
     {
-      label: "Delivered",
-      handler: setDelivered,
-    },
-    {
-      label: "In Transit",
-      handler: setInTransit,
-    },
-    {
-      label: "Loaded",
-      handler: setLoaded,
-    },
-    {
-      label: "On Hand",
-      handler: setOnHand,
-    },
-    {
-      label: "",
-      handler: setOnHold,
-    },
-    {
-      label: "Pending",
-      handler: setPending,
+      label: "Create Realese Order",
+      handler: seteRealease ,
     },
   ];
 
@@ -469,6 +475,21 @@ const Receipt = () => {
                 <AlertTitle>Error</AlertTitle>
                 <strong>Error deleting Receipt. Please try again</strong>
               </Alert>
+            )}
+
+
+              {selectedPickupOrder !== null && createRealeaseOrder && (
+              <div className="layout-fluid_form">
+                <ReleaseOrderCreationForm
+                  releaseOrder={selectedPickupOrder}
+                  closeModal={closeModalReleaseCreation}
+                  creating={true}
+                  onReleaseOrderDataChange={handlereceiptsDataChange}
+                  currentReleaseNumber={currentPickupNumber}
+                  setcurrentReleaseNumber={setcurrentPickupNumber}
+                  fromRecipt={true}
+                />
+              </div>
             )}
           </div>
         </div>
