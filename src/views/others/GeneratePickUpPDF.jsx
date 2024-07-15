@@ -91,11 +91,8 @@ const GeneratePickUpPDF = (data) => {
       let sixthRowText = "";
       let seventhRowText = "";
       
-
-
-      
       data.commodities?.forEach((commodity, index) => {
-        firstRowText    += `1; ${commodity.package_type_description}|| "Palet"\n \n \n`;
+        firstRowText    += `1; ${commodity.package_type_description}\n \n \n`;
         thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
         fourthRowText   += `${commodity.description} \n \n \n`;
         sixthRowText    += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
