@@ -43,7 +43,7 @@ const Receipt = () => {
     "Status",
     "Number",
     "Date",
-    "Creation Date",
+    // "Creation Date",
     "Shipper Name",
     "Consignee Name",
     "Carrier Name",

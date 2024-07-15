@@ -42,7 +42,7 @@ const ReceiptCreationForm = ({
   showBModal,
 }) => {
   console.log("pickupOrder", pickupOrder);
-  console.log("creating", creating);
+  console.log('creating', creating);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -81,7 +81,6 @@ const ReceiptCreationForm = ({
   const [defaultValueShipper, setdefaultValueShipper] = useState(null);
   const [defaultValueConsignee, setdefaultValueConsignee] = useState(null);
   const today = dayjs().format("YYYY-MM-DD hh:mm A");
-  const today_text = dayjs().format("DD/MM/YYYY hh:mm A");
   const pickupNumber = currentPickUpNumber + 1;
   const [canRender, setcanRender] = useState(false);
   // const [supplierInfo, setsupplierInfo] = useState("");
@@ -225,14 +224,8 @@ const ReceiptCreationForm = ({
 
   const handleDeleteEvent = () => {
     if (SelectEvent) {
-      // Filtra los eventos para eliminar el seleccionado
-      const updatedEvents = events.filter(event => event.id !== SelectEvent.id);
-      setEvents(updatedEvents);
-      setSelectEvent(null); // Resetea el evento seleccionado
     }
   };
-  
-  
 
   //------------------------------------------------
 
@@ -813,7 +806,7 @@ const ReceiptCreationForm = ({
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
-      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj
       let CTBID = "";
       if (fromReceipt) {
         CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
@@ -828,7 +821,6 @@ const ReceiptCreationForm = ({
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
-        creation_date_text: today_text,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1051,15 +1043,14 @@ const ReceiptCreationForm = ({
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id;
       }
-      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj
       let updatedFormData = {
         status: 4,
         // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
-        volumen: pickupOrder.volumen,
+        volumen : pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
-        creation_date_text: today_text,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1330,7 +1321,6 @@ const ReceiptCreationForm = ({
           status: 4, // Hice un cambio, estar pendeinte  status: 2,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
-          creation_date_text: today_text,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1363,7 +1353,6 @@ const ReceiptCreationForm = ({
           status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
-          creation_date_text: today_text,
           pick_up_date: formData.pickupDateAndTime,
           delivery_date: formData.deliveryDateAndTime,
           issued_by: formData.issuedById,
@@ -2220,27 +2209,26 @@ const ReceiptCreationForm = ({
                     noScrollY
                     data={events}
                     columns={[
-                      // "Date",
-                      "Creation Date",
+                      "Date",
                       // "Name",
                       "Event Type",
                       "Details",
                       "Location",
-                      //"Include In Tracking",
+                      "Include In Tracking",
                       "Created In",
                       // "Created By",
                       "Created On",
                       // "Last Modified By",
                       // "Last Modified On",
-                       "OptionsEvents"  
+                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}
-                    onDelete={handleDeleteEvent}
+                    onDelete={() => {}}
+                    onEdit={() => {}}
                     onAdd={() => {}}
                     showOptions={false}
                     importLabel={false}
-                    Nodoubleclick={true}
                   />
                 )}
               </div>

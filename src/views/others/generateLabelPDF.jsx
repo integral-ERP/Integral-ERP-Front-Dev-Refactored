@@ -9,9 +9,6 @@ import Alert from "@mui/material/Alert";
 pdfMake.vfs = pdfFonts;
 pdfMake.vfs = pdfFonts;
 
-
-
-
 const GenerateLabeltPDF = (data, numCon) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
@@ -347,7 +344,7 @@ const GenerateLabeltPDF = (data, numCon) => {
 // ------------------------------------------------------------------}
                     [
                       {
-                        text: `WATBILL NUMBER`,
+                        text: `WAYBILL NUMBER`,
                         alignment: `left`,
                         colSpan: 4,
                         bold: true,
