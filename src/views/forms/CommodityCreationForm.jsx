@@ -321,17 +321,15 @@ const CommodityCreationForm = ({
           />
         </div>
         {/* -------------------------------------------------- */}
-        <div>
+
+        <div className="row w-100 mb-3">
+        <div className="col-6">
+        {/* <div className="row w-100" style={{ padding: "0 0 0 1.5rem" }}> */}
           <label
-            htmlFor="containerType"
-            style={{
-              fontSize: "16px",
-              display: "flex",
-              fontWeight: "bold",
-            }}
-          >
+            htmlFor="containerType" className="text-comm">
             Container Type:
           </label>{" "}
+
           <select
             name="containerType"
             id="containerType"
@@ -355,12 +353,17 @@ const CommodityCreationForm = ({
               );
             })}
           </select>
+        {/* </div> */}
         </div>
+
+
         {/* -------------------------------------------------- */}
 {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
 
+
+<div className="col-6">
+
 {/* // Renderizar el código basado en la condición */}
-<div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
   {/* {isLocationEnabled && ( */}
   {!hideLocation  && (
   
@@ -368,7 +371,6 @@ const CommodityCreationForm = ({
       <label
         htmlFor="location"
         className="text-comm"
-        style={{ marginLeft: "-8px" }}
       >
         Location:
       </label>
@@ -407,6 +409,7 @@ const CommodityCreationForm = ({
     </>
   
    )}
+</div>
 </div>;
 
         <div className="table-hover charge-buttons">
