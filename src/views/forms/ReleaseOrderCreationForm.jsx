@@ -189,6 +189,9 @@ const ReleaseOrderCreationForm = ({
       consigneeId: id,
       consigneeType: type,
       consigneeInfo: info,
+      releasedToId: id,
+      releasedToInfo: info,
+      releasedToType: type,
     });
   };
 
@@ -218,7 +221,7 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
     if (!creating && releaseOrder != null) {
       setcommodities(releaseOrder.commodities);
-
+      
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -227,26 +230,32 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.releasedToObj?.data?.obj?.id,
-        releasedToType: releaseOrder.releasedToObj?.data?.obj?.type_person,
+        releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
+        releasedToType:  releaseOrder.releasedToObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo: `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,
-        clientToBillId: releaseOrder.client_to_bill,
-        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
-        carrierId: releaseOrder.carrier_by,
+        }`,  /* `${
+          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
+          releaseOrder.releasedToObj?.data?.obj?.state || ""
+        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
+          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
+        }`, */
+       /*  clientToBillId: releaseOrder.client_to_bill,
+        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person, */
+        carrierId: releaseOrder.carrier,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouseReceiptId: releaseOrder.warehouseReceiptId,
+       /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
-        charges: releaseOrder.charges,
-        consignee: releaseOrder.consignee,
+        /* charges: releaseOrder.charges, */
+        /* consignee: releaseOrder.consignee,
         consigneeId: releaseOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
         consigneeType: releaseOrder.consigneeObj.data?.obj?.type_person,
         consigneeInfo: `${
@@ -255,7 +264,7 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.consigneeObj?.data?.obj?.state || ""
         } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
           releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,
+        }`, */
       };
       setconsignee(releaseOrder.consigneeObj?.data?.obj);
       setconsigneeRequest(releaseOrder.consignee);
@@ -428,24 +437,29 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
     if (fromRecipt) {
       setcommodities(releaseOrder.commodities);
-
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
-        createdDateAndTime: releaseOrder.creation_date,
-        release_date: releaseOrder.release_date,
+        createdDateAndTime: today,//releaseOrder.creation_date,
+        release_date: today,// releaseOrder.release_date,
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.releasedToObj?.data?.obj?.id,
-        releasedToType: releaseOrder.releasedToObj?.data?.obj?.type_person,
-        releasedToInfo: `${
+        releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
+        releasedToType: releaseOrder.consigneeObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
+        releasedToInfo:`${
+          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`, /* `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,
+        }`, */
         clientToBillId: releaseOrder.client_to_bill,
         clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
         carrierId: releaseOrder.carrier_by,
@@ -468,6 +482,7 @@ const ReleaseOrderCreationForm = ({
         }`,
       };
       setconsignee(releaseOrder.consigneeObj?.data?.obj);
+      setReleasedTo(releaseOrder.consigneeObj?.data?.obj)
       setconsigneeRequest(releaseOrder.consignee);
       setFormData(updatedFormData);
       setcanRender(true);
@@ -475,17 +490,17 @@ const ReleaseOrderCreationForm = ({
   }, [fromRecipt, releaseOrder]);
   
   const sendData = async () => {
-    let releasedToName = "";
+     let releasedToName = "";
     if (formData.releasedToType === "customer") {
       releasedToName = "customerid";
     }
     if (formData.releasedToType === "vendor") {
       releasedToName = "vendorid";
     }
-    if (formData.releasedToType === "agent") {
+    if (formData.releasedToType === "forwarding-agent") {
       releasedToName = "agentid";
     }
-    if (formData.releasedToType === "carrier") {
+    if (formData.releasedToType === "Carrier") {
       releasedToName = "carrierid";
     }
 
@@ -498,7 +513,7 @@ const ReleaseOrderCreationForm = ({
       if (response.status === 201) {
         setReleasedTo(response.data.id);
       }
-    }
+    } 
     let clientToBillName = "";
 
     if (formData.clientToBillType === "releasedTo") {
@@ -601,14 +616,18 @@ const ReleaseOrderCreationForm = ({
         charges = [...charges, order.charges];
       });
 
-      
+        // Convertir createdDateAndTime a ISO 8601
+      const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+
+       // Convertir release_date a ISO 8601
+          const isoReleaseDate = dayjs(formData.release_date,"YYYY-MM-DD hh:mm A").toISOString(); 
 
       const createPickUp = async () => {
         let rawData = {
           status: StatusDelivered,
           number: formData.number,
-          creation_date: formData.creation_date,
-          release_date: formData.release_date,
+          creation_date: isoDate,
+          release_date: isoReleaseDate,
           employee: formData.employeeId,
           issued_by: formData.issuedById,
           issuedByType: formData.issuedByType,
@@ -616,7 +635,7 @@ const ReleaseOrderCreationForm = ({
           releasodToType: formData.releasedToType,
           client_to_bill: formData.clientToBill,
           client_to_bill_type: formData.clientToBillType,
-          carrier_by: formData.carrierId,
+          carrier: formData.main_carrierObj.id,
           pro_number: formData.pro_number,
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
@@ -630,7 +649,9 @@ const ReleaseOrderCreationForm = ({
         const response = await (creating
           ? ReleaseService.createRelease(rawData)
           :  (async () => {
-            const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
+
+            const updateInfoRelease = await ReleaseService.updateRelease(releaseOrder.id, rawData);
+           /*  const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
             const updatedReceiptData = { ...buscarrecipt.data };
             //console.log("updatedReceiptData", updatedReceiptData);
             updatedReceiptData.consignee=consigneeRequest;
@@ -648,7 +669,8 @@ const ReleaseOrderCreationForm = ({
               }
             });
             
-            return result; // Retornar el resultado de updateReceipt
+            return result; // Retornar el resultado de updateReceipt */
+            return updateInfoRelease;
           })()
       );
 
@@ -660,7 +682,7 @@ const ReleaseOrderCreationForm = ({
             onReleaseOrderDataChange();
             setShowSuccessAlert(false);
             setFormData(formFormat);
-            window.location.reload();
+            window.location.href = `/warehouse/release`;
           }, 1000);
         } else {
           setShowErrorAlert(true);
@@ -680,7 +702,7 @@ const ReleaseOrderCreationForm = ({
       });
     }
   }, []);
-
+  
   const getAsyncSelectValue = () => {
     let selectedOption = null;
     if (formData.clientToBillType === "releasedTo") {
@@ -799,11 +821,11 @@ const ReleaseOrderCreationForm = ({
                     <DateTimePicker
                       // label="Release Date and Time"
                       className="font-right"
-                      value={dayjs(formData.createdDateAndTime)}
+                      value={dayjs(formData.release_date)}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
+                          release_date: dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />
@@ -820,8 +842,8 @@ const ReleaseOrderCreationForm = ({
                       id="consignee"
                       value={consigneeOptions.find(
                         (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type_person === formData.consigneeType
+                          option.id === formData.releasedToId &&
+                          option.type_person === formData.releasedToType
                       )}
                       onChange={(e) => handleConsigneeSelection(e)}
                       isClearable={true}
