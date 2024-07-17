@@ -9,7 +9,6 @@ const GeneratePickUpPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -152,10 +151,8 @@ const GeneratePickUpPDF = (data) => {
 
           chargeRows.push(chargeRow);
         }
-      });
-      
+      }); 
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -164,8 +161,6 @@ const GeneratePickUpPDF = (data) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
-
           const pdf = {
             content: [
               {
@@ -392,7 +387,6 @@ const GeneratePickUpPDF = (data) => {
                         bold: true,
                         fontSize: 13,
                         fillColor: `#CCCCCC`,
-                        // margin: [0, 0, 0, 0],
                         colSpan: 4,
                         alignment: "center"
                       },
@@ -531,8 +525,7 @@ const GeneratePickUpPDF = (data) => {
                       },
                       {},
                       {},
-                      {
-                      },
+                      {},
                     ],
                     ...commodityRows,
                     [

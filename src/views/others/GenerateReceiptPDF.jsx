@@ -61,7 +61,7 @@ const GenerateReceiptPDF = (data, numCon) => {
       let sixthRowText = "";
       let seventhRowText = "";
       data.commodities?.forEach((commodity) => {
-        firstRowText    += `1; Pallet \n \n \n`;
+        firstRowText    += `1; ${commodity.package_type_description}\n \n \n`;
         thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
         fourthRowText   += `${commodity.description} \n \n \n`;
         sixthRowText    += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
@@ -73,7 +73,6 @@ const GenerateReceiptPDF = (data, numCon) => {
       });
       const commodityRow = [
         {
-
           text: firstRowText,
           colSpan: 2,
         },
@@ -129,8 +128,6 @@ const GenerateReceiptPDF = (data, numCon) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
-
           const pdf = {
             content: [
               {
@@ -450,8 +447,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {},
                       {},
-                      {
-                      },
+                      {},
                     ],
                     [
                       {
@@ -474,8 +470,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                       },
                       {},
                       {},
-                      {
-                      },
+                      {},
                     ],
                     ...commodityRows,
                     [

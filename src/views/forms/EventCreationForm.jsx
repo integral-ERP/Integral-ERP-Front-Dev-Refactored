@@ -259,7 +259,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
           style={{ width: "12vw", alignItems: "center", marginLeft: "13px" }}
         >
           <div className="form-column-create">
-          {/*  <Input
+            <Input
               inputName="includeTracking"
               changeHandler={(e) =>
                 setformData({
@@ -270,7 +270,7 @@ const EventCreationForm = ({ onCancel, events, setevents }) => {
               label="Include in Tracking"
               name="includeTracking"
               type="checkbox"
-            ></Input>*/}
+            ></Input>
            
           </div>
         </div>
