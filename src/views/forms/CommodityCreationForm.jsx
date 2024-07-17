@@ -321,19 +321,18 @@ const CommodityCreationForm = ({
           />
         </div>
         {/* -------------------------------------------------- */}
-        <div>
+
+        {/* <div className="row w-100 mb-3" style={{ width: "100px" }}> */}
+        <div className="col-6">
+        {/* <div className="row w-100" style={{ padding: "0 0 0 1.5rem" }}> */}
           <label
-            htmlFor="containerType"
-            style={{
-              fontSize: "16px",
-              display: "flex",
-              fontWeight: "bold",
-            }}
-          >
+            htmlFor="containerType" className="text-comm">
             Container Type:
           </label>{" "}
+
           <select
             name="containerType"
+            className="container-type"
             id="containerType"
             value={formData.package_type_id}
             onChange={(e) => {
@@ -344,7 +343,7 @@ const CommodityCreationForm = ({
                   e.target.options[e.target.selectedIndex].text,
               });
             }}
-            style={{ fontSize: '14px', color: 'gray', padding: "3px" }}
+            style={{ fontSize: '14px', color: 'gray', padding: "3px"}}
           >
             <option value="">Select an option</option>
             {packTypes.map((type) => {
@@ -355,12 +354,17 @@ const CommodityCreationForm = ({
               );
             })}
           </select>
+        {/* </div> */}
         </div>
+
+
         {/* -------------------------------------------------- */}
 {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
 
+
+<div className="col-6">
+
 {/* // Renderizar el código basado en la condición */}
-<div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
   {/* {isLocationEnabled && ( */}
   {!hideLocation  && (
   
@@ -368,13 +372,13 @@ const CommodityCreationForm = ({
       <label
         htmlFor="location"
         className="text-comm"
-        style={{ marginLeft: "-8px" }}
       >
         Location:
       </label>
 
       <select
       name="location"
+      className="container-type"
       id="location"
       value={formData.locationId}
       onChange={(e) => {
@@ -389,7 +393,7 @@ const CommodityCreationForm = ({
           });
         }}
         //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-        style={{ fontSize: '14px', color: 'gray', padding: "4px" }}
+        style={{ fontSize: '14px', color: 'gray', padding: "3px"}}
       >
         <option value="">Select an option</option>
         {locations.map((location) => {
@@ -407,7 +411,8 @@ const CommodityCreationForm = ({
     </>
   
    )}
-</div>;
+</div>
+{/* </div> */}
 
         <div className="table-hover charge-buttons">
           <button

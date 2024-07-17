@@ -809,6 +809,7 @@
   }
 
   .charge-buttons {
+    margin-top: 1vw !important;
     margin: 10px;
   }
 
@@ -1010,7 +1011,7 @@
     }
 
     &.description-form+input {
-      margin-bottom: 20px
+      margin-bottom: 10px
     }
   }
 
