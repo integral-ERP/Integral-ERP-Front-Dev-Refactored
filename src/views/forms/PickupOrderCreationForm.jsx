@@ -1760,7 +1760,7 @@ const PickupOrderCreationForm = ({
                       htmlFor="language"
                       style={{
                         fontWeight: "bold",
-                        fontSize: "15px",
+                        fontSize: "13px",
                         color: "#565656",
                         marginRight: "10px",
                       }}
