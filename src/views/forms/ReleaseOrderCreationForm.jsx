@@ -67,7 +67,8 @@ const ReleaseOrderCreationForm = ({
     tracking_number: "",
     purchase_order_number: "",
     main_carrierObj: "",
-    warehouseReceiptId: "",
+    warehouse_receipt: "",
+    warehouseReceiptObj:"",
     commodities: [],
     consigneeId: "",
     consigneeType: "",
@@ -252,6 +253,8 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
+        warehouse_receipt: releaseOrder.warehouse_receipt,
+        warehouseReceiptObj: releaseOrder.warehouseReceiptObj,
        /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
         /* charges: releaseOrder.charges, */
@@ -437,6 +440,8 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
     if (fromRecipt) {
       setcommodities(releaseOrder.commodities);
+      //console.log("idwh", releaseOrder.id);
+      //console.log("todowh", releaseOrder);
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -467,7 +472,8 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouseReceiptId: releaseOrder.warehouseReceiptId,
+        warehouse_receipt: releaseOrder.id,
+        warehouseReceiptObj: releaseOrder,
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
         consignee: releaseOrder.consignee,
@@ -640,7 +646,8 @@ const ReleaseOrderCreationForm = ({
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
           main_carrierObj: formData.main_carrierObj,
-          warehouse_receipt: formData.warehouseReceiptId,
+          warehouse_receipt: formData.warehouse_receipt,
+          warehouseReceiptObj: formData.warehouseReceiptObj,
           commodities: commodities,
           consignee: consigneeRequest,
         };
