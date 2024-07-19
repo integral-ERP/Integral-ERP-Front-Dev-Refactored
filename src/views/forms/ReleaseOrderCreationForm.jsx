@@ -17,6 +17,10 @@ import AsyncSelect from "react-select/async";
 import ReleaseService from "../../services/ReleaseService";
 import Table from "../shared/components/Table";
 import PickupService from "../../services/PickupService";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import mammoth from 'mammoth'
+import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import * as XLSX from 'xlsx';
 const ReleaseOrderCreationForm = ({
   releaseOrder,
   closeModal,
@@ -48,6 +52,7 @@ const ReleaseOrderCreationForm = ({
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [consignee, setconsignee] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
+  const [attachments, setAttachments] = useState([]);
   const StatusDelivered = 9;
   const formFormat = {
     status: StatusDelivered,
@@ -73,6 +78,7 @@ const ReleaseOrderCreationForm = ({
     consigneeId: "",
     consigneeType: "",
     consigneeInfo: "",
+    notes: "",
   };
 
   const [formData, setFormData] = useState(formFormat);
@@ -219,10 +225,169 @@ const ReleaseOrderCreationForm = ({
     setcommodities([...commodities, commodity]);
   };
 
+   //---------------------------------------added atacments ---------------------------------
+    //---------------------------------CHARGE IMG---------------------------------------------------------
+
+  const [showPreview, setShowPreview] = useState(false);
+  
+  const [fileContent, setfileContent] = useState({});
+
+  // const pdfPlugin = defaultLayoutPlugin();
+
+  const handleDownloadAttachment = (base64Data, fileName) => {
+    // Convertir la base64 a un Blob
+    const byteCharacters = atob(base64Data.split(",")[1]);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: "image/jpeg" });
+
+    // Crear un enlace temporal y descargar el Blob
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+  //---------------------------------------
+   const handleFileUpload = (event) => {
+    const files = Array.from(event.target.files);
+
+    const promises = files.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({
+            name: file.name,
+            base64: reader.result,
+            type: file.type,
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(promises).then(newAttachments => {
+      setAttachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+    });
+  };
+
+  const handlePreview = async (attachment) => {
+    if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      try {
+        const arrayBuffer = convertDataURIToBinary(attachment.base64);
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        setfileContent({ ...attachment, htmlContent: result.value });
+      } catch (error) {
+        console.error("Error processing Word file:", error);
+        alert("Error processing Word file. Please try again.");
+      }
+    } else {
+      setfileContent(attachment);
+    }
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreview(false);
+    setfileContent({});
+  };
+
+  const getIcon = (type) => {
+    if (type === 'application/pdf') {
+      return faFilePdf;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return faFileWord;
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return faFileExcel;
+    } else {
+      return faFile;
+    }
+  };
+
+  const getColor = (type) => {
+    if (type === 'application/pdf') {
+      return "#ff0000";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return "#1976d2";
+    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      return "#43a047";
+    } else {
+      return "#9e9e9e";
+    }
+  };
+
+
+  // ----------------------------------------------------------------------------------------
+  const handleDeleteAttachment = (name) => {
+    const updateAttachments = attachments.filter(
+      (attachment) => attachment.name !== name
+    );
+    setAttachments(updateAttachments);
+  }
+
+  const convertDataURIToBinary = (dataURI) => {
+    const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
+    const base64 = dataURI.substring(base64Index);
+    const raw = atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (let i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    return array.buffer;
+  };
+
+  const renderPreviewContent = () => {
+    if (fileContent.type.startsWith("image/")) {
+      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+    }
+    if (fileContent.type === 'application/pdf') {
+      return (
+        <iframe
+          src={fileContent.base64}
+          width="100%"
+          height="500px"
+          title="PDF file"
+        />
+      );
+    }
+
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
+      return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
+    }
+    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+    }
+
+    return <div>No se puede previsualizar este tipo de archivo</div>;
+  };
+
+  // -----------------------------------------------attachments end-----------------------------------------
   useEffect(() => {
     if (!creating && releaseOrder != null) {
       setcommodities(releaseOrder.commodities);
-      
+      setAttachments(releaseOrder.attachments);
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -257,6 +422,7 @@ const ReleaseOrderCreationForm = ({
         warehouseReceiptObj: releaseOrder.warehouseReceiptObj,
        /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
+        notes: releaseOrder.notes,
         /* charges: releaseOrder.charges, */
         /* consignee: releaseOrder.consignee,
         consigneeId: releaseOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
@@ -627,7 +793,10 @@ const ReleaseOrderCreationForm = ({
 
        // Convertir release_date a ISO 8601
           const isoReleaseDate = dayjs(formData.release_date,"YYYY-MM-DD hh:mm A").toISOString(); 
-
+          const logWithDelay = async (data) => {
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            console.log("Datos a enviar:", data);
+          };
       const createPickUp = async () => {
         let rawData = {
           status: StatusDelivered,
@@ -650,7 +819,17 @@ const ReleaseOrderCreationForm = ({
           warehouseReceiptObj: formData.warehouseReceiptObj,
           commodities: commodities,
           consignee: consigneeRequest,
+          attachments: attachments.map((attachment) => {
+            return {
+              name: attachment.name,
+              type: attachment.type,
+              base64: attachment.base64,
+            };
+          }),
+          notes: formData.notes,
         };
+        // Llama a la función de log con retraso
+        logWithDelay(rawData);
         //console.log("CHNAGED", updatedReceiptData.consigneeObj.data.obj);
         console.log("CONSIGNEREQUEST", consigneeRequest);
         const response = await (creating
@@ -1104,6 +1283,96 @@ const ReleaseOrderCreationForm = ({
           </div>
         </div>
       </div> */}
+
+
+<div className="creation creation-container">
+          <div className="form-label_name">
+            <h3>Attachments</h3>
+            <span></span>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <label htmlFor="fileInput" className="custom-file-input">
+                <span className="button-text">Seleccionar archivos</span>
+                <input
+                  type="file"
+                  id="fileInput"
+                  multiple
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                />
+              </label>
+              <br />
+              <br />
+              <div className="attachment-container">
+            {attachments.map((attachment) => (
+              <div key={attachment.name} className="attachment-wrapper">
+                <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
+                  {attachment.type.startsWith("image/") ? (
+                    <img
+                      src={attachment.base64}
+                      alt={attachment.name}
+                      style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={getIcon(attachment.type)}
+                      size="10x"
+                      style={{ color: getColor(attachment.type) }}
+                    />
+                  )}
+                </div>
+                <span className="attachment-name">{attachment.name}</span>
+                <div className="delete-button-container">
+                  <button
+                    className="custom-button"
+                    onClick={() => handleDeleteAttachment(attachment.name)}
+                  >
+                    <div className="delete-icon">
+                      <p>&times;</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {showPreview && (
+        <div className="preview-overlay" onClick={handleClosePreview}>
+          <div className="preview-container">
+            <button className="button-cancel pick" onClick={handleClosePreview}>
+              <i className="fas fa-times-circle"></i>
+            </button>
+            {renderPreviewContent()}
+          </div>
+        </div>
+      )}
+    </div>
+
+
+      <div className="creation creation-container">
+                <div className="form-label_name">
+                  <h3>Notes</h3>
+                  <span></span>
+                </div>
+
+                <div className="row align-items-center">
+                  <div className="col-10 text-start" style={{ width: "100%" }}>
+                    <Input
+                      type="textarea"
+                      inputName="notes"
+                      placeholder="Note here..."
+                      // label="Note"
+                      value={formData.notes}
+                      changeHandler={(e) =>
+                        setFormData({ ...formData, notes: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
 
         <div className="company-form__options-container">
            <button className="button-save" onClick={sendData}>
