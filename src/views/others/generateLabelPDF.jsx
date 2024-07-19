@@ -18,11 +18,6 @@ const GenerateLabeltPDF = (data, numCon) => {
   const location =  data.commodities[0].locationCode;
   const serialID =  data.commodities[0].id;
 
-  // const [showWarningAlert, setShowWarningAlert] = useState();
-
-  console.log("location = ", location);
-  console.log("cantidadPaquete = ", cantidadPaquete);
-
   var pais = "";
   var margPais = 20;
   var fontPais = 20;
@@ -103,7 +98,6 @@ const GenerateLabeltPDF = (data, numCon) => {
       let seventhRowText = "";
       let locatione = "";
       data.commodities?.forEach((commodity) => {
-        // firstRowText += `1; Pallet \n`;
         firstRowText += `1 \n`;
         thirdRowText += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
         fourthRowText += `${commodity.description} \n`;
@@ -112,8 +106,6 @@ const GenerateLabeltPDF = (data, numCon) => {
           `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
-        // locatione += `${commodity.description} \n`;
-        // console.log("totalWeight =", locatione);
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
@@ -126,9 +118,6 @@ const GenerateLabeltPDF = (data, numCon) => {
           });
         }
       });
-
-      let PESO1 = (totalWeight / 2.205).toFixed(2);
-      let PESO2 = (totalWeight);
 
       const commodityRow = [
         {
@@ -191,14 +180,10 @@ const GenerateLabeltPDF = (data, numCon) => {
 
           for (let index = 0; index < (cantidadPaquete+1); index++) {
             var numPages = index; 
-            
           }
-
-          // const numPages = 5; // Número de veces que quieres repetir la página
 
           const generatePageContent = (peso, description, numPage, location, barcodeImage) => {
             return [
-
               {
                 columns: [
                   {
@@ -224,7 +209,7 @@ const GenerateLabeltPDF = (data, numCon) => {
               {
                 columns: [
                   [
-                    {}, // Empty cell for the logo image (rowspan: 2)
+                    {},
                   ],
                   {},
                 ],
@@ -267,12 +252,10 @@ const GenerateLabeltPDF = (data, numCon) => {
                         fontSize: 15,
                         colSpan: 3,
                         border: ['top', 'top', '', 'top'],
-                        // lineWidth: 19,
                       },
                       {},
                       {},
                     ],
-                    
                     [
                       {
                         text: `CONSIGNEE`,
@@ -285,35 +268,22 @@ const GenerateLabeltPDF = (data, numCon) => {
                       },
                       {
                         text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``
-                          } \n \n`,
-                          `${data.consigneeObj?.data?.obj
-                            ?.street_and_number || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.city || ``
-                          }, ${data.consigneeObj?.data?.obj?.state || ``
-                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.country || ``
-                          }`,
-                          `${data.consigneeObj?.phone
-                            ? `Tel: ${data.consigneeObj.phone}, `
-                            : ``
-                          }${data.consigneeObj?.fax
-                            ? `Fax: ${data.consigneeObj.fax}`
-                            : ``
-                          }\n`,
+                          `${data.consigneeObj?.data?.obj?.name || ``} \n \n`,
+                          `${data.consigneeObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.city || ``}, 
+                          ${data.consigneeObj?.data?.obj?.state || ``} 
+                          ${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.country || ``}`,
+                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone},`: ``}
+                          ${data.consigneeObj?.fax? `Fax: ${data.consigneeObj.fax}`: ``}\n`,
                         ],
                         fontSize: 15,
                         colSpan: 3,
-                        // rowSpan: 2,
                         border: ['top', 'top', '', 'top'],
-                        // lineWidth: 19,
                       },
                       {},
                       {},
                     ],
-
                     [
                       {
                         text: '',
@@ -339,7 +309,6 @@ const GenerateLabeltPDF = (data, numCon) => {
                         alignment: 'center',
                         margin: [0, 10, 0, 0],
                       },
-
                     ],
 // ------------------------------------------------------------------}
                     [
@@ -354,11 +323,9 @@ const GenerateLabeltPDF = (data, numCon) => {
                       {},
                       {}
                     ],
-
                     [
                       {
                         image: barcodeImage,
-                        // fit: [550, 700],
                         alignment: `center`,
                         colSpan: 4,
                         border: ['', '', '', 'top']
@@ -366,7 +333,6 @@ const GenerateLabeltPDF = (data, numCon) => {
                       {},
                       {}
                     ],  
-
                     [
                       {
                         text: `DESCRIPTION`,
@@ -381,10 +347,8 @@ const GenerateLabeltPDF = (data, numCon) => {
                       {},
                       {}
                     ],
-
                     [
                       {
-                        // text: `${descrip}`, MIRAR
                         text: description,
                         margin: [20, 0, 0, 50],
                         colSpan: 4,
@@ -396,7 +360,6 @@ const GenerateLabeltPDF = (data, numCon) => {
                       {},
                       {}
                     ],
-
                     [
                       {
                         text: [`TRACKING`],
@@ -417,9 +380,7 @@ const GenerateLabeltPDF = (data, numCon) => {
                         fontSize: 12,
                         border: ['', '', '', ''],
                       },
-                      // {},
                     ],
-
                     [
                       {
                         text: [` `],
@@ -447,7 +408,6 @@ const GenerateLabeltPDF = (data, numCon) => {
                         border: ['', '', '', ''],
                       },
                       {
-                        // text: `COLLECT COD`,
                         text: ``,
                         bold: true,
                         margin: [0, 40, 0, 0],
@@ -496,16 +456,13 @@ const GenerateLabeltPDF = (data, numCon) => {
                       },
                       {
                         text: numPage + '/' + numCon,
-                        // text : "#Numero",
                         margin: [0, 0, 0, 20],
                         bold: true,
                         alignment: `center`,
                         fontSize: 40,
                         border: ['top', '', '', '']
                       },
-                    ],
-                       
-                    
+                    ],             
                     // -------------------------------------------------------------------
                   ],
                 },
@@ -513,15 +470,13 @@ const GenerateLabeltPDF = (data, numCon) => {
 // ----------------------------------------------------------------------------------------
             ];
           };
-
           if (!data.consigneeObj?.data?.obj?.city || data.number === undefined || data.number === null) {
             // Verificar si algún campo está vacío o no definido
             // console.log('Por favor completa todos los campos necesarios.');
             window.alert("Please complete the sender and recipient information.\nDon't leave empty fields.");
             
           } else {
-            const pdfContent = [];
-          
+            const pdfContent = [];          
             var contador = 0 ;
             data.commodities?.forEach((commodity) => {
               //------------------------------------------------
@@ -560,9 +515,7 @@ const GenerateLabeltPDF = (data, numCon) => {
             });
 
             const pdfDefinition = {
-              content: pdfContent,
-              
-              // Otros ajustes del PDF...
+              content: pdfContent,              
             };
 
             const pdfGenerator = pdfMake.createPdf(pdfDefinition);
@@ -570,10 +523,7 @@ const GenerateLabeltPDF = (data, numCon) => {
             const pdfUrl = URL.createObjectURL(blob);
             resolve(pdfUrl);
           });
-
           }
-        
-          
         };
         reader.readAsDataURL(imageBlob); // Read the logo image
       })

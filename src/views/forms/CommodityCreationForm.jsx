@@ -214,6 +214,12 @@ const CommodityCreationForm = ({
       .catch((error) => {});
   }, []);
 
+  const sortedPackTypes = packTypes.sort((a, b) => {
+    if (a.description < b.description) return -1;
+    if (a.description > b.description) return 1;
+    return 0;
+  });
+
   return (
     <div className="income-charge-form">
       {/* <h3>Commodity Creation Form</h3> */}
@@ -310,61 +316,53 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        {/* <div className="row w-100"> */}
-          <div className="col-6">
-            <label htmlFor="description" className="text-comm description-form">
-              Charge Description:
-            </label>
-            <input
-              name="description"
-              type="text"
-              className="form-input"
-              ref={input7Ref}
-              placeholder="Description..."
-              value={formData.description}
-              onChange={(e) =>
-                setformData({ ...formData, description: e.target.value })
-              }
-            />
-          </div>
+        <div className="col-6">
+          <label htmlFor="description" className="text-comm description-form">
+            Charge Description:
+          </label>
+          <input
+            name="description"
+            type="text"
+            className="form-input"
+            ref={input7Ref}
+            placeholder="Description..."
+            value={formData.description}
+            onChange={(e) =>
+              setformData({ ...formData, description: e.target.value })
+            }
+          />
+        </div>
 
-          <div className="col-6">
-            <label htmlFor="containerType"  className="text-comm description-form">
-              Container Type:
-            </label>{" "}
-            <select
-              name="containerType"
-              className="container-type"
-              id="containerType"
-              value={formData.package_type_id}
-              onChange={(e) => {
-                setformData({
-                  ...formData,
-                  package_type_id: e.target.value,
-                  package_type_description:
-                    e.target.options[e.target.selectedIndex].text,
-                });
-              }}
-              style={{ fontSize: "14px", color: "gray", padding: "3px" }}
-            >
-              <option value="">Select an option</option>
-              {packTypes.map((type) => {
-                return (
-                  <option value={type.id} key={type.id}>
-                    {type.description}
-                  </option>
-                );
-              })}
-            </select>
-            {/* </div> */}
-          </div>
-        {/* </div> */}
-
-        {/* -------------------------------------------------- */}
-
-        {/* -------------------------------------------------- */}
+        <div className="col-6">
+          <label htmlFor="containerType" className="text-comm description-form">
+            Container Type:
+          </label>{" "}
+          <select
+            name="containerType"
+            className="container-type"
+            id="containerType"
+            value={formData.package_type_id}
+            onChange={(e) => {
+              setformData({
+                ...formData,
+                package_type_id: e.target.value,
+                package_type_description:
+                  e.target.options[e.target.selectedIndex].text,
+              });
+            }}
+            style={{ fontSize: "14px", color: "gray", padding: "3px" }}
+          >
+            <option value="">Select an option</option>
+            {sortedPackTypes.map((type) => {
+              return (
+                <option value={type.id} key={type.id}>
+                  {type.description}
+                </option>
+              );
+            })}
+          </select>
+        </div>
         {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
-
         <div>
           {!hideLocation && (
             <>
