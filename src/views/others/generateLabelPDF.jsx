@@ -470,7 +470,8 @@ const GenerateLabeltPDF = (data, numCon) => {
 // ----------------------------------------------------------------------------------------
             ];
           };
-          if (!data.consigneeObj?.data?.obj?.city || data.number === undefined || data.number === null) {
+          // if (!data.consigneeObj?.data?.obj?.city || data.number === undefined || data.number === null) {
+            if (data.number === undefined || data.number === null) {
             // Verificar si algún campo está vacío o no definido
             // console.log('Por favor completa todos los campos necesarios.');
             window.alert("Please complete the sender and recipient information.\nDon't leave empty fields.");
@@ -487,10 +488,17 @@ const GenerateLabeltPDF = (data, numCon) => {
               let barcodeImage = null;
               canvas = document.createElement("canvas");
               var barra = data.commodities[0].id;
-              console.log("barra = ",barra)
+              console.log("barra = ",barra);
+              console.log("City = ",data.consigneeObj?.data?.obj?.city);
+              let tex_city=""
+              if(!data.consigneeObj?.data?.obj?.city){
+                tex_city=data.number + 'P' + contador
+              }else{
+                tex_city=`${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + contador
+              }
               const barcodeOptions = {
                 bcid: "code128", // Barcode type (e.g., code128),
-                text: `${data.consigneeObj?.data?.obj?.city.substring(0, 3)}` + data.number + 'P' + contador,
+                text: tex_city,
                 height: 20, // Height of the barcode
                 includetext: true, // Include human-readable text below the barcode
                 textxalign: "center",
