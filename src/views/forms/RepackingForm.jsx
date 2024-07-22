@@ -43,8 +43,14 @@ const RepackingForm = ({ commodities, setCommodities }) => {
 
   useEffect(() => {
     if (formData.height && formData.width && formData.length) {
-      const vol = ((formData.height * formData.width * formData.length) / 1728 ).toFixed(2);
-      const volWeight = ((formData.height * formData.width * formData.length) / 166 ).toFixed(2);
+      const vol = (
+        (formData.height * formData.width * formData.length) /
+        1728
+      ).toFixed(2);
+      const volWeight = (
+        (formData.height * formData.width * formData.length) /
+        166
+      ).toFixed(2);
 
       setformData((prevFormData) => ({
         ...prevFormData,
@@ -171,45 +177,19 @@ const RepackingForm = ({ commodities, setCommodities }) => {
     ]);
   };
 
+  const sortedPackTypes = packTypes.sort((a, b) => {
+    if (a.description < b.description) return -1;
+    if (a.description > b.description) return 1;
+    return 0;
+  });
+
   return (
     <div className="income-charge-form">
-      <h3>Repacking Form</h3>
-      <div>
-        <label
-          htmlFor="containerType"
-          style={{
-            fontSize: "16px",
-            display: "flex",
-            fontWeight: "bold",
-          }}
-        >
-          Container Type:
-        </label>{" "}
-        <select
-          name="containerType"
-          id="containerType"
-          /* added valor para repack */
-          value={formData.package_type_id}
-          onChange={(e) => {
-            setformData({
-              ...formData,
-              package_type_id: e.target.value,
-              package_type_description:
-                e.target.options[e.target.selectedIndex].text,
-            });
-          }}
-          style={{ fontSize: '14px', color: 'gray', padding: "3px" }}
-        >
-          <option value="">Select an option</option>
-          {packTypes.map((type) => {
-            return (
-              <option value={type.id} key={type.id}>
-                {type.description}
-              </option>
-            );
-          })}
-        </select>
+      <div className="form-label_name">
+        <h2>Repacking Form</h2>
+        <span></span>
       </div>
+
       <div className="form-row">
         <div className="form-column-create">
           <label className="text-comm">Length:</label>
@@ -275,9 +255,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
             <span className="input-group-text num-com">lb</span>
           </div>
         </div>
-        
-        
-        
+
         {/* <div className="form-column-create">
           <label className="text-comm">Volume:</label>
           <div className="input-group-r ">
@@ -305,22 +283,60 @@ const RepackingForm = ({ commodities, setCommodities }) => {
           </div>
         </div>
 
-        <label htmlFor="description" className="text-comm">
-          Description:
-        </label>
-        <input
-          name="description"
-          type="text"
-          className="form-input"
-          placeholder="Description..."
-          value={formData.description}
-          onChange={(e) =>
-            setformData({ ...formData, description: e.target.value })
-          }
-          style={{ width: "100%" }}
-        />
-      <div className="form-column-create" style={{ width: "100%" }}> 
-          <label htmlFor="location" className="text-comm" > 
+        <div className="row w-100">
+          <div className="col-6">
+            <label htmlFor="description" className="text-comm description-form">
+              Description:
+            </label>
+            <input
+              name="description"
+              type="text"
+              className="form-input"
+              placeholder="Description..."
+              value={formData.description}
+              onChange={(e) =>
+                setformData({ ...formData, description: e.target.value })
+              }
+              style={{ width: "100%" }}
+            />
+          </div>
+
+          <div className="col-6">
+            <label
+              htmlFor="containerType"
+              className="text-comm description-form"
+            >
+              Container Type:
+            </label>{" "}
+            <select
+              name="containerType"
+              className="container-type"
+              id="containerType"
+              value={formData.package_type_id}
+              onChange={(e) => {
+                setformData({
+                  ...formData,
+                  package_type_id: e.target.value,
+                  package_type_description:
+                    e.target.options[e.target.selectedIndex].text,
+                });
+              }}
+              style={{ fontSize: "14px", color: "gray", padding: "3px" }}
+            >
+              <option value="">Select an option</option>
+              {sortedPackTypes.map((type) => {
+                return (
+                  <option value={type.id} key={type.id}>
+                    {type.description}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        </div>
+
+        <div className="form-column-create" style={{ width: "99%" }}>
+          <label htmlFor="location" className="text-comm">
             Location:
           </label>
           <select
@@ -337,7 +353,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
                   ),
               });
             }}
-            style={{ fontSize: '14px', color: 'gray',padding: "4px"  }}
+            style={{ fontSize: "14px", color: "gray", padding: "4px" }}
           >
             <option value="">Select an option</option>
             {locations.map((location) => {
@@ -353,10 +369,6 @@ const RepackingForm = ({ commodities, setCommodities }) => {
             })}
           </select>
         </div>
-
-
-
-
       </div>
       <div className="useinter">
         <p style={{ margin: "1rem", fontSize: "15px" }}>
@@ -364,7 +376,7 @@ const RepackingForm = ({ commodities, setCommodities }) => {
         </p>
         <table
           id="tableware"
-          style={{ width: "60%", border: "2px solid black" }}
+          style={{ width: "0%", border: "2px solid black" }}
         >
           <tr style={{ display: "none" }}>
             {/* desabilitado de uso de peso interno */}

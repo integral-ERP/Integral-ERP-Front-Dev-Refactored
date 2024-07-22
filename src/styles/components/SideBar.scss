@@ -42,7 +42,7 @@
   
   .content-page {
     width: 230vw;
-    height: 225vw;
+    height: 165vw;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -310,8 +310,8 @@
   }
   
   .logo_integral{
-    width: 35vw;
-    height: 10vw;
+    width: 29vw;
+    height: 9vw;
   
   }
   
@@ -393,7 +393,7 @@
   
   .home-section .home-content {
     height: 100%;
-    width: 100vw;
+    width: 85vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -403,7 +403,7 @@
   .home-section .home-content .bx-menu,
   .home-section .home-content .text {
     color: #fff;
-    font-size: 400%;
+    font-size: 10vw;
     display: flex;
     align-items: center;
   }

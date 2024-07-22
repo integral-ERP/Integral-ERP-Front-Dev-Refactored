@@ -85,27 +85,35 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
       const commodityRow = [
         {
           text: firstRowText,
+          alignment: "left",
         },
         {
           text: secondRowText,
+          alignment: "left",
         },
         {
           text: thirdRowText,
+          alignment: "left",
         },
         {
           text: fourthRowText,
+          alignment: "left",
         },
         {
           text: fifthRowText,
+          alignment: "left",
         },
         {
           text: sixthRowText,
+          alignment: "left",
         },
         {
           text: seventhRowText,
+          alignment: "right",
         },
         {
           text: eigthRowText,
+          alignment: "right",
         },
         {
           text: ninenthRowText,
@@ -327,31 +335,37 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                         text: `Pcs`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `WHR No`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `Location`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `Dimensions`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `Package`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `Description`,
                         fillColor: `#CCCCCC`,
                         margin: [0, 0, 0, 0],
+                        alignment: "center",
                       },
                       {
                         text: `Weight`,
@@ -393,9 +407,9 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                       {
                         text: `Volume`,
                       },
-                        {
-                          text: [`Vol Weight`],
-                        },
+                      {
+                        text: [`Vol Weight`],
+                      },
                     ],
                     [
                       {},
@@ -408,21 +422,15 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                         alignment: "right"
                       },
                       {
-                        text: [
-                          `${(totalWeight ).toFixed(2)} lb`,
-                          ],
+                        text: [`${(totalWeight ).toFixed(2)} lb`],
                           alignment: "right"
                       },
                       {
-                        text: [
-                          `${totalVolume.toFixed(2)} ft3\n`,
-                        ],
+                        text: [`${totalVolume.toFixed(2)} ft3\n`],
                         alignment: "right"
                       },
                       {
-                        text: [
-                          `${totalVolumeM.toFixed(2)} Vlb\n`,
-                        ],
+                        text: [`${totalVolumeM.toFixed(2)} Vlb\n`],
                         alignment: "right"
                       },
                     ],

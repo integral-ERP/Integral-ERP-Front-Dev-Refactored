@@ -15,7 +15,7 @@ const CommodityCreationForm = ({
   commodity,
   locationEnabled,
   setEditingComodity,
-  hideLocation
+  hideLocation,
 }) => {
   const formFormat = {
     id: "",
@@ -23,8 +23,8 @@ const CommodityCreationForm = ({
     height: "",
     width: "",
     weight: "",
-    package_type_id:"",
-    package_type_description:"",
+    package_type_id: "",
+    package_type_description: "",
     volumetricWeight: "",
     chargedWeight: "",
     description: "",
@@ -62,7 +62,7 @@ const CommodityCreationForm = ({
       !formData.package_type_description ||
       !formData.width ||
       !formData.weight ||
-      !formData.description 
+      !formData.description
       // ||
       // (!formData.locationId && !(editing && commodity.containsCommodities))
     ) {
@@ -119,7 +119,7 @@ const CommodityCreationForm = ({
                 width: formData.width,
                 weight: formData.weight,
                 package_type_id: formData.package_type_id,
-                package_type_description:formData.package_type_description,
+                package_type_description: formData.package_type_description,
                 volumen: formData.volumen,
                 volumetricWeight: formData.volumetricWeight,
                 internalCommodities: prevCommodity.internalCommodities,
@@ -154,8 +154,14 @@ const CommodityCreationForm = ({
 
   useEffect(() => {
     if (formData.height && formData.width && formData.length) {
-      const volu =((formData.height * formData.width * formData.length) / 1728).toFixed(2);
-      const volWeight = ((formData.height * formData.width * formData.length) / 166).toFixed(2);
+      const volu = (
+        (formData.height * formData.width * formData.length) /
+        1728
+      ).toFixed(2);
+      const volWeight = (
+        (formData.height * formData.width * formData.length) /
+        166
+      ).toFixed(2);
 
       setformData((prevFormData) => ({
         ...prevFormData,
@@ -175,7 +181,7 @@ const CommodityCreationForm = ({
         length: commodity.length,
         width: commodity.width,
         height: commodity.height,
-        volumen:commodity.volumen,
+        volumen: commodity.volumen,
         volumetricWeight: commodity.volumetricWeight,
         chargedWeight: commodity.chargedWeight,
         description: commodity.description,
@@ -207,6 +213,12 @@ const CommodityCreationForm = ({
       })
       .catch((error) => {});
   }, []);
+
+  const sortedPackTypes = packTypes.sort((a, b) => {
+    if (a.description < b.description) return -1;
+    if (a.description > b.description) return 1;
+    return 0;
+  });
 
   return (
     <div className="income-charge-form">
@@ -304,7 +316,7 @@ const CommodityCreationForm = ({
           </div>
         </div>
 
-        <div className="row w-100" style={{ padding: "0 0 0 1.5rem" }}>
+        <div className="col-6">
           <label htmlFor="description" className="text-comm description-form">
             Charge Description:
           </label>
@@ -320,20 +332,14 @@ const CommodityCreationForm = ({
             }
           />
         </div>
-        {/* -------------------------------------------------- */}
-        <div>
-          <label
-            htmlFor="containerType"
-            style={{
-              fontSize: "16px",
-              display: "flex",
-              fontWeight: "bold",
-            }}
-          >
+
+        <div className="col-6">
+          <label htmlFor="containerType" className="text-comm description-form">
             Container Type:
           </label>{" "}
           <select
             name="containerType"
+            className="container-type"
             id="containerType"
             value={formData.package_type_id}
             onChange={(e) => {
@@ -344,10 +350,10 @@ const CommodityCreationForm = ({
                   e.target.options[e.target.selectedIndex].text,
               });
             }}
-            style={{ fontSize: '14px', color: 'gray', padding: "3px" }}
+            style={{ fontSize: "14px", color: "gray", padding: "3px" }}
           >
             <option value="">Select an option</option>
-            {packTypes.map((type) => {
+            {sortedPackTypes.map((type) => {
               return (
                 <option value={type.id} key={type.id}>
                   {type.description}
@@ -356,58 +362,49 @@ const CommodityCreationForm = ({
             })}
           </select>
         </div>
-        {/* -------------------------------------------------- */}
-{/* ---------------------------------------------------------------------------------------------------------------------------------- */}
+        {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
+        <div>
+          {!hideLocation && (
+            <>
+              <label htmlFor="location" className="text-comm">
+                Location:
+              </label>
 
-{/* // Renderizar el código basado en la condición */}
-<div className="row w-100 mb-3" style={{ padding: "0 0 0 1.5rem" }}>
-  {/* {isLocationEnabled && ( */}
-  {!hideLocation  && (
-  
-    <>
-      <label
-        htmlFor="location"
-        className="text-comm"
-        style={{ marginLeft: "-8px" }}
-      >
-        Location:
-      </label>
-
-      <select
-      name="location"
-      id="location"
-      value={formData.locationId}
-      onChange={(e) => {
-        setformData({
-          ...formData,
-          locationId: e.target.value,
-          locationCode:
-          e.target.options[e.target.selectedIndex].getAttribute(
-            "data-key"
-         
-              ),
-          });
-        }}
-        //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-        style={{ fontSize: '14px', color: 'gray', padding: "4px" }}
-      >
-        <option value="">Select an option</option>
-        {locations.map((location) => {
-          return (
-            <option
-              key={location.id}
-              value={location.id}
-              data-key={location.code}
-            >
-              {location.code}
-            </option>
-          );
-        })}
-      </select>
-    </>
-  
-   )}
-</div>;
+              <select
+                name="location"
+                className="container-type"
+                id="location"
+                value={formData.locationId}
+                onChange={(e) => {
+                  setformData({
+                    ...formData,
+                    locationId: e.target.value,
+                    locationCode:
+                      e.target.options[e.target.selectedIndex].getAttribute(
+                        "data-key"
+                      ),
+                  });
+                }}
+                //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
+                style={{ fontSize: "14px", color: "gray", padding: "3px" }}
+              >
+                <option value="">Select an option</option>
+                {locations.map((location) => {
+                  return (
+                    <option
+                      key={location.id}
+                      value={location.id}
+                      data-key={location.code}
+                    >
+                      {location.code}
+                    </option>
+                  );
+                })}
+              </select>
+            </>
+          )}
+        </div>
+        {/* </div> */}
 
         <div className="table-hover charge-buttons">
           <button

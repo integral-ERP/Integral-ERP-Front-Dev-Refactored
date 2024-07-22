@@ -9,7 +9,6 @@ const GeneratePickUpPDF = (data) => {
   const canvas = document.createElement("canvas");
   const barcodeImage = canvas.toDataURL();
   
-
   return new Promise((resolve, reject) => {
     let canvas = null;
     let barcodeImage = null;
@@ -92,7 +91,7 @@ const GeneratePickUpPDF = (data) => {
       let seventhRowText = "";
       
       data.commodities?.forEach((commodity, index) => {
-        firstRowText    += `1; ${commodity.package_type_description}\n \n \n`;
+        firstRowText    += `1. ${commodity.package_type_description}\n \n \n`;
         thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
         fourthRowText   += `${commodity.description} \n \n \n`;
         sixthRowText    += `${commodity.weight} lbs \n` +`${(commodity.weight / 2.205).toFixed(2)} Kg \n \n`;
@@ -152,10 +151,8 @@ const GeneratePickUpPDF = (data) => {
 
           chargeRows.push(chargeRow);
         }
-      });
-      
+      }); 
     }
-
 
     fetch(logo)
       .then((response) => response.blob())
@@ -164,8 +161,6 @@ const GeneratePickUpPDF = (data) => {
         const reader = new FileReader();
         reader.onload = (event) => {
           const imgUrl = event.target.result;
-
-
           const pdf = {
             content: [
               {
@@ -392,7 +387,6 @@ const GeneratePickUpPDF = (data) => {
                         bold: true,
                         fontSize: 13,
                         fillColor: `#CCCCCC`,
-                        // margin: [0, 0, 0, 0],
                         colSpan: 4,
                         alignment: "center"
                       },
@@ -470,7 +464,7 @@ const GeneratePickUpPDF = (data) => {
               },
               {
                 table: {
-                  widths: [`5%`, `10%`, `20%`, `30%`, `10%`, `10%`, `15%`],
+                  widths: [`10%`, `10%`, `22%`, `24%`, `10%`, `12%`, `12%`],
                   body: [
                     [
                       {
@@ -531,8 +525,7 @@ const GeneratePickUpPDF = (data) => {
                       },
                       {},
                       {},
-                      {
-                      },
+                      {},
                     ],
                     ...commodityRows,
                     [

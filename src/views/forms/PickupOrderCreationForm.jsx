@@ -48,8 +48,7 @@ const PickupOrderCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -144,7 +143,6 @@ const PickupOrderCreationForm = ({
     const issuedByOptions = [...forwardingAgentsWithType];
 
     const destinationAgentOptions = [...forwardingAgentsWithType];
-    // const destinationAgentOptions = [];
 
     const employeeOptions = [...employeesWithType];
 
@@ -192,30 +190,6 @@ const PickupOrderCreationForm = ({
     setReleasedToOptions(clientToBillOptions.sort(SortArray));
   };
 
-  // useEffect(() => {
-  //   fetchFormData()
-  //     .then((data) => {
-  //       const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
-  //       const customers = data.filter(item => item.type === 'customer');
-  //       const vendors = data.filter(item => item.type === 'vendor');
-  //       const employees = data.filter(item => item.type === 'employee');
-  //       const carriers = data.filter(item => item.type === 'carrier');
-
-  //       setIssuedByOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setDestinationAgentOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setEmployeeOptions([...employees].sort(SortArray));
-  //       setShipperOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setPickupLocationOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setConsigneeOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setDeliveryLocationOptions([...forwardingAgents, ...customers, ...vendors])
-  //       setCarrierOptions([...forwardingAgents, ...carriers, ...vendors])
-  //       setReleasedToOptions([...forwardingAgents, ...customers, ...vendors])
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error al obtener los datos:', error);
-  //     });
-  // }, []);
-
   useEffect(() => {}, [employeeOptions, formData.employeeId]);
 
   const handleIssuedBySelection = async (event) => {
@@ -227,8 +201,7 @@ const PickupOrderCreationForm = ({
     const info = `${selectedObject?.street_and_number || ""} - ${
       selectedObject?.city || ""
     } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""
-    }`;
+      selectedObject?.zip_code || ""}`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -302,8 +275,6 @@ const PickupOrderCreationForm = ({
       destinationAgentType: type,
       destinationAgentInfo: info,
     });
-    // const result = await ForwardingAgentService.getForwardingAgentById(id);
-    // setagent(result?.data);
   };
 
   const handleEmployeeSelection = async (event) => {
@@ -1111,7 +1082,7 @@ const PickupOrderCreationForm = ({
       let hours = dataCreation.getHours();
       let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
       // Determinar AM o PM
-      let ampm = hours >= 12 ? 'Pm' : 'Am';
+      let ampm = hours >= 12 ? 'P' : 'A';
       // Convertir horas de 24 horas a 12 horas
       hours = hours % 12;
       hours = hours ? hours : 12; // La hora 0 debería ser 12
@@ -1127,12 +1098,12 @@ const PickupOrderCreationForm = ({
       let pickhours = pickData.getHours();
       let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
       // Determinar AM o PM
-      let pickampm = pickhours >= 12 ? 'Pm' : 'Am';
+      let pickampm = pickhours >= 12 ? 'P' : 'A';
       // Convertir horas de 24 horas a 12 horas
       pickhours = pickhours % 12;
       pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
       // Formato: YYYY-MM-DD HH:MM AM/PM
-      let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear} - ${pickhours}:${pickminutes} ${pickampm}`;
+      let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear}-${pickhours}:${pickminutes}${pickampm}`;
 //-----------------------
       // # Obtener la fecha y la hora por separado
       const isodeliveryDate = dayjs(formData.deliveryDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
@@ -1143,12 +1114,12 @@ const PickupOrderCreationForm = ({
       let deliveryhours = deliveryData.getHours();
       let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, '0');
       // Determinar AM o PM
-      let deliveryampm = deliveryhours >= 12 ? 'Pm' : 'Am';
+      let deliveryampm = deliveryhours >= 12 ? 'P' : 'A';
       // Convertir horas de 24 horas a 12 horas
       deliveryhours = deliveryhours % 12;
       deliveryhours = deliveryhours ? deliveryhours : 12; // La hora 0 debería ser 12
       // Formato: YYYY-MM-DD HH:MM AM/PM
-      let deliveryformattedDateTime = `${deliveryday}/${deliverymonth}/${deliveryyear} - ${deliveryhours}:${deliveryminutes} ${deliveryampm}`;
+      let deliveryformattedDateTime = `${deliveryday}/${deliverymonth}/${deliveryyear}-${deliveryhours}:${deliveryminutes}${deliveryampm}`;
 
       const createPickUp = async () => {
         let rawData = {
@@ -1491,17 +1462,16 @@ const PickupOrderCreationForm = ({
               <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
-                    Destination Agent::
+                    Destination Agent:
                   </label>
                   {!creating ? (
                     canRender && (
                       <AsyncSelect
                         id="destinationAgent"
+                        defaultOptions={destinationAgentOptions}
                         onChange={(e) => {
                           handleDestinationAgentSelection(e);
                         }}
-                        className="async-option"
-                        defaultOptions={destinationAgentOptions}
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
@@ -1518,6 +1488,7 @@ const PickupOrderCreationForm = ({
                       }}
                       className="async-option"
                       defaultOptions={destinationAgentOptions}
+                      placeholder="Search and select..."
                       loadOptions={loadDestinationAgentsSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
@@ -1760,7 +1731,7 @@ const PickupOrderCreationForm = ({
                       htmlFor="language"
                       style={{
                         fontWeight: "bold",
-                        fontSize: "15px",
+                        fontSize: "13px",
                         color: "#565656",
                         marginRight: "10px",
                       }}

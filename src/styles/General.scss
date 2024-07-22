@@ -809,6 +809,7 @@
   }
 
   .charge-buttons {
+    margin-top: 1vw !important;
     margin: 10px;
   }
 
@@ -1010,7 +1011,7 @@
     }
 
     &.description-form+input {
-      margin-bottom: 20px
+      margin-bottom: 10px
     }
   }
 
@@ -1211,7 +1212,7 @@
 }
 
 .position-table {
-  width: 50%;
+  width: 100%;
   margin: 1px auto;
 }
 
@@ -1245,11 +1246,12 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #9191916d;
+  background-color: #d3c9c96d;
   color: rgb(0, 0, 0);
 }
 
 .useinter {
+  font-weight: bold;
   margin: 1rem;
   display: flex;
   justify-content: center;
