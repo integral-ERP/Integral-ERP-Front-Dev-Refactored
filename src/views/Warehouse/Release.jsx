@@ -35,8 +35,8 @@ const Release = () => {
     "Released to",
     "Pieces",
     // "Weight",
-    "Weight (lb)",
-    "Volumen (ft3)", 
+    //"Weight (lb)",
+    //"Volumen (ft3)", 
     "View Release PDF",
   ];
 
@@ -51,7 +51,7 @@ const Release = () => {
   //added status
   const StatusDelivered = 9;
   const StatusLoaded = 1;
-  const fetchData = async () => {
+  /* const fetchData = async () => {
     try {
       const receiptOrders = (await ReceiptService.getReceipts()).data.results;
       const pickUpsWithReceipt = receiptOrders.filter((pickUp) => {
@@ -84,14 +84,14 @@ const Release = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }; */
 
-  useEffect(() => {
+ /*  useEffect(() => {
     fetchData();
     console.log("Aqui-1 = ",fetchData());// No borrar
     console.log("Aqui-2 = ",fetchData());// No borrar
     console.log("Aqui-3 = ",fetchData());// No borrar
-  }, []);
+  }, []); */
 
   const updateReleaseOrders = (url = null) => {
     ReleaseService.getReleases(url)
