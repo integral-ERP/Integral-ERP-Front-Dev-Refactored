@@ -426,7 +426,7 @@ const Receipt = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-              title= {isLoggedIn ? "Warehouse Receipts" : "Realese Orders"}
+              title= {isLoggedIn ? "Warehouse Receipts" : "Release Orders"}
               setData={setreceipts}
               contextService={ReceiptService}
               importEnabled={false}
