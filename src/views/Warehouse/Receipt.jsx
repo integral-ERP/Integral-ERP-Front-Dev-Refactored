@@ -426,11 +426,12 @@ const Receipt = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-              title="Warehouse Receipts"
+              title= {isLoggedIn ? "Warehouse Receipts" : "Realese Orders"}
               setData={setreceipts}
               contextService={ReceiptService}
               importEnabled={false}
               centeredColumns={[2, 7]}
+              createWarehouseReceipt={createRealeaseOrder}
             >
               {selectedPickupOrder !== null && (
                 <ReceiptCreationForm
