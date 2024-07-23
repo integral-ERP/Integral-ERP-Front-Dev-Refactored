@@ -336,7 +336,7 @@ const Receipt = () => {
 
   const contextMenuOptions = [
     {
-      label: "Create Realese Order",
+      label: "Create Release Order",
       handler: seteRealease ,
     },
   ];
