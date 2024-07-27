@@ -833,18 +833,16 @@ const ReleaseOrderCreationForm = ({
         //console.log("CHNAGED", updatedReceiptData.consigneeObj.data.obj);
         console.log("CONSIGNEREQUEST", consigneeRequest);
         const response = await (creating
-          ? ReleaseService.createRelease(rawData)
-          :  (async () => {
+          ? (async () => {
 
-            const updateInfoRelease = await ReleaseService.updateRelease(releaseOrder.id, rawData);
-           /*  const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
+            const createReleaseForm = await ReleaseService.createRelease(rawData);
+              //added change status delivered
+             const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
             const updatedReceiptData = { ...buscarrecipt.data };
             //console.log("updatedReceiptData", updatedReceiptData);
-            updatedReceiptData.consignee=consigneeRequest;
-            updatedReceiptData.consigneeObj.data.obj = consignee;
-            console.log("updatedReceiptData request", updatedReceiptData.consignee);
-            console.log("updatedReceiptData", updatedReceiptData.consigneeObj.data.obj);
-            const result = await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
+            updatedReceiptData.status=StatusDelivered;
+           
+            await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
             
             const buscarpickup = (await callPickupOrders(null)).data.results;
             const numeroRecibo = buscarrecipt.data.number;
@@ -853,9 +851,15 @@ const ReleaseOrderCreationForm = ({
               if (pickup.number === numeroRecibo) {
                 PickupService.updatePickup(pickup.id, updatedReceiptData );
               }
-            });
+            }); 
             
-            return result; // Retornar el resultado de updateReceipt */
+             // Retornar el resultado de updateReceipt 
+            return createReleaseForm;
+          })()
+          :  (async () => {
+
+            const updateInfoRelease = await ReleaseService.updateRelease(releaseOrder.id, rawData);
+          
             return updateInfoRelease;
           })()
       );

@@ -1359,10 +1359,15 @@ const ReceiptCreationForm = ({
           formData.consigneeInfo === " -  -  -  - "
             ? 2
             : 4;
+
+        
+        // Convertir createdDateAndTime a ISO 8601
+        const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+
         let rawData = {
           status,
           number: formData.number,
-          creation_date: formData.createdDateAndTime,
+          creation_date: isoDate,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1429,7 +1434,9 @@ const ReceiptCreationForm = ({
           ? (async () => {
               const result = await ReceiptService.createReceipt(rawData);
               if (result) {
-                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+                if (pickupOrder && pickupOrder.id && pickupOrder.id !== '') {
+                  await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+                }
               }
               return result;
             })()

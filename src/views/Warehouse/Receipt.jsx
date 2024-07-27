@@ -385,7 +385,8 @@ const Receipt = () => {
         !isInsideCompanyFormPickup &&
         !isSelectMenu
       ) {
-        setSelectedPickupOrder(null);
+        //para que no se cierre release creation se comenta
+        //setSelectedPickupOrder(null);
       }
     };
 
