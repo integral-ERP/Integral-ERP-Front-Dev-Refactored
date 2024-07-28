@@ -1912,25 +1912,24 @@ const ReceiptCreationForm = ({
           </div>
 
           <div className="col-6">
-            <div className="creation creation-container w-100">
+          <div className="creation creation-container w-100">
               <div className="form-label_name">
-                <h3>Carrier Information</h3>
+                <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row">
-                <div className="col-4 text-start">
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
-                    )}
                     onChange={(e) => {
                       handleMainCarrierSelection(e);
                     }}
-                    isClearable={true}
+                    value={carrierOptions.find(
+                      (option) => option.id === formData.mainCarrierdId
+                    )}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
@@ -1938,23 +1937,11 @@ const ReceiptCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-4 text-start">
+                <div className="col-6 text-start">
                   <Input
-                    type="text"
-                    inputName="proNumber"
-                    placeholder="PRO Number..."
-                    value={formData.proNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, proNumber: e.target.value })
-                    }
-                    label="PRO Number"
-                  />
-                </div>
-                <div className="col-4 text-start">
-                  <Input
+                    id="trackingNumber"
                     type="text"
                     inputName="trackingNumber"
-                    placeholder="Tracking Number..."
                     value={formData.trackingNumber}
                     changeHandler={(e) =>
                       setFormData({
@@ -1963,6 +1950,31 @@ const ReceiptCreationForm = ({
                       })
                     }
                     label="Tracking Number"
+                  />
+                </div>
+              </div>
+              <div className="row ">
+                <div className="col-6 text-start">
+                  <Input
+                    id="TextMainCarrier"
+                    type="textarea"
+                    inputName="issuedbydata"
+                    value={formData.mainCarrierInfo}
+                    readonly={true}
+                    // label="Address"
+         
+         />
+                </div>
+                <div className="col-6 text-start">
+                  <Input
+                    id="proNumber"
+                    type="text"
+                    inputName="proNumber"
+                    value={formData.proNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, proNumber: e.target.value })
+                    }
+                    label="PRO Number"
                   />
                 </div>
               </div>
