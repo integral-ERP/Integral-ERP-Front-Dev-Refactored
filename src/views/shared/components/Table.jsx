@@ -207,6 +207,7 @@ const Table = ({
     "Account Number": "accountNumber",
     Code: "code",
     "Release Date": "creation_date",
+    " Release Date": "creation_date_text",
     "Released to": "releasedToObj.data.obj.name",
     " Location": "locationCode",
     "Parent Order": "parent",

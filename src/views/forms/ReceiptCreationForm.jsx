@@ -865,6 +865,7 @@ const ReceiptCreationForm = ({
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1093,6 +1094,7 @@ const ReceiptCreationForm = ({
         volumen: pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1363,11 +1365,27 @@ const ReceiptCreationForm = ({
         
         // Convertir createdDateAndTime a ISO 8601
         const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+        // # Obtener la fecha y la hora por separado
+        let dataCreation = new Date(isoDate);
+        let year = dataCreation.getFullYear();
+        let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+        let day = String(dataCreation.getDate()).padStart(2, '0');
+        let hours = dataCreation.getHours();
+        let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+        // Determinar AM o PM
+      let ampm = hours >= 12 ? 'P' : 'A';
+      // Convertir horas de 24 horas a 12 horas
+      hours = hours % 12;
+      hours = hours ? hours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+//-----------------------
 
         let rawData = {
           status,
           number: formData.number,
           creation_date: isoDate,
+          creation_date_text : formattedDateTime,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1400,6 +1418,7 @@ const ReceiptCreationForm = ({
           status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
+          creation_date_text : formattedDateTime,
           pick_up_date: formData.pickupDateAndTime,
           delivery_date: formData.deliveryDateAndTime,
           issued_by: formData.issuedById,

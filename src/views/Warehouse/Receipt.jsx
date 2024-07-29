@@ -46,8 +46,8 @@ const Receipt = () => {
   const columns = [
     "Status",
     "Number",
-    "Date",
-    // "Creation Date",
+    // "Date",
+    "Creation Date",
     "Shipper Name",
     "Consignee Name",
     "Carrier Name",
