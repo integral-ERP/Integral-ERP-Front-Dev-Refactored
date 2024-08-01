@@ -865,6 +865,7 @@ const ReceiptCreationForm = ({
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        // creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1093,6 +1094,7 @@ const ReceiptCreationForm = ({
         volumen: pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        // creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1363,11 +1365,27 @@ const ReceiptCreationForm = ({
         
         // Convertir createdDateAndTime a ISO 8601
         const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+        // # Obtener la fecha y la hora por separado
+        let dataCreation = new Date(isoDate);
+        let year = dataCreation.getFullYear();
+        let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+        let day = String(dataCreation.getDate()).padStart(2, '0');
+        let hours = dataCreation.getHours();
+        let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+        // Determinar AM o PM
+      let ampm = hours >= 12 ? 'P' : 'A';
+      // Convertir horas de 24 horas a 12 horas
+      hours = hours % 12;
+      hours = hours ? hours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+//-----------------------
 
         let rawData = {
           status,
           number: formData.number,
           creation_date: isoDate,
+          creation_date_text : formattedDateTime,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1400,6 +1418,7 @@ const ReceiptCreationForm = ({
           status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
+          creation_date_text : formattedDateTime,
           pick_up_date: formData.pickupDateAndTime,
           delivery_date: formData.deliveryDateAndTime,
           issued_by: formData.issuedById,
@@ -1912,25 +1931,24 @@ const ReceiptCreationForm = ({
           </div>
 
           <div className="col-6">
-            <div className="creation creation-container w-100">
+          <div className="creation creation-container w-100">
               <div className="form-label_name">
-                <h3>Carrier Information</h3>
+                <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row">
-                <div className="col-4 text-start">
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
-                    )}
                     onChange={(e) => {
                       handleMainCarrierSelection(e);
                     }}
-                    isClearable={true}
+                    value={carrierOptions.find(
+                      (option) => option.id === formData.mainCarrierdId
+                    )}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
@@ -1938,23 +1956,11 @@ const ReceiptCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-4 text-start">
+                <div className="col-6 text-start">
                   <Input
-                    type="text"
-                    inputName="proNumber"
-                    placeholder="PRO Number..."
-                    value={formData.proNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, proNumber: e.target.value })
-                    }
-                    label="PRO Number"
-                  />
-                </div>
-                <div className="col-4 text-start">
-                  <Input
+                    id="trackingNumber"
                     type="text"
                     inputName="trackingNumber"
-                    placeholder="Tracking Number..."
                     value={formData.trackingNumber}
                     changeHandler={(e) =>
                       setFormData({
@@ -1963,6 +1969,31 @@ const ReceiptCreationForm = ({
                       })
                     }
                     label="Tracking Number"
+                  />
+                </div>
+              </div>
+              <div className="row ">
+                <div className="col-6 text-start">
+                  <Input
+                    id="TextMainCarrier"
+                    type="textarea"
+                    inputName="issuedbydata"
+                    value={formData.mainCarrierInfo}
+                    readonly={true}
+                    // label="Address"
+         
+         />
+                </div>
+                <div className="col-6 text-start">
+                  <Input
+                    id="proNumber"
+                    type="text"
+                    inputName="proNumber"
+                    value={formData.proNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, proNumber: e.target.value })
+                    }
+                    label="PRO Number"
                   />
                 </div>
               </div>
@@ -2253,7 +2284,8 @@ const ReceiptCreationForm = ({
                     noScrollY
                     data={events}
                     columns={[
-                      "Date",
+                      // "Date",
+                      " Creation Date",
                       // "Name",
                       "Event Type",
                       "Details",
@@ -2264,7 +2296,7 @@ const ReceiptCreationForm = ({
                       "Created On",
                       // "Last Modified By",
                       // "Last Modified On",
-                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                      "Options"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}

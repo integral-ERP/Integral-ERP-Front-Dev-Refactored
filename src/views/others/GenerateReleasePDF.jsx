@@ -72,7 +72,7 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
         secondRowText   = data.warehouseReceiptObj?.number || "";
         thirdRowText    += `${commodity.locationCode} \n`;
         fourthRowText   += `${commodity.length}x${commodity.width}x${commodity.height} in \n`;
-        fifthRowText    += `${"Box"} \n`;
+        fifthRowText    += `${commodity.package_type_description} \n`;
         sixthRowText    += `${commodity.description} \n`;
         seventhRowText  += `${commodity.weight} lb \n`;
         eigthRowText    += `${commodity.volumen} ft3 \n`;
@@ -86,38 +86,47 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
         {
           text: firstRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: secondRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: thirdRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: fourthRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: fifthRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: sixthRowText,
           alignment: "left",
+          fontSize: 9,
         },
         {
           text: seventhRowText,
           alignment: "right",
+          fontSize: 9,
         },
         {
           text: eigthRowText,
           alignment: "right",
+          fontSize: 9,
         },
         {
           text: ninenthRowText,
           margin: [0, 0, 0, longboard],
+          fontSize: 9,
         },
       ];
       commodityRows.push(commodityRow);
@@ -247,7 +256,7 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                             fontSize: 9,
                           },
                           {
-                            text: data.consigneeObj.data.obj.name,
+                            text: data.releasedToObj.data.obj.name,
                             margin: [0, 0, 0, 0],
                             bold: true,
                             fontSize: 11,
@@ -318,126 +327,38 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
               },
               {
                 table: {
-                  widths: [
-                    `auto`,
-                    `auto`,
-                    `auto`,
-                    `auto`,
-                    `*`,
-                    `*`,
-                    `auto`,
-                    `auto`,
-                    `auto`,
-                  ],
+                  widths: ['5%', '9%', '11%', '13%', '12%', '20%', '9%', '11%', '11%'],
                   body: [
                     [
-                      {
-                        text: `Pcs`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `WHR No`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Location`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Dimensions`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Package`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Description`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Volume`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
-                      {
-                        text: `Vol Weight`,
-                        fillColor: `#CCCCCC`,
-                        margin: [0, 0, 0, 0],
-                        alignment: "center",
-                      },
+                      { text: 'Pcs',        fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'WHR No',     fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Location',   fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Dimensions', fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Package',    fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Description',fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Weight',     fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Volume',     fillColor: '#CCCCCC', alignment: 'center' },
+                      { text: 'Vol Weight', fillColor: '#CCCCCC', alignment: 'center' }
                     ],
                     ...commodityRows,
-                    
                     [
-                      {
-                        text: `Note:`,
-                        colSpan: 5,
-                        rowSpan: 2,
-                      },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {
-                        text: `Pieces`,
-                      },
-                      {
-                        text: `Weight`,
-                      },
-                      {
-                        text: `Volume`,
-                      },
-                      {
-                        text: [`Vol Weight`],
-                      },
+                      { text: 'Note:',      colSpan: 5, rowSpan: 2, alignment: 'left' }, {}, {}, {}, {},
+                      { text: 'Pieces',     alignment: 'center' },
+                      { text: 'Weight',     alignment: 'center' },
+                      { text: 'Volume',     alignment: 'center' },
+                      { text: 'Vol Weight', alignment: 'center' }
                     ],
                     [
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      {
-                        text: totalPieces,
-                        alignment: "right"
-                      },
-                      {
-                        text: [`${(totalWeight ).toFixed(2)} lb`],
-                          alignment: "right"
-                      },
-                      {
-                        text: [`${totalVolume.toFixed(2)} ft3\n`],
-                        alignment: "right"
-                      },
-                      {
-                        text: [`${totalVolumeM.toFixed(2)} Vlb\n`],
-                        alignment: "right"
-                      },
-                    ],
-                  ],
+                      {}, {}, {}, {}, {},
+                      { text: totalPieces, alignment: 'right' },
+                      { text: `${(totalWeight).toFixed(2)} lb`, alignment: 'right' },
+                      { text: `${totalVolume.toFixed(2)} ft3`, alignment: 'right' },
+                      { text: `${totalVolumeM.toFixed(2)} Vlb`, alignment: 'right' }
+                    ]
+                  ]
                 },
-                margin: [0, 10, 0, 20],
-              },
+                margin: [0, 10, 0, 20]
+              }
             ],
             styles: {
               header: {

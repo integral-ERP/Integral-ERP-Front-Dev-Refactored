@@ -799,11 +799,28 @@ const ReleaseOrderCreationForm = ({
             await new Promise(resolve => setTimeout(resolve, 10000));
             console.log("Datos a enviar:", data);
           };
+
+      // # Obtener la fecha y la hora por separado
+      let dataCreation = new Date(isoDate);
+      let year = dataCreation.getFullYear();
+      let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+      let day = String(dataCreation.getDate()).padStart(2, '0');
+      let hours = dataCreation.getHours();
+      let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+      // Determinar AM o PM
+      let ampm = hours >= 12 ? 'P' : 'A';
+      // Convertir horas de 24 horas a 12 horas
+      hours = hours % 12;
+      hours = hours ? hours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+//-----------------------
       const createPickUp = async () => {
         let rawData = {
           status: StatusDelivered,
           number: formData.number,
           creation_date: isoDate,
+          creation_date_text: formattedDateTime,
           release_date: isoReleaseDate,
           employee: formData.employeeId,
           issued_by: formData.issuedById,
@@ -1383,9 +1400,11 @@ const ReleaseOrderCreationForm = ({
            <button className="button-save" onClick={sendData}>
           Save
         </button> 
-          {/* <button className="button-cancel" onClick={closeModal}>
-            Accept
-          </button> */}
+
+          <button className="button-cancel" onClick={closeModal}>
+            Cancel
+          </button>
+
         </div>
         {/* {showSuccessAlert && (
         <Alert
