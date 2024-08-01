@@ -2284,7 +2284,7 @@ const ReceiptCreationForm = ({
                     noScrollY
                     data={events}
                     columns={[
-it                       // "Date",
+                      // "Date",
                       " Creation Date",
                       // "Name",
                       "Event Type",
