@@ -1378,9 +1378,11 @@ const ReleaseOrderCreationForm = ({
            <button className="button-save" onClick={sendData}>
           Save
         </button> 
-          {/* <button className="button-cancel" onClick={closeModal}>
-            Accept
-          </button> */}
+
+          <button className="button-cancel" onClick={closeModal}>
+            Cancel
+          </button>
+
         </div>
         {/* {showSuccessAlert && (
         <Alert

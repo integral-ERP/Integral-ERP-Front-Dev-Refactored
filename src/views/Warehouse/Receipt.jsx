@@ -375,7 +375,7 @@ const Receipt = () => {
       const isTableRow = clickedElement.closest(".table-row");
       const isInsideCompanyFormPickup = clickedElement.closest(".company-form");
       const isSelectMenu = event.target.id.includes("react-select");
-
+      
       if (
         !isreceiptsButton &&
         !isTableRow &&
@@ -383,7 +383,7 @@ const Receipt = () => {
         !isInsideCompanyFormPickup &&
         !isSelectMenu
       ) {
-        setSelectedPickupOrder(null);
+        // setSelectedPickupOrder(null);
       }
     };
 
