@@ -1908,7 +1908,9 @@ const PickupOrderCreationForm = ({
                       " Volume-Weight (Vlb)",
                       // " Weight (lb)",
                       "Package Type",
-                      "Options",                      
+                      "Hazardous",
+                      "Hazardous Type",
+                      "Options"
                     ]}
                     onSelect={handleSelectCommodity} // Make sure this line is correct
                     selectedRow={selectedCommodity}

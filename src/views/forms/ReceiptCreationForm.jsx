@@ -2039,6 +2039,8 @@ const ReceiptCreationForm = ({
                   " Volume (ft3)",
                   " Volume-Weight (Vlb)",
                   // " Weight (lb)",
+                  "Hazardous",
+                  "Hazardous Type",
                   "Options",
                 ]}
                 onSelect={handleSelectCommodity} // Make sure this line is correct
