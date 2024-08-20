@@ -2286,7 +2286,8 @@ const ReceiptCreationForm = ({
                     noScrollY
                     data={events}
                     columns={[
-                      "Date",
+                      // "Date",
+                      " Creation Date",
                       // "Name",
                       "Event Type",
                       "Details",
@@ -2297,7 +2298,7 @@ const ReceiptCreationForm = ({
                       "Created On",
                       // "Last Modified By",
                       // "Last Modified On",
-                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                      "Options"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}

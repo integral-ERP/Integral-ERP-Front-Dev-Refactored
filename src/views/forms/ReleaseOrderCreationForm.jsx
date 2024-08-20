@@ -62,9 +62,9 @@ const ReleaseOrderCreationForm = ({
     employeeId: "",
     issuedById: "",
     issuedByType: "",
-    releasedToId: "",
+    /* releasedToId: "",
     releasedToType: "",
-    releasedToInfo: "",
+    releasedToInfo: "", */
     clientToBillId: "",
     clientToBillType: "",
     carrierId: "",
@@ -72,8 +72,6 @@ const ReleaseOrderCreationForm = ({
     tracking_number: "",
     purchase_order_number: "",
     main_carrierObj: "",
-    warehouse_receipt: "",
-    warehouseReceiptObj:"",
     commodities: [],
     consigneeId: "",
     consigneeType: "",
@@ -196,9 +194,7 @@ const ReleaseOrderCreationForm = ({
       consigneeId: id,
       consigneeType: type,
       consigneeInfo: info,
-      releasedToId: id,
-      releasedToInfo: info,
-      releasedToType: type,
+      
     });
   };
 
@@ -396,7 +392,17 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
+
+        consigneeId: releaseOrder.consigneeObj.data?.obj?.id,
+        consigneeType:  releaseOrder.consigneeObj.data?.obj?.type_person,
+        consigneeInfo: `${
+          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
+        /* releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
         releasedToType:  releaseOrder.releasedToObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo: `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
@@ -404,7 +410,7 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.releasedToObj?.data?.obj?.state || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,  /* `${
+        }`,  */ /* `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
@@ -418,8 +424,6 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouse_receipt: releaseOrder.warehouse_receipt,
-        warehouseReceiptObj: releaseOrder.warehouseReceiptObj,
        /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
         notes: releaseOrder.notes,
@@ -616,7 +620,7 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
+       /*  releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
         releasedToType: releaseOrder.consigneeObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo:`${
           releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -624,7 +628,7 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.consigneeObj?.data?.obj?.state || ""
         } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
           releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`, /* `${
+        }`,  *//* `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
@@ -638,8 +642,6 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouse_receipt: releaseOrder.id,
-        warehouseReceiptObj: releaseOrder,
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
         consignee: releaseOrder.consignee,
@@ -662,7 +664,7 @@ const ReleaseOrderCreationForm = ({
   }, [fromRecipt, releaseOrder]);
   
   const sendData = async () => {
-     let releasedToName = "";
+    /*  let releasedToName = "";
     if (formData.releasedToType === "customer") {
       releasedToName = "customerid";
     }
@@ -685,7 +687,7 @@ const ReleaseOrderCreationForm = ({
       if (response.status === 201) {
         setReleasedTo(response.data.id);
       }
-    } 
+    }  */
     let clientToBillName = "";
 
     if (formData.clientToBillType === "releasedTo") {
@@ -823,8 +825,8 @@ const ReleaseOrderCreationForm = ({
           employee: formData.employeeId,
           issued_by: formData.issuedById,
           issuedByType: formData.issuedByType,
-          released_to: releasedTo,
-          releasodToType: formData.releasedToType,
+          /* released_to: releasedTo,
+          releasodToType: formData.releasedToType, */
           client_to_bill: formData.clientToBill,
           client_to_bill_type: formData.clientToBillType,
           carrier: formData.main_carrierObj.id,
@@ -832,8 +834,7 @@ const ReleaseOrderCreationForm = ({
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
           main_carrierObj: formData.main_carrierObj,
-          warehouse_receipt: formData.warehouse_receipt,
-          warehouseReceiptObj: formData.warehouseReceiptObj,
+          
           commodities: commodities,
           consignee: consigneeRequest,
           attachments: attachments.map((attachment) => {
@@ -861,14 +862,14 @@ const ReleaseOrderCreationForm = ({
            
             await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
             
-            const buscarpickup = (await callPickupOrders(null)).data.results;
+            /* const buscarpickup = (await callPickupOrders(null)).data.results;
             const numeroRecibo = buscarrecipt.data.number;
             
             buscarpickup.forEach(pickup => {
               if (pickup.number === numeroRecibo) {
                 PickupService.updatePickup(pickup.id, updatedReceiptData );
               }
-            }); 
+            });   */
             
              // Retornar el resultado de updateReceipt 
             return createReleaseForm;
@@ -1049,8 +1050,8 @@ const ReleaseOrderCreationForm = ({
                       id="consignee"
                       value={consigneeOptions.find(
                         (option) =>
-                          option.id === formData.releasedToId &&
-                          option.type_person === formData.releasedToType
+                          option.id === formData.consigneeId &&
+                          option.type_person === formData.consigneeType
                       )}
                       onChange={(e) => handleConsigneeSelection(e)}
                       isClearable={true}
@@ -1399,9 +1400,11 @@ const ReleaseOrderCreationForm = ({
            <button className="button-save" onClick={sendData}>
           Save
         </button> 
-          {/* <button className="button-cancel" onClick={closeModal}>
-            Accept
-          </button> */}
+
+          <button className="button-cancel" onClick={closeModal}>
+            Cancel
+          </button>
+
         </div>
         {/* {showSuccessAlert && (
         <Alert
