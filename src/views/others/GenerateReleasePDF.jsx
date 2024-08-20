@@ -256,7 +256,7 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                             fontSize: 9,
                           },
                           {
-                            text: data.releasedToObj.data.obj.name,
+                            text: data.consigneeObj.data.obj.name,
                             margin: [0, 0, 0, 0],
                             bold: true,
                             fontSize: 11,
