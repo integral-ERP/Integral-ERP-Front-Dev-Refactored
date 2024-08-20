@@ -862,14 +862,14 @@ const ReleaseOrderCreationForm = ({
            
             await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
             
-            /* const buscarpickup = (await callPickupOrders(null)).data.results;
-            const numeroRecibo = buscarrecipt.data.number;
-            
-            buscarpickup.forEach(pickup => {
-              if (pickup.number === numeroRecibo) {
-                PickupService.updatePickup(pickup.id, updatedReceiptData );
-              }
-            });   */
+            //added change status delivered if have pickup
+            const idPickinRecipt = buscarrecipt.data.pickup_order_id;
+            if (idPickinRecipt !== null) {
+              const buscarpickup = await PickupService.getPickupById(idPickinRecipt);
+              const updatedPickupData = { ...buscarpickup.data };
+              updatedPickupData.status=StatusDelivered;
+              await PickupService.updatePickup(idPickinRecipt, updatedPickupData );
+            }
             
              // Retornar el resultado de updateReceipt 
             return createReleaseForm;

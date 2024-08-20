@@ -194,6 +194,7 @@ const ReceiptCreationForm = ({
     tracking_number: "",
     invoice_number: "",
     purchase_order_number: "",
+    pickup_order_id  : "",
   };
   const [formData, setFormData] = useState(formFormat);
   //added unrepack
@@ -961,6 +962,7 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
+        pickup_order_Id: pickupOrder.id,
       };
 
       console.log("updatedFormData", updatedFormData);
@@ -1183,6 +1185,7 @@ const ReceiptCreationForm = ({
             : "",
 
         commodities: pickupOrder.commodities,
+        pickup_order_Id  : pickupOrder.id,
         // notes: [],
       };
       setFormData(updatedFormData);
@@ -1412,6 +1415,7 @@ const ReceiptCreationForm = ({
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
         //added para guardar comidities in pickup order
         let rawDatapick = {
@@ -1447,6 +1451,7 @@ const ReceiptCreationForm = ({
           /*  supplier: formData.shipperId, */
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
 
         const response = await (creating
