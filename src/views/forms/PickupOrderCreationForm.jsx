@@ -48,7 +48,8 @@ const PickupOrderCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] =
+    useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -201,7 +202,8 @@ const PickupOrderCreationForm = ({
     const info = `${selectedObject?.street_and_number || ""} - ${
       selectedObject?.city || ""
     } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""}`;
+      selectedObject?.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       issuedById: id,
@@ -1073,48 +1075,57 @@ const PickupOrderCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       // Convertir createdDateAndTime a ISO 8601
-      const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+      const isoDate = dayjs(
+        formData.createdDateAndTime,
+        "YYYY-MM-DD hh:mm A"
+      ).toISOString();
       // # Obtener la fecha y la hora por separado
       let dataCreation = new Date(isoDate);
       let year = dataCreation.getFullYear();
-      let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
-      let day = String(dataCreation.getDate()).padStart(2, '0');
+      let month = String(dataCreation.getMonth() + 1).padStart(2, "0"); // Meses comienzan desde 0
+      let day = String(dataCreation.getDate()).padStart(2, "0");
       let hours = dataCreation.getHours();
-      let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+      let minutes = String(dataCreation.getMinutes()).padStart(2, "0");
       // Determinar AM o PM
-      let ampm = hours >= 12 ? 'P' : 'A';
+      let ampm = hours >= 12 ? "P" : "A";
       // Convertir horas de 24 horas a 12 horas
       hours = hours % 12;
       hours = hours ? hours : 12; // La hora 0 debería ser 12
       // Formato: YYYY-MM-DD HH:MM AM/PM
       let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
-//-----------------------
-      const isopickupDate = dayjs(formData.pickupDateAndTime, "YYYY-MM-DD hh:mm A").toISOString();
+      //-----------------------
+      const isopickupDate = dayjs(
+        formData.pickupDateAndTime,
+        "YYYY-MM-DD hh:mm A"
+      ).toISOString();
       // # Obtener la fecha y la hora por separado
       let pickData = new Date(isopickupDate);
       let pickyear = pickData.getFullYear();
-      let pickmonth = String(pickData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
-      let pickday = String(pickData.getDate()).padStart(2, '0');
+      let pickmonth = String(pickData.getMonth() + 1).padStart(2, "0"); // Meses comienzan desde 0
+      let pickday = String(pickData.getDate()).padStart(2, "0");
       let pickhours = pickData.getHours();
-      let pickminutes = String(pickData.getMinutes()).padStart(2, '0');
+      let pickminutes = String(pickData.getMinutes()).padStart(2, "0");
       // Determinar AM o PM
-      let pickampm = pickhours >= 12 ? 'P' : 'A';
+      let pickampm = pickhours >= 12 ? "P" : "A";
       // Convertir horas de 24 horas a 12 horas
       pickhours = pickhours % 12;
       pickhours = pickhours ? pickhours : 12; // La hora 0 debería ser 12
       // Formato: YYYY-MM-DD HH:MM AM/PM
       let pickformattedDateTime = `${pickday}/${pickmonth}/${pickyear}-${pickhours}:${pickminutes}${pickampm}`;
-//-----------------------
+      //-----------------------
       // # Obtener la fecha y la hora por separado
-      const isodeliveryDate = dayjs(formData.deliveryDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+      const isodeliveryDate = dayjs(
+        formData.deliveryDateAndTime,
+        "YYYY-MM-DD hh:mm A"
+      ).toISOString();
       let deliveryData = new Date(isodeliveryDate);
       let deliveryyear = deliveryData.getFullYear();
-      let deliverymonth = String(deliveryData.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
-      let deliveryday = String(deliveryData.getDate()).padStart(2, '0');
+      let deliverymonth = String(deliveryData.getMonth() + 1).padStart(2, "0"); // Meses comienzan desde 0
+      let deliveryday = String(deliveryData.getDate()).padStart(2, "0");
       let deliveryhours = deliveryData.getHours();
-      let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, '0');
+      let deliveryminutes = String(deliveryData.getMinutes()).padStart(2, "0");
       // Determinar AM o PM
-      let deliveryampm = deliveryhours >= 12 ? 'P' : 'A';
+      let deliveryampm = deliveryhours >= 12 ? "P" : "A";
       // Convertir horas de 24 horas a 12 horas
       deliveryhours = deliveryhours % 12;
       deliveryhours = deliveryhours ? deliveryhours : 12; // La hora 0 debería ser 12
@@ -1360,21 +1371,21 @@ const PickupOrderCreationForm = ({
     // Obtener la información del shipper
     const shipperValue = defaultValueShipper;
     const shipperInfo = formData.shipperInfo;
-  
+
     if (shipperValue) {
       // Simular el evento que espera handlePickUpSelection
       const event = {
         id: shipperValue.id,
-        type: shipperValue.type
+        type: shipperValue.type,
       };
-  
+
       // Llamar a handlePickUpSelection con el evento simulado
       handlePickUpSelection(event);
-  
+
       // Actualizar la información adicional del pickup
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        pickupLocationInfo: shipperInfo
+        pickupLocationInfo: shipperInfo,
       }));
     }
   };
@@ -1384,21 +1395,21 @@ const PickupOrderCreationForm = ({
     // Obtener la información del consignee
     const consigneeValue = defaultValueConsignee;
     const consigneeInfo = formData.consigneeInfo; // Asegúrate de que este campo existe en tu formData
-  
+
     if (consigneeValue) {
       // Simular el evento que espera handleDeliveryLocationSelection
       const event = {
         id: consigneeValue.id,
-        type: consigneeValue.type
+        type: consigneeValue.type,
       };
-  
+
       // Llamar a handleDeliveryLocationSelection con el evento simulado
       handleDeliveryLocationSelection(event);
-  
+
       // Actualizar la información adicional del delivery location
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        deliveryLocationInfo: consigneeInfo
+        deliveryLocationInfo: consigneeInfo,
       }));
     }
   };
@@ -1651,7 +1662,16 @@ const PickupOrderCreationForm = ({
               </div>
 
               <div className="row mb-3">
-              <label style={{ border: "2px solid black" }} onClick={handleCopyClickShipper}>Copy To Pickup Location</label>
+                <div className="col-12">
+                  <label
+                    className="copy-label"
+                    onClick={handleCopyClickShipper}
+                  >
+                    Copy To Pickup Location
+                  </label>
+                </div>
+              </div>
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="pickup" className="form-label">
                     Pick-up Location:
@@ -1731,46 +1751,46 @@ const PickupOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
-                    {/* <AsyncSelect
-                      id="consignee"
-                      defaultValue={formData.consigneeId}
-                      onChange={(e) => {handleConsigneeSelection(e); }}
-                      value={defaultValueConsignee}
+                  </div>
+                  </div>
+
+                  <div
+                    className="col-6 text-start"
+                    style={{ marginBlockEnd: "auto" }}
+                  >
+                    <label htmlFor="delivery" className="form-label">
+                      Delivery Location:
+                    </label>
+                    <AsyncSelect
+                      id="deliveryLocation"
+                      onChange={(e) => {
+                        handleDeliveryLocationSelection(e);
+                      }}
+                      value={deliveryLocationOptions.find(
+                        (option) =>
+                          option.id === formData.deliveryLocationId &&
+                          option.type === formData.deliveryLocationType
+                      )}
                       placeholder="Search and select..."
-                      defaultOptions={consigneeOptions}
-                      loadOptions={loadConsigneeSelectOptions}
+                      defaultOptions={deliveryLocationOptions}
+                      loadOptions={loadDeliveryLocationSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                    /> */}
+                    />
                   </div>
-                  <label style={{ border: "2px solid black" }} onClick={handleCopyClickConsignee}>Copy To Delivery Location</label>
+              
                 </div>
-               
-                <div
-                  className="col-6 text-start"
-                  style={{ marginBlockEnd: "auto" }}
-                >
-                  <label htmlFor="delivery" className="form-label">
-                    Delivery Location:
-                  </label>
-                  <AsyncSelect
-                    id="deliveryLocation"
-                    onChange={(e) => {
-                      handleDeliveryLocationSelection(e);
-                    }}
-                    value={deliveryLocationOptions.find(
-                      (option) =>
-                        option.id === formData.deliveryLocationId &&
-                        option.type === formData.deliveryLocationType
-                    )}
-                    placeholder="Search and select..."
-                    defaultOptions={deliveryLocationOptions}
-                    loadOptions={loadDeliveryLocationSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
+                <div className="row mb-3">
+                  <div className="col-12">
+                    <label
+                      className="copy-label"
+                      onClick={handleCopyClickShipper}
+                    >
+                      Copy To Delivery Location
+                    </label>
+                  </div>
                 </div>
-              </div>
+             
 
               <div className="row align-items-center">
                 <div
@@ -1961,7 +1981,7 @@ const PickupOrderCreationForm = ({
                       "Package Type",
                       "Hazardous",
                       "Hazardous Type",
-                      "Options"
+                      "Options",
                     ]}
                     onSelect={handleSelectCommodity} // Make sure this line is correct
                     selectedRow={selectedCommodity}
