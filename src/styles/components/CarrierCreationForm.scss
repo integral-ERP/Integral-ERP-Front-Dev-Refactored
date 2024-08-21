@@ -565,6 +565,22 @@
     padding: 24px 0;
     font-size: 35px;
   }
+
+  .copy-label{
+    width: 20rem;
+    height: 2rem;
+    border-radius: 5px;
+    text-align: center;
+    // display: inline-block;
+    font-size: 13px;
+    border-color: #006bad;
+    background-color: #006bad;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.7s ease;
+
+  }
   
   }
 
