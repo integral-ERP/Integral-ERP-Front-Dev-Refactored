@@ -1355,6 +1355,54 @@ const PickupOrderCreationForm = ({
     console.log("commodities description ", selectedCommodity);
   };
 
+  //added copy handle
+  const handleCopyClickShipper = () => {
+    // Obtener la información del shipper
+    const shipperValue = defaultValueShipper;
+    const shipperInfo = formData.shipperInfo;
+  
+    if (shipperValue) {
+      // Simular el evento que espera handlePickUpSelection
+      const event = {
+        id: shipperValue.id,
+        type: shipperValue.type
+      };
+  
+      // Llamar a handlePickUpSelection con el evento simulado
+      handlePickUpSelection(event);
+  
+      // Actualizar la información adicional del pickup
+      setFormData(prevData => ({
+        ...prevData,
+        pickupLocationInfo: shipperInfo
+      }));
+    }
+  };
+
+  //added copy handle consignee
+  const handleCopyClickConsignee = () => {
+    // Obtener la información del consignee
+    const consigneeValue = defaultValueConsignee;
+    const consigneeInfo = formData.consigneeInfo; // Asegúrate de que este campo existe en tu formData
+  
+    if (consigneeValue) {
+      // Simular el evento que espera handleDeliveryLocationSelection
+      const event = {
+        id: consigneeValue.id,
+        type: consigneeValue.type
+      };
+  
+      // Llamar a handleDeliveryLocationSelection con el evento simulado
+      handleDeliveryLocationSelection(event);
+  
+      // Actualizar la información adicional del delivery location
+      setFormData(prevData => ({
+        ...prevData,
+        deliveryLocationInfo: consigneeInfo
+      }));
+    }
+  };
+
   return (
     <div className="form-container">
       <form className="company-form pickup">
@@ -1603,6 +1651,7 @@ const PickupOrderCreationForm = ({
               </div>
 
               <div className="row mb-3">
+              <label style={{ border: "2px solid black" }} onClick={handleCopyClickShipper}>Copy To Pickup Location</label>
                 <div className="col-6 text-start">
                   <label htmlFor="pickup" className="form-label">
                     Pick-up Location:
@@ -1694,7 +1743,9 @@ const PickupOrderCreationForm = ({
                       getOptionValue={(option) => option.id}
                     /> */}
                   </div>
+                  <label style={{ border: "2px solid black" }} onClick={handleCopyClickConsignee}>Copy To Delivery Location</label>
                 </div>
+               
                 <div
                   className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
