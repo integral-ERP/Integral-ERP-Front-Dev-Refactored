@@ -447,8 +447,8 @@ const CommodityCreationForm = ({
               >
                 <option value="">Type of hazardous material</option>
                 {hazardousMaterialsTypes.map((hazMaterial) => (
-                    <option key={hazMaterial.id} value={hazMaterial.material_name}>
-                      {hazMaterial.class_name} - {hazMaterial.material_name}
+                    <option key={hazMaterial.id} value={hazMaterial.material_name}>{hazMaterial.class_name}  {hazMaterial.material_name} 
+                      
                     </option>
                 ))}
               </select>
