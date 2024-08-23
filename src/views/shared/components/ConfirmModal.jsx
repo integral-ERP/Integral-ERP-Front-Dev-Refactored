@@ -5,16 +5,18 @@ function ConfirmModal({  onHide, onConfirm, title, body }) {
     console.log('ConfirmModal render');
 
   return (
-    <Modal show={true}>
-      <Modal.Header>
-        <Modal.Title>{title}</Modal.Title>
+    <Modal  style={{marginTop: '10%', marginLeft: '30%', width: '40%'}} show={true}>
+       
+      <Modal.Header >
+        <Modal.Title style={{color: '#006bad', fontWeight: 'bold', fontSize: '15px'}}>{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ width: '100%' }}>{body}</Modal.Body>
+      <Modal.Body style={{ width: '100%', fontSize: '16px'}}>{body}</Modal.Body>
       <Modal.Footer>
-        <Button style={{ color: 'red' }} variant="secondary" onClick={onHide}>
+        <Button style={{ color: 'white', background: '#006bad', borderRadius: '5px', fontSize: '14px' }} onClick={onHide}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={onConfirm}>
+
+        <Button style={{ color: 'white', background: '#006bad', borderRadius: '5px', fontSize: '14px'  }} onClick={onConfirm}>
           Confirmar
         </Button>
       </Modal.Footer>
