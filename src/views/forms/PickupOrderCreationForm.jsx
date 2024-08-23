@@ -1786,7 +1786,8 @@ const PickupOrderCreationForm = ({
                   <div className="col-12">
                     <label
                       className="copy-label"
-                      onClick={handleCopyClickShipper}
+                      // onClick={handleCopyClickShipper}
+                      onClick={handleCopyClickConsignee}
                     >
                       Copy To Delivery Location
                     </label>
