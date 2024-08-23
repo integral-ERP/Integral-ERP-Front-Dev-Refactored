@@ -34,6 +34,7 @@ import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import mammoth from "mammoth";
+import ConfirmModal from "../../views/shared/components/ConfirmModal";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -107,6 +108,7 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
 
   useEffect(() => {
     fetchFormData()
@@ -2422,10 +2424,12 @@ const ReceiptCreationForm = ({
             // disabled={changeStateSave}
             className="button-save"
             onClick={(e) => {
-              sendData();
-              setChangeStateButton(true);
+              e.preventDefault();
+              setShowModalConfirm(true);
+              // sendData();
+  
             }}
-            disabled={changeStateSave || changeStateButton}
+            // disabled={changeStateSave || changeStateButton}
           >
             Save
           </button>
@@ -2434,6 +2438,19 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)} 
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              setShowModalConfirm(false)
+              sendData();
+              setChangeStateButton(true);
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {showSuccessAlert && (
           <Alert
             severity="success"

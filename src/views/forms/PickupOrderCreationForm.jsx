@@ -23,6 +23,7 @@ import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
+import ConfirmModal from "../../views/shared/components/ConfirmModal";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -78,6 +79,7 @@ const PickupOrderCreationForm = ({
   const [attachments, setattachments] = useState([]);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
 
   const formFormat = {
     status: 14,
@@ -2180,7 +2182,8 @@ const PickupOrderCreationForm = ({
             className="button-save"
             onClick={(e) => {
               e.preventDefault();
-              sendData();
+              setShowModalConfirm(true)
+              // sendData();
             }}
             type="submit"
           >
@@ -2206,7 +2209,18 @@ const PickupOrderCreationForm = ({
             </p>
           </Alert>
         )}
-
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)}  
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              sendData();
+              setShowModalConfirm(false)
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {showErrorAlert && (
           <Alert
             severity="error"
