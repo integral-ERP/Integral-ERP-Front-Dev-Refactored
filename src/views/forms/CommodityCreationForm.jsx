@@ -415,7 +415,7 @@ const CommodityCreationForm = ({
               </>
           )}
         </div>
-        <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
+        <div style={{display: "flex", alignItems: "center", gap: "10px", marginTop: '20px'}}>
           <label htmlFor="hazardous" className="text-comm" style={{display: "flex", alignItems: "center"}}>
             Hazardous material?
             <input
