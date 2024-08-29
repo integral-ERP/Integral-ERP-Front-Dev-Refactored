@@ -34,6 +34,7 @@ import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import mammoth from "mammoth";
+import ConfirmModal from "../../views/shared/components/ConfirmModal";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -107,6 +108,7 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
 
   useEffect(() => {
     fetchFormData()
@@ -194,6 +196,7 @@ const ReceiptCreationForm = ({
     tracking_number: "",
     invoice_number: "",
     purchase_order_number: "",
+    pickup_order_id  : "",
   };
   const [formData, setFormData] = useState(formFormat);
   //added unrepack
@@ -961,6 +964,7 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
+        pickup_order_Id: pickupOrder.id,
       };
 
       console.log("updatedFormData", updatedFormData);
@@ -1183,6 +1187,7 @@ const ReceiptCreationForm = ({
             : "",
 
         commodities: pickupOrder.commodities,
+        pickup_order_Id  : pickupOrder.id,
         // notes: [],
       };
       setFormData(updatedFormData);
@@ -1412,6 +1417,7 @@ const ReceiptCreationForm = ({
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
         //added para guardar comidities in pickup order
         let rawDatapick = {
@@ -1447,6 +1453,7 @@ const ReceiptCreationForm = ({
           /*  supplier: formData.shipperId, */
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
 
         const response = await (creating
@@ -2417,10 +2424,12 @@ const ReceiptCreationForm = ({
             // disabled={changeStateSave}
             className="button-save"
             onClick={(e) => {
-              sendData();
-              setChangeStateButton(true);
+              e.preventDefault();
+              setShowModalConfirm(true);
+              // sendData();
+  
             }}
-            disabled={changeStateSave || changeStateButton}
+            // disabled={changeStateSave || changeStateButton}
           >
             Save
           </button>
@@ -2429,6 +2438,19 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)} 
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              setShowModalConfirm(false)
+              sendData();
+              setChangeStateButton(true);
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {showSuccessAlert && (
           <Alert
             severity="success"

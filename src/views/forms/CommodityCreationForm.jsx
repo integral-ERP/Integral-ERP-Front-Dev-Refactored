@@ -417,7 +417,7 @@ const CommodityCreationForm = ({
               </>
           )}
         </div>
-        <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
+        <div style={{display: "flex", alignItems: "center", gap: "10px", marginTop: '20px'}}>
           <label htmlFor="hazardous" className="text-comm" style={{display: "flex", alignItems: "center"}}>
             Hazardous material?
             <input
@@ -450,8 +450,8 @@ const CommodityCreationForm = ({
               >
                 <option value="">Type of hazardous material</option>
                 {hazardousMaterialsTypes.map((hazMaterial) => (
-                    <option key={hazMaterial.id} value={hazMaterial.material_name}>
-                      {hazMaterial.class_name} - {hazMaterial.material_name}
+                    <option key={hazMaterial.id} value={hazMaterial.material_name}>{hazMaterial.class_name}  {hazMaterial.material_name} 
+                      
                     </option>
                 ))}
               </select>

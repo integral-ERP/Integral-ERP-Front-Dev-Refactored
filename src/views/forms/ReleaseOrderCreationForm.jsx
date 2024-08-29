@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import mammoth from 'mammoth'
 import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import * as XLSX from 'xlsx';
+import ConfirmModal from "../shared/components/ConfirmModal";
 const ReleaseOrderCreationForm = ({
   releaseOrder,
   closeModal,
@@ -53,6 +54,7 @@ const ReleaseOrderCreationForm = ({
   const [consignee, setconsignee] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [attachments, setAttachments] = useState([]);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
   const StatusDelivered = 9;
   const formFormat = {
     status: StatusDelivered,
@@ -862,14 +864,14 @@ const ReleaseOrderCreationForm = ({
            
             await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
             
-            /* const buscarpickup = (await callPickupOrders(null)).data.results;
-            const numeroRecibo = buscarrecipt.data.number;
-            
-            buscarpickup.forEach(pickup => {
-              if (pickup.number === numeroRecibo) {
-                PickupService.updatePickup(pickup.id, updatedReceiptData );
-              }
-            });   */
+            //added change status delivered if have pickup
+            const idPickinRecipt = buscarrecipt.data.pickup_order_id;
+            if (idPickinRecipt !== null) {
+              const buscarpickup = await PickupService.getPickupById(idPickinRecipt);
+              const updatedPickupData = { ...buscarpickup.data };
+              updatedPickupData.status=StatusDelivered;
+              await PickupService.updatePickup(idPickinRecipt, updatedPickupData );
+            }
             
              // Retornar el resultado de updateReceipt 
             return createReleaseForm;
@@ -881,7 +883,7 @@ const ReleaseOrderCreationForm = ({
             return updateInfoRelease;
           })()
       );
-
+        
         if (response.status >= 200 && response.status <= 300) {
           setcurrentReleaseNumber(currentReleaseNumber + 1);
           setShowSuccessAlert(true);
@@ -1397,7 +1399,7 @@ const ReleaseOrderCreationForm = ({
               </div>
 
         <div className="company-form__options-container">
-           <button className="button-save" onClick={sendData}>
+           <button className="button-save" onClick={() => setShowModalConfirm(true)}>
           Save
         </button> 
 
@@ -1406,6 +1408,18 @@ const ReleaseOrderCreationForm = ({
           </button>
 
         </div>
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)} 
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              setShowModalConfirm(false)
+              sendData();
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {/* {showSuccessAlert && (
         <Alert
           severity="success"
