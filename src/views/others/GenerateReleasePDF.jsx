@@ -54,7 +54,10 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
-    let longboard = 440.0;
+    let hazardous = "";
+    let hazardousAlert = "";
+    let hazardous_type = ""
+    let longboard = 420.0;
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -81,6 +84,13 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
         totalVolume     += parseFloat(commodity.volumen);
         totalVolumeM    += parseFloat(commodity.volumetricWeight);
         longboard       -= 21;
+
+        hazardous       += `${commodity.hazardous}`;
+        hazardous_type  += `${commodity.hazardous_type}`;
+
+        if (hazardous=="true"){
+          hazardousAlert = "HAZARDOUS MATERIAL";
+        }
       });
       const commodityRow = [
         {
@@ -311,7 +321,16 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                             text: data.tracking_number,
                             fontSize: 11,
                             bold: true,
-                            },
+                          },
+                          {
+                          text: hazardousAlert,
+                          fontSize: 9,
+                          },
+                          {
+                          text: hazardous_type,
+                          fontSize: 11,
+                          bold: true,
+                          },
                         ],
                       },
                       {
