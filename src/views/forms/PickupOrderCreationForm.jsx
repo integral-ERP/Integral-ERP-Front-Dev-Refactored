@@ -80,6 +80,8 @@ const PickupOrderCreationForm = ({
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+  //added status consts
+  const StatusArriving= 5;
 
   const formFormat = {
     status: 14,
@@ -1069,7 +1071,7 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (commodities.length > 0) {
-      setFormData({ ...formData, status: 4 });
+      setFormData({ ...formData, status: StatusArriving });
     }
   }, [commodities]);
 
