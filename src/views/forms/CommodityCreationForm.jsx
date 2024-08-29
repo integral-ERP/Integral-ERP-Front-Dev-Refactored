@@ -6,6 +6,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import CommoditiesService from "../../services/CommoditiesService";
 import PackageTypeService from "../../services/PackageTypeService";
 import LocationService from "../../services/LocationService";
+import HazardousMaterialsService from "../../services/HazardousMaterialsService";
 const CommodityCreationForm = ({
   onCancel,
   commodities,
@@ -32,12 +33,15 @@ const CommodityCreationForm = ({
     containsCommodities: false,
     locationId: "",
     locationCode: "",
+    hazardous_type: "",
+    hazardous: false,
   };
 
   const [formData, setformData] = useState(formFormat);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [locations, setlocations] = useState([]);
+  const [hazardousMaterialsTypes, setHazardousMaterialsTypes] = useState([]);
   const [internalID, setinternalID] = useState(0);
 
   const [packTypes, setpackTypes] = useState([]);
@@ -96,6 +100,8 @@ const CommodityCreationForm = ({
       containsCommodities: false,
       locationId: formData.locationId,
       locationCode: formData.locationCode,
+      hazardous: formData.hazardous,
+      hazardous_type: formData.hazardous_type
     };
     if (editing) {
       // Update the specific commodity being edited
@@ -127,6 +133,8 @@ const CommodityCreationForm = ({
                 containsCommodities: true,
                 locationId: formData.locationId,
                 locationCode: formData.locationCode,
+                hazardous: formData.hazardous,
+                hazardous_type: formData.hazardous_type
               };
             }
           } else {
@@ -189,6 +197,8 @@ const CommodityCreationForm = ({
         package_type_id: commodity.package_type_id,
         locationId: commodity.locationId,
         locationCode: commodity.locationCode,
+        hazardous: commodity.hazardous,
+        hazardous_type: commodity.hazardous_type
       };
       setformData(formFormat);
     }
@@ -198,6 +208,9 @@ const CommodityCreationForm = ({
     LocationService.getLocations().then((response) => {
       setlocations(response.data.results);
     });
+    HazardousMaterialsService.getHazardousMaterialsTypes().then((response) => {
+      setHazardousMaterialsTypes(response.data.results);
+    })
   }, []);
 
   useEffect(() => {}, [formData.weight]);
@@ -228,20 +241,20 @@ const CommodityCreationForm = ({
           <label className="text-comm">Length:</label>
           <div className="input-group ">
             <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              ref={input1Ref}
-              value={formData.length}
-              onKeyDown={(e) => handleKeyDown(e, input2Ref)}
-              onChange={(e) =>
-                setformData({ ...formData, length: e.target.value })
-              }
-              /* added style for validation commodities */
-              style={{
-                borderColor: ValidationCommodities ? "green" : "",
-                boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
-              }}
+                type="number"
+                className="form-comm"
+                aria-label=""
+                ref={input1Ref}
+                value={formData.length}
+                onKeyDown={(e) => handleKeyDown(e, input2Ref)}
+                onChange={(e) =>
+                    setformData({...formData, length: e.target.value})
+                }
+                /* added style for validation commodities */
+                style={{
+                  borderColor: ValidationCommodities ? "green" : "",
+                  boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
+                }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -251,20 +264,20 @@ const CommodityCreationForm = ({
           <label className="text-comm">Width:</label>
           <div className="input-group ">
             <input
-              type="number"
-              className="form-comm"
-              ref={input3Ref}
-              aria-label=""
-              value={formData.width}
-              onKeyDown={(e) => handleKeyDown(e, input4Ref)}
-              onChange={(e) =>
-                setformData({ ...formData, width: e.target.value })
-              }
-              /* added style for validation commodities */
-              style={{
-                borderColor: ValidationCommodities ? "green" : "",
-                boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
-              }}
+                type="number"
+                className="form-comm"
+                ref={input3Ref}
+                aria-label=""
+                value={formData.width}
+                onKeyDown={(e) => handleKeyDown(e, input4Ref)}
+                onChange={(e) =>
+                    setformData({...formData, width: e.target.value})
+                }
+                /* added style for validation commodities */
+                style={{
+                  borderColor: ValidationCommodities ? "green" : "",
+                  boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
+                }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -274,20 +287,20 @@ const CommodityCreationForm = ({
           <label className="text-comm">Height:</label>
           <div className="input-group ">
             <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              ref={input2Ref}
-              onKeyDown={(e) => handleKeyDown(e, input3Ref)}
-              value={formData.height}
-              onChange={(e) =>
-                setformData({ ...formData, height: e.target.value })
-              }
-              /* added style for validation commodities */
-              style={{
-                borderColor: ValidationCommodities ? "green" : "",
-                boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
-              }}
+                type="number"
+                className="form-comm"
+                aria-label=""
+                ref={input2Ref}
+                onKeyDown={(e) => handleKeyDown(e, input3Ref)}
+                value={formData.height}
+                onChange={(e) =>
+                    setformData({...formData, height: e.target.value})
+                }
+                /* added style for validation commodities */
+                style={{
+                  borderColor: ValidationCommodities ? "green" : "",
+                  boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
+                }}
             />
             <span className="input-group-text num-com">in</span>
           </div>
@@ -297,20 +310,20 @@ const CommodityCreationForm = ({
           <label className="text-comm">Weigth:</label>
           <div className="input-group ">
             <input
-              type="number"
-              className="form-comm"
-              aria-label=""
-              value={formData.weight}
-              ref={input4Ref}
-              onKeyDown={(e) => handleKeyDown(e, input5Ref)}
-              onChange={(e) =>
-                setformData({ ...formData, weight: e.target.value })
-              }
-              /* added style for validation commodities */
-              style={{
-                borderColor: ValidationCommodities ? "green" : "",
-                boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
-              }}
+                type="number"
+                className="form-comm"
+                aria-label=""
+                value={formData.weight}
+                ref={input4Ref}
+                onKeyDown={(e) => handleKeyDown(e, input5Ref)}
+                onChange={(e) =>
+                    setformData({...formData, weight: e.target.value})
+                }
+                /* added style for validation commodities */
+                style={{
+                  borderColor: ValidationCommodities ? "green" : "",
+                  boxShadow: ValidationCommodities ? "0 0 1px 0.2px blue" : "",
+                }}
             />
             <span className="input-group-text num-com">lb</span>
           </div>
@@ -318,18 +331,18 @@ const CommodityCreationForm = ({
 
         <div className="col-6">
           <label htmlFor="description" className="text-comm description-form">
-            Charge Description:
+            Description:
           </label>
           <input
-            name="description"
-            type="text"
-            className="form-input"
-            ref={input7Ref}
-            placeholder="Description..."
-            value={formData.description}
-            onChange={(e) =>
-              setformData({ ...formData, description: e.target.value })
-            }
+              name="description"
+              type="text"
+              className="form-input"
+              ref={input7Ref}
+              placeholder="Description..."
+              value={formData.description}
+              onChange={(e) =>
+                  setformData({...formData, description: e.target.value})
+              }
           />
         </div>
 
@@ -338,26 +351,26 @@ const CommodityCreationForm = ({
             Container Type:
           </label>{" "}
           <select
-            name="containerType"
-            className="container-type"
-            id="containerType"
-            value={formData.package_type_id}
-            onChange={(e) => {
-              setformData({
-                ...formData,
-                package_type_id: e.target.value,
-                package_type_description:
+              name="containerType"
+              className="container-type"
+              id="containerType"
+              value={formData.package_type_id}
+              onChange={(e) => {
+                setformData({
+                  ...formData,
+                  package_type_id: e.target.value,
+                  package_type_description:
                   e.target.options[e.target.selectedIndex].text,
-              });
-            }}
-            style={{ fontSize: "14px", color: "gray", padding: "3px" }}
+                });
+              }}
+              style={{fontSize: "14px", color: "gray", padding: "3px"}}
           >
             <option value="">Select an option</option>
             {sortedPackTypes.map((type) => {
               return (
-                <option value={type.id} key={type.id}>
-                  {type.description}
-                </option>
+                  <option value={type.id} key={type.id}>
+                    {type.description}
+                  </option>
               );
             })}
           </select>
@@ -365,86 +378,127 @@ const CommodityCreationForm = ({
         {/* ---------------------------------------------------------------------------------------------------------------------------------- */}
         <div>
           {!hideLocation && (
-            <>
-              <label htmlFor="location" className="text-comm">
-                Location:
-              </label>
+              <>
+                <label htmlFor="location" className="text-comm">
+                  Location:
+                </label>
 
-              <select
-                name="location"
-                className="container-type"
-                id="location"
-                value={formData.locationId}
+                <select
+                    name="location"
+                    className="container-type"
+                    id="location"
+                    value={formData.locationId}
+                    onChange={(e) => {
+                      setformData({
+                        ...formData,
+                        locationId: e.target.value,
+                        locationCode:
+                            e.target.options[e.target.selectedIndex].getAttribute(
+                                "data-key"
+                            ),
+                      });
+                    }}
+                    //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
+                    style={{fontSize: "14px", color: "gray", padding: "3px"}}
+                >
+                  <option value="">Select an option</option>
+                  {locations.map((location) => {
+                    return (
+                        <option
+                            key={location.id}
+                            value={location.id}
+                            data-key={location.code}
+                        >
+                          {location.code}
+                        </option>
+                    );
+                  })}
+                </select>
+              </>
+          )}
+        </div>
+        <div style={{display: "flex", alignItems: "center", gap: "10px", marginTop: '20px'}}>
+          <label htmlFor="hazardous" className="text-comm" style={{display: "flex", alignItems: "center"}}>
+            Hazardous material?
+            <input
+                type="checkbox"
+                id="hazardous"
                 onChange={(e) => {
                   setformData({
                     ...formData,
-                    locationId: e.target.value,
-                    locationCode:
-                      e.target.options[e.target.selectedIndex].getAttribute(
-                        "data-key"
-                      ),
+                    hazardous: e.target.checked,
                   });
                 }}
-                //disabled={editing && commodity.containsCommodities} // Deshabilita si es edición y es un repaque
-                style={{ fontSize: "14px", color: "gray", padding: "3px" }}
+                checked={formData.hazardous}
+                style={{marginLeft: "5px"}}
+            />
+          </label>
+
+          {formData.hazardous && (
+              <select
+                  name="hazardous_type"
+                  className="container-type"
+                  id="hazardous_type"
+                  value={formData.hazardous_type}
+                  onChange={(e) => {
+                    setformData({
+                      ...formData,
+                      hazardous_type: e.target.value,
+                    });
+                  }}
+                  style={{fontSize: "14px", color: "gray", padding: "3px"}}
               >
-                <option value="">Select an option</option>
-                {locations.map((location) => {
-                  return (
-                    <option
-                      key={location.id}
-                      value={location.id}
-                      data-key={location.code}
-                    >
-                      {location.code}
+                <option value="">Type of hazardous material</option>
+                {hazardousMaterialsTypes.map((hazMaterial) => (
+                    <option key={hazMaterial.id} value={hazMaterial.material_name}>{hazMaterial.class_name}  {hazMaterial.material_name} 
+                      
                     </option>
-                  );
-                })}
+                ))}
               </select>
-            </>
           )}
         </div>
+
         {/* </div> */}
 
         <div className="table-hover charge-buttons">
           <button
-            className="button-save pick "
-            style={{ marginRight: "10px" }}
-            type="button"
-            onClick={addCommodity}
+              className="button-save pick "
+              style={{marginRight: "10px"}}
+              type="button"
+              onClick={addCommodity}
           >
             <i className="fas fa-check-circle"></i>
           </button>
 
           <button
-            className="button-cancel pick "
-            type="button"
-            onClick={() => onCancel(false)}
-            style={{ display: "none" }}
+              className="button-cancel pick "
+              type="button"
+              onClick={() => onCancel(false)}
+              style={{display: "none"}}
           >
             <i className="fas fa-times-circle"></i>
           </button>
         </div>
       </div>
       {showSuccessAlert && (
-        <Alert
-          severity="success"
-          onClose={() => setShowSuccessAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Success</AlertTitle>
-          <strong>Commodity created successfully!</strong>
-        </Alert>
+          <Alert
+              severity="success"
+              onClose={() => setShowSuccessAlert(false)}
+              className="alert-notification"
+          >
+            <AlertTitle>Success</AlertTitle>
+            <strong>Commodity created successfully!</strong>
+          </Alert>
       )}
       {showErrorAlert && (
-        <Alert
-          severity="error"
-          onClose={() => setShowErrorAlert(false)}
-          className="alert-notification"
-        >
-          <AlertTitle>Error</AlertTitle>
-          <strong>Error creating Commodity. Please try again</strong>
-        </Alert>
+          <Alert
+              severity="error"
+              onClose={() => setShowErrorAlert(false)}
+              className="alert-notification"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <strong>Error creating Commodity. Please try again</strong>
+          </Alert>
       )}
     </div>
   );

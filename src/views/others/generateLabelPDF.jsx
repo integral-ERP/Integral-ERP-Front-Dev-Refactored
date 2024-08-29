@@ -88,6 +88,9 @@ const GenerateLabeltPDF = (data, numCon) => {
     let totalPieces = 0;
     let totalWeight = 0.0;
     let totalVolume = 0.0;
+    let hazardous = "";
+    let hazardousAlert = "";
+    let hazardous_type = "";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -106,6 +109,12 @@ const GenerateLabeltPDF = (data, numCon) => {
           `${commodity.chargedWeight} Vlb \n`;
         totalWeight += parseFloat(commodity.weight);
         totalVolume += parseFloat(commodity.volumetricWeight);
+        hazardous       += `${commodity.hazardous}`;
+        hazardous_type  += `${commodity.hazardous_type}`;
+
+        if (hazardous=="true"){
+          hazardousAlert = "HAZARDOUS MATERIAL";
+        }
 
         if (commodity.containsCommodities && commodity.internalCommodities) {
           commodity.internalCommodities.forEach((internalCommodity) => {
@@ -337,28 +346,43 @@ const GenerateLabeltPDF = (data, numCon) => {
                       {
                         text: `DESCRIPTION`,
                         margin: [0, 0, 0, 0],
-                        colSpan: 4,
+                        colSpan: 3,
                         alignment: "left",
                         border: ['', '', '', ''],
                         bold: true,
                         fontSize: 12,
                       },
                       {},
-                      {},
-                      {}
+                      {
+                      },
+                      {
+                        text: hazardousAlert,
+                        margin: [0, 0, 0, 0],
+                        alignment: "left",
+                        border: ['', '', '', ''],
+                        bold: true,
+                        fontSize: 12,
+                      },
                     ],
                     [
                       {
                         text: description,
-                        margin: [20, 0, 0, 50],
-                        colSpan: 4,
+                        margin: [0, 0, 0, 50],
+                        colSpan: 3,
                         alignment: "left",
                         border: ['', '', '', ''],
                         fontSize: 16,
                       },
                       {},
                       {},
-                      {}
+                      {
+                        text: hazardous_type,
+                        margin: [0, 0, 0, 50],
+                        alignment: "left",
+                        border: ['', '', '', ''],
+                        bold: true,
+                        fontSize: 16
+                      },                        
                     ],
                     [
                       {

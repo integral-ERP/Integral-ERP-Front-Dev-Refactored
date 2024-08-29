@@ -31,7 +31,8 @@ const Release = () => {
   const columns = [
     "Status",
     "Number",
-    "Release Date",
+    // "Release Date",
+    " Release Date",
     "Released to",
     "Pieces",
     // "Weight",

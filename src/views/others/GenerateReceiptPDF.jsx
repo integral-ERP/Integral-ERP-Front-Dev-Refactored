@@ -51,7 +51,10 @@ const GenerateReceiptPDF = (data, numCon) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
-    let longboard = 305.0;
+    let longboard = 302.0;
+    let hazardous = "";
+    let hazardousA = "";
+    let hazardous_type = "";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -60,7 +63,8 @@ const GenerateReceiptPDF = (data, numCon) => {
       let fourthRowText = "";
       let sixthRowText = "";
       let seventhRowText = "";
-      data.commodities?.forEach((commodity) => {
+
+      data.commodities?.forEach((commodity, index) => {
         firstRowText    += `1; ${commodity.package_type_description}\n \n \n`;
         thirdRowText    += `${commodity.length}x${commodity.width}x${commodity.height} in \n \n \n`;
         fourthRowText   += `${commodity.description} \n \n \n`;
@@ -69,7 +73,13 @@ const GenerateReceiptPDF = (data, numCon) => {
         totalWeight     += parseFloat(commodity.weight);
         totalVolume     += parseFloat(commodity.volumetricWeight);
         totalVolumeM    += parseFloat(commodity.volumen);
+        hazardous       += `${commodity.hazardous}`;
+        hazardous_type  += `${commodity.hazardous_type}`;
         longboard       -= 37;
+        if (hazardous=="true"){
+          hazardousA = hazardous;
+        }
+         
       });
       const commodityRow = [
         {
@@ -336,6 +346,24 @@ const GenerateReceiptPDF = (data, numCon) => {
                         text: `${data.pro_number || ``}`,
                         margin: [0, 0, 0, 0],
                       }
+                    ],
+                    [
+                      {
+                        text: `Hazardous Material`,
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: hazardousA.toUpperCase(),
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: `Hazardous Type`,
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: hazardous_type.toUpperCase(),
+                        border: ['top', 'top', 'top', ''],
+                      },
                     ],
                     [
                       {

@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import mammoth from 'mammoth'
 import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import * as XLSX from 'xlsx';
+import ConfirmModal from "../shared/components/ConfirmModal";
 const ReleaseOrderCreationForm = ({
   releaseOrder,
   closeModal,
@@ -53,6 +54,7 @@ const ReleaseOrderCreationForm = ({
   const [consignee, setconsignee] = useState(null);
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [attachments, setAttachments] = useState([]);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
   const StatusDelivered = 9;
   const formFormat = {
     status: StatusDelivered,
@@ -62,9 +64,9 @@ const ReleaseOrderCreationForm = ({
     employeeId: "",
     issuedById: "",
     issuedByType: "",
-    releasedToId: "",
+    /* releasedToId: "",
     releasedToType: "",
-    releasedToInfo: "",
+    releasedToInfo: "", */
     clientToBillId: "",
     clientToBillType: "",
     carrierId: "",
@@ -72,8 +74,6 @@ const ReleaseOrderCreationForm = ({
     tracking_number: "",
     purchase_order_number: "",
     main_carrierObj: "",
-    warehouse_receipt: "",
-    warehouseReceiptObj:"",
     commodities: [],
     consigneeId: "",
     consigneeType: "",
@@ -196,9 +196,7 @@ const ReleaseOrderCreationForm = ({
       consigneeId: id,
       consigneeType: type,
       consigneeInfo: info,
-      releasedToId: id,
-      releasedToInfo: info,
-      releasedToType: type,
+      
     });
   };
 
@@ -396,7 +394,17 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
+
+        consigneeId: releaseOrder.consigneeObj.data?.obj?.id,
+        consigneeType:  releaseOrder.consigneeObj.data?.obj?.type_person,
+        consigneeInfo: `${
+          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.state || ""
+        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
+          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
+        }`,
+        /* releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
         releasedToType:  releaseOrder.releasedToObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo: `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
@@ -404,7 +412,7 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.releasedToObj?.data?.obj?.state || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,  /* `${
+        }`,  */ /* `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
@@ -418,8 +426,6 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouse_receipt: releaseOrder.warehouse_receipt,
-        warehouseReceiptObj: releaseOrder.warehouseReceiptObj,
        /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
         notes: releaseOrder.notes,
@@ -616,7 +622,7 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-        releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
+       /*  releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
         releasedToType: releaseOrder.consigneeObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
         releasedToInfo:`${
           releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
@@ -624,7 +630,7 @@ const ReleaseOrderCreationForm = ({
           releaseOrder.consigneeObj?.data?.obj?.state || ""
         } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
           releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`, /* `${
+        }`,  *//* `${
           releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
         } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
           releaseOrder.releasedToObj?.data?.obj?.state || ""
@@ -638,8 +644,6 @@ const ReleaseOrderCreationForm = ({
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-        warehouse_receipt: releaseOrder.id,
-        warehouseReceiptObj: releaseOrder,
         commodities: releaseOrder.commodities,
         charges: releaseOrder.charges,
         consignee: releaseOrder.consignee,
@@ -662,7 +666,7 @@ const ReleaseOrderCreationForm = ({
   }, [fromRecipt, releaseOrder]);
   
   const sendData = async () => {
-     let releasedToName = "";
+    /*  let releasedToName = "";
     if (formData.releasedToType === "customer") {
       releasedToName = "customerid";
     }
@@ -685,7 +689,7 @@ const ReleaseOrderCreationForm = ({
       if (response.status === 201) {
         setReleasedTo(response.data.id);
       }
-    } 
+    }  */
     let clientToBillName = "";
 
     if (formData.clientToBillType === "releasedTo") {
@@ -797,23 +801,6 @@ const ReleaseOrderCreationForm = ({
             await new Promise(resolve => setTimeout(resolve, 10000));
             console.log("Datos a enviar:", data);
           };
-
-      // # Obtener la fecha y la hora por separado
-      let dataCreation = new Date(isoDate);
-      let year = dataCreation.getFullYear();
-      let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
-      let day = String(dataCreation.getDate()).padStart(2, '0');
-      let hours = dataCreation.getHours();
-      let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
-      // Determinar AM o PM
-      let ampm = hours >= 12 ? 'P' : 'A';
-      // Convertir horas de 24 horas a 12 horas
-      hours = hours % 12;
-      hours = hours ? hours : 12; // La hora 0 debería ser 12
-      // Formato: YYYY-MM-DD HH:MM AM/PM
-      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
-//-----------------------
-        
       const createPickUp = async () => {
         let rawData = {
           status: StatusDelivered,
@@ -824,8 +811,8 @@ const ReleaseOrderCreationForm = ({
           employee: formData.employeeId,
           issued_by: formData.issuedById,
           issuedByType: formData.issuedByType,
-          released_to: releasedTo,
-          releasodToType: formData.releasedToType,
+          /* released_to: releasedTo,
+          releasodToType: formData.releasedToType, */
           client_to_bill: formData.clientToBill,
           client_to_bill_type: formData.clientToBillType,
           carrier: formData.main_carrierObj.id,
@@ -833,8 +820,7 @@ const ReleaseOrderCreationForm = ({
           tracking_number: formData.tracking_number,
           purchase_order_number: formData.purchase_order_number,
           main_carrierObj: formData.main_carrierObj,
-          warehouse_receipt: formData.warehouse_receipt,
-          warehouseReceiptObj: formData.warehouseReceiptObj,
+          
           commodities: commodities,
           consignee: consigneeRequest,
           attachments: attachments.map((attachment) => {
@@ -851,33 +837,37 @@ const ReleaseOrderCreationForm = ({
         //console.log("CHNAGED", updatedReceiptData.consigneeObj.data.obj);
         console.log("CONSIGNEREQUEST", consigneeRequest);
         const response = await (creating
-          ? ReleaseService.createRelease(rawData)
+          ? (async () => {
+
+            const createReleaseForm = await ReleaseService.createRelease(rawData);
+              //added change status delivered
+             const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
+            const updatedReceiptData = { ...buscarrecipt.data };
+            //console.log("updatedReceiptData", updatedReceiptData);
+            updatedReceiptData.status=StatusDelivered;
+           
+            await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
+            
+            //added change status delivered if have pickup
+            const idPickinRecipt = buscarrecipt.data.pickup_order_id;
+            if (idPickinRecipt !== null) {
+              const buscarpickup = await PickupService.getPickupById(idPickinRecipt);
+              const updatedPickupData = { ...buscarpickup.data };
+              updatedPickupData.status=StatusDelivered;
+              await PickupService.updatePickup(idPickinRecipt, updatedPickupData );
+            }
+            
+             // Retornar el resultado de updateReceipt 
+            return createReleaseForm;
+          })()
           :  (async () => {
 
             const updateInfoRelease = await ReleaseService.updateRelease(releaseOrder.id, rawData);
-           /*  const buscarrecipt = await ReceiptService.getReceiptById(releaseOrder.id);
-            const updatedReceiptData = { ...buscarrecipt.data };
-            //console.log("updatedReceiptData", updatedReceiptData);
-            updatedReceiptData.consignee=consigneeRequest;
-            updatedReceiptData.consigneeObj.data.obj = consignee;
-            console.log("updatedReceiptData request", updatedReceiptData.consignee);
-            console.log("updatedReceiptData", updatedReceiptData.consigneeObj.data.obj);
-            const result = await ReceiptService.updateReceipt(releaseOrder.id, updatedReceiptData );
-            
-            const buscarpickup = (await callPickupOrders(null)).data.results;
-            const numeroRecibo = buscarrecipt.data.number;
-            
-            buscarpickup.forEach(pickup => {
-              if (pickup.number === numeroRecibo) {
-                PickupService.updatePickup(pickup.id, updatedReceiptData );
-              }
-            });
-            
-            return result; // Retornar el resultado de updateReceipt */
+          
             return updateInfoRelease;
           })()
       );
-
+        
         if (response.status >= 200 && response.status <= 300) {
           setcurrentReleaseNumber(currentReleaseNumber + 1);
           setShowSuccessAlert(true);
@@ -1045,8 +1035,8 @@ const ReleaseOrderCreationForm = ({
                       id="consignee"
                       value={consigneeOptions.find(
                         (option) =>
-                          option.id === formData.releasedToId &&
-                          option.type_person === formData.releasedToType
+                          option.id === formData.consigneeId &&
+                          option.type_person === formData.consigneeType
                       )}
                       onChange={(e) => handleConsigneeSelection(e)}
                       isClearable={true}
@@ -1392,13 +1382,27 @@ const ReleaseOrderCreationForm = ({
               </div>
 
         <div className="company-form__options-container">
-           <button className="button-save" onClick={sendData}>
+           <button className="button-save" onClick={() => setShowModalConfirm(true)}>
           Save
         </button> 
-          {/* <button className="button-cancel" onClick={closeModal}>
-            Accept
-          </button> */}
+
+          <button className="button-cancel" onClick={closeModal}>
+            Cancel
+          </button>
+
         </div>
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)} 
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              setShowModalConfirm(false)
+              sendData();
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {/* {showSuccessAlert && (
         <Alert
           severity="success"

@@ -23,12 +23,18 @@ import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
 import { fetchFormData } from "./DataFetcher";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFile, faFileWord, faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons'
-import * as XLSX from 'xlsx';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import mammoth from 'mammoth'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFile,
+  faFileWord,
+  faFileExcel,
+  faFilePdf,
+} from "@fortawesome/free-solid-svg-icons";
+import * as XLSX from "xlsx";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import mammoth from "mammoth";
+import ConfirmModal from "../../views/shared/components/ConfirmModal";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -42,7 +48,7 @@ const ReceiptCreationForm = ({
   showBModal,
 }) => {
   console.log("pickupOrder", pickupOrder);
-  console.log('creating', creating);
+  console.log("creating", creating);
   const [activeTab, setActiveTab] = useState("general");
   // const [note, setNote] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -66,7 +72,8 @@ const ReceiptCreationForm = ({
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [volumenUpdated, setVolumenUpdated] = useState(0);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] =
+    useState(false);
   const [commodities, setcommodities] = useState([]);
   const [charges, setcharges] = useState([]);
   const [events, setEvents] = useState([]);
@@ -101,29 +108,35 @@ const ReceiptCreationForm = ({
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
-
-
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
 
   useEffect(() => {
     fetchFormData()
       .then((data) => {
-        const forwardingAgents = data.filter(item => item.type === 'forwarding-agent');
-        const customers = data.filter(item => item.type === 'customer');
-        const vendors = data.filter(item => item.type === 'vendor');
-        const employees = data.filter(item => item.type === 'employee');
-        const carriers = data.filter(item => item.type === 'Carrier');
+        const forwardingAgents = data.filter(
+          (item) => item.type === "forwarding-agent"
+        );
+        const customers = data.filter((item) => item.type === "customer");
+        const vendors = data.filter((item) => item.type === "vendor");
+        const employees = data.filter((item) => item.type === "employee");
+        const carriers = data.filter((item) => item.type === "Carrier");
 
-        setIssuedByOptions([...forwardingAgents])
-        setDestinationAgentOptions([...forwardingAgents])
+        setIssuedByOptions([...forwardingAgents]);
+        setDestinationAgentOptions([...forwardingAgents]);
         setEmployeeOptions([...employees]);
-        setShipperOptions([...forwardingAgents, ...customers, ...vendors])
+        setShipperOptions([...forwardingAgents, ...customers, ...vendors]);
         // setSupplierOptions([...forwardingAgents, ...customers, ...vendors])
-        setSupplierOptions([...customers, ...vendors])
-        setConsigneeOptions([...forwardingAgents, ...customers, ...vendors, ...carriers])
-        setCarrierOptions([...carriers])
+        setSupplierOptions([...customers, ...vendors]);
+        setConsigneeOptions([
+          ...forwardingAgents,
+          ...customers,
+          ...vendors,
+          ...carriers,
+        ]);
+        setCarrierOptions([...carriers]);
       })
       .catch((error) => {
-        console.error('Error al obtener los datos:', error);
+        console.error("Error al obtener los datos:", error);
       });
   }, []);
 
@@ -183,6 +196,7 @@ const ReceiptCreationForm = ({
     tracking_number: "",
     invoice_number: "",
     purchase_order_number: "",
+    pickup_order_id  : "",
   };
   const [formData, setFormData] = useState(formFormat);
   //added unrepack
@@ -305,7 +319,7 @@ const ReceiptCreationForm = ({
     });
   };
 
- /*  const handleSupplierSelection = async (event) => {
+  /*  const handleSupplierSelection = async (event) => {
     const id = event.id || formData.supplierId;
     // const type = event.type || formData.supplierType;
     const type = event?.type || "";
@@ -342,7 +356,7 @@ const ReceiptCreationForm = ({
       supplierInfo: info,
     });
   }; */
- /*  const handleSupplierSelection = async (event) => {
+  /*  const handleSupplierSelection = async (event) => {
     const id = event.id || "";
     // const type = event.type || formData.supplierType;
     const type = event?.type || "";
@@ -461,7 +475,7 @@ const ReceiptCreationForm = ({
   //---------------------------------CHARGE IMG---------------------------------------------------------
 
   const [showPreview, setShowPreview] = useState(false);
-  
+
   const [fileContent, setfileContent] = useState({});
 
   // const pdfPlugin = defaultLayoutPlugin();
@@ -499,7 +513,7 @@ const ReceiptCreationForm = ({
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
 
-    const promises = files.map(file => {
+    const promises = files.map((file) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
@@ -514,13 +528,19 @@ const ReceiptCreationForm = ({
       });
     });
 
-    Promise.all(promises).then(newAttachments => {
-      setAttachments(prevAttachments => [...prevAttachments, ...newAttachments]);
+    Promise.all(promises).then((newAttachments) => {
+      setAttachments((prevAttachments) => [
+        ...prevAttachments,
+        ...newAttachments,
+      ]);
     });
   };
 
   const handlePreview = async (attachment) => {
-    if (attachment.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    if (
+      attachment.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
       try {
         const arrayBuffer = convertDataURIToBinary(attachment.base64);
         const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -541,11 +561,17 @@ const ReceiptCreationForm = ({
   };
 
   const getIcon = (type) => {
-    if (type === 'application/pdf') {
+    if (type === "application/pdf") {
       return faFilePdf;
-    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
       return faFileWord;
-    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
       return faFileExcel;
     } else {
       return faFile;
@@ -553,17 +579,22 @@ const ReceiptCreationForm = ({
   };
 
   const getColor = (type) => {
-    if (type === 'application/pdf') {
+    if (type === "application/pdf") {
       return "#ff0000";
-    } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
       return "#1976d2";
-    } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    } else if (
+      type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
       return "#43a047";
     } else {
       return "#9e9e9e";
     }
   };
-
 
   // ----------------------------------------------------------------------------------------
   const handleDeleteAttachment = (name) => {
@@ -571,10 +602,10 @@ const ReceiptCreationForm = ({
       (attachment) => attachment.name !== name
     );
     setAttachments(updateAttachments);
-  }
+  };
 
   const convertDataURIToBinary = (dataURI) => {
-    const base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
+    const base64Index = dataURI.indexOf(";base64,") + ";base64,".length;
     const base64 = dataURI.substring(base64Index);
     const raw = atob(base64);
     const rawLength = raw.length;
@@ -588,9 +619,15 @@ const ReceiptCreationForm = ({
 
   const renderPreviewContent = () => {
     if (fileContent.type.startsWith("image/")) {
-      return <img src={fileContent.base64} style={{ width: "60rem" }} alt="Large Preview" />;
+      return (
+        <img
+          src={fileContent.base64}
+          style={{ width: "60rem" }}
+          alt="Large Preview"
+        />
+      );
     }
-    if (fileContent.type === 'application/pdf') {
+    if (fileContent.type === "application/pdf") {
       return (
         <iframe
           src={fileContent.base64}
@@ -601,15 +638,25 @@ const ReceiptCreationForm = ({
       );
     }
 
-    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      const workbook = XLSX.read(fileContent.base64.split(',')[1], { type: 'base64' });
+    if (
+      fileContent.type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      const workbook = XLSX.read(fileContent.base64.split(",")[1], {
+        type: "base64",
+      });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const htmlString = XLSX.utils.sheet_to_html(sheet, { editable: false });
       return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
     }
-    if (fileContent.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      return <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />;
+    if (
+      fileContent.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      return (
+        <div dangerouslySetInnerHTML={{ __html: fileContent.htmlContent }} />
+      );
     }
 
     return <div>No se puede previsualizar este tipo de archivo</div>;
@@ -806,7 +853,7 @@ const ReceiptCreationForm = ({
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
 
-      const initialSupplier = pickupOrder.shipperObj?.data?.obj
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
       let CTBID = "";
       if (fromReceipt) {
         CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
@@ -821,6 +868,7 @@ const ReceiptCreationForm = ({
         status: pickupOrder.status,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        // creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -904,7 +952,6 @@ const ReceiptCreationForm = ({
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
-        
 
         clientToBillId: CTBID,
         clientToBillType:
@@ -917,6 +964,7 @@ const ReceiptCreationForm = ({
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
         notes: pickupOrder.notes,
+        pickup_order_Id: pickupOrder.id,
       };
 
       console.log("updatedFormData", updatedFormData);
@@ -1021,7 +1069,6 @@ const ReceiptCreationForm = ({
     }
   }, [pickupNumber]);
 
-
   useEffect(() => {
     if (fromPickUp) {
       setshowCommodityCreationForm(true);
@@ -1043,14 +1090,15 @@ const ReceiptCreationForm = ({
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id;
       }
-      const initialSupplier = pickupOrder.shipperObj?.data?.obj
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
       let updatedFormData = {
         status: 4,
         // notes :pickupOrder.notes,
         weight: pickupOrder.weight,
-        volumen : pickupOrder.volumen,
+        volumen: pickupOrder.volumen,
         number: pickupOrder.number,
         createdDateAndTime: pickupOrder.creation_date,
+        // creation_date_text : formattedDateTime,
         pickupDateAndTime: pickupOrder.pick_up_date,
         deliveryDateAndTime: pickupOrder.delivery_date,
         issuedById: pickupOrder.issued_by,
@@ -1139,6 +1187,7 @@ const ReceiptCreationForm = ({
             : "",
 
         commodities: pickupOrder.commodities,
+        pickup_order_Id  : pickupOrder.id,
         // notes: [],
       };
       setFormData(updatedFormData);
@@ -1148,8 +1197,6 @@ const ReceiptCreationForm = ({
       setsupplierRequest(pickupOrder.supplier);
     }
   }, [fromPickUp, pickupOrder]);
-
-  
 
   useEffect(() => {
     if (formDataUpdated) {
@@ -1164,12 +1211,10 @@ const ReceiptCreationForm = ({
       handleDestinationAgentSelection({
         id: pickupOrder.destination_agentObj?.id,
       });
-      
     }
   }, [formDataUpdated, pickupOrder]);
 
   const sendData = async () => {
-
     // Mostrar la alerta si commodities es null o vacío
     if (isButtonDisabled) {
       setchangeStateSave(true);
@@ -1177,7 +1222,7 @@ const ReceiptCreationForm = ({
       setShowWarningAlert(true);
       return;
     }
-    
+
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -1316,11 +1361,36 @@ const ReceiptCreationForm = ({
     checkUpdatesComplete();
     if (allStateUpdatesComplete) {
       const createPickUp = async () => {
-        console.log("createPickUpAAA",supplierRequest);
+        const status =
+          formData.shipperInfo === " -  -  -  - " ||
+          formData.consigneeInfo === " -  -  -  - "
+            ? 2
+            : 4;
+
+        
+        // Convertir createdDateAndTime a ISO 8601
+        const isoDate = dayjs(formData.createdDateAndTime,"YYYY-MM-DD hh:mm A").toISOString();
+        // # Obtener la fecha y la hora por separado
+        let dataCreation = new Date(isoDate);
+        let year = dataCreation.getFullYear();
+        let month = String(dataCreation.getMonth() + 1).padStart(2, '0'); // Meses comienzan desde 0
+        let day = String(dataCreation.getDate()).padStart(2, '0');
+        let hours = dataCreation.getHours();
+        let minutes = String(dataCreation.getMinutes()).padStart(2, '0');
+        // Determinar AM o PM
+      let ampm = hours >= 12 ? 'P' : 'A';
+      // Convertir horas de 24 horas a 12 horas
+      hours = hours % 12;
+      hours = hours ? hours : 12; // La hora 0 debería ser 12
+      // Formato: YYYY-MM-DD HH:MM AM/PM
+      let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+//-----------------------
+
         let rawData = {
-          status: 4, // Hice un cambio, estar pendeinte  status: 2,
+          status,
           number: formData.number,
-          creation_date: formData.createdDateAndTime,
+          creation_date: isoDate,
+          creation_date_text : formattedDateTime,
           issued_by: formData.issuedById,
           destination_agent: formData.destinationAgentId,
           employee: formData.employeeId,
@@ -1347,12 +1417,14 @@ const ReceiptCreationForm = ({
           purchase_order_number: formData.purchaseOrderNumber,
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
         //added para guardar comidities in pickup order
         let rawDatapick = {
           status: formData.status,
           number: formData.number,
           creation_date: formData.createdDateAndTime,
+          creation_date_text : formattedDateTime,
           pick_up_date: formData.pickupDateAndTime,
           delivery_date: formData.deliveryDateAndTime,
           issued_by: formData.issuedById,
@@ -1378,36 +1450,41 @@ const ReceiptCreationForm = ({
 
           commodities: commodities,
           charges: charges,
-         /*  supplier: formData.shipperId, */
+          /*  supplier: formData.shipperId, */
           weight: weightUpdated,
           volumen: volumenUpdated,
+          pickup_order_id  : formData.pickup_order_Id, 
         };
-        
+
         const response = await (creating
           ? (async () => {
               const result = await ReceiptService.createReceipt(rawData);
               if (result) {
-                await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+                if (pickupOrder && pickupOrder.id && pickupOrder.id !== '') {
+                  await PickupService.updatePickup(pickupOrder.id, rawDatapick);
+                }
               }
               return result;
             })()
           : (async () => {
-              const result = await ReceiptService.updateReceipt(pickupOrder.id, rawData);
-              const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+              const result = await ReceiptService.updateReceipt(
+                pickupOrder.id,
+                rawData
+              );
+              const buscarrecipt = await ReceiptService.getReceiptById(
+                pickupOrder.id
+              );
               const buscarpickup = (await callPickupOrders(null)).data.results;
               const numeroRecibo = buscarrecipt.data.number;
-              
-              buscarpickup.forEach(pickup => {
+
+              buscarpickup.forEach((pickup) => {
                 if (pickup.number === numeroRecibo) {
                   PickupService.updatePickup(pickup.id, rawDatapick);
                 }
               });
-              
+
               return result; // Retornar el resultado de updateReceipt
-            })()
-        );
-        
-        
+            })());
 
         /* if (!creating) {
             const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
@@ -1426,12 +1503,7 @@ const ReceiptCreationForm = ({
 
         if (response.status >= 200 && response.status <= 300) {
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
-        
-          
-              
-          
-          
-          
+
           //PickupService.updatePickup(pickupOrder.id, rawDatapick);
           /* if (fromPickUp) {
             console.log("BANDERA-1 = ", fromPickUp);
@@ -1478,8 +1550,6 @@ const ReceiptCreationForm = ({
       throw error;
     }
   };
-  
-  
 
   /* useEffect(() => {
     console.log(formData)
@@ -1537,7 +1607,7 @@ const ReceiptCreationForm = ({
   //     );
   //   }
   // };
-  
+
   return (
     <div className="form-container">
       <div className="company-form receipt">
@@ -1634,15 +1704,16 @@ const ReceiptCreationForm = ({
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          createdDateAndTime: dayjs(e).format("YYYY-MM-DD hh:mm A"),
+                          createdDateAndTime:
+                            dayjs(e).format("YYYY-MM-DD hh:mm A"),
                         })
                       }
                     />
                   </LocalizationProvider>
                 </div>
-                </div>
+              </div>
 
-                <div className="row mb-3">
+              <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedBy" className="form-label">
                     Issued By:
@@ -1673,8 +1744,7 @@ const ReceiptCreationForm = ({
                     label="Entry Number"
                   />
                 </div>
-                </div>
-            
+              </div>
             </div>
           </div>
 
@@ -1692,7 +1762,7 @@ const ReceiptCreationForm = ({
                   <AsyncSelect
                     id="shipper"
                     value={shipperOptions.find(
-                      (option) => 
+                      (option) =>
                         option.id === formData.shipperId &&
                         option.type_person === formData.shipperType
                     )}
@@ -1709,21 +1779,21 @@ const ReceiptCreationForm = ({
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
                   </label>
-                    <AsyncSelect
-                      id="consignee"
-                      value={consigneeOptions.find(
-                        (option) =>
-                          option.id === formData.consigneeId &&
-                          option.type_person === formData.consigneeType
-                      )}
-                      onChange={(e) => handleConsigneeSelection(e)}
-                      isClearable={true}
-                      placeholder="Search and select..."
-                      defaultOptions={consigneeOptions}
-                      loadOptions={loadConsigneeSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
+                  <AsyncSelect
+                    id="consignee"
+                    value={consigneeOptions.find(
+                      (option) =>
+                        option.id === formData.consigneeId &&
+                        option.type_person === formData.consigneeType
+                    )}
+                    onChange={(e) => handleConsigneeSelection(e)}
+                    isClearable={true}
+                    placeholder="Search and select..."
+                    defaultOptions={consigneeOptions}
+                    loadOptions={loadConsigneeSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
                 </div>
               </div>
 
@@ -1789,7 +1859,7 @@ const ReceiptCreationForm = ({
                   <AsyncSelect
                     id="supplier"
                     value={supplierOptions.find(
-                      (option) => 
+                      (option) =>
                         option.id === formData.supplierId &&
                         option.type_person === formData.supplierType
                     )}
@@ -1868,25 +1938,24 @@ const ReceiptCreationForm = ({
           </div>
 
           <div className="col-6">
-            <div className="creation creation-container w-100">
+          <div className="creation creation-container w-100">
               <div className="form-label_name">
-                <h3>Carrier Information</h3>
+                <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row">
-                <div className="col-4 text-start">
+              <div className="row align-items-center mb-3">
+                <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
-                    )}
                     onChange={(e) => {
                       handleMainCarrierSelection(e);
                     }}
-                    isClearable={true}
+                    value={carrierOptions.find(
+                      (option) => option.id === formData.mainCarrierdId
+                    )}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
                     loadOptions={loadCarrierSelectOptions}
@@ -1894,23 +1963,11 @@ const ReceiptCreationForm = ({
                     getOptionValue={(option) => option.id}
                   />
                 </div>
-                <div className="col-4 text-start">
+                <div className="col-6 text-start">
                   <Input
-                    type="text"
-                    inputName="proNumber"
-                    placeholder="PRO Number..."
-                    value={formData.proNumber}
-                    changeHandler={(e) =>
-                      setFormData({ ...formData, proNumber: e.target.value })
-                    }
-                    label="PRO Number"
-                  />
-                </div>
-                <div className="col-4 text-start">
-                  <Input
+                    id="trackingNumber"
                     type="text"
                     inputName="trackingNumber"
-                    placeholder="Tracking Number..."
                     value={formData.trackingNumber}
                     changeHandler={(e) =>
                       setFormData({
@@ -1919,6 +1976,31 @@ const ReceiptCreationForm = ({
                       })
                     }
                     label="Tracking Number"
+                  />
+                </div>
+              </div>
+              <div className="row ">
+                <div className="col-6 text-start">
+                  <Input
+                    id="TextMainCarrier"
+                    type="textarea"
+                    inputName="issuedbydata"
+                    value={formData.mainCarrierInfo}
+                    readonly={true}
+                    // label="Address"
+         
+         />
+                </div>
+                <div className="col-6 text-start">
+                  <Input
+                    id="proNumber"
+                    type="text"
+                    inputName="proNumber"
+                    value={formData.proNumber}
+                    changeHandler={(e) =>
+                      setFormData({ ...formData, proNumber: e.target.value })
+                    }
+                    label="PRO Number"
                   />
                 </div>
               </div>
@@ -1964,6 +2046,8 @@ const ReceiptCreationForm = ({
                   " Volume (ft3)",
                   " Volume-Weight (Vlb)",
                   // " Weight (lb)",
+                  "Hazardous",
+                  "Hazardous Type",
                   "Options",
                 ]}
                 onSelect={handleSelectCommodity} // Make sure this line is correct
@@ -2209,7 +2293,8 @@ const ReceiptCreationForm = ({
                     noScrollY
                     data={events}
                     columns={[
-                      "Date",
+                      // "Date",
+                      " Creation Date",
                       // "Name",
                       "Event Type",
                       "Details",
@@ -2220,7 +2305,7 @@ const ReceiptCreationForm = ({
                       "Created On",
                       // "Last Modified By",
                       // "Last Modified On",
-                      // "Optionss"  //Mirar como modifico esta parte para q salga solo eliminar y editar
+                      "Options"  //Mirar como modifico esta parte para q salga solo eliminar y editar
                     ]}
                     onSelect={handleSelectEvent}
                     selectedRow={SelectEvent}
@@ -2235,7 +2320,7 @@ const ReceiptCreationForm = ({
             </div>
           </div>
         </div>
-        
+
         <div className="creation creation-container">
           <div className="form-label_name">
             <h3>Attachments</h3>
@@ -2256,54 +2341,61 @@ const ReceiptCreationForm = ({
               <br />
               <br />
               <div className="attachment-container">
-            {attachments.map((attachment) => (
-              <div key={attachment.name} className="attachment-wrapper">
-                <div onClick={() => handlePreview(attachment)} style={{ cursor: 'pointer' }}>
-                  {attachment.type.startsWith("image/") ? (
-                    <img
-                      src={attachment.base64}
-                      alt={attachment.name}
-                      style={{ width: "100px", height: "100px", objectFit: "cover" }}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={getIcon(attachment.type)}
-                      size="10x"
-                      style={{ color: getColor(attachment.type) }}
-                    />
-                  )}
-                </div>
-                <span className="attachment-name">{attachment.name}</span>
-                <div className="delete-button-container">
-                  <button
-                    className="custom-button"
-                    onClick={() => handleDeleteAttachment(attachment.name)}
-                  >
-                    <div className="delete-icon">
-                      <p>&times;</p>
+                {attachments.map((attachment) => (
+                  <div key={attachment.name} className="attachment-wrapper">
+                    <div
+                      onClick={() => handlePreview(attachment)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {attachment.type.startsWith("image/") ? (
+                        <img
+                          src={attachment.base64}
+                          alt={attachment.name}
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={getIcon(attachment.type)}
+                          size="10x"
+                          style={{ color: getColor(attachment.type) }}
+                        />
+                      )}
                     </div>
-                  </button>
-                </div>
+                    <span className="attachment-name">{attachment.name}</span>
+                    <div className="delete-button-container">
+                      <button
+                        className="custom-button"
+                        onClick={() => handleDeleteAttachment(attachment.name)}
+                      >
+                        <div className="delete-icon">
+                          <p>&times;</p>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
+
+          {showPreview && (
+            <div className="preview-overlay" onClick={handleClosePreview}>
+              <div className="preview-container">
+                <button
+                  className="button-cancel pick"
+                  onClick={handleClosePreview}
+                >
+                  <i className="fas fa-times-circle"></i>
+                </button>
+                {renderPreviewContent()}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-
-      {showPreview && (
-        <div className="preview-overlay" onClick={handleClosePreview}>
-          <div className="preview-container">
-            <button className="button-cancel pick" onClick={handleClosePreview}>
-              <i className="fas fa-times-circle"></i>
-            </button>
-            {renderPreviewContent()}
-          </div>
-        </div>
-      )}
-    </div>
-
-
-        
 
         <div className="creation creation-container">
           <div className="form-label_name">
@@ -2329,14 +2421,15 @@ const ReceiptCreationForm = ({
 
         <div className="company-form__options-container">
           <button
-            // disabled={changeStateSave} 
+            // disabled={changeStateSave}
             className="button-save"
-            onClick={(e)=>{
-              sendData();
-              setChangeStateButton(true);
-              
+            onClick={(e) => {
+              e.preventDefault();
+              setShowModalConfirm(true);
+              // sendData();
+  
             }}
-            disabled={changeStateSave || changeStateButton} 
+            // disabled={changeStateSave || changeStateButton}
           >
             Save
           </button>
@@ -2345,6 +2438,19 @@ const ReceiptCreationForm = ({
             Cancel
           </button>
         </div>
+        {showModalConfirm && (
+          <ConfirmModal 
+            title="Confirm"
+            onHide={() => setShowModalConfirm(false)} 
+            body={"Are you sure you want to save the changes?"}
+            onConfirm={() =>  {
+              setShowModalConfirm(false)
+              sendData();
+              setChangeStateButton(true);
+            }}
+            onCancel={() => setShowModalConfirm(false)}
+          />
+        )}
         {showSuccessAlert && (
           <Alert
             severity="success"

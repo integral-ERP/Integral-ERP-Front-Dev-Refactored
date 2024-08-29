@@ -25,7 +25,11 @@ const Receipt = () => {
   const [createReceiptOrder, setCreateReceiptOrder] = useState(true);
   //added for creation realease
   const [createRealeaseOrder, setCreateReleaseOrder] = useState(false);
-  const [isOpenReleaseCreation, openModalReleaseCreation, closeModalReleaseCreation] = useModal(false);
+  const [
+    isOpenReleaseCreation,
+    openModalReleaseCreation,
+    closeModalReleaseCreation,
+  ] = useModal(false);
   //added menu context
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -42,8 +46,8 @@ const Receipt = () => {
   const columns = [
     "Status",
     "Number",
-    "Date",
-    // "Creation Date",
+    // "Date",
+    "Creation Date",
     "Shipper Name",
     "Consignee Name",
     "Carrier Name",
@@ -204,7 +208,7 @@ const Receipt = () => {
 
   //added context menu
 
- /*  const setOnHold = async () => {
+  /*  const setOnHold = async () => {
     if (selectedPickupOrder) {
       const updatedPickuporder = {
         ...selectedPickupOrder,
@@ -333,17 +337,15 @@ const Receipt = () => {
     }
   }, [createRealeaseOrder]);
 
-
   const contextMenuOptions = [
     {
       label: "Create Release Order",
-      handler: seteRealease ,
+      handler: seteRealease,
     },
   ];
 
   const handleContextMenu = (e) => {
-    if (selectedPickupOrder) {
-      //console.log("selectedPickupOrder", selectedPickupOrder);
+    if (selectedPickupOrder && selectedPickupOrder.status !== "2") {
       e.preventDefault(); // Prevent the browser's default context menu
       const clickX = e.clientX;
       const clickY = e.clientY;
@@ -383,7 +385,8 @@ const Receipt = () => {
         !isInsideCompanyFormPickup &&
         !isSelectMenu
       ) {
-        setSelectedPickupOrder(null);
+        //para que no se cierre release creation se comenta
+        //setSelectedPickupOrder(null);
       }
     };
 
@@ -426,7 +429,7 @@ const Receipt = () => {
               contextMenuPosition={contextMenuPosition}
               setShowContextMenu={setShowContextMenu}
               contextMenuOptions={contextMenuOptions}
-              title= {isLoggedIn ? "Warehouse Receipts" : "Realese Orders"}
+              title={isLoggedIn ? "Warehouse Receipts" : "Realese Orders"}
               setData={setreceipts}
               contextService={ReceiptService}
               importEnabled={false}
@@ -478,8 +481,7 @@ const Receipt = () => {
               </Alert>
             )}
 
-
-              {selectedPickupOrder !== null && createRealeaseOrder && (
+            {selectedPickupOrder !== null && createRealeaseOrder && (
               <div className="layout-fluid_form">
                 <ReleaseOrderCreationForm
                   releaseOrder={selectedPickupOrder}

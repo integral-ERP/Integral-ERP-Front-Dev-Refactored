@@ -65,6 +65,7 @@ const Pickup = () => {
     "Tracking Number",
     "Invoice Number",
     "Purchase Order number",
+    "Contains hazards",
     "View PDF",
   ];
 

@@ -80,7 +80,9 @@ const GeneratePickUpPDF = (data) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
-    let longboard = 340.0;
+    let longboard = 338.0;
+    let hazardous = "";
+    let hazardous_type = "";
 
     if (data.commodities) {
       totalPieces = data.commodities.length;
@@ -99,8 +101,9 @@ const GeneratePickUpPDF = (data) => {
         totalWeight     += parseFloat(commodity.weight);
         totalVolume     += parseFloat(commodity.volumetricWeight);
         totalVolumeM    += parseFloat(commodity.volumen);
+        hazardous       += `${commodity.hazardous}`;
+        hazardous_type  += `${commodity.hazardous_type}`;
         longboard       -= 35;
-
       });
       const commodityRow = [
         {
@@ -457,6 +460,30 @@ const GeneratePickUpPDF = (data) => {
                         text: `${data.invoice_number || ``}`,
                         bold: true,
                         border: ['top', '', 'top', ''],
+                      },
+                    ],
+                    [
+                      {
+                        text: `Hazardous Material`,
+                        bold: true,
+                        fontSize: 10.8,
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: hazardous.toUpperCase(),
+                        bold: true,
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: `Hazardous Type`,
+                        bold: true,
+                        fontSize: 11,
+                        border: ['top', 'top', 'top', ''],
+                      },
+                      {
+                        text: hazardous_type.toUpperCase(),
+                        bold: true,
+                        border: ['top', 'top', 'top', ''],
                       },
                     ],
                   ]
