@@ -275,7 +275,7 @@ const PaymentsCreationForm = ({
               <AsyncSelect
                 id="customer"
                 value={customerByOptions.find(
-                  (option) => option.id === formData.customerById)}
+                  (option) => option.id === formData.customerByName)}
                 onChange={(e) => { handleCustomerBySelection(e); }}
                 isClearable={true}
                 placeholder="Search and select..."

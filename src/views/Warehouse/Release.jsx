@@ -22,10 +22,6 @@ const Release = () => {
   const [currentReleaseNumber, setcurrentReleaseNumber] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [initialDataFetched, setInitialDataFetched] = useState(false);
-  // const [contextMenuPosition, setContextMenuPosition] = useState({
-  //   x: 0,
-  //   y: 0,
-  // });
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [createReleaseOrder, setCreateReleaseOrder] = useState(true);
   const columns = [
@@ -36,8 +32,8 @@ const Release = () => {
     "Released to",
     "Pieces",
     // "Weight",
-    "Weight(lb)",
-    "Volume(ft3)", 
+    //"Weight (lb)",
+    //"Volumen (ft3)", 
     "View Release PDF",
   ];
 
@@ -52,48 +48,6 @@ const Release = () => {
   //added status
   const StatusDelivered = 9;
   const StatusLoaded = 1;
-  /* const fetchData = async () => {
-    try {
-      const receiptOrders = (await ReceiptService.getReceipts()).data.results;
-      const pickUpsWithReceipt = receiptOrders.filter((pickUp) => {
-        return (
-          pickUp.status == StatusDelivered || pickUp.status == StatusLoaded
-        );
-      });
-      let filteredData = [];
-      for (let i = 0; i < receiptOrders.length; i++) {
-        for (let j = 0; j < pickUpsWithReceipt.length; j++) {
-          if (receiptOrders[i].number === pickUpsWithReceipt[j].number) {
-            let weight = 0;
-            for (let n = 0; n < receiptOrders[i].commodities.length; n++) {
-              const e = receiptOrders[i].commodities[n];
-              weight += parseInt(e.weight);
-            }
-            let temp = {
-              ...receiptOrders[i],
-              release_date: pickUpsWithReceipt[j].delivery_date,
-              releasedToObj: pickUpsWithReceipt[j].deliveryLocationObj,
-              weight,
-            };
-            filteredData.push(temp);
-          }
-        }
-      }
-      // console.log("Aqui-1 = ",filteredData);
-      // console.log("Aqui-2 = ",filteredData);
-      setReleaseOrders(filteredData.reverse());
-    } catch (error) {
-      console.log(error);
-    }
-  }; */
-
- /*  useEffect(() => {
-    fetchData();
-    console.log("Aqui-1 = ",fetchData());// No borrar
-    console.log("Aqui-2 = ",fetchData());// No borrar
-    console.log("Aqui-3 = ",fetchData());// No borrar
-  }, []); */
-
   const updateReleaseOrders = (url = null) => {
     ReleaseService.getReleases(url)
       .then((response) => {
@@ -348,32 +302,6 @@ const Release = () => {
                 <strong>Error deleting Release Order. Please try again</strong>
               </Alert>
             )}
-
-            {/* {selectedReleaseOrder !== null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReleaseOrderCreationForm
-                  releaseOrder={selectedReleaseOrder}
-                  closeModal={closeModal}
-                  creating={false}
-                  onReleaseOrderDataChange={handlereceiptsDataChange}
-                  currentReleaseNumber={currentReleaseNumber}
-                  setcurrentReleaseNumber={setcurrentReleaseNumber}
-                />
-              </ModalForm>
-            )}
-
-            {selectedReleaseOrder === null && (
-              <ModalForm isOpen={isOpen} closeModal={closeModal}>
-                <ReleaseOrderCreationForm
-                  releaseOrder={null}
-                  closeModal={closeModal}
-                  creating={true}
-                  onReleaseOrderDataChange={handlereceiptsDataChange}
-                  currentReleaseNumber={currentReleaseNumber}
-                  setcurrentReleaseNumber={setcurrentReleaseNumber}
-                />
-              </ModalForm>
-            )} */}
           </div>
         </div>
       </div>

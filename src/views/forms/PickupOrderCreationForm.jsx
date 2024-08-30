@@ -381,8 +381,6 @@ const PickupOrderCreationForm = ({
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      // consigneeId: id,
-      // consigneeType: type,
     });
   };
 
@@ -480,6 +478,9 @@ const PickupOrderCreationForm = ({
         } - ${pickupOrder.issued_byObj?.state || ""} - ${
           pickupOrder.issued_byObj?.country || ""
         } - ${pickupOrder.issued_byObj?.zip_code || ""}`,
+
+
+        
         destinationAgentId: pickupOrder.destination_agent,
         employeeId: pickupOrder.employee,
         employeeByName: pickupOrder.employeeObj?.data?.obj?.name,
@@ -1230,7 +1231,7 @@ const PickupOrderCreationForm = ({
           supplier: formData.supplierId,
           shipper: shipperRequest,
           consignee: consigneeRequest,
-          client_to_bill: clientToBillRequest,
+          // client_to_bill: clientToBillRequest,
           main_carrier: formData.mainCarrierdId,
           commodities: commodities,
           charges: charges,
