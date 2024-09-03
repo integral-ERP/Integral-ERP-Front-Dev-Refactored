@@ -12,6 +12,8 @@ const CarrierCreationForm = ({
   closeModal,
   creating,
   onCarrierDataChange,
+  fromPickupOrder,
+  onProcessComplete,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [carrierType, setcarrierType] = useState("Land");
@@ -193,13 +195,17 @@ const CarrierCreationForm = ({
 
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
-      // setTimeout(() => {
-        // closeModal();
-        onCarrierDataChange();
-        // setShowSuccessAlert(false);
+      setTimeout(() => {
+        // Aquí va el código que debe ejecutarse después de 2 segundos.
+        if (fromPickupOrder == false) {
+          onCarrierDataChange();
+        }
+    
+        // Llamar a la función de callback para notificar a PickOrderCreationForm
+        onProcessComplete();
         setFormData(formFormat);
         // window.location.reload();
-      // }, 1000);
+      }, 2000); // Espera de 2 segundos
     } else {
       setShowErrorAlert(true);
     }
@@ -216,6 +222,10 @@ const CarrierCreationForm = ({
   };
 
   const handleCancel = () => {
+    if (fromPickupOrder== true){
+      closeModal();
+      return;
+    }
     window.location.reload();
   };
 
@@ -642,12 +652,24 @@ const CarrierCreationForm = ({
       </div>
 
       <div className="company-form__options-container" style={{marginLeft:"27vw"}}>
-        <button className="button-save" onClick={sendData}>
-          Save
-        </button>
-        <button className="button-cancel" onClick={handleCancel}>
-          Cancel
-        </button>
+            {fromPickupOrder ? (
+                  <>
+                    <label onClick={sendData}>Save</label>
+                     <label onClick={handleCancel}>Cancel</label>
+                  </>
+                ) : (
+                  <>
+                    <button className="button-save" onClick={sendData}>
+                      Save
+                    </button>
+                    <button className="button-cancel" onClick={handleCancel}>
+                      Cancel
+                    </button>
+                  </>
+                )}
+
+
+        
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
@@ -683,6 +705,7 @@ CarrierCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
   onCarrierDataChange: propTypes.func,
+  onProcessComplete: propTypes.func,
 };
 
 CarrierCreationForm.defaultProps = {
@@ -690,6 +713,7 @@ CarrierCreationForm.defaultProps = {
   closeModal: null,
   creating: false,
   onCarrierDataChange: null,
+  onProcessComplete: () => {},
 };
 
 export default CarrierCreationForm;

@@ -24,6 +24,7 @@ import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
 import ConfirmModal from "../../views/shared/components/ConfirmModal";
+import CarrierCreationForm from "../forms/CarrierCreationForm";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -82,6 +83,10 @@ const PickupOrderCreationForm = ({
   const [showModalConfirm, setShowModalConfirm] = useState(false);
   //added status consts
   const StatusArriving= 5;
+  //added  carrier modal 
+  const [isModalOpenCarrier, setIsModalOpenCarrier] = useState(false);
+  const [selectedCarrier, setSelectedCarrier] = useState(null);
+  const [isProcessCompleteCarrier, setIsProcessCompleteCarrier] = useState(false);
 
   const formFormat = {
     status: 14,
@@ -447,6 +452,27 @@ const PickupOrderCreationForm = ({
     }
   };
 
+  //added handle carrier creation
+  const handleAddCarrierClick = () => {
+    setSelectedCarrier(null);
+    setIsModalOpenCarrier(true);
+  };
+  const handleEditCarrierClick = () => {
+    if (selectedCarrier) {
+      setIsModalOpenCarrier(true);
+    } else {
+      alert("Please select a carrier to edit.");
+    }
+  };
+  const closeModalCarrier = () => {
+    setIsModalOpenCarrier(false);
+  };
+  const handleProcessCompleteCarrier = () => {
+    setIsProcessCompleteCarrier(true);
+    setIsModalOpenCarrier(false);
+    console.log('Proceso completado en CarrierCreationForm');
+  };
+
   useEffect(() => {
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
@@ -737,7 +763,7 @@ const PickupOrderCreationForm = ({
       .results;
 
     const options = [...addTypeToObjects(responseCarriers, "Carrier")];
-
+    
     return options;
   };
 
@@ -1888,6 +1914,24 @@ const PickupOrderCreationForm = ({
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
+
+                  <label
+                    className="btn btn-primary"
+                    onClick={handleAddCarrierClick}
+                  >
+                    ++
+                  </label>
+
+
+                  <label
+                    className="btn btn-primary"
+                    onClick={handleEditCarrierClick}
+                  >
+                    Edit 
+                  </label>
+
+                    
+                  
                 </div>
                 <div className="col-6 text-start">
                   <Input
@@ -1938,6 +1982,26 @@ const PickupOrderCreationForm = ({
         <label className="button-charge" htmlFor="toggleBoton">
           Commodities
         </label>
+
+        <div>{isModalOpenCarrier && selectedCarrier === null &&(
+                    <CarrierCreationForm
+                      carrier={null}
+                      closeModal={closeModalCarrier}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompleteCarrier}
+                    />
+                  )}</div>
+
+                <div>{isModalOpenCarrier && selectedCarrier !==null &&(
+                    <CarrierCreationForm
+                      carrier={selectedCarrier}
+                      closeModal={closeModalCarrier}
+                      creating={false}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompleteCarrier}
+                    />
+                  )}</div>
 
         <div className="row w-100" id="miDiv">
           <div className="">
