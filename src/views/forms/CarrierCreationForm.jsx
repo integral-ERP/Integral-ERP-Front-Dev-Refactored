@@ -196,13 +196,14 @@ const CarrierCreationForm = ({
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
       setTimeout(() => {
-        // Aquí va el código que debe ejecutarse después de 2 segundos.
+        //  después de 2 segundos.
         if (fromPickupOrder == false) {
           onCarrierDataChange();
         }
     
         // Llamar a la función de callback para notificar a PickOrderCreationForm
-        onProcessComplete();
+        // Pase el ID del transportista creado al crear un nuevo carrier
+        onProcessComplete(creating ? response.data.id : undefined);
         setFormData(formFormat);
         // window.location.reload();
       }, 2000); // Espera de 2 segundos

@@ -413,6 +413,7 @@ const PickupOrderCreationForm = ({
       mainCarrierdId: id,
       mainCarrierInfo: info,
     });
+    setSelectedCarrier(result?.data); // Set the selected carrier
   };
 
   const handleClientToBillSelection = async (event) => {
@@ -458,7 +459,7 @@ const PickupOrderCreationForm = ({
     setIsModalOpenCarrier(true);
   };
   const handleEditCarrierClick = () => {
-    if (selectedCarrier) {
+    if (formData.mainCarrierdId) {
       setIsModalOpenCarrier(true);
     } else {
       alert("Please select a carrier to edit.");
@@ -466,11 +467,26 @@ const PickupOrderCreationForm = ({
   };
   const closeModalCarrier = () => {
     setIsModalOpenCarrier(false);
+    setSelectedCarrier(null);
   };
-  const handleProcessCompleteCarrier = () => {
+  const handleProcessCompleteCarrier = async (createdCarrierId = null) => {
     setIsProcessCompleteCarrier(true);
     setIsModalOpenCarrier(false);
     console.log('Proceso completado en CarrierCreationForm');
+    
+    // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
+    const carrierId = createdCarrierId || formData.mainCarrierdId;
+    
+    if (carrierId) {
+      await handleMainCarrierSelection({ id: carrierId });
+      
+      // Obtener y actualizar las opciones del carrier
+      const updatedOptions = await loadCarrierSelectOptions('');
+      setCarrierOptions(updatedOptions);
+    }
+    
+    // Restablecer el carrier seleccionado después del procesamiento
+    setSelectedCarrier(null);
   };
 
   useEffect(() => {
@@ -757,15 +773,21 @@ const PickupOrderCreationForm = ({
 
     return options;
   };
+  //added para recargar carriersoptions al crear un carrier
+  useEffect(() => {
+    const initializeCarrierOptions = async () => {
+      const initialOptions = await loadCarrierSelectOptions('');
+      setCarrierOptions(initialOptions);
+    };
+  
+    initializeCarrierOptions();
+  }, []);
 
   const loadCarrierSelectOptions = async (inputValue) => {
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
-
-    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
-    
-    return options;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    return addTypeToObjects(responseCarriers, "Carrier");
   };
+  //------------------
 
   const loadClientToBillSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -1913,8 +1935,10 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadCarrierSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={carrierOptions.length} // Add esto para que se refresque la lista
                   />
 
+                  {/* labels de creacion y edicion carrier */}
                   <label
                     className="btn btn-primary"
                     onClick={handleAddCarrierClick}
@@ -1983,17 +2007,18 @@ const PickupOrderCreationForm = ({
           Commodities
         </label>
 
+           {/* Forms creacion y edicion carrier */}
         <div>{isModalOpenCarrier && selectedCarrier === null &&(
                     <CarrierCreationForm
                       carrier={null}
                       closeModal={closeModalCarrier}
                       creating={true}
                       fromPickupOrder={true}
-                      onProcessComplete={handleProcessCompleteCarrier}
+                      onProcessComplete={(createdCarrierId) => handleProcessCompleteCarrier(createdCarrierId)}
                     />
                   )}</div>
 
-                <div>{isModalOpenCarrier && selectedCarrier !==null &&(
+                <div>{isModalOpenCarrier && selectedCarrier !== null &&(
                     <CarrierCreationForm
                       carrier={selectedCarrier}
                       closeModal={closeModalCarrier}
@@ -2002,7 +2027,7 @@ const PickupOrderCreationForm = ({
                       onProcessComplete={handleProcessCompleteCarrier}
                     />
                   )}</div>
-
+         {/* terminacion de Forms creacion y edicion carrier */}
         <div className="row w-100" id="miDiv">
           <div className="">
             <div className="creation creation-container w-100">
