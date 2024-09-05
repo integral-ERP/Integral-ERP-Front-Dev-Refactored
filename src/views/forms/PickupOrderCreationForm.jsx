@@ -1954,6 +1954,28 @@ const PickupOrderCreationForm = ({
                     Edit 
                   </label>
 
+                          {/* Forms creacion y edicion carrier */}
+                <div>{isModalOpenCarrier && selectedCarrier === null &&(
+                            <CarrierCreationForm
+                              carrier={null}
+                              closeModal={closeModalCarrier}
+                              creating={true}
+                              fromPickupOrder={true}
+                              onProcessComplete={(createdCarrierId) => handleProcessCompleteCarrier(createdCarrierId)}
+                            />
+                          )}</div>
+
+                        <div>{isModalOpenCarrier && selectedCarrier !== null &&(
+                            <CarrierCreationForm
+                              carrier={selectedCarrier}
+                              closeModal={closeModalCarrier}
+                              creating={false}
+                              fromPickupOrder={true}
+                              onProcessComplete={handleProcessCompleteCarrier}
+                            />
+                          )}</div>
+                {/* terminacion de Forms creacion y edicion carrier */}
+
                     
                   
                 </div>
@@ -2007,27 +2029,7 @@ const PickupOrderCreationForm = ({
           Commodities
         </label>
 
-           {/* Forms creacion y edicion carrier */}
-        <div>{isModalOpenCarrier && selectedCarrier === null &&(
-                    <CarrierCreationForm
-                      carrier={null}
-                      closeModal={closeModalCarrier}
-                      creating={true}
-                      fromPickupOrder={true}
-                      onProcessComplete={(createdCarrierId) => handleProcessCompleteCarrier(createdCarrierId)}
-                    />
-                  )}</div>
-
-                <div>{isModalOpenCarrier && selectedCarrier !== null &&(
-                    <CarrierCreationForm
-                      carrier={selectedCarrier}
-                      closeModal={closeModalCarrier}
-                      creating={false}
-                      fromPickupOrder={true}
-                      onProcessComplete={handleProcessCompleteCarrier}
-                    />
-                  )}</div>
-         {/* terminacion de Forms creacion y edicion carrier */}
+          
         <div className="row w-100" id="miDiv">
           <div className="">
             <div className="creation creation-container w-100">
