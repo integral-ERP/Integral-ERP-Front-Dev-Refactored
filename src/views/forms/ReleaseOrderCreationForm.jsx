@@ -55,6 +55,9 @@ const ReleaseOrderCreationForm = ({
   const [consigneeRequest, setconsigneeRequest] = useState(null);
   const [attachments, setAttachments] = useState([]);
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+
+  const [customerByOptions, setCustomerByOptions] = useState([]); //mirar
+
   const StatusDelivered = 9;
   const formFormat = {
     status: StatusDelivered,
@@ -79,9 +82,22 @@ const ReleaseOrderCreationForm = ({
     consigneeType: "",
     consigneeInfo: "",
     notes: "",
+
+    customerById: "", //Cristian
+    customerByName:"",
   };
 
   const [formData, setFormData] = useState(formFormat);
+
+  const handleCustomerBySelection = async (event) => {
+    const id = event?.id || "";
+    const name = event.name;
+    setFormData({
+      ...formData,
+      customerById: id,
+      customerByName: name,
+    });
+  };
 
   const handleIssuedBySelection = async (event) => {
     const id = event.id;
@@ -395,6 +411,9 @@ const ReleaseOrderCreationForm = ({
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
 
+        // client_to_bill: releaseOrder.customerById,//Cristian
+        customerById: releaseOrder.clienTo,//Cristian
+
         consigneeId: releaseOrder.consigneeObj.data?.obj?.id,
         consigneeType:  releaseOrder.consigneeObj.data?.obj?.type_person,
         consigneeInfo: `${
@@ -404,42 +423,13 @@ const ReleaseOrderCreationForm = ({
         } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
           releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
         }`,
-        /* releasedToId: releaseOrder.releasedToObj.data?.obj?.id, //pickupOrder.consignee //releaseOrder.releasedToObj?.data?.obj?.id,
-        releasedToType:  releaseOrder.releasedToObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
-        releasedToInfo: `${
-          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.state || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`,  */ /* `${
-          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.state || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`, */
-       /*  clientToBillId: releaseOrder.client_to_bill,
-        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person, */
         carrierId: releaseOrder.carrier,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
         purchase_order_number: releaseOrder.purchase_order_number,
         main_carrierObj: releaseOrder.main_carrierObj,
-       /*  warehouseReceiptId: releaseOrder.warehouseReceiptId, */
         commodities: releaseOrder.commodities,
         notes: releaseOrder.notes,
-        /* charges: releaseOrder.charges, */
-        /* consignee: releaseOrder.consignee,
-        consigneeId: releaseOrder.consigneeObj.data?.obj?.id, //pickupOrder.consignee
-        consigneeType: releaseOrder.consigneeObj.data?.obj?.type_person,
-        consigneeInfo: `${
-          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          releaseOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`, */
       };
       setconsignee(releaseOrder.consigneeObj?.data?.obj);
       setconsigneeRequest(releaseOrder.consignee);
@@ -449,9 +439,7 @@ const ReleaseOrderCreationForm = ({
   }, [creating, releaseOrder]);
 
   const fetchFormData = async () => {
-    const forwardingAgents = (
-      await ForwardingAgentService.getForwardingAgents()
-    ).data.results;
+    const forwardingAgents = (await ForwardingAgentService.getForwardingAgents()).data.results;
     const customers = (await CustomerService.getCustomers()).data.results;
     const vendors = (await VendorService.getVendors()).data.results;
     const employees = (await EmployeeService.getEmployees()).data.results;
@@ -460,10 +448,7 @@ const ReleaseOrderCreationForm = ({
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    const forwardingAgentsWithType = addTypeToObjects(
-      forwardingAgents,
-      "forwarding-agent"
-    );
+    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents,"forwarding-agent");
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
@@ -471,33 +456,18 @@ const ReleaseOrderCreationForm = ({
 
     const issuedByOptions = [...forwardingAgentsWithType];
     const employeeOptions = [...employeesWithType];
-    const releasedToOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ];
-
+    const releasedToOptions = [...customersWithType,...vendorsWithType,...forwardingAgentsWithType,...carriersWithType,];
     const carrierOptions = [...carriersWithType];
+    const consigneeOptions = [...customersWithType,...vendorsWithType,...forwardingAgentsWithType,...carriersWithType,]
 
-    const consigneeOptions = [
-      ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
-    ]
+    const customerByOptions = [...customersWithType, ...forwardingAgentsWithType];//Cristian
 
-    issuedByOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
+    issuedByOptions.sort((a, b) => {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+    employeeOptions.sort((a, b) => {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
+    carrierOptions.sort((a, b) => {return a.name.toLowerCase().localeCompare(b.name.toLowerCase());});
 
-    employeeOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
+    setCustomerByOptions(customerByOptions);//Cristian
 
-    carrierOptions.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-    });
     setConsigneeOptions(consigneeOptions);
     setReleasedToOptions(releasedToOptions);
     setIssuedByOptions(issuedByOptions);
@@ -506,6 +476,11 @@ const ReleaseOrderCreationForm = ({
   };
 
   const addTypeToObjects = (arr, type) => arr.map((obj) => ({ ...obj, type }));
+
+  const SortArray = (x, y) => {
+    return new Intl.Collator("es").compare(x.name, y.name);
+  };
+
 
   const loadIssuedBySelectOptions = async (inputValue) => {
     const responseAgents = (await ForwardingAgentService.search(inputValue))
@@ -550,20 +525,22 @@ const ReleaseOrderCreationForm = ({
       ...addTypeToObjects(responseAgents, "forwarding-agent"),
       ...addTypeToObjects(responseCarriers, "carrier"),
     ];
+    return options;
+  };
 
+  const loadCustomerBySelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data
+      .results;
+    const options = [...addTypeToObjects(responseCustomers, "Customer")];
     return options;
   };
 
 
   const loadConsigneeToOptionsSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data
-      .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    const responseVendors = (await VendorService.search(inputValue)).data.results;
+    const responseAgents = (await ForwardingAgentService.search(inputValue)).data.results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
 
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
@@ -612,8 +589,6 @@ const ReleaseOrderCreationForm = ({
   useEffect(() => {
     if (fromRecipt) {
       setcommodities(releaseOrder.commodities);
-      //console.log("idwh", releaseOrder.id);
-      //console.log("todowh", releaseOrder);
       let updatedFormData = {
         status: releaseOrder.status,
         number: releaseOrder.number,
@@ -622,23 +597,12 @@ const ReleaseOrderCreationForm = ({
         employeeId: releaseOrder.employee,
         issuedById: releaseOrder.issued_by,
         issuedByType: releaseOrder.issued_byObj?.type_person,
-       /*  releasedToId: releaseOrder.consigneeObj.data?.obj?.id,//releaseOrder.releasedToObj?.data?.obj?.id,
-        releasedToType: releaseOrder.consigneeObj.data?.obj?.type_person,//releaseOrder.releasedToObj?.data?.obj?.type_person,
-        releasedToInfo:`${
-          releaseOrder.consigneeObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.consigneeObj?.data?.obj?.city || ""} - ${
-          releaseOrder.consigneeObj?.data?.obj?.state || ""
-        } - ${releaseOrder.consigneeObj?.data?.obj?.country || ""} - ${
-          releaseOrder.consigneeObj?.data?.obj?.zip_code || ""
-        }`,  *//* `${
-          releaseOrder.releasedToObj?.data?.obj?.street_and_number || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.city || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.state || ""
-        } - ${releaseOrder.releasedToObj?.data?.obj?.country || ""} - ${
-          releaseOrder.releasedToObj?.data?.obj?.zip_code || ""
-        }`, */
-        clientToBillId: releaseOrder.client_to_bill,
-        clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
+
+        // client_to_bill: releaseOrder.customerById, //cristian
+        cliento : releaseOrder.customerById,//Cristian
+
+        // clientToBillId: releaseOrder.client_to_bill,
+        // clientToBillType: releaseOrder.clientBillObj?.data?.obj?.type_person,
         carrierId: releaseOrder.carrier_by,
         pro_number: releaseOrder.pro_number,
         tracking_number: releaseOrder.tracking_number,
@@ -666,32 +630,7 @@ const ReleaseOrderCreationForm = ({
   }, [fromRecipt, releaseOrder]);
   
   const sendData = async () => {
-    /*  let releasedToName = "";
-    if (formData.releasedToType === "customer") {
-      releasedToName = "customerid";
-    }
-    if (formData.releasedToType === "vendor") {
-      releasedToName = "vendorid";
-    }
-    if (formData.releasedToType === "forwarding-agent") {
-      releasedToName = "agentid";
-    }
-    if (formData.releasedToType === "Carrier") {
-      releasedToName = "carrierid";
-    }
-
-    if (releasedToName !== "") {
-      const releasedToC = {
-        [releasedToName]: formData.releasedToId,
-      };
-
-      const response = await ReleaseService.createReleasedTo(releasedToC);
-      if (response.status === 201) {
-        setReleasedTo(response.data.id);
-      }
-    }  */
     let clientToBillName = "";
-
     if (formData.clientToBillType === "releasedTo") {
       switch (formData.releasedToType) {
         case "customer":
@@ -756,9 +695,10 @@ const ReleaseOrderCreationForm = ({
       if (response.status === 201) {
         setconsigneeRequest(response.data.id);
       }
+      
     }
     
-    console.log("hecho3");
+    // console.log("hecho3");
     if (commodities.length > 0) {
       let totalWeight = 0;
       commodities.forEach((com) => {
@@ -766,6 +706,9 @@ const ReleaseOrderCreationForm = ({
       });
       setWeightUpdated(totalWeight);
     }
+
+    
+
   };
   const callPickupOrders = async (url = null) => {
     try {
@@ -816,6 +759,7 @@ const ReleaseOrderCreationForm = ({
       hours = hours ? hours : 12; // La hora 0 debería ser 12
       // Formato: YYYY-MM-DD HH:MM AM/PM
       let formattedDateTime = `${day}/${month}/${year}-${hours}:${minutes}${ampm}`;
+      let prueba = 12;
 //-----------------------
       const createPickUp = async () => {
         let rawData = {
@@ -825,11 +769,12 @@ const ReleaseOrderCreationForm = ({
           creation_date_text: formattedDateTime,
           release_date: isoReleaseDate,
           employee: formData.employeeId,
-          issued_by: formData.issuedById,
+          issued_by: formData.number,
           issuedByType: formData.issuedByType,
+          clienTo: formData.customerById, //Cristian
+          // client_to_bill: formData.customerById, //Cristian
           /* released_to: releasedTo,
           releasodToType: formData.releasedToType, */
-          client_to_bill: formData.clientToBill,
           client_to_bill_type: formData.clientToBillType,
           carrier: formData.main_carrierObj.id,
           pro_number: formData.pro_number,
@@ -1080,92 +1025,50 @@ const ReleaseOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
-                )}
-              </div> 
-
-                {/* <div className="col-4 text-start">
-                <label htmlFor="releasedTo" className="form-label">
-                  Released To:
-                </label>
-                {!creating ? (
-                  canRender && (
-                    <AsyncSelect
-                      id="releasedTo"
-                      onChange={(e) => {
-                        handleReleasedToSelection(e);
-                      }}
-                      value={releasedToOptions.find(
-                        (option) =>
-                          option.id === formData.releasedToId &&
-                          option.type === formData.releasedToType
-                      )}
-                      className="async-option"
-                      isClearable={true}
-                      defaultOptions={releasedToOptions}
-                      loadOptions={loadReleasedToOptionsSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  )
-                ) : (
-                  <AsyncSelect
-                    id="releasedToId"
-                    onChange={(e) => {
-                      handleReleasedToSelection(e);
-                    }}
-                    value={releasedToOptions.find(
-                      (option) =>
-                        option.id === formData.releasedToId &&
-                        option.type === formData.releasedToType
-                    )}
-                    className="async-option"
-                    isClearable={true}
-                    defaultOptions={releasedToOptions}
-                    loadOptions={loadReleasedToOptionsSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                )}
-              </div>  */}
+                  )}
+                </div>
               </div>
 
-              {/* <div className="row align-items-center mb-3">
-              <div className="col-6 text-start">
-                <label htmlFor="clientToBill" className="form-label">
-                  Client to Bill:
+
+              <div className="clienToDiv text-start">
+                <label htmlFor="customer" className="form-label">
+                  Clien to Bill:
                 </label>
-                <Input
-                  name="clientToBill"
-                  id="clientToBill"
-                  value={formData.client_to_bill_type}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
-                  }}
-                >
-                  <option value="">Select an Option</option>
-                  <option value="releasedTo">Released To</option>
-                  <option value="other">Other</option>
-                </Input>
-                <p style={{ color: "red" }}>
-                  Note: Always select a client to bill when editing
-                </p>
-                </div>
-                <div className="col-6 text-start">
                 <AsyncSelect
-                  id="releasedToOther"
-                  isDisabled={formData.clientToBillType !== "other"}
-                  onChange={(e) => {
-                    handleClientToBillSelection(e);
+                  id="clienTo"
+                  onChange={(e) => { handleCustomerBySelection(e); }}
+                  value={customerByOptions.find(
+                    (option) => option.id === formData.customerById
+                  )}
+                  placeholder="Release To . . . "
+                  defaultOptions={customerByOptions}
+                  loadOptions={loadCustomerBySelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}
+                  isClearable={true} // Aquí agregas la opción de limpieza
+                />
+              </div>
+              {/* <div className="clienToDiv text-start">
+                <label htmlFor="customer" className="form-label">
+                  Clien to Bill:
+                </label>
+                <AsyncSelect
+                  id="clienTo"
+                  onChange={(e) => { handleCustomerBySelection(e); 
                   }}
-                  value={getAsyncSelectValue()}
-                  isClearable={true}
-                  defaultOptions={releasedToOptions}
-                  loadOptions={loadReleasedToOptionsSelectOptions}
+                  value={customerByOptions.find(
+                    (option) => option.id === formData.customerById
+                  )}                  
+                  placeholder="Release To . . . "
+                  defaultOptions={customerByOptions}
+                  loadOptions={loadCustomerBySelectOptions}
                   getOptionLabel={(option) => option.name}
                   getOptionValue={(option) => option.id}
                 />
-              </div> 
-            </div>*/}
+              </div> */}
+
+
+
             </div>
           </div>
 

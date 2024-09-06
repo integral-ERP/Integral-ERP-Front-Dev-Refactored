@@ -345,7 +345,7 @@ const Receipt = () => {
   ];
 
   const handleContextMenu = (e) => {
-    if (selectedPickupOrder && selectedPickupOrder.status !== "2") {
+    if (selectedPickupOrder && selectedPickupOrder.status == StatusOnHand ) {
       e.preventDefault(); // Prevent the browser's default context menu
       const clickX = e.clientX;
       const clickY = e.clientY;

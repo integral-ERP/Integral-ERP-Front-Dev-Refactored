@@ -197,6 +197,8 @@ const CommodityCreationForm = ({
         package_type_id: commodity.package_type_id,
         locationId: commodity.locationId,
         locationCode: commodity.locationCode,
+        hazardous: commodity.hazardous,
+        hazardous_type: commodity.hazardous_type
       };
       setformData(formFormat);
     }
@@ -329,7 +331,7 @@ const CommodityCreationForm = ({
 
         <div className="col-6">
           <label htmlFor="description" className="text-comm description-form">
-            Charge Description:
+            Description:
           </label>
           <input
               name="description"
@@ -427,6 +429,7 @@ const CommodityCreationForm = ({
                     hazardous: e.target.checked,
                   });
                 }}
+                checked={formData.hazardous}
                 style={{marginLeft: "5px"}}
             />
           </label>
