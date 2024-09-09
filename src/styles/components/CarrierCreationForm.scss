@@ -369,6 +369,16 @@
         color: black;
       }
     }
+
+    &__options-carrier {
+      position: static;
+      bottom: 0px;
+      display: flex;
+      width: 40%;
+      justify-content: space-evenly;
+      // height: 20rem;
+
+    }
   
     &__table {
       border-collapse: collapse;
@@ -549,6 +559,10 @@
     // height: 50vw; /* O la altura deseada */
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .form-container_carrier{
+    margin: -15px 0px 0px 0px;
   }
   
   .MuiPaper-root{
