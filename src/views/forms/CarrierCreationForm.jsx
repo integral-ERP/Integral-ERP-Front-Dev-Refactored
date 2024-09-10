@@ -12,6 +12,8 @@ const CarrierCreationForm = ({
   closeModal,
   creating,
   onCarrierDataChange,
+  fromPickupOrder,
+  onProcessComplete,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [carrierType, setcarrierType] = useState("Land");
@@ -193,13 +195,18 @@ const CarrierCreationForm = ({
 
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
-      // setTimeout(() => {
-        // closeModal();
-        onCarrierDataChange();
-        // setShowSuccessAlert(false);
+      setTimeout(() => {
+        //  después de 2 segundos.
+        if (fromPickupOrder == false) {
+          onCarrierDataChange();
+        }
+    
+        // Llamar a la función de callback para notificar a PickOrderCreationForm
+        // Pase el ID del transportista creado al crear un nuevo carrier
+        onProcessComplete(creating ? response.data.id : undefined);
         setFormData(formFormat);
         // window.location.reload();
-      // }, 1000);
+      }, 2000); // Espera de 2 segundos
     } else {
       setShowErrorAlert(true);
     }
@@ -216,6 +223,10 @@ const CarrierCreationForm = ({
   };
 
   const handleCancel = () => {
+    if (fromPickupOrder== true){
+      closeModal();
+      return;
+    }
     window.location.reload();
   };
 
@@ -228,11 +239,11 @@ const CarrierCreationForm = ({
       //   overflowY: "auto",
       // }}
     >
-      <div className="form-container">
+      <div className="form-container_carrier">
         <div className="company-form carrier">
           <div className="row w-100">
-            <div className="col-6">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form_general w-100">
                 <div className="form-label_name">
                   <h2>General</h2>
                   <span></span>
@@ -336,7 +347,7 @@ const CarrierCreationForm = ({
                   </div>
 
                   <div className="col-6">
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="email"
                         inputName="email"
@@ -349,7 +360,7 @@ const CarrierCreationForm = ({
                       />
                     </div>
 
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="website"
@@ -361,7 +372,7 @@ const CarrierCreationForm = ({
                         label="Web Site"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="reference_number"
@@ -376,7 +387,7 @@ const CarrierCreationForm = ({
                         label="Reference Number"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="contactFN"
@@ -391,7 +402,7 @@ const CarrierCreationForm = ({
                         label="Contact First Name"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="contact_last_name"
@@ -406,7 +417,7 @@ const CarrierCreationForm = ({
                         label="Contact Last Name"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="identification_number"
@@ -427,9 +438,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-
-            <div className="col-6">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form w-100">
                 <div className="form-label_name">
                   <h2>Address</h2>
                   <span></span>
@@ -500,11 +510,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="row w-100">
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form w-100">
                 <div className="form-label_name">
                   <h2>Land</h2>
                   <span></span>
@@ -580,9 +587,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-carrier w-100">
                 <div className="form-label_name">
                   <h2>Airline</h2>
                   <span></span>
@@ -603,10 +609,9 @@ const CarrierCreationForm = ({
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+              {/* <div className="col-4"> */}
+              <div className="creation creation-carrier w-100">
                 <div className="form-label_name">
                   <h2>Ocean</h2>
                   <span></span>
@@ -635,19 +640,33 @@ const CarrierCreationForm = ({
                     label="SCAC number"
                   />
                 </div>
-              </div>
+              {/* </div> */}
+            </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      <div className="company-form__options-container" style={{marginLeft:"27vw"}}>
-        <button className="button-save" onClick={sendData}>
-          Save
-        </button>
-        <button className="button-cancel" onClick={handleCancel}>
-          Cancel
-        </button>
+      <div className="company-form__options-carrier" style={{marginLeft:"27vw", marginTop: "-1vw"}}>
+            {fromPickupOrder ? (
+                  <>
+                    <label className="button-save" onClick={sendData}>Save</label>
+                     <label className="button-cancel" onClick={handleCancel}>Cancel</label>
+                  </>
+                ) : (
+                  <>
+                    <button className="button-save" onClick={sendData}>
+                      Save
+                    </button>
+                    <button className="button-cancel" onClick={handleCancel}>
+                      Cancel
+                    </button>
+                  </>
+                )}
+
+
+        
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
@@ -683,6 +702,7 @@ CarrierCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
   onCarrierDataChange: propTypes.func,
+  onProcessComplete: propTypes.func,
 };
 
 CarrierCreationForm.defaultProps = {
@@ -690,6 +710,7 @@ CarrierCreationForm.defaultProps = {
   closeModal: null,
   creating: false,
   onCarrierDataChange: null,
+  onProcessComplete: () => {},
 };
 
 export default CarrierCreationForm;

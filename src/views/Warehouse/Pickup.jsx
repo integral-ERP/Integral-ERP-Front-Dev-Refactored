@@ -35,13 +35,14 @@ const Pickup = () => {
   //added warning alert for delete pickup order
   const [showWarningAlert, setShowWarningAlert] = useState(false);
   const StatusEmpty = 14;
-  const StatusOnHand = 4;  
+  const StatusInTransit= 6;
+  const StatusArriving= 5;  
   //added status for update context menu
   /*  const StatusOnHand = 4;
   const StatusInTransit= 6;
   const StatusDelivered = 9;
   
-  const [contextMenuOptionsState , setContextMenuOptionsState] = useState(false); */
+   */
 
   const columns = [
     "Status",
@@ -77,7 +78,7 @@ const Pickup = () => {
       setContextMenuPosition({ x: clickX, y: clickY });
       setShowContextMenu(true);
       //added context menu for status onhand
-      if ((selectedPickupOrder.status != StatusEmpty) && (selectedPickupOrder.status!=StatusOnHand)) {
+      if (selectedPickupOrder.status!=StatusInTransit && selectedPickupOrder.status!=StatusArriving) {
         setShowContextMenu(false);
       }
     }
@@ -264,7 +265,8 @@ const Pickup = () => {
     }
   };
 
-  /* const setInTransit = async () => {
+
+  const setInTransit = async () => {
     if (selectedPickupOrder) {
       const updatedPickuporder = {
         ...selectedPickupOrder,
@@ -281,6 +283,8 @@ const Pickup = () => {
       alert("Please select a pickup order to continue.");
     }
   };
+
+  /* 
 
   const setDelivered = async () => {
     if (selectedPickupOrder) {
@@ -343,26 +347,20 @@ const Pickup = () => {
       label: "Create Warehouse Receipt",
       handler: seteWarehouse,
     },
-  ];
-
-  /* const contextMenuOptionsStatus = [
-    {
-      label: "OnHold",
-      handler: setOnHold,
-    },
     {
       label: "InTransit",
       handler: setInTransit,
     },
+  ];
+
+   /* const contextMenuOptionsStatus = [
+
     {
-      label: "Delivered",
-      handler: setDelivered,
+      label: "InTransit",
+      handler: setInTransit,
     },
-    {
-      label: "OnHand",
-      handler: setOnHand,
-    }
-  ] */
+
+  ]; */
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 

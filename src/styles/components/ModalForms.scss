@@ -5,11 +5,11 @@
   z-index: 10;
   top: 0;
   left: 0;
-  min-width: 100vw;
+  min-width: 107vw;
   min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.75);
   display: none;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   overflow-x: hidden;
 
@@ -21,9 +21,9 @@
 
 .modal__container {
   position: relative;
-  height: 90vh;
+  height: 99vh;
   width: 90%;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   padding: 1rem;
   overflow-x: hidden;
   color: black;

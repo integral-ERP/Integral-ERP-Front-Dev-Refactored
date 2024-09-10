@@ -24,6 +24,8 @@ import "../../styles/components/CreationForm.scss";
 import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
 import ConfirmModal from "../../views/shared/components/ConfirmModal";
+import CarrierCreationForm from "../forms/CarrierCreationForm";
+import ModalForm from "../shared/components/ModalForm";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -80,6 +82,13 @@ const PickupOrderCreationForm = ({
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+  //added status consts
+  const StatusArriving = 5;
+  //added  carrier modal
+  const [isModalOpenCarrier, setIsModalOpenCarrier] = useState(false);
+  const [selectedCarrier, setSelectedCarrier] = useState(null);
+  const [isProcessCompleteCarrier, setIsProcessCompleteCarrier] =
+    useState(false);
 
   const formFormat = {
     status: 14,
@@ -406,6 +415,7 @@ const PickupOrderCreationForm = ({
       mainCarrierdId: id,
       mainCarrierInfo: info,
     });
+    setSelectedCarrier(result?.data); // Set the selected carrier
   };
 
   const handleClientToBillSelection = async (event) => {
@@ -443,6 +453,42 @@ const PickupOrderCreationForm = ({
       });
       console.log("Este es form data despues de el else", formData);
     }
+  };
+
+  //added handle carrier creation
+  const handleAddCarrierClick = () => {
+    setSelectedCarrier(null);
+    setIsModalOpenCarrier(true);
+  };
+  const handleEditCarrierClick = () => {
+    if (formData.mainCarrierdId) {
+      setIsModalOpenCarrier(true);
+    } else {
+      alert("Please select a carrier to edit.");
+    }
+  };
+  const closeModalCarrier = () => {
+    setIsModalOpenCarrier(false);
+    setSelectedCarrier(null);
+  };
+  const handleProcessCompleteCarrier = async (createdCarrierId = null) => {
+    setIsProcessCompleteCarrier(true);
+    setIsModalOpenCarrier(false);
+    console.log("Proceso completado en CarrierCreationForm");
+
+    // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
+    const carrierId = createdCarrierId || formData.mainCarrierdId;
+
+    if (carrierId) {
+      await handleMainCarrierSelection({ id: carrierId });
+
+      // Obtener y actualizar las opciones del carrier
+      const updatedOptions = await loadCarrierSelectOptions("");
+      setCarrierOptions(updatedOptions);
+    }
+
+    // Restablecer el carrier seleccionado después del procesamiento
+    setSelectedCarrier(null);
   };
 
   useEffect(() => {
@@ -729,15 +775,22 @@ const PickupOrderCreationForm = ({
 
     return options;
   };
+  //added para recargar carriersoptions al crear un carrier
+  useEffect(() => {
+    const initializeCarrierOptions = async () => {
+      const initialOptions = await loadCarrierSelectOptions("");
+      setCarrierOptions(initialOptions);
+    };
+
+    initializeCarrierOptions();
+  }, []);
 
   const loadCarrierSelectOptions = async (inputValue) => {
     const responseCarriers = (await CarrierService.search(inputValue)).data
       .results;
-
-    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
-
-    return options;
+    return addTypeToObjects(responseCarriers, "Carrier");
   };
+  //------------------
 
   const loadClientToBillSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -1069,7 +1122,7 @@ const PickupOrderCreationForm = ({
 
   useEffect(() => {
     if (commodities.length > 0) {
-      setFormData({ ...formData, status: 4 });
+      setFormData({ ...formData, status: StatusArriving });
     }
   }, [commodities]);
 
@@ -1754,46 +1807,44 @@ const PickupOrderCreationForm = ({
                       getOptionValue={(option) => option.id}
                     />
                   </div>
-                  </div>
+                </div>
 
-                  <div
-                    className="col-6 text-start"
-                    style={{ marginBlockEnd: "auto" }}
+                <div
+                  className="col-6 text-start"
+                  style={{ marginBlockEnd: "auto" }}
+                >
+                  <label htmlFor="delivery" className="form-label">
+                    Delivery Location:
+                  </label>
+                  <AsyncSelect
+                    id="deliveryLocation"
+                    onChange={(e) => {
+                      handleDeliveryLocationSelection(e);
+                    }}
+                    value={deliveryLocationOptions.find(
+                      (option) =>
+                        option.id === formData.deliveryLocationId &&
+                        option.type === formData.deliveryLocationType
+                    )}
+                    placeholder="Search and select..."
+                    defaultOptions={deliveryLocationOptions}
+                    loadOptions={loadDeliveryLocationSelectOptions}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.id}
+                  />
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-12">
+                  <label
+                    className="copy-label"
+                    // onClick={handleCopyClickShipper}
+                    onClick={handleCopyClickConsignee}
                   >
-                    <label htmlFor="delivery" className="form-label">
-                      Delivery Location:
-                    </label>
-                    <AsyncSelect
-                      id="deliveryLocation"
-                      onChange={(e) => {
-                        handleDeliveryLocationSelection(e);
-                      }}
-                      value={deliveryLocationOptions.find(
-                        (option) =>
-                          option.id === formData.deliveryLocationId &&
-                          option.type === formData.deliveryLocationType
-                      )}
-                      placeholder="Search and select..."
-                      defaultOptions={deliveryLocationOptions}
-                      loadOptions={loadDeliveryLocationSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                    />
-                  </div>
-              
+                    Copy To Delivery Location
+                  </label>
                 </div>
-                <div className="row mb-3">
-                  <div className="col-12">
-                    <label
-                      className="copy-label"
-                      // onClick={handleCopyClickShipper}
-                      onClick={handleCopyClickConsignee}
-                    >
-                      Copy To Delivery Location
-                    </label>
-                  </div>
-                </div>
-             
+              </div>
 
               <div className="row align-items-center">
                 <div
@@ -1885,7 +1936,48 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadCarrierSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={carrierOptions.length} // Add esto para que se refresque la lista
                   />
+
+                  {/* labels de creacion y edicion carrier */}
+                 
+                  {/* Forms creacion y edicion carrier */}
+                  <div>
+                    {isModalOpenCarrier && selectedCarrier === null && (
+                      <ModalForm
+                        isOpen={isModalOpenCarrier}
+                        onClose={closeModalCarrier}
+                      >
+                        <CarrierCreationForm
+                          carrier={null}
+                          closeModal={closeModalCarrier}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdCarrierId) =>
+                            handleProcessCompleteCarrier(createdCarrierId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+
+                  <div>
+                    {isModalOpenCarrier && selectedCarrier !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenCarrier}
+                        onClose={closeModalCarrier}
+                      >
+                        <CarrierCreationForm
+                          carrier={selectedCarrier}
+                          closeModal={closeModalCarrier}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteCarrier}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion carrier */}
                 </div>
                 <div className="col-6 text-start">
                   <Input
@@ -1902,7 +1994,24 @@ const PickupOrderCreationForm = ({
                     label="Tracking Number"
                   />
                 </div>
-              </div>
+                </div>
+                <div className="col-6 text-start">
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddCarrierClick}
+                  >
+                    ++
+                  </label>
+
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditCarrierClick}
+                  >
+                    Edit
+                  </label>
+                  </div>
+
+             
               <div className="row ">
                 <div className="col-6 text-start">
                   <Input
@@ -2183,7 +2292,7 @@ const PickupOrderCreationForm = ({
             className="button-save"
             onClick={(e) => {
               e.preventDefault();
-              setShowModalConfirm(true)
+              setShowModalConfirm(true);
               // sendData();
             }}
             type="submit"
@@ -2211,13 +2320,13 @@ const PickupOrderCreationForm = ({
           </Alert>
         )}
         {showModalConfirm && (
-          <ConfirmModal 
+          <ConfirmModal
             title="Confirm"
-            onHide={() => setShowModalConfirm(false)}  
+            onHide={() => setShowModalConfirm(false)}
             body={"Are you sure you want to save the changes?"}
-            onConfirm={() =>  {
+            onConfirm={() => {
               sendData();
-              setShowModalConfirm(false)
+              setShowModalConfirm(false);
             }}
             onCancel={() => setShowModalConfirm(false)}
           />
