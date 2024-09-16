@@ -25,6 +25,8 @@ import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
 import ConfirmModal from "../../views/shared/components/ConfirmModal";
 import CarrierCreationForm from "../forms/CarrierCreationForm";
+import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
+import CustomerCreationForm from "../forms/CustomerCreationForm";
 import ModalForm from "../shared/components/ModalForm";
 
 const PickupOrderCreationForm = ({
@@ -51,8 +53,7 @@ const PickupOrderCreationForm = ({
   const [shipperRequest, setshipperRequest] = useState(null);
   const [releasedToOptions, setReleasedToOptions] = useState([]);
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
-  const [showCommodityCreationForm, setshowCommodityCreationForm] =
-    useState(false);
+  const [showCommodityCreationForm, setshowCommodityCreationForm] = useState(false);
   const [showCommodityEditForm, setshowCommodityEditForm] = useState(false);
   const [showCommodityInspect, setshowCommodityInspect] = useState(false);
   const [showRepackingForm, setshowRepackingForm] = useState(false);
@@ -87,8 +88,31 @@ const PickupOrderCreationForm = ({
   //added  carrier modal
   const [isModalOpenCarrier, setIsModalOpenCarrier] = useState(false);
   const [selectedCarrier, setSelectedCarrier] = useState(null);
-  const [isProcessCompleteCarrier, setIsProcessCompleteCarrier] =
-    useState(false);
+  const [isProcessCompleteCarrier, setIsProcessCompleteCarrier] = useState(false);
+  //added  Agent modal
+  const [isModalOpenAgent, setIsModalOpenAgent] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
+  //added  Shipper modal
+  const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+  const [selectedShipp, setSelectedShipper] = useState(null);
+  const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+  //added  Delivery Location modal
+  const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
+  const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
+  const [isProcessCompleteDeliLocation, setIsProcessCompleteDeliLocation] = useState(false);
+  //added  Consignee modal
+  const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
+  const [selectedConsignee, setSelectedConsignee] = useState(null);
+  const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
+  //added  Destination Agent modal 
+  const [isModalOpenDestinationAgent, setIsModalOpenDestinationAgent] = useState(false);
+  const [selectedDestinationAgent, setSelectedDestinationAgent] = useState(null);
+  const [isProcessCompleteDestinationAgent, setIsProcessCompleteDestinationAgent] = useState(false);
+  //added  Pick-up Location modal 
+  const [isModalOpenPickUpLocation, setIsModalOpenPickUpLocation] = useState(false);
+  const [selectedPickUpLocation, setSelectedPickUpLocation] = useState(null);
+  const [isProcessCompletePickUpLocation, setIsProcessCompletePickUpLocation] = useState(false);
 
   const formFormat = {
     status: 14,
@@ -158,13 +182,12 @@ const PickupOrderCreationForm = ({
 
     const employeeOptions = [...employeesWithType];
 
-    // const shipperOptions          = [...customersWithType, ...vendorsWithType, ...forwardingAgentsWithType];
     const shipperOptions = [...customersWithType];
 
     const pickupLocationOptions = [
       ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
+      // ...vendorsWithType,
+      // ...forwardingAgentsWithType,
     ];
     // const pickupLocationOptions   = [...customersWithType, ...vendorsWithType];
 
@@ -178,11 +201,10 @@ const PickupOrderCreationForm = ({
 
     const deliveryLocationOptions = [
       ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
+      // ...vendorsWithType,
+      // ...forwardingAgentsWithType,
+      // ...carriersWithType,
     ];
-    // const deliveryLocationOptions = [...customersWithType, ...vendorsWithType, ...carriersWithType];
 
     const carrierOptions = [...carriersWithType];
 
@@ -207,13 +229,11 @@ const PickupOrderCreationForm = ({
   const handleIssuedBySelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = issuedByOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    const info = `${selectedObject?.street_and_number || ""} - ${
-      selectedObject?.city || ""
-    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""
+    const result = await ForwardingAgentService.getForwardingAgentById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -221,18 +241,18 @@ const PickupOrderCreationForm = ({
       issuedByType: type,
       issuedByInfo: info,
     });
+    setSelectedAgent(result?.data);
+    console.log("setSelectedAgent",setSelectedAgent);
   };
 
   const handlePickUpSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const selectedObject = pickupLocationOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    const info = `${selectedObject?.street_and_number || ""} - ${
-      selectedObject?.city || ""
-    } - ${selectedObject?.state || ""} - ${selectedObject?.country || ""} - ${
-      selectedObject?.zip_code || ""
+    const result = await CustomerService.getCustomerById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
     }`;
     setFormData({
       ...formData,
@@ -240,55 +260,92 @@ const PickupOrderCreationForm = ({
       pickupLocationInfo: info,
       pickupLocationType: type,
     });
+    setSelectedPickUpLocation(result?.data); // Set the selected customer
+    console.log("setSelectedPickUpLocation",setSelectedPickUpLocation);
   };
 
   const handleSelectCommodity = (commodity) => {
     setselectedCommodity(commodity);
+    
   };
 
-  const handleDeliveryLocationSelection = async (event) => {
+   const handleDeliveryLocationSelection = async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const deliveryLocation = deliveryLocationOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (deliveryLocation) {
-      const info = `${deliveryLocation?.street_and_number || ""} - ${
-        deliveryLocation?.city || ""
-      } - ${deliveryLocation?.state || ""} - ${
-        deliveryLocation?.country || ""
-      } - ${deliveryLocation?.zip_code || ""}`;
-      setdeliverylocation(deliveryLocation);
+    const result = await CustomerService.getCustomerById(id);
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""} - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""}`;
       setFormData({
         ...formData,
         deliveryLocationId: id,
         deliveryLocationInfo: info,
         deliveryLocationType: type,
+
       });
-    } else {
-      console.error(
-        "Error: No se encontró la ubicación de entrega con el id y tipo especificados."
-      );
-    }
-  };
+      setSelectedDeliLocation(result?.data); // Set the selected carrier
+      console.log("setSelectedDeliLocation",setSelectedDeliLocation);
+   }
+
+  // const handleDeliveryLocationSelection = async (event) => {
+  //   const id = event?.id || "";
+  //   const type = event?.type || "";
+  //   const deliveryLocation = deliveryLocationOptions.find(
+  //     (option) => option.id === id && option.type === type
+  //   );
+  //   if (deliveryLocation) {
+  //     const info = `${deliveryLocation?.street_and_number || ""} - ${
+  //       deliveryLocation?.city || ""
+  //     } - ${deliveryLocation?.state || ""} - ${
+  //       deliveryLocation?.country || ""
+  //     } - ${deliveryLocation?.zip_code || ""}`;
+  //     setdeliverylocation(deliveryLocation);
+  //     setFormData({
+  //       ...formData,
+  //       deliveryLocationId: id,
+  //       deliveryLocationInfo: info,
+  //       deliveryLocationType: type,
+  //     });
+  //   } else {
+  //     console.error(
+  //       "Error: No se encontró la ubicación de entrega con el id y tipo especificados."
+  //     );
+  //   }
+  // };
 
   const handleDestinationAgentSelection = async (event) => {
-    const id = event?.id;
+    const id = event?.id || "";
     const type = event?.type || "";
-    // const selectedObject = await ForwardingAgentService.getForwardingAgentById(id);
-    const sele = destinationAgentOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    const info = `${sele.street_and_number || ""} - ${sele.city || ""} - ${
-      sele.state || ""
-    } - ${sele.country || ""} - ${sele.zip_code || ""}`;
+    const result = await ForwardingAgentService.getForwardingAgentById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       destinationAgentId: id,
       destinationAgentType: type,
       destinationAgentInfo: info,
     });
-  };
+    setSelectedDestinationAgent(result?.data); // Set the selected Destination Agent
+    console.log("setSelectedDestinationAgent",setSelectedDestinationAgent);
+  }
+
+  // const handleDestinationAgentSelection = async (event) => {
+  //   const id = event?.id;
+  //   const type = event?.type || "";
+  //   const sele = destinationAgentOptions.find(
+  //     (option) => option.id === id && option.type === type
+  //   );
+  //   const info = `${sele.street_and_number || ""} - ${sele.city || ""} - ${
+  //     sele.state || ""
+  //   } - ${sele.country || ""} - ${sele.zip_code || ""}`;
+  //   setFormData({
+  //     ...formData,
+  //     destinationAgentId: id,
+  //     destinationAgentType: type,
+  //     destinationAgentInfo: info,
+  //   });
+  // };
 
   const handleEmployeeSelection = async (event) => {
     const id = event?.id;
@@ -298,30 +355,49 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  //-----------------------------------------------------------
-  // const handleConsigneeSelection = async (event) => {
+
+  const handleConsigneeSelection = async (event) => {
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const result = await CustomerService.getCustomerById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
+    }`;
+    setFormData({
+      ...formData,
+      consigneeId: id,
+      consigneeType: type,
+      consigneeInfo: info,
+    });
+    setSelectedConsignee(result?.data); // Set the selected carrier
+    console.log("setSelectedConsignee",setSelectedConsignee);
+  };
+
+  // const handleConsigneeSelection = (event) => {
   //   const id = event?.id || "";
   //   const type = event?.type || "";
+  //   const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+  //   if (!validTypes.includes(type)) {
+  //     console.error(`Unsupported consignee type: ${type}`);
+  //     return;
+  //   }
+  //   const selectedConsignee = consigneeOptions.find(
+  //     (option) => option.id === id && option.type === type
+  //   );
+  //   if (!selectedConsignee) {
+  //     console.error(`Consignee not found with ID ${id} and type ${type}`);
+  //     return;
+  //   }
 
-  //   let result;
-  //   if (type === "forwarding-agent") {
-  //     result = await ForwardingAgentService.getForwardingAgentById(id);
-  //   }
-  //   if (type === "customer") {
-  //     result = await CustomerService.getCustomerById(id);
-  //   }
-  //   if (type === "vendor") {
-  //     result = await VendorService.getVendorByID(id);
-  //   }
-  //   if (type === "Carrier") {
-  //     result = await CarrierService.getCarrierById(id);
-  //   }
-  //   const info = `${result?.data.street_and_number || ""} - ${
-  //     result?.data.city || ""
-  //   } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-  //     result?.data.zip_code || ""
-  //   }`;
-  //   setconsignee(result?.data);
+  //   const info = `${selectedConsignee.street_and_number || ""} - ${
+  //     selectedConsignee.city || ""
+  //   } - ${selectedConsignee.state || ""} - ${
+  //     selectedConsignee.country || ""
+  //   } - ${selectedConsignee.zip_code || ""}`;
+  //   setconsignee(selectedConsignee);
+  //   setdefaultValueConsignee(selectedConsignee);
   //   setFormData({
   //     ...formData,
   //     consigneeId: id,
@@ -330,69 +406,28 @@ const PickupOrderCreationForm = ({
   //   });
   // };
 
-  const handleConsigneeSelection = (event) => {
+  const handleShipperSelection = async(event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-    const selectedConsignee = consigneeOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (!selectedConsignee) {
-      console.error(`Consignee not found with ID ${id} and type ${type}`);
-      return;
-    }
+    const result = await CustomerService.getCustomerById(id);
 
-    const info = `${selectedConsignee.street_and_number || ""} - ${
-      selectedConsignee.city || ""
-    } - ${selectedConsignee.state || ""} - ${
-      selectedConsignee.country || ""
-    } - ${selectedConsignee.zip_code || ""}`;
-    setconsignee(selectedConsignee);
-    setdefaultValueConsignee(selectedConsignee);
-    setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    });
-  };
-
-  const handleShipperSelection = (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-    const selectedShipper = shipperOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (!selectedShipper) {
-      console.error(`Shipper not found with ID ${id} and type ${type}`);
-      return;
-    }
-
-    const info = `${selectedShipper?.street_and_number || ""} - ${
-      selectedShipper?.city || ""
-    } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${
-      selectedShipper?.zip_code || ""
+    
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
     }`;
 
-    setshipper(selectedShipper);
-    setdefaultValueShipper(selectedShipper);
+    // setshipper(selectedShipper);
+    // setdefaultValueShipper(selectedShipper);
     setFormData({
       ...formData,
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      // consigneeId: id,
-      // consigneeType: type,
     });
+    setSelectedShipper(result?.data); // Set the selected carrier
+    console.log("setSelectedShipper",setSelectedShipper);
   };
 
   const handleCommodityDelete = () => {
@@ -416,6 +451,7 @@ const PickupOrderCreationForm = ({
       mainCarrierInfo: info,
     });
     setSelectedCarrier(result?.data); // Set the selected carrier
+    console.log("setSelectedCarrier",setSelectedCarrier);
   };
 
   const handleClientToBillSelection = async (event) => {
@@ -491,6 +527,230 @@ const PickupOrderCreationForm = ({
     setSelectedCarrier(null);
   };
 
+  //--------------------------------------------------------------
+  //added handle Agent creation
+  const handleAddAgentClick = () => {
+    setSelectedAgent(null);
+    setIsModalOpenAgent(true);
+  };
+  const handleEditAgentClick = () => {
+    if (formData.issuedById) {
+      setIsModalOpenAgent(true);
+    } else {
+      alert("Please select a Agent to edit.");
+    }
+  };
+  const closeModalAgent = () => {
+    setIsModalOpenAgent(false);
+    setSelectedAgent(null);
+  };
+  const handleProcessCompleteAgent = async (createdAgentId = null) => {
+    setIsProcessCompleteAgent(true);
+    setIsModalOpenAgent(false);
+    console.log('Proceso completado en ForwardingAgentCreationForm');
+    // Si se creó un nuevo Agent, utilice su ID; de lo contrario, utilice el issuedById existente
+    const AgentId = createdAgentId || formData.issuedById;
+
+    if (AgentId) {
+      await handleIssuedBySelection({ id: AgentId });
+
+      // Obtener y actualizar las opciones del Agent
+      const updatedOptions = await loadAgentSelectOptions('');
+      setIssuedByOptions(updatedOptions);
+    }
+
+    // Restablecer el Agent seleccionado después del procesamiento
+    setSelectedAgent(null);
+  };
+  //--------------------------------------------------------------
+  //added handle Shipper creation
+  const handleAddShipperClick = () => {
+    setSelectedShipper(null);
+    setIsModalOpenShipper(true);
+  };
+  const handleEditShipperClick = () => {
+    if (formData.shipperId) {
+      setIsModalOpenShipper(true);
+    } else {
+      alert("Please select a Shipper to edit.");
+    }
+  };
+  const closeModalShipper = () => {
+    setIsModalOpenShipper(false);
+    setSelectedShipper(null);
+  };
+  const handleProcessCompleteShipper = async (createdShipperId = null) => {
+    setIsProcessCompleteShipper(true);
+    setIsModalOpenShipper(false);
+    console.log('Proceso completado en ShipperCreationForm');
+
+    // Si se creó un nuevo Shipper, utilice su ID; de lo contrario, utilice el shipperId existente
+    const shippId = createdShipperId || formData.shipperId;
+
+    if (shippId) {
+      await handleShipperSelection({ id: shippId });
+
+      // Obtener y actualizar las opciones del Shipper
+      const updatedOption = await loadShipperSelectOptions('');
+      setShipperOptions(updatedOption);
+
+      // const updateOptionClientBillSelectionShipper = await handleClientToBillSelection('');
+      // setConsigneeOptions(updateOptionClientBillSelectionShipper);
+    }
+
+    // Restablecer el Shipper seleccionado después del procesamiento
+    setSelectedShipper(null);
+  };
+  //--------------------------------------------------------------
+    //added handle DeliLocation creation
+    const handleAddDeliLocationClick = () => {
+      setSelectedDeliLocation(null);
+      setIsModalOpenDeliLocation(true);
+    };
+    const handleEditDeliLocationClick = () => {
+      if (formData.deliveryLocationId) {
+        setIsModalOpenDeliLocation(true);
+      } else {
+        alert("Please select a Delivery to edit.");
+      }
+    };
+    const closeModalDeliLocation = () => {
+      setIsModalOpenDeliLocation(false);
+      setSelectedDeliLocation(null);
+    };
+    const handleProcessCompleteDeliLocation = async (createdDeliLocationId = null) => {
+      setIsProcessCompleteDeliLocation(true);
+      setIsModalOpenDeliLocation(false);
+      console.log("Proceso completado en DeliveryCreationForm");
+  
+      // Si se creó un nuevo Delivery location, utilice su ID; de lo contrario, utilice el deliveryLocationId existente
+      const DeliLocationId = createdDeliLocationId || formData.deliveryLocationId;
+  
+      if (DeliLocationId) {
+        await handleDeliveryLocationSelection({ id: DeliLocationId });
+  
+        // Obtener y actualizar las opciones del delivery
+        const updatedOptions = await loadDeliLocationSelectOptions("");
+        setDeliveryLocationOptions(updatedOptions);
+      }
+  
+      // Restablecer el delivery seleccionado después del procesamiento
+      setSelectedDeliLocation(null);
+    };
+  
+    //--------------------------------------------------------------
+      //added handle Consignee creation
+  const handleAddConsigneeClick = () => {
+    setSelectedConsignee(null);
+    setIsModalOpenConsignee(true);
+  };
+  const handleEditConsigneeClick = () => {
+    if (formData.consigneeId) {
+      setIsModalOpenConsignee(true);
+    } else {
+      alert("Please select a Consignee to edit.");
+    }
+  };
+  const closeModalConsignee = () => {
+    setIsModalOpenConsignee(false);
+    setSelectedConsignee(null);
+  };
+  const handleProcessCompleteConsignee = async (createdConsigneeId = null) => {
+    setIsProcessCompleteConsignee(true);
+    setIsModalOpenConsignee(false);
+    console.log("Proceso completado en ConsigneeCreationForm");
+
+    // Si se creó un nuevo Consignee, utilice su ID; de lo contrario, utilice el consigneeId existente
+    const ConsigneeId = createdConsigneeId || formData.consigneeId;
+
+    if (ConsigneeId) {
+      await handleConsigneeSelection({ id: ConsigneeId });
+
+      // Obtener y actualizar las opciones del Consignee
+      const updatedOptions = await loadConsigneeSelectOptions("");
+      setConsigneeOptions(updatedOptions);
+    }
+
+    // Restablecer el Consignee seleccionado después del procesamiento
+    setSelectedConsignee(null);
+  };
+
+  //--------------------------------------------------------------
+    //added handle DestinationAgent creation
+    const handleAddDestinationAgentClick = () => {
+      setSelectedDestinationAgent(null);
+      setIsModalOpenDestinationAgent(true);
+    };
+    const handleEditDestinationAgentClick = () => {
+      if (formData.destinationAgentId) {
+        setIsModalOpenDestinationAgent(true);
+      } else {
+        alert("Please select a DestinationAgent to edit.");
+      }
+    };
+    const closeModalDestinationAgent = () => {
+      setIsModalOpenDestinationAgent(false);
+      setSelectedDestinationAgent(null);
+    };
+    const handleProcessCompleteDestinationAgent = async (createdDestinationAgentId = null) => {
+      setIsProcessCompleteDestinationAgent(true);
+      setIsModalOpenDestinationAgent(false);
+      console.log("Proceso completado en DestinationAgent");
+  
+      // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el destinationAgentId existente
+      const destinationId = createdDestinationAgentId || formData.destinationAgentId;
+  
+      if (destinationId) {
+        await handleDestinationAgentSelection({ id: destinationId });
+  
+        // Obtener y actualizar las opciones del DestinationAgent
+        const updatedOptions = await loadDestinationAgentsSelectOptions("");
+        setDestinationAgentOptions(updatedOptions);
+      }
+  
+      // Restablecer el DestinationAgent seleccionado después del procesamiento
+      setSelectedDestinationAgent(null);
+    };
+  
+    //--------------------------------------------------------------
+      //added handle Pick-up Location creation
+  const handleAddPickUpLocationClick = () => {
+    setSelectedPickUpLocation(null);
+    setIsModalOpenPickUpLocation(true);
+  };
+  const handleEditPickUpLocationClick = () => {
+    if (formData.pickupLocationId) {
+      setIsModalOpenPickUpLocation(true);
+    } else {
+      alert("Please select a PickUpLocation to edit.");
+    }
+  };
+  const closeModalPickUpLocation = () => {
+    setIsModalOpenPickUpLocation(false);
+    setSelectedPickUpLocation(null);
+  };
+  const handleProcessCompletePickUpLocation = async (createdPickUpLocationId = null) => {
+    setIsProcessCompletePickUpLocation(true);
+    setIsModalOpenPickUpLocation(false);
+    console.log("Proceso completado en CustomerCreationForm");
+
+    // Si se creó un nuevo customer, utilice su ID; de lo contrario, utilice el pickupLocationId existente
+    const carrierId = createdPickUpLocationId || formData.pickupLocationId;
+
+    if (carrierId) {
+      await handlePickUpSelection({ id: carrierId });
+
+      // Obtener y actualizar las opciones del Customer
+      const updatedOptions = await loadPickUpLocationSelectOpt("");
+      setPickupLocationOptions(updatedOptions);
+    }
+
+    // Restablecer el PickUpLocation seleccionado después del procesamiento
+    setSelectedPickUpLocation(null);
+  };
+
+  //--------------------------------------------------------------
+  
   useEffect(() => {
     if (!creating && pickupOrder != null) {
       setcommodities(pickupOrder.commodities);
@@ -675,47 +935,8 @@ const PickupOrderCreationForm = ({
 
     return options;
   };
-  const loadShipperSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = shipperOptions.filter((option) =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      const options = filteredOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
 
-      return options;
-    } else {
-      const options = shipperOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
-      return options;
-    }
-  };
   //---------------------------------------------------------
-  // const loadConsigneeSelectOptions = async (inputValue) => {
-  //   const responseCustomers = (await CustomerService.search(inputValue)).data
-  //     .results;
-  //   const responseVendors = (await VendorService.search(inputValue)).data
-  //     .results;
-  //   const responseAgents = (await ForwardingAgentService.search(inputValue))
-  //     .data.results;
-  //   const responseCarriers = (await CarrierService.search(inputValue)).data
-  //     .results;
-
-  //   const options = [
-  //     ...addTypeToObjects(responseVendors, "vendor"),
-  //     ...addTypeToObjects(responseCustomers, "customer"),
-  //     ...addTypeToObjects(responseAgents, "forwarding-agent"),
-  //     ...addTypeToObjects(responseCarriers, "Carrier"),
-  //   ];
-
-  //   return options;
-  // };
 
   const loadConsigneeSelectOptions = async (inputValue) => {
     if (inputValue) {
@@ -786,12 +1007,85 @@ const PickupOrderCreationForm = ({
   }, []);
 
   const loadCarrierSelectOptions = async (inputValue) => {
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
     return addTypeToObjects(responseCarriers, "Carrier");
   };
   //------------------
+  //added para recargar Agentsoptions al crear un Agent
+  useEffect(() => {
+    const initializeAgentOptions = async () => {
+      const initialOptionsAgent = await loadAgentSelectOptions("");
+      setIssuedByOptions(initialOptionsAgent);
+    };
 
+    initializeAgentOptions();
+  }, []);
+
+  const loadAgentSelectOptions = async (inputValueAgent) => {
+    const responseAgents = (await ForwardingAgentService.search(inputValueAgent)).data
+      .results;
+    return addTypeToObjects(responseAgents, "forwarding-agent");
+  };
+  //------------------
+  //added para recargar Shipperoptions al crear un shipper
+  useEffect(() => {
+    const initializeShipperOptions = async () => {
+      const initialOptions = await loadShipperSelectOptions('');
+      setShipperOptions(initialOptions);
+    };
+
+    initializeShipperOptions();
+  }, []);
+
+  const loadShipperSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responseCustomers, "customer");
+  };
+  //------------------
+  //added para recargar DeliveryOptions al crear un Delivery
+  useEffect(() => {
+    const initializeDeliLocationOptions = async () => {
+      const initialOptions = await loadDeliLocationSelectOptions("");
+      setDeliveryLocationOptions(initialOptions);
+    };
+
+    initializeDeliLocationOptions();
+  }, []);
+
+  const loadDeliLocationSelectOptions = async (inputValue) => {
+    const responseDeliLocation = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responseDeliLocation, "customer");
+  };
+  //------------------
+   //added para recargar destinationAgentOptions al crear un Agent
+   useEffect(() => {
+    const initializeDestinationAgent = async () => {
+      const initialOptions = await loadinitializeDestinationAgentSelectOptions('');
+      setCarrierOptions(initialOptions);
+    };
+
+    initializeDestinationAgent();
+  }, []);
+  const loadinitializeDestinationAgentSelectOptions = async (inputValue) => {
+    const responseDestinationAgent = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responseDestinationAgent, "forwarding-agent");
+  };
+  //-----------------
+  //added para recargar carriersoptions al crear un carrier
+  useEffect(() => {
+    const initializePickUpLocationOptions = async () => {
+      const initialOptions = await loadPickUpLocationSelectOpt("");
+      setPickUpLocationOptions(initialOptions);
+    };
+
+    initializePickUpLocationOptions();
+  }, []);
+
+  const loadPickUpLocationSelectOpt = async (inputValue) => {
+    const responsePickUpLocation = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responsePickUpLocation, "customer");
+  };
+  //-----------------
   const loadClientToBillSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
       .results;
@@ -1428,13 +1722,13 @@ const PickupOrderCreationForm = ({
     const shipperInfo = formData.shipperInfo;
 
     if (shipperValue) {
-      // Simular el evento que espera handlePickUpSelection
+      // Simular el evento que espera handlePickUp Selection
       const event = {
         id: shipperValue.id,
         type: shipperValue.type,
       };
 
-      // Llamar a handlePickUpSelection con el evento simulado
+      // Llamar a handlePickUp Selection con el evento simulado
       handlePickUpSelection(event);
 
       // Actualizar la información adicional del pickup
@@ -1573,25 +1867,28 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="" style={{ display: "flex"}}
+                  >
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
                     Destination Agent:
                   </label>
+                  
                   {!creating ? (
                     canRender && (
                       <AsyncSelect
                         id="destinationAgent"
-                        defaultOptions={destinationAgentOptions}
                         onChange={(e) => {
                           handleDestinationAgentSelection(e);
                         }}
-                        loadOptions={loadDestinationAgentsSelectOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
                         value={destinationAgentOptions.find(
                           (option) => option.id === formData.destinationAgentId
                         )}
+                        defaultOptions={destinationAgentOptions}
+                        loadOptions={loadDestinationAgentsSelectOptions}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.id}
+                        key={destinationAgentOptions.length} // Add esto para que se refresque la lista
                       />
                     )
                   ) : (
@@ -1611,26 +1908,124 @@ const PickupOrderCreationForm = ({
                       )}
                     />
                   )}
-                </div>
+                    <label
+                      className="copy-label_add"
+                      onClick={handleAddDestinationAgentClick}
+                      >
+                      Add
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditDestinationAgentClick}
+                      >
+                      Edit 
+                    </label>
+                  </div>
+                  {/* Forms creacion y edicion DestinationAgent */}
+                  <div>
+                    {isModalOpenDestinationAgent && selectedDestinationAgent === null &&(
+                      <ModalForm
+                      isOpen={isModalOpenDestinationAgent}
+                      onClose={closeModalDestinationAgent}
+                      >
+                      <ForwardingAgentsCreationForm
+                        carrier={null}
+                        closeModal={closeModalDestinationAgent}
+                        creating={true}
+                        fromPickupOrder={true}
+                        // onProcessComplete={handleProcessCompleteDestinationAgent}
+                        onProcessComplete={(createdDestinationAgentId) => 
+                          handleProcessCompleteDestinationAgent(createdDestinationAgentId)}
+                      />
+                      </ModalForm>
+                    )}
+                  </div>
+
+                  <div>
+                    {isModalOpenDestinationAgent && selectedDestinationAgent !== null &&(
+                      <ModalForm
+                        isOpen={isModalOpenDestinationAgent}
+                        onClose={closeModalDestinationAgent}
+                        >
+                        <ForwardingAgentsCreationForm
+                          carrier={selectedDestinationAgent}
+                          closeModal={closeModalDestinationAgent}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteDestinationAgent}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion carrier */}
+
                 <div className="col-6 text-start">
                   <label htmlFor="issuedby" className="form-label issuedBy">
                     Issued By:
                   </label>
                   <AsyncSelect
                     id="issuedById"
-                    defaultValue={formData.issuedById}
                     onChange={(e) => {
                       handleIssuedBySelection(e);
                     }}
-                    placeholder="Search and select..."
-                    defaultOptions={issuedByOptions}
                     value={issuedByOptions.find(
                       (issued_by) => issued_by.id === formData.issuedById
                     )}
-                    loadOptions={loadIssuedBySelectOptions}
+                    // defaultValue={formData.issuedById}
+                    
+                    placeholder="Search and select..."
+                    defaultOptions={issuedByOptions}
+                    loadOptions={loadAgentSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={issuedByOptions.length} // Add esto para que se refresque la lista
                   />
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddAgentClick}
+                    >
+                    Add
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditAgentClick}
+                    >
+                    Edit 
+                  </label>
+                <div>{isModalOpenAgent && selectedAgent !== null &&(
+                  <ModalForm
+                    isOpen={isModalOpenAgent}
+                    onClose={closeModalAgent}
+                  >
+                    <ForwardingAgentsCreationForm
+                      forwarding-agent={selectedAgent}
+                      closeModal={closeModalAgent}
+                      creating={false}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompleteAgent}
+                    />
+                  </ModalForm>
+                  )}</div>
+                  {/* Forms creacion y edicion Agent */}
+                  <div>
+                    {isModalOpenAgent && selectedAgent === null &&(
+                      <ModalForm
+                        isOpen={isModalOpenAgent}
+                        onClose={closeModalAgent}
+                      >
+                      <ForwardingAgentsCreationForm
+                        forwarding-agent={null}
+                        closeModal={closeModalAgent}
+                        creating={true}
+                        fromPickupOrder={true}
+                        onProcessComplete={(createdAgentId) => 
+                          handleProcessCompleteAgent(createdAgentId)}
+                      />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion Agent */}
+                  
                 </div>
               </div>
 
@@ -1678,15 +2073,31 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleShipperSelection(e);
                     }}
-                    value={defaultValueShipper}
+                    // value={defaultValueShipper}
+                    value={shipperOptions.find(
+                      (option) => option.id === formData.shipperId
+                    )}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={shipperOptions.length} // Add esto para que se refresque la lista
                   />
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddShipperClick}
+                    >
+                      Add
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditShipperClick}
+                    >
+                      Edit 
+                  </label>
                 </div>
-
+                {/* labels de creacion y edicion Shipper */}
                 <div className="col-6 text-start">
                   <Input
                     type="text"
@@ -1701,7 +2112,42 @@ const PickupOrderCreationForm = ({
                     label="Purchase Order"
                   />
                 </div>
-              </div>
+                {/* Forms creacion y edicion Shipper */}                
+                <div>
+                  {isModalOpenShipper && selectedShipp === null &&(
+                    <ModalForm
+                      isOpen={isModalOpenShipper}
+                      onClose={closeModalShipper}
+                    >
+                    <CustomerCreationForm
+                      customer={null}
+                      closeModal={closeModalShipper}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={(createdShipperId) => 
+                        handleProcessCompleteShipper(createdShipperId)}
+                    />
+                    </ModalForm>
+                    )}
+                  </div>
+
+                <div>
+                  {isModalOpenShipper && selectedShipp !== null &&(
+                  <ModalForm
+                    isOpen={isModalOpenShipper}
+                    onClose={closeModalShipper}
+                  >
+                  <CustomerCreationForm
+                    customer={selectedShipp}
+                    closeModal={closeModalShipper}
+                    creating={false}
+                    fromPickupOrder={true}
+                    onProcessComplete={handleProcessCompleteShipper}
+                  />
+                  </ModalForm>
+                  )}
+                </div>                
+              </div>              
 
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -1743,10 +2189,23 @@ const PickupOrderCreationForm = ({
                     )}
                     placeholder="Search and select..."
                     defaultOptions={pickupLocationOptions}
-                    loadOptions={loadPickUpLocationSelectOptions}
+                    loadOptions={loadPickUpLocationSelectOpt}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={pickupLocationOptions.length} // Add esto para que se refresque la lista
                   />
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddPickUpLocationClick}
+                  >
+                    Add
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditPickUpLocationClick}
+                  >
+                    Edit 
+                  </label>
                 </div>
 
                 <div className="col-6 text-start">
@@ -1763,6 +2222,41 @@ const PickupOrderCreationForm = ({
                     label="Invoice Number"
                   />
                 </div>
+                {/* Forms creacion y edicion PickUpLocation */}
+                <div>
+                  {isModalOpenPickUpLocation && selectedPickUpLocation === null &&(
+                    <ModalForm
+                      isOpen={isModalOpenPickUpLocation}
+                      onClose={closeModalPickUpLocation}
+                    >                    
+                    <CustomerCreationForm
+                      customer={null}
+                      closeModal={closeModalPickUpLocation}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompletePickUpLocation}
+                    />
+                    </ModalForm>
+                  )}
+                </div>
+
+                <div>
+                  {isModalOpenPickUpLocation && selectedPickUpLocation !== null &&(
+                    <ModalForm
+                      isOpen={isModalOpenPickUpLocation}
+                      onClose={closeModalPickUpLocation}
+                    >
+                    <CustomerCreationForm
+                      customer={selectedPickUpLocation}
+                      closeModal={closeModalPickUpLocation}
+                      creating={false}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompletePickUpLocation}
+                    />
+                  </ModalForm>
+                  )}
+                </div>
+                {/* terminacion de Forms creacion y edicion PickUpLocation */}
               </div>
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -1799,20 +2293,71 @@ const PickupOrderCreationForm = ({
                       onChange={(e) => {
                         handleConsigneeSelection(e);
                       }}
-                      value={defaultValueConsignee}
+                      // value={defaultValueConsignee}
+                      value={consigneeOptions.find(
+                        (option) => option.id === formData.consigneeId
+                      )}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
                       loadOptions={loadConsigneeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
+                      key={consigneeOptions.length} // Add esto para que se refresque la lista
                     />
+                    <label
+                    className="copy-label_add"
+                    onClick={handleAddConsigneeClick}
+                    >
+                      Add
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditConsigneeClick}
+                    >
+                      Edit 
+                    </label>
                   </div>
-                </div>
+                
+                <div>
+                  {isModalOpenConsignee && selectedConsignee === null &&(
+                    <ModalForm
+                      isOpen={isModalOpenConsignee}
+                      onClose={closeModalConsignee}
+                    >
+                      <CustomerCreationForm
+                        carrier={null}
+                        closeModal={closeModalConsignee}
+                        creating={true}
+                        fromPickupOrder={true}
+                        onProcessComplete={(createdConsigneeId) =>
+                          handleProcessCompleteCarrier(createdConsigneeId)
+                        }
+                      />
+                      </ModalForm>
+                    )}
+                  </div>
 
+                  <div>
+                    {isModalOpenConsignee && selectedConsignee !==null &&(
+                      <ModalForm
+                        isOpen={isModalOpenConsignee}
+                        onClose={closeModalConsignee}
+                        >
+                        <CustomerCreationForm
+                          carrier={selectedConsignee}
+                          closeModal={closeModalConsignee}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteConsignee}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  </div>
                 <div
                   className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
-                >
+                  >
                   <label htmlFor="delivery" className="form-label">
                     Delivery Location:
                   </label>
@@ -1822,17 +2367,66 @@ const PickupOrderCreationForm = ({
                       handleDeliveryLocationSelection(e);
                     }}
                     value={deliveryLocationOptions.find(
-                      (option) =>
-                        option.id === formData.deliveryLocationId &&
-                        option.type === formData.deliveryLocationType
+                      (option) => option.id === formData.deliveryLocationId 
+                        // && option.type === formData.deliveryLocationType
                     )}
                     placeholder="Search and select..."
                     defaultOptions={deliveryLocationOptions}
-                    loadOptions={loadDeliveryLocationSelectOptions}
+                    loadOptions={loadDeliLocationSelectOptions}
+                    // loadOptions={loadDeliveryLocationSelectOptions}loadDeliLocationSelectOptions
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={deliveryLocationOptions.length}
                   />
+                  <label
+                      className="copy-label_add"
+                      onClick={handleAddDeliLocationClick}
+                    >
+                      Add
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditDeliLocationClick}
+                    >
+                      Edit 
+                  </label>
                 </div>
+                <div>
+                  {isModalOpenDeliLocation && selectedDeliLocation === null &&(
+                    <ModalForm
+                    isOpen={isModalOpenDeliLocation}
+                    onClose={closeModalDeliLocation}
+                    >
+                    <CustomerCreationForm
+                      customer={null}
+                      closeModal={closeModalDeliLocation}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={(createdDeliLocationId) =>
+                        handleProcessCompleteDeliLocation(createdDeliLocationId)
+                      }
+                    />
+                    </ModalForm>
+                  )}
+                </div>
+
+                <div>
+                  {isModalOpenDeliLocation && selectedDeliLocation !==null &&(
+                    <ModalForm
+                    isOpen={isModalOpenDeliLocation}
+                    onClose={closeModalDeliLocation}
+                    >
+                    <CustomerCreationForm
+                      customer={selectedDeliLocation}
+                      closeModal={closeModalDeliLocation}
+                      creating={false}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompleteDeliLocation}
+                    />
+                    </ModalForm>
+                  )}
+                </div>
+                
               </div>
               <div className="row mb-3">
                 <div className="col-12">
@@ -1845,7 +2439,7 @@ const PickupOrderCreationForm = ({
                   </label>
                 </div>
               </div>
-
+              
               <div className="row align-items-center">
                 <div
                   className="col-6 text-start"
@@ -1893,6 +2487,7 @@ const PickupOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
+                    
                   </div>
                 </div>
                 <div className="col-6 text-start">
@@ -1918,7 +2513,7 @@ const PickupOrderCreationForm = ({
                 <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center">
                 <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
@@ -2000,7 +2595,7 @@ const PickupOrderCreationForm = ({
                     className="copy-label_add"
                     onClick={handleAddCarrierClick}
                   >
-                    ++
+                    Add
                   </label>
 
                   <label

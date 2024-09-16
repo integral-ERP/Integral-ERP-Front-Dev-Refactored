@@ -10,6 +10,8 @@ const ForwardingAgentsCreationForm = ({
   closeModal,
   creating,
   onForwardingAgentDataChange,
+  fromPickupOrder,
+  onProcessComplete,
 }) => {
 
   const [activeTab, setActiveTab] = useState("general");
@@ -155,10 +157,13 @@ const ForwardingAgentsCreationForm = ({
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
       setTimeout(() => {
-        closeModal();
-        onForwardingAgentDataChange();
-        setShowSuccessAlert(false);
-        window.location.reload();
+        if (fromPickupOrder == false) {
+          onForwardingAgentDataChange();
+        }
+        // closeModal();
+        onProcessComplete(creating ? response.data.id : undefined);
+        setFormData(formData);
+        // window.location.reload();
       }, 1000);
     } else {
       setShowErrorAlert(true);
@@ -166,6 +171,11 @@ const ForwardingAgentsCreationForm = ({
   };
 
   const handleCancel = () => {
+    // window.location.reload();
+    if (fromPickupOrder== true){
+      closeModal();
+      return;
+    }
     window.location.reload();
   };
 
@@ -474,14 +484,35 @@ const ForwardingAgentsCreationForm = ({
         </div>
       </div>
 
-      <div className="company-form__options-container">
+      <div className="company-form__options-carrier" style={{marginLeft:"27vw", marginTop: "-1vw"}}>
+        {fromPickupOrder ? (
+          <>
+            <label className="button-save" onClick={sendData}>Save</label>
+            <label className="button-cancel" onClick={handleCancel}>Cancel</label>
+          </>
+          ) : (
+            <>
+              <button className="button-save" onClick={sendData}>
+                Save
+              </button>
+              <button className="button-cancel" onClick={handleCancel}>
+                Cancel
+              </button>
+            </>
+          )
+        }
+      </div>
+
+
+
+      {/* <div className="company-form__options-container">
         <button className="button-save" onClick={sendData}>
           Save
         </button>
         <button className="button-cancel" onClick={handleCancel}>
           Cancel
         </button>
-      </div>
+      </div> */}
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
         <Alert
@@ -518,6 +549,7 @@ ForwardingAgentsCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
   onForwardingAgentDataChange: propTypes.func,
+  onProcessComplete: propTypes.func,
 };
 
 ForwardingAgentsCreationForm.defaultProps = {
@@ -525,6 +557,7 @@ ForwardingAgentsCreationForm.defaultProps = {
   closeModal: null,
   creating: false,
   onForwardingAgentDataChange: null,
+  onProcessComplete: () => {},
 };
 
 export default ForwardingAgentsCreationForm;

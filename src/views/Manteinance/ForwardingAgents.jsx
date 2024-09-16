@@ -100,6 +100,7 @@ const [initialDataFetched, setInitialDataFetched] = useState(false);
 
   const handleSelectForwardingAgent = (wp) => {
     setselectedForwardingAgent(wp);
+    console.log("Data", wp);
   };
 
   const handleAddForwardingAgent = () => {
