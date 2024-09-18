@@ -26,7 +26,9 @@ const ForwardingAgentsCreationForm = ({
   const [cities, setCities] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [formData, setFormData] = useState({
+  // const [formData, setFormData] = useState({
+  
+  const formFormat = {
     name: "",
     phone: "",
     mobile_phone: "",
@@ -43,8 +45,8 @@ const ForwardingAgentsCreationForm = ({
     state: "",
     country: "",
     zip_code: "",
-  });
-
+  };
+  const [formData, setFormData] = useState(formFormat);
   const handlecountryChange = (event) => {
     setFormData({ ...formData, country: event.target.value });
     setSelectedcountry(
@@ -157,14 +159,16 @@ const ForwardingAgentsCreationForm = ({
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
       setTimeout(() => {
+        //  después de 2 segundos.
         if (fromPickupOrder == false) {
           onForwardingAgentDataChange();
         }
-        // closeModal();
+        // Llamar a la función de callback para notificar a ForwardingAgentsCreationForm
+        // Pase el ID del transportista creado al crear un nuevo Agent
         onProcessComplete(creating ? response.data.id : undefined);
-        setFormData(formData);
+        setFormData(formFormat);
         // window.location.reload();
-      }, 1000);
+      }, 2000); // Espera de 2 segundos
     } else {
       setShowErrorAlert(true);
     }

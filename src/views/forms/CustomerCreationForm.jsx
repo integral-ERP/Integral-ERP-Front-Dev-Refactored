@@ -139,11 +139,12 @@ const CustomerCreationForm = ({
         if (fromPickupOrder == false) {
           onCustomerDataChange();
         }
+
         // Llamar a la función de callback para notificar a PickOrderCreationForm
         // Pase el ID del transportista creado al crear un nuevo carrier
         onProcessComplete(creating ? response.data.id : undefined);
-        setFormData(formData);
-      }, 1000);
+        setFormData(formFormat);
+      }, 2000);
     } else {
       setShowErrorAlert(true);
     }

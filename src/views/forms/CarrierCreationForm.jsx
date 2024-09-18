@@ -5,8 +5,6 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CountriesService from "../../services/CountriesService"; // Adjust the path as needed
 import Input from "../shared/components/Input";
-import { GlobalContext } from "../../context/global";
-
 const CarrierCreationForm = ({
   carrier,
   closeModal,

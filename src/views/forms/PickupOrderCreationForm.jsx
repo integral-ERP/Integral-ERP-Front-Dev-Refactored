@@ -123,6 +123,7 @@ const PickupOrderCreationForm = ({
     issuedById: "",
     issuedByType: "",
     issuedByInfo: "",
+
     destinationAgentId: "",
     destinationAgentInfo: "",
     employeeId: "",
@@ -169,7 +170,7 @@ const PickupOrderCreationForm = ({
 
     const forwardingAgentsWithType = addTypeToObjects(
       forwardingAgents,
-      "forwarding-agent"
+      "forwardingAgent"
     );
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
@@ -194,9 +195,9 @@ const PickupOrderCreationForm = ({
     // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
     const consigneeOptions = [
       ...customersWithType,
-      ...vendorsWithType,
-      ...forwardingAgentsWithType,
-      ...carriersWithType,
+      // ...vendorsWithType,
+      // ...forwardingAgentsWithType,
+      // ...carriersWithType,
     ];
 
     const deliveryLocationOptions = [
@@ -378,7 +379,7 @@ const PickupOrderCreationForm = ({
   // const handleConsigneeSelection = (event) => {
   //   const id = event?.id || "";
   //   const type = event?.type || "";
-  //   const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+  //   const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
   //   if (!validTypes.includes(type)) {
   //     console.error(`Unsupported consignee type: ${type}`);
   //     return;
@@ -594,8 +595,8 @@ const PickupOrderCreationForm = ({
       const updatedOption = await loadShipperSelectOptions('');
       setShipperOptions(updatedOption);
 
-      // const updateOptionClientBillSelectionShipper = await handleClientToBillSelection('');
-      // setConsigneeOptions(updateOptionClientBillSelectionShipper);
+      const updateOptionClientBillSelectionShipper = getAsyncSelectValue('');
+      setConsigneeOptions(updateOptionClientBillSelectionShipper);
     }
 
     // Restablecer el Shipper seleccionado después del procesamiento
@@ -794,7 +795,7 @@ const PickupOrderCreationForm = ({
         shipperType:
           pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.shipperObj?.data?.obj?.type_person
-            : "forwarding-agent",
+            : "forwardingAgent",
         shipperInfo: `${
           pickupOrder.shipperObj?.data?.obj?.street_and_number || ""
         } - ${pickupOrder.shipperObj?.data?.obj?.city || ""} - ${
@@ -814,7 +815,7 @@ const PickupOrderCreationForm = ({
         pickupLocationType:
           pickupOrder.pickUpLocationObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.pickUpLocationObj?.data?.obj?.type_person
-            : "forwarding-agent",
+            : "forwardingAgent",
 
         consigneeId: pickupOrder.consigneeObj?.data?.obj?.id,
         consigneeInfo: `${
@@ -829,7 +830,7 @@ const PickupOrderCreationForm = ({
         deliveryLocationType:
           pickupOrder.deliveryLocationObj?.data?.obj?.type_person !== "agent"
             ? pickupOrder.deliveryLocationObj?.data?.obj?.type_person
-            : "forwarding-agent",
+            : "forwardingAgent",
         deliveryLocationInfo: `${
           pickupOrder.deliveryLocationObj?.data?.obj?.street_and_number || ""
         } - ${pickupOrder.deliveryLocationObj?.data?.obj?.city || ""} - ${
@@ -877,12 +878,12 @@ const PickupOrderCreationForm = ({
         ?.type_person
         ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.type_person
         : pickupOrder.client_to_billObj?.data?.obj?.type_person;
-      setCTBType(temp !== "agent" ? temp : "forwarding-agent");
+      setCTBType(temp !== "agent" ? temp : "forwardingAgent");
       handleClientToBillSelection({
         id: pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
           : pickupOrder.client_to_billObj?.data?.obj?.id,
-        type: temp !== "agent" ? temp : "forwarding-agent",
+        type: temp !== "agent" ? temp : "forwardingAgent",
       });
       setFormData(updatedFormData);
       setcanRender(true);
@@ -921,7 +922,7 @@ const PickupOrderCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
     ];
 
     return options;
@@ -931,7 +932,7 @@ const PickupOrderCreationForm = ({
     const responseAgents = (await ForwardingAgentService.search(inputValue))
       .data.results;
 
-    const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
+    const options = [...addTypeToObjects(responseAgents, "forwardingAgent")];
 
     return options;
   };
@@ -971,7 +972,7 @@ const PickupOrderCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
     ];
 
     return options;
@@ -990,7 +991,7 @@ const PickupOrderCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
       ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
@@ -1024,7 +1025,7 @@ const PickupOrderCreationForm = ({
   const loadAgentSelectOptions = async (inputValueAgent) => {
     const responseAgents = (await ForwardingAgentService.search(inputValueAgent)).data
       .results;
-    return addTypeToObjects(responseAgents, "forwarding-agent");
+    return addTypeToObjects(responseAgents, "forwardingAgent");
   };
   //------------------
   //added para recargar Shipperoptions al crear un shipper
@@ -1068,7 +1069,7 @@ const PickupOrderCreationForm = ({
   }, []);
   const loadinitializeDestinationAgentSelectOptions = async (inputValue) => {
     const responseDestinationAgent = (await CustomerService.search(inputValue)).data.results;
-    return addTypeToObjects(responseDestinationAgent, "forwarding-agent");
+    return addTypeToObjects(responseDestinationAgent, "forwardingAgent");
   };
   //-----------------
   //added para recargar carriersoptions al crear un carrier
@@ -1094,7 +1095,7 @@ const PickupOrderCreationForm = ({
 
     const options = [
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
     ];
 
     return options;
@@ -1230,7 +1231,7 @@ const PickupOrderCreationForm = ({
     if (formData.consigneeType === "vendor") {
       consigneeName = "vendorid";
     }
-    if (formData.consigneeType === "forwarding-agent") {
+    if (formData.consigneeType === "forwardingAgent") {
       consigneeName = "agentid";
     }
     if (formData.consigneeType === "Carrier") {
@@ -1257,7 +1258,7 @@ const PickupOrderCreationForm = ({
     if (formData.deliveryLocationType === "vendor") {
       deliveryLocationName = "vendorid";
     }
-    if (formData.deliveryLocationType === "forwarding-agent") {
+    if (formData.deliveryLocationType === "forwardingAgent") {
       deliveryLocationName = "agentid";
     }
     if (formData.deliveryLocationType === "Carrier") {
@@ -1281,7 +1282,7 @@ const PickupOrderCreationForm = ({
     if (formData.pickupLocationType === "vendor") {
       pickUpLocationName = "vendorid";
     }
-    if (formData.pickupLocationType === "forwarding-agent") {
+    if (formData.pickupLocationType === "forwardingAgent") {
       pickUpLocationName = "agentid";
     }
     if (formData.pickupLocationType === "Carrier") {
@@ -1305,7 +1306,7 @@ const PickupOrderCreationForm = ({
     if (formData.shipperType === "vendor") {
       shipperName = "vendorid";
     }
-    if (formData.shipperType === "forwarding-agent") {
+    if (formData.shipperType === "forwardingAgent") {
       shipperName = "agentid";
     }
     if (formData.shipperType === "Carrier") {
@@ -1334,7 +1335,7 @@ const PickupOrderCreationForm = ({
       if (CTBType === "vendor") {
         clientToBillName = "vendorid";
       }
-      if (CTBType === "forwarding-agent") {
+      if (CTBType === "forwardingAgent") {
         clientToBillName = "agentid";
       }
       if (CTBType === "carrier") {
@@ -1867,8 +1868,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="" style={{ display: "flex"}}
-                  >
+              <div className="" style={{ display: "flex"}}>
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
                     Destination Agent:
@@ -1897,15 +1897,16 @@ const PickupOrderCreationForm = ({
                       onChange={(e) => {
                         handleDestinationAgentSelection(e);
                       }}
-                      className="async-option"
-                      defaultOptions={destinationAgentOptions}
-                      placeholder="Search and select..."
-                      loadOptions={loadDestinationAgentsSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
                       value={destinationAgentOptions.find(
                         (option) => option.id === formData.destinationAgentId
                       )}
+                      placeholder="Search and select..."
+                      defaultOptions={destinationAgentOptions}
+                      loadOptions={loadDestinationAgentsSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                      key={destinationAgentOptions.length} // Add esto para que se refresque la lista
+
                     />
                   )}
                     <label
@@ -1929,11 +1930,10 @@ const PickupOrderCreationForm = ({
                       onClose={closeModalDestinationAgent}
                       >
                       <ForwardingAgentsCreationForm
-                        carrier={null}
+                        forwardingAgent={null}
                         closeModal={closeModalDestinationAgent}
                         creating={true}
                         fromPickupOrder={true}
-                        // onProcessComplete={handleProcessCompleteDestinationAgent}
                         onProcessComplete={(createdDestinationAgentId) => 
                           handleProcessCompleteDestinationAgent(createdDestinationAgentId)}
                       />
@@ -1948,7 +1948,7 @@ const PickupOrderCreationForm = ({
                         onClose={closeModalDestinationAgent}
                         >
                         <ForwardingAgentsCreationForm
-                          carrier={selectedDestinationAgent}
+                          forwardingAgent={selectedDestinationAgent}
                           closeModal={closeModalDestinationAgent}
                           creating={false}
                           fromPickupOrder={true}
@@ -1992,20 +1992,22 @@ const PickupOrderCreationForm = ({
                     >
                     Edit 
                   </label>
-                <div>{isModalOpenAgent && selectedAgent !== null &&(
+                <div>
+                  {isModalOpenAgent && selectedAgent !== null &&(
                   <ModalForm
                     isOpen={isModalOpenAgent}
                     onClose={closeModalAgent}
                   >
                     <ForwardingAgentsCreationForm
-                      forwarding-agent={selectedAgent}
+                      forwardingAgent={selectedAgent}
                       closeModal={closeModalAgent}
                       creating={false}
                       fromPickupOrder={true}
                       onProcessComplete={handleProcessCompleteAgent}
                     />
                   </ModalForm>
-                  )}</div>
+                  )}
+                </div>
                   {/* Forms creacion y edicion Agent */}
                   <div>
                     {isModalOpenAgent && selectedAgent === null &&(
@@ -2014,7 +2016,7 @@ const PickupOrderCreationForm = ({
                         onClose={closeModalAgent}
                       >
                       <ForwardingAgentsCreationForm
-                        forwarding-agent={null}
+                        forwardingAgent={null}
                         closeModal={closeModalAgent}
                         creating={true}
                         fromPickupOrder={true}
@@ -2128,8 +2130,8 @@ const PickupOrderCreationForm = ({
                         handleProcessCompleteShipper(createdShipperId)}
                     />
                     </ModalForm>
-                    )}
-                  </div>
+                  )}
+                </div>
 
                 <div>
                   {isModalOpenShipper && selectedShipp !== null &&(
@@ -2317,7 +2319,9 @@ const PickupOrderCreationForm = ({
                       Edit 
                     </label>
                   </div>
-                
+                {/* labels de creacion y edicion Consignee */}
+                 
+                {/* Forms creacion y edicion Consignee */}
                 <div>
                   {isModalOpenConsignee && selectedConsignee === null &&(
                     <ModalForm
@@ -2325,7 +2329,7 @@ const PickupOrderCreationForm = ({
                       onClose={closeModalConsignee}
                     >
                       <CustomerCreationForm
-                        carrier={null}
+                        customer={null}
                         closeModal={closeModalConsignee}
                         creating={true}
                         fromPickupOrder={true}
@@ -2344,7 +2348,7 @@ const PickupOrderCreationForm = ({
                         onClose={closeModalConsignee}
                         >
                         <CustomerCreationForm
-                          carrier={selectedConsignee}
+                          customer={selectedConsignee}
                           closeModal={closeModalConsignee}
                           creating={false}
                           fromPickupOrder={true}
@@ -2613,6 +2617,7 @@ const PickupOrderCreationForm = ({
                     id="TextMainCarrier"
                     type="textarea"
                     inputName="issuedbydata"
+                    placeholder="Carrier Info..."
                     value={formData.mainCarrierInfo}
                     readonly={true}
                     label="Address"
