@@ -94,17 +94,17 @@ const PickupOrderCreationForm = ({
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
   //added  Shipper modal
-  const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
-  const [selectedShipp, setSelectedShipper] = useState(null);
-  const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+  // const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+  // const [selectedShipp, setSelectedShipper] = useState(null);
+  // const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
   //added  Delivery Location modal
   const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
   const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
   const [isProcessCompleteDeliLocation, setIsProcessCompleteDeliLocation] = useState(false);
   //added  Consignee modal
-  const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
-  const [selectedConsignee, setSelectedConsignee] = useState(null);
-  const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
+  // const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
+  // const [selectedConsignee, setSelectedConsignee] = useState(null);
+  // const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
   //added  Destination Agent modal 
   const [isModalOpenDestinationAgent, setIsModalOpenDestinationAgent] = useState(false);
   const [selectedDestinationAgent, setSelectedDestinationAgent] = useState(null);
@@ -250,18 +250,14 @@ const PickupOrderCreationForm = ({
     const id = event?.id || "";
     const type = event?.type || "";
     const result = await CustomerService.getCustomerById(id);
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const info = `${result?.data.street_and_number || ""} - ${result?.data.city || ""} - ${result?.data.state || ""} - ${result?.data.country || ""} - ${result?.data.zip_code || ""}`;
     setFormData({
       ...formData,
       pickupLocationId: id,
       pickupLocationInfo: info,
       pickupLocationType: type,
     });
-    setSelectedPickUpLocation(result?.data); // Set the selected customer
+    setSelectedPickUpLocation(result?.data); // Set the selected carrier
     console.log("setSelectedPickUpLocation",setSelectedPickUpLocation);
   };
 
@@ -285,32 +281,6 @@ const PickupOrderCreationForm = ({
       setSelectedDeliLocation(result?.data); // Set the selected carrier
       console.log("setSelectedDeliLocation",setSelectedDeliLocation);
    }
-
-  // const handleDeliveryLocationSelection = async (event) => {
-  //   const id = event?.id || "";
-  //   const type = event?.type || "";
-  //   const deliveryLocation = deliveryLocationOptions.find(
-  //     (option) => option.id === id && option.type === type
-  //   );
-  //   if (deliveryLocation) {
-  //     const info = `${deliveryLocation?.street_and_number || ""} - ${
-  //       deliveryLocation?.city || ""
-  //     } - ${deliveryLocation?.state || ""} - ${
-  //       deliveryLocation?.country || ""
-  //     } - ${deliveryLocation?.zip_code || ""}`;
-  //     setdeliverylocation(deliveryLocation);
-  //     setFormData({
-  //       ...formData,
-  //       deliveryLocationId: id,
-  //       deliveryLocationInfo: info,
-  //       deliveryLocationType: type,
-  //     });
-  //   } else {
-  //     console.error(
-  //       "Error: No se encontró la ubicación de entrega con el id y tipo especificados."
-  //     );
-  //   }
-  // };
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id || "";
@@ -357,78 +327,70 @@ const PickupOrderCreationForm = ({
   };
 
 
-  const handleConsigneeSelection = async (event) => {
+  const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const result = await CustomerService.getCustomerById(id);
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
-    }`;
+    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+    const selectedConsignee = consigneeOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    if (!selectedConsignee) {
+      console.error(`Consignee not found with ID ${id} and type ${type}`);
+      return;
+    }
+
+    const info = `${selectedConsignee.street_and_number || ""} - ${
+      selectedConsignee.city || ""
+    } - ${selectedConsignee.state || ""} - ${
+      selectedConsignee.country || ""
+    } - ${selectedConsignee.zip_code || ""}`;
+    setconsignee(selectedConsignee);
+    setdefaultValueConsignee(selectedConsignee);
     setFormData({
       ...formData,
       consigneeId: id,
       consigneeType: type,
       consigneeInfo: info,
     });
-    setSelectedConsignee(result?.data); // Set the selected carrier
-    console.log("setSelectedConsignee",setSelectedConsignee);
   };
 
-  // const handleConsigneeSelection = (event) => {
-  //   const id = event?.id || "";
-  //   const type = event?.type || "";
-  //   const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
-  //   if (!validTypes.includes(type)) {
-  //     console.error(`Unsupported consignee type: ${type}`);
-  //     return;
-  //   }
-  //   const selectedConsignee = consigneeOptions.find(
-  //     (option) => option.id === id && option.type === type
-  //   );
-  //   if (!selectedConsignee) {
-  //     console.error(`Consignee not found with ID ${id} and type ${type}`);
-  //     return;
-  //   }
-
-  //   const info = `${selectedConsignee.street_and_number || ""} - ${
-  //     selectedConsignee.city || ""
-  //   } - ${selectedConsignee.state || ""} - ${
-  //     selectedConsignee.country || ""
-  //   } - ${selectedConsignee.zip_code || ""}`;
-  //   setconsignee(selectedConsignee);
-  //   setdefaultValueConsignee(selectedConsignee);
-  //   setFormData({
-  //     ...formData,
-  //     consigneeId: id,
-  //     consigneeType: type,
-  //     consigneeInfo: info,
-  //   });
-  // };
-
-  const handleShipperSelection = async(event) => {
+  const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const result = await CustomerService.getCustomerById(id);
+    // const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    const validTypes = ["customer"];
+    if (!validTypes.includes(type)) {
+      console.error(`Unsupported consignee type: ${type}`);
+      return;
+    }
+    const selectedShipper = shipperOptions.find(
+      (option) => option.id === id && option.type === type
+    );
+    if (!selectedShipper) {
+      console.error(`Shipper not found with ID ${id} and type ${type}`);
+      return;
+    }
 
-    
-    const info = `${result?.data.street_and_number || ""} - ${
-      result?.data.city || ""
-    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-      result?.data.zip_code || ""
+    const info = `${selectedShipper?.street_and_number || ""} - ${
+      selectedShipper?.city || ""
+    } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${
+      selectedShipper?.zip_code || ""
     }`;
 
-    // setshipper(selectedShipper);
-    // setdefaultValueShipper(selectedShipper);
+    setshipper(selectedShipper);
+    setdefaultValueShipper(selectedShipper);
     setFormData({
       ...formData,
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
+      // consigneeId: id,
+      // consigneeType: type,
     });
-    setSelectedShipper(result?.data); // Set the selected carrier
-    console.log("setSelectedShipper",setSelectedShipper);
   };
 
   const handleCommodityDelete = () => {
@@ -564,44 +526,44 @@ const PickupOrderCreationForm = ({
     setSelectedAgent(null);
   };
   //--------------------------------------------------------------
-  //added handle Shipper creation
-  const handleAddShipperClick = () => {
-    setSelectedShipper(null);
-    setIsModalOpenShipper(true);
-  };
-  const handleEditShipperClick = () => {
-    if (formData.shipperId) {
-      setIsModalOpenShipper(true);
-    } else {
-      alert("Please select a Shipper to edit.");
-    }
-  };
-  const closeModalShipper = () => {
-    setIsModalOpenShipper(false);
-    setSelectedShipper(null);
-  };
-  const handleProcessCompleteShipper = async (createdShipperId = null) => {
-    setIsProcessCompleteShipper(true);
-    setIsModalOpenShipper(false);
-    console.log('Proceso completado en ShipperCreationForm');
+  // //added handle Shipper creation
+  // const handleAddShipperClick = () => {
+  //   setSelectedShipper(null);
+  //   setIsModalOpenShipper(true);
+  // };
+  // const handleEditShipperClick = () => {
+  //   if (formData.shipperId) {
+  //     setIsModalOpenShipper(true);
+  //   } else {
+  //     alert("Please select a Shipper to edit.");
+  //   }
+  // };
+  // const closeModalShipper = () => {
+  //   setIsModalOpenShipper(false);
+  //   setSelectedShipper(null);
+  // };
+  // const handleProcessCompleteShipper = async (createdShipperId = null) => {
+  //   setIsProcessCompleteShipper(true);
+  //   setIsModalOpenShipper(false);
+  //   console.log('Proceso completado en ShipperCreationForm');
 
-    // Si se creó un nuevo Shipper, utilice su ID; de lo contrario, utilice el shipperId existente
-    const shippId = createdShipperId || formData.shipperId;
+  //   // Si se creó un nuevo Shipper, utilice su ID; de lo contrario, utilice el shipperId existente
+  //   const shippId = createdShipperId || formData.shipperId;
 
-    if (shippId) {
-      await handleShipperSelection({ id: shippId });
+  //   if (shippId) {
+  //     await handleShipperSelection({ id: shippId });
 
-      // Obtener y actualizar las opciones del Shipper
-      const updatedOption = await loadShipperSelectOptions('');
-      setShipperOptions(updatedOption);
+  //     // Obtener y actualizar las opciones del Shipper
+  //     const updatedOption = await loadShipperSelectOptions('');
+  //     setShipperOptions(updatedOption);
 
-      const updateOptionClientBillSelectionShipper = getAsyncSelectValue('');
-      setConsigneeOptions(updateOptionClientBillSelectionShipper);
-    }
+  //     const updateOptionClientBillSelectionShipper = getAsyncSelectValue('');
+  //     setConsigneeOptions(updateOptionClientBillSelectionShipper);
+  //   }
 
-    // Restablecer el Shipper seleccionado después del procesamiento
-    setSelectedShipper(null);
-  };
+  //   // Restablecer el Shipper seleccionado después del procesamiento
+  //   setSelectedShipper(null);
+  // };
   //--------------------------------------------------------------
     //added handle DeliLocation creation
     const handleAddDeliLocationClick = () => {
@@ -641,40 +603,40 @@ const PickupOrderCreationForm = ({
   
     //--------------------------------------------------------------
       //added handle Consignee creation
-  const handleAddConsigneeClick = () => {
-    setSelectedConsignee(null);
-    setIsModalOpenConsignee(true);
-  };
-  const handleEditConsigneeClick = () => {
-    if (formData.consigneeId) {
-      setIsModalOpenConsignee(true);
-    } else {
-      alert("Please select a Consignee to edit.");
-    }
-  };
-  const closeModalConsignee = () => {
-    setIsModalOpenConsignee(false);
-    setSelectedConsignee(null);
-  };
-  const handleProcessCompleteConsignee = async (createdConsigneeId = null) => {
-    setIsProcessCompleteConsignee(true);
-    setIsModalOpenConsignee(false);
-    console.log("Proceso completado en ConsigneeCreationForm");
+  // const handleAddConsigneeClick = () => {
+  //   setSelectedConsignee(null);
+  //   setIsModalOpenConsignee(true);
+  // };
+  // const handleEditConsigneeClick = () => {
+  //   if (formData.consigneeId) {
+  //     setIsModalOpenConsignee(true);
+  //   } else {
+  //     alert("Please select a Consignee to edit.");
+  //   }
+  // };
+  // const closeModalConsignee = () => {
+  //   setIsModalOpenConsignee(false);
+  //   setSelectedConsignee(null);
+  // };
+  // const handleProcessCompleteConsignee = async (createdConsigneeId = null) => {
+  //   setIsProcessCompleteConsignee(true);
+  //   setIsModalOpenConsignee(false);
+  //   console.log("Proceso completado en ConsigneeCreationForm");
 
-    // Si se creó un nuevo Consignee, utilice su ID; de lo contrario, utilice el consigneeId existente
-    const ConsigneeId = createdConsigneeId || formData.consigneeId;
+  //   // Si se creó un nuevo Consignee, utilice su ID; de lo contrario, utilice el consigneeId existente
+  //   const ConsigneeId = createdConsigneeId || formData.consigneeId;
 
-    if (ConsigneeId) {
-      await handleConsigneeSelection({ id: ConsigneeId });
+  //   if (ConsigneeId) {
+  //     await handleConsigneeSelection({ id: ConsigneeId });
 
-      // Obtener y actualizar las opciones del Consignee
-      const updatedOptions = await loadConsigneeSelectOptions("");
-      setConsigneeOptions(updatedOptions);
-    }
+  //     // Obtener y actualizar las opciones del Consignee
+  //     const updatedOptions = await loadConsigneeSelectOptions("");
+  //     setConsigneeOptions(updatedOptions);
+  //   }
 
-    // Restablecer el Consignee seleccionado después del procesamiento
-    setSelectedConsignee(null);
-  };
+  //   // Restablecer el Consignee seleccionado después del procesamiento
+  //   setSelectedConsignee(null);
+  // };
 
   //--------------------------------------------------------------
     //added handle DestinationAgent creation
@@ -736,10 +698,10 @@ const PickupOrderCreationForm = ({
     console.log("Proceso completado en CustomerCreationForm");
 
     // Si se creó un nuevo customer, utilice su ID; de lo contrario, utilice el pickupLocationId existente
-    const carrierId = createdPickUpLocationId || formData.pickupLocationId;
+    const PickLocationId = createdPickUpLocationId || formData.pickupLocationId;
 
-    if (carrierId) {
-      await handlePickUpSelection({ id: carrierId });
+    if (PickLocationId) {
+      await handlePickUpSelection({ id: PickLocationId });
 
       // Obtener y actualizar las opciones del Customer
       const updatedOptions = await loadPickUpLocationSelectOpt("");
@@ -1072,7 +1034,7 @@ const PickupOrderCreationForm = ({
     return addTypeToObjects(responseDestinationAgent, "forwardingAgent");
   };
   //-----------------
-  //added para recargar carriersoptions al crear un carrier
+  // added para recargar carriersoptions al crear un carrier
   useEffect(() => {
     const initializePickUpLocationOptions = async () => {
       const initialOptions = await loadPickUpLocationSelectOpt("");
@@ -2075,31 +2037,15 @@ const PickupOrderCreationForm = ({
                     onChange={(e) => {
                       handleShipperSelection(e);
                     }}
-                    // value={defaultValueShipper}
-                    value={shipperOptions.find(
-                      (option) => option.id === formData.shipperId
-                    )}
+                    value={defaultValueShipper}
                     placeholder="Search and select..."
                     defaultOptions={shipperOptions}
                     loadOptions={loadShipperSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
-                    key={shipperOptions.length} // Add esto para que se refresque la lista
                   />
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddShipperClick}
-                    >
-                      Add
-                    </label>
-                    <label
-                      className="copy-label_edit"
-                      onClick={handleEditShipperClick}
-                    >
-                      Edit 
-                  </label>
                 </div>
-                {/* labels de creacion y edicion Shipper */}
+
                 <div className="col-6 text-start">
                   <Input
                     type="text"
@@ -2114,42 +2060,7 @@ const PickupOrderCreationForm = ({
                     label="Purchase Order"
                   />
                 </div>
-                {/* Forms creacion y edicion Shipper */}                
-                <div>
-                  {isModalOpenShipper && selectedShipp === null &&(
-                    <ModalForm
-                      isOpen={isModalOpenShipper}
-                      onClose={closeModalShipper}
-                    >
-                    <CustomerCreationForm
-                      customer={null}
-                      closeModal={closeModalShipper}
-                      creating={true}
-                      fromPickupOrder={true}
-                      onProcessComplete={(createdShipperId) => 
-                        handleProcessCompleteShipper(createdShipperId)}
-                    />
-                    </ModalForm>
-                  )}
-                </div>
-
-                <div>
-                  {isModalOpenShipper && selectedShipp !== null &&(
-                  <ModalForm
-                    isOpen={isModalOpenShipper}
-                    onClose={closeModalShipper}
-                  >
-                  <CustomerCreationForm
-                    customer={selectedShipp}
-                    closeModal={closeModalShipper}
-                    creating={false}
-                    fromPickupOrder={true}
-                    onProcessComplete={handleProcessCompleteShipper}
-                  />
-                  </ModalForm>
-                  )}
-                </div>                
-              </div>              
+              </div>
 
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -2174,6 +2085,7 @@ const PickupOrderCreationForm = ({
                   </label>
                 </div>
               </div>
+              
               <div className="row mb-3">
                 <div className="col-6 text-start">
                   <label htmlFor="pickup" className="form-label">
@@ -2191,25 +2103,13 @@ const PickupOrderCreationForm = ({
                     )}
                     placeholder="Search and select..."
                     defaultOptions={pickupLocationOptions}
+                    // loadOptions={loadPickUpLocationSelectOptions}
                     loadOptions={loadPickUpLocationSelectOpt}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                     key={pickupLocationOptions.length} // Add esto para que se refresque la lista
-                  />
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddPickUpLocationClick}
-                  >
-                    Add
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditPickUpLocationClick}
-                  >
-                    Edit 
-                  </label>
+                    />
                 </div>
-
                 <div className="col-6 text-start">
                   <Input
                     type="text"
@@ -2224,30 +2124,29 @@ const PickupOrderCreationForm = ({
                     label="Invoice Number"
                   />
                 </div>
-                {/* Forms creacion y edicion PickUpLocation */}
-                <div>
-                  {isModalOpenPickUpLocation && selectedPickUpLocation === null &&(
+                    {/* Forms creacion y edicion PickUp Location */}
+                <div>{isModalOpenPickUpLocation && selectedPickUpLocation === null &&(
                     <ModalForm
-                      isOpen={isModalOpenPickUpLocation}
-                      onClose={closeModalPickUpLocation}
-                    >                    
+                    isOpen={isModalOpenPickUpLocation}
+                    onClose={closeModalPickUpLocation}
+                  >
                     <CustomerCreationForm
                       customer={null}
                       closeModal={closeModalPickUpLocation}
                       creating={true}
                       fromPickupOrder={true}
-                      onProcessComplete={handleProcessCompletePickUpLocation}
+                      onProcessComplete={(createdPickUpLocationId) =>
+                        handleProcessCompletePickUpLocation(createdPickUpLocationId)
+                      }
                     />
                     </ModalForm>
-                  )}
-                </div>
-
-                <div>
-                  {isModalOpenPickUpLocation && selectedPickUpLocation !== null &&(
+                  )}</div>
+                  
+                <div>{isModalOpenPickUpLocation && selectedPickUpLocation !==null &&(
                     <ModalForm
-                      isOpen={isModalOpenPickUpLocation}
-                      onClose={closeModalPickUpLocation}
-                    >
+                    isOpen={isModalOpenPickUpLocation}
+                    onClose={closeModalPickUpLocation}
+                  >
                     <CustomerCreationForm
                       customer={selectedPickUpLocation}
                       closeModal={closeModalPickUpLocation}
@@ -2255,10 +2154,27 @@ const PickupOrderCreationForm = ({
                       fromPickupOrder={true}
                       onProcessComplete={handleProcessCompletePickUpLocation}
                     />
-                  </ModalForm>
-                  )}
-                </div>
-                {/* terminacion de Forms creacion y edicion PickUpLocation */}
+                    </ModalForm>
+                  )}</div>
+                  {/* terminacion de Forms creacion y edicion PickUp Location */}
+
+
+                
+              </div>
+              <div className="col-6 text-start">
+                <label
+                  className="copy-label_add"
+                  onClick={handleAddPickUpLocationClick}
+                >
+                  Add
+                </label>
+
+                <label
+                  className="copy-label_edit"
+                  onClick={handleEditPickUpLocationClick}
+                >
+                  Edit
+                </label>
               </div>
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -2295,155 +2211,111 @@ const PickupOrderCreationForm = ({
                       onChange={(e) => {
                         handleConsigneeSelection(e);
                       }}
-                      // value={defaultValueConsignee}
-                      value={consigneeOptions.find(
-                        (option) => option.id === formData.consigneeId
-                      )}
+                      value={defaultValueConsignee}
                       placeholder="Search and select..."
                       defaultOptions={consigneeOptions}
                       loadOptions={loadConsigneeSelectOptions}
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
-                      key={consigneeOptions.length} // Add esto para que se refresque la lista
                     />
-                    <label
-                    className="copy-label_add"
-                    onClick={handleAddConsigneeClick}
-                    >
-                      Add
-                    </label>
-                    <label
-                      className="copy-label_edit"
-                      onClick={handleEditConsigneeClick}
-                    >
-                      Edit 
-                    </label>
                   </div>
-                {/* labels de creacion y edicion Consignee */}
-                 
-                {/* Forms creacion y edicion Consignee */}
-                <div>
-                  {isModalOpenConsignee && selectedConsignee === null &&(
-                    <ModalForm
-                      isOpen={isModalOpenConsignee}
-                      onClose={closeModalConsignee}
-                    >
-                      <CustomerCreationForm
-                        customer={null}
-                        closeModal={closeModalConsignee}
-                        creating={true}
-                        fromPickupOrder={true}
-                        onProcessComplete={(createdConsigneeId) =>
-                          handleProcessCompleteCarrier(createdConsigneeId)
-                        }
-                      />
+                  </div>
+
+                  <div
+                    className="col-6 text-start"
+                    style={{ marginBlockEnd: "auto" }}
+                  >
+                    <label htmlFor="delivery" className="form-label">
+                      Delivery Location:
+                    </label>
+                    <AsyncSelect
+                      id="deliveryLocation"
+                      onChange={(e) => {
+                        handleDeliveryLocationSelection(e);
+                      }}
+                      value={deliveryLocationOptions.find(
+                        (option) =>
+                          option.id === formData.deliveryLocationId &&
+                          option.type === formData.deliveryLocationType
+                      )}
+                      placeholder="Search and select..."
+                      defaultOptions={deliveryLocationOptions}
+                      // loadOptions={loadDeliveryLocationSelectOptions}
+                      loadOptions={loadDeliLocationSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                      key={deliveryLocationOptions.length} // Add esto para que se refresque la lista
+                    />
+                    <div className="text-start">
+                      <label
+                        className="copy-label_add"
+                        onClick={handleAddDeliLocationClick}
+                      >
+                        Add
+                      </label>
+
+                      <label
+                        className="copy-label_edit"
+                        onClick={handleEditDeliLocationClick}
+                      >
+                        Edit
+                      </label>
+                    </div>
+                    {/* Forms creacion y edicion customer */}
+                  <div>
+                    {isModalOpenDeliLocation && selectedDeliLocation === null && (
+                      <ModalForm
+                        isOpen={isModalOpenDeliLocation}
+                        onClose={closeModalDeliLocation}
+                      >
+                        <CustomerCreationForm
+                          customer={null}
+                          closeModal={closeModalDeliLocation}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdDeliLocationId) =>
+                            handleProcessCompleteDeliLocation(createdDeliLocationId)
+                          }
+                        />
                       </ModalForm>
                     )}
                   </div>
 
                   <div>
-                    {isModalOpenConsignee && selectedConsignee !==null &&(
+                    {isModalOpenDeliLocation && selectedDeliLocation !== null && (
                       <ModalForm
-                        isOpen={isModalOpenConsignee}
-                        onClose={closeModalConsignee}
-                        >
+                        isOpen={isModalOpenDeliLocation}
+                        onClose={closeModalDeliLocation}
+                      >
                         <CustomerCreationForm
-                          customer={selectedConsignee}
-                          closeModal={closeModalConsignee}
+                          customer={selectedDeliLocation}
+                          closeModal={closeModalDeliLocation}
                           creating={false}
                           fromPickupOrder={true}
-                          onProcessComplete={handleProcessCompleteConsignee}
+                          onProcessComplete={handleProcessCompleteDeliLocation}
                         />
                       </ModalForm>
                     )}
                   </div>
+                  {/* terminacion de Forms creacion y edicion Customer */}
                   </div>
-                <div
-                  className="col-6 text-start"
-                  style={{ marginBlockEnd: "auto" }}
-                  >
-                  <label htmlFor="delivery" className="form-label">
-                    Delivery Location:
-                  </label>
-                  <AsyncSelect
-                    id="deliveryLocation"
-                    onChange={(e) => {
-                      handleDeliveryLocationSelection(e);
-                    }}
-                    value={deliveryLocationOptions.find(
-                      (option) => option.id === formData.deliveryLocationId 
-                        // && option.type === formData.deliveryLocationType
-                    )}
-                    placeholder="Search and select..."
-                    defaultOptions={deliveryLocationOptions}
-                    loadOptions={loadDeliLocationSelectOptions}
-                    // loadOptions={loadDeliveryLocationSelectOptions}loadDeliLocationSelectOptions
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    key={deliveryLocationOptions.length}
-                  />
-                  <label
-                      className="copy-label_add"
-                      onClick={handleAddDeliLocationClick}
-                    >
-                      Add
-                    </label>
-                    <label
-                      className="copy-label_edit"
-                      onClick={handleEditDeliLocationClick}
-                    >
-                      Edit 
-                  </label>
-                </div>
-                <div>
-                  {isModalOpenDeliLocation && selectedDeliLocation === null &&(
-                    <ModalForm
-                    isOpen={isModalOpenDeliLocation}
-                    onClose={closeModalDeliLocation}
-                    >
-                    <CustomerCreationForm
-                      customer={null}
-                      closeModal={closeModalDeliLocation}
-                      creating={true}
-                      fromPickupOrder={true}
-                      onProcessComplete={(createdDeliLocationId) =>
-                        handleProcessCompleteDeliLocation(createdDeliLocationId)
-                      }
-                    />
-                    </ModalForm>
-                  )}
-                </div>
-
-                <div>
-                  {isModalOpenDeliLocation && selectedDeliLocation !==null &&(
-                    <ModalForm
-                    isOpen={isModalOpenDeliLocation}
-                    onClose={closeModalDeliLocation}
-                    >
-                    <CustomerCreationForm
-                      customer={selectedDeliLocation}
-                      closeModal={closeModalDeliLocation}
-                      creating={false}
-                      fromPickupOrder={true}
-                      onProcessComplete={handleProcessCompleteDeliLocation}
-                    />
-                    </ModalForm>
-                  )}
-                </div>
-                
-              </div>
-              <div className="row mb-3">
-                <div className="col-12">
-                  <label
-                    className="copy-label"
-                    // onClick={handleCopyClickShipper}
-                    onClick={handleCopyClickConsignee}
-                  >
-                    Copy To Delivery Location
-                  </label>
-                </div>
-              </div>
+                  
+                  
               
+                </div>
+                <div className="row mb-3">
+                  <div className="col-12">
+                    <label
+                      className="copy-label"
+                      // onClick={handleCopyClickShipper}
+                      onClick={handleCopyClickConsignee}
+                    >
+                      Copy To Delivery Location
+                    </label>
+                  </div>
+                </div>
+             
+
               <div className="row align-items-center">
                 <div
                   className="col-6 text-start"
@@ -2491,7 +2363,6 @@ const PickupOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
-                    
                   </div>
                 </div>
                 <div className="col-6 text-start">
@@ -2511,6 +2382,7 @@ const PickupOrderCreationForm = ({
               <div className="row align-items-center"></div>
             </div>
           </div>
+          
           <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
@@ -2593,23 +2465,22 @@ const PickupOrderCreationForm = ({
                     label="Tracking Number"
                   />
                 </div>
-                </div>
-                <div className="col-6 text-start">
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddCarrierClick}
-                  >
-                    Add
-                  </label>
+              </div>
+              <div className="col-6 text-start">
+                <label
+                  className="copy-label_add"
+                  onClick={handleAddCarrierClick}
+                >
+                  Add
+                </label>
 
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditCarrierClick}
-                  >
-                    Edit
-                  </label>
-                  </div>
-
+                <label
+                  className="copy-label_edit"
+                  onClick={handleEditCarrierClick}
+                >
+                  Edit
+                </label>
+              </div>
              
               <div className="row ">
                 <div className="col-6 text-start">
