@@ -168,10 +168,7 @@ const PickupOrderCreationForm = ({
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    const forwardingAgentsWithType = addTypeToObjects(
-      forwardingAgents,
-      "forwardingAgent"
-    );
+    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents,"forwardingAgent");
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
@@ -330,7 +327,7 @@ const PickupOrderCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
@@ -361,7 +358,6 @@ const PickupOrderCreationForm = ({
   const handleShipperSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    // const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
     const validTypes = ["customer"];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported consignee type: ${type}`);
@@ -1902,7 +1898,6 @@ const PickupOrderCreationForm = ({
                       </ModalForm>
                     )}
                   </div>
-
                   <div>
                     {isModalOpenDestinationAgent && selectedDestinationAgent !== null &&(
                       <ModalForm
@@ -1954,6 +1949,7 @@ const PickupOrderCreationForm = ({
                     >
                     Edit 
                   </label>
+                  {/* Forms creacion y edicion Agent */}
                 <div>
                   {isModalOpenAgent && selectedAgent !== null &&(
                   <ModalForm
@@ -1970,25 +1966,24 @@ const PickupOrderCreationForm = ({
                   </ModalForm>
                   )}
                 </div>
-                  {/* Forms creacion y edicion Agent */}
-                  <div>
-                    {isModalOpenAgent && selectedAgent === null &&(
-                      <ModalForm
-                        isOpen={isModalOpenAgent}
-                        onClose={closeModalAgent}
-                      >
-                      <ForwardingAgentsCreationForm
-                        forwardingAgent={null}
-                        closeModal={closeModalAgent}
-                        creating={true}
-                        fromPickupOrder={true}
-                        onProcessComplete={(createdAgentId) => 
-                          handleProcessCompleteAgent(createdAgentId)}
-                      />
-                      </ModalForm>
-                    )}
-                  </div>
-                  {/* terminacion de Forms creacion y edicion Agent */}
+                <div>
+                  {isModalOpenAgent && selectedAgent === null &&(
+                    <ModalForm
+                      isOpen={isModalOpenAgent}
+                      onClose={closeModalAgent}
+                    >
+                    <ForwardingAgentsCreationForm
+                      forwardingAgent={null}
+                      closeModal={closeModalAgent}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={(createdAgentId) => 
+                        handleProcessCompleteAgent(createdAgentId)}
+                    />
+                    </ModalForm>
+                  )}
+                </div>
+                {/* terminacion de Forms creacion y edicion Agent */}
                   
                 </div>
               </div>

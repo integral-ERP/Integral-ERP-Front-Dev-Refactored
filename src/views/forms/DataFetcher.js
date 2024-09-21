@@ -59,7 +59,7 @@ export const fetchFormData = async () => {
     // Procesar los datos combinados
     const addTypeToObjects = (arr, type) => arr.map(obj => ({ ...obj, type }));
 
-    const forwardingAgentsWithType = addTypeToObjects(forwardingAgentsResults, "forwarding-agent");
+    const forwardingAgentsWithType = addTypeToObjects(forwardingAgentsResults, "forwardingAgent");
     const customersWithType = addTypeToObjects(customersResults, "customer");
     const vendorsWithType = addTypeToObjects(vendorsResults, "vendor");
     const employeesWithType = addTypeToObjects(employeesResults, "employee");
