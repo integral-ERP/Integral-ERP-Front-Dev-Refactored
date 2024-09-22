@@ -72,6 +72,8 @@ const ReceiptCreationForm = ({
   const [clientToBillRequest, setclientToBillRequest] = useState(null);
   const [weightUpdated, setWeightUpdated] = useState(0);
   const [volumenUpdated, setVolumenUpdated] = useState(0);
+  const [releasedToOptions, setReleasedToOptions] = useState([]);
+  const [CTBType, setCTBType] = useState("");
   const [showCommodityCreationForm, setshowCommodityCreationForm] =
     useState(false);
   const [commodities, setcommodities] = useState([]);
@@ -121,6 +123,16 @@ const ReceiptCreationForm = ({
         const employees = data.filter((item) => item.type === "employee");
         const carriers = data.filter((item) => item.type === "Carrier");
 
+        const customersWithType = addTypeToObjects(customers, "customer");
+        const forwardingAgentsWithType = addTypeToObjects(
+            forwardingAgents,
+            "forwarding-agent"
+        );
+        const clientToBillOptions = [
+          ...customersWithType,
+          ...forwardingAgentsWithType,
+        ];
+
         setIssuedByOptions([...forwardingAgents]);
         setDestinationAgentOptions([...forwardingAgents]);
         setEmployeeOptions([...employees]);
@@ -134,6 +146,7 @@ const ReceiptCreationForm = ({
           ...carriers,
         ]);
         setCarrierOptions([...carriers]);
+        setReleasedToOptions(clientToBillOptions.sort(SortArray));
       })
       .catch((error) => {
         console.error("Error al obtener los datos:", error);
@@ -274,18 +287,38 @@ const ReceiptCreationForm = ({
   };
 
   const handleClientToBillSelection = async (event) => {
-    const type = event.target.value;
-    const id =
-      type === "shipper"
-        ? formData.shipperId
-        : type === "consignee"
-        ? formData.consigneeId
-        : "";
-    setFormData({
-      ...formData,
-      clientToBillId: id,
-      clientToBillType: type,
-    });
+    const type = event?.target?.value || "";
+
+    if (type === "other") {
+      setFormData({ ...formData, clientToBillType: type });
+    } else if (type === "shipper" || type === "consignee") {
+      if (formData.shipperId || formData.consigneeId) {
+        const id =
+            type === "shipper" ? formData.shipperId : formData.consigneeId;
+        setFormData({
+          ...formData,
+          clientToBillType: type,
+          clientToBillId: id,
+        });
+      } else {
+        console.error("ShipperId or consigneeId is not available.");
+      }
+    } else {
+      setCTBType(event?.type);
+      const id = event?.id;
+      const type =
+          event?.type === "shipper"
+              ? "shipper"
+              : event?.type === "consignee"
+                  ? "consignee"
+                  : "other";
+
+      setFormData({
+        ...formData,
+        clientToBillType: type,
+        clientToBillId: id,
+      });
+    }
   };
 
   const handleConsigneeSelection = (event) => {
@@ -852,17 +885,29 @@ const ReceiptCreationForm = ({
       setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
+      debugger;
+      let temp = pickupOrder.clientBillObj?.data?.obj?.data?.obj
+              ?.type_person
+              ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
+              pickupOrder.shipperObj?.data?.obj?.id
+                  ? "shipper"
+                  : pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
+                  pickupOrder.consigneeObj?.data?.obj?.id
+                      ? "consignee"
+                      : "other"
+              : "other";
 
-      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
+      setCTBType(temp !== "agent" ? temp : "forwarding-agent");
+
       let CTBID = "";
       if (fromReceipt) {
         CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
           ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
           : pickupOrder.clientBillObj?.data?.obj?.id;
       } else {
-        CTBID = pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          ? pickupOrder.client_to_billObj?.data?.obj?.data?.obj?.id
-          : pickupOrder.client_to_billObj?.data?.obj?.id;
+        CTBID = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id
+          : pickupOrder.clientBillObj?.data?.obj?.id;
       }
       let updatedFormData = {
         status: pickupOrder.status,
@@ -954,12 +999,7 @@ const ReceiptCreationForm = ({
         purchaseOrderNumber: pickupOrder.purchase_order_number,
 
         clientToBillId: CTBID,
-        clientToBillType:
-          CTBID === pickupOrder.shipperObj.data?.obj?.id
-            ? "shipper"
-            : CTBID === pickupOrder.consigneeObj.data?.obj?.id
-            ? "consignee"
-            : "",
+        clientToBillType: temp,
 
         commodities: pickupOrder.commodities,
         charges: pickupOrder.charges,
@@ -967,8 +1007,14 @@ const ReceiptCreationForm = ({
         pickup_order_Id: pickupOrder.id,
       };
 
-      console.log("updatedFormData", updatedFormData);
 
+
+      console.log("updatedFormData", updatedFormData);
+      const initialSupplier = pickupOrder.shipperObj?.data?.obj;
+      handleClientToBillSelection({
+        id: CTBID,
+        type: temp,
+      });
       setFormData(updatedFormData);
       setcanRender(true);
     }
@@ -1238,7 +1284,7 @@ const ReceiptCreationForm = ({
       });
       setVolumenUpdated(totalVolume.toFixed(2));
     }
-
+    let auxVar;
     let consigneeName = "";
     if (formData.consigneeType === "customer") {
       consigneeName = "customerid";
@@ -1259,6 +1305,9 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createConsignee(consignee);
       if (response.status === 201) {
+        formData.clientToBillType === "consignee"
+            ? (auxVar = response.data.id)
+            : "";
         setconsigneeRequest(response.data.id);
       }
     }
@@ -1283,6 +1332,9 @@ const ReceiptCreationForm = ({
 
       const response = await ReceiptService.createShipper(consignee);
       if (response.status === 201) {
+        formData.clientToBillType === "shipper"
+            ? (auxVar = response.data.id)
+            : "";
         setshipperRequest(response.data.id);
       }
     }
@@ -1310,7 +1362,23 @@ const ReceiptCreationForm = ({
       }
     }
 
+    console.log("CLIENT TO BILL: ", formData.clientToBillId, formData.clientToBillType)
     let clientToBillName = "";
+    debugger;
+    if (formData.clientToBillType === "other") {
+      if (CTBType === "customer") {
+        clientToBillName = "customerid";
+      }
+      if (CTBType === "vendor") {
+        clientToBillName = "vendorid";
+      }
+      if (CTBType === "forwarding-agent") {
+        clientToBillName = "agentid";
+      }
+      if (CTBType === "carrier") {
+        clientToBillName = "carrierid";
+      }
+    }
     if (formData.clientToBillType === "shipper") {
       clientToBillName = "shipperid";
     }
@@ -1320,9 +1388,10 @@ const ReceiptCreationForm = ({
     if (clientToBillName !== "") {
       const clientToBill = {
         [clientToBillName]:
-          clientToBillName === "shipperid"
-            ? formData.shipper
-            : formData.consignee,
+            formData.clientToBillType === "shipper" ||
+            formData.clientToBillType === "consignee"
+                ? auxVar
+                : formData.clientToBillId,
       };
 
       const response = await ReceiptService.createClientToBill(clientToBill);
@@ -1438,6 +1507,7 @@ const ReceiptCreationForm = ({
           consignee: consigneeRequest,
           delivery_location: formData.deliverylocation,
           client_to_bill_type: formData.client_to_bill_type,
+          clientToBillType: formData.client_to_bill_type,
           client_to_bill: formData.client_to_bill,
 
           pro_number: formData.proNumber,
@@ -1568,6 +1638,29 @@ const ReceiptCreationForm = ({
 
   const handleCancel = () => {
     window.location.reload();
+  };
+
+  const getAsyncSelectValue = () => {
+    let selectedOption = null;
+    if (formData.clientToBillType === "shipper") {
+      selectedOption = releasedToOptions.find(
+          (option) =>
+              option.id === formData.shipperId &&
+              option.type === formData.shipperType
+      );
+    } else if (formData.clientToBillType === "consignee") {
+      selectedOption = releasedToOptions.find(
+          (option) =>
+              option.id === formData.consigneeId &&
+              option.type === formData.consigneeType
+      );
+    } else {
+      selectedOption = releasedToOptions.find(
+          (option) =>
+              option.id === formData.client_to_bill && option.type === CTBType
+      );
+    }
+    return selectedOption;
   };
 
   //---------------------------------------------------------------------
@@ -1760,19 +1853,19 @@ const ReceiptCreationForm = ({
                     Shipper:
                   </label>
                   <AsyncSelect
-                    id="shipper"
-                    value={shipperOptions.find(
-                      (option) =>
-                        option.id === formData.shipperId &&
-                        option.type_person === formData.shipperType
-                    )}
-                    onChange={(e) => handleShipperSelection(e)}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={shipperOptions}
-                    loadOptions={loadShipperSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
+                      id="shipper"
+                      value={shipperOptions.find(
+                          (option) =>
+                              option.id === formData.shipperId &&
+                              option.type_person === formData.shipperType
+                      )}
+                      onChange={(e) => handleShipperSelection(e)}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={shipperOptions}
+                      loadOptions={loadShipperSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
                   />
                 </div>
                 <div className="col-6 text-start">
@@ -1780,19 +1873,19 @@ const ReceiptCreationForm = ({
                     Consignee:
                   </label>
                   <AsyncSelect
-                    id="consignee"
-                    value={consigneeOptions.find(
-                      (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type_person === formData.consigneeType
-                    )}
-                    onChange={(e) => handleConsigneeSelection(e)}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
+                      id="consignee"
+                      value={consigneeOptions.find(
+                          (option) =>
+                              option.id === formData.consigneeId &&
+                              option.type_person === formData.consigneeType
+                      )}
+                      onChange={(e) => handleConsigneeSelection(e)}
+                      isClearable={true}
+                      placeholder="Search and select..."
+                      defaultOptions={consigneeOptions}
+                      loadOptions={loadConsigneeSelectOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
                   />
                 </div>
               </div>
@@ -1800,22 +1893,22 @@ const ReceiptCreationForm = ({
               <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
                   <Input
-                    type="textarea"
-                    inputName="shipperinfo"
-                    placeholder="Shipper Location..."
-                    value={formData.shipperInfo}
-                    readonly={true}
+                      type="textarea"
+                      inputName="shipperinfo"
+                      placeholder="Shipper Location..."
+                      value={formData.shipperInfo}
+                      readonly={true}
                   />
                 </div>
 
                 <div className="col-6 text-start">
                   <Input
-                    type="textarea"
-                    inputName="consigneeInfo"
-                    placeholder="Consignee Info..."
-                    value={formData.consigneeInfo}
-                    readonly={true}
-                    label=""
+                      type="textarea"
+                      inputName="consigneeInfo"
+                      placeholder="Consignee Info..."
+                      value={formData.consigneeInfo}
+                      readonly={true}
+                      label=""
                   />
                 </div>
               </div>
@@ -1826,18 +1919,35 @@ const ReceiptCreationForm = ({
                     Client to Bill:
                   </label>
                   <select
-                    value={formData.clientToBillType}
-                    name="clientToBill"
-                    id="clientToBill"
-                    onChange={(e) => handleClientToBillSelection(e)}
+                      value={formData.clientToBillType}
+                      name="clientToBill"
+                      id="clientToBill"
+                      onChange={(e) => handleClientToBillSelection(e)}
                   >
                     <option value="">Select an option</option>
                     <option value="consignee">Consignee</option>
                     <option value="shipper">Shipper</option>
+                    <option value="other">Other</option>
                   </select>
-                  <p style={{ color: "red" }}>
+                  <p style={{color: "red"}}>
                     Note: Always select a client to bill when editing
                   </p>
+                </div>
+                <div className="col-6 text-start">
+                  <label htmlFor="clientToBill" className="form-label">
+                    Other Client to Bill:
+                  </label>
+                  <AsyncSelect
+                      id="releasedToOther"
+                      isDisabled={formData.client_to_bill_type !== "other"}
+                      onChange={(e) => {
+                        handleClientToBillSelection(e);
+                      }}
+                      value={getAsyncSelectValue()}
+                      defaultOptions={releasedToOptions}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
+                  />
                 </div>
               </div>
             </div>
@@ -1845,7 +1955,7 @@ const ReceiptCreationForm = ({
         </div>
 
         <div className="row w-100">
-          <div className="col-6">
+        <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 <h3>Supplier</h3>
@@ -1857,7 +1967,7 @@ const ReceiptCreationForm = ({
                     Name:
                   </label>
                   <AsyncSelect
-                    id="supplier"
+                      id="supplier"
                     value={supplierOptions.find(
                       (option) =>
                         option.id === formData.supplierId &&

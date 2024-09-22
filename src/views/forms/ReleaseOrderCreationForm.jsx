@@ -1032,7 +1032,7 @@ const ReleaseOrderCreationForm = ({
 
               <div className="clienToDiv text-start">
                 <label htmlFor="customer" className="form-label">
-                  Clien to Bill:
+                  Client to Bill:
                 </label>
                 <AsyncSelect
                   id="clienTo"

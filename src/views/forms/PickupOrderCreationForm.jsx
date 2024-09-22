@@ -21,7 +21,6 @@ import ExpenseChargeForm from "./ExpenseChargeForm";
 import RepackingForm from "./RepackingForm";
 import ReleaseService from "../../services/ReleaseService";
 import "../../styles/components/CreationForm.scss";
-import { fetchFormData } from "./DataFetcher";
 import ReceiptService from "../../services/ReceiptService";
 import ConfirmModal from "../../views/shared/components/ConfirmModal";
 import CarrierCreationForm from "../forms/CarrierCreationForm";
@@ -35,7 +34,7 @@ const PickupOrderCreationForm = ({
   currentPickUpNumber,
   setcurrentPickUpNumber,
   showBModal,
-  fromPickUp, //added fromPickUp para save commodities
+  fromPickUp,
 }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -298,38 +297,6 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  //-----------------------------------------------------------
-  // const handleConsigneeSelection = async (event) => {
-  //   const id = event?.id || "";
-  //   const type = event?.type || "";
-
-  //   let result;
-  //   if (type === "forwarding-agent") {
-  //     result = await ForwardingAgentService.getForwardingAgentById(id);
-  //   }
-  //   if (type === "customer") {
-  //     result = await CustomerService.getCustomerById(id);
-  //   }
-  //   if (type === "vendor") {
-  //     result = await VendorService.getVendorByID(id);
-  //   }
-  //   if (type === "Carrier") {
-  //     result = await CarrierService.getCarrierById(id);
-  //   }
-  //   const info = `${result?.data.street_and_number || ""} - ${
-  //     result?.data.city || ""
-  //   } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
-  //     result?.data.zip_code || ""
-  //   }`;
-  //   setconsignee(result?.data);
-  //   setFormData({
-  //     ...formData,
-  //     consigneeId: id,
-  //     consigneeType: type,
-  //     consigneeInfo: info,
-  //   });
-  // };
-
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
@@ -420,7 +387,6 @@ const PickupOrderCreationForm = ({
 
   const handleClientToBillSelection = async (event) => {
     const type = event?.target?.value || "";
-    console.log("TYPE", type);
 
     if (type === "other") {
       setFormData({ ...formData, client_to_bill_type: type });
@@ -451,7 +417,6 @@ const PickupOrderCreationForm = ({
         client_to_bill_type: type,
         client_to_bill: id,
       });
-      console.log("Este es form data despues de el else", formData);
     }
   };
 
