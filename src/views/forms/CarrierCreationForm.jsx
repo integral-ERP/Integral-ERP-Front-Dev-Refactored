@@ -5,8 +5,6 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CountriesService from "../../services/CountriesService"; // Adjust the path as needed
 import Input from "../shared/components/Input";
-import { GlobalContext } from "../../context/global";
-
 const CarrierCreationForm = ({
   carrier,
   closeModal,
@@ -239,11 +237,11 @@ const CarrierCreationForm = ({
       //   overflowY: "auto",
       // }}
     >
-      <div className="form-container">
+      <div className="form-container_carrier">
         <div className="company-form carrier">
           <div className="row w-100">
-            <div className="col-6">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form_general w-100">
                 <div className="form-label_name">
                   <h2>General</h2>
                   <span></span>
@@ -347,7 +345,7 @@ const CarrierCreationForm = ({
                   </div>
 
                   <div className="col-6">
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="email"
                         inputName="email"
@@ -360,7 +358,7 @@ const CarrierCreationForm = ({
                       />
                     </div>
 
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="website"
@@ -372,7 +370,7 @@ const CarrierCreationForm = ({
                         label="Web Site"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="reference_number"
@@ -387,7 +385,7 @@ const CarrierCreationForm = ({
                         label="Reference Number"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="contactFN"
@@ -402,7 +400,7 @@ const CarrierCreationForm = ({
                         label="Contact First Name"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="contact_last_name"
@@ -417,7 +415,7 @@ const CarrierCreationForm = ({
                         label="Contact Last Name"
                       />
                     </div>
-                    <div className="company-form__section">
+                    <div className="company-form__section" style={{width: "11vw"}}>
                       <Input
                         type="text"
                         inputName="identification_number"
@@ -438,9 +436,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-
-            <div className="col-6">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form w-100">
                 <div className="form-label_name">
                   <h2>Address</h2>
                   <span></span>
@@ -511,11 +508,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="row w-100">
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-form w-100">
                 <div className="form-label_name">
                   <h2>Land</h2>
                   <span></span>
@@ -591,9 +585,8 @@ const CarrierCreationForm = ({
                 </div>
               </div>
             </div>
-
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+            <div className="col-3">
+              <div className="creation creation-carrier w-100">
                 <div className="form-label_name">
                   <h2>Airline</h2>
                   <span></span>
@@ -614,10 +607,9 @@ const CarrierCreationForm = ({
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="col-4">
-              <div className="creation creation-container w-100">
+              {/* <div className="col-4"> */}
+              <div className="creation creation-carrier w-100">
                 <div className="form-label_name">
                   <h2>Ocean</h2>
                   <span></span>
@@ -646,17 +638,19 @@ const CarrierCreationForm = ({
                     label="SCAC number"
                   />
                 </div>
-              </div>
+              {/* </div> */}
+            </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      <div className="company-form__options-container" style={{marginLeft:"27vw"}}>
+      <div className="company-form__options-carrier" style={{marginLeft:"27vw", marginTop: "-1vw"}}>
             {fromPickupOrder ? (
                   <>
-                    <button className="button-save" onClick={sendData}>Save</button>
-                     <button className="button-cancel" onClick={handleCancel}>Cancel</button>
+                    <label className="button-save" onClick={sendData}>Save</label>
+                     <label className="button-cancel" onClick={handleCancel}>Cancel</label>
                   </>
                 ) : (
                   <>

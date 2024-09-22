@@ -22,7 +22,10 @@ import EventCreationForm from "./EventCreationForm";
 import "../../styles/components/ReceipCreationForm.scss";
 import RepackingForm from "./RepackingForm";
 import PickupService from "../../services/PickupService";
+import CarrierCreationForm from "../forms/CarrierCreationForm";
+import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
 import { fetchFormData } from "./DataFetcher";
+import ModalForm from "../shared/components/ModalForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFile,
@@ -35,6 +38,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import mammoth from "mammoth";
 import ConfirmModal from "../../views/shared/components/ConfirmModal";
+import CustomerCreationForm from "./CustomerCreationForm";
 
 const ReceiptCreationForm = ({
   pickupOrder,
@@ -104,20 +108,34 @@ const ReceiptCreationForm = ({
 
   const [selectedIncomeCharge, setSelectedIncomeCarge] = useState(null);
   const [selectedExpenseCharge, setSelectedExpenseCarge] = useState(null);
-  const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] =
-    useState(false);
+  const [showIncomeChargeEditForm, setshowIncomeChargeEditForm] =useState(false);
   const [showExpenseEditForm, setshowExpenseEditForm] = useState(false);
   // Desabilitar el botón si commodities es null o vacío y cambio de estado
   const [changeStateSave, setchangeStateSave] = useState(false);
   const isButtonDisabled = !commodities || commodities.length === 0;
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+  //added  carrier modal
+  const [isModalOpenCarrier, setIsModalOpenCarrier] = useState(false);
+  const [selectedCarrier, setSelectedCarrier] = useState(null);
+  const [isProcessCompleteCarrier, setIsProcessCompleteCarrier] = useState(false);
+  //added  Destination Agent modal
+  const [isModalOpenDestinationAgent, setIsModalOpenDestinationAgent] = useState(false);
+  const [selectedDestinationAgent, setSelectedDestinationAgent] = useState(null);
+  const [isProcessCompleteDestinationAgent, setIsProcessCompleteDestinationAgent] = useState(false);
+  //added  Agent modal
+  const [isModalOpenAgent, setIsModalOpenAgent] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
+  //added Supplier modal
+  const [isModalOpenSupplier, setIsModalOpenSupplier] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [isProcessCompleteSupplier, setIsProcessCompleteSupplier] = useState(false);
+
 
   useEffect(() => {
     fetchFormData()
       .then((data) => {
-        const forwardingAgents = data.filter(
-          (item) => item.type === "forwarding-agent"
-        );
+        const forwardingAgents = data.filter((item) => item.type === "forwardingAgent");
         const customers = data.filter((item) => item.type === "customer");
         const vendors = data.filter((item) => item.type === "vendor");
         const employees = data.filter((item) => item.type === "employee");
@@ -231,17 +249,28 @@ const ReceiptCreationForm = ({
       issuedByType: type,
       issuedByInfo: info,
     });
+    setSelectedAgent(result?.data);
+    console.log("setSelectedAgent",setSelectedAgent);
   };
 
   const handleDestinationAgentSelection = async (event) => {
-    const id = event.id;
+    const id = event?.id || "";
+    const type = event?.type || "";
+    const result = await ForwardingAgentService.getForwardingAgentById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
+    }`;
     setFormData({
       ...formData,
       destinationAgentId: id,
+      destinationAgentType: type,
+      destinationAgentInfo: info,
     });
-    const result = await ForwardingAgentService.getForwardingAgentById(id);
-    setagent(result.data);
-  };
+    setSelectedDestinationAgent(result?.data); // Set the selected Destination Agent
+    console.log("setSelectedDestinationAgent",setSelectedDestinationAgent);
+  }
 
   //------------------------------------------------
   const handleSelectEvent = (events) => {
@@ -324,7 +353,7 @@ const ReceiptCreationForm = ({
   const handleConsigneeSelection = (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
@@ -352,124 +381,59 @@ const ReceiptCreationForm = ({
     });
   };
 
-  /*  const handleSupplierSelection = async (event) => {
-    const id = event.id || formData.supplierId;
-    // const type = event.type || formData.supplierType;
-    const type = event?.type || "";
-    const selectedSupplier = supplierOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-
-    if (supplierOptions) {
-      console.log("supplierOptions =", supplierOptions);
-      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        supplierId: supplierOptions.id
-      }));
-    }
-
-    if (!selectedSupplier) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-
-    const info = `${selectedSupplier?.street_and_number || ""} - ${
-      selectedSupplier?.city || ""
-    } - ${selectedSupplier?.state || ""} - ${
-      selectedSupplier?.country || ""
-    } - ${selectedSupplier?.zip_code || ""}`;
-
-    setSupplier(selectedSupplier);
-
-    setFormData({
-      ...formData,
-      supplierId: id,
-      supplierType: type,
-      supplierInfo: info,
-    });
-  }; */
-  /*  const handleSupplierSelection = async (event) => {
-    const id = event.id || "";
-    // const type = event.type || formData.supplierType;
-    const type = event?.type || "";
-    const selectedSupplier = supplierOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    
-
-    
-    if (supplierOptions) {
-      console.log("supplierOptions =", supplierOptions);
-      console.log("selectedSupplier =", selectedSupplier);
-      const info = `${selectedSupplier?.street_and_number || ""} - ${
-        selectedSupplier?.city || "" 
-      } - ${selectedSupplier?.state || ""} - ${
-        selectedSupplier?.country || ""
-      } - ${selectedSupplier?.zip_code || ""}`;
-      // Si se selecciona una opción, actualiza el estado con el nuevo ID de proveedor
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        supplierId: selectedSupplier.id,
-        supplierType: selectedSupplier.type,
-        supplierInfo: info,
-      }));
-    }
-
-    if (!selectedSupplier) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-
-    const info = `${selectedSupplier?.street_and_number || ""} - ${
-      selectedSupplier?.city || ""
-    } - ${selectedSupplier?.state || ""} - ${
-      selectedSupplier?.country || ""
-    } - ${selectedSupplier?.zip_code || ""}`;
-
-    setSupplier(selectedSupplier);
-
-    setFormData({
-      ...formData,
-      supplierId: id,
-      supplierType: type,
-      supplierInfo: info,
-    });
-  }; */
   const handleSupplierSelection = async (event) => {
-    if (event && event.id) {
-      const id = event.id || formData.supplierId;
-      const type = event.type || formData.supplierType;
-
-      let result;
-      if (type === "forwarding-agent") {
-        result = await ForwardingAgentService.getForwardingAgentById(id);
-      } else if (type === "customer") {
-        result = await CustomerService.getCustomerById(id);
-      } else if (type === "vendor") {
-        result = await VendorService.getVendorByID(id);
-      }
-
-      const info = result?.data
-        ? `${result.data.street_and_number || ""} - ${
-            result.data.city || ""
-          } - ${result.data.state || ""} - ${result.data.country || ""} - ${
-            result.data.zip_code || ""
-          }`
-        : formData.supplierInfo;
-      setSupplier(result?.data || supplier);
-      setFormData({
-        ...formData,
-        supplierId: id,
-        supplierType: type,
-        supplierInfo: info,
-      });
-    } else {
-      console.error(
-        "El objeto de selección de supplier es nulo o no tiene una propiedad 'id'"
-      );
-    }
+    const id = event.id;
+    const result = await CustomerService.getCustomerById(id);
+    const type = event.type || formData.supplierType;
+    const info = `${result.data.street_and_number || ""} - ${
+      result.data.city || ""
+    } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+      result.data.zip_code || ""
+    }`;
+    setFormData({
+      ...formData,
+      supplierId: id,
+      supplierType: type,
+      supplierInfo: info,
+    });
+      setSelectedSupplier(result?.data); // Set the selected Supplier
+      console.log("setSelectedSupplier",setSelectedSupplier);
   };
+
+  // const handleSupplierSelection = async (event) => {
+  //   if (event && event.id) {
+  //     const id = event.id || formData.supplierId;
+  //     const type = event.type || formData.supplierType;
+
+  //     let result;
+  //     if (type === "forwardingAgent") {
+  //       result = await ForwardingAgentService.getForwardingAgentById(id);
+  //     } else if (type === "customer") {
+  //       result = await CustomerService.getCustomerById(id);
+  //     } else if (type === "vendor") {
+  //       result = await VendorService.getVendorByID(id);
+  //     }
+
+  //     const info = result?.data
+  //       ? `${result.data.street_and_number || ""} - ${
+  //           result.data.city || ""
+  //         } - ${result.data.state || ""} - ${result.data.country || ""} - ${
+  //           result.data.zip_code || ""
+  //         }`
+  //       : formData.supplierInfo;
+  //     setSupplier(result?.data || supplier);
+  //     setFormData({
+  //       ...formData,
+  //       supplierId: id,
+  //       supplierType: type,
+  //       supplierInfo: info,
+  //     });
+  //   } else {
+  //     console.error(
+  //       "El objeto de selección de supplier es nulo o no tiene una propiedad 'id'"
+  //     );
+  //   }
+  // };
 
   const handleShipperSelection = async (event) => {
     if (event && event.id) {
@@ -477,7 +441,7 @@ const ReceiptCreationForm = ({
       const type = event.type || formData.shipperType;
 
       let result;
-      if (type === "forwarding-agent") {
+      if (type === "forwardingAgent") {
         result = await ForwardingAgentService.getForwardingAgentById(id);
       } else if (type === "customer") {
         result = await CustomerService.getCustomerById(id);
@@ -505,6 +469,154 @@ const ReceiptCreationForm = ({
       );
     }
   };
+
+  //added handle carrier creation
+  const handleAddCarrierClick = () => {
+    setSelectedCarrier(null);
+    setIsModalOpenCarrier(true);
+  };
+  const handleEditCarrierClick = () => {
+    if (formData.mainCarrierdId) {
+      setIsModalOpenCarrier(true);
+    } else {
+      alert("Please select a carrier to edit.");
+    }
+  };
+  const closeModalCarrier = () => {
+    setIsModalOpenCarrier(false);
+    setSelectedCarrier(null);
+  };
+  const handleProcessCompleteCarrier = async (createdCarrierId = null) => {
+    setIsProcessCompleteCarrier(true);
+    setIsModalOpenCarrier(false);
+    console.log("Proceso completado en CarrierCreationForm");
+
+    // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
+    const carrierId = createdCarrierId || formData.mainCarrierdId;
+
+    if (carrierId) {
+      await handleMainCarrierSelection({ id: carrierId });
+
+      // Obtener y actualizar las opciones del carrier
+      const updatedOptions = await loadCarrierSelectOptions("");
+      setCarrierOptions(updatedOptions);
+    }
+
+    // Restablecer el carrier seleccionado después del procesamiento
+    setSelectedCarrier(null);
+  };
+
+  //--------------------------------------------------------------
+    //added handle DestinationAgent creation
+    const handleAddDestinationAgentClick = () => {
+      setSelectedDestinationAgent(null);
+      setIsModalOpenDestinationAgent(true);
+    };
+    const handleEditDestinationAgentClick = () => {
+      if (formData.destinationAgentId) {
+        setIsModalOpenDestinationAgent(true);
+      } else {
+        alert("Please select a DestinationAgent to edit.");
+      }
+    };
+    const closeModalDestinationAgent = () => {
+      setIsModalOpenDestinationAgent(false);
+      setSelectedDestinationAgent(null);
+    };
+    const handleProcessCompleteDestinationAgent = async (createdDestinationAgentId = null) => {
+      setIsProcessCompleteDestinationAgent(true);
+      setIsModalOpenDestinationAgent(false);
+      console.log("Proceso completado en DestinationAgent");
+
+      // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el destinationAgentId existente
+      const destinationId = createdDestinationAgentId || formData.destinationAgentId;
+
+      if (destinationId) {
+        await handleDestinationAgentSelection({ id: destinationId });
+
+        // Obtener y actualizar las opciones del DestinationAgent
+        const updatedOptions = await loadDestinationAgentsSelectOptions("");
+        setDestinationAgentOptions(updatedOptions);
+      }
+
+      // Restablecer el DestinationAgent seleccionado después del procesamiento
+      setSelectedDestinationAgent(null);
+    };
+
+    //--------------------------------------------------------------
+  //added handle Agent creation
+  const handleAddAgentClick = () => {
+    setSelectedAgent(null);
+    setIsModalOpenAgent(true);
+  };
+  const handleEditAgentClick = () => {
+    if (formData.issuedById) {
+      setIsModalOpenAgent(true);
+    } else {
+      alert("Please select a Agent to edit.");
+    }
+  };
+  const closeModalAgent = () => {
+    setIsModalOpenAgent(false);
+    setSelectedAgent(null);
+  };
+  const handleProcessCompleteAgent = async (createdAgentId = null) => {
+    setIsProcessCompleteAgent(true);
+    setIsModalOpenAgent(false);
+    console.log('Proceso completado en ForwardingAgentCreationForm');
+    // Si se creó un nuevo Agent, utilice su ID; de lo contrario, utilice el issuedById existente
+    const AgentId = createdAgentId || formData.issuedById;
+
+    if (AgentId) {
+      await handleIssuedBySelection({ id: AgentId });
+
+      // Obtener y actualizar las opciones del Agent
+      const updatedOptions = await loadAgentSelectOptions('');
+      setIssuedByOptions(updatedOptions);
+    }
+
+    // Restablecer el Agent seleccionado después del procesamiento
+    setSelectedAgent(null);
+  };
+  //------------------------------------------------------------
+    //added handle Supplier creation
+    const handleAddSupplierClick = () => {
+      setSelectedSupplier(null);
+      setIsModalOpenSupplier(true);
+    };
+    const handleEditSupplierClick = () => {
+      if (formData.supplierId) {
+        setIsModalOpenSupplier(true);
+      } else {
+        alert("Please select a Supplier to edit.");
+      }
+    };
+    const closeModalSupplier = () => {
+      setIsModalOpenSupplier(false);
+      setSelectedSupplier(null);
+    };
+    const handleProcessCompleteSupplier = async (createdSupplierId = null) => {
+      setIsProcessCompleteSupplier(true);
+      setIsModalOpenSupplier(false);
+      console.log("Proceso completado en customerCreationform");
+
+      // Si se creó un nuevo Supplier, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
+      const SupplierId = createdSupplierId || formData.supplierId;
+
+      if (SupplierId) {
+        await handleSupplierSelection({ id: SupplierId });
+
+        // Obtener y actualizar las opciones del Supplier
+        const updatedOptions = await loadSupplierSelectOptions("");
+        setSupplierOptions(updatedOptions);
+      }
+
+      // Restablecer el  seleccionado después del procesamiento
+      setSelectedSupplier(null);
+    };
+
+    //--------------------------------------------------------------
+
   //---------------------------------CHARGE IMG---------------------------------------------------------
 
   const [showPreview, setShowPreview] = useState(false);
@@ -708,6 +820,8 @@ const ReceiptCreationForm = ({
       mainCarrierdId: id,
       mainCarrierInfo: info,
     });
+    setSelectedCarrier(result?.data); // Set the selected carrier
+    console.log("setSelectedCarrier",setSelectedCarrier);
   };
 
   const handleSelectCommodity = (commodity) => {
@@ -827,7 +941,7 @@ const ReceiptCreationForm = ({
     if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if (type === "forwarding-agent") {
+    if (type === "forwardingAgent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
     if (type === "Carrier") {
@@ -844,7 +958,7 @@ const ReceiptCreationForm = ({
     if (type === "vendor") {
       option = await VendorService.getVendorByID(id);
     }
-    if (type === "forwarding-agent") {
+    if (type === "forwardingAgent") {
       option = await ForwardingAgentService.getForwardingAgentById(id);
     }
     if (type === "Carrier") {
@@ -868,13 +982,13 @@ const ReceiptCreationForm = ({
         pickupOrder.shipperObj?.data?.obj?.id,
         pickupOrder.shipperObj?.data?.obj?.type_person !== "agent"
           ? pickupOrder.shipperObj?.data?.obj?.type_person
-          : "forwarding-agent"
+          : "forwardingAgent"
       );
       loadConsigneeOption(
         pickupOrder.consigneeObj?.data?.obj?.id,
         pickupOrder.consigneeObj?.data?.obj?.type_person !== "agent"
           ? pickupOrder.consigneeObj?.data?.obj?.type_person
-          : "forwarding-agent"
+          : "forwardingAgent"
       );
       setshowExpenseForm(true);
       setshowIncomeForm(true);
@@ -1033,7 +1147,7 @@ const ReceiptCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
     ];
 
     return options;
@@ -1043,7 +1157,7 @@ const ReceiptCreationForm = ({
     const responseAgents = (await ForwardingAgentService.search(inputValue))
       .data.results;
 
-    const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
+    const options = [...addTypeToObjects(responseAgents, "forwardingAgent")];
 
     return options;
   };
@@ -1051,15 +1165,15 @@ const ReceiptCreationForm = ({
   const loadShipperSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
       .results;
-    const responseVendors = (await VendorService.search(inputValue)).data
-      .results;
-    const responseAgents = (await ForwardingAgentService.search(inputValue))
-      .data.results;
+    // const responseVendors = (await VendorService.search(inputValue)).data
+    //   .results;
+    // const responseAgents = (await ForwardingAgentService.search(inputValue))
+    //   .data.results;
 
     const options = [
-      ...addTypeToObjects(responseVendors, "vendor"),
+      // ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      // ...addTypeToObjects(responseAgents, "forwardingAgent"),
     ];
 
     return options;
@@ -1078,7 +1192,7 @@ const ReceiptCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
       ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
@@ -1094,14 +1208,66 @@ const ReceiptCreationForm = ({
     return options;
   };
 
+  //added para recargar carriersoptions al crear un carrier
+  useEffect(() => {
+    const initializeCarrierOptions = async () => {
+      const initialOptions = await loadCarrierSelectOptions('');
+      setCarrierOptions(initialOptions);
+    };
+
+    initializeCarrierOptions();
+  }, []);
   const loadCarrierSelectOptions = async (inputValue) => {
-    const responseCarriers = (await CarrierService.search(inputValue)).data
-      .results;
-
-    const options = [...addTypeToObjects(responseCarriers, "Carrier")];
-
-    return options;
+    const responseCarriers = (await CarrierService.search(inputValue)).data.results;
+    return addTypeToObjects(responseCarriers, "Carrier");
   };
+
+  //added para recargar destinationAgentOptions al crear un Agent
+  useEffect(() => {
+    const initializeDestinationAgent = async () => {
+      const initialOptions = await loadinitializeDestinationAgentSelectOptions('');
+      setCarrierOptions(initialOptions);
+    };
+
+    initializeDestinationAgent();
+  }, []);
+
+  const loadinitializeDestinationAgentSelectOptions = async (inputValue) => {
+    const responseDestinationAgent = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responseDestinationAgent, "forwardingAgent");
+  };
+
+  //added para recargar Agentsoptions al crear un Agent
+  useEffect(() => {
+    const initializeAgentOptions = async () => {
+      const initialOptionsAgent = await loadAgentSelectOptions("");
+      setIssuedByOptions(initialOptionsAgent);
+    };
+
+    initializeAgentOptions();
+  }, []);
+
+  const loadAgentSelectOptions = async (inputValueAgent) => {
+    const responseAgents = (await ForwardingAgentService.search(inputValueAgent)).data
+      .results;
+    return addTypeToObjects(responseAgents, "forwardingAgent");
+  };
+  //-----------------
+  //added para recargar Supplieroptions al crear un Supplier
+  useEffect(() => {
+    const initializeSupplierOptions = async () => {
+      const initialOptions = await loadSupplierSelectOptions('');
+      setSupplierOptions(initialOptions);
+    };
+
+    initializeSupplierOptions();
+  }, []);
+  const loadSupplierSelectOptions = async (inputValue) => {
+    const responseSupplier = (await CustomerService.search(inputValue)).data.results;
+    return addTypeToObjects(responseSupplier, "customer");
+  };
+
+  //--------------------------------
 
   useEffect(() => {
     if (!fromPickUp) {
@@ -1114,6 +1280,8 @@ const ReceiptCreationForm = ({
       setFormData({ ...formData, number: pickupNumber });
     }
   }, [pickupNumber]);
+
+
 
   useEffect(() => {
     if (fromPickUp) {
@@ -1292,7 +1460,7 @@ const ReceiptCreationForm = ({
     if (formData.consigneeType === "vendor") {
       consigneeName = "vendorid";
     }
-    if (formData.consigneeType === "forwarding-agent") {
+    if (formData.consigneeType === "forwardingAgent") {
       consigneeName = "agentid";
     }
     if (formData.consigneeType === "Carrier") {
@@ -1319,7 +1487,7 @@ const ReceiptCreationForm = ({
     if (formData.shipperType === "vendor") {
       shipperName = "vendorid";
     }
-    if (formData.shipperType === "forwarding-agent") {
+    if (formData.shipperType === "forwardingAgent") {
       shipperName = "agentid";
     }
     if (formData.shipperType === "Carrier") {
@@ -1345,7 +1513,7 @@ const ReceiptCreationForm = ({
     if (formData.supplierType === "vendor") {
       supplierName = "vendorid";
     }
-    if (formData.supplierType === "forwarding-agent") {
+    if (formData.supplierType === "forwardingAgent") {
       supplierName = "agentid";
     }
     if (formData.supplierType === "Carrier") {
@@ -1765,6 +1933,7 @@ const ReceiptCreationForm = ({
                         loadOptions={loadDestinationAgentsSelectOptions}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.id}
+                        key={destinationAgentOptions.length} // Add esto para que se refresque la lista
                       />
                     )
                   ) : (
@@ -1784,7 +1953,55 @@ const ReceiptCreationForm = ({
                       placeholder="Search and select..."
                     />
                   )}
+                  <label
+                      className="copy-label_add"
+                      onClick={handleAddDestinationAgentClick}
+                      >
+                      Add
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditDestinationAgentClick}
+                      >
+                      Edit
+                    </label>
                 </div>
+                {/* Forms creacion y edicion DestinationAgent */}
+                <div>
+                    {isModalOpenDestinationAgent && selectedDestinationAgent === null &&(
+                      <ModalForm
+                      isOpen={isModalOpenDestinationAgent}
+                      onClose={closeModalDestinationAgent}
+                      >
+                      <ForwardingAgentsCreationForm
+                        forwardingAgent={null}
+                        closeModal={closeModalDestinationAgent}
+                        creating={true}
+                        fromPickupOrder={true}
+                        onProcessComplete={(createdDestinationAgentId) =>
+                          handleProcessCompleteDestinationAgent(createdDestinationAgentId)}
+                      />
+                      </ModalForm>
+                    )}
+                  </div>
+                  <div>
+                    {isModalOpenDestinationAgent && selectedDestinationAgent !== null &&(
+                      <ModalForm
+                        isOpen={isModalOpenDestinationAgent}
+                        onClose={closeModalDestinationAgent}
+                        >
+                        <ForwardingAgentsCreationForm
+                          forwardingAgent={selectedDestinationAgent}
+                          closeModal={closeModalDestinationAgent}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteDestinationAgent}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion carrier */}
+
                 <div className="col-6 text-start">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <p id="creation-date" className="text-date">
@@ -1825,7 +2042,55 @@ const ReceiptCreationForm = ({
                     loadOptions={loadIssuedBySelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={issuedByOptions.length} // Add esto para que se refresque la lista
                   />
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddAgentClick}
+                    >
+                    Add
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditAgentClick}
+                    >
+                    Edit
+                  </label>
+                  {/* Forms creacion y edicion Agent */}
+                <div>
+                  {isModalOpenAgent && selectedAgent !== null &&(
+                  <ModalForm
+                    isOpen={isModalOpenAgent}
+                    onClose={closeModalAgent}
+                  >
+                    <ForwardingAgentsCreationForm
+                      forwardingAgent={selectedAgent}
+                      closeModal={closeModalAgent}
+                      creating={false}
+                      fromPickupOrder={true}
+                      onProcessComplete={handleProcessCompleteAgent}
+                    />
+                  </ModalForm>
+                  )}
+                </div>
+                <div>
+                  {isModalOpenAgent && selectedAgent === null &&(
+                    <ModalForm
+                      isOpen={isModalOpenAgent}
+                      onClose={closeModalAgent}
+                    >
+                    <ForwardingAgentsCreationForm
+                      forwardingAgent={null}
+                      closeModal={closeModalAgent}
+                      creating={true}
+                      fromPickupOrder={true}
+                      onProcessComplete={(createdAgentId) =>
+                        handleProcessCompleteAgent(createdAgentId)}
+                    />
+                    </ModalForm>
+                  )}
+                </div>
+                {/* terminacion de Forms creacion y edicion Agent */}
                 </div>
 
                 <div className="col-6 text-start">
@@ -1967,38 +2232,77 @@ const ReceiptCreationForm = ({
                     Name:
                   </label>
                   <AsyncSelect
-                      id="supplier"
+                    id="supplier"
+                    onChange={(e) => handleSupplierSelection(e)}
                     value={supplierOptions.find(
                       (option) =>
-                        option.id === formData.supplierId &&
-                        option.type_person === formData.supplierType
+                        option.id === formData.supplierId
+                        // option.id === formData.supplierId &&
+                        // option.type_person === formData.supplierType
                     )}
-                    onChange={(e) => handleSupplierSelection(e)}
                     isClearable={true}
                     placeholder="Search and select..."
                     defaultOptions={supplierOptions}
-                    loadOptions={loadShipperSelectOptions}
+                    // loadOptions={loadShipperSelectOptions}
+                    loadOptions={loadSupplierSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={supplierOptions.length} // Add esto para que se refresque la lista
+
                   />
-                  {/* <AsyncSelect
-                    id="supplier"
-                    onChange={(e) => {
-                      handleSupplierSelection(e);
-                    }}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={supplierOptions}
-                    loadOptions={loadShipperSelectOptions}
-                    value={supplierOptions.find(
-                      (option) => 
-                      option.id === formData.supplierId &&
-                      option.type_person === formData.supplierType
-                    )}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  /> */}
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddSupplierClick}
+                  >
+                    Add
+                  </label>
+
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditSupplierClick}
+                  >
+                    Edit
+                  </label>
                 </div>
+
+                {/* Forms creacion y edicion Supplier */}
+                <div>
+                    {isModalOpenSupplier && selectedSupplier === null && (
+                      <ModalForm
+                        isOpen={isModalOpenSupplier}
+                        onClose={closeModalSupplier}
+                      >
+                        <CustomerCreationForm
+                          customer={null}
+                          closeModal={closeModalSupplier}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdSupplierId) =>
+                            handleProcessCompleteSupplier(createdSupplierId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+
+                  <div>
+                    {isModalOpenSupplier && selectedSupplier !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenSupplier}
+                        onClose={closeModalSupplier}
+                      >
+                        <CustomerCreationForm
+                          customer={selectedSupplier}
+                          closeModal={closeModalSupplier}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteSupplier}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion Supplier */}
+
 
                 <div className="col-6 text-start">
                   <Input
@@ -2060,9 +2364,7 @@ const ReceiptCreationForm = ({
                   </label>
                   <AsyncSelect
                     id="mainCarrier"
-                    onChange={(e) => {
-                      handleMainCarrierSelection(e);
-                    }}
+                    onChange={(e) => {handleMainCarrierSelection(e);}}
                     value={carrierOptions.find(
                       (option) => option.id === formData.mainCarrierdId
                     )}
@@ -2071,7 +2373,48 @@ const ReceiptCreationForm = ({
                     loadOptions={loadCarrierSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+                    key={carrierOptions.length} // Add esto para que se refresque la lista
                   />
+                  {/* labels de creacion y edicion carrier */}
+
+                  {/* Forms creacion y edicion carrier */}
+                  <div>
+                    {isModalOpenCarrier && selectedCarrier === null && (
+                      <ModalForm
+                        isOpen={isModalOpenCarrier}
+                        onClose={closeModalCarrier}
+                      >
+                        <CarrierCreationForm
+                          carrier={null}
+                          closeModal={closeModalCarrier}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdCarrierId) =>
+                            handleProcessCompleteCarrier(createdCarrierId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+
+                  <div>
+                    {isModalOpenCarrier && selectedCarrier !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenCarrier}
+                        onClose={closeModalCarrier}
+                      >
+                        <CarrierCreationForm
+                          carrier={selectedCarrier}
+                          closeModal={closeModalCarrier}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteCarrier}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion carrier */}
+
                 </div>
                 <div className="col-6 text-start">
                   <Input
@@ -2088,6 +2431,21 @@ const ReceiptCreationForm = ({
                     label="Tracking Number"
                   />
                 </div>
+              </div>
+              <div className="col-6 text-start">
+                <label
+                  className="copy-label_add"
+                  onClick={handleAddCarrierClick}
+                >
+                  Add
+                </label>
+
+                <label
+                  className="copy-label_edit"
+                  onClick={handleEditCarrierClick}
+                >
+                  Edit
+                </label>
               </div>
               <div className="row ">
                 <div className="col-6 text-start">

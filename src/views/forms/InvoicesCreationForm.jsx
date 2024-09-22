@@ -312,7 +312,7 @@ const InvoicesCreationForm = ({
     const customersWithType = addTypeToObjects(customers, "customer");
 
 
-    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents, "forwarding-agent");
+    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents, "forwardingAgent");
     const paymentsWithType = addTypeToObjects(paiment, "paiment-termn");
     const accountWithType = addTypeToObjects(accoun, "accounten-termn");
     const typeWithType = addTypeToObjects(type, "type");
@@ -394,7 +394,7 @@ const InvoicesCreationForm = ({
       "customer"
     )), ...(addTypeToObjects(
       responseAgents,
-      "forwarding-agent"
+      "forwardingAgent"
     ))];
 
     return options;

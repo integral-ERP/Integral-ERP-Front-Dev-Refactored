@@ -10,6 +10,8 @@ const CustomerCreationForm = ({
   closeModal,
   creating,
   onCustomerDataChange,
+  fromPickupOrder,
+  onProcessComplete,
 }) => {
   const [activeTab, setActiveTab] = useState("general");
   const [countries, setCountries] = useState([]);
@@ -19,7 +21,8 @@ const CustomerCreationForm = ({
   const [cities, setCities] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [formData, setFormData] = useState({
+  
+  const formFormat = {
     name: "",
     phone: "",
     email: "",
@@ -33,8 +36,8 @@ const CustomerCreationForm = ({
     state: "",
     country: "",
     zip_code: "",
-  });
-
+  };
+  const [formData, setFormData] = useState(formFormat);
   const handleCountryChange = (event) => {
     setFormData({ ...formData, country: event.target.value });
     setSelectedCountry(
@@ -132,17 +135,26 @@ const CustomerCreationForm = ({
     if (response.status >= 200 && response.status <= 300) {
       setShowSuccessAlert(true);
       setTimeout(() => {
-        closeModal();
-        onCustomerDataChange();
-        setShowSuccessAlert(false);
-        window.location.reload();
-      }, 1000);
+        //  después de 2 segundos.
+        if (fromPickupOrder == false) {
+          onCustomerDataChange();
+        }
+
+        // Llamar a la función de callback para notificar a PickOrderCreationForm
+        // Pase el ID del transportista creado al crear un nuevo carrier
+        onProcessComplete(creating ? response.data.id : undefined);
+        setFormData(formFormat);
+      }, 2000);
     } else {
       setShowErrorAlert(true);
     }
   };
 
   const handleCancel = () => {
+    if (fromPickupOrder== true){
+      closeModal();
+      return;
+    }
     window.location.reload();
   };
 
@@ -365,12 +377,27 @@ const CustomerCreationForm = ({
       </div>
 
       <div className="company-form__options-container">
-        <button className="button-save" onClick={sendData}>
+      {fromPickupOrder ? (
+        <>
+          <label onClick={sendData}>Save</label>
+            <label onClick={handleCancel}>Cancel</label>
+        </>
+        ) : (
+        <>
+          <button className="button-save" onClick={sendData}>
+            Save
+          </button>
+          <button className="button-cancel" onClick={handleCancel}>
+            Cancel
+          </button>
+        </>
+      )}
+        {/* <button className="button-save" onClick={sendData}>
           Save
         </button>
         <button className="button-cancel" onClick={handleCancel}>
           Cancel
-        </button>
+        </button> */}
       </div>
       {showSuccessAlert && (
         <Alert
@@ -407,6 +434,7 @@ CustomerCreationForm.propTypes = {
   closeModal: propTypes.func,
   creating: propTypes.bool.isRequired,
   onCustomerDataChange: propTypes.func,
+  onProcessComplete: propTypes.func,
 };
 
 CustomerCreationForm.defaultProps = {
@@ -414,6 +442,7 @@ CustomerCreationForm.defaultProps = {
   closeModal: null,
   creating: false,
   onCustomerDataChange: null,
+  onProcessComplete: () => {},
 };
 
 export default CustomerCreationForm;
