@@ -188,7 +188,7 @@ const ReleaseOrderCreationForm = ({
   const handleConsigneeSelection =async (event) => {
     const id = event?.id || "";
     const type = event?.type || "";
-    const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
+    const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
     if (!validTypes.includes(type)) {
       console.error(`Unsupported consignee type: ${type}`);
       return;
@@ -448,7 +448,7 @@ const ReleaseOrderCreationForm = ({
     const addTypeToObjects = (arr, type) =>
       arr.map((obj) => ({ ...obj, type }));
 
-    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents,"forwarding-agent");
+    const forwardingAgentsWithType = addTypeToObjects(forwardingAgents,"forwardingAgent");
     const customersWithType = addTypeToObjects(customers, "customer");
     const vendorsWithType = addTypeToObjects(vendors, "vendor");
     const employeesWithType = addTypeToObjects(employees, "employee");
@@ -486,7 +486,7 @@ const ReleaseOrderCreationForm = ({
     const responseAgents = (await ForwardingAgentService.search(inputValue))
       .data.results;
 
-    const options = [...addTypeToObjects(responseAgents, "forwarding-agent")];
+    const options = [...addTypeToObjects(responseAgents, "forwardingAgent")];
 
     return options;
   };
@@ -522,7 +522,7 @@ const ReleaseOrderCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
       ...addTypeToObjects(responseCarriers, "carrier"),
     ];
     return options;
@@ -545,7 +545,7 @@ const ReleaseOrderCreationForm = ({
     const options = [
       ...addTypeToObjects(responseVendors, "vendor"),
       ...addTypeToObjects(responseCustomers, "customer"),
-      ...addTypeToObjects(responseAgents, "forwarding-agent"),
+      ...addTypeToObjects(responseAgents, "forwardingAgent"),
       ...addTypeToObjects(responseCarriers, "Carrier"),
     ];
 
@@ -680,7 +680,7 @@ const ReleaseOrderCreationForm = ({
     if (formData.consigneeType === "vendor") {
       consigneeName = "vendorid";
     }
-    if (formData.consigneeType === "forwarding-agent") {
+    if (formData.consigneeType === "forwardingAgent") {
       consigneeName = "agentid";
     }
     if (formData.consigneeType === "Carrier") {
@@ -1032,7 +1032,7 @@ const ReleaseOrderCreationForm = ({
 
               <div className="clienToDiv text-start">
                 <label htmlFor="customer" className="form-label">
-                  Clien to Bill:
+                  Client to Bill:
                 </label>
                 <AsyncSelect
                   id="clienTo"
