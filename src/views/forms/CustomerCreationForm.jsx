@@ -376,12 +376,12 @@ const CustomerCreationForm = ({
         </div>
       </div>
 
-      <div className="company-form__options-container">
+      <div className="company-form__options-carrier">
       {fromPickupOrder ? (
         <>
-          <label onClick={sendData}>Save</label>
-            <label onClick={handleCancel}>Cancel</label>
-        </>
+                    <label className="button-save" onClick={sendData}>Save</label>
+                    <label className="button-cancel" onClick={handleCancel}>Cancel</label>
+                    </>
         ) : (
         <>
           <button className="button-save" onClick={sendData}>
