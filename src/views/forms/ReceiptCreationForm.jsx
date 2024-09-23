@@ -1011,16 +1011,16 @@ const ReceiptCreationForm = ({
       setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
-      debugger;
-      let temp = pickupOrder.clientBillObj?.data?.obj?.data?.obj?.type_person
-        ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
-          pickupOrder.shipperObj?.data?.obj?.id
-          ? "shipper"
-          : pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
-            pickupOrder.consigneeObj?.data?.obj?.id
-          ? "consignee"
-          : "other"
-        : "other";
+      let temp = pickupOrder.clientBillObj?.data?.obj?.data?.obj
+              ?.type_person
+              ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
+              pickupOrder.shipperObj?.data?.obj?.id
+                  ? "shipper"
+                  : pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
+                  pickupOrder.consigneeObj?.data?.obj?.id
+                      ? "consignee"
+                      : "other"
+              : "other";
 
       setCTBType(temp !== "agent" ? temp : "forwarding-agent");
 
@@ -1549,7 +1549,6 @@ const ReceiptCreationForm = ({
       formData.clientToBillType
     );
     let clientToBillName = "";
-    debugger;
     if (formData.clientToBillType === "other") {
       if (CTBType === "customer") {
         clientToBillName = "customerid";
