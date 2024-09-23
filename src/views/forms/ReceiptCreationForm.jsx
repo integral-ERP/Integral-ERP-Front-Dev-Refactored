@@ -999,7 +999,6 @@ const ReceiptCreationForm = ({
       setsupplierRequest(pickupOrder.supplier);
       setagent(pickupOrder.destination_agentObj);
       setshowCommodityCreationForm(true);
-      debugger;
       let temp = pickupOrder.clientBillObj?.data?.obj?.data?.obj
               ?.type_person
               ? pickupOrder.clientBillObj?.data?.obj?.data?.obj?.id ===
@@ -1532,7 +1531,6 @@ const ReceiptCreationForm = ({
 
     console.log("CLIENT TO BILL: ", formData.clientToBillId, formData.clientToBillType)
     let clientToBillName = "";
-    debugger;
     if (formData.clientToBillType === "other") {
       if (CTBType === "customer") {
         clientToBillName = "customerid";
