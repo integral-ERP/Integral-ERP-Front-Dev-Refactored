@@ -43,9 +43,9 @@ const ModalForm = ({ children, isOpen, closeModal }) => {
 
         onClick={handleModalContainerClick}
       >
-        <button className="modal__close" onClick={closeModal}>
+        {/* <button className="modal__close" onClick={closeModal}>
           X
-        </button>
+        </button> */}
         {children}
       </div>
     </article>
