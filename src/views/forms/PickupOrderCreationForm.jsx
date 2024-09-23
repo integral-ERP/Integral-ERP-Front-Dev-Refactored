@@ -94,9 +94,9 @@ const PickupOrderCreationForm = ({
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
   //added  Shipper modal
-  // const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
-  // const [selectedShipp, setSelectedShipper] = useState(null);
-  // const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+   const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+   const [selectedShipp, setSelectedShipper] = useState(null);
+   const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
   //added  Delivery Location modal
   const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
   const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
@@ -258,7 +258,7 @@ const PickupOrderCreationForm = ({
       pickupLocationType: type,
     });
     setSelectedPickUpLocation(result?.data); // Set the selected carrier
-    console.log("setSelectedPickUpLocation",setSelectedPickUpLocation);
+    console.log("setSelectedPickUpLocation",selectedPickUpLocation);
   };
 
   const handleSelectCommodity = (commodity) => {
@@ -358,39 +358,25 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleShipperSelection = (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    // const validTypes = ["forwarding-agent", "customer", "vendor", "Carrier"];
-    const validTypes = ["customer"];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-    const selectedShipper = shipperOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (!selectedShipper) {
-      console.error(`Shipper not found with ID ${id} and type ${type}`);
+  const handleShipperSelection = (selectedOption) => {
+    if (!selectedOption) return;
+
+    const { id, type , street_and_number, city, state, country, zip_code } = selectedOption;
+
+    if (type !== "customer") {
+      console.error(`Unsupported shipper type: ${type}`);
       return;
     }
 
-    const info = `${selectedShipper?.street_and_number || ""} - ${
-      selectedShipper?.city || ""
-    } - ${selectedShipper?.state || ""} - ${selectedShipper?.country || ""} - ${
-      selectedShipper?.zip_code || ""
-    }`;
+    const info = `${street_and_number || ""} - ${city || ""} - ${state || ""} - ${country || ""} - ${zip_code || ""}`;
 
-    setshipper(selectedShipper);
-    setdefaultValueShipper(selectedShipper);
-    setFormData({
-      ...formData,
+    setdefaultValueShipper(selectedOption);
+    setFormData(prevData => ({
+      ...prevData,
       shipperId: id,
       shipperType: type,
       shipperInfo: info,
-      // consigneeId: id,
-      // consigneeType: type,
-    });
+    }));
   };
 
   const handleCommodityDelete = () => {
@@ -487,7 +473,7 @@ const PickupOrderCreationForm = ({
     }
 
     // Restablecer el carrier seleccionado después del procesamiento
-    setSelectedCarrier(null);
+    //setSelectedCarrier(null);
   };
 
   //--------------------------------------------------------------
@@ -523,47 +509,70 @@ const PickupOrderCreationForm = ({
     }
 
     // Restablecer el Agent seleccionado después del procesamiento
-    setSelectedAgent(null);
+    //setSelectedAgent(null);
   };
   //--------------------------------------------------------------
   // //added handle Shipper creation
-  // const handleAddShipperClick = () => {
-  //   setSelectedShipper(null);
-  //   setIsModalOpenShipper(true);
-  // };
-  // const handleEditShipperClick = () => {
-  //   if (formData.shipperId) {
-  //     setIsModalOpenShipper(true);
-  //   } else {
-  //     alert("Please select a Shipper to edit.");
-  //   }
-  // };
-  // const closeModalShipper = () => {
-  //   setIsModalOpenShipper(false);
-  //   setSelectedShipper(null);
-  // };
-  // const handleProcessCompleteShipper = async (createdShipperId = null) => {
-  //   setIsProcessCompleteShipper(true);
-  //   setIsModalOpenShipper(false);
-  //   console.log('Proceso completado en ShipperCreationForm');
+   const handleAddShipperClick = () => {
+     setSelectedShipper(null);
+    setIsModalOpenShipper(true);
+   };
+   const handleEditShipperClick = () => {
+    if (formData.shipperId) {
+      const shipperToEdit = shipperOptions.find(
+        (shipper) => shipper.id === formData.shipperId
+      );
+      setSelectedShipper(shipperToEdit);
+      setIsModalOpenShipper(true);
+    } else {
+      alert("Please select a Shipper to edit.");
+    }
+  };
+   const closeModalShipper = () => {
+     setIsModalOpenShipper(false);
+   setSelectedShipper(null);
+   };
+   // Función para manejar la finalización del proceso de creación/edición
+  const handleProcessCompleteShipper = async (createdOrUpdatedShipperId) => {
+    setIsProcessCompleteShipper(true);
+    setIsModalOpenShipper(false);
+    console.log('Process completed in ShipperCreationForm');
+   
 
-  //   // Si se creó un nuevo Shipper, utilice su ID; de lo contrario, utilice el shipperId existente
-  //   const shippId = createdShipperId || formData.shipperId;
+    if (createdOrUpdatedShipperId) {
+      const updatedShipperOptions = await loadShipperSelectOptions('');
+      setShipperOptions(updatedShipperOptions);
 
-  //   if (shippId) {
-  //     await handleShipperSelection({ id: shippId });
+      const updatedShipper = updatedShipperOptions.find(
+        (shipper) => shipper.id === createdOrUpdatedShipperId
+      );
 
-  //     // Obtener y actualizar las opciones del Shipper
-  //     const updatedOption = await loadShipperSelectOptions('');
-  //     setShipperOptions(updatedOption);
+      if (updatedShipper) {
+        handleShipperSelection(updatedShipper);
+      }
+     
+    }
+  };
+  //Muy importante para despues de add/edit recarcargar opciones de Shipper!!
+  useEffect(() => {
+    if (isProcessCompleteShipper) {
+      loadShipperSelectOptions('').then(options => {
+        // Actualizar las opciones carajo
+        setShipperOptions(options);
+        setPickupLocationOptions(options); 
+        setReleasedToOptions(options);
+        if (selectedShipp) {
+          const updatedShipper = options.find(option => option.id === selectedShipp.id);
+          if (updatedShipper) {
+            handleShipperSelection(updatedShipper);
+          }
+        }
+        setIsProcessCompleteShipper(false);
+      });
+    }
+  }, [isProcessCompleteShipper, selectedShipp]);
+  
 
-  //     const updateOptionClientBillSelectionShipper = getAsyncSelectValue('');
-  //     setConsigneeOptions(updateOptionClientBillSelectionShipper);
-  //   }
-
-  //   // Restablecer el Shipper seleccionado después del procesamiento
-  //   setSelectedShipper(null);
-  // };
   //--------------------------------------------------------------
     //added handle DeliLocation creation
     const handleAddDeliLocationClick = () => {
@@ -598,7 +607,7 @@ const PickupOrderCreationForm = ({
       }
   
       // Restablecer el delivery seleccionado después del procesamiento
-      setSelectedDeliLocation(null);
+      //setSelectedDeliLocation(null);
     };
   
     //--------------------------------------------------------------
@@ -672,7 +681,7 @@ const PickupOrderCreationForm = ({
       }
   
       // Restablecer el DestinationAgent seleccionado después del procesamiento
-      setSelectedDestinationAgent(null);
+      //setSelectedDestinationAgent(null);
     };
   
     //--------------------------------------------------------------
@@ -709,7 +718,7 @@ const PickupOrderCreationForm = ({
     }
 
     // Restablecer el PickUpLocation seleccionado después del procesamiento
-    setSelectedPickUpLocation(null);
+    //setSelectedPickUpLocation(null);
   };
 
   //--------------------------------------------------------------
@@ -991,18 +1000,21 @@ const PickupOrderCreationForm = ({
   };
   //------------------
   //added para recargar Shipperoptions al crear un shipper
+  // Efecto para cargar las opciones iniciales de shipper
   useEffect(() => {
-    const initializeShipperOptions = async () => {
-      const initialOptions = await loadShipperSelectOptions('');
-      setShipperOptions(initialOptions);
-    };
-
-    initializeShipperOptions();
+    loadShipperSelectOptions('').then(options => setShipperOptions(options));
   }, []);
 
+
+  // Función para cargar las opciones de shipper
   const loadShipperSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.search(inputValue)).data.results;
-    return addTypeToObjects(responseCustomers, "customer");
+    const responseCustomers = (await CustomerService.getCustomers()).data.results;
+    return responseCustomers.map(customer => ({ 
+      ...customer, 
+      type: "customer", 
+      value: customer.id, 
+      label: customer.name 
+    }));
   };
   //------------------
   //added para recargar DeliveryOptions al crear un Delivery
@@ -2043,8 +2055,58 @@ const PickupOrderCreationForm = ({
                     loadOptions={loadShipperSelectOptions}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
+
                   />
                 </div>
+                <label
+                    className="copy-label_add"
+                    onClick={handleAddShipperClick}
+                    >
+                    Add
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditShipperClick}
+                    >
+                    Edit 
+                  </label>
+                {/* Forms creacion y edicion carrier */}
+                <div>
+                    {isModalOpenShipper && selectedShipp === null && (
+                      <ModalForm
+                        isOpen={isModalOpenShipper}
+                        onClose={closeModalShipper}
+                      >
+                        <CustomerCreationForm
+                          customer={null}
+                          closeModal={closeModalShipper}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdShipperId) =>
+                            handleProcessCompleteShipper(createdShipperId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+
+                  <div>
+                    {isModalOpenShipper && selectedShipp  !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenShipper}
+                        onClose={closeModalShipper}
+                      >
+                        <CustomerCreationForm
+                          customer={selectedShipp}
+                          closeModal={closeModalShipper}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteShipper}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion shipper */}
 
                 <div className="col-6 text-start">
                   <Input
