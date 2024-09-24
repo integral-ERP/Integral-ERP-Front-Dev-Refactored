@@ -95,18 +95,18 @@ const PickupOrderCreationForm = ({
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
   //added  Shipper modal
-   const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
-   const [selectedShipp, setSelectedShipper] = useState(null);
-   const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+  const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+  const [selectedShipp, setSelectedShipper] = useState(null);
+  const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
   //added  Delivery Location modal
   const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
   const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
   const [isProcessCompleteDeliLocation, setIsProcessCompleteDeliLocation] =
     useState(false);
   //added  Consignee modal
-  // const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
-  // const [selectedConsignee, setSelectedConsignee] = useState(null);
-  // const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
+  const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
+  const [selectedConsignee, setSelectedConsignee] = useState(null);
+  const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
   //added  Destination Agent modal
   const [isModalOpenDestinationAgent, setIsModalOpenDestinationAgent] =
     useState(false);
@@ -201,13 +201,7 @@ const PickupOrderCreationForm = ({
     ];
     // const pickupLocationOptions   = [...customersWithType, ...vendorsWithType];
 
-    // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
-    const consigneeOptions = [
-      ...customersWithType,
-      // ...vendorsWithType,
-      // ...forwardingAgentsWithType,
-      // ...carriersWithType,
-    ];
+    const consigneeOptions = [ ...customersWithType,];
 
     const deliveryLocationOptions = [
       ...customersWithType,
@@ -324,29 +318,19 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleConsigneeSelection = (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-    const selectedConsignee = consigneeOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (!selectedConsignee) {
-      console.error(`Consignee not found with ID ${id} and type ${type}`);
+  const handleConsigneeSelection = (selectedOption) => {
+    if (!selectedOption) return;
+
+    const { id, type , street_and_number, city, state, country, zip_code } = selectedOption;
+    if (type !== "customer") {
+
+      console.error(`Unsupported Consignee type: ${type}`);
       return;
     }
 
-    const info = `${selectedConsignee.street_and_number || ""} - ${
-      selectedConsignee.city || ""
-    } - ${selectedConsignee.state || ""} - ${
-      selectedConsignee.country || ""
-    } - ${selectedConsignee.zip_code || ""}`;
-    setconsignee(selectedConsignee);
-    setdefaultValueConsignee(selectedConsignee);
+    const info = `${street_and_number || ""} - ${city || ""} - ${state || ""} - ${country || ""} - ${zip_code || ""}`;
+    
+    setdefaultValueConsignee(selectedOption);
     setFormData({
       ...formData,
       consigneeId: id,
@@ -354,6 +338,7 @@ const PickupOrderCreationForm = ({
       consigneeInfo: info,
     });
   };
+
 
   const handleShipperSelection = (selectedOption) => {
     if (!selectedOption) return;
@@ -604,44 +589,68 @@ const PickupOrderCreationForm = ({
       // Restablecer el delivery seleccionado después del procesamiento
       //setSelectedDeliLocation(null);
     };
-  
-  
     //--------------------------------------------------------------
-      //added handle Consignee creation
-  // const handleAddConsigneeClick = () => {
-  //   setSelectedConsignee(null);
-  //   setIsModalOpenConsignee(true);
-  // };
-  // const handleEditConsigneeClick = () => {
-  //   if (formData.consigneeId) {
-  //     setIsModalOpenConsignee(true);
-  //   } else {
-  //     alert("Please select a Consignee to edit.");
-  //   }
-  // };
-  // const closeModalConsignee = () => {
-  //   setIsModalOpenConsignee(false);
-  //   setSelectedConsignee(null);
-  // };
-  // const handleProcessCompleteConsignee = async (createdConsigneeId = null) => {
-  //   setIsProcessCompleteConsignee(true);
-  //   setIsModalOpenConsignee(false);
-  //   console.log("Proceso completado en ConsigneeCreationForm");
+      
+  // //added handle consignee creation
+  const handleAddConsigneeClick = () => {
+    setSelectedConsignee(null);
+    setIsModalOpenConsignee(true);
+  };
+  const handleEditConsigneeClick = () => {
+    if (formData.consigneeId) {
+      const ConsigneeToEdit = consigneeOptions.find(
+        (consignee) => consignee.id === formData.consigneeId
+      );
+      setSelectedConsignee(ConsigneeToEdit);
+      setIsModalOpenConsignee(true);
+    } else {
+      alert("Please select a consignee to edit.");
+    }
+  };
+  const closeModalConsignee = () => {
+    setIsModalOpenConsignee(false);
+  setSelectedConsignee(null);
+  };
+  // Función para manejar la finalización del proceso de creación/edición
+  const handleProcessCompleteConsignee = async (createdOrUpdatedConsigneeId) => {
+    setIsProcessCompleteConsignee(true);
+    setIsModalOpenConsignee(false);
+    console.log('Process completed in ConsigneeCreationForm');
+    
+    if (createdOrUpdatedConsigneeId) {
+      const updatedConsigneeOptions = await loadConsigneeSelectOptions('');
+      setConsigneeOptions(updatedConsigneeOptions);
 
-  //   // Si se creó un nuevo Consignee, utilice su ID; de lo contrario, utilice el consigneeId existente
-  //   const ConsigneeId = createdConsigneeId || formData.consigneeId;
+      const updatedConsignee = updatedConsigneeOptions.find(
+        (consignee) => consignee.id === createdOrUpdatedConsigneeId
+      );
 
-  //   if (ConsigneeId) {
-  //     await handleConsigneeSelection({ id: ConsigneeId });
+      if (updatedConsignee) {
+        handleConsigneeSelection(updatedConsignee);
+      }
+      
+    }
+  };
+ //Muy importante para despues de add/edit recarcargar opciones de Consignee!!
+  useEffect(() => {
+    if (isProcessCompleteConsignee) {
+      loadConsigneeSelectOptions('').then(options => {
+        // Actualizar las opciones carajo
+        setConsigneeOptions(options);
+        setDeliveryLocationOptions(options); 
+        setReleasedToOptions(options);
+        if (selectedConsignee) {
+          const updatedConsignee = options.find(option => option.id === selectedConsignee.id);
+          if (updatedConsignee) {
+            handleConsigneeSelection(updatedConsignee);
+          }
+        }
+        setIsProcessCompleteConsignee(false);
+      });
+    }
+  }, [isProcessCompleteConsignee, selectedConsignee]);
+  
 
-  //     // Obtener y actualizar las opciones del Consignee
-  //     const updatedOptions = await loadConsigneeSelectOptions("");
-  //     setConsigneeOptions(updatedOptions);
-  //   }
-
-  //   // Restablecer el Consignee seleccionado después del procesamiento
-  //   setSelectedConsignee(null);
-  // };
 
   //--------------------------------------------------------------
     //added handle DestinationAgent creation
@@ -906,29 +915,7 @@ const PickupOrderCreationForm = ({
     return options;
   };
 
-  //---------------------------------------------------------
 
-  const loadConsigneeSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = consigneeOptions.filter((option) =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      const options = filteredOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
-
-      return options;
-    } else {
-      const options = consigneeOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
-      return options;
-    }
-  };
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -1006,9 +993,27 @@ const PickupOrderCreationForm = ({
 
   }, []);
 
-
   // Función para cargar las opciones de shipper
   const loadShipperSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.getCustomers()).data.results;
+    
+    return responseCustomers.map(customer => ({ 
+      ...customer, 
+      type: "customer", 
+      value: customer.id, 
+      label: customer.name 
+    }));
+  };
+  //------------------
+  //added para recargar Consigneeoptions al crear un Consignee
+  // Efecto para cargar las opciones iniciales de Consignee
+  useEffect(() => {
+    loadConsigneeSelectOptions('').then(options => setConsigneeOptions(options));
+
+  }, []);
+
+  // Función para cargar las opciones de Consignee
+  const loadConsigneeSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.getCustomers()).data.results;
     
     return responseCustomers.map(customer => ({ 
@@ -2087,18 +2092,6 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
 
                   />
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddShipperClick}
-                    >
-                    Add
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditShipperClick}
-                    >
-                    Edit 
-                  </label>
                 </div>
                 <div className="col-6 text-start">
                   <Input
@@ -2152,9 +2145,22 @@ const PickupOrderCreationForm = ({
                     )}
                   </div>
                   {/* terminacion de Forms creacion y edicion shipper */}
-
-                
               </div>
+              <div className="col-6 text-start">
+              <label
+                className="copy-label_add"
+                onClick={handleAddShipperClick}
+                >
+                Add
+              </label>
+              <label
+                className="copy-label_edit"
+                onClick={handleEditShipperClick}
+                >
+                Edit 
+              </label>
+              </div>
+              
 
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -2323,7 +2329,58 @@ const PickupOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
+                    
                   </div>
+                  
+                {/* Forms creacion y edicion carrier */}
+                <div>
+                    {isModalOpenConsignee && selectedConsignee === null && (
+                      <ModalForm
+                        isOpen={isModalOpenConsignee}
+                        onClose={closeModalConsignee}
+                      >
+                        <CustomerCreationForm
+                          customer={null}
+                          closeModal={closeModalConsignee}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdConsigneeId) =>
+                            handleProcessCompleteConsignee(createdConsigneeId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddConsigneeClick}
+                    >
+                    Add
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditConsigneeClick}
+                    >
+                    Edit 
+                  </label>
+                  <div>
+                    {isModalOpenConsignee && selectedConsignee  !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenConsignee}
+                        onClose={closeModalConsignee}
+                      >
+                        <CustomerCreationForm
+                          customer={selectedConsignee}
+                          closeModal={closeModalConsignee}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteConsignee}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion shipper */}
                 </div>
 
                 <div
@@ -2394,16 +2451,7 @@ const PickupOrderCreationForm = ({
                           />
                         </ModalForm>
                       )}
-                  </div>
-                  {/* terminacion de Forms creacion y edicion Customer */}
-                </div>
-              </div>
-
-              <div className="row mb-3">
-              <div className="col-6 text-start">
-               </div>
-              <div className="col-6 text-start">
-                    <label
+                      <label
                       className="copy-label_add"
                       onClick={handleAddDeliLocationClick}
                     >
@@ -2416,6 +2464,16 @@ const PickupOrderCreationForm = ({
                     >
                       Edit
                     </label>
+                  </div>
+                  {/* terminacion de Forms creacion y edicion Customer */}
+                </div>
+              </div>
+
+              <div className="row mb-3">
+              <div className="col-6 text-start">
+               </div>
+              <div className="col-6 text-start">
+                    
                   </div>
                   </div>
 
