@@ -2087,8 +2087,7 @@ const PickupOrderCreationForm = ({
                     getOptionValue={(option) => option.id}
 
                   />
-                </div>
-                <label
+                  <label
                     className="copy-label_add"
                     onClick={handleAddShipperClick}
                     >
@@ -2100,6 +2099,22 @@ const PickupOrderCreationForm = ({
                     >
                     Edit 
                   </label>
+                </div>
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="invoiceNumber"
+                    value={formData.invoiceNumber}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        invoiceNumber: e.target.value,
+                      })
+                    }
+                    label="Purchase Order"
+                  />
+                </div>
+                
                 {/* Forms creacion y edicion carrier */}
                 <div>
                     {isModalOpenShipper && selectedShipp === null && (
@@ -2138,20 +2153,7 @@ const PickupOrderCreationForm = ({
                   </div>
                   {/* terminacion de Forms creacion y edicion shipper */}
 
-                <div className="col-6 text-start">
-                  <Input
-                    type="text"
-                    inputName="invoiceNumber"
-                    value={formData.invoiceNumber}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        invoiceNumber: e.target.value,
-                      })
-                    }
-                    label="Purchase Order"
-                  />
-                </div>
+                
               </div>
 
               <div className="row mb-3">
