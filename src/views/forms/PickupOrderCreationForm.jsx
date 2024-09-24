@@ -95,9 +95,9 @@ const PickupOrderCreationForm = ({
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
   //added  Shipper modal
-   const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
-   const [selectedShipp, setSelectedShipper] = useState(null);
-   const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+  const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+  const [selectedShipp, setSelectedShipper] = useState(null);
+  const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
   //added  Delivery Location modal
   const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
   const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
@@ -1005,7 +1005,7 @@ const PickupOrderCreationForm = ({
     }));
   };
   //------------------
-    //added para recargar Consigneeoptions al crear un Consignee
+  //added para recargar Consigneeoptions al crear un Consignee
   // Efecto para cargar las opciones iniciales de Consignee
   useEffect(() => {
     loadConsigneeSelectOptions('').then(options => setConsigneeOptions(options));
