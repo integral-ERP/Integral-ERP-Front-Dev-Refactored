@@ -2026,7 +2026,7 @@ const ReceiptCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
                     Destination Agent:
@@ -2135,17 +2135,17 @@ const ReceiptCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddDestinationAgentClick}
                 >
-                  Add
+                  <i className="fas fa-plus button-icon fa-3x"></i>
                 </label>
                 <label
                   className="copy-label_edit"
                   onClick={handleEditDestinationAgentClick}
                 >
-                  Edit
+                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="issuedBy" className="form-label">
                     Issued By:
@@ -2216,13 +2216,13 @@ const ReceiptCreationForm = ({
               </div>
               <div className="col-6 text-start">
                 <label className="copy-label_add" onClick={handleAddAgentClick}>
-                  Add
+                <i className="fas fa-plus button-icon fa-3x"></i>
                 </label>
                 <label
                   className="copy-label_edit"
                   onClick={handleEditAgentClick}
                 >
-                  Edit
+                  <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
                 {/* Forms creacion y edicion Agent */}
               </div>
@@ -2449,7 +2449,7 @@ const ReceiptCreationForm = ({
                 <h3>Supplier</h3>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="supplier" className="form-label">
                     Name:
@@ -2532,14 +2532,14 @@ const ReceiptCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddSupplierClick}
                 >
-                  Add
+                 <i className="fas fa-plus button-icon fa-3x"></i>
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditSupplierClick}
                 >
-                  Edit
+                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
               </div>
@@ -2580,7 +2580,7 @@ const ReceiptCreationForm = ({
                 <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
@@ -2663,14 +2663,14 @@ const ReceiptCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddCarrierClick}
                 >
-                  Add
+                   <i className="fas fa-plus button-icon fa-3x"></i>
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditCarrierClick}
                 >
-                  Edit
+                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
               </div>
