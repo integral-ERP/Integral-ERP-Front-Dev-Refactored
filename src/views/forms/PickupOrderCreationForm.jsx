@@ -271,7 +271,7 @@ const PickupOrderCreationForm = ({
       pickupLocationType: type,
     });
     setSelectedPickUpLocation(result?.data); // Set the selected carrier
-    console.log("setSelectedPickUpLocation", setSelectedPickUpLocation);
+    console.log("setSelectedPickUpLocation", selectedPickUpLocation);
   };
 
   const handleSelectCommodity = (commodity) => {
@@ -481,7 +481,7 @@ const PickupOrderCreationForm = ({
     }
 
     // Restablecer el carrier seleccionado después del procesamiento
-    setSelectedCarrier(null);
+    // setSelectedCarrier(null);
   };
 
   //--------------------------------------------------------------
@@ -710,7 +710,7 @@ const PickupOrderCreationForm = ({
     }
 
     // Restablecer el PickUpLocation seleccionado después del procesamiento
-    setSelectedPickUpLocation(null);
+    // setSelectedPickUpLocation(null);
   };
 
   //--------------------------------------------------------------
@@ -1153,17 +1153,20 @@ const PickupOrderCreationForm = ({
       const inputSelected = document.querySelector(inputs.selectedId);
       const inputAsociated = document.querySelector(inputs.asociatedId);
       const isValid = true; //inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-
+      
       if (inputSelected && formData[inputSelected.id]) {
         inputSelected.style.border = "1px solid green";
-
+        console.log("formData[inputSelected.id]", formData[inputSelected.id]);
         continue;
       } else {
+        console.log("inputSelected", inputSelected);
+        console.log("inputAsociated", inputAsociated);
         if (inputSelected) inputSelected.style.border = "1px solid red";
 
         if (!isValid && inputSelected?.style) {
           inputSelected.style.border = "1px solid red";
         } else {
+          console.log('entre en el este con: ' + isValid)
           if (inputSelected) inputSelected.style.border = "1px solid green";
         }
       }
@@ -1839,7 +1842,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 {/* <div className="" style={{ display: "flex" }}> */}
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
@@ -1998,13 +2001,14 @@ const PickupOrderCreationForm = ({
                       className="copy-label_add"
                       onClick={handleAddDestinationAgentClick}
                     >
-                      Add
+                    <i className="fas fa-plus button-icon fa-3x"></i>
                     </label>
                     <label
                       className="copy-label_edit"
                       onClick={handleEditDestinationAgentClick}
                     >
-                      Edit
+                     <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+
                     </label>
                   </div>
 
@@ -2013,13 +2017,14 @@ const PickupOrderCreationForm = ({
                     className="copy-label_add"
                     onClick={handleAddAgentClick}
                   >
-                    Add
+                 <i className="fas fa-plus button-icon fa-3x"></i>
+
                   </label>
                   <label
                     className="copy-label_edit"
                     onClick={handleEditAgentClick}
                   >
-                    Edit
+                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                   </label>
                   </div>
                   </div>
@@ -2118,7 +2123,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="pickup" className="form-label">
                     Pick-up Location:
@@ -2208,14 +2213,15 @@ const PickupOrderCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddPickUpLocationClick}
                 >
-                  Add
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditPickUpLocationClick}
                 >
-                  Edit
+                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
               </div>
@@ -2243,7 +2249,7 @@ const PickupOrderCreationForm = ({
                 <h2>Delivery Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
@@ -2345,14 +2351,15 @@ const PickupOrderCreationForm = ({
                       className="copy-label_add"
                       onClick={handleAddDeliLocationClick}
                     >
-                      Add
+                    <i className="fas fa-plus button-icon fa-3x"></i>
+
                     </label>
 
                     <label
                       className="copy-label_edit"
                       onClick={handleEditDeliLocationClick}
                     >
-                      Edit
+                       <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                     </label>
                   </div>
                   </div>
@@ -2432,7 +2439,7 @@ const PickupOrderCreationForm = ({
                   </div>
                 </div>
               </div>
-              <div className="row align-items-center"></div>
+              {/* <div className="row align-items-center"></div> */}
             </div>
           </div>
 
@@ -2442,7 +2449,7 @@ const PickupOrderCreationForm = ({
                 <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
@@ -2526,14 +2533,15 @@ const PickupOrderCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddCarrierClick}
                 >
-                  Add
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditCarrierClick}
                 >
-                  Edit
+                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
 
@@ -2574,7 +2582,7 @@ const PickupOrderCreationForm = ({
         </label>
 
         <div className="row w-100" id="miDiv">
-          <div className="">
+          {/* <div className=""> */}
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 {editingComodity ? (
@@ -2721,7 +2729,7 @@ const PickupOrderCreationForm = ({
                 </div>
               )}
             </div>
-          </div>
+          {/* </div> */}
         </div>
 
         {/* -------------------------------------------------------------------------------------------------------------- */}
