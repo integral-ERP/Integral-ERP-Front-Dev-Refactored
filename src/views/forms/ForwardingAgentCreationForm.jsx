@@ -488,7 +488,7 @@ const ForwardingAgentsCreationForm = ({
         </div>
       </div>
 
-      <div className="company-form__options-carrier" style={{marginLeft:"27vw", marginTop: "-1vw"}}>
+      <div className="company-form__options-carrier" style={{marginTop: "-1vw"}}>
         {fromPickupOrder ? (
           <>
             <label className="button-save" onClick={sendData}>Save</label>
