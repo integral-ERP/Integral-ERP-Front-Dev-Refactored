@@ -487,6 +487,7 @@ const ReleaseOrderCreationForm = ({
     }, [commodities]);
 
     useEffect(() => {
+        //debugger;
         if (fromRecipt) {
             setcommodities(releaseOrder.commodities);
             let updatedFormData = {
@@ -503,9 +504,11 @@ const ReleaseOrderCreationForm = ({
                 customerById: releaseOrder.consigneeObj?.data?.obj.id,
                 customerByType:
                     releaseOrder.consigneeObj?.data?.obj.type_person,
-                clientToBillId: releaseOrder.consigneeObj?.data?.obj.id,
+                clientToBillId:
+                    releaseOrder.clientBillObj?.data?.obj?.data?.obj?.id,
                 clientToBillType:
-                    releaseOrder.consigneeObj?.data?.obj.type_person,
+                    releaseOrder.clientBillObj?.data?.obj?.data?.obj
+                        ?.type_person,
                 carrierId: releaseOrder.carrier_by,
                 pro_number: releaseOrder.pro_number,
                 tracking_number: releaseOrder.tracking_number,
