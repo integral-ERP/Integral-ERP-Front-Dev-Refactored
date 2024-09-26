@@ -51,13 +51,13 @@ const ReceiptCreationForm = ({
     fromReceipt,
     showBModal,
 }) => {
-
-
+    console.log('pickupOrder', pickupOrder);
+    console.log('creating', creating);
     const [activeTab, setActiveTab] = useState('general');
     // const [note, setNote] = useState("");
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [formDataUpdated, setFormDataUpdated] = useState(false);
-
+    console.log('formdataupdated', formDataUpdated);
     //added warning alert for commodities
     const [showWarningAlert, setShowWarningAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -139,13 +139,16 @@ const ReceiptCreationForm = ({
     const [selectedSupplier, setSelectedSupplier] = useState(null);
     const [isProcessCompleteSupplier, setIsProcessCompleteSupplier] =
         useState(false);
+    //added  Shipper modal
     const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
     const [selectedShipp, setSelectedShipper] = useState(null);
-    const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+    const [isProcessCompleteShipper, setIsProcessCompleteShipper] =
+        useState(false);
     //added  Consignee modal
     const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
     const [selectedConsignee, setSelectedConsignee] = useState(null);
-    const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
+    const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] =
+        useState(false);
 
     useEffect(() => {
         fetchFormData()
@@ -175,19 +178,21 @@ const ReceiptCreationForm = ({
                     ...forwardingAgentsWithType,
                 ];
 
-        setIssuedByOptions([...forwardingAgents].sort(SortArray));
-        setDestinationAgentOptions([...forwardingAgents].sort(SortArray));
-        setEmployeeOptions([...employees].sort(SortArray));
-        setShipperOptions([...customers].sort(SortArray));
-        setSupplierOptions([...customers].sort(SortArray));
-        setConsigneeOptions([...customers].sort(SortArray));
-        setCarrierOptions([...carriers].sort(SortArray));
-        setReleasedToOptions(clientToBillOptions.sort(SortArray));
-      })
-      .catch((error) => {
-        console.error("Error al obtener los datos:", error);
-      });
-  }, []);
+                setIssuedByOptions([...forwardingAgents].sort(SortArray));
+                setDestinationAgentOptions(
+                    [...forwardingAgents].sort(SortArray)
+                );
+                setEmployeeOptions([...employees].sort(SortArray));
+                setShipperOptions([...customers].sort(SortArray));
+                setSupplierOptions([...customers].sort(SortArray));
+                setConsigneeOptions([...customers].sort(SortArray));
+                setCarrierOptions([...carriers].sort(SortArray));
+                setReleasedToOptions(clientToBillOptions.sort(SortArray));
+            })
+            .catch((error) => {
+                console.error('Error al obtener los datos:', error);
+            });
+    }, []);
 
     useEffect(() => {
         if (!isButtonDisabled) {
@@ -268,7 +273,7 @@ const ReceiptCreationForm = ({
             issuedByInfo: info,
         });
         setSelectedAgent(result?.data);
-
+        console.log('setSelectedAgent', setSelectedAgent);
     };
 
     const handleDestinationAgentSelection = async (event) => {
@@ -287,13 +292,13 @@ const ReceiptCreationForm = ({
             destinationAgentInfo: info,
         });
         setSelectedDestinationAgent(result?.data); // Set the selected Destination Agent
-
+        console.log('setSelectedDestinationAgent', setSelectedDestinationAgent);
     };
 
     //------------------------------------------------
     const handleSelectEvent = (events) => {
         setSelectEvent(events);
-
+        console.log('selected events ', events);
     };
 
     const handleDeleteEvent = () => {
@@ -370,26 +375,26 @@ const ReceiptCreationForm = ({
         }
     };
 
-  const handleConsigneeSelection = (selectedOption) => {
-    if (!selectedOption) return;
+    const handleConsigneeSelection = (selectedOption) => {
+        if (!selectedOption) return;
 
-    const { id, type , street_and_number, city, state, country, zip_code } = selectedOption;
-    if (type !== "customer") {
+        const { id, type, street_and_number, city, state, country, zip_code } =
+            selectedOption;
+        if (type !== 'customer') {
+            console.error(`Unsupported Consignee type: ${type}`);
+            return;
+        }
 
-      console.error(`Unsupported Consignee type: ${type}`);
-      return;
-    }
+        const info = `${street_and_number || ''} - ${city || ''} - ${state || ''} - ${country || ''} - ${zip_code || ''}`;
 
-    const info = `${street_and_number || ""} - ${city || ""} - ${state || ""} - ${country || ""} - ${zip_code || ""}`;
-
-    setdefaultValueConsignee(selectedOption);
-    setFormData({
-      ...formData,
-      consigneeId: id,
-      consigneeType: type,
-      consigneeInfo: info,
-    });
-  };
+        setdefaultValueConsignee(selectedOption);
+        setFormData({
+            ...formData,
+            consigneeId: id,
+            consigneeType: type,
+            consigneeInfo: info,
+        });
+    };
 
     const handleSupplierSelection = async (event) => {
         const id = event.id;
@@ -407,7 +412,7 @@ const ReceiptCreationForm = ({
             supplierInfo: info,
         });
         setSelectedSupplier(result?.data); // Set the selected Supplier
-
+        console.log('setSelectedSupplier', setSelectedSupplier);
     };
 
     // const handleSupplierSelection = async (event) => {
@@ -445,26 +450,27 @@ const ReceiptCreationForm = ({
     //   }
     // };
 
-  const handleShipperSelection = (selectedOption) => {
-    if (!selectedOption) return;
+    const handleShipperSelection = (selectedOption) => {
+        if (!selectedOption) return;
 
-    const { id, type , street_and_number, city, state, country, zip_code } = selectedOption;
+        const { id, type, street_and_number, city, state, country, zip_code } =
+            selectedOption;
 
-    if (type !== "customer") {
-      console.error(`Unsupported shipper type: ${type}`);
-      return;
-    }
+        if (type !== 'customer') {
+            console.error(`Unsupported shipper type: ${type}`);
+            return;
+        }
 
-    const info = `${street_and_number || ""} - ${city || ""} - ${state || ""} - ${country || ""} - ${zip_code || ""}`;
+        const info = `${street_and_number || ''} - ${city || ''} - ${state || ''} - ${country || ''} - ${zip_code || ''}`;
 
-    setdefaultValueShipper(selectedOption);
-    setFormData(prevData => ({
-      ...prevData,
-      shipperId: id,
-      shipperType: type,
-      shipperInfo: info,
-    }));
-  };
+        setdefaultValueShipper(selectedOption);
+        setFormData((prevData) => ({
+            ...prevData,
+            shipperId: id,
+            shipperType: type,
+            shipperInfo: info,
+        }));
+    };
 
     //added handle carrier creation
     const handleAddCarrierClick = () => {
@@ -485,7 +491,7 @@ const ReceiptCreationForm = ({
     const handleProcessCompleteCarrier = async (createdCarrierId = null) => {
         setIsProcessCompleteCarrier(true);
         setIsModalOpenCarrier(false);
-
+        console.log('Proceso completado en CarrierCreationForm');
 
         // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
         const carrierId = createdCarrierId || formData.mainCarrierdId;
@@ -498,9 +504,9 @@ const ReceiptCreationForm = ({
             setCarrierOptions(updatedOptions);
         }
 
-    // Restablecer el carrier seleccionado después del procesamiento
-    // setSelectedCarrier(null);
-  };
+        // Restablecer el carrier seleccionado después del procesamiento
+        // setSelectedCarrier(null);
+    };
 
     //--------------------------------------------------------------
     //added handle DestinationAgent creation
@@ -524,7 +530,7 @@ const ReceiptCreationForm = ({
     ) => {
         setIsProcessCompleteDestinationAgent(true);
         setIsModalOpenDestinationAgent(false);
-
+        console.log('Proceso completado en DestinationAgent');
 
         // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el destinationAgentId existente
         const destinationId =
@@ -538,9 +544,9 @@ const ReceiptCreationForm = ({
             setDestinationAgentOptions(updatedOptions);
         }
 
-    // Restablecer el DestinationAgent seleccionado después del procesamiento
-    // setSelectedDestinationAgent(null);
-  };
+        // Restablecer el DestinationAgent seleccionado después del procesamiento
+        // setSelectedDestinationAgent(null);
+    };
 
     //--------------------------------------------------------------
     //added handle Agent creation
@@ -562,7 +568,7 @@ const ReceiptCreationForm = ({
     const handleProcessCompleteAgent = async (createdAgentId = null) => {
         setIsProcessCompleteAgent(true);
         setIsModalOpenAgent(false);
-
+        console.log('Proceso completado en ForwardingAgentCreationForm');
         // Si se creó un nuevo Agent, utilice su ID; de lo contrario, utilice el issuedById existente
         const AgentId = createdAgentId || formData.issuedById;
 
@@ -574,30 +580,30 @@ const ReceiptCreationForm = ({
             setIssuedByOptions(updatedOptions);
         }
 
-    // Restablecer el Agent seleccionado después del procesamiento
-    // setSelectedAgent(null);
-  };
-  //------------------------------------------------------------
-  //added handle Supplier creation
-  const handleAddSupplierClick = () => {
-    setSelectedSupplier(null);
-    setIsModalOpenSupplier(true);
-  };
-  const handleEditSupplierClick = () => {
-    if (formData.supplierId) {
-      setIsModalOpenSupplier(true);
-    } else {
-      alert("Please select a Supplier to edit.");
-    }
-  };
-  const closeModalSupplier = () => {
-    setIsModalOpenSupplier(false);
-    setSelectedSupplier(null);
-  };
-  const handleProcessCompleteSupplier = async (createdSupplierId = null) => {
-    setIsProcessCompleteSupplier(true);
-    setIsModalOpenSupplier(false);
-    console.log("Proceso completado en customerCreationform");
+        // Restablecer el Agent seleccionado después del procesamiento
+        // setSelectedAgent(null);
+    };
+    //------------------------------------------------------------
+    //added handle Supplier creation
+    const handleAddSupplierClick = () => {
+        setSelectedSupplier(null);
+        setIsModalOpenSupplier(true);
+    };
+    const handleEditSupplierClick = () => {
+        if (formData.supplierId) {
+            setIsModalOpenSupplier(true);
+        } else {
+            alert('Please select a Supplier to edit.');
+        }
+    };
+    const closeModalSupplier = () => {
+        setIsModalOpenSupplier(false);
+        setSelectedSupplier(null);
+    };
+    const handleProcessCompleteSupplier = async (createdSupplierId = null) => {
+        setIsProcessCompleteSupplier(true);
+        setIsModalOpenSupplier(false);
+        console.log('Proceso completado en customerCreationform');
 
         // Si se creó un nuevo Supplier, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
         const SupplierId = createdSupplierId || formData.supplierId;
@@ -614,127 +620,132 @@ const ReceiptCreationForm = ({
         setSelectedSupplier(null);
     };
 
-  //--------------------------------------------------------------
+    //--------------------------------------------------------------
     // //added handle Shipper creation
     const handleAddShipperClick = () => {
-      setSelectedShipper(null);
-     setIsModalOpenShipper(true);
+        setSelectedShipper(null);
+        setIsModalOpenShipper(true);
     };
     const handleEditShipperClick = () => {
-     if (formData.shipperId) {
-       const shipperToEdit = shipperOptions.find(
-         (shipper) => shipper.id === formData.shipperId
-       );
-       setSelectedShipper(shipperToEdit);
-       setIsModalOpenShipper(true);
-     } else {
-       alert("Please select a Shipper to edit.");
-     }
-   };
+        if (formData.shipperId) {
+            const shipperToEdit = shipperOptions.find(
+                (shipper) => shipper.id === formData.shipperId
+            );
+            setSelectedShipper(shipperToEdit);
+            setIsModalOpenShipper(true);
+        } else {
+            alert('Please select a Shipper to edit.');
+        }
+    };
     const closeModalShipper = () => {
-      setIsModalOpenShipper(false);
-    setSelectedShipper(null);
+        setIsModalOpenShipper(false);
+        setSelectedShipper(null);
     };
     // Función para manejar la finalización del proceso de creación/edición
-   const handleProcessCompleteShipper = async (createdOrUpdatedShipperId) => {
-     setIsProcessCompleteShipper(true);
-     setIsModalOpenShipper(false);
-     console.log('Process completed in ShipperCreationForm');
+    const handleProcessCompleteShipper = async (createdOrUpdatedShipperId) => {
+        setIsProcessCompleteShipper(true);
+        setIsModalOpenShipper(false);
+        console.log('Process completed in ShipperCreationForm');
 
-     if (createdOrUpdatedShipperId) {
-       const updatedShipperOptions = await loadShipperSelectOptions('');
-       setShipperOptions(updatedShipperOptions);
-       const updatedShipper = updatedShipperOptions.find(
-         (shipper) => shipper.id === createdOrUpdatedShipperId
-       );
+        if (createdOrUpdatedShipperId) {
+            const updatedShipperOptions = await loadShipperSelectOptions('');
+            setShipperOptions(updatedShipperOptions);
+            const updatedShipper = updatedShipperOptions.find(
+                (shipper) => shipper.id === createdOrUpdatedShipperId
+            );
 
-       if (updatedShipper) {
-         handleShipperSelection(updatedShipper);
-       }
-
-     }
-   };
-   //Muy importante para despues de add/edit recarcargar opciones de Shipper!!
-   useEffect(() => {
-     if (isProcessCompleteShipper) {
-       loadShipperSelectOptions('').then(options => {
-         // Actualizar las opciones carajo
-         setShipperOptions(options);
-         setPickupLocationOptions(options);
-         setReleasedToOptions(options);
-         if (selectedShipp) {
-           const updatedShipper = options.find(option => option.id === selectedShipp.id);
-           if (updatedShipper) {
-             handleShipperSelection(updatedShipper);
-           }
-         }
-         setIsProcessCompleteShipper(false);
-       });
-     }
-   }, [isProcessCompleteShipper, selectedShipp]);
+            if (updatedShipper) {
+                handleShipperSelection(updatedShipper);
+            }
+        }
+    };
+    //Muy importante para despues de add/edit recarcargar opciones de Shipper!!
+    useEffect(() => {
+        if (isProcessCompleteShipper) {
+            loadShipperSelectOptions('').then((options) => {
+                // Actualizar las opciones carajo
+                setShipperOptions(options);
+                setPickupLocationOptions(options);
+                setReleasedToOptions(options);
+                if (selectedShipp) {
+                    const updatedShipper = options.find(
+                        (option) => option.id === selectedShipp.id
+                    );
+                    if (updatedShipper) {
+                        handleShipperSelection(updatedShipper);
+                    }
+                }
+                setIsProcessCompleteShipper(false);
+            });
+        }
+    }, [isProcessCompleteShipper, selectedShipp]);
 
     //--------------------------------------------------------------
 
-  // //added handle consignee creation
-  const handleAddConsigneeClick = () => {
-    setSelectedConsignee(null);
-    setIsModalOpenConsignee(true);
-  };
-  const handleEditConsigneeClick = () => {
-    if (formData.consigneeId) {
-      const ConsigneeToEdit = consigneeOptions.find(
-        (consignee) => consignee.id === formData.consigneeId
-      );
-      setSelectedConsignee(ConsigneeToEdit);
-      setIsModalOpenConsignee(true);
-    } else {
-      alert("Please select a consignee to edit.");
-    }
-  };
-  const closeModalConsignee = () => {
-    setIsModalOpenConsignee(false);
-  setSelectedConsignee(null);
-  };
-  // Función para manejar la finalización del proceso de creación/edición
-  const handleProcessCompleteConsignee = async (createdOrUpdatedConsigneeId) => {
-    setIsProcessCompleteConsignee(true);
-    setIsModalOpenConsignee(false);
-    console.log('Process completed in ConsigneeCreationForm');
-
-    if (createdOrUpdatedConsigneeId) {
-      const updatedConsigneeOptions = await loadConsigneeSelectOptions('');
-      setConsigneeOptions(updatedConsigneeOptions);
-
-      const updatedConsignee = updatedConsigneeOptions.find(
-        (consignee) => consignee.id === createdOrUpdatedConsigneeId
-      );
-
-      if (updatedConsignee) {
-        handleConsigneeSelection(updatedConsignee);
-      }
-
-    }
-  };
- //Muy importante para despues de add/edit recarcargar opciones de Consignee!!
-  useEffect(() => {
-    if (isProcessCompleteConsignee) {
-      loadConsigneeSelectOptions('').then(options => {
-        // Actualizar las opciones carajo
-        setConsigneeOptions(options);
-        setDeliveryLocationOptions(options);
-        setReleasedToOptions(options);
-        if (selectedConsignee) {
-          const updatedConsignee = options.find(option => option.id === selectedConsignee.id);
-          if (updatedConsignee) {
-            handleConsigneeSelection(updatedConsignee);
-          }
+    // //added handle consignee creation
+    const handleAddConsigneeClick = () => {
+        setSelectedConsignee(null);
+        setIsModalOpenConsignee(true);
+    };
+    const handleEditConsigneeClick = () => {
+        if (formData.consigneeId) {
+            const ConsigneeToEdit = consigneeOptions.find(
+                (consignee) => consignee.id === formData.consigneeId
+            );
+            setSelectedConsignee(ConsigneeToEdit);
+            setIsModalOpenConsignee(true);
+        } else {
+            alert('Please select a consignee to edit.');
         }
-        setIsProcessCompleteConsignee(false);
-      });
-    }
-  }, [isProcessCompleteConsignee, selectedConsignee]);
+    };
+    const closeModalConsignee = () => {
+        setIsModalOpenConsignee(false);
+        setSelectedConsignee(null);
+    };
+    // Función para manejar la finalización del proceso de creación/edición
+    const handleProcessCompleteConsignee = async (
+        createdOrUpdatedConsigneeId
+    ) => {
+        setIsProcessCompleteConsignee(true);
+        setIsModalOpenConsignee(false);
+        console.log('Process completed in ConsigneeCreationForm');
 
-  //---------------------------------CHARGE IMG---------------------------------------------------------
+        if (createdOrUpdatedConsigneeId) {
+            const updatedConsigneeOptions =
+                await loadConsigneeSelectOptions('');
+            setConsigneeOptions(updatedConsigneeOptions);
+
+            const updatedConsignee = updatedConsigneeOptions.find(
+                (consignee) => consignee.id === createdOrUpdatedConsigneeId
+            );
+
+            if (updatedConsignee) {
+                handleConsigneeSelection(updatedConsignee);
+            }
+        }
+    };
+    //Muy importante para despues de add/edit recarcargar opciones de Consignee!!
+    useEffect(() => {
+        if (isProcessCompleteConsignee) {
+            loadConsigneeSelectOptions('').then((options) => {
+                // Actualizar las opciones carajo
+                setConsigneeOptions(options);
+                setDeliveryLocationOptions(options);
+                setReleasedToOptions(options);
+                if (selectedConsignee) {
+                    const updatedConsignee = options.find(
+                        (option) => option.id === selectedConsignee.id
+                    );
+                    if (updatedConsignee) {
+                        handleConsigneeSelection(updatedConsignee);
+                    }
+                }
+                setIsProcessCompleteConsignee(false);
+            });
+        }
+    }, [isProcessCompleteConsignee, selectedConsignee]);
+
+    //---------------------------------CHARGE IMG---------------------------------------------------------
 
     const [showPreview, setShowPreview] = useState(false);
 
@@ -944,12 +955,12 @@ const ReceiptCreationForm = ({
             mainCarrierInfo: info,
         });
         setSelectedCarrier(result?.data); // Set the selected carrier
-
+        console.log('setSelectedCarrier', setSelectedCarrier);
     };
 
     const handleSelectCommodity = (commodity) => {
         setselectedCommodity(commodity);
-
+        console.log('selected commodity ', commodity);
     };
 
     const handleCommodityDelete = async () => {
@@ -1010,9 +1021,9 @@ const ReceiptCreationForm = ({
 
     //added edit commodities
     const handleCommodityEdit = () => {
-
+        console.log('commodities description ', selectedCommodity.description);
         setEditingComodity(true);
-
+        console.log('commodities description ', selectedCommodity);
     };
 
     const updateSelectedCommodity = (updatedInternalCommodities) => {
@@ -1215,6 +1226,16 @@ const ReceiptCreationForm = ({
                 } - ${pickupOrder.main_carrierObj?.country || ''} - ${
                     pickupOrder.main_carrierObj?.zip_code || ''
                 }`,
+
+                /* supplier: initialSupplier,
+                supplierId: initialSupplier?.id,
+                supplierType: initialSupplier?.type_person,
+
+                supplierInfo: `${initialSupplier?.street_and_number || ""} - ${
+                  initialSupplier?.city || ""
+                } - ${initialSupplier?.state || ""} - ${
+                  initialSupplier?.country || ""
+                } - ${initialSupplier?.zip_code || ""}`, */
                 supplier: pickupOrder.supplier,
                 supplierId: pickupOrder.supplierObj.data?.obj?.id,
                 supplierType: pickupOrder.supplierObj.data?.obj?.type_person,
@@ -1238,6 +1259,8 @@ const ReceiptCreationForm = ({
                 pickup_order_Id: pickupOrder.id,
             };
 
+            console.log('updatedFormData', updatedFormData);
+            const initialSupplier = pickupOrder.shipperObj?.data?.obj;
             handleClientToBillSelection({
                 id: CTBID,
                 type: temp,
@@ -1273,26 +1296,6 @@ const ReceiptCreationForm = ({
 
         const options = [
             ...addTypeToObjects(responseAgents, 'forwardingAgent'),
-        ];
-
-        return options;
-    };
-
-    const loadConsigneeSelectOptions = async (inputValue) => {
-        const responseCustomers = (await CustomerService.search(inputValue))
-            .data.results;
-        const responseVendors = (await VendorService.search(inputValue)).data
-            .results;
-        const responseAgents = (await ForwardingAgentService.search(inputValue))
-            .data.results;
-        const responseCarriers = (await CarrierService.search(inputValue)).data
-            .results;
-
-        const options = [
-            ...addTypeToObjects(responseVendors, 'vendor'),
-            ...addTypeToObjects(responseCustomers, 'customer'),
-            ...addTypeToObjects(responseAgents, 'forwardingAgent'),
-            ...addTypeToObjects(responseCarriers, 'Carrier'),
         ];
 
         return options;
@@ -1364,49 +1367,54 @@ const ReceiptCreationForm = ({
             setSupplierOptions(initialOptions);
         };
 
-    initializeSupplierOptions();
-  }, []);
-  const loadSupplierSelectOptions = async (inputValue) => {
-    const responseSupplier = (await CustomerService.search(inputValue)).data
-      .results;
-    return addTypeToObjects(responseSupplier, "customer");
-  };
-  //added para recargar Shipperoptions al crear un shipper
-  // Efecto para cargar las opciones iniciales de shipper
-  useEffect(() => {
-    loadShipperSelectOptions('').then(options => setShipperOptions(options));
-  }, []);
+        initializeSupplierOptions();
+    }, []);
+    const loadSupplierSelectOptions = async (inputValue) => {
+        const responseSupplier = (await CustomerService.search(inputValue)).data
+            .results;
+        return addTypeToObjects(responseSupplier, 'customer');
+    };
+    //added para recargar Shipperoptions al crear un shipper
+    // Efecto para cargar las opciones iniciales de shipper
+    useEffect(() => {
+        loadShipperSelectOptions('').then((options) =>
+            setShipperOptions(options)
+        );
+    }, []);
 
-  // Función para cargar las opciones de shipper
-  const loadShipperSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.getCustomers()).data.results;
-    return responseCustomers.map(customer => ({
-      ...customer,
-      type: "customer",
-      value: customer.id,
-      label: customer.name
-    }));
-  };
-  //------------------
-  //added para recargar Consigneeoptions al crear un Consignee
-  // Efecto para cargar las opciones iniciales de Consignee
-  useEffect(() => {
-    loadConsigneeSelectOptions('').then(options => setConsigneeOptions(options));
+    // Función para cargar las opciones de shipper
+    const loadShipperSelectOptions = async (inputValue) => {
+        const responseCustomers = (await CustomerService.getCustomers()).data
+            .results;
+        return responseCustomers.map((customer) => ({
+            ...customer,
+            type: 'customer',
+            value: customer.id,
+            label: customer.name,
+        }));
+    };
+    //------------------
+    //added para recargar Consigneeoptions al crear un Consignee
+    // Efecto para cargar las opciones iniciales de Consignee
+    useEffect(() => {
+        loadConsigneeSelectOptions('').then((options) =>
+            setConsigneeOptions(options)
+        );
+    }, []);
 
-  }, []);
+    // Función para cargar las opciones de Consignee
+    const loadConsigneeSelectOptions = async (inputValue) => {
+        const responseCustomers = (await CustomerService.getCustomers()).data
+            .results;
 
-  // Función para cargar las opciones de Consignee
-  const loadConsigneeSelectOptions = async (inputValue) => {
-    const responseCustomers = (await CustomerService.getCustomers()).data.results;
-
-    return responseCustomers.map(customer => ({
-      ...customer,
-      type: "customer",
-      value: customer.id,
-      label: customer.name
-    }));
-  };
-  //--------------------------------
+        return responseCustomers.map((customer) => ({
+            ...customer,
+            type: 'customer',
+            value: customer.id,
+            label: customer.name,
+        }));
+    };
+    //--------------------------------
 
     useEffect(() => {
         if (!fromPickUp) {
@@ -1669,6 +1677,11 @@ const ReceiptCreationForm = ({
             }
         }
 
+        console.log(
+            'CLIENT TO BILL: ',
+            formData.clientToBillId,
+            formData.clientToBillType
+        );
         let clientToBillName = '';
         if (formData.clientToBillType === 'other') {
             if (CTBType === 'customer') {
@@ -1689,12 +1702,6 @@ const ReceiptCreationForm = ({
         }
         if (formData.clientToBillType === 'consignee') {
             clientToBillName = 'consigneeid';
-        }
-        if (!auxVar) {
-            auxVar =
-                formData.clientToBillType === 'shipper'
-                    ? shipperRequest
-                    : consigneeRequest;
         }
         if (clientToBillName !== '') {
             const clientToBill = {
@@ -1889,10 +1896,36 @@ const ReceiptCreationForm = ({
                           return result; // Retornar el resultado de updateReceipt
                       })());
 
+                /* if (!creating) {
+                    const buscarrecipt = await ReceiptService.getReceiptById(pickupOrder.id);
+                    const buscarpickup = (await callPickupOrders(null)).data.results;
+
+                    //console.log("BUSCARPICKUP", buscarpickup);
+                    const numeroRecibo = buscarrecipt.data.number;
+                    //console.log("numeroRecibo",numeroRecibo);
+                    buscarpickup.forEach(pickup => {
+                      if (pickup.number === numeroRecibo) {
+                        //console.log("HECHO",pickup.number);
+                        PickupService.updatePickup(pickup.id, rawDatapick);
+                      }
+                    });
+                  }  */
+
                 if (response.status >= 200 && response.status <= 300) {
+                    //PickupService.updatePickup(pickupOrder.id, rawDatapick);
+
+                    //PickupService.updatePickup(pickupOrder.id, rawDatapick);
+                    /* if (fromPickUp) {
+                      console.log("BANDERA-1 = ", fromPickUp);
+                      //added onhand status
+                      const statusOnhand = 4;
+                      const newPickup = { ...pickupOrder, status: statusOnhand };
+                      PickupService.updatePickup(pickupOrder.id, newPickup);
+                    } */
+
                     if (!fromPickUp) {
                         //added onhand status
-
+                        console.log('BANDERA-2 = ', fromPickUp);
                     }
                     setcurrentPickUpNumber(currentPickUpNumber + 1);
                     setShowSuccessAlert(true);
@@ -1929,7 +1962,10 @@ const ReceiptCreationForm = ({
     };
 
     /* useEffect(() => {
+      console.log(formData)
+    }, [formData]) */
 
+    const [colorTab, setcolorTab] = useState(true);
     useEffect(() => {
         const listItems = document.querySelectorAll('.nav-item');
         if (!listItems) return;
@@ -2055,146 +2091,205 @@ const ReceiptCreationForm = ({
                                 </div>
                             </div>
 
-              <div className="row mb-2">
-                <div className="col-6 text-start">
-                  <label htmlFor="destinationAgent" className="form-label">
-                    Destination Agent:
-                  </label>
-                  {!creating ? (
-                    canRender && (
-                      <AsyncSelect
-                        id="destinationAgent"
-                        onChange={(e) => {
-                          handleDestinationAgentSelection(e);
-                        }}
-                        value={destinationAgentOptions.find(
-                          (option) => option.id === formData.destinationAgentId
-                        )}
-                        isClearable={true}
-                        defaultOptions={destinationAgentOptions}
-                        loadOptions={loadDestinationAgentsSelectOptions}
-                        getOptionLabel={(option) => option.name}
-                        getOptionValue={(option) => option.id}
-                        key={destinationAgentOptions.length} // Add esto para que se refresque la lista
-                      />
-                    )
-                  ) : (
-                    <AsyncSelect
-                      id="destinationAgent"
-                      onChange={(e) => {
-                        handleDestinationAgentSelection(e);
-                      }}
-                      value={destinationAgentOptions.find(
-                        (option) => option.id === formData.destinationAgentId
-                      )}
-                      isClearable={true}
-                      defaultOptions={destinationAgentOptions}
-                      loadOptions={loadDestinationAgentsSelectOptions}
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.id}
-                      placeholder="Search and select..."
-                    />
-                  )}
-                </div>
+                            <div className="row mb-2">
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="destinationAgent"
+                                        className="form-label"
+                                    >
+                                        Destination Agent:
+                                    </label>
+                                    {!creating ? (
+                                        canRender && (
+                                            <AsyncSelect
+                                                id="destinationAgent"
+                                                onChange={(e) => {
+                                                    handleDestinationAgentSelection(
+                                                        e
+                                                    );
+                                                }}
+                                                value={destinationAgentOptions.find(
+                                                    (option) =>
+                                                        option.id ===
+                                                        formData.destinationAgentId
+                                                )}
+                                                isClearable={true}
+                                                defaultOptions={
+                                                    destinationAgentOptions
+                                                }
+                                                loadOptions={
+                                                    loadDestinationAgentsSelectOptions
+                                                }
+                                                getOptionLabel={(option) =>
+                                                    option.name
+                                                }
+                                                getOptionValue={(option) =>
+                                                    option.id
+                                                }
+                                                key={
+                                                    destinationAgentOptions.length
+                                                } // Add esto para que se refresque la lista
+                                            />
+                                        )
+                                    ) : (
+                                        <AsyncSelect
+                                            id="destinationAgent"
+                                            onChange={(e) => {
+                                                handleDestinationAgentSelection(
+                                                    e
+                                                );
+                                            }}
+                                            value={destinationAgentOptions.find(
+                                                (option) =>
+                                                    option.id ===
+                                                    formData.destinationAgentId
+                                            )}
+                                            isClearable={true}
+                                            defaultOptions={
+                                                destinationAgentOptions
+                                            }
+                                            loadOptions={
+                                                loadDestinationAgentsSelectOptions
+                                            }
+                                            getOptionLabel={(option) =>
+                                                option.name
+                                            }
+                                            getOptionValue={(option) =>
+                                                option.id
+                                            }
+                                            placeholder="Search and select..."
+                                        />
+                                    )}
+                                </div>
 
-                <div className="col-6 text-start">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <p id="creation-date" className="text-date">
-                      Entry Date and Time
-                    </p>
-                    <DateTimePicker
-                      // label="Entry Date and Time"
-                      className="font-right"
-                      value={dayjs(formData.createdDateAndTime)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          createdDateAndTime:
-                            dayjs(e).format("YYYY-MM-DD hh:mm A"),
-                        })
-                      }
-                    />
-                  </LocalizationProvider>
-                </div>
-                {/* Forms creacion y edicion DestinationAgent */}
-                <div>
-                  {isModalOpenDestinationAgent &&
-                    selectedDestinationAgent === null && (
-                      <ModalForm
-                        isOpen={isModalOpenDestinationAgent}
-                        onClose={closeModalDestinationAgent}
-                      >
-                        <ForwardingAgentsCreationForm
-                          forwardingAgent={null}
-                          closeModal={closeModalDestinationAgent}
-                          creating={true}
-                          fromPickupOrder={true}
-                          onProcessComplete={(createdDestinationAgentId) =>
-                            handleProcessCompleteDestinationAgent(
-                              createdDestinationAgentId
-                            )
-                          }
-                        />
-                      </ModalForm>
-                    )}
-                </div>
-                <div>
-                  {isModalOpenDestinationAgent &&
-                    selectedDestinationAgent !== null && (
-                      <ModalForm
-                        isOpen={isModalOpenDestinationAgent}
-                        onClose={closeModalDestinationAgent}
-                      >
-                        <ForwardingAgentsCreationForm
-                          forwardingAgent={selectedDestinationAgent}
-                          closeModal={closeModalDestinationAgent}
-                          creating={false}
-                          fromPickupOrder={true}
-                          onProcessComplete={
-                            handleProcessCompleteDestinationAgent
-                          }
-                        />
-                      </ModalForm>
-                    )}
-                </div>
-                {/* terminacion de Forms creacion y edicion carrier */}
-              </div>
-              <div className="col-6 text-start">
-                <label
-                  className="copy-label_add"
-                  onClick={handleAddDestinationAgentClick}
-                >
-                  <i className="fas fa-plus button-icon fa-3x"></i>
-                </label>
-                <label
-                  className="copy-label_edit"
-                  onClick={handleEditDestinationAgentClick}
-                >
-                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
-                </label>
-              </div>
+                                <div className="col-6 text-start">
+                                    <LocalizationProvider
+                                        dateAdapter={AdapterDayjs}
+                                    >
+                                        <p
+                                            id="creation-date"
+                                            className="text-date"
+                                        >
+                                            Entry Date and Time
+                                        </p>
+                                        <DateTimePicker
+                                            // label="Entry Date and Time"
+                                            className="font-right"
+                                            value={dayjs(
+                                                formData.createdDateAndTime
+                                            )}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    createdDateAndTime:
+                                                        dayjs(e).format(
+                                                            'YYYY-MM-DD hh:mm A'
+                                                        ),
+                                                })
+                                            }
+                                        />
+                                    </LocalizationProvider>
+                                </div>
+                                {/* Forms creacion y edicion DestinationAgent */}
+                                <div>
+                                    {isModalOpenDestinationAgent &&
+                                        selectedDestinationAgent === null && (
+                                            <ModalForm
+                                                isOpen={
+                                                    isModalOpenDestinationAgent
+                                                }
+                                                onClose={
+                                                    closeModalDestinationAgent
+                                                }
+                                            >
+                                                <ForwardingAgentsCreationForm
+                                                    forwardingAgent={null}
+                                                    closeModal={
+                                                        closeModalDestinationAgent
+                                                    }
+                                                    creating={true}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={(
+                                                        createdDestinationAgentId
+                                                    ) =>
+                                                        handleProcessCompleteDestinationAgent(
+                                                            createdDestinationAgentId
+                                                        )
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
+                                <div>
+                                    {isModalOpenDestinationAgent &&
+                                        selectedDestinationAgent !== null && (
+                                            <ModalForm
+                                                isOpen={
+                                                    isModalOpenDestinationAgent
+                                                }
+                                                onClose={
+                                                    closeModalDestinationAgent
+                                                }
+                                            >
+                                                <ForwardingAgentsCreationForm
+                                                    forwardingAgent={
+                                                        selectedDestinationAgent
+                                                    }
+                                                    closeModal={
+                                                        closeModalDestinationAgent
+                                                    }
+                                                    creating={false}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={
+                                                        handleProcessCompleteDestinationAgent
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
+                                {/* terminacion de Forms creacion y edicion carrier */}
+                            </div>
+                            <div className="col-6 text-start">
+                                <label
+                                    className="copy-label_add"
+                                    onClick={handleAddDestinationAgentClick}
+                                >
+                                    <i className="fas fa-plus button-icon fa-3x"></i>
+                                </label>
+                                <label
+                                    className="copy-label_edit"
+                                    onClick={handleEditDestinationAgentClick}
+                                >
+                                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                </label>
+                            </div>
 
-              <div className="row mb-2">
-                <div className="col-6 text-start">
-                  <label htmlFor="issuedBy" className="form-label">
-                    Issued By:
-                  </label>
-                  <AsyncSelect
-                    id="issuedBy"
-                    onChange={(e) => {
-                      handleIssuedBySelection(e);
-                    }}
-                    value={issuedByOptions.find(
-                      (option) => option.id === formData.issuedById
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={issuedByOptions}
-                    loadOptions={loadIssuedBySelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    key={issuedByOptions.length} // Add esto para que se refresque la lista
-                  />
+                            <div className="row mb-2">
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="issuedBy"
+                                        className="form-label"
+                                    >
+                                        Issued By:
+                                    </label>
+                                    <AsyncSelect
+                                        id="issuedBy"
+                                        onChange={(e) => {
+                                            handleIssuedBySelection(e);
+                                        }}
+                                        value={issuedByOptions.find(
+                                            (option) =>
+                                                option.id ===
+                                                formData.issuedById
+                                        )}
+                                        isClearable={true}
+                                        placeholder="Search and select..."
+                                        defaultOptions={issuedByOptions}
+                                        loadOptions={loadIssuedBySelectOptions}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                        key={issuedByOptions.length} // Add esto para que se refresque la lista
+                                    />
 
                                     <div>
                                         {isModalOpenAgent &&
@@ -2247,190 +2342,230 @@ const ReceiptCreationForm = ({
                                     {/* terminacion de Forms creacion y edicion Agent */}
                                 </div>
 
-                <div className="col-6 text-start">
-                  <Input
-                    type="number"
-                    inputName="entryNumber"
-                    placeholder="Entry Number..."
-                    value={formData.entryNumber}
-                    label="Entry Number"
-                  />
-                </div>
-              </div>
-              <div className="col-6 text-start">
-                <label className="copy-label_add" onClick={handleAddAgentClick}>
-                <i className="fas fa-plus button-icon fa-3x"></i>
-                </label>
-                <label
-                  className="copy-label_edit"
-                  onClick={handleEditAgentClick}
-                >
-                  <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
-                </label>
-                {/* Forms creacion y edicion Agent */}
-              </div>
-            </div>
-          </div>
+                                <div className="col-6 text-start">
+                                    <Input
+                                        type="number"
+                                        inputName="entryNumber"
+                                        placeholder="Entry Number..."
+                                        value={formData.entryNumber}
+                                        label="Entry Number"
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-6 text-start">
+                                <label
+                                    className="copy-label_add"
+                                    onClick={handleAddAgentClick}
+                                >
+                                    <i className="fas fa-plus button-icon fa-3x"></i>
+                                </label>
+                                <label
+                                    className="copy-label_edit"
+                                    onClick={handleEditAgentClick}
+                                >
+                                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                </label>
+                                {/* Forms creacion y edicion Agent */}
+                            </div>
+                        </div>
+                    </div>
 
-          <div className="col-6">
-            <div className="creation creation-container w-100">
-              <div className="form-label_name">
-                <h3>Shipper/Consignee</h3>
-                <span></span>
-              </div>
-              <div className="row mb-3">
-                <div className="col-6 text-start">
-                  <label htmlFor="shipper" className="form-label">
-                    Shipper:
-                  </label>
-                  <AsyncSelect
-                    id="shipper"
-                    value={shipperOptions.find(
-                      (option) =>
-                        option.id === formData.shipperId &&
-                        option.type_person === formData.shipperType
-                    )}
-                    onChange={(e) => handleShipperSelection(e)}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={shipperOptions}
-                    loadOptions={loadShipperSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                  <div>
-                    <label
-                      className="copy-label_add"
-                      onClick={handleAddShipperClick}
-                      >
-                      Add Shipper
-                    </label>
-                    <label
-                      className="copy-label_edit"
-                      onClick={handleEditShipperClick}
-                      >
-                      Edit
-                    </label>
-                  </div>
-                </div>
+                    <div className="col-6">
+                        <div className="creation creation-container w-100">
+                            <div className="form-label_name">
+                                <h3>Shipper/Consignee</h3>
+                                <span></span>
+                            </div>
+                            <div className="row mb-3">
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="shipper"
+                                        className="form-label"
+                                    >
+                                        Shipper:
+                                    </label>
+                                    <AsyncSelect
+                                        id="shipper"
+                                        value={shipperOptions.find(
+                                            (option) =>
+                                                option.id ===
+                                                    formData.shipperId &&
+                                                option.type_person ===
+                                                    formData.shipperType
+                                        )}
+                                        onChange={(e) =>
+                                            handleShipperSelection(e)
+                                        }
+                                        isClearable={true}
+                                        placeholder="Search and select..."
+                                        defaultOptions={shipperOptions}
+                                        loadOptions={loadShipperSelectOptions}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                    />
+                                    <div>
+                                        <label
+                                            className="copy-label_add"
+                                            onClick={handleAddShipperClick}
+                                        >
+                                            Add Shipper
+                                        </label>
+                                        <label
+                                            className="copy-label_edit"
+                                            onClick={handleEditShipperClick}
+                                        >
+                                            Edit
+                                        </label>
+                                    </div>
+                                </div>
 
-                <div className="col-6 text-start">
-                  <label htmlFor="consignee" className="form-label">
-                    Consignee:
-                  </label>
-                  <AsyncSelect
-                    id="consignee"
-                    value={consigneeOptions.find(
-                      (option) =>
-                        option.id === formData.consigneeId &&
-                        option.type_person === formData.consigneeType
-                    )}
-                    onChange={(e) => handleConsigneeSelection(e)}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={consigneeOptions}
-                    loadOptions={loadConsigneeSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                  />
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddConsigneeClick}
-                    >
-                    Add C
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditConsigneeClick}
-                    >
-                    Edit
-                  </label>
-                </div>
-                 {/* Forms creacion y edicion carrier */}
-                 <div>
-                    {isModalOpenConsignee && selectedConsignee === null && (
-                      <ModalForm
-                        isOpen={isModalOpenConsignee}
-                        onClose={closeModalConsignee}
-                      >
-                        <CustomerCreationForm
-                          customer={null}
-                          closeModal={closeModalConsignee}
-                          creating={true}
-                          fromPickupOrder={true}
-                          onProcessComplete={(createdConsigneeId) =>
-                            handleProcessCompleteConsignee(createdConsigneeId)
-                          }
-                        />
-                      </ModalForm>
-                    )}
-                  </div>
-                  <div>
-                    {isModalOpenConsignee && selectedConsignee  !== null && (
-                      <ModalForm
-                        isOpen={isModalOpenConsignee}
-                        onClose={closeModalConsignee}
-                      >
-                        <CustomerCreationForm
-                          customer={selectedConsignee}
-                          closeModal={closeModalConsignee}
-                          creating={false}
-                          fromPickupOrder={true}
-                          onProcessComplete={handleProcessCompleteConsignee}
-                        />
-                      </ModalForm>
-                    )}
-                  </div>
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="consignee"
+                                        className="form-label"
+                                    >
+                                        Consignee:
+                                    </label>
+                                    <AsyncSelect
+                                        id="consignee"
+                                        value={consigneeOptions.find(
+                                            (option) =>
+                                                option.id ===
+                                                    formData.consigneeId &&
+                                                option.type_person ===
+                                                    formData.consigneeType
+                                        )}
+                                        onChange={(e) =>
+                                            handleConsigneeSelection(e)
+                                        }
+                                        isClearable={true}
+                                        placeholder="Search and select..."
+                                        defaultOptions={consigneeOptions}
+                                        loadOptions={loadConsigneeSelectOptions}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                    />
+                                    <label
+                                        className="copy-label_add"
+                                        onClick={handleAddConsigneeClick}
+                                    >
+                                        Add C
+                                    </label>
+                                    <label
+                                        className="copy-label_edit"
+                                        onClick={handleEditConsigneeClick}
+                                    >
+                                        Edit
+                                    </label>
+                                </div>
+                                {/* Forms creacion y edicion carrier */}
+                                <div>
+                                    {isModalOpenConsignee &&
+                                        selectedConsignee === null && (
+                                            <ModalForm
+                                                isOpen={isModalOpenConsignee}
+                                                onClose={closeModalConsignee}
+                                            >
+                                                <CustomerCreationForm
+                                                    customer={null}
+                                                    closeModal={
+                                                        closeModalConsignee
+                                                    }
+                                                    creating={true}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={(
+                                                        createdConsigneeId
+                                                    ) =>
+                                                        handleProcessCompleteConsignee(
+                                                            createdConsigneeId
+                                                        )
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
+                                <div>
+                                    {isModalOpenConsignee &&
+                                        selectedConsignee !== null && (
+                                            <ModalForm
+                                                isOpen={isModalOpenConsignee}
+                                                onClose={closeModalConsignee}
+                                            >
+                                                <CustomerCreationForm
+                                                    customer={selectedConsignee}
+                                                    closeModal={
+                                                        closeModalConsignee
+                                                    }
+                                                    creating={false}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={
+                                                        handleProcessCompleteConsignee
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
 
-                {/* Forms creacion y edicion carrier */}
-                <div>
-                  {isModalOpenShipper && selectedShipp === null && (
-                    <ModalForm
-                      isOpen={isModalOpenShipper}
-                      onClose={closeModalShipper}
-                    >
-                      <CustomerCreationForm
-                        customer={null}
-                        closeModal={closeModalShipper}
-                        creating={true}
-                        fromPickupOrder={true}
-                        onProcessComplete={(createdShipperId) =>
-                          handleProcessCompleteShipper(createdShipperId)
-                        }
-                      />
-                    </ModalForm>
-                  )}
-                </div>
-                <div>
-                  {isModalOpenShipper && selectedShipp  !== null && (
-                    <ModalForm
-                      isOpen={isModalOpenShipper}
-                      onClose={closeModalShipper}
-                    >
-                      <CustomerCreationForm
-                        customer={selectedShipp}
-                        closeModal={closeModalShipper}
-                        creating={false}
-                        fromPickupOrder={true}
-                        onProcessComplete={handleProcessCompleteShipper}
-                      />
-                    </ModalForm>
-                  )}
-                </div>
-                {/* terminacion de Forms creacion y edicion shipper */}
+                                {/* Forms creacion y edicion carrier */}
+                                <div>
+                                    {isModalOpenShipper &&
+                                        selectedShipp === null && (
+                                            <ModalForm
+                                                isOpen={isModalOpenShipper}
+                                                onClose={closeModalShipper}
+                                            >
+                                                <CustomerCreationForm
+                                                    customer={null}
+                                                    closeModal={
+                                                        closeModalShipper
+                                                    }
+                                                    creating={true}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={(
+                                                        createdShipperId
+                                                    ) =>
+                                                        handleProcessCompleteShipper(
+                                                            createdShipperId
+                                                        )
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
+                                <div>
+                                    {isModalOpenShipper &&
+                                        selectedShipp !== null && (
+                                            <ModalForm
+                                                isOpen={isModalOpenShipper}
+                                                onClose={closeModalShipper}
+                                            >
+                                                <CustomerCreationForm
+                                                    customer={selectedShipp}
+                                                    closeModal={
+                                                        closeModalShipper
+                                                    }
+                                                    creating={false}
+                                                    fromPickupOrder={true}
+                                                    onProcessComplete={
+                                                        handleProcessCompleteShipper
+                                                    }
+                                                />
+                                            </ModalForm>
+                                        )}
+                                </div>
+                                {/* terminacion de Forms creacion y edicion shipper */}
+                            </div>
 
-              </div>
-
-              <div className="row align-items-center mb-3">
-                <div className="col-6 text-start">
-                  <Input
-                    type="textarea"
-                    inputName="shipperinfo"
-                    placeholder="Shipper Location..."
-                    value={formData.shipperInfo}
-                    readonly={true}
-                  />
-                </div>
+                            <div className="row align-items-center mb-3">
+                                <div className="col-6 text-start">
+                                    <Input
+                                        type="textarea"
+                                        inputName="shipperinfo"
+                                        placeholder="Shipper Location..."
+                                        value={formData.shipperInfo}
+                                        readonly={true}
+                                    />
+                                </div>
 
                                 <div className="col-6 text-start">
                                     <Input
@@ -2501,50 +2636,57 @@ const ReceiptCreationForm = ({
                     </div>
                 </div>
 
-        <div className="row w-100">
-          <div className="col-6">
-            <div className="creation creation-container w-100">
-              <div className="form-label_name">
-                <h3>Supplier</h3>
-                <span></span>
-              </div>
-              <div className="row align-items-center mb-2">
-                <div className="col-6 text-start">
-                  <label htmlFor="supplier" className="form-label">
-                    Name:
-                  </label>
-                  <AsyncSelect
-                    id="supplier"
-                    onChange={(e) => handleSupplierSelection(e)}
-                    value={supplierOptions.find(
-                      (option) => option.id === formData.supplierId
-                      // option.id === formData.supplierId &&
-                      // option.type_person === formData.supplierType
-                    )}
-                    isClearable={true}
-                    placeholder="Search and select..."
-                    defaultOptions={supplierOptions}
-                    loadOptions={loadSupplierSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    key={supplierOptions.length} // Add esto para que se refresque la lista
-                  />
-                </div>
-                <div className="col-6 text-start">
-                  <Input
-                    type="text"
-                    inputName="invoiceNumber"
-                    placeholder="Invoice Number..."
-                    value={formData.invoiceNumber}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        invoiceNumber: e.target.value,
-                      })
-                    }
-                    label="Invoice Number"
-                  />
-                </div>
+                <div className="row w-100">
+                    <div className="col-6">
+                        <div className="creation creation-container w-100">
+                            <div className="form-label_name">
+                                <h3>Supplier</h3>
+                                <span></span>
+                            </div>
+                            <div className="row align-items-center mb-2">
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="supplier"
+                                        className="form-label"
+                                    >
+                                        Name:
+                                    </label>
+                                    <AsyncSelect
+                                        id="supplier"
+                                        onChange={(e) =>
+                                            handleSupplierSelection(e)
+                                        }
+                                        value={supplierOptions.find(
+                                            (option) =>
+                                                option.id ===
+                                                formData.supplierId
+                                            // option.id === formData.supplierId &&
+                                            // option.type_person === formData.supplierType
+                                        )}
+                                        isClearable={true}
+                                        placeholder="Search and select..."
+                                        defaultOptions={supplierOptions}
+                                        loadOptions={loadSupplierSelectOptions}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                        key={supplierOptions.length} // Add esto para que se refresque la lista
+                                    />
+                                </div>
+                                <div className="col-6 text-start">
+                                    <Input
+                                        type="text"
+                                        inputName="invoiceNumber"
+                                        placeholder="Invoice Number..."
+                                        value={formData.invoiceNumber}
+                                        changeHandler={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                invoiceNumber: e.target.value,
+                                            })
+                                        }
+                                        label="Invoice Number"
+                                    />
+                                </div>
 
                                 {/* Forms creacion y edicion Supplier */}
                                 <div>
@@ -2597,23 +2739,23 @@ const ReceiptCreationForm = ({
                                 {/* terminacion de Forms creacion y edicion Supplier */}
                             </div>
 
-              <div className="row mb-3">
-              <div className="col-6 text-start">
-                <label
-                  className="copy-label_add"
-                  onClick={handleAddSupplierClick}
-                >
-                 <i className="fas fa-plus button-icon fa-3x"></i>
-                </label>
+                            <div className="row mb-3">
+                                <div className="col-6 text-start">
+                                    <label
+                                        className="copy-label_add"
+                                        onClick={handleAddSupplierClick}
+                                    >
+                                        <i className="fas fa-plus button-icon fa-3x"></i>
+                                    </label>
 
-                <label
-                  className="copy-label_edit"
-                  onClick={handleEditSupplierClick}
-                >
-                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
-                </label>
-              </div>
-              </div>
+                                    <label
+                                        className="copy-label_edit"
+                                        onClick={handleEditSupplierClick}
+                                    >
+                                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                    </label>
+                                </div>
+                            </div>
 
                             <div className="row alig-items-center">
                                 <div className="col-6 text-start">
@@ -2649,33 +2791,38 @@ const ReceiptCreationForm = ({
                         </div>
                     </div>
 
-          <div className="col-6">
-            <div className="creation creation-container w-100">
-              <div className="form-label_name">
-                <h2>Carrier Information</h2>
-                <span></span>
-              </div>
-              <div className="row align-items-center mb-2">
-                <div className="col-6 text-start">
-                  <label htmlFor="mainCarrier" className="form-label">
-                    Carrier:
-                  </label>
-                  <AsyncSelect
-                    id="mainCarrier"
-                    onChange={(e) => {
-                      handleMainCarrierSelection(e);
-                    }}
-                    value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
-                    )}
-                    placeholder="Search and select..."
-                    defaultOptions={carrierOptions}
-                    loadOptions={loadCarrierSelectOptions}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    key={carrierOptions.length} // Add esto para que se refresque la lista
-                  />
-                  {/* labels de creacion y edicion carrier */}
+                    <div className="col-6">
+                        <div className="creation creation-container w-100">
+                            <div className="form-label_name">
+                                <h2>Carrier Information</h2>
+                                <span></span>
+                            </div>
+                            <div className="row align-items-center mb-2">
+                                <div className="col-6 text-start">
+                                    <label
+                                        htmlFor="mainCarrier"
+                                        className="form-label"
+                                    >
+                                        Carrier:
+                                    </label>
+                                    <AsyncSelect
+                                        id="mainCarrier"
+                                        onChange={(e) => {
+                                            handleMainCarrierSelection(e);
+                                        }}
+                                        value={carrierOptions.find(
+                                            (option) =>
+                                                option.id ===
+                                                formData.mainCarrierdId
+                                        )}
+                                        placeholder="Search and select..."
+                                        defaultOptions={carrierOptions}
+                                        loadOptions={loadCarrierSelectOptions}
+                                        getOptionLabel={(option) => option.name}
+                                        getOptionValue={(option) => option.id}
+                                        key={carrierOptions.length} // Add esto para que se refresque la lista
+                                    />
+                                    {/* labels de creacion y edicion carrier */}
 
                                     {/* Forms creacion y edicion carrier */}
                                     <div>
@@ -2746,23 +2893,23 @@ const ReceiptCreationForm = ({
                                 </div>
                             </div>
 
-              <div className="row mb-3">
-              <div className="col-6 text-start">
-                <label
-                  className="copy-label_add"
-                  onClick={handleAddCarrierClick}
-                >
-                   <i className="fas fa-plus button-icon fa-3x"></i>
-                </label>
+                            <div className="row mb-3">
+                                <div className="col-6 text-start">
+                                    <label
+                                        className="copy-label_add"
+                                        onClick={handleAddCarrierClick}
+                                    >
+                                        <i className="fas fa-plus button-icon fa-3x"></i>
+                                    </label>
 
-                <label
-                  className="copy-label_edit"
-                  onClick={handleEditCarrierClick}
-                >
-                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
-                </label>
-              </div>
-              </div>
+                                    <label
+                                        className="copy-label_edit"
+                                        onClick={handleEditCarrierClick}
+                                    >
+                                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                    </label>
+                                </div>
+                            </div>
 
                             <div className="row mb-3">
                                 <div className="col-6 text-start">
