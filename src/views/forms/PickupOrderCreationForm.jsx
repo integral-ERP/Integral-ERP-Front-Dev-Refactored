@@ -27,6 +27,7 @@ import CarrierCreationForm from "../forms/CarrierCreationForm";
 import ForwardingAgentsCreationForm from "../forms/ForwardingAgentCreationForm";
 import CustomerCreationForm from "../forms/CustomerCreationForm";
 import ModalForm from "../shared/components/ModalForm";
+import { set } from "lodash";
 
 const PickupOrderCreationForm = ({
   pickupOrder,
@@ -296,6 +297,7 @@ const PickupOrderCreationForm = ({
     setSelectedDeliLocation(result?.data); // Set the selected carrier
     console.log("setSelectedDeliLocation", setSelectedDeliLocation);
   };
+  
 
   const handleDestinationAgentSelection = async (event) => {
     const id = event?.id || "";
@@ -442,9 +444,13 @@ const PickupOrderCreationForm = ({
   };
   const handleEditCarrierClick = () => {
     if (formData.mainCarrierdId) {
+      const carrierToEdit = carrierOptions.find(
+        (carrierv) => carrierv.id === formData.mainCarrierdId
+      );
+      setSelectedCarrier(carrierToEdit);
       setIsModalOpenCarrier(true);
     } else {
-      alert("Please select a carrier to edit.");
+      alert("Please select a Carrier to edit.");
     }
   };
   const closeModalCarrier = () => {
@@ -479,6 +485,10 @@ const PickupOrderCreationForm = ({
   };
   const handleEditAgentClick = () => {
     if (formData.issuedById) {
+      const issuedByToEdit = issuedByOptions.find(
+        (issuedv) => issuedv.id === formData.issuedById
+      );
+      setSelectedAgent(issuedByToEdit);
       setIsModalOpenAgent(true);
     } else {
       alert("Please select a Agent to edit.");
@@ -552,10 +562,12 @@ const PickupOrderCreationForm = ({
   useEffect(() => {
     if (isProcessCompleteShipper) {
       loadShipperSelectOptions('').then(options => {
-        // Actualizar las opciones carajo
+        // Actualizar las opciones 
         setShipperOptions(options);
         setPickupLocationOptions(options); 
         setReleasedToOptions(options);
+        setDeliveryLocationOptions(options);
+        setConsigneeOptions(options);
         if (selectedShipp) {
           const updatedShipper = options.find(option => option.id === selectedShipp.id);
           if (updatedShipper) {
@@ -576,9 +588,13 @@ const PickupOrderCreationForm = ({
     };
     const handleEditDeliLocationClick = () => {
       if (formData.deliveryLocationId) {
+        const deliveryLocationToEdit = deliveryLocationOptions.find(
+          (deliLocationv) =>   deliLocationv.id === formData.deliveryLocationId
+        );
+        setSelectedDeliLocation(deliveryLocationToEdit);
         setIsModalOpenDeliLocation(true);
       } else {
-        alert("Please select a Delivery to edit.");
+        alert("Please select a Delivery Location to edit.");
       }
     };
     const closeModalDeliLocation = () => {
@@ -594,16 +610,45 @@ const PickupOrderCreationForm = ({
       const DeliLocationId = createdDeliLocationId || formData.deliveryLocationId;
   
       if (DeliLocationId) {
-        await handleDeliveryLocationSelection({ id: DeliLocationId });
+        //await handleDeliveryLocationSelection({ id: DeliLocationId });
   
         // Obtener y actualizar las opciones del delivery
         const updatedOptions = await loadDeliLocationSelectOptions("");
         setDeliveryLocationOptions(updatedOptions);
+
+        const updatedDeliveryLocation = updatedOptions.find(
+          (shipper) => shipper.id === DeliLocationId
+        );
+  
+        if (updatedDeliveryLocation) {
+          handleDeliveryLocationSelection(updatedDeliveryLocation);
+        }
       }
   
       // Restablecer el delivery seleccionado después del procesamiento
       //setSelectedDeliLocation(null);
     };
+
+     //Muy importante para despues de add/edit recarcargar opciones de deliverylocation!!
+  useEffect(() => {
+    if (isProcessCompleteDeliLocation) {
+      loadDeliLocationSelectOptions('').then(options => {
+        // Actualizar las opciones 
+        setShipperOptions(options);
+        setPickupLocationOptions(options); 
+        setReleasedToOptions(options);
+        setDeliveryLocationOptions(options);
+        setConsigneeOptions(options);
+        if (selectedDeliLocation) {
+          const updateddeliveryLocationChanged = options.find(option => option.id === selectedDeliLocation.id);
+          if (updateddeliveryLocationChanged) {
+            handleDeliveryLocationSelection(updateddeliveryLocationChanged);
+          }
+        }
+        setIsProcessCompleteDeliLocation(false);
+      });
+    }
+  }, [isProcessCompleteDeliLocation, selectedDeliLocation]);
   
   
     //--------------------------------------------------------------
@@ -688,9 +733,13 @@ const PickupOrderCreationForm = ({
   };
   const handleEditPickUpLocationClick = () => {
     if (formData.pickupLocationId) {
+      const PickupLocationvToEdit = pickupLocationOptions.find(
+        (pickupLocationv) => pickupLocationv.id === formData.pickupLocationId
+      );
+      setSelectedPickUpLocation(PickupLocationvToEdit);
       setIsModalOpenPickUpLocation(true);
     } else {
-      alert("Please select a PickUpLocation to edit.");
+      alert("Please select a Pick-up Location to edit.");
     }
   };
   const closeModalPickUpLocation = () => {
@@ -708,16 +757,43 @@ const PickupOrderCreationForm = ({
     const PickLocationId = createdPickUpLocationId || formData.pickupLocationId;
 
     if (PickLocationId) {
-      await handlePickUpSelection({ id: PickLocationId });
+      //await handlePickUpSelection({ id: PickLocationId });
 
       // Obtener y actualizar las opciones del Customer
       const updatedOptions = await loadPickUpLocationSelectOpt("");
       setPickupLocationOptions(updatedOptions);
+      const updatedpickupLocation = updatedOptions.find(
+        (shipper) => shipper.id === PickLocationId
+      );
+
+      if (updatedOptions) {
+        handlePickUpSelection(updatedpickupLocation);
+      }
     }
 
     // Restablecer el PickUpLocation seleccionado después del procesamiento
     //setSelectedPickUpLocation(null);
   };
+  //Muy importante para despues de add/edit recarcargar opciones de pickupl location!!
+  useEffect(() => {
+    if (isProcessCompletePickUpLocation) {
+      loadPickUpLocationSelectOpt('').then(options => {
+        // Actualizar las opciones 
+        setShipperOptions(options);
+        setPickupLocationOptions(options); 
+        setReleasedToOptions(options);
+        setDeliveryLocationOptions(options);
+        setConsigneeOptions(options);
+        if (selectedPickUpLocation) {
+          const updatedpickupLocationchanged = options.find(option => option.id === selectedPickUpLocation.id);
+          if (updatedpickupLocationchanged ) {
+            handlePickUpSelection(updatedpickupLocationchanged);
+          }
+        }
+        setIsProcessCompletePickUpLocation(false);
+      });
+    }
+  }, [isProcessCompletePickUpLocation, selectedPickUpLocation]);
 
   //--------------------------------------------------------------
 
