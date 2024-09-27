@@ -2079,7 +2079,7 @@ const PickupOrderCreationForm = ({
                 <span></span>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="shipper" className="form-label">
                     Shipper:
@@ -2156,13 +2156,14 @@ const PickupOrderCreationForm = ({
                 className="copy-label_add"
                 onClick={handleAddShipperClick}
                 >
-                Add
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
               </label>
               <label
                 className="copy-label_edit"
                 onClick={handleEditShipperClick}
                 >
-                Edit 
+                 <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
               </label>
               </div>
               
@@ -2358,18 +2359,7 @@ const PickupOrderCreationForm = ({
                     )}
                   </div>
                   
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddConsigneeClick}
-                    >
-                    Add
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditConsigneeClick}
-                    >
-                    Edit 
-                  </label>
+                  
                   <div>
                     {isModalOpenConsignee && selectedConsignee  !== null && (
                       <ModalForm
@@ -2389,8 +2379,7 @@ const PickupOrderCreationForm = ({
                   {/* terminacion de Forms creacion y edicion shipper */}
                 </div>
 
-                <div
-                  className="col-6 text-start"
+                <div className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
                 >
                   <label htmlFor="delivery" className="form-label">
@@ -2457,7 +2446,35 @@ const PickupOrderCreationForm = ({
                           />
                         </ModalForm>
                       )}
-                      <label
+
+                      
+                     
+                  </div>
+
+                 
+                </div>
+              </div>
+
+              <div className="row mb-3">
+              <div className="col-6 text-start">
+              <label
+                    className="copy-label_add"
+                    onClick={handleAddConsigneeClick}
+                    >
+                   <i className="fas fa-plus button-icon fa-3x"></i>
+
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditConsigneeClick}
+                    >
+                  <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+
+                  </label>
+               </div>
+              <div className="col-6 text-start">
+              <div className="col-6 text-start">
+                  <label
                       className="copy-label_add"
                       onClick={handleAddDeliLocationClick}
                     >
@@ -2471,16 +2488,7 @@ const PickupOrderCreationForm = ({
                     >
                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                     </label>
-                  </div>
-                  {/* terminacion de Forms creacion y edicion Customer */}
                 </div>
-              </div>
-
-              <div className="row mb-3">
-              <div className="col-6 text-start">
-               </div>
-              <div className="col-6 text-start">
-                    
                   </div>
                   </div>
 
@@ -2696,7 +2704,7 @@ const PickupOrderCreationForm = ({
         </div>
 
         {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
-        <input type="checkbox" id="toggleBoton"></input>
+        {/* <input type="checkbox" id="toggleBoton"></input> */}
         <label className="button-charge" htmlFor="toggleBoton">
           Commodities
         </label>
