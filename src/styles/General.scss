@@ -1313,6 +1313,7 @@
   display: flex;
   justify-content: center; 
   align-items: center; 
+  font-size: 13px !important;
 }
 
 .button-charge {
@@ -1360,16 +1361,24 @@
 }
 
 .custom-file-input {
-  display: inline-block;
-  padding: 5px 13px;
+  width: 12rem;
+  height: 2rem;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  border-color: #006BAD;
   background-color: #006BAD;
-  color: #fff;
-  border-radius: 6px;
+  color: white;
   cursor: pointer;
+  transition: background-color 9.7s ease;  
+  margin-top: 1vw !important;
+  display: inline-flex !important;
 }
 
 .custom-file-input .button-text {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 #eventType{

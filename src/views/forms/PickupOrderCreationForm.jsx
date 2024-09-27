@@ -2704,7 +2704,7 @@ const PickupOrderCreationForm = ({
         </div>
 
         {/* //-------------------------------------COMMODITES------------------------------------------------------------- */}
-        {/* <input type="checkbox" id="toggleBoton"></input> */}
+        <input type="checkbox" id="toggleBoton"></input>
         <label className="button-charge" htmlFor="toggleBoton">
           Commodities
         </label>
