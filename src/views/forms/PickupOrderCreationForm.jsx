@@ -96,18 +96,18 @@ const PickupOrderCreationForm = ({
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isProcessCompleteAgent, setIsProcessCompleteAgent] = useState(false);
   //added  Shipper modal
-   const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
-   const [selectedShipp, setSelectedShipper] = useState(null);
-   const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
+  const [isModalOpenShipper, setIsModalOpenShipper] = useState(false);
+  const [selectedShipp, setSelectedShipper] = useState(null);
+  const [isProcessCompleteShipper, setIsProcessCompleteShipper] = useState(false);
   //added  Delivery Location modal
   const [isModalOpenDeliLocation, setIsModalOpenDeliLocation] = useState(false);
   const [selectedDeliLocation, setSelectedDeliLocation] = useState(null);
   const [isProcessCompleteDeliLocation, setIsProcessCompleteDeliLocation] =
     useState(false);
   //added  Consignee modal
-  // const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
-  // const [selectedConsignee, setSelectedConsignee] = useState(null);
-  // const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
+  const [isModalOpenConsignee, setIsModalOpenConsignee] = useState(false);
+  const [selectedConsignee, setSelectedConsignee] = useState(null);
+  const [isProcessCompleteConsignee, setIsProcessCompleteConsignee] = useState(false);
   //added  Destination Agent modal
   const [isModalOpenDestinationAgent, setIsModalOpenDestinationAgent] =
     useState(false);
@@ -202,13 +202,7 @@ const PickupOrderCreationForm = ({
     ];
     // const pickupLocationOptions   = [...customersWithType, ...vendorsWithType];
 
-    // const consigneeOptions        = [...customersWithType, ...vendorsWithType, ...carriersWithType];
-    const consigneeOptions = [
-      ...customersWithType,
-      // ...vendorsWithType,
-      // ...forwardingAgentsWithType,
-      // ...carriersWithType,
-    ];
+    const consigneeOptions = [ ...customersWithType,];
 
     const deliveryLocationOptions = [
       ...customersWithType,
@@ -326,29 +320,19 @@ const PickupOrderCreationForm = ({
     });
   };
 
-  const handleConsigneeSelection = (event) => {
-    const id = event?.id || "";
-    const type = event?.type || "";
-    const validTypes = ["forwardingAgent", "customer", "vendor", "Carrier"];
-    if (!validTypes.includes(type)) {
-      console.error(`Unsupported consignee type: ${type}`);
-      return;
-    }
-    const selectedConsignee = consigneeOptions.find(
-      (option) => option.id === id && option.type === type
-    );
-    if (!selectedConsignee) {
-      console.error(`Consignee not found with ID ${id} and type ${type}`);
+  const handleConsigneeSelection = (selectedOption) => {
+    if (!selectedOption) return;
+
+    const { id, type , street_and_number, city, state, country, zip_code } = selectedOption;
+    if (type !== "customer") {
+
+      console.error(`Unsupported Consignee type: ${type}`);
       return;
     }
 
-    const info = `${selectedConsignee.street_and_number || ""} - ${
-      selectedConsignee.city || ""
-    } - ${selectedConsignee.state || ""} - ${
-      selectedConsignee.country || ""
-    } - ${selectedConsignee.zip_code || ""}`;
-    setconsignee(selectedConsignee);
-    setdefaultValueConsignee(selectedConsignee);
+    const info = `${street_and_number || ""} - ${city || ""} - ${state || ""} - ${country || ""} - ${zip_code || ""}`;
+    
+    setdefaultValueConsignee(selectedOption);
     setFormData({
       ...formData,
       consigneeId: id,
@@ -356,6 +340,7 @@ const PickupOrderCreationForm = ({
       consigneeInfo: info,
     });
   };
+
 
   const handleShipperSelection = (selectedOption) => {
     if (!selectedOption) return;
@@ -652,41 +637,67 @@ const PickupOrderCreationForm = ({
   
   
     //--------------------------------------------------------------
-      //added handle Consignee creation
-  // const handleAddConsigneeClick = () => {
-  //   setSelectedConsignee(null);
-  //   setIsModalOpenConsignee(true);
-  // };
-  // const handleEditConsigneeClick = () => {
-  //   if (formData.consigneeId) {
-  //     setIsModalOpenConsignee(true);
-  //   } else {
-  //     alert("Please select a Consignee to edit.");
-  //   }
-  // };
-  // const closeModalConsignee = () => {
-  //   setIsModalOpenConsignee(false);
-  //   setSelectedConsignee(null);
-  // };
-  // const handleProcessCompleteConsignee = async (createdConsigneeId = null) => {
-  //   setIsProcessCompleteConsignee(true);
-  //   setIsModalOpenConsignee(false);
-  //   console.log("Proceso completado en ConsigneeCreationForm");
+      
+  // //added handle consignee creation
+  const handleAddConsigneeClick = () => {
+    setSelectedConsignee(null);
+    setIsModalOpenConsignee(true);
+  };
+  const handleEditConsigneeClick = () => {
+    if (formData.consigneeId) {
+      const ConsigneeToEdit = consigneeOptions.find(
+        (consignee) => consignee.id === formData.consigneeId
+      );
+      setSelectedConsignee(ConsigneeToEdit);
+      setIsModalOpenConsignee(true);
+    } else {
+      alert("Please select a consignee to edit.");
+    }
+  };
+  const closeModalConsignee = () => {
+    setIsModalOpenConsignee(false);
+  setSelectedConsignee(null);
+  };
+  // Función para manejar la finalización del proceso de creación/edición
+  const handleProcessCompleteConsignee = async (createdOrUpdatedConsigneeId) => {
+    setIsProcessCompleteConsignee(true);
+    setIsModalOpenConsignee(false);
+    console.log('Process completed in ConsigneeCreationForm');
+    
+    if (createdOrUpdatedConsigneeId) {
+      const updatedConsigneeOptions = await loadConsigneeSelectOptions('');
+      setConsigneeOptions(updatedConsigneeOptions);
 
-  //   // Si se creó un nuevo Consignee, utilice su ID; de lo contrario, utilice el consigneeId existente
-  //   const ConsigneeId = createdConsigneeId || formData.consigneeId;
+      const updatedConsignee = updatedConsigneeOptions.find(
+        (consignee) => consignee.id === createdOrUpdatedConsigneeId
+      );
 
-  //   if (ConsigneeId) {
-  //     await handleConsigneeSelection({ id: ConsigneeId });
+      if (updatedConsignee) {
+        handleConsigneeSelection(updatedConsignee);
+      }
+      
+    }
+  };
+ //Muy importante para despues de add/edit recarcargar opciones de Consignee!!
+  useEffect(() => {
+    if (isProcessCompleteConsignee) {
+      loadConsigneeSelectOptions('').then(options => {
+        // Actualizar las opciones carajo
+        setConsigneeOptions(options);
+        setDeliveryLocationOptions(options); 
+        setReleasedToOptions(options);
+        if (selectedConsignee) {
+          const updatedConsignee = options.find(option => option.id === selectedConsignee.id);
+          if (updatedConsignee) {
+            handleConsigneeSelection(updatedConsignee);
+          }
+        }
+        setIsProcessCompleteConsignee(false);
+      });
+    }
+  }, [isProcessCompleteConsignee, selectedConsignee]);
+  
 
-  //     // Obtener y actualizar las opciones del Consignee
-  //     const updatedOptions = await loadConsigneeSelectOptions("");
-  //     setConsigneeOptions(updatedOptions);
-  //   }
-
-  //   // Restablecer el Consignee seleccionado después del procesamiento
-  //   setSelectedConsignee(null);
-  // };
 
   //--------------------------------------------------------------
     //added handle DestinationAgent creation
@@ -982,29 +993,7 @@ const PickupOrderCreationForm = ({
     return options;
   };
 
-  //---------------------------------------------------------
 
-  const loadConsigneeSelectOptions = async (inputValue) => {
-    if (inputValue) {
-      const filteredOptions = consigneeOptions.filter((option) =>
-        option.name.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      const options = filteredOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
-
-      return options;
-    } else {
-      const options = consigneeOptions.map((option) => ({
-        ...option,
-        value: option.id,
-        label: option.name,
-      }));
-      return options;
-    }
-  };
 
   const loadPickUpLocationSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.search(inputValue)).data
@@ -1082,9 +1071,27 @@ const PickupOrderCreationForm = ({
 
   }, []);
 
-
   // Función para cargar las opciones de shipper
   const loadShipperSelectOptions = async (inputValue) => {
+    const responseCustomers = (await CustomerService.getCustomers()).data.results;
+    
+    return responseCustomers.map(customer => ({ 
+      ...customer, 
+      type: "customer", 
+      value: customer.id, 
+      label: customer.name 
+    }));
+  };
+  //------------------
+  //added para recargar Consigneeoptions al crear un Consignee
+  // Efecto para cargar las opciones iniciales de Consignee
+  useEffect(() => {
+    loadConsigneeSelectOptions('').then(options => setConsigneeOptions(options));
+
+  }, []);
+
+  // Función para cargar las opciones de Consignee
+  const loadConsigneeSelectOptions = async (inputValue) => {
     const responseCustomers = (await CustomerService.getCustomers()).data.results;
     
     return responseCustomers.map(customer => ({ 
@@ -1239,17 +1246,20 @@ const PickupOrderCreationForm = ({
       const inputSelected = document.querySelector(inputs.selectedId);
       const inputAsociated = document.querySelector(inputs.asociatedId);
       const isValid = true; //inputSelected && inputAsociated && !(inputAsociated.value === "" || inputAsociated.value === null || inputAsociated.value === undefined)
-
+      
       if (inputSelected && formData[inputSelected.id]) {
         inputSelected.style.border = "1px solid green";
-
+        console.log("formData[inputSelected.id]", formData[inputSelected.id]);
         continue;
       } else {
+        console.log("inputSelected", inputSelected);
+        console.log("inputAsociated", inputAsociated);
         if (inputSelected) inputSelected.style.border = "1px solid red";
 
         if (!isValid && inputSelected?.style) {
           inputSelected.style.border = "1px solid red";
         } else {
+          console.log('entre en el este con: ' + isValid)
           if (inputSelected) inputSelected.style.border = "1px solid green";
         }
       }
@@ -1925,7 +1935,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 {/* <div className="" style={{ display: "flex" }}> */}
                 <div className="col-6 text-start">
                   <label htmlFor="destinationAgent" className="form-label">
@@ -2084,13 +2094,14 @@ const PickupOrderCreationForm = ({
                       className="copy-label_add"
                       onClick={handleAddDestinationAgentClick}
                     >
-                      Add
+                    <i className="fas fa-plus button-icon fa-3x"></i>
                     </label>
                     <label
                       className="copy-label_edit"
                       onClick={handleEditDestinationAgentClick}
                     >
-                      Edit
+                     <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+
                     </label>
                   </div>
 
@@ -2099,13 +2110,14 @@ const PickupOrderCreationForm = ({
                     className="copy-label_add"
                     onClick={handleAddAgentClick}
                   >
-                    Add
+                 <i className="fas fa-plus button-icon fa-3x"></i>
+
                   </label>
                   <label
                     className="copy-label_edit"
                     onClick={handleEditAgentClick}
                   >
-                    Edit
+                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                   </label>
                   </div>
                   </div>
@@ -2145,7 +2157,7 @@ const PickupOrderCreationForm = ({
                 <span></span>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="shipper" className="form-label">
                     Shipper:
@@ -2164,18 +2176,21 @@ const PickupOrderCreationForm = ({
 
                   />
                 </div>
-                <label
-                    className="copy-label_add"
-                    onClick={handleAddShipperClick}
-                    >
-                    Add
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditShipperClick}
-                    >
-                    Edit 
-                  </label>
+                <div className="col-6 text-start">
+                  <Input
+                    type="text"
+                    inputName="invoiceNumber"
+                    value={formData.invoiceNumber}
+                    changeHandler={(e) =>
+                      setFormData({
+                        ...formData,
+                        invoiceNumber: e.target.value,
+                      })
+                    }
+                    label="Purchase Order"
+                  />
+                </div>
+                
                 {/* Forms creacion y edicion carrier */}
                 <div>
                     {isModalOpenShipper && selectedShipp === null && (
@@ -2213,22 +2228,23 @@ const PickupOrderCreationForm = ({
                     )}
                   </div>
                   {/* terminacion de Forms creacion y edicion shipper */}
-
-                <div className="col-6 text-start">
-                  <Input
-                    type="text"
-                    inputName="invoiceNumber"
-                    value={formData.invoiceNumber}
-                    changeHandler={(e) =>
-                      setFormData({
-                        ...formData,
-                        invoiceNumber: e.target.value,
-                      })
-                    }
-                    label="Purchase Order"
-                  />
-                </div>
               </div>
+              <div className="col-6 text-start">
+              <label
+                className="copy-label_add"
+                onClick={handleAddShipperClick}
+                >
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
+              </label>
+              <label
+                className="copy-label_edit"
+                onClick={handleEditShipperClick}
+                >
+                 <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+              </label>
+              </div>
+              
 
               <div className="row mb-3">
                 <div className="col-12 text-start">
@@ -2254,7 +2270,7 @@ const PickupOrderCreationForm = ({
                 </div>
               </div>
 
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="pickup" className="form-label">
                     Pick-up Location:
@@ -2344,14 +2360,15 @@ const PickupOrderCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddPickUpLocationClick}
                 >
-                  Add
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditPickUpLocationClick}
                 >
-                  Edit
+                    <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
               </div>
@@ -2379,7 +2396,7 @@ const PickupOrderCreationForm = ({
                 <h2>Delivery Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="consignee" className="form-label">
                     Consignee:
@@ -2397,11 +2414,50 @@ const PickupOrderCreationForm = ({
                       getOptionLabel={(option) => option.name}
                       getOptionValue={(option) => option.id}
                     />
+                    
                   </div>
+                  
+                {/* Forms creacion y edicion carrier */}
+                <div>
+                    {isModalOpenConsignee && selectedConsignee === null && (
+                      <ModalForm
+                        isOpen={isModalOpenConsignee}
+                        onClose={closeModalConsignee}
+                      >
+                        <CustomerCreationForm
+                          customer={null}
+                          closeModal={closeModalConsignee}
+                          creating={true}
+                          fromPickupOrder={true}
+                          onProcessComplete={(createdConsigneeId) =>
+                            handleProcessCompleteConsignee(createdConsigneeId)
+                          }
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  
+                  
+                  <div>
+                    {isModalOpenConsignee && selectedConsignee  !== null && (
+                      <ModalForm
+                        isOpen={isModalOpenConsignee}
+                        onClose={closeModalConsignee}
+                      >
+                        <CustomerCreationForm
+                          customer={selectedConsignee}
+                          closeModal={closeModalConsignee}
+                          creating={false}
+                          fromPickupOrder={true}
+                          onProcessComplete={handleProcessCompleteConsignee}
+                        />
+                      </ModalForm>
+                    )}
+                  </div>
+                  {/* terminacion de Forms creacion y edicion shipper */}
                 </div>
 
-                <div
-                  className="col-6 text-start"
+                <div className="col-6 text-start"
                   style={{ marginBlockEnd: "auto" }}
                 >
                   <label htmlFor="delivery" className="form-label">
@@ -2468,28 +2524,49 @@ const PickupOrderCreationForm = ({
                           />
                         </ModalForm>
                       )}
+
+                      
+                     
                   </div>
-                  {/* terminacion de Forms creacion y edicion Customer */}
+
+                 
                 </div>
               </div>
 
               <div className="row mb-3">
               <div className="col-6 text-start">
+              <label
+                    className="copy-label_add"
+                    onClick={handleAddConsigneeClick}
+                    >
+                   <i className="fas fa-plus button-icon fa-3x"></i>
+
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditConsigneeClick}
+                    >
+                  <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+
+                  </label>
                </div>
               <div className="col-6 text-start">
-                    <label
+              <div className="col-6 text-start">
+                  <label
                       className="copy-label_add"
                       onClick={handleAddDeliLocationClick}
                     >
-                      Add
+                    <i className="fas fa-plus button-icon fa-3x"></i>
+
                     </label>
 
                     <label
                       className="copy-label_edit"
                       onClick={handleEditDeliLocationClick}
                     >
-                      Edit
+                       <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                     </label>
+                </div>
                   </div>
                   </div>
 
@@ -2568,7 +2645,7 @@ const PickupOrderCreationForm = ({
                   </div>
                 </div>
               </div>
-              <div className="row align-items-center"></div>
+              {/* <div className="row align-items-center"></div> */}
             </div>
           </div>
 
@@ -2578,7 +2655,7 @@ const PickupOrderCreationForm = ({
                 <h2>Carrier Information</h2>
                 <span></span>
               </div>
-              <div className="row align-items-center mb-3">
+              <div className="row align-items-center mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="mainCarrier" className="form-label">
                     Carrier:
@@ -2662,14 +2739,15 @@ const PickupOrderCreationForm = ({
                   className="copy-label_add"
                   onClick={handleAddCarrierClick}
                 >
-                  Add
+               <i className="fas fa-plus button-icon fa-3x"></i>
+
                 </label>
 
                 <label
                   className="copy-label_edit"
                   onClick={handleEditCarrierClick}
                 >
-                  Edit
+                   <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
                 </label>
               </div>
 
@@ -2710,7 +2788,7 @@ const PickupOrderCreationForm = ({
         </label>
 
         <div className="row w-100" id="miDiv">
-          <div className="">
+          {/* <div className=""> */}
             <div className="creation creation-container w-100">
               <div className="form-label_name">
                 {editingComodity ? (
@@ -2857,7 +2935,7 @@ const PickupOrderCreationForm = ({
                 </div>
               )}
             </div>
-          </div>
+          {/* </div> */}
         </div>
 
         {/* -------------------------------------------------------------------------------------------------------------- */}

@@ -662,9 +662,6 @@ const CarrierCreationForm = ({
                     </button>
                   </>
                 )}
-
-
-        
       </div>
       {/* Conditionally render the success alert */}
       {showSuccessAlert && (
