@@ -215,7 +215,7 @@ const PickupOrderCreationForm = ({
 
     const clientToBillOptions = [
       ...customersWithType,
-      ...forwardingAgentsWithType,
+      // ...forwardingAgentsWithType,
     ];
 
     setIssuedByOptions(issuedByOptions.sort(SortArray));
