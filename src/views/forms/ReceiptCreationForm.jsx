@@ -2235,7 +2235,7 @@ const ReceiptCreationForm = ({
                 <h3>Shipper/Consignee</h3>
                 <span></span>
               </div>
-              <div className="row mb-3">
+              <div className="row mb-2">
                 <div className="col-6 text-start">
                   <label htmlFor="shipper" className="form-label">
                     Shipper:
@@ -2255,20 +2255,7 @@ const ReceiptCreationForm = ({
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}
                   />
-                  <div>
-                    <label
-                      className="copy-label_add"
-                      onClick={handleAddShipperClick}
-                      >
-                      Add Shipper
-                    </label>
-                    <label
-                      className="copy-label_edit"
-                      onClick={handleEditShipperClick}
-                      >
-                      Edit 
-                    </label>
-                  </div>
+                 
                 </div>
                 
                 <div className="col-6 text-start">
@@ -2290,18 +2277,7 @@ const ReceiptCreationForm = ({
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.id}                    
                   />
-                  <label
-                    className="copy-label_add"
-                    onClick={handleAddConsigneeClick}
-                    >
-                    Add C
-                  </label>
-                  <label
-                    className="copy-label_edit"
-                    onClick={handleEditConsigneeClick}
-                    >
-                    Edit 
-                  </label>
+                 
                 </div>
                  {/* Forms creacion y edicion carrier */}                 
                  <div>
@@ -2377,6 +2353,38 @@ const ReceiptCreationForm = ({
                 {/* terminacion de Forms creacion y edicion shipper */}
                 
               </div>
+
+              <div className="row mb-2">
+              <div className="col-6 text-start">
+                    <label
+                      className="copy-label_add"
+                      onClick={handleAddShipperClick}
+                      >
+                        <i className="fas fa-plus button-icon fa-3x"></i>
+                    </label>
+                    <label
+                      className="copy-label_edit"
+                      onClick={handleEditShipperClick}
+                      >
+                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                    </label>
+                  </div>
+
+                  <div className="col-6 text-start">
+                  <label
+                    className="copy-label_add"
+                    onClick={handleAddConsigneeClick}
+                    >
+                     <i className="fas fa-plus button-icon fa-3x"></i>
+                  </label>
+                  <label
+                    className="copy-label_edit"
+                    onClick={handleEditConsigneeClick}
+                    >
+                      <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                  </label>
+                  </div>
+                  </div>
               
               <div className="row align-items-center mb-3">
                 <div className="col-6 text-start">
