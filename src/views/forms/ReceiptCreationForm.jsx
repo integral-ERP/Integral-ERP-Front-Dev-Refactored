@@ -175,7 +175,7 @@ const ReceiptCreationForm = ({
                 );
                 const clientToBillOptions = [
                     ...customersWithType,
-                    ...forwardingAgentsWithType,
+                    // ...forwardingAgentsWithType,
                 ];
 
                 setIssuedByOptions([...forwardingAgents].sort(SortArray));
