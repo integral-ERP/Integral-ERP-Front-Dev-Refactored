@@ -669,6 +669,7 @@ const CarrierCreationForm = ({
           severity="success"
           onClose={() => setShowSuccessAlert(false)}
           className="alert-notification"
+          style={{ marginLeft: "30vw" }}
         >
           <AlertTitle>Success</AlertTitle>
           <strong>
