@@ -649,8 +649,8 @@ const CarrierCreationForm = ({
       <div className="company-form__options-carrier" style={{marginLeft:"27vw", marginTop: "-1vw"}}>
             {fromPickupOrder ? (
                   <>
-                    <label className="button-save" onClick={sendData}>Save</label>
-                     <label className="button-cancel" onClick={handleCancel}>Cancel</label>
+                    <label className="button-charge" onClick={sendData}>Save</label>
+                     <label className="button-charge" onClick={handleCancel}>Cancel</label>
                   </>
                 ) : (
                   <>

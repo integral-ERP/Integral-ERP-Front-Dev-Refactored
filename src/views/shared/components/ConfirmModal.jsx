@@ -31,7 +31,7 @@ function ConfirmModal({ onHide, onConfirm, title, body }) {
                     }}
                     onClick={onHide}
                 >
-                    Cancelar
+                    Cancel
                 </Button>
 
                 <Button
@@ -43,7 +43,7 @@ function ConfirmModal({ onHide, onConfirm, title, body }) {
                     }}
                     onClick={onConfirm}
                 >
-                    Confirmar
+                    Accept
                 </Button>
             </Modal.Footer>
         </Modal>

@@ -175,7 +175,7 @@ const ReceiptCreationForm = ({
                 );
                 const clientToBillOptions = [
                     ...customersWithType,
-                    ...forwardingAgentsWithType,
+                    // ...forwardingAgentsWithType,
                 ];
 
                 setIssuedByOptions([...forwardingAgents].sort(SortArray));
@@ -3302,8 +3302,8 @@ const ReceiptCreationForm = ({
                                 htmlFor="fileInput"
                                 className="custom-file-input"
                             >
-                                <span className="button-text">
-                                    Seleccionar archivos
+                                <span className="button-text" style={{padding: '0 0 0 17%'}}>
+                                    Select files
                                 </span>
                                 <input
                                     type="file"
