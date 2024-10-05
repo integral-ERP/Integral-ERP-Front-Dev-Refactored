@@ -80,7 +80,7 @@ const GeneratePickUpPDF = (data) => {
     let totalWeight = 0.0;
     let totalVolume = 0.0;
     let totalVolumeM = 0.0;
-    let longboard = 338.0;
+    let longboard = 325.0;
     let hazardous = "";
     let hazardous_type = "";
 
@@ -186,12 +186,12 @@ const GeneratePickUpPDF = (data) => {
                         text: [
                           `${data.issued_byObj?.name || ``} \n`,
                           `${data.issued_byObj?.phone? `Tel: ${data.issued_byObj.phone || ``}, \n `: ``}
-                          ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax || ``}`: ``}\n`,
+                           ${data.issued_byObj?.fax? `Fax: ${data.issued_byObj.fax || ``}`: ``}\n`,
                           `${data.issued_byObj?.street_and_number || ``} \n`,
                           `${data.issued_byObj?.country || ``} \n`,
                           `${data.issued_byObj?.state || ``} \n`,
                           `${data.issued_byObj?.city || ``} \n`,
-                          `${data.issued_byObj?.zip_code || ``} \n`,   
+                          `${data.issued_byObj?.zip_code || ``} `,   
                         ],
                       },
                       
@@ -261,7 +261,7 @@ const GeneratePickUpPDF = (data) => {
                                 bold: true,
                               }, 
                               {
-                                text: `${data.employeeObj.name || ``}, `,
+                                text: `${data.employeeObj.name || ``} `,
                                 fontSize: 10,
                               }
                             ],
@@ -279,12 +279,14 @@ const GeneratePickUpPDF = (data) => {
                         text: `Pickup Company`,
                         bold: true,
                         fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
                         fontSize: 11,
                       },
                       {
                         text: `Delivery Company`,
                         bold: true,
                         fillColor: `#CCCCCC`,
+                        margin: [0, 0, 0, 0],
                         fontSize: 11,
                       },
                     ],
@@ -292,58 +294,26 @@ const GeneratePickUpPDF = (data) => {
                       {
                         text: [
                           `${data.pickUpLocationObj?.data?.obj?.name || ``} \n`,
-                          `${
-                            data.pickUpLocationObj?.data?.obj
-                              ?.street_and_number || ``
-                          } \n`,
-                          `${data.pickUpLocationObj?.data?.obj?.city || ``}, ${
-                            data.pickUpLocationObj?.data?.obj?.state || ``
-                          } ${
-                            data.pickUpLocationObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.pickUpLocationObj?.data?.obj?.country || ``}`,
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
+                          `${data.pickUpLocationObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.pickUpLocationObj?.data?.obj?.city || ``},
+                           ${data.pickUpLocationObj?.data?.obj?.state || ``} 
+                           ${data.pickUpLocationObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.pickUpLocationObj?.data?.obj?.country || ``}\n`,     
+                          `Tel: ${data.pickUpLocationObj?.data?.obj?.phone || ``}`,                       
                         ],
-                        margin: [0, 0, 0, 20],
+                        margin: [0, 0, 0, 0],
                       },
                       {
                         text: [
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj
-                              ?.street_and_number || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.city || ``
-                          }, ${
-                            data.deliveryLocationObj?.data?.obj?.state || ``
-                          } ${
-                            data.deliveryLocationObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${
-                            data.deliveryLocationObj?.data?.obj?.country || ``
-                          }`,
-                          `${
-                            data.issued_byObj?.phone
-                              ? `Tel: ${data.issued_byObj.phone}, `
-                              : ``
-                          }${
-                            data.issued_byObj?.fax
-                              ? `Fax: ${data.issued_byObj.fax}`
-                              : ``
-                          }\n`,
+                          `${data.deliveryLocationObj?.data?.obj?.name || ``} \n`,
+                          `${data.deliveryLocationObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.deliveryLocationObj?.data?.obj?.city || ``}, 
+                           ${data.deliveryLocationObj?.data?.obj?.state || ``} 
+                           ${data.deliveryLocationObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.deliveryLocationObj?.data?.obj?.country || ``}`,
+                          `Tel: ${data.deliveryLocationObj?.data?.obj?.phone || ``}`,
                         ],
-                        margin: [0, 0, 0, 10],
+                        margin: [0, 0, 0, 0],
                       },
                     ],
                   ],

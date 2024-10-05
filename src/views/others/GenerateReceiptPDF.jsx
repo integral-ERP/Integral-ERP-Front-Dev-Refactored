@@ -233,48 +233,28 @@ const GenerateReceiptPDF = (data, numCon) => {
                     [
                       {
                         text: [
-                          `${data.shipperObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${data.shipperObj?.data?.obj
-                            ?.street_and_number || ``
-                          } \n`,
-                          `${data.shipperObj?.data?.obj?.city || ``
-                          }, ${data.shipperObj?.data?.obj?.state || ``
-                          } ${data.shipperObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.shipperObj?.data?.obj?.country || ``
-                          }`,
-                          `${data.shipperObj?.phone
-                            ? `Tel: ${data.shipperObj.phone}, `
-                            : ``
-                          }${data.shipperObj?.fax
-                            ? `Fax: ${data.shipperObj.fax}`
-                            : ``
-                          }\n`,
+                          `${data.shipperObj?.data?.obj?.name || ``} \n`,
+                          `${data.shipperObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.shipperObj?.data?.obj?.city || ``}, 
+                           ${data.shipperObj?.data?.obj?.state || ``} 
+                           ${data.shipperObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.shipperObj?.data?.obj?.country || ``}`,
+                          `${data.shipperObj?.phone? `Tel: ${data.shipperObj.phone}, `: ``}
+                           ${data.shipperObj?.fax? `Fax: ${data.shipperObj.fax}`: ``}`,
                         ],
                         colSpan: 2
                       },
                       {},
                       {
                         text: [
-                          `${data.consigneeObj?.data?.obj?.name || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj
-                            ?.street_and_number || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.city || ``
-                          }, ${data.consigneeObj?.data?.obj?.state || ``
-                          } ${data.consigneeObj?.data?.obj?.zip_code || ``
-                          } \n`,
-                          `${data.consigneeObj?.data?.obj?.country || ``
-                          }`,
-                          `${data.consigneeObj?.phone
-                            ? `Tel: ${data.consigneeObj.phone}, `
-                            : ``
-                          }${data.consigneeObj?.fax
-                            ? `Fax: ${data.consigneeObj.fax}`
-                            : ``
-                          }\n`,
+                          `${data.consigneeObj?.data?.obj?.name || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.street_and_number || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.city || ``}, 
+                           ${data.consigneeObj?.data?.obj?.state || ``} 
+                           ${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
+                          `${data.consigneeObj?.data?.obj?.country || ``}`,
+                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone}, `: ``}
+                           ${data.consigneeObj?.fax? `Fax: ${data.consigneeObj.fax}`: ``}`,
                         ],
                         colSpan: 2
                       },
