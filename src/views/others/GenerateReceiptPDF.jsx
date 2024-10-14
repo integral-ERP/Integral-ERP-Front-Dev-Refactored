@@ -279,7 +279,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                         margin: [0, 0, 0, 0],
                       },
                       {
-                        text: `${data.main_carrierObj?.name || ``}`,
+                        text: `${data.inland_carrierObj?.name || ``}`,
                         margin: [0, 0, 0, 0],
                       },
                       {
