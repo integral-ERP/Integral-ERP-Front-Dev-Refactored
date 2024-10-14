@@ -81,7 +81,7 @@ const ReleaseOrderCreationForm = ({
         pro_number: '',
         tracking_number: '',
         purchase_order_number: '',
-        main_carrierObj: '',
+        inland_carrierObj: '',
         commodities: [],
         consigneeId: '',
         consigneeType: '',
@@ -350,7 +350,7 @@ const ReleaseOrderCreationForm = ({
                 pro_number: releaseOrder.pro_number,
                 tracking_number: releaseOrder.tracking_number,
                 purchase_order_number: releaseOrder.purchase_order_number,
-                main_carrierObj: releaseOrder.main_carrierObj,
+                inland_carrierObj: releaseOrder.inland_carrierObj,
                 commodities: releaseOrder.commodities,
                 notes: releaseOrder.notes,
             };
@@ -513,7 +513,7 @@ const ReleaseOrderCreationForm = ({
                 pro_number: releaseOrder.pro_number,
                 tracking_number: releaseOrder.tracking_number,
                 purchase_order_number: releaseOrder.purchase_order_number,
-                main_carrierObj: releaseOrder.main_carrierObj,
+                inland_carrierObj: releaseOrder.inland_carrierObj,
                 commodities: releaseOrder.commodities,
                 charges: releaseOrder.charges,
                 consignee: releaseOrder.consignee,
@@ -682,11 +682,11 @@ const ReleaseOrderCreationForm = ({
                     releasodToType: formData.releasedToType, */
                     client_to_bill_type: formData.clientToBillType,
                     clientToBillType: formData.clientToBillType,
-                    carrier: formData.main_carrierObj.id,
+                    carrier: formData.inland_carrierObj.id,
                     pro_number: formData.pro_number,
                     tracking_number: formData.tracking_number,
                     purchase_order_number: formData.purchase_order_number,
-                    main_carrierObj: formData.main_carrierObj,
+                    inland_carrierObj: formData.inland_carrierObj,
 
                     commodities: commodities,
                     consignee: consigneeRequest,
@@ -1045,7 +1045,7 @@ const ReleaseOrderCreationForm = ({
                                         inputName="purchaseOrderNumber"
                                         placeholder="Carrier . . . "
                                         value={
-                                            formData.main_carrierObj.name || ''
+                                            formData.inland_carrierObj.name || ''
                                         }
                                     />
                                 </div>

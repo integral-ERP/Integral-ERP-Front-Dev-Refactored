@@ -374,7 +374,7 @@ const GeneratePickUpPDF = (data) => {
                         fontSize: 11,
                       },
                       {
-                        text: `${data.main_carrierObj?.name || ``}`,
+                        text: `${data.inland_carrierObj?.name || ``}`,
                         bold: true,
                       },
                       {

@@ -282,7 +282,7 @@ let formattedDateTime = `${day}/${month}/${year} - ${hours}:${minutes} ${ampm}`;
                           fontSize: 9,
                           },
                           {
-                            text: data.main_carrierObj.name,
+                            text: data.inland_carrierObj.name,
                             fontSize: 11,
                             bold: true,
                             },

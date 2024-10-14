@@ -158,6 +158,10 @@ const PickupOrderCreationForm = ({
     trackingNumber: "",
     mainCarrierdId: "",
     mainCarrierInfo: "",
+
+    inlandCarrierdId: "",
+    inlandCarrierdInfo: "",
+
     invoiceNumber: "",
     purchaseOrderNumber: "",
 
@@ -381,7 +385,24 @@ const PickupOrderCreationForm = ({
     setFormData({
       ...formData,
       mainCarrierdId: id,
-      mainCarrierInfo: info,
+      mainCarrierdInfo: info,
+    });
+    setSelectedCarrier(result?.data); // Set the selected carrier
+    console.log("setSelectedCarrier", setSelectedCarrier);
+  };
+
+  const handleInlandCarrierSelection = async (event) => {
+    const id = event?.id || "";
+    const result = await CarrierService.getCarrierById(id);
+    const info = `${result?.data.street_and_number || ""} - ${
+      result?.data.city || ""
+    } - ${result?.data.state || ""} - ${result?.data.country || ""} - ${
+      result?.data.zip_code || ""
+    }`;
+    setFormData({
+      ...formData,
+      inlandCarrierdId: id,
+      inlandCarrierdInfo: info,
     });
     setSelectedCarrier(result?.data); // Set the selected carrier
     console.log("setSelectedCarrier", setSelectedCarrier);
@@ -428,9 +449,9 @@ const PickupOrderCreationForm = ({
     setIsModalOpenCarrier(true);
   };
   const handleEditCarrierClick = () => {
-    if (formData.mainCarrierdId) {
+    if (formData.inlandCarrierdId) {
       const carrierToEdit = carrierOptions.find(
-        (carrierv) => carrierv.id === formData.mainCarrierdId
+        (carrierv) => carrierv.id === formData.inlandCarrierdId
       );
       setSelectedCarrier(carrierToEdit);
       setIsModalOpenCarrier(true);
@@ -447,11 +468,11 @@ const PickupOrderCreationForm = ({
     setIsModalOpenCarrier(false);
     console.log("Proceso completado en CarrierCreationForm");
 
-    // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
-    const carrierId = createdCarrierId || formData.mainCarrierdId;
+    // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el inlandCarrierdId existente
+    const carrierId = createdCarrierId || formData.inlandCarrierdId;
 
     if (carrierId) {
-      await handleMainCarrierSelection({ id: carrierId });
+      await handleInlandCarrierSelection({ id: carrierId });
 
       // Obtener y actualizar las opciones del carrier
       const updatedOptions = await loadCarrierSelectOptions("");
@@ -897,14 +918,16 @@ const PickupOrderCreationForm = ({
 
         proNumber: pickupOrder.pro_number,
         trackingNumber: pickupOrder.tracking_number,
-        mainCarrierdId: pickupOrder.main_carrier,
-        mainCarrierInfo: `${
-          pickupOrder.main_carrierObj?.street_and_number || ""
-        } - ${pickupOrder.main_carrierObj?.city || ""} - ${
-          pickupOrder.main_carrierObj?.state || ""
-        } - ${pickupOrder.main_carrierObj?.country || ""} - ${
-          pickupOrder.main_carrierObj?.zip_code || ""
+        inlandCarrierdId: pickupOrder.inland_carrier,
+        inlandCarrierdInfo: `${
+          pickupOrder.inland_carrierObj?.street_and_number || ""
+        } - ${pickupOrder.inland_carrierObj?.city || ""} - ${
+          pickupOrder.inland_carrierObj?.state || ""
+        } - ${pickupOrder.inland_carrierObj?.country || ""} - ${
+          pickupOrder.inland_carrierObj?.zip_code || ""
         }`,
+
+        mainCarrierdId: pickupOrder.main_carrier,
 
         invoiceNumber: pickupOrder.invoice_number,
         purchaseOrderNumber: pickupOrder.purchase_order_number,
@@ -1572,7 +1595,7 @@ const PickupOrderCreationForm = ({
 
           pro_number: formData.proNumber,
           tracking_number: formData.trackingNumber,
-          inland_carrier: formData.mainCarrierdId,
+          inland_carrier: formData.inlandCarrierdId,
           main_carrier: formData.mainCarrierdId,
 
           invoice_number: formData.invoiceNumber,
@@ -1647,6 +1670,7 @@ const PickupOrderCreationForm = ({
           consignee: consigneeRequest,
           client_to_bill: clientToBillRequest,
           main_carrier: formData.mainCarrierdId,
+          inland_carrier: formData.inlandCarrierdId,
           commodities: commodities,
           charges: charges,
           events: events,
@@ -2652,7 +2676,11 @@ const PickupOrderCreationForm = ({
           <div className="col-6">
             <div className="creation creation-container w-100">
               <div className="form-label_name">
-                <h2>Carrier Information</h2>
+                <h2>Carrier</h2>
+                {/* <span></span> */}
+              </div>
+              <div className="form-label_name">
+                <h4>Inland Carrier</h4>
                 <span></span>
               </div>
               <div className="row align-items-center mb-2">
@@ -2663,10 +2691,10 @@ const PickupOrderCreationForm = ({
                   <AsyncSelect
                     id="mainCarrier"
                     onChange={(e) => {
-                      handleMainCarrierSelection(e);
+                      handleInlandCarrierSelection(e);
                     }}
                     value={carrierOptions.find(
-                      (option) => option.id === formData.mainCarrierdId
+                      (option) => option.id === formData.inlandCarrierdId
                     )}
                     placeholder="Search and select..."
                     defaultOptions={carrierOptions}
@@ -2759,7 +2787,7 @@ const PickupOrderCreationForm = ({
                     type="textarea"
                     inputName="issuedbydata"
                     placeholder="Carrier Info..."
-                    value={formData.mainCarrierInfo}
+                    value={formData.inlandCarrierdInfo}
                     readonly={true}
                     label="Address"
                   />
@@ -2777,6 +2805,28 @@ const PickupOrderCreationForm = ({
                   />
                 </div>
               </div>
+              <div className="form-label_name">
+                <h4>Main Carrier</h4>
+                <span></span>
+              </div>
+              <div className="col-6 text-start">
+                <label htmlFor="mainCarrier" className="form-label">
+                  Carrier:
+                </label>
+                <AsyncSelect
+                  id="mainCarrier"
+                  onChange={(e) => {
+                    handleMainCarrierSelection(e);
+                  }}
+                  value={carrierOptions.find(
+                    (option) => option.id === formData.mainCarrierdId
+                  )}
+                  placeholder="Search and select..."
+                  defaultOptions={carrierOptions}
+                  loadOptions={loadCarrierSelectOptions}
+                  getOptionLabel={(option) => option.name}
+                  getOptionValue={(option) => option.id}/>
+                </div>              
             </div>
           </div>
         </div>

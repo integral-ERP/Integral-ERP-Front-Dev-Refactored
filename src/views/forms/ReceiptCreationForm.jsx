@@ -236,6 +236,10 @@ const ReceiptCreationForm = ({
         trackingNumber: '',
         mainCarrierdId: '',
         mainCarrierInfo: '',
+
+        inlandCarrierdId: "",
+        inlandCarrierdInfo: "",
+
         invoiceNumber: '',
         purchaseOrderNumber: '',
 
@@ -478,7 +482,7 @@ const ReceiptCreationForm = ({
         setIsModalOpenCarrier(true);
     };
     const handleEditCarrierClick = () => {
-        if (formData.mainCarrierdId) {
+        if (formData.inlandCarrierdId) {
             setIsModalOpenCarrier(true);
         } else {
             alert('Please select a carrier to edit.');
@@ -493,11 +497,11 @@ const ReceiptCreationForm = ({
         setIsModalOpenCarrier(false);
         console.log('Proceso completado en CarrierCreationForm');
 
-        // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
-        const carrierId = createdCarrierId || formData.mainCarrierdId;
+        // Si se creó un nuevo carrire, utilice su ID; de lo contrario, utilice el inlandCarrierdId existente
+        const carrierId = createdCarrierId || formData.inlandCarrierdId;
 
         if (carrierId) {
-            await handleMainCarrierSelection({ id: carrierId });
+            await handleInlandCarrierSelection({ id: carrierId });
 
             // Obtener y actualizar las opciones del carrier
             const updatedOptions = await loadCarrierSelectOptions('');
@@ -605,7 +609,7 @@ const ReceiptCreationForm = ({
         setIsModalOpenSupplier(false);
         console.log('Proceso completado en customerCreationform');
 
-        // Si se creó un nuevo Supplier, utilice su ID; de lo contrario, utilice el mainCarrierdId existente
+        // Si se creó un nuevo Supplier, utilice su ID; de lo contrario, utilice el inlandCarrierdId existente
         const SupplierId = createdSupplierId || formData.supplierId;
 
         if (SupplierId) {
@@ -941,7 +945,7 @@ const ReceiptCreationForm = ({
         return <div>No se puede previsualizar este tipo de archivo</div>;
     };
 
-    const handleMainCarrierSelection = async (event) => {
+    const handleInlandCarrierSelection = async (event) => {
         const id = event.id;
         const result = await CarrierService.getCarrierById(id);
         const info = `${result.data.street_and_number || ''} - ${
@@ -951,8 +955,8 @@ const ReceiptCreationForm = ({
         }`;
         setFormData({
             ...formData,
-            mainCarrierdId: id,
-            mainCarrierInfo: info,
+            inlandCarrierdId: id,
+            inlandCarrierdInfo: info,
         });
         setSelectedCarrier(result?.data); // Set the selected carrier
         console.log('setSelectedCarrier', setSelectedCarrier);
@@ -1218,13 +1222,13 @@ const ReceiptCreationForm = ({
 
                 proNumber: pickupOrder.pro_number,
                 trackingNumber: pickupOrder.tracking_number,
-                mainCarrierdId: pickupOrder.main_carrier,
-                mainCarrierInfo: `${
-                    pickupOrder.main_carrierObj?.street_and_number || ''
-                } - ${pickupOrder.main_carrierObj?.city || ''} - ${
-                    pickupOrder.main_carrierObj?.state || ''
-                } - ${pickupOrder.main_carrierObj?.country || ''} - ${
-                    pickupOrder.main_carrierObj?.zip_code || ''
+                inlandCarrierdId: pickupOrder.inland_carrier,
+                inlandCarrierdInfo: `${
+                    pickupOrder.inland_carrierObj?.street_and_number || ''
+                } - ${pickupOrder.inland_carrierObj?.city || ''} - ${
+                    pickupOrder.inland_carrierObj?.state || ''
+                } - ${pickupOrder.inland_carrierObj?.country || ''} - ${
+                    pickupOrder.inland_carrierObj?.zip_code || ''
                 }`,
 
                 /* supplier: initialSupplier,
@@ -1436,7 +1440,7 @@ const ReceiptCreationForm = ({
             setDestinationAgentOptions([pickupOrder.destination_agentObj]);
             setShipperOptions([pickupOrder.shipperObj?.data?.obj]);
             setConsigneeOptions([pickupOrder.consigneeObj?.data?.obj]);
-            setCarrierOptions([pickupOrder.main_carrierObj]);
+            setCarrierOptions([pickupOrder.inland_carrierObj]);
             setcommodities(pickupOrder.commodities);
 
             let CTBID = '';
@@ -1515,13 +1519,13 @@ const ReceiptCreationForm = ({
 
                 proNumber: pickupOrder.pro_number,
                 trackingNumber: pickupOrder.tracking_number,
-                mainCarrierdId: pickupOrder.main_carrier,
-                mainCarrierInfo: `${
-                    pickupOrder.main_carrierObj?.street_and_number || ''
-                } - ${pickupOrder.main_carrierObj?.city || ''} - ${
-                    pickupOrder.main_carrierObj?.state || ''
-                } - ${pickupOrder.main_carrierObj?.country || ''} - ${
-                    pickupOrder.main_carrierObj?.zip_code || ''
+                inlandCarrierdId: pickupOrder.inland_carrier,
+                inlandCarrierdInfo: `${
+                    pickupOrder.inland_carrierObj?.street_and_number || ''
+                } - ${pickupOrder.inland_carrierObj?.city || ''} - ${
+                    pickupOrder.inland_carrierObj?.state || ''
+                } - ${pickupOrder.inland_carrierObj?.country || ''} - ${
+                    pickupOrder.inland_carrierObj?.zip_code || ''
                 }`,
 
                 supplierId: pickupOrder.shipperObj.data?.obj?.id,
@@ -1796,6 +1800,7 @@ const ReceiptCreationForm = ({
                     consignee: consigneeRequest,
                     client_to_bill: clientToBillRequest,
                     main_carrier: formData.mainCarrierdId,
+                    inland_carrier: formData.inlandCarrierdId,
                     commodities: commodities,
                     charges: charges,
                     events: events,
@@ -1839,7 +1844,7 @@ const ReceiptCreationForm = ({
 
                     pro_number: formData.proNumber,
                     tracking_number: formData.trackingNumber,
-                    inland_carrier: formData.mainCarrierdId,
+                    inland_carrier: formData.inlandCarrierdId,
                     main_carrier: formData.mainCarrierdId,
 
                     invoice_number: formData.invoiceNumber,
@@ -2819,12 +2824,12 @@ const ReceiptCreationForm = ({
                                     <AsyncSelect
                                         id="mainCarrier"
                                         onChange={(e) => {
-                                            handleMainCarrierSelection(e);
+                                            handleInlandCarrierSelection(e);
                                         }}
                                         value={carrierOptions.find(
                                             (option) =>
                                                 option.id ===
-                                                formData.mainCarrierdId
+                                                formData.inlandCarrierdId
                                         )}
                                         placeholder="Search and select..."
                                         defaultOptions={carrierOptions}
@@ -2928,7 +2933,7 @@ const ReceiptCreationForm = ({
                                         id="TextMainCarrier"
                                         type="textarea"
                                         inputName="issuedbydata"
-                                        value={formData.mainCarrierInfo}
+                                        value={formData.inlandCarrierdInfo}
                                         readonly={true}
                                         // label="Address"
                                     />
