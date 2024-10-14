@@ -157,8 +157,10 @@ const ChartOfAccountsCreationForm = ({
 
     return (
         <div className="company-form">
-            <div className="creation creation-container w-100">
+           
                 <div className="row w-100">
+                <div className="col-6">
+                <div className="creation creation-container w-100">
                     <div className="form-label_name">
                         <h2>Items & Services</h2>
                         <span></span>
@@ -174,7 +176,9 @@ const ChartOfAccountsCreationForm = ({
                                 activeTab === 'definition' ? 'block' : 'none',
                         }}
                     >
-                        <div className="">
+                     
+                     <div className="row align-items-center mb-2">
+                     <div className="col-6 text-start">
                             <div className="company-form__section">
                                 <label htmlFor="type" className="form-label">
                                     Type:
@@ -224,6 +228,9 @@ const ChartOfAccountsCreationForm = ({
                                     </option>
                                 </select>
                             </div>
+                     </div>
+
+                     <div className="col-6 text-start">
                             <div className="company-form__section">
                                 <Input
                                     type="text"
@@ -239,6 +246,12 @@ const ChartOfAccountsCreationForm = ({
                                     label="Name"
                                 />
                             </div>
+                            </div>
+                       
+                    </div>
+
+                    <div className="row align-items-center mb-2">
+                    <div className="col-6 text-start">
                             <div className="company-form__section">
                                 <Input
                                     type="num"
@@ -254,6 +267,9 @@ const ChartOfAccountsCreationForm = ({
                                     label="Account Number"
                                 />
                             </div>
+                    </div>
+
+                    <div className="col-6 text-start">
                             <div className="company-form__section">
                                 <label
                                     htmlFor="chartofaccountsType"
@@ -296,8 +312,12 @@ const ChartOfAccountsCreationForm = ({
                                     ))}
                                 </select>
                             </div>
-                            <div className="">
-                                <div className="company-form__section">
+                            </div>
+                    </div>
+
+                    <div className="row align-items-center mb-3">
+                    <div className="col-6 text-start">
+                        <div className="company-form__section" style={{marginBottom: '4vw'}}>
                                     <label
                                         htmlFor="currency"
                                         className="form-label"
@@ -336,9 +356,10 @@ const ChartOfAccountsCreationForm = ({
                                             );
                                         })}
                                     </select>
-                                </div>
-                            </div>
                         </div>
+                        </div>
+                           
+                        <div className="col-6 text-start">
                         <div className="form-group">
                             <Input
                                 type="textarea"
@@ -354,7 +375,10 @@ const ChartOfAccountsCreationForm = ({
                                 }
                             />
                         </div>
+                        </div>
+                    </div>
                     </form>
+                </div>
                 </div>
             </div>
 
