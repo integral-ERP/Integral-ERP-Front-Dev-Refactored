@@ -200,7 +200,10 @@ const InvoiceIncomeCreationForm = ({
   };
   return (
     <div className="income-charge-form">
-      <h3>Invoyces Creation Form</h3>
+      <div className="form-label_name"><h2>Invoices Creation Form</h2><span></span></div>
+      <div className="creation creation-container w-100">
+
+
       {/* ------------------------------------------------------------------ */}
       <div className="form-row">
         {/* ------------------------- */}
@@ -290,6 +293,7 @@ const InvoiceIncomeCreationForm = ({
               label="Note"
             />
           </div>
+        </div>
         {/* -------------------------------------------------------------- */}
         <div className="table-hover charge-buttons">
           <button

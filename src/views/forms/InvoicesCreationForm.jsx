@@ -402,9 +402,14 @@ const InvoicesCreationForm = ({
 
   return (
     <div className="company-form">
-      <div className="creation creation-container w-100">
+   
         <div className="row w-100">
+        <div className="col-6 text-start">
+        <div className="creation creation-container w-100">
           <div className="form-label_name"><h2>Definition</h2><span></span></div>
+         
+
+          <div className="row w-100">
           <div className="col-6 text-start">
             <div className="company-form__section">
               <Input
@@ -418,6 +423,9 @@ const InvoicesCreationForm = ({
                 label="Number"
               />
             </div>
+            </div>
+
+            <div className="col-6 text-start">
             <div className="company-form__section">
               <label htmlFor="account" className="form-label">
                 Chart Account:
@@ -434,11 +442,17 @@ const InvoicesCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
+            </div>
+            </div>
+
+            <div className="row w-100">
+            <div className="col-6 text-start">
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <p id="creation-date" className="text-date">
+                      Due Date
+                    </p>
                 <DateTimePicker
-                  label="Due Date"
-                  className="font-right"
                   value={dayjs(formData.due)}
                   onChange={(e) =>
                     setformData({
@@ -449,11 +463,15 @@ const InvoicesCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
+            </div>
+
+            <div className="col-6 text-start">
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <p id="creation-date" className="text-date">
+                      Transaction Date
+                    </p>
                 <DateTimePicker
-                  label="Transation Date"
-                  className="font-right"
                   value={dayjs(formData.trasaDate)}
                   onChange={(e) =>
                     setformData({
@@ -464,25 +482,11 @@ const InvoicesCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
-          </div>
-
-          <div className="col-6 text-start">
-            <div className="company-form__section">
-              <label htmlFor="paymentTem" className="form-label">
-                Payment Tems:
-              </label>
-              <AsyncSelect
-                id="paymentTem"
-                value={paymentByOptions.find(
-                  (option) => option.id === formData.paymentById)}
-                onChange={(e) => { handlePaymentBySelection(e); }}
-                isClearable={true}
-                placeholder="Search and select..."
-                defaultOptions={paymentByOptions}
-                getOptionLabel={(option) => option.description}
-                getOptionValue={(option) => option.id}
-              />
             </div>
+            </div>
+        
+            <div className="row w-100">
+            <div className="col-6 text-start">
             <div className="company-form__section">
               <label htmlFor="apply" className="form-label">
                 Apply To:
@@ -503,6 +507,31 @@ const InvoicesCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
+            </div>
+
+            <div className="col-6 text-start">
+            <div className="company-form__section">
+              <label htmlFor="paymentTem" className="form-label">
+                Payment Tems:
+              </label>
+              <AsyncSelect
+                id="paymentTem"
+                value={paymentByOptions.find(
+                  (option) => option.id === formData.paymentById)}
+                onChange={(e) => { handlePaymentBySelection(e); }}
+                isClearable={true}
+                placeholder="Search and select..."
+                defaultOptions={paymentByOptions}
+                getOptionLabel={(option) => option.description}
+                getOptionValue={(option) => option.id}
+              />
+            </div>
+            
+            </div>
+            </div>
+            
+            <div className="row w-100">
+            <div className="col-6 text-start">
             <div className="company-form__section">
               <Input
                 type="textarea"
@@ -512,12 +541,18 @@ const InvoicesCreationForm = ({
                 readonly={true}
               />
             </div>
+            </div>
+            </div>
+
           </div>
-        </div>
+          
+          </div>
+    
         <div className="company-form__section">
           <button
+          style={{ marginTop: "20px", height: "2vw" }}
             type="button"
-            className="button-addpiece"
+            className="button-charge"
             onClick={() =>
               setshowCommodityCreationForm(!showCommodityCreationForm)
             }
