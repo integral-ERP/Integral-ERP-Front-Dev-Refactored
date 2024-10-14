@@ -253,12 +253,14 @@ const BillsCreationForm = ({
   };
   return (
     <div className="company-form">
-      <div className="creation creation-container w-100">
+     
         <div className="row w-100">
-          <div className="form-label_name"><h2>Bill</h2><span></span>
-          </div>
+          
 
           <div className="col-6 text-start">
+          <div className="creation creation-container w-100">
+          <div className="form-label_name"><h2>Bill</h2><span></span>
+
             <div className="company-form__section">
               <Input
                 type="text"
@@ -287,6 +289,7 @@ const BillsCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
+
             <div className="company-form__section">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
@@ -302,6 +305,7 @@ const BillsCreationForm = ({
                 />
               </LocalizationProvider>
             </div>
+
             <div className="company-form__section">
               <label htmlFor="account" className="form-label">
                 Account:
@@ -320,7 +324,7 @@ const BillsCreationForm = ({
             </div>
           </div>
 
-          <div className="col-6 text-start">
+         
             <div className="company-form__section">
               <label htmlFor="apply" className="form-label">
                 Vendor:
@@ -371,9 +375,9 @@ const BillsCreationForm = ({
                 getOptionValue={(option) => option.id}
               />
             </div>
-          </div>
-
-        </div>
+            </div>
+            </div>
+      
 
 
         <div className="company-form__section">
