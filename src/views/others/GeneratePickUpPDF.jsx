@@ -310,7 +310,7 @@ const GeneratePickUpPDF = (data) => {
                           `${data.deliveryLocationObj?.data?.obj?.city || ``}, 
                            ${data.deliveryLocationObj?.data?.obj?.state || ``} 
                            ${data.deliveryLocationObj?.data?.obj?.zip_code || ``} \n`,
-                          `${data.deliveryLocationObj?.data?.obj?.country || ``}`,
+                          `${data.deliveryLocationObj?.data?.obj?.country || ``}\n`,
                           `Tel: ${data.deliveryLocationObj?.data?.obj?.phone || ``}`,
                         ],
                         margin: [0, 0, 0, 0],

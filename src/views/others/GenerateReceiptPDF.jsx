@@ -239,7 +239,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                            ${data.shipperObj?.data?.obj?.state || ``} 
                            ${data.shipperObj?.data?.obj?.zip_code || ``} \n`,
                           `${data.shipperObj?.data?.obj?.country || ``}`,
-                          `${data.shipperObj?.phone? `Tel: ${data.shipperObj.phone}, `: ``}
+                          `${data.shipperObj?.phone? `Tel: ${data.shipperObj.phone}, `: `\n`}
                            ${data.shipperObj?.fax? `Fax: ${data.shipperObj.fax}`: ``}`,
                         ],
                         colSpan: 2
@@ -253,7 +253,7 @@ const GenerateReceiptPDF = (data, numCon) => {
                            ${data.consigneeObj?.data?.obj?.state || ``} 
                            ${data.consigneeObj?.data?.obj?.zip_code || ``} \n`,
                           `${data.consigneeObj?.data?.obj?.country || ``}`,
-                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone}, `: ``}
+                          `${data.consigneeObj?.phone? `Tel: ${data.consigneeObj.phone}, `: `\n`}
                            ${data.consigneeObj?.fax? `Fax: ${data.consigneeObj.fax}`: ``}`,
                         ],
                         colSpan: 2
