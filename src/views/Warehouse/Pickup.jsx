@@ -175,6 +175,7 @@ const Pickup = () => {
     };
 
     const handleSelectPickupOrder = (PickupOrder) => {
+        console.log(PickupOrder);
         setSelectedPickupOrder(PickupOrder);
         if (PickupOrder) {
         } else {

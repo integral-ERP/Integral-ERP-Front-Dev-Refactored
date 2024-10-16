@@ -130,6 +130,7 @@ const Receipt = () => {
     };
 
     const handleSelectPickupOrder = (PickupOrder) => {
+        console.log(PickupOrder);
         setSelectedPickupOrder(PickupOrder);
     };
 
