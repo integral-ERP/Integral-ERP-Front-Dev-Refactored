@@ -361,6 +361,10 @@ const ReleaseOrderCreationForm = ({
         }
     }, [creating, releaseOrder]);
 
+    const SortArray = (x, y) => {
+        return new Intl.Collator('es').compare(x.name, y.name);
+    };
+
     const fetchFormData = async () => {
         const forwardingAgents = (
             await ForwardingAgentService.getForwardingAgents()
@@ -428,7 +432,9 @@ const ReleaseOrderCreationForm = ({
     const loadCustomerBySelectOptions = async (inputValue) => {
         const responseCustomers = (await CustomerService.search(inputValue))
             .data.results;
-        const options = [...addTypeToObjects(responseCustomers, 'Customer')];
+        const options = [
+            ...addTypeToObjects(responseCustomers, 'Customer'),
+        ].sort(SortArray);
         return options;
     };
 
@@ -447,7 +453,7 @@ const ReleaseOrderCreationForm = ({
             ...addTypeToObjects(responseCustomers, 'customer'),
             ...addTypeToObjects(responseAgents, 'forwardingAgent'),
             ...addTypeToObjects(responseCarriers, 'Carrier'),
-        ];
+        ].sort(SortArray);
 
         return options;
     };
@@ -1045,7 +1051,8 @@ const ReleaseOrderCreationForm = ({
                                         inputName="purchaseOrderNumber"
                                         placeholder="Carrier . . . "
                                         value={
-                                            formData.inland_carrierObj.name || ''
+                                            formData.inland_carrierObj.name ||
+                                            ''
                                         }
                                     />
                                 </div>
@@ -1187,7 +1194,10 @@ const ReleaseOrderCreationForm = ({
                                 htmlFor="fileInput"
                                 className="custom-file-input"
                             >
-                                <span className="button-text" style={{padding: '0 0 0 17%'}}>
+                                <span
+                                    className="button-text"
+                                    style={{ padding: '0 0 0 17%' }}
+                                >
                                     Select files
                                 </span>
                                 <input

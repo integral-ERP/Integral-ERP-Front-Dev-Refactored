@@ -237,8 +237,8 @@ const ReceiptCreationForm = ({
         mainCarrierdId: '',
         mainCarrierInfo: '',
 
-        inlandCarrierdId: "",
-        inlandCarrierdInfo: "",
+        inlandCarrierdId: '',
+        inlandCarrierdInfo: '',
 
         invoiceNumber: '',
         purchaseOrderNumber: '',
@@ -1291,7 +1291,7 @@ const ReceiptCreationForm = ({
             ...addTypeToObjects(responseAgents, 'forwardingAgent'),
         ];
 
-        return options;
+        return options.sort(SortArray);
     };
 
     const loadDestinationAgentsSelectOptions = async (inputValue) => {
@@ -1302,7 +1302,7 @@ const ReceiptCreationForm = ({
             ...addTypeToObjects(responseAgents, 'forwardingAgent'),
         ];
 
-        return options;
+        return options.sort(SortArray);
     };
 
     const loadEmployeeSelectOptions = async (inputValue) => {
@@ -1311,7 +1311,7 @@ const ReceiptCreationForm = ({
 
         const options = addTypeToObjects(data, 'employee');
 
-        return options;
+        return options.sort(SortArray);
     };
 
     //added para recargar carriersoptions al crear un carrier
@@ -1326,7 +1326,7 @@ const ReceiptCreationForm = ({
     const loadCarrierSelectOptions = async (inputValue) => {
         const responseCarriers = (await CarrierService.search(inputValue)).data
             .results;
-        return addTypeToObjects(responseCarriers, 'Carrier');
+        return addTypeToObjects(responseCarriers, 'Carrier').sort(SortArray);
     };
 
     //added para recargar destinationAgentOptions al crear un Agent
@@ -1376,7 +1376,7 @@ const ReceiptCreationForm = ({
     const loadSupplierSelectOptions = async (inputValue) => {
         const responseSupplier = (await CustomerService.search(inputValue)).data
             .results;
-        return addTypeToObjects(responseSupplier, 'customer');
+        return addTypeToObjects(responseSupplier, 'customer').sort(SortArray);
     };
     //added para recargar Shipperoptions al crear un shipper
     // Efecto para cargar las opciones iniciales de shipper
@@ -1390,12 +1390,14 @@ const ReceiptCreationForm = ({
     const loadShipperSelectOptions = async (inputValue) => {
         const responseCustomers = (await CustomerService.getCustomers()).data
             .results;
-        return responseCustomers.map((customer) => ({
-            ...customer,
-            type: 'customer',
-            value: customer.id,
-            label: customer.name,
-        }));
+        return responseCustomers
+            .map((customer) => ({
+                ...customer,
+                type: 'customer',
+                value: customer.id,
+                label: customer.name,
+            }))
+            .sort(SortArray);
     };
     //------------------
     //added para recargar Consigneeoptions al crear un Consignee
@@ -1411,12 +1413,14 @@ const ReceiptCreationForm = ({
         const responseCustomers = (await CustomerService.getCustomers()).data
             .results;
 
-        return responseCustomers.map((customer) => ({
-            ...customer,
-            type: 'customer',
-            value: customer.id,
-            label: customer.name,
-        }));
+        return responseCustomers
+            .map((customer) => ({
+                ...customer,
+                type: 'customer',
+                value: customer.id,
+                label: customer.name,
+            }))
+            .sort(SortArray);
     };
     //--------------------------------
 
@@ -2408,7 +2412,6 @@ const ReceiptCreationForm = ({
                                         getOptionLabel={(option) => option.name}
                                         getOptionValue={(option) => option.id}
                                     />
-                                    
                                 </div>
 
                                 <div className="col-6 text-start">
@@ -2437,7 +2440,6 @@ const ReceiptCreationForm = ({
                                         getOptionLabel={(option) => option.name}
                                         getOptionValue={(option) => option.id}
                                     />
-                                   
                                 </div>
                                 {/* Forms creacion y edicion carrier */}
                                 <div>
@@ -2538,39 +2540,36 @@ const ReceiptCreationForm = ({
                             </div>
 
                             <div className="row align-items-center mb-2">
-                            <div className="col-6 text-start">
-                                        <label
-                                            className="copy-label_add"
-                                            onClick={handleAddShipperClick}
-                                        >
-                    <i className="fas fa-plus button-icon fa-3x"></i>
-                    </label>
-                                        <label
-                                            className="copy-label_edit"
-                                            onClick={handleEditShipperClick}
-                                        >
-                                                                 <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                <div className="col-6 text-start">
+                                    <label
+                                        className="copy-label_add"
+                                        onClick={handleAddShipperClick}
+                                    >
+                                        <i className="fas fa-plus button-icon fa-3x"></i>
+                                    </label>
+                                    <label
+                                        className="copy-label_edit"
+                                        onClick={handleEditShipperClick}
+                                    >
+                                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                    </label>
+                                </div>
 
-                                        </label>
-                                    </div>
-
-
-                                    <div className="col-6 text-start">
+                                <div className="col-6 text-start">
                                     <label
                                         className="copy-label_add"
                                         onClick={handleAddConsigneeClick}
                                     >
-                    <i className="fas fa-plus button-icon fa-3x"></i>
-                    </label>
+                                        <i className="fas fa-plus button-icon fa-3x"></i>
+                                    </label>
                                     <label
                                         className="copy-label_edit"
                                         onClick={handleEditConsigneeClick}
                                     >
-                     <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
-                     </label>
-
+                                        <i className="fas fa-pencil-alt button-icon fa-3x ne"></i>
+                                    </label>
                                 </div>
-                                </div>
+                            </div>
 
                             <div className="row align-items-center mb-3">
                                 <div className="col-6 text-start">
@@ -3307,7 +3306,10 @@ const ReceiptCreationForm = ({
                                 htmlFor="fileInput"
                                 className="custom-file-input"
                             >
-                                <span className="button-text" style={{padding: '0 0 0 17%'}}>
+                                <span
+                                    className="button-text"
+                                    style={{ padding: '0 0 0 17%' }}
+                                >
                                     Select files
                                 </span>
                                 <input
