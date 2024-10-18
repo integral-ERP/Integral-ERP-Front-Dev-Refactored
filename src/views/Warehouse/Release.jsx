@@ -107,6 +107,7 @@ const Release = () => {
     };
 
     const handleSelectPickupOrder = (releaseOrder) => {
+        console.log(releaseOrder);
         setSelectedReleaseOrder(releaseOrder);
     };
 

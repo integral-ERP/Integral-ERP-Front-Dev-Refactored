@@ -26,6 +26,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import * as XLSX from 'xlsx';
 import ConfirmModal from '../shared/components/ConfirmModal';
+import { set } from 'lodash';
 
 const ReleaseOrderCreationForm = ({
     releaseOrder,
@@ -63,6 +64,8 @@ const ReleaseOrderCreationForm = ({
 
     const [customerByOptions, setCustomerByOptions] = useState([]); //mirar
 
+    
+
     const StatusDelivered = 9;
     const formFormat = {
         status: StatusDelivered,
@@ -90,6 +93,7 @@ const ReleaseOrderCreationForm = ({
 
         customerById: '', //Cristian
         customerByName: '',
+        wh_receipt_id: '',
     };
 
     const [formData, setFormData] = useState(formFormat);
@@ -353,6 +357,7 @@ const ReleaseOrderCreationForm = ({
                 inland_carrierObj: releaseOrder.inland_carrierObj,
                 commodities: releaseOrder.commodities,
                 notes: releaseOrder.notes,
+                wh_receipt_Id: releaseOrder.id,
             };
             setconsignee(releaseOrder.consigneeObj?.data?.obj);
             setconsigneeRequest(releaseOrder.consignee);
@@ -504,7 +509,7 @@ const ReleaseOrderCreationForm = ({
                 employeeId: releaseOrder.employee,
                 issuedById: releaseOrder.issued_byObj?.id,
                 issuedByType: releaseOrder.issued_byObj?.type_person,
-
+                wh_receipt_Id: releaseOrder.id,
                 // client_to_bill: releaseOrder.customerById, //cristian
                 cliento: releaseOrder.customerById, //Cristian
                 customerById: releaseOrder.consigneeObj?.data?.obj.id,
@@ -621,6 +626,26 @@ const ReleaseOrderCreationForm = ({
         }
     };
 
+    //added  checked release
+    const handleSelectRealeaseeChecked = (commodity) => {
+        setSelectedCommodities(prevSelected => {
+            const commodityIndex = prevSelected.findIndex(item => item.id === commodity.id);
+            let newSelected;
+            if (commodityIndex !== -1) {
+                // Si el commodity ya está en el array, se remueve
+                newSelected = prevSelected.filter(item => item.id !== commodity.id);
+            } else {
+                // Si el commodity no está en el array, se agrega
+                newSelected = [...prevSelected, commodity];
+            }
+            
+            // Registrar el nuevo estado de selectedCommodities
+            console.log("Commodities seleccionados actualizados:", newSelected);
+            
+            return newSelected;
+        });
+    };
+
     const checkUpdatesComplete = () => {
         if (
             /* releasedTo !== null &&*/ clientToBill !== null &&
@@ -694,7 +719,8 @@ const ReleaseOrderCreationForm = ({
                     purchase_order_number: formData.purchase_order_number,
                     inland_carrierObj: formData.inland_carrierObj,
 
-                    commodities: commodities,
+                    commodities: selectedCommodities,
+                    wh_receipt_id: formData.wh_receipt_Id,
                     consignee: consigneeRequest,
                     attachments: attachments.map((attachment) => {
                         return {
@@ -713,7 +739,7 @@ const ReleaseOrderCreationForm = ({
                     ? (async () => {
                           const createReleaseForm =
                               await ReleaseService.createRelease(rawData);
-                          //added change status delivered
+                        /*   //added change status delivered
 
                           const buscarrecipt =
                               await ReceiptService.getReceiptById(
@@ -729,7 +755,7 @@ const ReleaseOrderCreationForm = ({
                           );
 
                           //added change status delivered if have pickup
-                          /*
+                          
                           const idPickinRecipt =
                               buscarrecipt.data.pickup_order_id;
                           if (idPickinRecipt !== null) {
@@ -745,8 +771,8 @@ const ReleaseOrderCreationForm = ({
                                   idPickinRecipt,
                                   updatedPickupData
                               );
-                          }
-*/
+                          } */
+
                           // Retornar el resultado de updateReceipt
                           return createReleaseForm;
                       })()
@@ -1123,6 +1149,7 @@ const ReleaseOrderCreationForm = ({
                         noScrollY
                         data={commodities}
                         columns={[
+                            'ReleaseCheck',
                             'Description',
                             ' Length (in)',
                             ' Width (in)',
@@ -1135,6 +1162,8 @@ const ReleaseOrderCreationForm = ({
                         ]}
                         onAdd={() => {}}
                         showOptions={false}
+                        Nodoubleclick={true}
+                        CheckForRealease={handleSelectRealeaseeChecked}
                     />
                 </div>
 
