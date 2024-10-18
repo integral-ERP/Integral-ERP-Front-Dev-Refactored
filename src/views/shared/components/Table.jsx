@@ -49,6 +49,7 @@ const Table = ({
 
     createWarehouseReceipt,
     Nodoubleclick,
+    CheckForRealease,
 }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedFormat, setSelectedFormat] = useState('')
@@ -260,6 +261,7 @@ const Table = ({
         'Package Type': 'package_type_description',
         Hazardous: 'hazardous',
         'Hazardous Type': 'hazardous_type',
+        ReleaseCheck: 'releaseCheck',
     }
     const handleMapWithThead = () => {
         return visibleColumnOrder.map((columnName, columnIndex) => {
@@ -752,6 +754,22 @@ const Table = ({
         return <i className="fas fa-times"></i>
     }
 
+    const getReleaseCheck = (isChecked) => {
+        if (isChecked) {
+        CheckForRealease 
+          return (
+            <span>
+              Check For Release <i className="fas fa-check"></i>
+            </span>
+          );
+        }
+        return null;
+      };
+    
+
+    
+
+
     const handleViews = () => {
         switch (showPage) {
             case 'initial':
@@ -925,6 +943,20 @@ const Table = ({
                                                         >
                                                             <i className="fas fa-file-pdf"></i>
                                                         </button>
+                                                    ): columnName ===
+                                                    'ReleaseCheck' ? (
+                                                        <input
+                                                                type="checkbox"
+                                                                onChange={(e) => {
+                                                                if (e.target.checked ) {
+                                                                    CheckForRealease(row);
+                                                                }else {
+                                                                    // También llamamos a CheckForRealease cuando se desmarca
+                                                                    // para que pueda ser removido del array
+                                                                    CheckForRealease(row);
+                                                                }
+                                                                }}
+                                                            />
                                                     ) : columnName ===
                                                       'Status' ? (
                                                         getStatus(
@@ -1776,6 +1808,8 @@ Table.propTypes = {
     onAdd: PropTypes.func,
     title: PropTypes.string,
     showOptions: PropTypes.bool,
+    CheckForRealease:PropTypes.func,
+
 }
 
 Table.defaultProps = {
@@ -1790,6 +1824,7 @@ Table.defaultProps = {
     showOptions: true,
     importEnabled: true,
     importLabel: true,
+    CheckForRealease:null,
 }
 
 export default Table
